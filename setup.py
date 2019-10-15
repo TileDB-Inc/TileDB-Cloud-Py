@@ -39,6 +39,7 @@ setup(
     install_requires=REQUIRES,
     packages=packages,
     include_package_data=True,
+    zip_safe=False, # Force folder install; egg doesn't work for namespace
     long_description="""\
     TileDB Cloud Platform Python API # noqa: E501
     """
