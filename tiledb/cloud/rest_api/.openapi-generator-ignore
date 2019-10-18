@@ -1,0 +1,9 @@
+docs/*
+test/
+test/*
+git_push.sh
+tox.ini
+test-requirements.txt
+setup.py
+.gitignore
+.travis.yml

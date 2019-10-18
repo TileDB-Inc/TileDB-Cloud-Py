@@ -1,0 +1,6 @@
+  {
+  "projectName": "tiledb-cloud",
+  "packageName": "rest_api",
+  "documentationPage": false,
+  "generateSourceCodeOnly": true
+  }
