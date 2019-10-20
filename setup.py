@@ -16,7 +16,7 @@ VERSION = "0.1.0"
 # prerequisite: setuptools
 # http://pypi.python.org/pypi/setuptools
 
-REQUIRES = ["tiledb"]
+REQUIRES = ["tiledb", "urllib3>=1.15", "six>=1.10", "certifi", "python-dateutil"]
 
 # NOTE: we cannot use an __init__.py file in the tiledb/ directory, because it is supplied
 #       by core tiledb-py. Therefore, `find_packages` at the root directory does not find
