@@ -24,7 +24,7 @@ from six.moves.urllib.parse import quote
 
 from tiledb.cloud.rest_api.configuration import Configuration
 import tiledb.cloud.rest_api.models
-from rest_api import rest
+from tiledb.cloud.rest_api import rest
 from tiledb.cloud.rest_api.exceptions import ApiValueError
 
 
