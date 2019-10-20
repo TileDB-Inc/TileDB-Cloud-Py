@@ -3,6 +3,7 @@ from __future__ import print_function
 import urllib
 import tiledb.cloud.config as config
 import tiledb.cloud.rest_api as rest_api
+import tiledb
 from tiledb.cloud.rest_api.rest import ApiException
 
 def split_uri(uri):
@@ -36,7 +37,7 @@ def list_arrays():
     return api_instance.get_all_array_metadata()
 
 
-def array(uri):
+def array_metadata(uri):
     """Return array metadata"""
     (namespace, array_name) = split_uri(uri)
     if not isinstance(config.logged_in, bool):
@@ -44,3 +45,16 @@ def array(uri):
     api_instance = rest_api.ArrayApi(rest_api.ApiClient(config.config))
 
     return api_instance.get_array_metadata(namespace = namespace, array = array_name)
+
+
+def array_sharing_list(self):
+    """Return array metadata"""
+    (namespace, array_name) = split_uri(self.uri)
+    if not isinstance(config.logged_in, bool):
+        raise Exception(config.logged_in)
+    api_instance = rest_api.ArrayApi(rest_api.ApiClient(config.config))
+
+    return api_instance.get_array_sharing_policies(namespace = namespace, array = array_name)
+
+setattr(tiledb.Array, 'sharing', array_sharing_list)
+setattr(tiledb.Array, 'metadata', array_metadata)
