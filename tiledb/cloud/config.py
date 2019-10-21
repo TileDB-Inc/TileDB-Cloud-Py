@@ -1,8 +1,7 @@
-import tiledb.cloud.rest_api as rest_api
 import os.path
-import sys
 from pathlib import Path
 import json
+from . import rest_api
 
 config = rest_api.configuration.Configuration()
 default_config_file = Path.joinpath(Path.home(), ".tiledb", "cloud.json")
