@@ -1,11 +1,15 @@
-import tiledb
 import urllib
 from . import rest_api
 from . import config
 from . import client
 
 def split_uri(uri):
-  """Split a URI into namespace and array name"""
+  """
+  Split a URI into namespace and array name
+
+  :param uri: uri to split into namespace and array name
+  :return: tuple (namespace, array_name)
+  """
   parsed = urllib.parse.urlparse(uri)
   if not parsed.scheme == "tiledb":
     raise Exception("Incorrect array uri, must be in tiledb:// scheme")
