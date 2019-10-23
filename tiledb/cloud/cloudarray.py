@@ -66,12 +66,13 @@ class CloudArray(object):
     """
     return self.share(namespace, list())
 
-  def register(self, namespace=None, array_name=None, description=None):
+  def register(self, namespace=None, array_name=None, description=None, access_credentials_name=None):
     """
     Register this array with the tiledb cloud service
+    :param str namespace: optional username or organization array should be registered under. If unset will default to the user
     :param str array_name: name of array
     :param str description: optional description
-    :param str namespace: optional username or organization array should be registered under. If unset will default to the user
+    :param str access_credentials_name: optional name of access credentials to use, if left blank default for namespace will be used
     """
     api_instance = client.get_array_api()
 
@@ -81,7 +82,7 @@ class CloudArray(object):
 
       namespace = config.user.username
 
-    return api_instance.register_array(namespace=namespace, array=self.uri, array_metadata=rest_api.models.ArrayMetadataUpdate(description=description, name=array_name, uri=self.uri))
+    return api_instance.register_array(namespace=namespace, array=self.uri, array_metadata=rest_api.models.ArrayMetadataUpdate(description=description, name=array_name, uri=self.uri, access_credentials_name=access_credentials_name))
 
   def deregister(self):
     """
