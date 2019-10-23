@@ -15,23 +15,23 @@ from __future__ import absolute_import
 import unittest
 
 import rest_api
-from tiledb.cloud.rest_api.models.array_task import ArrayTask  # noqa: E501
+from tiledb.cloud.rest_api.api.sql_api import SqlApi  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestArrayTask(unittest.TestCase):
-    """ArrayTask unit test stubs"""
+class TestSqlApi(unittest.TestCase):
+    """SqlApi unit test stubs"""
 
     def setUp(self):
-        pass
+        self.api = tiledb.cloud.rest_api.api.sql_api.SqlApi()  # noqa: E501
 
     def tearDown(self):
         pass
 
-    def testArrayTask(self):
-        """Test ArrayTask"""
-        # FIXME: construct object with mandatory attributes with example values
-        # model = tiledb.cloud.rest_api.models.array_task.ArrayTask()  # noqa: E501
+    def test_run_sql(self):
+        """Test case for run_sql
+
+        """
         pass
 
 
