@@ -3,6 +3,34 @@ from __future__ import print_function
 
 from . import rest_api
 from . import config
+import urllib
+
+import tiledb
+
+
+def Config():
+  """
+  Builds a tiledb config setting the login parameters that exist for the cloud service
+  :return: tiledb.Config
+  """
+  host_parsed = urllib.parse.urlparse(config.config.host)
+  cfg = tiledb.Config({"rest.server_address": urllib.parse.urlunparse((host_parsed.scheme, host_parsed.netloc, "", "", "", ""))})
+  if config.config.username != "" and config.config.password != "":
+    cfg["rest.username"] = config.config.username
+    cfg["rest.password"] = config.config.password
+  else:
+    cfg["rest.token"] = config.config.api_key["X-TILEDB-REST-API-KEY"]
+
+  return cfg
+
+
+def Ctx():
+    """
+    Builds a TileDB Context that has the tiledb config parameters for tiledb cloud set from stored login
+    :return: tiledb.Ctx
+    """
+    return tiledb.Ctx(Config())
+
 
 def get_array_api():
     if not isinstance(config.logged_in, bool):
@@ -14,10 +42,18 @@ def get_user_api():
         raise Exception(config.logged_in)
     return rest_api.UserApi(rest_api.ApiClient(config.config))
 
+
 def get_organization_api():
     if not isinstance(config.logged_in, bool):
         raise Exception(config.logged_in)
     return rest_api.OrganizationApi(rest_api.ApiClient(config.config))
+
+
+def get_sql_api():
+    if not isinstance(config.logged_in, bool):
+        raise Exception(config.logged_in)
+    return rest_api.SqlApi(rest_api.ApiClient(config.config))
+
 
 def login(token="", username="", password="", host=None):
     """
