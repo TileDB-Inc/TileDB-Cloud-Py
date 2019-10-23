@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**add_user_to_organization**](UserApi.md#add_user_to_organization) | **POST** /organizations/{organization}/user | 
 [**check_aws_access_credentials**](UserApi.md#check_aws_access_credentials) | **GET** /credentials/{namespace}/aws | 
 [**check_aws_access_credentials_by_name**](UserApi.md#check_aws_access_credentials_by_name) | **GET** /credentials/{namespace}/aws/{name} | 
+[**confirm_email**](UserApi.md#confirm_email) | **POST** /user/confirm_email | 
 [**create_user**](UserApi.md#create_user) | **POST** /user | 
 [**delete_aws_access_credentials**](UserApi.md#delete_aws_access_credentials) | **DELETE** /credentials/{namespace}/aws/{name} | 
 [**delete_user**](UserApi.md#delete_user) | **DELETE** /users/{username} | 
@@ -409,6 +410,95 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | AWS keys are set |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **confirm_email**
+> confirm_email()
+
+
+
+confirm user email
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.UserApi(rest_api.ApiClient(configuration))
+
+try:
+    api_instance.confirm_email()
+except ApiException as e:
+    print("Exception when calling UserApi->confirm_email: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.UserApi(rest_api.ApiClient(configuration))
+
+try:
+    api_instance.confirm_email()
+except ApiException as e:
+    print("Exception when calling UserApi->confirm_email: %s\n" % e)
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**204** | User email confirmed successfully |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
