@@ -57,6 +57,12 @@ def get_udf_api():
     return rest_api.UdfApi(rest_api.ApiClient(config.config))
 
 
+def get_sql_api():
+    if not isinstance(config.logged_in, bool):
+        raise Exception(config.logged_in)
+    return rest_api.SqlApi(rest_api.ApiClient(config.config))
+
+
 def login(token="", username="", password="", host=None, verify_ssl=True):
     """
     Login to cloud service
