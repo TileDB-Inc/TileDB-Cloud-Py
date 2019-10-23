@@ -22,23 +22,11 @@ class CloudArray(object):
 
     return api_instance.get_array_sharing_policies(namespace=namespace, array=array_name)
 
-  def cloud_metadata(uri):
+  def cloud_metadata(self):
     """Return array metadata"""
-    (namespace, array_name) = split_uri(uri)
+    (namespace, array_name) = split_uri(self.uri)
     if not isinstance(config.logged_in, bool):
       raise Exception(config.logged_in)
     api_instance = rest_api.ArrayApi(rest_api.ApiClient(config.config))
 
     return api_instance.get_array_metadata(namespace = namespace, array = array_name)
-
-
-class DenseArray(CloudArray, tiledb.DenseArray):
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-
-
-class SparseArray(CloudArray, tiledb.SparseArray):
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-
-
