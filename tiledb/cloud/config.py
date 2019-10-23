@@ -37,3 +37,4 @@ def setup_configuration(api_key, username, password, host):
 
 # Load default config file if it exists
 logged_in = load_configuration(default_config_file)
+user = None
