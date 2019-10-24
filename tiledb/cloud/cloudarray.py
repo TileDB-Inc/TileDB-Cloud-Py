@@ -2,6 +2,8 @@ import urllib
 from . import rest_api
 from . import config
 from . import client
+from . import udf
+
 
 def split_uri(uri):
   """
@@ -94,3 +96,21 @@ class CloudArray(object):
     api_instance = client.get_array_api()
 
     return api_instance.deregister_array(namespace=namespace, array=array_name)
+
+  def apply(self, func):
+    """
+    Apply a user defined function to a udf
+
+    **Example**
+    >>> import tiledb, tiledb.cloud, numpy
+    >>> def median(df):
+    ...   return numpy.median(df["a"])
+    >>> # Open the array then run the UDF
+    >>> with tiledb.SparseArray("tiledb://user/myarray", ctx=tiledb.cloud.ctx()) as A:
+    ...   A.apply(median)[0:4]
+    2.0
+
+    :param func: user function to run
+    :return: results of applied udf
+    """
+    return udf.UDF(self, func)

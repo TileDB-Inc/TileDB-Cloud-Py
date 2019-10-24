@@ -49,10 +49,10 @@ def get_organization_api():
     return rest_api.OrganizationApi(rest_api.ApiClient(config.config))
 
 
-def get_sql_api():
+def get_udf_api():
     if not isinstance(config.logged_in, bool):
         raise Exception(config.logged_in)
-    return rest_api.SqlApi(rest_api.ApiClient(config.config))
+    return rest_api.UdfApi(rest_api.ApiClient(config.config))
 
 
 def login(token="", username="", password="", host=None):
