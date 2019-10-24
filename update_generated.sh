@@ -61,10 +61,12 @@ docker run --rm  \
 sudo chown -R `whoami` ${OUTPUT_PATH}
 
 # fix imports
-find "${OUTPUT_PATH}" -name "*.py" -exec sed -i '' -e "s/${PACKAGE_NAME}\./tiledb.cloud.${PACKAGE_NAME}./g" {} \;
+find "${OUTPUT_PATH}" -iname "*.py" -exec sed -i '' -e "s/${PACKAGE_NAME}\./tiledb.cloud.${PACKAGE_NAME}./g" {} \;
+# fix extra import in api_client
+find "${OUTPUT_PATH}" -iname "api_client.py" -exec sed -i '' -e "s/from ${PACKAGE_NAME} import rest/from tiledb.cloud.${PACKAGE_NAME} import rest/g" {} \;
 
 # move generated files to TARGET_PATH
-cp -r ${OUTPUT_PATH}/${PACKAGE_NAME} ${TARGET_PATH}/${PACKAGE_NAME}
+cp -r ${OUTPUT_PATH}/${PACKAGE_NAME} ${TARGET_PATH}/
 
 cp ${OUTPUT_PATH}/${PACKAGE_NAME}_README.md ${TARGET_PATH}/${PACKAGE_NAME}/README.md
 # The newer openapi-generator-cli doesn't produce a requirements.txt
