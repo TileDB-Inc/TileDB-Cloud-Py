@@ -1,18 +1,18 @@
-# rest_api.SqlApi
+# rest_api.UdfApi
 
 All URIs are relative to *http://localhost/v1*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**run_sql**](SqlApi.md#run_sql) | **POST** /sql/{namespace} | 
+[**submit_udf**](UdfApi.md#submit_udf) | **POST** /arrays/{namespace}/{array}/udf/submit | 
 
 
-# **run_sql**
-> run_sql(namespace, sql)
+# **submit_udf**
+> str submit_udf(namespace, array, udf, x_payer=x_payer)
 
 
 
-Run a sql query
+send a UDF to run against a specified array/URI registered to a group/project
 
 ### Example
 
@@ -36,14 +36,17 @@ configuration.password = 'YOUR_PASSWORD'
 # Defining host is optional and default to http://localhost/v1
 configuration.host = "http://localhost/v1"
 # Create an instance of the API class
-api_instance = rest_api.SqlApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace to run task under is in (an organization name or user's username)
-sql = rest_api.SQLParameters() # SQLParameters | sql being submitted
+api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
+namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+udf = rest_api.UDF() # UDF | udf to run
+x_payer = 'x_payer_example' # str | Name of organization or user who should be charged for this request (optional)
 
 try:
-    api_instance.run_sql(namespace, sql)
+    api_response = api_instance.submit_udf(namespace, array, udf, x_payer=x_payer)
+    pprint(api_response)
 except ApiException as e:
-    print("Exception when calling SqlApi->run_sql: %s\n" % e)
+    print("Exception when calling UdfApi->submit_udf: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -66,26 +69,31 @@ configuration.password = 'YOUR_PASSWORD'
 # Defining host is optional and default to http://localhost/v1
 configuration.host = "http://localhost/v1"
 # Create an instance of the API class
-api_instance = rest_api.SqlApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace to run task under is in (an organization name or user's username)
-sql = rest_api.SQLParameters() # SQLParameters | sql being submitted
+api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
+namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+udf = rest_api.UDF() # UDF | udf to run
+x_payer = 'x_payer_example' # str | Name of organization or user who should be charged for this request (optional)
 
 try:
-    api_instance.run_sql(namespace, sql)
+    api_response = api_instance.submit_udf(namespace, array, udf, x_payer=x_payer)
+    pprint(api_response)
 except ApiException as e:
-    print("Exception when calling SqlApi->run_sql: %s\n" % e)
+    print("Exception when calling UdfApi->submit_udf: %s\n" % e)
 ```
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace to run task under is in (an organization name or user&#39;s username) | 
- **sql** | [**SQLParameters**](SQLParameters.md)| sql being submitted | 
+ **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
+ **array** | **str**| name/uri of array that is url-encoded | 
+ **udf** | [**UDF**](UDF.md)| udf to run | 
+ **x_payer** | **str**| Name of organization or user who should be charged for this request | [optional] 
 
 ### Return type
 
-void (empty response body)
+**str**
 
 ### Authorization
 
@@ -94,12 +102,12 @@ void (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: application/json
+ - **Accept**: application/octet-stream
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**204** | SQL executed successfully |  -  |
+**200** | udf completed and the udf-type specific result is returned |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
