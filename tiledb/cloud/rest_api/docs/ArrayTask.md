@@ -20,6 +20,8 @@ Name | Type | Description | Notes
 **udf_language** | **str** | Optional actual language used to express udf_code | [optional] 
 **sql_query** | **str** | Optional actual sql query that is going to be executed | [optional] 
 **type** | [**ArrayTaskType**](ArrayTaskType.md) |  | [optional] 
+**activity** | [**ArrayActivityLog**](ArrayActivityLog.md) |  | [optional] 
+**logs** | [**ArrayTaskLog**](ArrayTaskLog.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

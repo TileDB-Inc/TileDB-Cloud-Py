@@ -25,6 +25,7 @@ from tiledb.cloud.rest_api.models.array_sample import ArraySample
 from tiledb.cloud.rest_api.models.array_schema import ArraySchema
 from tiledb.cloud.rest_api.models.array_sharing import ArraySharing
 from tiledb.cloud.rest_api.models.array_task import ArrayTask
+from tiledb.cloud.rest_api.models.array_task_log import ArrayTaskLog
 from tiledb.cloud.rest_api.models.array_task_status import ArrayTaskStatus
 from tiledb.cloud.rest_api.models.array_task_type import ArrayTaskType
 from tiledb.cloud.rest_api.models.array_type import ArrayType
@@ -58,6 +59,7 @@ from tiledb.cloud.rest_api.models.query_reader import QueryReader
 from tiledb.cloud.rest_api.models.querystatus import Querystatus
 from tiledb.cloud.rest_api.models.querytype import Querytype
 from tiledb.cloud.rest_api.models.read_state import ReadState
+from tiledb.cloud.rest_api.models.sso_provider import SSOProvider
 from tiledb.cloud.rest_api.models.subarray import Subarray
 from tiledb.cloud.rest_api.models.subarray_partitioner import SubarrayPartitioner
 from tiledb.cloud.rest_api.models.subarray_partitioner_current import SubarrayPartitionerCurrent
