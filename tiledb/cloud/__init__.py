@@ -1,3 +1,11 @@
 from __future__ import absolute_import
 
-from . import client
+from .client import (
+    Config,
+    Ctx,
+    list_arrays,
+    login,
+    organizations,
+    organization,
+    user_profile,
+)

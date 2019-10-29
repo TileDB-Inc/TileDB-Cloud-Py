@@ -3,6 +3,36 @@ from __future__ import print_function
 
 from . import rest_api
 from . import config
+from . import tiledb_cloud_error
+from .rest_api import ApiException as GenApiException
+import urllib
+
+import tiledb
+
+
+def Config():
+  """
+  Builds a tiledb config setting the login parameters that exist for the cloud service
+  :return: tiledb.Config
+  """
+  host_parsed = urllib.parse.urlparse(config.config.host)
+  cfg = tiledb.Config({"rest.server_address": urllib.parse.urlunparse((host_parsed.scheme, host_parsed.netloc, "", "", "", ""))})
+  if config.config.username != "" and config.config.password != "":
+    cfg["rest.username"] = config.config.username
+    cfg["rest.password"] = config.config.password
+  else:
+    cfg["rest.token"] = config.config.api_key["X-TILEDB-REST-API-KEY"]
+
+  return cfg
+
+
+def Ctx():
+    """
+    Builds a TileDB Context that has the tiledb config parameters for tiledb cloud set from stored login
+    :return: tiledb.Ctx
+    """
+    return tiledb.Ctx(Config())
+
 
 def get_array_api():
     if not isinstance(config.logged_in, bool):
@@ -14,12 +44,20 @@ def get_user_api():
         raise Exception(config.logged_in)
     return rest_api.UserApi(rest_api.ApiClient(config.config))
 
+
 def get_organization_api():
     if not isinstance(config.logged_in, bool):
         raise Exception(config.logged_in)
     return rest_api.OrganizationApi(rest_api.ApiClient(config.config))
 
-def login(token="", username="", password="", host=None):
+
+def get_udf_api():
+    if not isinstance(config.logged_in, bool):
+        raise Exception(config.logged_in)
+    return rest_api.UdfApi(rest_api.ApiClient(config.config))
+
+
+def login(token="", username="", password="", host=None, verify_ssl=True):
     """
     Login to cloud service
 
@@ -37,7 +75,7 @@ def login(token="", username="", password="", host=None):
     if (username == "" and password == "") and token == "":
         raise Exception("Username and Password are both required")
 
-    config.setup_configuration({"X-TILEDB-REST-API-KEY": token}, username, password, host)
+    config.setup_configuration({"X-TILEDB-REST-API-KEY": token}, username, password, host, verify_ssl)
     config.save_configuration(config.default_config_file)
     config.logged_in = True
 
@@ -50,7 +88,10 @@ def list_arrays():
     """
     api_instance = get_array_api()
 
-    return api_instance.get_all_array_metadata()
+    try:
+        return api_instance.get_all_array_metadata()
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
 
 
 def user_profile():
@@ -61,7 +102,10 @@ def user_profile():
 
     api_instance = get_user_api()
 
-    return api_instance.get_user()
+    try:
+        return api_instance.get_user()
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
 
 
 def organizations():
@@ -72,7 +116,10 @@ def organizations():
 
     api_instance = get_organization_api()
 
-    return api_instance.get_all_organizations()
+    try:
+        return api_instance.get_all_organizations()
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
 
 
 def organization(organization):
@@ -84,4 +131,7 @@ def organization(organization):
 
     api_instance = get_organization_api()
 
-    return api_instance.get_organization(organization=organization)
+    try:
+        return api_instance.get_organization(organization=organization)
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
