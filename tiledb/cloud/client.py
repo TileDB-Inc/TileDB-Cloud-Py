@@ -57,7 +57,7 @@ def get_udf_api():
     return rest_api.UdfApi(rest_api.ApiClient(config.config))
 
 
-def login(token="", username="", password="", host=None):
+def login(token="", username="", password="", host=None, verify_ssl=True):
     """
     Login to cloud service
 
@@ -75,7 +75,7 @@ def login(token="", username="", password="", host=None):
     if (username == "" and password == "") and token == "":
         raise Exception("Username and Password are both required")
 
-    config.setup_configuration({"X-TILEDB-REST-API-KEY": token}, username, password, host)
+    config.setup_configuration({"X-TILEDB-REST-API-KEY": token}, username, password, host, verify_ssl)
     config.save_configuration(config.default_config_file)
     config.logged_in = True
 
