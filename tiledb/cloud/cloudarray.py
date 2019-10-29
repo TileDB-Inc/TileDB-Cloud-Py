@@ -2,6 +2,8 @@ import urllib
 from . import rest_api
 from . import config
 from . import client
+from . import tiledb_cloud_error
+from .rest_api import ApiException as GenApiException
 
 import cloudpickle
 import base64
@@ -61,7 +63,10 @@ class CloudArray(object):
     (namespace, array_name) = split_uri(self.uri)
     api_instance = client.get_array_api()
 
-    return api_instance.get_array_sharing_policies(namespace=namespace, array=array_name)
+    try:
+      return api_instance.get_array_sharing_policies(namespace=namespace, array=array_name)
+    except GenApiException as exc:
+      raise tiledb_cloud_error.check_exc(exc) from None
 
   def cloud_metadata(self):
     """
@@ -72,7 +77,10 @@ class CloudArray(object):
     (namespace, array_name) = split_uri(self.uri)
     api_instance = client.get_array_api()
 
-    return api_instance.get_array_metadata(namespace = namespace, array = array_name)
+    try:
+      return api_instance.get_array_metadata(namespace = namespace, array = array_name)
+    except GenApiException as exc:
+      raise tiledb_cloud_error.check_exc(exc) from None
 
   def share(self, namespace, permissions):
     """
@@ -93,7 +101,10 @@ class CloudArray(object):
     (array_namespace, array_name) = split_uri(self.uri)
     api_instance = client.get_array_api()
 
-    return api_instance.share_array(namespace=array_namespace, array=array_name, array_sharing=rest_api.models.ArraySharing(namespace=namespace, actions=permissions))
+    try:
+      return api_instance.share_array(namespace=array_namespace, array=array_name, array_sharing=rest_api.models.ArraySharing(namespace=namespace, actions=permissions))
+    except GenApiException as exc:
+      raise tiledb_cloud_error.check_exc(exc) from None
 
   def unshare(self, namespace):
     """
@@ -121,7 +132,10 @@ class CloudArray(object):
 
       namespace = config.user.username
 
-    return api_instance.register_array(namespace=namespace, array=self.uri, array_metadata=rest_api.models.ArrayMetadataUpdate(description=description, name=array_name, uri=self.uri, access_credentials_name=access_credentials_name))
+    try:
+      return api_instance.register_array(namespace=namespace, array=self.uri, array_metadata=rest_api.models.ArrayMetadataUpdate(description=description, name=array_name, uri=self.uri, access_credentials_name=access_credentials_name))
+    except GenApiException as exc:
+      raise tiledb_cloud_error.check_exc(exc) from None
 
   def deregister(self):
     """
@@ -132,9 +146,12 @@ class CloudArray(object):
 
     api_instance = client.get_array_api()
 
-    return api_instance.deregister_array(namespace=namespace, array=array_name)
+    try:
+      return api_instance.deregister_array(namespace=namespace, array=array_name)
+    except GenApiException as exc:
+      raise tiledb_cloud_error.check_exc(exc) from None
 
-  def apply(self, func, subarray, attrs=None, layout='R'):
+  def apply(self, func, subarray, attrs=None, layout=None):
     """
     Apply a user defined function to a udf
 
@@ -165,7 +182,21 @@ class CloudArray(object):
       ranges.append(rest_api.models.UDFSubarrayRange(dimension_id=idx, range_start=start, range_end=end))
       idx = idx + 1
 
-    ranges = rest_api.models.UDFSubarray(layout=layout, ranges=ranges)
+    converted_layout = 'row-major'
 
-    res = api_instance.submit_udf(namespace=namespace, array=array_name, udf=rest_api.models.UDF(type=rest_api.models.UDFType.PYTHON, _exec=pickledUDF, subarray=ranges, version="{}.{}.{}".format(sys.version_info.major, sys.version_info.minor, sys.version_info.micro)))
+    if layout is None:
+      converted_layout = 'unordered'
+    elif layout.upper() == 'R':
+      converted_layout = 'row-major'
+    elif layout.upper() == 'C':
+      converted_layout = 'col-major'
+    elif layout.upper() == 'G':
+      converted_layout = 'global-order'
+
+    ranges = rest_api.models.UDFSubarray(layout=converted_layout, ranges=ranges)
+
+    try:
+      res = api_instance.submit_udf(namespace=namespace, array=array_name, udf=rest_api.models.UDF(type=rest_api.models.UDFType.PYTHON, _exec=pickledUDF, subarray=ranges, version="{}.{}.{}".format(sys.version_info.major, sys.version_info.minor, sys.version_info.micro)))
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
     return cloudpickle.loads(res)

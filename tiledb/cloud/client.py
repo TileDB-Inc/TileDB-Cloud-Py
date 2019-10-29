@@ -3,6 +3,8 @@ from __future__ import print_function
 
 from . import rest_api
 from . import config
+from . import tiledb_cloud_error
+from .rest_api import ApiException as GenApiException
 import urllib
 
 import tiledb
@@ -86,7 +88,10 @@ def list_arrays():
     """
     api_instance = get_array_api()
 
-    return api_instance.get_all_array_metadata()
+    try:
+        return api_instance.get_all_array_metadata()
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
 
 
 def user_profile():
@@ -97,7 +102,10 @@ def user_profile():
 
     api_instance = get_user_api()
 
-    return api_instance.get_user()
+    try:
+        return api_instance.get_user()
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
 
 
 def organizations():
@@ -108,7 +116,10 @@ def organizations():
 
     api_instance = get_organization_api()
 
-    return api_instance.get_all_organizations()
+    try:
+        return api_instance.get_all_organizations()
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
 
 
 def organization(organization):
@@ -120,4 +131,7 @@ def organization(organization):
 
     api_instance = get_organization_api()
 
-    return api_instance.get_organization(organization=organization)
+    try:
+        return api_instance.get_organization(organization=organization)
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
