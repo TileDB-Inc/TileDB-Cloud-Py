@@ -15,12 +15,12 @@ from __future__ import absolute_import
 import unittest
 
 import rest_api
-from tiledb.cloud.rest_api.models.filter_type import FilterType  # noqa: E501
+from tiledb.cloud.rest_api.models.sql_parameters import SQLParameters  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestFilterType(unittest.TestCase):
-    """FilterType unit test stubs"""
+class TestSQLParameters(unittest.TestCase):
+    """SQLParameters unit test stubs"""
 
     def setUp(self):
         pass
@@ -28,10 +28,10 @@ class TestFilterType(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def testFilterType(self):
-        """Test FilterType"""
+    def testSQLParameters(self):
+        """Test SQLParameters"""
         # FIXME: construct object with mandatory attributes with example values
-        # model = tiledb.cloud.rest_api.models.filter_type.FilterType()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.sql_parameters.SQLParameters()  # noqa: E501
         pass
 
 
