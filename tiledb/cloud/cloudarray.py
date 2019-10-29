@@ -4,6 +4,7 @@ from . import config
 from . import client
 from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
+from .rest_api import rest
 
 import cloudpickle
 import base64
@@ -160,8 +161,8 @@ class CloudArray(object):
     >>> def median(df):
     ...   return numpy.median(df["a"])
     >>> # Open the array then run the UDF
-    >>> with tiledb.SparseArray("tiledb://user/myarray", ctx=tiledb.cloud.ctx()) as A:
-    ...   A.apply(median, [(0,4)], attrs=["a", "b", "c"])
+    >>> with tiledb.SparseArray("tiledb://TileDB-Inc/quickstart_dense", ctx=tiledb.cloud.ctx()) as A:
+    ...   A.apply(median, [(0,5), (0,5)], attrs=["a", "b", "c"])
     2.0
 
     :param func: user function to run
@@ -196,7 +197,11 @@ class CloudArray(object):
     ranges = rest_api.models.UDFSubarray(layout=converted_layout, ranges=ranges)
 
     try:
-      res = api_instance.submit_udf(namespace=namespace, array=array_name, udf=rest_api.models.UDF(type=rest_api.models.UDFType.PYTHON, _exec=pickledUDF, subarray=ranges, version="{}.{}.{}".format(sys.version_info.major, sys.version_info.minor, sys.version_info.micro)))
+      # _preload_content must be set to false to avoid trying to decode binary data
+      response = api_instance.submit_udf(namespace=namespace, array=array_name, udf=rest_api.models.UDF(type=rest_api.models.UDFType.PYTHON, _exec=pickledUDF, subarray=ranges, version="{}.{}.{}".format(sys.version_info.major, sys.version_info.minor, sys.version_info.micro)), _preload_content=False)
+      response = rest.RESTResponse(response)
+
+      res = response.data
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
     return cloudpickle.loads(res)

@@ -8,7 +8,7 @@ Method | HTTP request | Description
 
 
 # **submit_udf**
-> str submit_udf(namespace, array, udf, x_payer=x_payer)
+> file submit_udf(namespace, array, udf, x_payer=x_payer)
 
 
 
@@ -93,7 +93,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**str**
+**file**
 
 ### Authorization
 
