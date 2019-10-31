@@ -5,9 +5,9 @@ from .rest_api import ApiException as GenApiException
 
 import datetime
 
-def Task(id=None):
+def task(id):
   """
-
+  Fetch a single array task
   :param id:
   :return:
   """
@@ -20,7 +20,7 @@ def Task(id=None):
     raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def Tasks(namespace=None, array=None, start=None, end=datetime.datetime.utcnow(), status=None):
+def tasks(namespace=None, array=None, start=None, end=datetime.datetime.utcnow(), status=None):
   """
   Fetch all tasks a user has access too
   :param str namespace: optional filter by namespace
