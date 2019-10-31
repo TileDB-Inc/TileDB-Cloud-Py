@@ -2,6 +2,8 @@ from . import rest_api
 from . import config
 from . import client
 from . import cloudarray
+from . import tiledb_cloud_error
+from .rest_api import ApiException as GenApiException
 
 import tiledb
 
@@ -28,7 +30,11 @@ def exec(query, output_uri=None, namespace=None, task_name=None):
 
   api_instance = client.get_sql_api()
 
-  return api_instance.run_sql(namespace=namespace, query=rest_api.models.SQLParameters(name=task_name, query=query))
+  try:
+
+    return api_instance.run_sql(namespace=namespace, query=rest_api.models.SQLParameters(name=task_name, query=query))
+  except GenApiException as exc:
+    raise tiledb_cloud_error.check_exc(exc) from None
 
 
 def exec_and_fetch(query, output_uri, output_schema=None, namespace=None, task_name=None, output_array_name=None):
@@ -66,7 +72,11 @@ def exec_and_fetch(query, output_uri, output_schema=None, namespace=None, task_n
         array_api.update_array_metadata(namespace=namespace, output_uri=output_uri, array_metadata=rest_api.models.ArrayMetadataUpdate(name=output_array_name))
 
   # Execute the sql query
-  exec(query=query, output_uri=tiledb_output_uri, namespace=namespace, task_name=task_name)
+  try:
+    exec(query=query, output_uri=tiledb_output_uri, namespace=namespace, task_name=task_name)
 
-  return tiledb.Array(tiledb_output_uri, ctx=client.Ctx())
+    return tiledb.Array(tiledb_output_uri, ctx=client.Ctx())
+
+  except GenApiException as exc:
+    raise tiledb_cloud_error.check_exc(exc) from None
 
