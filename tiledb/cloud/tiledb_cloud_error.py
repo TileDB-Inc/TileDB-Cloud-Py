@@ -1,3 +1,5 @@
+import json
+
 class TileDBClientError(BaseException):
   pass
 
