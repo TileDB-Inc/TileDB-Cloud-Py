@@ -23,7 +23,7 @@ def load_configuration(config_path):
         global config
         # Parse JSON into an object with attributes corresponding to dict keys.
         config_obj = json.loads(f.read())
-        setup_configuration(api_key=config_obj['api_key'], username=config_obj['username'], password=config_obj['password'], host=config_obj['host']+"/v1", verify_ssl=config_obj['verify_ssl'])
+        setup_configuration(api_key=config_obj['api_key'], username=config_obj['username'], password=config_obj['password'], host=config_obj['host'], verify_ssl=config_obj['verify_ssl'])
     return True
 
 
