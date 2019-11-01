@@ -32,7 +32,7 @@ def exec(query, output_uri=None, namespace=None, task_name=None):
 
   try:
 
-    return api_instance.run_sql(namespace=namespace, query=rest_api.models.SQLParameters(name=task_name, query=query))
+    return api_instance.run_sql(namespace=namespace, sql=rest_api.models.SQLParameters(name=task_name, query=query))
   except GenApiException as exc:
     raise tiledb_cloud_error.check_exc(exc) from None
 
