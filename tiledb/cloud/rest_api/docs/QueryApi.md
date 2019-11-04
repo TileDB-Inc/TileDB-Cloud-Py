@@ -117,7 +117,7 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | query completed and results are returned in query object |  -  |
+**200** | query completed and results are returned in query object |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br>  |
 **204** | query completed successfully with no return |  -  |
 **0** | error response |  -  |
 
@@ -232,7 +232,7 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | query completed and results are returned in query object |  -  |
+**200** | query completed and results are returned in query object |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br>  |
 **204** | query completed successfully with no return |  -  |
 **0** | error response |  -  |
 
