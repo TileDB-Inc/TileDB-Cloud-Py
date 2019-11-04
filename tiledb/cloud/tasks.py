@@ -5,12 +5,20 @@ from .rest_api import ApiException as GenApiException
 
 import datetime
 
-def task(id):
+last_task_id = None
+
+def task(id=None):
   """
   Fetch a single array task
-  :param id:
-  :return:
+  :param str id: id to lookup, if unset will use the id of the last array task run in the current python session
+  :return task : object with task details
   """
+
+  if id is None and last_task_id is None:
+    raise Exception("id parameter can not be None and there is no last run task")
+  elif id is None and last_task_id is not None:
+    id = last_task_id
+
   api_instance = client.get_tasks_api()
 
   try:

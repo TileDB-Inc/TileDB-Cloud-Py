@@ -9,6 +9,7 @@ import urllib
 
 import tiledb
 
+TASK_ID_HEADER = 'X-TILEDB-CLOUD-TASK-ID'
 
 def Config():
   """

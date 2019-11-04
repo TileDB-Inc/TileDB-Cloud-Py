@@ -2,8 +2,10 @@ from . import rest_api
 from . import config
 from . import client
 from . import cloudarray
+from . import tasks
 from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
+from .rest_api import rest
 
 import tiledb
 
@@ -32,7 +34,15 @@ def exec(query, output_uri=None, namespace=None, task_name=None):
 
   try:
 
-    return api_instance.run_sql(namespace=namespace, sql=rest_api.models.SQLParameters(name=task_name, query=query))
+    response = api_instance.run_sql(namespace=namespace, sql=rest_api.models.SQLParameters(name=task_name, query=query),  _preload_content=False)
+    response = rest.RESTResponse(response)
+
+    tasks.last_task_id = response.getheader(client.TASK_ID_HEADER)
+
+    if response.status >= 200 and response.status < 300:
+      return None
+
+    return response.data
   except GenApiException as exc:
     raise tiledb_cloud_error.check_exc(exc) from None
 

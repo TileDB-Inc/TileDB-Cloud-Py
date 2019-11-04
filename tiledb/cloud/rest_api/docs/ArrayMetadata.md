@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **access_credentials_name** | **str** | the name of the access credentials to use. if unset, the default credentials will be used | [optional] 
 **type** | **str** | Array type (dense, key-value, sparse) | [optional] 
 **share_count** | **float** | number of unique namespaces this array is shared with | [optional] 
+**tiledb_uri** | **str** | uri for access through TileDB cloud | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

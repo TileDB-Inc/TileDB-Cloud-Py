@@ -42,7 +42,8 @@ class ArrayMetadata(object):
         'logo': 'str',
         'access_credentials_name': 'str',
         'type': 'str',
-        'share_count': 'float'
+        'share_count': 'float',
+        'tiledb_uri': 'str'
     }
 
     attribute_map = {
@@ -57,10 +58,11 @@ class ArrayMetadata(object):
         'logo': 'logo',
         'access_credentials_name': 'access_credentials_name',
         'type': 'type',
-        'share_count': 'share_count'
+        'share_count': 'share_count',
+        'tiledb_uri': 'tiledb_uri'
     }
 
-    def __init__(self, id=None, uri=None, namespace=None, size=None, last_accessed=None, description=None, name=None, allowed_actions=None, logo=None, access_credentials_name=None, type=None, share_count=None):  # noqa: E501
+    def __init__(self, id=None, uri=None, namespace=None, size=None, last_accessed=None, description=None, name=None, allowed_actions=None, logo=None, access_credentials_name=None, type=None, share_count=None, tiledb_uri=None):  # noqa: E501
         """ArrayMetadata - a model defined in OpenAPI"""  # noqa: E501
 
         self._id = None
@@ -75,6 +77,7 @@ class ArrayMetadata(object):
         self._access_credentials_name = None
         self._type = None
         self._share_count = None
+        self._tiledb_uri = None
         self.discriminator = None
 
         if id is not None:
@@ -101,6 +104,8 @@ class ArrayMetadata(object):
             self.type = type
         if share_count is not None:
             self.share_count = share_count
+        if tiledb_uri is not None:
+            self.tiledb_uri = tiledb_uri
 
     @property
     def id(self):
@@ -377,6 +382,29 @@ class ArrayMetadata(object):
         """
 
         self._share_count = share_count
+
+    @property
+    def tiledb_uri(self):
+        """Gets the tiledb_uri of this ArrayMetadata.  # noqa: E501
+
+        uri for access through TileDB cloud  # noqa: E501
+
+        :return: The tiledb_uri of this ArrayMetadata.  # noqa: E501
+        :rtype: str
+        """
+        return self._tiledb_uri
+
+    @tiledb_uri.setter
+    def tiledb_uri(self, tiledb_uri):
+        """Sets the tiledb_uri of this ArrayMetadata.
+
+        uri for access through TileDB cloud  # noqa: E501
+
+        :param tiledb_uri: The tiledb_uri of this ArrayMetadata.  # noqa: E501
+        :type: str
+        """
+
+        self._tiledb_uri = tiledb_uri
 
     def to_dict(self):
         """Returns the model properties as a dict"""
