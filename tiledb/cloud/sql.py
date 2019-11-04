@@ -68,24 +68,30 @@ def exec_and_fetch(query, output_uri, output_schema=None, namespace=None, task_n
 
     namespace = config.user.username
 
-    tiledb_output_uri = output_uri
+  tiledb_output_uri = output_uri
 
-    # If the user passes an output schema create the output array
-    if output_schema is not None and output_uri is not None:
-      tiledb_output_uri = "tiledb://{}/{}".format(namespace, output_uri)
-      # Create the (empty) output array in the service
-      tiledb.Array.create(tiledb_output_uri, output_schema)
+  # If the user passes an output schema create the output array
+  if output_schema is not None and output_uri is not None:
+    tiledb_output_uri = "tiledb://{}/{}".format(namespace, output_uri)
+    # Create the (empty) output array in the service
+    tiledb.Array.create(tiledb_output_uri, output_schema)
 
-      # If the user wishes to set a specific array name for the newly registered output array let's update the details
-      if output_array_name is not None:
-        array_api = client.get_array_api()
-        array_api.update_array_metadata(namespace=namespace, output_uri=output_uri, array_metadata=rest_api.models.ArrayMetadataUpdate(name=output_array_name))
+    # If the user wishes to set a specific array name for the newly registered output array let's update the details
+    if output_array_name is not None:
+      array_api = client.get_array_api()
+      array_api.update_array_metadata(namespace=namespace, output_uri=output_uri, array_metadata=rest_api.models.ArrayMetadataUpdate(name=output_array_name))
 
   # Execute the sql query
   try:
     exec(query=query, output_uri=tiledb_output_uri, namespace=namespace, task_name=task_name)
 
-    return tiledb.Array(tiledb_output_uri, ctx=client.Ctx())
+    # Fetch output schema to check if its sparse or dense
+    schema = tiledb.ArraySchema.load(tiledb_output_uri, ctx=client.Ctx())
+
+    if schema.sparse:
+      return tiledb.SparseArray(tiledb_output_uri, ctx=client.Ctx())
+
+    return tiledb.DenseArray(tiledb_output_uri, ctx=client.Ctx())
 
   except GenApiException as exc:
     raise tiledb_cloud_error.check_exc(exc) from None
