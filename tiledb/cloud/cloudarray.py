@@ -2,6 +2,7 @@ import urllib
 from . import rest_api
 from . import config
 from . import client
+from . import tasks
 from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
 from .rest_api import rest
@@ -200,6 +201,8 @@ class CloudArray(object):
       # _preload_content must be set to false to avoid trying to decode binary data
       response = api_instance.submit_udf(namespace=namespace, array=array_name, udf=rest_api.models.UDF(type=rest_api.models.UDFType.PYTHON, _exec=pickledUDF, subarray=ranges, version="{}.{}.{}".format(sys.version_info.major, sys.version_info.minor, sys.version_info.micro)), _preload_content=False)
       response = rest.RESTResponse(response)
+
+      tasks.last_task_id = response.getheader(client.TASK_ID_HEADER)
 
       res = response.data
     except GenApiException as exc:
