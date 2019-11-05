@@ -102,19 +102,46 @@ def login(token="", username="", password="", host=None, verify_ssl=True, no_ses
     config.logged_in = True
 
 
-def list_arrays():
+def list_arrays(include_public=False, namespace=None, permissions=None):
     """
     List arrays in a user account
 
-    :return: list of all array metadata you have access to
+    :param bool include_public: include publicly shared arrays or not, defaults to false
+    :param str namespace: list arrays in single namespace
+    :param list permissions: filter arrays for given permissions
+    :return: list of all array metadata you have access to that meet the filter applied
     """
+
     api_instance = get_array_api()
 
+    public_share = None
+    if not include_public:
+        public_share = "exclude"
+
+    if permissions is not None and not isinstance(permissions, list):
+        permissions = [permissions]
+
     try:
-        return api_instance.get_all_array_metadata()
+        final_arrays = []
+        res = api_instance.get_all_array_metadata(public_share=public_share)
+
+        # Loop through results and filter as appropriate
+        for array in res:
+            if namespace is not None and array.namespace != namespace:
+                continue
+
+            if permissions is not None and len(permissions) > 0:
+                permission_found = any(filter(lambda p: p in array.allowed_actions, permissions))
+
+                if not permission_found:
+                    continue
+
+            final_arrays.append(array)
+
+        return final_arrays
+
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
-
 
 def user_profile():
     """
