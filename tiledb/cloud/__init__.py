@@ -12,7 +12,9 @@ from .client import (
 
 from .tasks import (
     task,
-    task
+    tasks,
+    last_sql_task,
+    last_udf_task
 )
 
 from . import sql
