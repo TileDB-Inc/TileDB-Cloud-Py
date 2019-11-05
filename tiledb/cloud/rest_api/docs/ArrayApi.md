@@ -434,7 +434,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_all_array_metadata**
-> list[ArrayMetadata] get_all_array_metadata()
+> list[ArrayMetadata] get_all_array_metadata(public_share=public_share)
 
 
 
@@ -463,9 +463,10 @@ configuration.password = 'YOUR_PASSWORD'
 configuration.host = "http://localhost/v1"
 # Create an instance of the API class
 api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+public_share = 'public_share_example' # str | Public share values can be one of exclude, only (optional)
 
 try:
-    api_response = api_instance.get_all_array_metadata()
+    api_response = api_instance.get_all_array_metadata(public_share=public_share)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->get_all_array_metadata: %s\n" % e)
@@ -492,16 +493,20 @@ configuration.password = 'YOUR_PASSWORD'
 configuration.host = "http://localhost/v1"
 # Create an instance of the API class
 api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+public_share = 'public_share_example' # str | Public share values can be one of exclude, only (optional)
 
 try:
-    api_response = api_instance.get_all_array_metadata()
+    api_response = api_instance.get_all_array_metadata(public_share=public_share)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->get_all_array_metadata: %s\n" % e)
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **public_share** | **str**| Public share values can be one of exclude, only | [optional] 
 
 ### Return type
 

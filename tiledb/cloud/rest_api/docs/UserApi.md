@@ -14,6 +14,7 @@ Method | HTTP request | Description
 [**delete_user**](UserApi.md#delete_user) | **DELETE** /users/{username} | 
 [**delete_user_from_organization**](UserApi.md#delete_user_from_organization) | **DELETE** /organizations/{organization}/{username} | 
 [**get_organization_user**](UserApi.md#get_organization_user) | **GET** /organizations/{organization}/{username} | 
+[**get_session**](UserApi.md#get_session) | **GET** /session | 
 [**get_user**](UserApi.md#get_user) | **GET** /user | 
 [**get_user_with_username**](UserApi.md#get_user_with_username) | **GET** /users/{username} | 
 [**request_token**](UserApi.md#request_token) | **POST** /token | 
@@ -981,6 +982,102 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **200** | user from organization |  -  |
 **404** | User is not in organization |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **get_session**
+> Token get_session(remember_me=remember_me)
+
+
+
+Get session token for user
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.UserApi(rest_api.ApiClient(configuration))
+remember_me = 'remember_me_example' # str | flag to create a token with expiration of 30 days, default is false (optional)
+
+try:
+    api_response = api_instance.get_session(remember_me=remember_me)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling UserApi->get_session: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.UserApi(rest_api.ApiClient(configuration))
+remember_me = 'remember_me_example' # str | flag to create a token with expiration of 30 days, default is false (optional)
+
+try:
+    api_response = api_instance.get_session(remember_me=remember_me)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling UserApi->get_session: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **remember_me** | **str**| flag to create a token with expiration of 30 days, default is false | [optional] 
+
+### Return type
+
+[**Token**](Token.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Session token |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
