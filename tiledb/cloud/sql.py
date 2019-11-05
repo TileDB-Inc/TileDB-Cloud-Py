@@ -8,6 +8,7 @@ from .rest_api import ApiException as GenApiException
 from .rest_api import rest
 
 import tiledb
+import time
 
 def exec(query, output_uri=None, output_schema=None, namespace=None, task_name=None, output_array_name=None):
   """
@@ -37,6 +38,23 @@ def exec(query, output_uri=None, output_schema=None, namespace=None, task_name=N
   if output_schema is not None and output_uri is not None:
     # Create the (empty) output array in the service
     tiledb.Array.create(output_uri, output_schema)
+
+    timeout = time.time() + 10  # 10 second timeout
+    arrays_api = client.get_array_api()
+    (array_namespace, array_name) = cloudarray.split_uri(output_uri)
+    while True:
+      if time.time() > timeout:
+        break
+
+      try:
+        res = arrays_api.get_array_metadata(namespace=array_namespace, array=array_name)
+        if res is not None:
+          break
+      except:
+        pass
+
+      # Sleep for 250ms to avoid dosing the server
+      time.sleep(0.25)
 
     # If the user wishes to set a specific array name for the newly registered output array let's update the details
     if output_array_name is not None:
