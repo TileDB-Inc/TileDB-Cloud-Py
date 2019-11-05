@@ -34,7 +34,7 @@ def exec(query, output_uri=None, namespace=None, task_name=None):
 
   try:
 
-    response = api_instance.run_sql(namespace=namespace, sql=rest_api.models.SQLParameters(name=task_name, query=query),  _preload_content=False)
+    response = api_instance.run_sql(namespace=namespace, sql=rest_api.models.SQLParameters(name=task_name, query=query, output_uri=output_uri),  _preload_content=False)
     response = rest.RESTResponse(response)
 
     tasks.last_task_id = response.getheader(client.TASK_ID_HEADER)
