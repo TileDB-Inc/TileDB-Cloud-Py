@@ -66,7 +66,7 @@ def exec(query, output_uri=None, output_schema=None, namespace=None, task_name=N
     response = api_instance.run_sql(namespace=namespace, sql=rest_api.models.SQLParameters(name=task_name, query=query, output_uri=output_uri),  _preload_content=False)
     response = rest.RESTResponse(response)
 
-    tasks.last_task_id = response.getheader(client.TASK_ID_HEADER)
+    tasks.last_sql_task_id = response.getheader(client.TASK_ID_HEADER)
 
     if response.status >= 200 and response.status < 300:
       return None

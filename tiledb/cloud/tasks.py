@@ -5,19 +5,18 @@ from .rest_api import ApiException as GenApiException
 
 import datetime
 
-last_task_id = None
+last_sql_task_id = None
+last_udf_task_id = None
 
-def task(id=None):
+def task(id):
   """
   Fetch a single array task
   :param str id: id to lookup, if unset will use the id of the last array task run in the current python session
   :return task : object with task details
   """
 
-  if id is None and last_task_id is None:
-    raise Exception("id parameter can not be None and there is no last run task")
-  elif id is None and last_task_id is not None:
-    id = last_task_id
+  if id is None:
+    raise Exception("id parameter can not be empty")
 
   api_instance = client.get_tasks_api()
 
@@ -61,3 +60,27 @@ def tasks(namespace=None, array=None, start=None, end=datetime.datetime.utcnow()
 
   except GenApiException as exc:
     raise tiledb_cloud_error.check_exc(exc) from None
+
+
+def last_sql_task():
+  """
+  Fetch the last run sql array task
+  :return task : object with task details
+  """
+
+  if tasks.last_sql_task_id is None:
+    raise Exception("There is no last run sql task in current python session")
+
+  return task(id=tasks.last_sql_task_id)
+
+
+def last_udf_task():
+  """
+  Fetch the last run udf task
+  :return task : object with task details
+  """
+
+  if tasks.last_udf_task_id is None:
+    raise Exception("There is no last run udf task in current python session")
+
+  return task(id=tasks.last_udf_task_id)
