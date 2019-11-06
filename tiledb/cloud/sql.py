@@ -10,6 +10,8 @@ from .rest_api import rest
 import tiledb
 import time
 
+last_sql_task_id = None
+
 def exec(query, output_uri=None, output_schema=None, namespace=None, task_name=None, output_array_name=None):
   """
   Run a sql query
@@ -66,14 +68,15 @@ def exec(query, output_uri=None, output_schema=None, namespace=None, task_name=N
     response = api_instance.run_sql(namespace=namespace, sql=rest_api.models.SQLParameters(name=task_name, query=query, output_uri=output_uri),  _preload_content=False)
     response = rest.RESTResponse(response)
 
-    tasks.last_sql_task_id = response.getheader(client.TASK_ID_HEADER)
+    global last_sql_task_id
+    last_sql_task_id = response.getheader(client.TASK_ID_HEADER)
 
     if response.status >= 200 and response.status < 300:
       return None
 
     return response.data
   except GenApiException as exc:
-    raise tiledb_cloud_error.check_exc(exc) from None
+    raise tiledb_cloud_error.check_sql_exc(exc) from None
 
 
 def exec_and_fetch(query, output_uri, output_schema=None, namespace=None, task_name=None, output_array_name=None):
