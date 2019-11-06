@@ -39,7 +39,7 @@ def exec(query, output_uri=None, output_schema=None, namespace=None, task_name=N
   # If the user passes an output schema create the output array
   if output_schema is not None and output_uri is not None:
     # Create the (empty) output array in the service
-    tiledb.Array.create(output_uri, output_schema)
+    tiledb.Array.create(output_uri, output_schema, ctx=client.Ctx())
 
     timeout = time.time() + 10  # 10 second timeout
     arrays_api = client.get_array_api()
@@ -55,8 +55,8 @@ def exec(query, output_uri=None, output_schema=None, namespace=None, task_name=N
       except:
         pass
 
-      # Sleep for 250ms to avoid dosing the server
-      time.sleep(0.25)
+      # Sleep for 500ms to avoid dosing the server
+      time.sleep(0.5)
 
     # If the user wishes to set a specific array name for the newly registered output array let's update the details
     if output_array_name is not None:
