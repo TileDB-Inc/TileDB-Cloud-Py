@@ -1,4 +1,7 @@
 trigger:
+  tags:
+    include:
+      - v*
   branches:
     include:
     - master
@@ -7,13 +10,13 @@ strategy:
   matrix:
     mac_35:
       imageName: 'macOS-10.13'
-      python.version: '3.x'
+      python.version: '3.5'
     mac_36:
       imageName: 'macOS-10.13'
-      python.version: '3.x'
+      python.version: '3.6'
     mac_37:
       imageName: 'macOS-10.13'
-      python.version: '3.x'
+      python.version: '3.7'
     linux_py35:
       imageName: 'ubuntu-16.04'
       python.version: '3.5'
@@ -40,9 +43,14 @@ steps:
 - script: black --check .
   displayName: 'Test Formating'
   condition: eq(variables['python.version'], '3.7')
- 
+
 - script: python -m pip install --upgrade .
   displayName: 'Test Install'
+  condition: ne(variables['Agent.OS'], 'Windows_NT')
+
+  # Build the python distribution from source
+- script: python setup.py bdist_wheel
+  displayName: 'Build wheel'
   condition: ne(variables['Agent.OS'], 'Windows_NT')
 
 - bash: |
@@ -58,3 +66,20 @@ steps:
       done;
   condition: failed() # only run this job if the build step failed
   displayName: "Print log files (failed build only)"
+
+- script: 'pip install twine'
+  displayName: 'Install twine'
+  condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
+
+- task: TwineAuthenticate@1
+  displayName: 'Twine Authenticate'
+  inputs:
+    artifactFeed: 'TileDB-Cloud-Py-pypi'
+    # In this case, name of the service connection is "pypi-upload".
+    pythonUploadServiceConnection: pypi-upload
+  condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
+ 
+# Use command line script to 'twine upload', use -r to pass the repository name and --config-file to pass the environment variable set by the authenticate task.
+- script: |
+   python -m twine upload -r "pypi-upload" --config-file $(PYPIRC_PATH) dist/*.whl
+  condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
