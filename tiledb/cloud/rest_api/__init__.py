@@ -34,6 +34,7 @@ from tiledb.cloud.rest_api.exceptions import ApiTypeError
 from tiledb.cloud.rest_api.exceptions import ApiValueError
 from tiledb.cloud.rest_api.exceptions import ApiKeyError
 from tiledb.cloud.rest_api.exceptions import ApiException
+
 # import models into sdk package
 from tiledb.cloud.rest_api.models.aws_access_credentials import AWSAccessCredentials
 from tiledb.cloud.rest_api.models.activity_event_type import ActivityEventType
@@ -85,8 +86,12 @@ from tiledb.cloud.rest_api.models.sql_parameters import SQLParameters
 from tiledb.cloud.rest_api.models.sso_provider import SSOProvider
 from tiledb.cloud.rest_api.models.subarray import Subarray
 from tiledb.cloud.rest_api.models.subarray_partitioner import SubarrayPartitioner
-from tiledb.cloud.rest_api.models.subarray_partitioner_current import SubarrayPartitionerCurrent
-from tiledb.cloud.rest_api.models.subarray_partitioner_state import SubarrayPartitionerState
+from tiledb.cloud.rest_api.models.subarray_partitioner_current import (
+    SubarrayPartitionerCurrent,
+)
+from tiledb.cloud.rest_api.models.subarray_partitioner_state import (
+    SubarrayPartitionerState,
+)
 from tiledb.cloud.rest_api.models.subarray_ranges import SubarrayRanges
 from tiledb.cloud.rest_api.models.token import Token
 from tiledb.cloud.rest_api.models.token_request import TokenRequest
@@ -96,4 +101,3 @@ from tiledb.cloud.rest_api.models.udf_subarray_range import UDFSubarrayRange
 from tiledb.cloud.rest_api.models.udf_type import UDFType
 from tiledb.cloud.rest_api.models.user import User
 from tiledb.cloud.rest_api.models.writer import Writer
-

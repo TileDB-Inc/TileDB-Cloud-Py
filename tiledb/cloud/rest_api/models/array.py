@@ -30,17 +30,9 @@ class Array(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'timestamp': 'float',
-        'query_type': 'Querytype',
-        'uri': 'str'
-    }
+    openapi_types = {"timestamp": "float", "query_type": "Querytype", "uri": "str"}
 
-    attribute_map = {
-        'timestamp': 'timestamp',
-        'query_type': 'queryType',
-        'uri': 'uri'
-    }
+    attribute_map = {"timestamp": "timestamp", "query_type": "queryType", "uri": "uri"}
 
     def __init__(self, timestamp=None, query_type=None, uri=None):  # noqa: E501
         """Array - a model defined in OpenAPI"""  # noqa: E501
@@ -75,7 +67,9 @@ class Array(object):
         :type: float
         """
         if timestamp is None:
-            raise ValueError("Invalid value for `timestamp`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `timestamp`, must not be `None`"
+            )  # noqa: E501
 
         self._timestamp = timestamp
 
@@ -98,7 +92,9 @@ class Array(object):
         :type: Querytype
         """
         if query_type is None:
-            raise ValueError("Invalid value for `query_type`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `query_type`, must not be `None`"
+            )  # noqa: E501
 
         self._query_type = query_type
 
@@ -123,7 +119,9 @@ class Array(object):
         :type: str
         """
         if uri is None:
-            raise ValueError("Invalid value for `uri`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `uri`, must not be `None`"
+            )  # noqa: E501
 
         self._uri = uri
 
@@ -134,18 +132,20 @@ class Array(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

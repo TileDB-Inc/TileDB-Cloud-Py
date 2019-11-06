@@ -16,7 +16,14 @@ VERSION = "0.3.0"
 # prerequisite: setuptools
 # http://pypi.python.org/pypi/setuptools
 
-REQUIRES = ["tiledb", "urllib3>=1.15", "six>=1.10", "certifi", "python-dateutil", "cloudpickle"]
+REQUIRES = [
+    "tiledb",
+    "urllib3>=1.15",
+    "six>=1.10",
+    "certifi",
+    "python-dateutil",
+    "cloudpickle",
+]
 
 # NOTE: we cannot use an __init__.py file in the tiledb/ directory, because it is supplied
 #       by core tiledb-py. Therefore, `find_packages` at the root directory does not find
@@ -27,7 +34,9 @@ REQUIRES = ["tiledb", "urllib3>=1.15", "six>=1.10", "certifi", "python-dateutil"
 #       '[].nspkg.pth' pointer file, which breaks imports of tiledb.cloud.
 # 3) https://stackoverflow.com/a/50301070
 
-packages = ['tiledb.cloud'] + ['tiledb.cloud.'+x for x in find_packages("./tiledb/cloud")]
+packages = ["tiledb.cloud"] + [
+    "tiledb.cloud." + x for x in find_packages("./tiledb/cloud")
+]
 
 setup(
     name=NAME,
@@ -39,8 +48,8 @@ setup(
     install_requires=REQUIRES,
     packages=packages,
     include_package_data=True,
-    zip_safe=False, # Force folder install; egg doesn't work for namespace
+    zip_safe=False,  # Force folder install; egg doesn't work for namespace
     long_description="""\
     TileDB Cloud Platform Python API # noqa: E501
-    """
+    """,
 )

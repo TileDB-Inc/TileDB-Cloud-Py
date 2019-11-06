@@ -15,7 +15,9 @@ from __future__ import absolute_import
 import unittest
 
 import rest_api
-from tiledb.cloud.rest_api.models.array_metadata_update import ArrayMetadataUpdate  # noqa: E501
+from tiledb.cloud.rest_api.models.array_metadata_update import (
+    ArrayMetadataUpdate,
+)  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
@@ -35,5 +37,5 @@ class TestArrayMetadataUpdate(unittest.TestCase):
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -23,7 +23,9 @@ class TestOrganizationApi(unittest.TestCase):
     """OrganizationApi unit test stubs"""
 
     def setUp(self):
-        self.api = tiledb.cloud.rest_api.api.organization_api.OrganizationApi()  # noqa: E501
+        self.api = (
+            tiledb.cloud.rest_api.api.organization_api.OrganizationApi()
+        )  # noqa: E501
 
     def tearDown(self):
         pass
@@ -113,5 +115,5 @@ class TestOrganizationApi(unittest.TestCase):
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

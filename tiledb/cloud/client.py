@@ -9,22 +9,29 @@ import urllib
 
 import tiledb
 
-TASK_ID_HEADER = 'X-TILEDB-CLOUD-TASK-ID'
+TASK_ID_HEADER = "X-TILEDB-CLOUD-TASK-ID"
+
 
 def Config():
-  """
+    """
   Builds a tiledb config setting the login parameters that exist for the cloud service
   :return: tiledb.Config
   """
-  host_parsed = urllib.parse.urlparse(config.config.host)
-  cfg = tiledb.Config({"rest.server_address": urllib.parse.urlunparse((host_parsed.scheme, host_parsed.netloc, "", "", "", ""))})
-  if config.config.username != "" and config.config.password != "":
-    cfg["rest.username"] = config.config.username
-    cfg["rest.password"] = config.config.password
-  else:
-    cfg["rest.token"] = config.config.api_key["X-TILEDB-REST-API-KEY"]
+    host_parsed = urllib.parse.urlparse(config.config.host)
+    cfg = tiledb.Config(
+        {
+            "rest.server_address": urllib.parse.urlunparse(
+                (host_parsed.scheme, host_parsed.netloc, "", "", "", "")
+            )
+        }
+    )
+    if config.config.username != "" and config.config.password != "":
+        cfg["rest.username"] = config.config.username
+        cfg["rest.password"] = config.config.password
+    else:
+        cfg["rest.token"] = config.config.api_key["X-TILEDB-REST-API-KEY"]
 
-  return cfg
+    return cfg
 
 
 def Ctx():
@@ -39,6 +46,7 @@ def get_array_api():
     if not isinstance(config.logged_in, bool):
         raise Exception(config.logged_in)
     return rest_api.ArrayApi(rest_api.ApiClient(config.config))
+
 
 def get_user_api():
     if not isinstance(config.logged_in, bool):
@@ -70,7 +78,9 @@ def get_sql_api():
     return rest_api.SqlApi(rest_api.ApiClient(config.config))
 
 
-def login(token="", username="", password="", host=None, verify_ssl=True, no_session=False):
+def login(
+    token="", username="", password="", host=None, verify_ssl=True, no_session=False
+):
     """
     Login to cloud service
 
@@ -90,14 +100,26 @@ def login(token="", username="", password="", host=None, verify_ssl=True, no_ses
 
     # Is user logs in with username/password we need to create a session
     if token == "" and not no_session:
-        config.setup_configuration(api_key={"X-TILEDB-REST-API-KEY": token}, username=username, password=password, host=host, verify_ssl=verify_ssl)
+        config.setup_configuration(
+            api_key={"X-TILEDB-REST-API-KEY": token},
+            username=username,
+            password=password,
+            host=host,
+            verify_ssl=verify_ssl,
+        )
         user_api = get_user_api()
         session = user_api.get_session(remember_me=True)
         token = session.token
         username = ""
         password = ""
 
-    config.setup_configuration(api_key={"X-TILEDB-REST-API-KEY": token}, username=username, password=password, host=host, verify_ssl=verify_ssl)
+    config.setup_configuration(
+        api_key={"X-TILEDB-REST-API-KEY": token},
+        username=username,
+        password=password,
+        host=host,
+        verify_ssl=verify_ssl,
+    )
     config.save_configuration(config.default_config_file)
     config.logged_in = True
 
@@ -131,7 +153,9 @@ def list_arrays(include_public=False, namespace=None, permissions=None):
                 continue
 
             if permissions is not None and len(permissions) > 0:
-                permission_found = any(filter(lambda p: p in array.allowed_actions, permissions))
+                permission_found = any(
+                    filter(lambda p: p in array.allowed_actions, permissions)
+                )
 
                 if not permission_found:
                     continue
@@ -142,6 +166,7 @@ def list_arrays(include_public=False, namespace=None, permissions=None):
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
+
 
 def user_profile():
     """

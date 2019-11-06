@@ -31,50 +31,71 @@ class ArrayTask(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'id': 'str',
-        'name': 'str',
-        'description': 'str',
-        'array_metadata': 'ArrayMetadata',
-        'subarray': 'DomainArray',
-        'memory': 'int',
-        'cpu': 'int',
-        'namespace': 'str',
-        'status': 'ArrayTaskStatus',
-        'start_time': 'datetime',
-        'finish_time': 'datetime',
-        'cost': 'int',
-        'query_type': 'Querytype',
-        'udf_code': 'str',
-        'udf_language': 'str',
-        'sql_query': 'str',
-        'type': 'ArrayTaskType',
-        'activity': 'list[ArrayActivityLog]',
-        'logs': 'str'
+        "id": "str",
+        "name": "str",
+        "description": "str",
+        "array_metadata": "ArrayMetadata",
+        "subarray": "DomainArray",
+        "memory": "int",
+        "cpu": "int",
+        "namespace": "str",
+        "status": "ArrayTaskStatus",
+        "start_time": "datetime",
+        "finish_time": "datetime",
+        "cost": "int",
+        "query_type": "Querytype",
+        "udf_code": "str",
+        "udf_language": "str",
+        "sql_query": "str",
+        "type": "ArrayTaskType",
+        "activity": "list[ArrayActivityLog]",
+        "logs": "str",
     }
 
     attribute_map = {
-        'id': 'id',
-        'name': 'name',
-        'description': 'description',
-        'array_metadata': 'array_metadata',
-        'subarray': 'subarray',
-        'memory': 'memory',
-        'cpu': 'cpu',
-        'namespace': 'namespace',
-        'status': 'status',
-        'start_time': 'start_time',
-        'finish_time': 'finish_time',
-        'cost': 'cost',
-        'query_type': 'query_type',
-        'udf_code': 'udf_code',
-        'udf_language': 'udf_language',
-        'sql_query': 'sql_query',
-        'type': 'type',
-        'activity': 'activity',
-        'logs': 'logs'
+        "id": "id",
+        "name": "name",
+        "description": "description",
+        "array_metadata": "array_metadata",
+        "subarray": "subarray",
+        "memory": "memory",
+        "cpu": "cpu",
+        "namespace": "namespace",
+        "status": "status",
+        "start_time": "start_time",
+        "finish_time": "finish_time",
+        "cost": "cost",
+        "query_type": "query_type",
+        "udf_code": "udf_code",
+        "udf_language": "udf_language",
+        "sql_query": "sql_query",
+        "type": "type",
+        "activity": "activity",
+        "logs": "logs",
     }
 
-    def __init__(self, id=None, name=None, description=None, array_metadata=None, subarray=None, memory=None, cpu=None, namespace=None, status=None, start_time=None, finish_time=None, cost=None, query_type=None, udf_code=None, udf_language=None, sql_query=None, type=None, activity=None, logs=None):  # noqa: E501
+    def __init__(
+        self,
+        id=None,
+        name=None,
+        description=None,
+        array_metadata=None,
+        subarray=None,
+        memory=None,
+        cpu=None,
+        namespace=None,
+        status=None,
+        start_time=None,
+        finish_time=None,
+        cost=None,
+        query_type=None,
+        udf_code=None,
+        udf_language=None,
+        sql_query=None,
+        type=None,
+        activity=None,
+        logs=None,
+    ):  # noqa: E501
         """ArrayTask - a model defined in OpenAPI"""  # noqa: E501
 
         self._id = None
@@ -571,18 +592,20 @@ class ArrayTask(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

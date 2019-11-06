@@ -64,8 +64,12 @@ from tiledb.cloud.rest_api.models.sql_parameters import SQLParameters
 from tiledb.cloud.rest_api.models.sso_provider import SSOProvider
 from tiledb.cloud.rest_api.models.subarray import Subarray
 from tiledb.cloud.rest_api.models.subarray_partitioner import SubarrayPartitioner
-from tiledb.cloud.rest_api.models.subarray_partitioner_current import SubarrayPartitionerCurrent
-from tiledb.cloud.rest_api.models.subarray_partitioner_state import SubarrayPartitionerState
+from tiledb.cloud.rest_api.models.subarray_partitioner_current import (
+    SubarrayPartitionerCurrent,
+)
+from tiledb.cloud.rest_api.models.subarray_partitioner_state import (
+    SubarrayPartitionerState,
+)
 from tiledb.cloud.rest_api.models.subarray_ranges import SubarrayRanges
 from tiledb.cloud.rest_api.models.token import Token
 from tiledb.cloud.rest_api.models.token_request import TokenRequest

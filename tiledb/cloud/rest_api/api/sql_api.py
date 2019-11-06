@@ -18,10 +18,7 @@ import re  # noqa: F401
 import six
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import (
-    ApiTypeError,
-    ApiValueError
-)
+from tiledb.cloud.rest_api.exceptions import ApiTypeError, ApiValueError
 
 
 class SqlApi(object):
@@ -59,7 +56,7 @@ class SqlApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.run_sql_with_http_info(namespace, sql, **kwargs)  # noqa: E501
 
     def run_sql_with_http_info(self, namespace, sql, **kwargs):  # noqa: E501
@@ -90,34 +87,35 @@ class SqlApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'sql']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = ["namespace", "sql"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method run_sql" % key
+                    "Got an unexpected keyword argument '%s'" " to method run_sql" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `run_sql`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `run_sql`"
+            )  # noqa: E501
         # verify the required parameter 'sql' is set
-        if ('sql' not in local_var_params or
-                local_var_params['sql'] is None):
-            raise ApiValueError("Missing the required parameter `sql` when calling `run_sql`")  # noqa: E501
+        if "sql" not in local_var_params or local_var_params["sql"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `sql` when calling `run_sql`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
 
         query_params = []
 
@@ -127,21 +125,26 @@ class SqlApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'sql' in local_var_params:
-            body_params = local_var_params['sql']
+        if "sql" in local_var_params:
+            body_params = local_var_params["sql"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/sql/{namespace}', 'POST',
+            "/sql/{namespace}",
+            "POST",
             path_params,
             query_params,
             header_params,
@@ -150,8 +153,11 @@ class SqlApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )

@@ -31,32 +31,44 @@ class FilterData(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'int8': 'int',
-        'uint8': 'int',
-        'int16': 'int',
-        'uint16': 'int',
-        'int32': 'int',
-        'uint32': 'int',
-        'int64': 'int',
-        'uint64': 'int',
-        'float32': 'int',
-        'float64': 'int'
+        "int8": "int",
+        "uint8": "int",
+        "int16": "int",
+        "uint16": "int",
+        "int32": "int",
+        "uint32": "int",
+        "int64": "int",
+        "uint64": "int",
+        "float32": "int",
+        "float64": "int",
     }
 
     attribute_map = {
-        'int8': 'int8',
-        'uint8': 'uint8',
-        'int16': 'int16',
-        'uint16': 'uint16',
-        'int32': 'int32',
-        'uint32': 'uint32',
-        'int64': 'int64',
-        'uint64': 'uint64',
-        'float32': 'float32',
-        'float64': 'float64'
+        "int8": "int8",
+        "uint8": "uint8",
+        "int16": "int16",
+        "uint16": "uint16",
+        "int32": "int32",
+        "uint32": "uint32",
+        "int64": "int64",
+        "uint64": "uint64",
+        "float32": "float32",
+        "float64": "float64",
     }
 
-    def __init__(self, int8=None, uint8=None, int16=None, uint16=None, int32=None, uint32=None, int64=None, uint64=None, float32=None, float64=None):  # noqa: E501
+    def __init__(
+        self,
+        int8=None,
+        uint8=None,
+        int16=None,
+        uint16=None,
+        int32=None,
+        uint32=None,
+        int64=None,
+        uint64=None,
+        float32=None,
+        float64=None,
+    ):  # noqa: E501
         """FilterData - a model defined in OpenAPI"""  # noqa: E501
 
         self._int8 = None
@@ -309,18 +321,20 @@ class FilterData(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

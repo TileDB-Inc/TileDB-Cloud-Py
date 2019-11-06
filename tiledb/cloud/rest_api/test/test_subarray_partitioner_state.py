@@ -15,7 +15,9 @@ from __future__ import absolute_import
 import unittest
 
 import rest_api
-from tiledb.cloud.rest_api.models.subarray_partitioner_state import SubarrayPartitionerState  # noqa: E501
+from tiledb.cloud.rest_api.models.subarray_partitioner_state import (
+    SubarrayPartitionerState,
+)  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
@@ -35,5 +37,5 @@ class TestSubarrayPartitionerState(unittest.TestCase):
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

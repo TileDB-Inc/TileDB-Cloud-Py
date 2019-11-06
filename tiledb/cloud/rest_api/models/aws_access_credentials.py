@@ -31,28 +31,38 @@ class AWSAccessCredentials(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'secret_access_key': 'str',
-        'access_key_id': 'str',
-        'service_role_arn': 'str',
-        'name': 'str',
-        'default': 'bool',
-        'buckets': 'list[str]',
-        'created_at': 'datetime',
-        'updated_at': 'datetime'
+        "secret_access_key": "str",
+        "access_key_id": "str",
+        "service_role_arn": "str",
+        "name": "str",
+        "default": "bool",
+        "buckets": "list[str]",
+        "created_at": "datetime",
+        "updated_at": "datetime",
     }
 
     attribute_map = {
-        'secret_access_key': 'secret_access_key',
-        'access_key_id': 'access_key_id',
-        'service_role_arn': 'service_role_arn',
-        'name': 'name',
-        'default': 'default',
-        'buckets': 'buckets',
-        'created_at': 'created_at',
-        'updated_at': 'updated_at'
+        "secret_access_key": "secret_access_key",
+        "access_key_id": "access_key_id",
+        "service_role_arn": "service_role_arn",
+        "name": "name",
+        "default": "default",
+        "buckets": "buckets",
+        "created_at": "created_at",
+        "updated_at": "updated_at",
     }
 
-    def __init__(self, secret_access_key=None, access_key_id=None, service_role_arn=None, name=None, default=None, buckets=None, created_at=None, updated_at=None):  # noqa: E501
+    def __init__(
+        self,
+        secret_access_key=None,
+        access_key_id=None,
+        service_role_arn=None,
+        name=None,
+        default=None,
+        buckets=None,
+        created_at=None,
+        updated_at=None,
+    ):  # noqa: E501
         """AWSAccessCredentials - a model defined in OpenAPI"""  # noqa: E501
 
         self._secret_access_key = None
@@ -273,18 +283,20 @@ class AWSAccessCredentials(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

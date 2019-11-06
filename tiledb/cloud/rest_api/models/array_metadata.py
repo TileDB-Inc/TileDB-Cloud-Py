@@ -31,40 +31,56 @@ class ArrayMetadata(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'id': 'str',
-        'uri': 'str',
-        'namespace': 'str',
-        'size': 'float',
-        'last_accessed': 'datetime',
-        'description': 'str',
-        'name': 'str',
-        'allowed_actions': 'list[ArrayActions]',
-        'logo': 'str',
-        'access_credentials_name': 'str',
-        'type': 'str',
-        'share_count': 'float',
-        'public_share': 'bool',
-        'tiledb_uri': 'str'
+        "id": "str",
+        "uri": "str",
+        "namespace": "str",
+        "size": "float",
+        "last_accessed": "datetime",
+        "description": "str",
+        "name": "str",
+        "allowed_actions": "list[ArrayActions]",
+        "logo": "str",
+        "access_credentials_name": "str",
+        "type": "str",
+        "share_count": "float",
+        "public_share": "bool",
+        "tiledb_uri": "str",
     }
 
     attribute_map = {
-        'id': 'id',
-        'uri': 'uri',
-        'namespace': 'namespace',
-        'size': 'size',
-        'last_accessed': 'last_accessed',
-        'description': 'description',
-        'name': 'name',
-        'allowed_actions': 'allowed_actions',
-        'logo': 'logo',
-        'access_credentials_name': 'access_credentials_name',
-        'type': 'type',
-        'share_count': 'share_count',
-        'public_share': 'public_share',
-        'tiledb_uri': 'tiledb_uri'
+        "id": "id",
+        "uri": "uri",
+        "namespace": "namespace",
+        "size": "size",
+        "last_accessed": "last_accessed",
+        "description": "description",
+        "name": "name",
+        "allowed_actions": "allowed_actions",
+        "logo": "logo",
+        "access_credentials_name": "access_credentials_name",
+        "type": "type",
+        "share_count": "share_count",
+        "public_share": "public_share",
+        "tiledb_uri": "tiledb_uri",
     }
 
-    def __init__(self, id=None, uri=None, namespace=None, size=None, last_accessed=None, description=None, name=None, allowed_actions=None, logo=None, access_credentials_name=None, type=None, share_count=None, public_share=None, tiledb_uri=None):  # noqa: E501
+    def __init__(
+        self,
+        id=None,
+        uri=None,
+        namespace=None,
+        size=None,
+        last_accessed=None,
+        description=None,
+        name=None,
+        allowed_actions=None,
+        logo=None,
+        access_credentials_name=None,
+        type=None,
+        share_count=None,
+        public_share=None,
+        tiledb_uri=None,
+    ):  # noqa: E501
         """ArrayMetadata - a model defined in OpenAPI"""  # noqa: E501
 
         self._id = None
@@ -441,18 +457,20 @@ class ArrayMetadata(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

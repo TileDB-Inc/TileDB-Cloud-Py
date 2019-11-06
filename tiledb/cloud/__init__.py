@@ -10,20 +10,15 @@ from .client import (
     user_profile,
 )
 
-from .array import(
+from .array import (
     info,
     register_array,
     deregister_array,
     list_shared_with,
     share_array,
-    unshare_array
+    unshare_array,
 )
 
-from .tasks import (
-    task,
-    tasks,
-    last_sql_task,
-    last_udf_task
-)
+from .tasks import task, tasks, last_sql_task, last_udf_task
 
 from . import sql
