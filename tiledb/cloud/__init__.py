@@ -10,6 +10,15 @@ from .client import (
     user_profile,
 )
 
+from .array import(
+    info,
+    register_array,
+    deregister_array,
+    list_shared_with,
+    share_array,
+    unshare_array
+)
+
 from .tasks import (
     task,
     tasks,

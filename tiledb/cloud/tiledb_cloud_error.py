@@ -13,6 +13,9 @@ def check_exc(exc):
   if not isinstance(exc, BaseException):
     raise Exception(internal_err_msg)
 
+  if exc.status == 404 and len(exc.body) == 0:
+    return TileDBClientError("Not found")
+
   try:
     body = json.loads(exc.body)
     new_exc = TileDBClientError("{} - Code: {}".format(body['message'], body['code']))
