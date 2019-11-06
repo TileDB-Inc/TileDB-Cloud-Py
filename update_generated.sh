@@ -77,3 +77,9 @@ cp -r ${OUTPUT_PATH}/.openapi-generator/ ${TARGET_PATH}/${PACKAGE_NAME}/
 
 echo
 echo "Output copied from '${OUTPUT_PATH}' to '${TARGET_PATH}/${PACKAGE_NAME}'"
+
+if ! [ -x "$(command -v black)" ]; then
+  echo 'Warning: black python linter/formater is not installed. You must install black and run black to format generated files' >&2
+else
+  black .
+fi
