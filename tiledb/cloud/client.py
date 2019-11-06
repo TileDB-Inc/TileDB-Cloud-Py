@@ -70,7 +70,7 @@ def get_sql_api():
     return rest_api.SqlApi(rest_api.ApiClient(config.config))
 
 
-def login(token="", username="", password="", host=None, verify_ssl=True):
+def login(token="", username="", password="", host=None, verify_ssl=True, no_session=False):
     """
     Login to cloud service
 
@@ -85,10 +85,19 @@ def login(token="", username="", password="", host=None, verify_ssl=True):
 
     if token == "" and username == "" and password == "":
         raise Exception("Username and Password OR token must be set")
-    if (username == "" and password == "") and token == "":
+    if (username == "" or password == "") and token == "":
         raise Exception("Username and Password are both required")
 
-    config.setup_configuration({"X-TILEDB-REST-API-KEY": token}, username, password, host, verify_ssl)
+    # Is user logs in with username/password we need to create a session
+    if token == "" and not no_session:
+        config.setup_configuration(api_key={"X-TILEDB-REST-API-KEY": token}, username=username, password=password, host=host, verify_ssl=verify_ssl)
+        user_api = get_user_api()
+        session = user_api.get_session(remember_me=True)
+        token = session.token
+        username = ""
+        password = ""
+
+    config.setup_configuration(api_key={"X-TILEDB-REST-API-KEY": token}, username=username, password=password, host=host, verify_ssl=verify_ssl)
     config.save_configuration(config.default_config_file)
     config.logged_in = True
 
