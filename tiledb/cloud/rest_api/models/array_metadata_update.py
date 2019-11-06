@@ -31,20 +31,22 @@ class ArrayMetadataUpdate(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'description': 'str',
-        'name': 'str',
-        'uri': 'str',
-        'access_credentials_name': 'str'
+        "description": "str",
+        "name": "str",
+        "uri": "str",
+        "access_credentials_name": "str",
     }
 
     attribute_map = {
-        'description': 'description',
-        'name': 'name',
-        'uri': 'uri',
-        'access_credentials_name': 'access_credentials_name'
+        "description": "description",
+        "name": "name",
+        "uri": "uri",
+        "access_credentials_name": "access_credentials_name",
     }
 
-    def __init__(self, description=None, name=None, uri=None, access_credentials_name=None):  # noqa: E501
+    def __init__(
+        self, description=None, name=None, uri=None, access_credentials_name=None
+    ):  # noqa: E501
         """ArrayMetadataUpdate - a model defined in OpenAPI"""  # noqa: E501
 
         self._description = None
@@ -161,18 +163,20 @@ class ArrayMetadataUpdate(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

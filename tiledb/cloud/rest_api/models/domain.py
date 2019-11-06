@@ -31,20 +31,22 @@ class Domain(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'type': 'Datatype',
-        'tile_order': 'Layout',
-        'cell_order': 'Layout',
-        'dimensions': 'list[Dimension]'
+        "type": "Datatype",
+        "tile_order": "Layout",
+        "cell_order": "Layout",
+        "dimensions": "list[Dimension]",
     }
 
     attribute_map = {
-        'type': 'type',
-        'tile_order': 'tileOrder',
-        'cell_order': 'cellOrder',
-        'dimensions': 'dimensions'
+        "type": "type",
+        "tile_order": "tileOrder",
+        "cell_order": "cellOrder",
+        "dimensions": "dimensions",
     }
 
-    def __init__(self, type=None, tile_order=None, cell_order=None, dimensions=None):  # noqa: E501
+    def __init__(
+        self, type=None, tile_order=None, cell_order=None, dimensions=None
+    ):  # noqa: E501
         """Domain - a model defined in OpenAPI"""  # noqa: E501
 
         self._type = None
@@ -77,7 +79,9 @@ class Domain(object):
         :type: Datatype
         """
         if type is None:
-            raise ValueError("Invalid value for `type`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `type`, must not be `None`"
+            )  # noqa: E501
 
         self._type = type
 
@@ -100,7 +104,9 @@ class Domain(object):
         :type: Layout
         """
         if tile_order is None:
-            raise ValueError("Invalid value for `tile_order`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `tile_order`, must not be `None`"
+            )  # noqa: E501
 
         self._tile_order = tile_order
 
@@ -123,7 +129,9 @@ class Domain(object):
         :type: Layout
         """
         if cell_order is None:
-            raise ValueError("Invalid value for `cell_order`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `cell_order`, must not be `None`"
+            )  # noqa: E501
 
         self._cell_order = cell_order
 
@@ -148,7 +156,9 @@ class Domain(object):
         :type: list[Dimension]
         """
         if dimensions is None:
-            raise ValueError("Invalid value for `dimensions`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `dimensions`, must not be `None`"
+            )  # noqa: E501
 
         self._dimensions = dimensions
 
@@ -159,18 +169,20 @@ class Domain(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

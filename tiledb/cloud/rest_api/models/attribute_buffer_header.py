@@ -31,18 +31,23 @@ class AttributeBufferHeader(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'name': 'str',
-        'fixed_len_buffer_size_in_bytes': 'int',
-        'var_len_buffer_size_in_bytes': 'int'
+        "name": "str",
+        "fixed_len_buffer_size_in_bytes": "int",
+        "var_len_buffer_size_in_bytes": "int",
     }
 
     attribute_map = {
-        'name': 'name',
-        'fixed_len_buffer_size_in_bytes': 'fixedLenBufferSizeInBytes',
-        'var_len_buffer_size_in_bytes': 'varLenBufferSizeInBytes'
+        "name": "name",
+        "fixed_len_buffer_size_in_bytes": "fixedLenBufferSizeInBytes",
+        "var_len_buffer_size_in_bytes": "varLenBufferSizeInBytes",
     }
 
-    def __init__(self, name=None, fixed_len_buffer_size_in_bytes=None, var_len_buffer_size_in_bytes=None):  # noqa: E501
+    def __init__(
+        self,
+        name=None,
+        fixed_len_buffer_size_in_bytes=None,
+        var_len_buffer_size_in_bytes=None,
+    ):  # noqa: E501
         """AttributeBufferHeader - a model defined in OpenAPI"""  # noqa: E501
 
         self._name = None
@@ -75,7 +80,9 @@ class AttributeBufferHeader(object):
         :type: str
         """
         if name is None:
-            raise ValueError("Invalid value for `name`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `name`, must not be `None`"
+            )  # noqa: E501
 
         self._name = name
 
@@ -100,7 +107,9 @@ class AttributeBufferHeader(object):
         :type: int
         """
         if fixed_len_buffer_size_in_bytes is None:
-            raise ValueError("Invalid value for `fixed_len_buffer_size_in_bytes`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `fixed_len_buffer_size_in_bytes`, must not be `None`"
+            )  # noqa: E501
 
         self._fixed_len_buffer_size_in_bytes = fixed_len_buffer_size_in_bytes
 
@@ -125,7 +134,9 @@ class AttributeBufferHeader(object):
         :type: int
         """
         if var_len_buffer_size_in_bytes is None:
-            raise ValueError("Invalid value for `var_len_buffer_size_in_bytes`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `var_len_buffer_size_in_bytes`, must not be `None`"
+            )  # noqa: E501
 
         self._var_len_buffer_size_in_bytes = var_len_buffer_size_in_bytes
 
@@ -136,18 +147,20 @@ class AttributeBufferHeader(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

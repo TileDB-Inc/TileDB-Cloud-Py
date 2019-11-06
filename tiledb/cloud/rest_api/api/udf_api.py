@@ -18,10 +18,7 @@ import re  # noqa: F401
 import six
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import (
-    ApiTypeError,
-    ApiValueError
-)
+from tiledb.cloud.rest_api.exceptions import ApiTypeError, ApiValueError
 
 
 class UdfApi(object):
@@ -61,8 +58,10 @@ class UdfApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.submit_udf_with_http_info(namespace, array, udf, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.submit_udf_with_http_info(
+            namespace, array, udf, **kwargs
+        )  # noqa: E501
 
     def submit_udf_with_http_info(self, namespace, array, udf, **kwargs):  # noqa: E501
         """submit_udf  # noqa: E501
@@ -94,76 +93,87 @@ class UdfApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'array', 'udf', 'x_payer']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = ["namespace", "array", "udf", "x_payer"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method submit_udf" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `submit_udf`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `submit_udf`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if ('array' not in local_var_params or
-                local_var_params['array'] is None):
-            raise ApiValueError("Missing the required parameter `array` when calling `submit_udf`")  # noqa: E501
+        if "array" not in local_var_params or local_var_params["array"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `submit_udf`"
+            )  # noqa: E501
         # verify the required parameter 'udf' is set
-        if ('udf' not in local_var_params or
-                local_var_params['udf'] is None):
-            raise ApiValueError("Missing the required parameter `udf` when calling `submit_udf`")  # noqa: E501
+        if "udf" not in local_var_params or local_var_params["udf"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `udf` when calling `submit_udf`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
 
         header_params = {}
-        if 'x_payer' in local_var_params:
-            header_params['X-Payer'] = local_var_params['x_payer']  # noqa: E501
+        if "x_payer" in local_var_params:
+            header_params["X-Payer"] = local_var_params["x_payer"]  # noqa: E501
 
         form_params = []
         local_var_files = {}
 
         body_params = None
-        if 'udf' in local_var_params:
-            body_params = local_var_params['udf']
+        if "udf" in local_var_params:
+            body_params = local_var_params["udf"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/octet-stream'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/octet-stream"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}/udf/submit', 'POST',
+            "/arrays/{namespace}/{array}/udf/submit",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='file',  # noqa: E501
+            response_type="file",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )

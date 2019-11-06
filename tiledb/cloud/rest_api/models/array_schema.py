@@ -31,32 +31,44 @@ class ArraySchema(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'uri': 'str',
-        'version': 'list[int]',
-        'array_type': 'ArrayType',
-        'tile_order': 'Layout',
-        'cell_order': 'Layout',
-        'capacity': 'int',
-        'coords_filter_pipeline': 'FilterPipeline',
-        'offset_filter_pipeline': 'FilterPipeline',
-        'domain': 'Domain',
-        'attributes': 'list[Attribute]'
+        "uri": "str",
+        "version": "list[int]",
+        "array_type": "ArrayType",
+        "tile_order": "Layout",
+        "cell_order": "Layout",
+        "capacity": "int",
+        "coords_filter_pipeline": "FilterPipeline",
+        "offset_filter_pipeline": "FilterPipeline",
+        "domain": "Domain",
+        "attributes": "list[Attribute]",
     }
 
     attribute_map = {
-        'uri': 'uri',
-        'version': 'version',
-        'array_type': 'arrayType',
-        'tile_order': 'tileOrder',
-        'cell_order': 'cellOrder',
-        'capacity': 'capacity',
-        'coords_filter_pipeline': 'coordsFilterPipeline',
-        'offset_filter_pipeline': 'offsetFilterPipeline',
-        'domain': 'domain',
-        'attributes': 'attributes'
+        "uri": "uri",
+        "version": "version",
+        "array_type": "arrayType",
+        "tile_order": "tileOrder",
+        "cell_order": "cellOrder",
+        "capacity": "capacity",
+        "coords_filter_pipeline": "coordsFilterPipeline",
+        "offset_filter_pipeline": "offsetFilterPipeline",
+        "domain": "domain",
+        "attributes": "attributes",
     }
 
-    def __init__(self, uri=None, version=None, array_type=None, tile_order=None, cell_order=None, capacity=None, coords_filter_pipeline=None, offset_filter_pipeline=None, domain=None, attributes=None):  # noqa: E501
+    def __init__(
+        self,
+        uri=None,
+        version=None,
+        array_type=None,
+        tile_order=None,
+        cell_order=None,
+        capacity=None,
+        coords_filter_pipeline=None,
+        offset_filter_pipeline=None,
+        domain=None,
+        attributes=None,
+    ):  # noqa: E501
         """ArraySchema - a model defined in OpenAPI"""  # noqa: E501
 
         self._uri = None
@@ -127,7 +139,9 @@ class ArraySchema(object):
         :type: list[int]
         """
         if version is None:
-            raise ValueError("Invalid value for `version`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `version`, must not be `None`"
+            )  # noqa: E501
 
         self._version = version
 
@@ -150,7 +164,9 @@ class ArraySchema(object):
         :type: ArrayType
         """
         if array_type is None:
-            raise ValueError("Invalid value for `array_type`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `array_type`, must not be `None`"
+            )  # noqa: E501
 
         self._array_type = array_type
 
@@ -173,7 +189,9 @@ class ArraySchema(object):
         :type: Layout
         """
         if tile_order is None:
-            raise ValueError("Invalid value for `tile_order`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `tile_order`, must not be `None`"
+            )  # noqa: E501
 
         self._tile_order = tile_order
 
@@ -196,7 +214,9 @@ class ArraySchema(object):
         :type: Layout
         """
         if cell_order is None:
-            raise ValueError("Invalid value for `cell_order`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `cell_order`, must not be `None`"
+            )  # noqa: E501
 
         self._cell_order = cell_order
 
@@ -221,7 +241,9 @@ class ArraySchema(object):
         :type: int
         """
         if capacity is None:
-            raise ValueError("Invalid value for `capacity`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `capacity`, must not be `None`"
+            )  # noqa: E501
 
         self._capacity = capacity
 
@@ -244,7 +266,9 @@ class ArraySchema(object):
         :type: FilterPipeline
         """
         if coords_filter_pipeline is None:
-            raise ValueError("Invalid value for `coords_filter_pipeline`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `coords_filter_pipeline`, must not be `None`"
+            )  # noqa: E501
 
         self._coords_filter_pipeline = coords_filter_pipeline
 
@@ -267,7 +291,9 @@ class ArraySchema(object):
         :type: FilterPipeline
         """
         if offset_filter_pipeline is None:
-            raise ValueError("Invalid value for `offset_filter_pipeline`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `offset_filter_pipeline`, must not be `None`"
+            )  # noqa: E501
 
         self._offset_filter_pipeline = offset_filter_pipeline
 
@@ -290,7 +316,9 @@ class ArraySchema(object):
         :type: Domain
         """
         if domain is None:
-            raise ValueError("Invalid value for `domain`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `domain`, must not be `None`"
+            )  # noqa: E501
 
         self._domain = domain
 
@@ -315,7 +343,9 @@ class ArraySchema(object):
         :type: list[Attribute]
         """
         if attributes is None:
-            raise ValueError("Invalid value for `attributes`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `attributes`, must not be `None`"
+            )  # noqa: E501
 
         self._attributes = attributes
 
@@ -326,18 +356,20 @@ class ArraySchema(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

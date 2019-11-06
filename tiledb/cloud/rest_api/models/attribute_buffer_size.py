@@ -30,19 +30,17 @@ class AttributeBufferSize(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'attribute': 'str',
-        'offset_bytes': 'int',
-        'data_bytes': 'int'
-    }
+    openapi_types = {"attribute": "str", "offset_bytes": "int", "data_bytes": "int"}
 
     attribute_map = {
-        'attribute': 'attribute',
-        'offset_bytes': 'offsetBytes',
-        'data_bytes': 'dataBytes'
+        "attribute": "attribute",
+        "offset_bytes": "offsetBytes",
+        "data_bytes": "dataBytes",
     }
 
-    def __init__(self, attribute=None, offset_bytes=None, data_bytes=None):  # noqa: E501
+    def __init__(
+        self, attribute=None, offset_bytes=None, data_bytes=None
+    ):  # noqa: E501
         """AttributeBufferSize - a model defined in OpenAPI"""  # noqa: E501
 
         self._attribute = None
@@ -75,7 +73,9 @@ class AttributeBufferSize(object):
         :type: str
         """
         if attribute is None:
-            raise ValueError("Invalid value for `attribute`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `attribute`, must not be `None`"
+            )  # noqa: E501
 
         self._attribute = attribute
 
@@ -100,7 +100,9 @@ class AttributeBufferSize(object):
         :type: int
         """
         if offset_bytes is None:
-            raise ValueError("Invalid value for `offset_bytes`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `offset_bytes`, must not be `None`"
+            )  # noqa: E501
 
         self._offset_bytes = offset_bytes
 
@@ -125,7 +127,9 @@ class AttributeBufferSize(object):
         :type: int
         """
         if data_bytes is None:
-            raise ValueError("Invalid value for `data_bytes`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `data_bytes`, must not be `None`"
+            )  # noqa: E501
 
         self._data_bytes = data_bytes
 
@@ -136,18 +140,20 @@ class AttributeBufferSize(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

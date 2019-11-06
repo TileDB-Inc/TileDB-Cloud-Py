@@ -31,20 +31,22 @@ class Attribute(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'name': 'str',
-        'type': 'Datatype',
-        'filter_pipeline': 'FilterPipeline',
-        'cell_val_num': 'int'
+        "name": "str",
+        "type": "Datatype",
+        "filter_pipeline": "FilterPipeline",
+        "cell_val_num": "int",
     }
 
     attribute_map = {
-        'name': 'name',
-        'type': 'type',
-        'filter_pipeline': 'filterPipeline',
-        'cell_val_num': 'cellValNum'
+        "name": "name",
+        "type": "type",
+        "filter_pipeline": "filterPipeline",
+        "cell_val_num": "cellValNum",
     }
 
-    def __init__(self, name=None, type=None, filter_pipeline=None, cell_val_num=None):  # noqa: E501
+    def __init__(
+        self, name=None, type=None, filter_pipeline=None, cell_val_num=None
+    ):  # noqa: E501
         """Attribute - a model defined in OpenAPI"""  # noqa: E501
 
         self._name = None
@@ -79,7 +81,9 @@ class Attribute(object):
         :type: str
         """
         if name is None:
-            raise ValueError("Invalid value for `name`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `name`, must not be `None`"
+            )  # noqa: E501
 
         self._name = name
 
@@ -102,7 +106,9 @@ class Attribute(object):
         :type: Datatype
         """
         if type is None:
-            raise ValueError("Invalid value for `type`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `type`, must not be `None`"
+            )  # noqa: E501
 
         self._type = type
 
@@ -125,7 +131,9 @@ class Attribute(object):
         :type: FilterPipeline
         """
         if filter_pipeline is None:
-            raise ValueError("Invalid value for `filter_pipeline`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `filter_pipeline`, must not be `None`"
+            )  # noqa: E501
 
         self._filter_pipeline = filter_pipeline
 
@@ -150,7 +158,9 @@ class Attribute(object):
         :type: int
         """
         if cell_val_num is None:
-            raise ValueError("Invalid value for `cell_val_num`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `cell_val_num`, must not be `None`"
+            )  # noqa: E501
 
         self._cell_val_num = cell_val_num
 
@@ -161,18 +171,20 @@ class Attribute(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

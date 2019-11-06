@@ -31,24 +31,32 @@ class SubarrayPartitioner(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'subarray': 'Subarray',
-        'budget': 'list[AttributeBufferSize]',
-        'current': 'SubarrayPartitionerCurrent',
-        'state': 'SubarrayPartitionerState',
-        'memory_budget': 'int',
-        'memory_budget_var': 'int'
+        "subarray": "Subarray",
+        "budget": "list[AttributeBufferSize]",
+        "current": "SubarrayPartitionerCurrent",
+        "state": "SubarrayPartitionerState",
+        "memory_budget": "int",
+        "memory_budget_var": "int",
     }
 
     attribute_map = {
-        'subarray': 'subarray',
-        'budget': 'budget',
-        'current': 'current',
-        'state': 'state',
-        'memory_budget': 'memoryBudget',
-        'memory_budget_var': 'memoryBudgetVar'
+        "subarray": "subarray",
+        "budget": "budget",
+        "current": "current",
+        "state": "state",
+        "memory_budget": "memoryBudget",
+        "memory_budget_var": "memoryBudgetVar",
     }
 
-    def __init__(self, subarray=None, budget=None, current=None, state=None, memory_budget=None, memory_budget_var=None):  # noqa: E501
+    def __init__(
+        self,
+        subarray=None,
+        budget=None,
+        current=None,
+        state=None,
+        memory_budget=None,
+        memory_budget_var=None,
+    ):  # noqa: E501
         """SubarrayPartitioner - a model defined in OpenAPI"""  # noqa: E501
 
         self._subarray = None
@@ -211,18 +219,20 @@ class SubarrayPartitioner(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

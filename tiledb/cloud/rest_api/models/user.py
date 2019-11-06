@@ -31,34 +31,47 @@ class User(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'id': 'str',
-        'username': 'str',
-        'password': 'str',
-        'name': 'str',
-        'email': 'str',
-        'is_valid_email': 'bool',
-        'logo': 'str',
-        'last_activity_date': 'datetime',
-        'timezone': 'str',
-        'organizations': 'list[OrganizationUser]',
-        'allowed_actions': 'list[NamespaceActions]'
+        "id": "str",
+        "username": "str",
+        "password": "str",
+        "name": "str",
+        "email": "str",
+        "is_valid_email": "bool",
+        "logo": "str",
+        "last_activity_date": "datetime",
+        "timezone": "str",
+        "organizations": "list[OrganizationUser]",
+        "allowed_actions": "list[NamespaceActions]",
     }
 
     attribute_map = {
-        'id': 'id',
-        'username': 'username',
-        'password': 'password',
-        'name': 'name',
-        'email': 'email',
-        'is_valid_email': 'is_valid_email',
-        'logo': 'logo',
-        'last_activity_date': 'last_activity_date',
-        'timezone': 'timezone',
-        'organizations': 'organizations',
-        'allowed_actions': 'allowed_actions'
+        "id": "id",
+        "username": "username",
+        "password": "password",
+        "name": "name",
+        "email": "email",
+        "is_valid_email": "is_valid_email",
+        "logo": "logo",
+        "last_activity_date": "last_activity_date",
+        "timezone": "timezone",
+        "organizations": "organizations",
+        "allowed_actions": "allowed_actions",
     }
 
-    def __init__(self, id=None, username=None, password=None, name=None, email=None, is_valid_email=None, logo=None, last_activity_date=None, timezone=None, organizations=None, allowed_actions=None):  # noqa: E501
+    def __init__(
+        self,
+        id=None,
+        username=None,
+        password=None,
+        name=None,
+        email=None,
+        is_valid_email=None,
+        logo=None,
+        last_activity_date=None,
+        timezone=None,
+        organizations=None,
+        allowed_actions=None,
+    ):  # noqa: E501
         """User - a model defined in OpenAPI"""  # noqa: E501
 
         self._id = None
@@ -140,13 +153,23 @@ class User(object):
         :type: str
         """
         if username is None:
-            raise ValueError("Invalid value for `username`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `username`, must not be `None`"
+            )  # noqa: E501
         if username is not None and len(username) > 20:
-            raise ValueError("Invalid value for `username`, length must be less than or equal to `20`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `username`, length must be less than or equal to `20`"
+            )  # noqa: E501
         if username is not None and len(username) < 4:
-            raise ValueError("Invalid value for `username`, length must be greater than or equal to `4`")  # noqa: E501
-        if username is not None and not re.search(r'^[\w.\-]+$', username):  # noqa: E501
-            raise ValueError(r"Invalid value for `username`, must be a follow pattern or equal to `/^[\w.\-]+$/`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `username`, length must be greater than or equal to `4`"
+            )  # noqa: E501
+        if username is not None and not re.search(
+            r"^[\w.\-]+$", username
+        ):  # noqa: E501
+            raise ValueError(
+                r"Invalid value for `username`, must be a follow pattern or equal to `/^[\w.\-]+$/`"
+            )  # noqa: E501
 
         self._username = username
 
@@ -171,7 +194,9 @@ class User(object):
         :type: str
         """
         if password is not None and len(password) < 8:
-            raise ValueError("Invalid value for `password`, length must be greater than or equal to `8`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `password`, length must be greater than or equal to `8`"
+            )  # noqa: E501
 
         self._password = password
 
@@ -196,7 +221,9 @@ class User(object):
         :type: str
         """
         if name is not None and len(name) < 1:
-            raise ValueError("Invalid value for `name`, length must be greater than or equal to `1`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `name`, length must be greater than or equal to `1`"
+            )  # noqa: E501
 
         self._name = name
 
@@ -366,18 +393,20 @@ class User(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

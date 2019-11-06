@@ -31,24 +31,32 @@ class OrganizationUser(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'user_id': 'str',
-        'organization_id': 'str',
-        'username': 'str',
-        'organization_name': 'str',
-        'role': 'OrganizationRoles',
-        'allowed_actions': 'list[NamespaceActions]'
+        "user_id": "str",
+        "organization_id": "str",
+        "username": "str",
+        "organization_name": "str",
+        "role": "OrganizationRoles",
+        "allowed_actions": "list[NamespaceActions]",
     }
 
     attribute_map = {
-        'user_id': 'user_id',
-        'organization_id': 'organization_id',
-        'username': 'username',
-        'organization_name': 'organization_name',
-        'role': 'role',
-        'allowed_actions': 'allowed_actions'
+        "user_id": "user_id",
+        "organization_id": "organization_id",
+        "username": "username",
+        "organization_name": "organization_name",
+        "role": "role",
+        "allowed_actions": "allowed_actions",
     }
 
-    def __init__(self, user_id=None, organization_id=None, username=None, organization_name=None, role=None, allowed_actions=None):  # noqa: E501
+    def __init__(
+        self,
+        user_id=None,
+        organization_id=None,
+        username=None,
+        organization_name=None,
+        role=None,
+        allowed_actions=None,
+    ):  # noqa: E501
         """OrganizationUser - a model defined in OpenAPI"""  # noqa: E501
 
         self._user_id = None
@@ -215,18 +223,20 @@ class OrganizationUser(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

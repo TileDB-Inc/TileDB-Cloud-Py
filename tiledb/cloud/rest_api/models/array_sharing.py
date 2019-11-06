@@ -31,15 +31,15 @@ class ArraySharing(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'actions': 'list[ArrayActions]',
-        'namespace': 'str',
-        'namespace_type': 'str'
+        "actions": "list[ArrayActions]",
+        "namespace": "str",
+        "namespace_type": "str",
     }
 
     attribute_map = {
-        'actions': 'actions',
-        'namespace': 'namespace',
-        'namespace_type': 'namespace_type'
+        "actions": "actions",
+        "namespace": "namespace",
+        "namespace_type": "namespace_type",
     }
 
     def __init__(self, actions=None, namespace=None, namespace_type=None):  # noqa: E501
@@ -133,18 +133,20 @@ class ArraySharing(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

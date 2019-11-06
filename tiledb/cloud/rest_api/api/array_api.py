@@ -18,10 +18,7 @@ import re  # noqa: F401
 import six
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import (
-    ApiTypeError,
-    ApiValueError
-)
+from tiledb.cloud.rest_api.exceptions import ApiTypeError, ApiValueError
 
 
 class ArrayApi(object):
@@ -63,10 +60,14 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.array_activity_log_with_http_info(namespace, array, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.array_activity_log_with_http_info(
+            namespace, array, **kwargs
+        )  # noqa: E501
 
-    def array_activity_log_with_http_info(self, namespace, array, **kwargs):  # noqa: E501
+    def array_activity_log_with_http_info(
+        self, namespace, array, **kwargs
+    ):  # noqa: E501
         """array_activity_log  # noqa: E501
 
         get array activity logs  # noqa: E501
@@ -98,46 +99,57 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'array', 'start', 'end', 'event_types', 'task_id']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = [
+            "namespace",
+            "array",
+            "start",
+            "end",
+            "event_types",
+            "task_id",
+        ]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method array_activity_log" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `array_activity_log`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `array_activity_log`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if ('array' not in local_var_params or
-                local_var_params['array'] is None):
-            raise ApiValueError("Missing the required parameter `array` when calling `array_activity_log`")  # noqa: E501
+        if "array" not in local_var_params or local_var_params["array"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `array_activity_log`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
-        if 'start' in local_var_params:
-            query_params.append(('start', local_var_params['start']))  # noqa: E501
-        if 'end' in local_var_params:
-            query_params.append(('end', local_var_params['end']))  # noqa: E501
-        if 'event_types' in local_var_params:
-            query_params.append(('event_types', local_var_params['event_types']))  # noqa: E501
-        if 'task_id' in local_var_params:
-            query_params.append(('task_id', local_var_params['task_id']))  # noqa: E501
+        if "start" in local_var_params:
+            query_params.append(("start", local_var_params["start"]))  # noqa: E501
+        if "end" in local_var_params:
+            query_params.append(("end", local_var_params["end"]))  # noqa: E501
+        if "event_types" in local_var_params:
+            query_params.append(
+                ("event_types", local_var_params["event_types"])
+            )  # noqa: E501
+        if "task_id" in local_var_params:
+            query_params.append(("task_id", local_var_params["task_id"]))  # noqa: E501
 
         header_params = {}
 
@@ -146,29 +158,36 @@ class ArrayApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}/activity', 'GET',
+            "/arrays/{namespace}/{array}/activity",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[ArrayActivityLog]',  # noqa: E501
+            response_type="list[ArrayActivityLog]",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
-    def create_array(self, namespace, array, content_type, array_schema, **kwargs):  # noqa: E501
+    def create_array(
+        self, namespace, array, content_type, array_schema, **kwargs
+    ):  # noqa: E501
         """create_array  # noqa: E501
 
         create a array schema at a specified URI registered to a group/project  # noqa: E501
@@ -193,10 +212,14 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.create_array_with_http_info(namespace, array, content_type, array_schema, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.create_array_with_http_info(
+            namespace, array, content_type, array_schema, **kwargs
+        )  # noqa: E501
 
-    def create_array_with_http_info(self, namespace, array, content_type, array_schema, **kwargs):  # noqa: E501
+    def create_array_with_http_info(
+        self, namespace, array, content_type, array_schema, **kwargs
+    ):  # noqa: E501
         """create_array  # noqa: E501
 
         create a array schema at a specified URI registered to a group/project  # noqa: E501
@@ -226,70 +249,92 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'array', 'content_type', 'array_schema']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = [
+            "namespace",
+            "array",
+            "content_type",
+            "array_schema",
+        ]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method create_array" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `create_array`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `create_array`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if ('array' not in local_var_params or
-                local_var_params['array'] is None):
-            raise ApiValueError("Missing the required parameter `array` when calling `create_array`")  # noqa: E501
+        if "array" not in local_var_params or local_var_params["array"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `create_array`"
+            )  # noqa: E501
         # verify the required parameter 'content_type' is set
-        if ('content_type' not in local_var_params or
-                local_var_params['content_type'] is None):
-            raise ApiValueError("Missing the required parameter `content_type` when calling `create_array`")  # noqa: E501
+        if (
+            "content_type" not in local_var_params
+            or local_var_params["content_type"] is None
+        ):
+            raise ApiValueError(
+                "Missing the required parameter `content_type` when calling `create_array`"
+            )  # noqa: E501
         # verify the required parameter 'array_schema' is set
-        if ('array_schema' not in local_var_params or
-                local_var_params['array_schema'] is None):
-            raise ApiValueError("Missing the required parameter `array_schema` when calling `create_array`")  # noqa: E501
+        if (
+            "array_schema" not in local_var_params
+            or local_var_params["array_schema"] is None
+        ):
+            raise ApiValueError(
+                "Missing the required parameter `array_schema` when calling `create_array`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
 
         header_params = {}
-        if 'content_type' in local_var_params:
-            header_params['Content-Type'] = local_var_params['content_type']  # noqa: E501
+        if "content_type" in local_var_params:
+            header_params["Content-Type"] = local_var_params[
+                "content_type"
+            ]  # noqa: E501
 
         form_params = []
         local_var_files = {}
 
         body_params = None
-        if 'array_schema' in local_var_params:
-            body_params = local_var_params['array_schema']
+        if "array_schema" in local_var_params:
+            body_params = local_var_params["array_schema"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}', 'POST',
+            "/arrays/{namespace}/{array}",
+            "POST",
             path_params,
             query_params,
             header_params,
@@ -298,11 +343,14 @@ class ArrayApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def delete_array(self, namespace, array, content_type, **kwargs):  # noqa: E501
         """delete_array  # noqa: E501
@@ -328,10 +376,14 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.delete_array_with_http_info(namespace, array, content_type, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.delete_array_with_http_info(
+            namespace, array, content_type, **kwargs
+        )  # noqa: E501
 
-    def delete_array_with_http_info(self, namespace, array, content_type, **kwargs):  # noqa: E501
+    def delete_array_with_http_info(
+        self, namespace, array, content_type, **kwargs
+    ):  # noqa: E501
         """delete_array  # noqa: E501
 
         delete a array  # noqa: E501
@@ -360,60 +412,70 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'array', 'content_type']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = ["namespace", "array", "content_type"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method delete_array" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `delete_array`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `delete_array`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if ('array' not in local_var_params or
-                local_var_params['array'] is None):
-            raise ApiValueError("Missing the required parameter `array` when calling `delete_array`")  # noqa: E501
+        if "array" not in local_var_params or local_var_params["array"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `delete_array`"
+            )  # noqa: E501
         # verify the required parameter 'content_type' is set
-        if ('content_type' not in local_var_params or
-                local_var_params['content_type'] is None):
-            raise ApiValueError("Missing the required parameter `content_type` when calling `delete_array`")  # noqa: E501
+        if (
+            "content_type" not in local_var_params
+            or local_var_params["content_type"] is None
+        ):
+            raise ApiValueError(
+                "Missing the required parameter `content_type` when calling `delete_array`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
 
         header_params = {}
-        if 'content_type' in local_var_params:
-            header_params['Content-Type'] = local_var_params['content_type']  # noqa: E501
+        if "content_type" in local_var_params:
+            header_params["Content-Type"] = local_var_params[
+                "content_type"
+            ]  # noqa: E501
 
         form_params = []
         local_var_files = {}
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}', 'DELETE',
+            "/arrays/{namespace}/{array}",
+            "DELETE",
             path_params,
             query_params,
             header_params,
@@ -422,11 +484,14 @@ class ArrayApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def deregister_array(self, namespace, array, **kwargs):  # noqa: E501
         """deregister_array  # noqa: E501
@@ -451,8 +516,10 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.deregister_array_with_http_info(namespace, array, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.deregister_array_with_http_info(
+            namespace, array, **kwargs
+        )  # noqa: E501
 
     def deregister_array_with_http_info(self, namespace, array, **kwargs):  # noqa: E501
         """deregister_array  # noqa: E501
@@ -482,36 +549,38 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'array']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = ["namespace", "array"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method deregister_array" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `deregister_array`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `deregister_array`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if ('array' not in local_var_params or
-                local_var_params['array'] is None):
-            raise ApiValueError("Missing the required parameter `array` when calling `deregister_array`")  # noqa: E501
+        if "array" not in local_var_params or local_var_params["array"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `deregister_array`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
 
@@ -522,14 +591,16 @@ class ArrayApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}/deregister', 'DELETE',
+            "/arrays/{namespace}/{array}/deregister",
+            "DELETE",
             path_params,
             query_params,
             header_params,
@@ -538,11 +609,14 @@ class ArrayApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def get_all_array_metadata(self, **kwargs):  # noqa: E501
         """get_all_array_metadata  # noqa: E501
@@ -566,7 +640,7 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.get_all_array_metadata_with_http_info(**kwargs)  # noqa: E501
 
     def get_all_array_metadata_with_http_info(self, **kwargs):  # noqa: E501
@@ -596,28 +670,30 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['public_share']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = ["public_share"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_all_array_metadata" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
-        if 'public_share' in local_var_params:
-            query_params.append(('public_share', local_var_params['public_share']))  # noqa: E501
+        if "public_share" in local_var_params:
+            query_params.append(
+                ("public_share", local_var_params["public_share"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -626,27 +702,32 @@ class ArrayApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays', 'GET',
+            "/arrays",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[ArrayMetadata]',  # noqa: E501
+            response_type="list[ArrayMetadata]",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def get_array(self, namespace, array, content_type, **kwargs):  # noqa: E501
         """get_array  # noqa: E501
@@ -672,10 +753,14 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.get_array_with_http_info(namespace, array, content_type, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.get_array_with_http_info(
+            namespace, array, content_type, **kwargs
+        )  # noqa: E501
 
-    def get_array_with_http_info(self, namespace, array, content_type, **kwargs):  # noqa: E501
+    def get_array_with_http_info(
+        self, namespace, array, content_type, **kwargs
+    ):  # noqa: E501
         """get_array  # noqa: E501
 
         get an ArraySchema using a url encoded uri  # noqa: E501
@@ -704,75 +789,90 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'array', 'content_type']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = ["namespace", "array", "content_type"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_array" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `get_array`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `get_array`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if ('array' not in local_var_params or
-                local_var_params['array'] is None):
-            raise ApiValueError("Missing the required parameter `array` when calling `get_array`")  # noqa: E501
+        if "array" not in local_var_params or local_var_params["array"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `get_array`"
+            )  # noqa: E501
         # verify the required parameter 'content_type' is set
-        if ('content_type' not in local_var_params or
-                local_var_params['content_type'] is None):
-            raise ApiValueError("Missing the required parameter `content_type` when calling `get_array`")  # noqa: E501
+        if (
+            "content_type" not in local_var_params
+            or local_var_params["content_type"] is None
+        ):
+            raise ApiValueError(
+                "Missing the required parameter `content_type` when calling `get_array`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
 
         header_params = {}
-        if 'content_type' in local_var_params:
-            header_params['Content-Type'] = local_var_params['content_type']  # noqa: E501
+        if "content_type" in local_var_params:
+            header_params["Content-Type"] = local_var_params[
+                "content_type"
+            ]  # noqa: E501
 
         form_params = []
         local_var_files = {}
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json', 'application/capnp'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json", "application/capnp"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}', 'GET',
+            "/arrays/{namespace}/{array}",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='ArraySchema',  # noqa: E501
+            response_type="ArraySchema",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
-    def get_array_max_buffer_sizes(self, namespace, array, subarray, content_type, **kwargs):  # noqa: E501
+    def get_array_max_buffer_sizes(
+        self, namespace, array, subarray, content_type, **kwargs
+    ):  # noqa: E501
         """get_array_max_buffer_sizes  # noqa: E501
 
         get the max buffer sizes of an array for a subarray  # noqa: E501
@@ -798,10 +898,14 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.get_array_max_buffer_sizes_with_http_info(namespace, array, subarray, content_type, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.get_array_max_buffer_sizes_with_http_info(
+            namespace, array, subarray, content_type, **kwargs
+        )  # noqa: E501
 
-    def get_array_max_buffer_sizes_with_http_info(self, namespace, array, subarray, content_type, **kwargs):  # noqa: E501
+    def get_array_max_buffer_sizes_with_http_info(
+        self, namespace, array, subarray, content_type, **kwargs
+    ):  # noqa: E501
         """get_array_max_buffer_sizes  # noqa: E501
 
         get the max buffer sizes of an array for a subarray  # noqa: E501
@@ -832,81 +936,103 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'array', 'subarray', 'content_type', 'x_payer']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = [
+            "namespace",
+            "array",
+            "subarray",
+            "content_type",
+            "x_payer",
+        ]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_array_max_buffer_sizes" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `get_array_max_buffer_sizes`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `get_array_max_buffer_sizes`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if ('array' not in local_var_params or
-                local_var_params['array'] is None):
-            raise ApiValueError("Missing the required parameter `array` when calling `get_array_max_buffer_sizes`")  # noqa: E501
+        if "array" not in local_var_params or local_var_params["array"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `get_array_max_buffer_sizes`"
+            )  # noqa: E501
         # verify the required parameter 'subarray' is set
-        if ('subarray' not in local_var_params or
-                local_var_params['subarray'] is None):
-            raise ApiValueError("Missing the required parameter `subarray` when calling `get_array_max_buffer_sizes`")  # noqa: E501
+        if "subarray" not in local_var_params or local_var_params["subarray"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `subarray` when calling `get_array_max_buffer_sizes`"
+            )  # noqa: E501
         # verify the required parameter 'content_type' is set
-        if ('content_type' not in local_var_params or
-                local_var_params['content_type'] is None):
-            raise ApiValueError("Missing the required parameter `content_type` when calling `get_array_max_buffer_sizes`")  # noqa: E501
+        if (
+            "content_type" not in local_var_params
+            or local_var_params["content_type"] is None
+        ):
+            raise ApiValueError(
+                "Missing the required parameter `content_type` when calling `get_array_max_buffer_sizes`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
-        if 'subarray' in local_var_params:
-            query_params.append(('subarray', local_var_params['subarray']))  # noqa: E501
+        if "subarray" in local_var_params:
+            query_params.append(
+                ("subarray", local_var_params["subarray"])
+            )  # noqa: E501
 
         header_params = {}
-        if 'content_type' in local_var_params:
-            header_params['Content-Type'] = local_var_params['content_type']  # noqa: E501
-        if 'x_payer' in local_var_params:
-            header_params['X-Payer'] = local_var_params['x_payer']  # noqa: E501
+        if "content_type" in local_var_params:
+            header_params["Content-Type"] = local_var_params[
+                "content_type"
+            ]  # noqa: E501
+        if "x_payer" in local_var_params:
+            header_params["X-Payer"] = local_var_params["x_payer"]  # noqa: E501
 
         form_params = []
         local_var_files = {}
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}/max_buffer_sizes', 'GET',
+            "/arrays/{namespace}/{array}/max_buffer_sizes",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='MaxBufferSizes',  # noqa: E501
+            response_type="MaxBufferSizes",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def get_array_metadata(self, namespace, array, **kwargs):  # noqa: E501
         """get_array_metadata  # noqa: E501
@@ -931,10 +1057,14 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.get_array_metadata_with_http_info(namespace, array, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.get_array_metadata_with_http_info(
+            namespace, array, **kwargs
+        )  # noqa: E501
 
-    def get_array_metadata_with_http_info(self, namespace, array, **kwargs):  # noqa: E501
+    def get_array_metadata_with_http_info(
+        self, namespace, array, **kwargs
+    ):  # noqa: E501
         """get_array_metadata  # noqa: E501
 
         get metadata on an array  # noqa: E501
@@ -962,36 +1092,38 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'array']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = ["namespace", "array"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_array_metadata" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `get_array_metadata`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `get_array_metadata`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if ('array' not in local_var_params or
-                local_var_params['array'] is None):
-            raise ApiValueError("Missing the required parameter `array` when calling `get_array_metadata`")  # noqa: E501
+        if "array" not in local_var_params or local_var_params["array"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `get_array_metadata`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
 
@@ -1002,29 +1134,36 @@ class ArrayApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}/metadata', 'GET',
+            "/arrays/{namespace}/{array}/metadata",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='ArrayMetadata',  # noqa: E501
+            response_type="ArrayMetadata",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
-    def get_array_non_empty_domain(self, namespace, array, content_type, **kwargs):  # noqa: E501
+    def get_array_non_empty_domain(
+        self, namespace, array, content_type, **kwargs
+    ):  # noqa: E501
         """get_array_non_empty_domain  # noqa: E501
 
         get the non empty domain of an array  # noqa: E501
@@ -1049,10 +1188,14 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.get_array_non_empty_domain_with_http_info(namespace, array, content_type, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.get_array_non_empty_domain_with_http_info(
+            namespace, array, content_type, **kwargs
+        )  # noqa: E501
 
-    def get_array_non_empty_domain_with_http_info(self, namespace, array, content_type, **kwargs):  # noqa: E501
+    def get_array_non_empty_domain_with_http_info(
+        self, namespace, array, content_type, **kwargs
+    ):  # noqa: E501
         """get_array_non_empty_domain  # noqa: E501
 
         get the non empty domain of an array  # noqa: E501
@@ -1082,75 +1225,88 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'array', 'content_type', 'x_payer']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = ["namespace", "array", "content_type", "x_payer"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_array_non_empty_domain" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `get_array_non_empty_domain`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `get_array_non_empty_domain`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if ('array' not in local_var_params or
-                local_var_params['array'] is None):
-            raise ApiValueError("Missing the required parameter `array` when calling `get_array_non_empty_domain`")  # noqa: E501
+        if "array" not in local_var_params or local_var_params["array"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `get_array_non_empty_domain`"
+            )  # noqa: E501
         # verify the required parameter 'content_type' is set
-        if ('content_type' not in local_var_params or
-                local_var_params['content_type'] is None):
-            raise ApiValueError("Missing the required parameter `content_type` when calling `get_array_non_empty_domain`")  # noqa: E501
+        if (
+            "content_type" not in local_var_params
+            or local_var_params["content_type"] is None
+        ):
+            raise ApiValueError(
+                "Missing the required parameter `content_type` when calling `get_array_non_empty_domain`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
 
         header_params = {}
-        if 'content_type' in local_var_params:
-            header_params['Content-Type'] = local_var_params['content_type']  # noqa: E501
-        if 'x_payer' in local_var_params:
-            header_params['X-Payer'] = local_var_params['x_payer']  # noqa: E501
+        if "content_type" in local_var_params:
+            header_params["Content-Type"] = local_var_params[
+                "content_type"
+            ]  # noqa: E501
+        if "x_payer" in local_var_params:
+            header_params["X-Payer"] = local_var_params["x_payer"]  # noqa: E501
 
         form_params = []
         local_var_files = {}
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}/non_empty_domain', 'GET',
+            "/arrays/{namespace}/{array}/non_empty_domain",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='NonEmptyDomain',  # noqa: E501
+            response_type="NonEmptyDomain",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def get_array_sample_data(self, namespace, array, **kwargs):  # noqa: E501
         """get_array_sample_data  # noqa: E501
@@ -1176,10 +1332,14 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.get_array_sample_data_with_http_info(namespace, array, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.get_array_sample_data_with_http_info(
+            namespace, array, **kwargs
+        )  # noqa: E501
 
-    def get_array_sample_data_with_http_info(self, namespace, array, **kwargs):  # noqa: E501
+    def get_array_sample_data_with_http_info(
+        self, namespace, array, **kwargs
+    ):  # noqa: E501
         """get_array_sample_data  # noqa: E501
 
         get an sample set of data from the array  # noqa: E501
@@ -1208,40 +1368,42 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'array', 'samples']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = ["namespace", "array", "samples"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_array_sample_data" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `get_array_sample_data`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `get_array_sample_data`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if ('array' not in local_var_params or
-                local_var_params['array'] is None):
-            raise ApiValueError("Missing the required parameter `array` when calling `get_array_sample_data`")  # noqa: E501
+        if "array" not in local_var_params or local_var_params["array"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `get_array_sample_data`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
-        if 'samples' in local_var_params:
-            query_params.append(('samples', local_var_params['samples']))  # noqa: E501
+        if "samples" in local_var_params:
+            query_params.append(("samples", local_var_params["samples"]))  # noqa: E501
 
         header_params = {}
 
@@ -1250,27 +1412,32 @@ class ArrayApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}/sample', 'GET',
+            "/arrays/{namespace}/{array}/sample",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='ArraySample',  # noqa: E501
+            response_type="ArraySample",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def get_array_sharing_policies(self, namespace, array, **kwargs):  # noqa: E501
         """get_array_sharing_policies  # noqa: E501
@@ -1295,10 +1462,14 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.get_array_sharing_policies_with_http_info(namespace, array, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.get_array_sharing_policies_with_http_info(
+            namespace, array, **kwargs
+        )  # noqa: E501
 
-    def get_array_sharing_policies_with_http_info(self, namespace, array, **kwargs):  # noqa: E501
+    def get_array_sharing_policies_with_http_info(
+        self, namespace, array, **kwargs
+    ):  # noqa: E501
         """get_array_sharing_policies  # noqa: E501
 
         Get all sharing details of the array  # noqa: E501
@@ -1326,36 +1497,38 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'array']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = ["namespace", "array"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_array_sharing_policies" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `get_array_sharing_policies`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `get_array_sharing_policies`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if ('array' not in local_var_params or
-                local_var_params['array'] is None):
-            raise ApiValueError("Missing the required parameter `array` when calling `get_array_sharing_policies`")  # noqa: E501
+        if "array" not in local_var_params or local_var_params["array"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `get_array_sharing_policies`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
 
@@ -1366,27 +1539,32 @@ class ArrayApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}/share', 'GET',
+            "/arrays/{namespace}/{array}/share",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[ArraySharing]',  # noqa: E501
+            response_type="list[ArraySharing]",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def get_arrays_in_namespace(self, namespace, **kwargs):  # noqa: E501
         """get_arrays_in_namespace  # noqa: E501
@@ -1410,8 +1588,10 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.get_arrays_in_namespace_with_http_info(namespace, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.get_arrays_in_namespace_with_http_info(
+            namespace, **kwargs
+        )  # noqa: E501
 
     def get_arrays_in_namespace_with_http_info(self, namespace, **kwargs):  # noqa: E501
         """get_arrays_in_namespace  # noqa: E501
@@ -1440,30 +1620,31 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = ["namespace"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_arrays_in_namespace" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `get_arrays_in_namespace`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `get_arrays_in_namespace`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
 
         query_params = []
 
@@ -1474,27 +1655,32 @@ class ArrayApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}', 'GET',
+            "/arrays/{namespace}",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[ArrayMetadata]',  # noqa: E501
+            response_type="list[ArrayMetadata]",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def get_last_accessed_arrays(self, **kwargs):  # noqa: E501
         """get_last_accessed_arrays  # noqa: E501
@@ -1516,7 +1702,7 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.get_last_accessed_arrays_with_http_info(**kwargs)  # noqa: E501
 
     def get_last_accessed_arrays_with_http_info(self, **kwargs):  # noqa: E501
@@ -1545,19 +1731,19 @@ class ArrayApi(object):
         local_var_params = locals()
 
         all_params = []  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_last_accessed_arrays" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
@@ -1572,27 +1758,32 @@ class ArrayApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/last_accessed', 'GET',
+            "/arrays/last_accessed",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[LastAccessedArray]',  # noqa: E501
+            response_type="list[LastAccessedArray]",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def register_array(self, namespace, array, array_metadata, **kwargs):  # noqa: E501
         """register_array  # noqa: E501
@@ -1618,10 +1809,14 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.register_array_with_http_info(namespace, array, array_metadata, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.register_array_with_http_info(
+            namespace, array, array_metadata, **kwargs
+        )  # noqa: E501
 
-    def register_array_with_http_info(self, namespace, array, array_metadata, **kwargs):  # noqa: E501
+    def register_array_with_http_info(
+        self, namespace, array, array_metadata, **kwargs
+    ):  # noqa: E501
         """register_array  # noqa: E501
 
         register an array at a specified URI registered to the given namespace  # noqa: E501
@@ -1650,40 +1845,46 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'array', 'array_metadata']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = ["namespace", "array", "array_metadata"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method register_array" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `register_array`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `register_array`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if ('array' not in local_var_params or
-                local_var_params['array'] is None):
-            raise ApiValueError("Missing the required parameter `array` when calling `register_array`")  # noqa: E501
+        if "array" not in local_var_params or local_var_params["array"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `register_array`"
+            )  # noqa: E501
         # verify the required parameter 'array_metadata' is set
-        if ('array_metadata' not in local_var_params or
-                local_var_params['array_metadata'] is None):
-            raise ApiValueError("Missing the required parameter `array_metadata` when calling `register_array`")  # noqa: E501
+        if (
+            "array_metadata" not in local_var_params
+            or local_var_params["array_metadata"] is None
+        ):
+            raise ApiValueError(
+                "Missing the required parameter `array_metadata` when calling `register_array`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
 
@@ -1693,21 +1894,26 @@ class ArrayApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'array_metadata' in local_var_params:
-            body_params = local_var_params['array_metadata']
+        if "array_metadata" in local_var_params:
+            body_params = local_var_params["array_metadata"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}/register', 'POST',
+            "/arrays/{namespace}/{array}/register",
+            "POST",
             path_params,
             query_params,
             header_params,
@@ -1716,11 +1922,14 @@ class ArrayApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def share_array(self, namespace, array, array_sharing, **kwargs):  # noqa: E501
         """share_array  # noqa: E501
@@ -1746,10 +1955,14 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.share_array_with_http_info(namespace, array, array_sharing, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.share_array_with_http_info(
+            namespace, array, array_sharing, **kwargs
+        )  # noqa: E501
 
-    def share_array_with_http_info(self, namespace, array, array_sharing, **kwargs):  # noqa: E501
+    def share_array_with_http_info(
+        self, namespace, array, array_sharing, **kwargs
+    ):  # noqa: E501
         """share_array  # noqa: E501
 
         Share an array with a user  # noqa: E501
@@ -1778,40 +1991,46 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'array', 'array_sharing']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = ["namespace", "array", "array_sharing"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method share_array" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `share_array`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `share_array`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if ('array' not in local_var_params or
-                local_var_params['array'] is None):
-            raise ApiValueError("Missing the required parameter `array` when calling `share_array`")  # noqa: E501
+        if "array" not in local_var_params or local_var_params["array"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `share_array`"
+            )  # noqa: E501
         # verify the required parameter 'array_sharing' is set
-        if ('array_sharing' not in local_var_params or
-                local_var_params['array_sharing'] is None):
-            raise ApiValueError("Missing the required parameter `array_sharing` when calling `share_array`")  # noqa: E501
+        if (
+            "array_sharing" not in local_var_params
+            or local_var_params["array_sharing"] is None
+        ):
+            raise ApiValueError(
+                "Missing the required parameter `array_sharing` when calling `share_array`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
 
@@ -1821,21 +2040,26 @@ class ArrayApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'array_sharing' in local_var_params:
-            body_params = local_var_params['array_sharing']
+        if "array_sharing" in local_var_params:
+            body_params = local_var_params["array_sharing"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}/share', 'PATCH',
+            "/arrays/{namespace}/{array}/share",
+            "PATCH",
             path_params,
             query_params,
             header_params,
@@ -1844,13 +2068,18 @@ class ArrayApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
-    def update_array_metadata(self, namespace, array, array_metadata, **kwargs):  # noqa: E501
+    def update_array_metadata(
+        self, namespace, array, array_metadata, **kwargs
+    ):  # noqa: E501
         """update_array_metadata  # noqa: E501
 
         update metadata on an array  # noqa: E501
@@ -1874,10 +2103,14 @@ class ArrayApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.update_array_metadata_with_http_info(namespace, array, array_metadata, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.update_array_metadata_with_http_info(
+            namespace, array, array_metadata, **kwargs
+        )  # noqa: E501
 
-    def update_array_metadata_with_http_info(self, namespace, array, array_metadata, **kwargs):  # noqa: E501
+    def update_array_metadata_with_http_info(
+        self, namespace, array, array_metadata, **kwargs
+    ):  # noqa: E501
         """update_array_metadata  # noqa: E501
 
         update metadata on an array  # noqa: E501
@@ -1906,40 +2139,46 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ['namespace', 'array', 'array_metadata']  # noqa: E501
-        all_params.append('async_req')
-        all_params.append('_return_http_data_only')
-        all_params.append('_preload_content')
-        all_params.append('_request_timeout')
+        all_params = ["namespace", "array", "array_metadata"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method update_array_metadata" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if ('namespace' not in local_var_params or
-                local_var_params['namespace'] is None):
-            raise ApiValueError("Missing the required parameter `namespace` when calling `update_array_metadata`")  # noqa: E501
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `update_array_metadata`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if ('array' not in local_var_params or
-                local_var_params['array'] is None):
-            raise ApiValueError("Missing the required parameter `array` when calling `update_array_metadata`")  # noqa: E501
+        if "array" not in local_var_params or local_var_params["array"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `update_array_metadata`"
+            )  # noqa: E501
         # verify the required parameter 'array_metadata' is set
-        if ('array_metadata' not in local_var_params or
-                local_var_params['array_metadata'] is None):
-            raise ApiValueError("Missing the required parameter `array_metadata` when calling `update_array_metadata`")  # noqa: E501
+        if (
+            "array_metadata" not in local_var_params
+            or local_var_params["array_metadata"] is None
+        ):
+            raise ApiValueError(
+                "Missing the required parameter `array_metadata` when calling `update_array_metadata`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
 
@@ -1949,21 +2188,26 @@ class ArrayApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'array_metadata' in local_var_params:
-            body_params = local_var_params['array_metadata']
+        if "array_metadata" in local_var_params:
+            body_params = local_var_params["array_metadata"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}/metadata', 'PATCH',
+            "/arrays/{namespace}/{array}/metadata",
+            "PATCH",
             path_params,
             query_params,
             header_params,
@@ -1972,8 +2216,11 @@ class ArrayApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )

@@ -30,15 +30,9 @@ class NonEmptyDomain(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'non_empty_domain': 'DomainArray',
-        'is_empty': 'bool'
-    }
+    openapi_types = {"non_empty_domain": "DomainArray", "is_empty": "bool"}
 
-    attribute_map = {
-        'non_empty_domain': 'nonEmptyDomain',
-        'is_empty': 'isEmpty'
-    }
+    attribute_map = {"non_empty_domain": "nonEmptyDomain", "is_empty": "isEmpty"}
 
     def __init__(self, non_empty_domain=None, is_empty=None):  # noqa: E501
         """NonEmptyDomain - a model defined in OpenAPI"""  # noqa: E501
@@ -69,7 +63,9 @@ class NonEmptyDomain(object):
         :type: DomainArray
         """
         if non_empty_domain is None:
-            raise ValueError("Invalid value for `non_empty_domain`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `non_empty_domain`, must not be `None`"
+            )  # noqa: E501
 
         self._non_empty_domain = non_empty_domain
 
@@ -94,7 +90,9 @@ class NonEmptyDomain(object):
         :type: bool
         """
         if is_empty is None:
-            raise ValueError("Invalid value for `is_empty`, must not be `None`")  # noqa: E501
+            raise ValueError(
+                "Invalid value for `is_empty`, must not be `None`"
+            )  # noqa: E501
 
         self._is_empty = is_empty
 
@@ -105,18 +103,20 @@ class NonEmptyDomain(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

@@ -31,24 +31,32 @@ class ArrayActivityLog(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'event_at': 'datetime',
-        'action': 'ActivityEventType',
-        'username': 'str',
-        'bytes_sent': 'int',
-        'bytes_received': 'int',
-        'array_task_id': 'str'
+        "event_at": "datetime",
+        "action": "ActivityEventType",
+        "username": "str",
+        "bytes_sent": "int",
+        "bytes_received": "int",
+        "array_task_id": "str",
     }
 
     attribute_map = {
-        'event_at': 'event_at',
-        'action': 'action',
-        'username': 'username',
-        'bytes_sent': 'bytes_sent',
-        'bytes_received': 'bytes_received',
-        'array_task_id': 'array_task_id'
+        "event_at": "event_at",
+        "action": "action",
+        "username": "username",
+        "bytes_sent": "bytes_sent",
+        "bytes_received": "bytes_received",
+        "array_task_id": "array_task_id",
     }
 
-    def __init__(self, event_at=None, action=None, username=None, bytes_sent=None, bytes_received=None, array_task_id=None):  # noqa: E501
+    def __init__(
+        self,
+        event_at=None,
+        action=None,
+        username=None,
+        bytes_sent=None,
+        bytes_received=None,
+        array_task_id=None,
+    ):  # noqa: E501
         """ArrayActivityLog - a model defined in OpenAPI"""  # noqa: E501
 
         self._event_at = None
@@ -215,18 +223,20 @@ class ArrayActivityLog(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 
