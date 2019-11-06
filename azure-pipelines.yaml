@@ -74,7 +74,13 @@ jobs:
 - job: Deploy
   pool:
     vmImage: 'ubuntu-16.04'
+
   steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+      architecture: 'x64'
+
   - script: 'pip install twine'
     displayName: 'Install twine'
     condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
@@ -82,22 +88,13 @@ jobs:
     # Build the python distribution from source
   - script: python setup.py bdist_wheel
     displayName: 'Build wheel'
-    condition: ne(variables['Agent.OS'], 'Windows_NT')
-
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '$(python.version)'
-      architecture: 'x64'
+    condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
 
   - task: TwineAuthenticate@1
-    displayName: 'Twine Authenticate'
-    inputs:
-      artifactFeed: 'TileDB-Cloud-Py-pypi'
-      # In this case, name of the service connection is "pypi-upload".
+    displayName: 'Twine Authenticate'
+    inputs:
       pythonUploadServiceConnection: 'pypi-upload'
-    condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
-   
-  # Use command line script to 'twine upload', use -r to pass the repository name and --config-file to pass the environment variable set by the authenticate task.
-  - script: |
-     python -m twine upload -r "pypi-upload" --config-file $(PYPIRC_PATH) dist/*.whl
+
+  - script: python -m twine upload -r "pypi-upload" --config-file $(PYPIRC_PATH) dist/*.whl
+    displayName: 'Upload to Pypi'
     condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
