@@ -8,4 +8,3 @@ To install from Github, use:
  
     pip install -e git+"ssh://git@github.com/TileDB-Inc/TileDB-Cloud-Py#egg=tiledb-cloud"
   
-**(note: git authentication must be configured because the repository is currently private)**
