@@ -11,6 +11,8 @@ import cloudpickle
 import base64
 import sys
 
+last_udf_task_id = None
+
 
 def split_uri(uri):
   """
@@ -202,9 +204,10 @@ class CloudArray(object):
       response = api_instance.submit_udf(namespace=namespace, array=array_name, udf=rest_api.models.UDF(type=rest_api.models.UDFType.PYTHON, _exec=pickledUDF, subarray=ranges, version="{}.{}.{}".format(sys.version_info.major, sys.version_info.minor, sys.version_info.micro)), _preload_content=False)
       response = rest.RESTResponse(response)
 
-      tasks.last_udf_task_id = response.getheader(client.TASK_ID_HEADER)
+      global last_udf_task_id
+      last_udf_task_id = response.getheader(client.TASK_ID_HEADER)
 
       res = response.data
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.check_udf_exc(exc) from None
     return cloudpickle.loads(res)

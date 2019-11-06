@@ -1,12 +1,10 @@
 from . import client
 from . import tiledb_cloud_error
 from . import cloudarray
+from . import sql
 from .rest_api import ApiException as GenApiException
 
 import datetime
-
-last_sql_task_id = None
-last_udf_task_id = None
 
 def task(id):
   """
@@ -68,10 +66,10 @@ def last_sql_task():
   :return task : object with task details
   """
 
-  if tasks.last_sql_task_id is None:
+  if sql.last_sql_task_id is None:
     raise Exception("There is no last run sql task in current python session")
 
-  return task(id=tasks.last_sql_task_id)
+  return task(id=sql.last_sql_task_id)
 
 
 def last_udf_task():
@@ -80,7 +78,7 @@ def last_udf_task():
   :return task : object with task details
   """
 
-  if tasks.last_udf_task_id is None:
+  if cloudarray.last_udf_task_id is None:
     raise Exception("There is no last run udf task in current python session")
 
-  return task(id=tasks.last_udf_task_id)
+  return task(id=cloudarray.last_udf_task_id)
