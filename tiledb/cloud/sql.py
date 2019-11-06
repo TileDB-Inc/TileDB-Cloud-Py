@@ -49,14 +49,14 @@ def exec(query, output_uri=None, output_schema=None, namespace=None, task_name=N
         break
 
       try:
-        res = arrays_api.get_array_metadata(namespace=array_namespace, array=array_name)
+        res = tiledb.ArraySchema.load(output_uri, ctx=client.Ctx())
         if res is not None:
           break
       except:
         pass
 
-      # Sleep for 500ms to avoid dosing the server
-      time.sleep(0.5)
+      # Sleep for 250ms to avoid dosing the server
+      time.sleep(0.25)
 
     # If the user wishes to set a specific array name for the newly registered output array let's update the details
     if output_array_name is not None:
