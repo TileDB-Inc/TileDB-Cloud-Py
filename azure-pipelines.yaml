@@ -28,58 +28,76 @@ strategy:
       python.version: '3.7'
   maxParallel: 4
 
-pool:
-  vmImage: $(imageName)
+# test and upload my code as an artifact named WebSite
+jobs:
+- job: Build
+  pool:
+    vmImage: $(imageName)
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(python.version)'
-    architecture: 'x64'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+      architecture: 'x64'
 
-- script: python -m pip install --upgrade black
-  displayName: 'Install black (linter)'
-  condition: eq(variables['python.version'], '3.7')
-- script: black --check .
-  displayName: 'Test Formating'
-  condition: eq(variables['python.version'], '3.7')
+  - script: python -m pip install --upgrade black
+    displayName: 'Install black (linter)'
+    condition: eq(variables['python.version'], '3.7')
+  - script: black --check .
+    displayName: 'Test Formating'
+    condition: eq(variables['python.version'], '3.7')
 
-- script: python -m pip install --upgrade .
-  displayName: 'Test Install'
-  condition: ne(variables['Agent.OS'], 'Windows_NT')
+  - script: python -m pip install --upgrade .
+    displayName: 'Test Install'
+    condition: ne(variables['Agent.OS'], 'Windows_NT')
 
-  # Build the python distribution from source
-- script: python setup.py bdist_wheel
-  displayName: 'Build wheel'
-  condition: ne(variables['Agent.OS'], 'Windows_NT')
+    # Build the python distribution from source
+  - script: python setup.py bdist_wheel
+    displayName: 'Build wheel'
+    condition: ne(variables['Agent.OS'], 'Windows_NT')
 
-- bash: |
-    set -xeo pipefail
-    # Display log files if the build failed
-    echo "Dumping log files for failed build"
-    echo "----------------------------------"
-    for f in $(find $BUILD_REPOSITORY_LOCALPATH/build -name *.log);
-      do echo "------"
-         echo $f
-         echo "======"
-         cat $f
-      done;
-  condition: failed() # only run this job if the build step failed
-  displayName: "Print log files (failed build only)"
+  - bash: |
+      set -xeo pipefail
+      # Display log files if the build failed
+      echo "Dumping log files for failed build"
+      echo "----------------------------------"
+      for f in $(find $BUILD_REPOSITORY_LOCALPATH/build -name *.log);
+        do echo "------"
+           echo $f
+           echo "======"
+           cat $f
+        done;
+    condition: failed() # only run this job if the build step failed
+    displayName: "Print log files (failed build only)"
 
-- script: 'pip install twine'
-  displayName: 'Install twine'
-  condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
+# download the artifact and deploy it only if the build job succeeded
+- job: Deploy
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - script: 'pip install twine'
+    displayName: 'Install twine'
+    condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
 
-- task: TwineAuthenticate@1
-  displayName: 'Twine Authenticate'
-  inputs:
-    artifactFeed: 'TileDB-Cloud-Py-pypi'
-    # In this case, name of the service connection is "pypi-upload".
-    pythonUploadServiceConnection: pypi-upload
-  condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
- 
-# Use command line script to 'twine upload', use -r to pass the repository name and --config-file to pass the environment variable set by the authenticate task.
-- script: |
-   python -m twine upload -r "pypi-upload" --config-file $(PYPIRC_PATH) dist/*.whl
-  condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
+    # Build the python distribution from source
+  - script: python setup.py bdist_wheel
+    displayName: 'Build wheel'
+    condition: ne(variables['Agent.OS'], 'Windows_NT')
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+      architecture: 'x64'
+
+  - task: TwineAuthenticate@1
+    displayName: 'Twine Authenticate'
+    inputs:
+      artifactFeed: 'TileDB-Cloud-Py-pypi'
+      # In this case, name of the service connection is "pypi-upload".
+      pythonUploadServiceConnection: 'pypi-upload'
+    condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
+   
+  # Use command line script to 'twine upload', use -r to pass the repository name and --config-file to pass the environment variable set by the authenticate task.
+  - script: |
+     python -m twine upload -r "pypi-upload" --config-file $(PYPIRC_PATH) dist/*.whl
+    condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
