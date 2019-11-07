@@ -2,35 +2,35 @@ trigger:
   tags:
     include:
       - v*
+      - \d.\d.\d
   branches:
     include:
     - master
 
-strategy:
-  matrix:
-    mac_35:
-      imageName: 'macOS-10.13'
-      python.version: '3.5'
-    mac_36:
-      imageName: 'macOS-10.13'
-      python.version: '3.6'
-    mac_37:
-      imageName: 'macOS-10.13'
-      python.version: '3.7'
-    linux_py35:
-      imageName: 'ubuntu-16.04'
-      python.version: '3.5'
-    linux_py36:
-      imageName: 'ubuntu-16.04'
-      python.version: '3.6'
-    linux_py37:
-      imageName: 'ubuntu-16.04'
-      python.version: '3.7'
-  maxParallel: 4
 
 # test and upload my code as an artifact named WebSite
 jobs:
 - job: Build
+  strategy:
+    matrix:
+      mac_35:
+        imageName: 'macOS-10.13'
+        python.version: '3.5'
+      mac_36:
+        imageName: 'macOS-10.13'
+        python.version: '3.6'
+      mac_37:
+        imageName: 'macOS-10.13'
+        python.version: '3.7'
+      linux_py35:
+        imageName: 'ubuntu-16.04'
+        python.version: '3.5'
+      linux_py36:
+        imageName: 'ubuntu-16.04'
+        python.version: '3.6'
+      linux_py37:
+        imageName: 'ubuntu-16.04'
+        python.version: '3.7'
   pool:
     vmImage: $(imageName)
 
@@ -78,17 +78,17 @@ jobs:
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '$(python.version)'
+      versionSpec: '3.7'
       architecture: 'x64'
 
   - script: 'pip install twine'
     displayName: 'Install twine'
-    condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
+    condition: and(succeeded(), and( and( eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7') ), startsWith(variables['Build.SourceBranch'], 'refs/tags')))
 
     # Build the python distribution from source
   - script: python setup.py bdist_wheel
     displayName: 'Build wheel'
-    condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
+    condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7')), startsWith(variables['Build.SourceBranch'], 'refs/tags')))
 
   - task: TwineAuthenticate@1
     displayName: 'Twine Authenticate'
@@ -97,4 +97,4 @@ jobs:
 
   - script: python -m twine upload -r "pypi-upload" --config-file $(PYPIRC_PATH) dist/*.whl
     displayName: 'Upload to Pypi'
-    condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7'))), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
+    condition: and(succeeded(), and(and(eq(variables['Agent.OS'], 'Linux'), eq(variables['python.version'], '3.7')), startsWith(variables['Build.SourceBranch'], 'refs/tags')))
