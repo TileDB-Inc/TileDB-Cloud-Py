@@ -17,7 +17,7 @@ def check_exc(exc):
         raise Exception(internal_err_msg)
 
     if exc.status == 404 and len(exc.body) == 0:
-        return TileDBClientError("Not found")
+        return TileDBClientError("Array or Namespace Not found")
 
     try:
         body = json.loads(exc.body)
