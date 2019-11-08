@@ -62,9 +62,19 @@ def tasks(
         (namespace, array) = cloudarray.split_uri(array)
 
     try:
-        return api_instance.tasks_get(
-            namespace=namespace, array=array, start=start, end=end, status=status
-        )
+        args = {}
+        if namespace is not None:
+            args["namespace"] = namespace
+        if array is not None:
+            args["array"] = array
+        if start is not None:
+            args["start"] = int(start)
+        if end is not None:
+            args["end"] = int(end)
+        if status is not None:
+            args["status"] = status
+
+        return api_instance.tasks_get(**args)
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
