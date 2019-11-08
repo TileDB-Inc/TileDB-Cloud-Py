@@ -128,3 +128,18 @@ def deregister_array(uri):
         return api_instance.deregister_array(namespace=namespace, array=array_name)
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
+
+def array_activity(uri):
+  """
+  Fetch array activity
+  :param uri:
+  :return:
+  """
+  (namespace, array_name) = cloudarray.split_uri(uri)
+
+  api_instance = client.get_array_api()
+
+  try:
+      return api_instance.array_activity_log(namespace=namespace, array=array_name)
+  except GenApiException as exc:
+      raise tiledb_cloud_error.check_exc(exc) from None
