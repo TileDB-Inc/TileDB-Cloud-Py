@@ -4,9 +4,12 @@
 
 This repository contains the Python client for the TileDB Cloud Service.
 
-## Installation
+## Quick Links
 
-To install from Github, use:
- 
-    pip install -e git+"ssh://git@github.com/TileDB-Inc/TileDB-Cloud-Py#egg=tiledb-cloud"
-  
+### Installation
+
+See [Installation Instructions](https://docs.tiledb.com/cloud/client-api/installation)
+
+### Quickstart
+
+See [Quickstart](https://docs.tiledb.com/cloud/quickstart) section of the docs.
