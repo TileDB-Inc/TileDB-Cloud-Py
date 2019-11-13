@@ -6,7 +6,7 @@ name = "pypi"
 
 
 [packages]
-tiledb = "*"
+tiledb = ">=0.5.0"
 urllib3 = ">=1.15"
 six = ">=1.10"
 certifi = "*"

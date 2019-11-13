@@ -7,7 +7,7 @@
 from setuptools import setup, find_packages  # noqa: H301
 
 NAME = "tiledb-cloud"
-VERSION = "0.3.1"
+VERSION = "0.3.2"
 
 # To install the library, run the following
 #
@@ -17,7 +17,7 @@ VERSION = "0.3.1"
 # http://pypi.python.org/pypi/setuptools
 
 REQUIRES = [
-    "tiledb",
+    "tiledb>=0.5.0",
     "urllib3>=1.15",
     "six>=1.10",
     "certifi",
