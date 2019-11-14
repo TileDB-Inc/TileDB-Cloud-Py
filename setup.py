@@ -7,7 +7,6 @@
 from setuptools import setup, find_packages  # noqa: H301
 
 NAME = "tiledb-cloud"
-VERSION = "0.3.2"
 
 # To install the library, run the following
 #
@@ -23,6 +22,8 @@ REQUIRES = [
     "certifi",
     "python-dateutil",
     "cloudpickle",
+    "setuptools>=18.0",
+    "setuptools_scm>=1.5.4",
 ]
 
 # NOTE: we cannot use an __init__.py file in the tiledb/ directory, because it is supplied
@@ -40,7 +41,6 @@ packages = ["tiledb.cloud"] + [
 
 setup(
     name=NAME,
-    version=VERSION,
     description="TileDB Cloud Platform Python Client",
     author_email="",
     url="https://tiledb.io",
@@ -49,6 +49,11 @@ setup(
     packages=packages,
     include_package_data=True,
     zip_safe=False,  # Force folder install; egg doesn't work for namespace
+    use_scm_version={
+        "version_scheme": "guess-next-dev",
+        "local_scheme": "dirty-tag",
+        "write_to": "tiledb/cloud/version.py",
+    },
     long_description="""\
     TileDB Cloud Platform Python API # noqa: E501
     """,
