@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **bytes_sent** | **int** | Bytes sent to client | [optional] 
 **bytes_received** | **int** | Bytes recieved from client | [optional] 
 **array_task_id** | **str** | uuid of associated array task | [optional] 
+**query_ranges** | **str** | ranges for query | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

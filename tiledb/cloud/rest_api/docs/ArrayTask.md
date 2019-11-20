@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **status** | [**ArrayTaskStatus**](ArrayTaskStatus.md) |  | [optional] 
 **start_time** | **datetime** | Start time RFC3339 for job | [optional] 
 **finish_time** | **datetime** | Finish time RFC3339 for job | [optional] 
-**cost** | **int** | Cost accumulated for task in 0.001 USD, example is 1 USD | [optional] 
+**cost** | **int** | Cost accumulated for task in 0.01 USD, example is 1 USD | [optional] 
 **query_type** | [**Querytype**](Querytype.md) |  | [optional] 
 **udf_code** | **str** | Optional actual code that is going to be executed | [optional] 
 **udf_language** | **str** | Optional actual language used to express udf_code | [optional] 

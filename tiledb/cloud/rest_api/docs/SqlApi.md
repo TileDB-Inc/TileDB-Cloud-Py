@@ -8,7 +8,7 @@ Method | HTTP request | Description
 
 
 # **run_sql**
-> run_sql(namespace, sql)
+> list[object] run_sql(namespace, sql)
 
 
 
@@ -41,7 +41,8 @@ namespace = 'namespace_example' # str | namespace to run task under is in (an or
 sql = rest_api.SQLParameters() # SQLParameters | sql being submitted
 
 try:
-    api_instance.run_sql(namespace, sql)
+    api_response = api_instance.run_sql(namespace, sql)
+    pprint(api_response)
 except ApiException as e:
     print("Exception when calling SqlApi->run_sql: %s\n" % e)
 ```
@@ -71,7 +72,8 @@ namespace = 'namespace_example' # str | namespace to run task under is in (an or
 sql = rest_api.SQLParameters() # SQLParameters | sql being submitted
 
 try:
-    api_instance.run_sql(namespace, sql)
+    api_response = api_instance.run_sql(namespace, sql)
+    pprint(api_response)
 except ApiException as e:
     print("Exception when calling SqlApi->run_sql: %s\n" % e)
 ```
@@ -85,7 +87,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+**list[object]**
 
 ### Authorization
 
@@ -99,6 +101,7 @@ void (empty response body)
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
+**200** | JSON results in array of objects form, if the query returns results |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br>  |
 **204** | SQL executed successfully |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br>  |
 **0** | error response |  -  |
 
