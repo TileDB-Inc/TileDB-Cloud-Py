@@ -8,6 +8,9 @@ from .rest_api import ApiException as GenApiException
 from .rest_api import rest
 
 import cloudpickle
+
+tiledb_cloud_protocol = 4
+
 import base64
 import sys
 
@@ -84,7 +87,7 @@ class CloudArray(object):
         (namespace, array_name) = split_uri(self.uri)
         api_instance = client.get_udf_api()
 
-        pickledUDF = cloudpickle.dumps(func)
+        pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
         ranges = []
