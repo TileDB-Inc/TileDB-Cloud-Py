@@ -9,6 +9,8 @@ from .rest_api import rest
 
 import tiledb
 import time
+import pandas
+import json
 
 last_sql_task_id = None
 
@@ -20,13 +22,17 @@ def exec(
     namespace=None,
     task_name=None,
     output_array_name=None,
+    raw_results=False,
 ):
     """
   Run a sql query
   :param str query: query to run
   :param str output_uri: optional array to store results to, must be a tiledb:// registered array
+  :param tiledb.ArraySchema output_schema: optional schema for creating output array if it does not exist
   :param str namespace: optional namespace to charge the query to
-  :param task_name: optional name to assign the task for logging and audit purposes
+  :param str task_name: optional name to assign the task for logging and audit purposes
+  :param str output_array_name: optional array name to set if creating new output array
+  :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
   """
 
     # Make sure the output_uri is remote array
@@ -90,10 +96,24 @@ def exec(
         global last_sql_task_id
         last_sql_task_id = response.getheader(client.TASK_ID_HEADER)
 
-        if response.status >= 200 and response.status < 300:
+        # Only return the response data if OK or err ignore all other 2xx response bodies
+        if response.status >= 200 and response.status < 300 and response.status != 200:
             return None
 
-        return response.data
+        if response.status == 200:
+            if not raw_results:
+                return pandas.read_json(response.data)
+            else:
+                return response.data
+
+        # Try to parse results as json, 200 status returns should be handled above and 4xx/5xx should through exceptions
+        # This path is unlikely to be called
+        try:
+            res = json.loads(response.data)
+            return res
+        except:
+            return response.data
+
     except GenApiException as exc:
         raise tiledb_cloud_error.check_sql_exc(exc) from None
 
