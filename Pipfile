@@ -12,6 +12,7 @@ six = ">=1.10"
 certifi = "*"
 python-dateutil = "*"
 cloudpickle = "*"
+pandas = "*"
 
 [dev-packages]
 

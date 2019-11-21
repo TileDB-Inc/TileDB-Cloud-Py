@@ -24,6 +24,7 @@ REQUIRES = [
     "cloudpickle",
     "setuptools>=18.0",
     "setuptools_scm>=1.5.4",
+    "pandas",
 ]
 
 # NOTE: we cannot use an __init__.py file in the tiledb/ directory, because it is supplied
