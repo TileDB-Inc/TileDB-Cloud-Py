@@ -33,6 +33,8 @@ def exec(
   :param str task_name: optional name to assign the task for logging and audit purposes
   :param str output_array_name: optional array name to set if creating new output array
   :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
+
+  :return: pandas dataframe if no output array is given and query returns results
   """
 
     # Make sure the output_uri is remote array

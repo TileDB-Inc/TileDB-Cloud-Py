@@ -206,7 +206,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **tasks_get**
-> list[ArrayTask] tasks_get(namespace=namespace, created_by=created_by, array=array, start=start, end=end, status=status)
+> ArrayTaskData tasks_get(namespace=namespace, created_by=created_by, array=array, start=start, end=end, page=page, per_page=per_page, type=type, status=status, search=search, orderby=orderby)
 
 
 
@@ -240,10 +240,15 @@ created_by = 'created_by_example' # str | username to filter (optional)
 array = 'array_example' # str | name/uri of array that is url-encoded to filter (optional)
 start = 56 # int | start time for tasks to filter by (optional)
 end = 56 # int | end time for tasks to filter by (optional)
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
+type = 'type_example' # str | task type, \"QUERY\", \"SQL\", \"UDF\" (optional)
 status = 'status_example' # str | Filter to only return these statuses (optional)
+search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
+orderby = 'orderby_example' # str | sort by which field valid values include start_time, name (optional)
 
 try:
-    api_response = api_instance.tasks_get(namespace=namespace, created_by=created_by, array=array, start=start, end=end, status=status)
+    api_response = api_instance.tasks_get(namespace=namespace, created_by=created_by, array=array, start=start, end=end, page=page, per_page=per_page, type=type, status=status, search=search, orderby=orderby)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling TasksApi->tasks_get: %s\n" % e)
@@ -275,10 +280,15 @@ created_by = 'created_by_example' # str | username to filter (optional)
 array = 'array_example' # str | name/uri of array that is url-encoded to filter (optional)
 start = 56 # int | start time for tasks to filter by (optional)
 end = 56 # int | end time for tasks to filter by (optional)
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
+type = 'type_example' # str | task type, \"QUERY\", \"SQL\", \"UDF\" (optional)
 status = 'status_example' # str | Filter to only return these statuses (optional)
+search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
+orderby = 'orderby_example' # str | sort by which field valid values include start_time, name (optional)
 
 try:
-    api_response = api_instance.tasks_get(namespace=namespace, created_by=created_by, array=array, start=start, end=end, status=status)
+    api_response = api_instance.tasks_get(namespace=namespace, created_by=created_by, array=array, start=start, end=end, page=page, per_page=per_page, type=type, status=status, search=search, orderby=orderby)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling TasksApi->tasks_get: %s\n" % e)
@@ -293,11 +303,16 @@ Name | Type | Description  | Notes
  **array** | **str**| name/uri of array that is url-encoded to filter | [optional] 
  **start** | **int**| start time for tasks to filter by | [optional] 
  **end** | **int**| end time for tasks to filter by | [optional] 
+ **page** | **int**| pagination offset | [optional] 
+ **per_page** | **int**| pagination limit | [optional] 
+ **type** | **str**| task type, \&quot;QUERY\&quot;, \&quot;SQL\&quot;, \&quot;UDF\&quot; | [optional] 
  **status** | **str**| Filter to only return these statuses | [optional] 
+ **search** | **str**| search string that will look at name, namespace or description fields | [optional] 
+ **orderby** | **str**| sort by which field valid values include start_time, name | [optional] 
 
 ### Return type
 
-[**list[ArrayTask]**](ArrayTask.md)
+[**ArrayTaskData**](ArrayTaskData.md)
 
 ### Authorization
 
