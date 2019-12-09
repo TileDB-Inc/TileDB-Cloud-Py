@@ -20,6 +20,8 @@ from .array import (
     array_activity,
 )
 
+from .tiledb_cloud_error import TileDBCloudError
+
 from .tasks import task, tasks, last_sql_task, last_udf_task
 
 from . import sql
