@@ -39,6 +39,11 @@ jobs:
       versionSpec: '$(python.version)'
       architecture: 'x64'
 
+  - script: python -m pip install --upgrade 'numpy==1.17.*'
+    # pip installs release candidates by default:
+    #   https://github.com/pypa/pip/issues/4969
+    displayName: 'Install pinned numpy'
+
   - script: python -m pip install --upgrade black
     displayName: 'Install black (linter)'
     condition: eq(variables['python.version'], '3.7')
