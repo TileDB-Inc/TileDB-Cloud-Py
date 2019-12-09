@@ -39,10 +39,10 @@ jobs:
       versionSpec: '$(python.version)'
       architecture: 'x64'
 
-  - script: python -m pip install --upgrade 'numpy==1.17.*'
+  - script: python -m pip install --upgrade 'numpy==1.17.*' pytest
     # pip installs release candidates by default:
     #   https://github.com/pypa/pip/issues/4969
-    displayName: 'Install pinned numpy'
+    displayName: 'Install dependencies'
 
   - script: python -m pip install --upgrade black
     displayName: 'Install black (linter)'
@@ -73,6 +73,14 @@ jobs:
         done;
     condition: failed() # only run this job if the build step failed
     displayName: "Print log files (failed build only)"
+
+  - bash: |
+      set -xeo pipefail
+      pytest
+    condition: eq(variables['Agent.OS'], 'Linux')
+    env:
+      TILEDB_CLOUD_HELPER_VAR: $(TILEDB_CLOUD_HELPER_VAR)
+    displayName: "Run tests (Linux only)"
 
 # download the artifact and deploy it only if the build job succeeded
 - job: Deploy
