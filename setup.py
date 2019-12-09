@@ -16,7 +16,7 @@ NAME = "tiledb-cloud"
 # http://pypi.python.org/pypi/setuptools
 
 REQUIRES = [
-    "tiledb>=0.5.0",
+    "tiledb",
     "urllib3>=1.15",
     "six>=1.10",
     "certifi",
