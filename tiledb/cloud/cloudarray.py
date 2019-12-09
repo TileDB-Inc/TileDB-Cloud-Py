@@ -7,6 +7,8 @@ from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
 from .rest_api import rest
 
+from tiledb import libtiledb, multirange_indexing
+
 import cloudpickle
 
 tiledb_cloud_protocol = 4
@@ -66,6 +68,33 @@ def build_dimension_coordinate(domain_type, val):
     return None
 
 
+class MultiIndexRanges(object):
+    def __init__(self, ranges):
+        self.ranges = ranges
+
+
+class MultiIndexer(object):
+    def __init__(self, array):
+        self.schema = array.schema
+
+    def __getitem__(self, idx):
+        # adapted from libtiledb.multi_index `getitem_ranges`
+        dom = self.schema.domain
+        ndim = dom.ndim
+        idx = libtiledb._index_as_tuple(idx)
+
+        ranges = list()
+        for i, sel in enumerate(idx):
+            subranges = multirange_indexing.sel_to_subranges(sel)
+            ranges.append(subranges)
+
+        # extend the list to ndim
+        if len(ranges) < ndim:
+            ranges.extend([tuple() for _ in range(ndim - len(ranges))])
+
+        return MultiIndexRanges(ranges)
+
+
 class CloudArray(object):
     def apply(self, func, subarray, attrs=None, layout=None):
         """
@@ -93,17 +122,7 @@ class CloudArray(object):
         pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
-        ranges = []
-        idx = 0
-        for dim in self.schema.domain:
-            start = build_dimension_coordinate(dim.dtype, subarray[idx][0])
-            end = build_dimension_coordinate(dim.dtype, subarray[idx][1])
-            ranges.append(
-                rest_api.models.UDFSubarrayRange(
-                    dimension_id=idx, range_start=start, range_end=end
-                )
-            )
-            idx = idx + 1
+        ranges = self._calculate_ranges(subarray)
 
         converted_layout = "row-major"
 
@@ -144,3 +163,32 @@ class CloudArray(object):
         except GenApiException as exc:
             raise tiledb_cloud_error.check_udf_exc(exc) from None
         return cloudpickle.loads(res)
+
+    def _calculate_ranges(self, subarray):
+        ranges = list()
+        if isinstance(subarray, MultiIndexRanges):
+            for dim_idx, dim_rng in enumerate(subarray.ranges):
+                dim = self.schema.domain.dim(dim_idx)
+                for idx, rng in enumerate(dim_rng):
+                    start = build_dimension_coordinate(dim.dtype, rng[0])
+                    end = build_dimension_coordinate(dim.dtype, rng[1] + 1)
+                    ranges.append(
+                        rest_api.models.UDFSubarrayRange(
+                            dimension_id=dim_idx, range_start=start, range_end=end
+                        )
+                    )
+        else:
+            for idx, dim in enumerate(self.schema.domain):
+                start = build_dimension_coordinate(dim.dtype, subarray[idx][0])
+                end = build_dimension_coordinate(dim.dtype, subarray[idx][1])
+                ranges.append(
+                    rest_api.models.UDFSubarrayRange(
+                        dimension_id=idx, range_start=start, range_end=end
+                    )
+                )
+
+        return ranges
+
+    @property
+    def MI(self):
+        return MultiIndexer(self)
