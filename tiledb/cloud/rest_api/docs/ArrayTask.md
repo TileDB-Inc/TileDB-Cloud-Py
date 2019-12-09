@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 **id** | **str** | task id | [optional] 
 **name** | **str** | Optional task name | [optional] 
 **description** | **str** | Optional task description (Tasks purpose) | [optional] 
-**array_metadata** | [**ArrayMetadata**](ArrayMetadata.md) |  | [optional] 
+**array_metadata** | [**ArrayInfo**](ArrayInfo.md) |  | [optional] 
 **subarray** | [**DomainArray**](DomainArray.md) |  | [optional] 
 **memory** | **int** | memory allocated to task in bytes | [optional] 
 **cpu** | **int** | millicpu allocated to task | [optional] 

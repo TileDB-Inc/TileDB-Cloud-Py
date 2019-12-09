@@ -434,7 +434,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_all_array_metadata**
-> list[ArrayMetadata] get_all_array_metadata(public_share=public_share)
+> list[ArrayInfo] get_all_array_metadata(public_share=public_share)
 
 
 
@@ -510,7 +510,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**list[ArrayMetadata]**](ArrayMetadata.md)
+[**list[ArrayInfo]**](ArrayInfo.md)
 
 ### Authorization
 
@@ -740,7 +740,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_array_metadata**
-> ArrayMetadata get_array_metadata(namespace, array)
+> ArrayInfo get_array_metadata(namespace, array)
 
 
 
@@ -819,7 +819,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**ArrayMetadata**](ArrayMetadata.md)
+[**ArrayInfo**](ArrayInfo.md)
 
 ### Authorization
 
@@ -1146,7 +1146,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_arrays_in_namespace**
-> list[ArrayMetadata] get_arrays_in_namespace(namespace)
+> list[ArrayInfo] get_arrays_in_namespace(namespace)
 
 
 
@@ -1222,7 +1222,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**list[ArrayMetadata]**](ArrayMetadata.md)
+[**list[ArrayInfo]**](ArrayInfo.md)
 
 ### Authorization
 
@@ -1362,7 +1362,7 @@ configuration.host = "http://localhost/v1"
 api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-array_metadata = rest_api.ArrayMetadataUpdate() # ArrayMetadataUpdate | metadata associated with array
+array_metadata = rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | metadata associated with array
 
 try:
     api_instance.register_array(namespace, array, array_metadata)
@@ -1393,7 +1393,7 @@ configuration.host = "http://localhost/v1"
 api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-array_metadata = rest_api.ArrayMetadataUpdate() # ArrayMetadataUpdate | metadata associated with array
+array_metadata = rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | metadata associated with array
 
 try:
     api_instance.register_array(namespace, array, array_metadata)
@@ -1407,7 +1407,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
  **array** | **str**| name/uri of array that is url-encoded | 
- **array_metadata** | [**ArrayMetadataUpdate**](ArrayMetadataUpdate.md)| metadata associated with array | 
+ **array_metadata** | [**ArrayInfoUpdate**](ArrayInfoUpdate.md)| metadata associated with array | 
 
 ### Return type
 
@@ -1563,7 +1563,7 @@ configuration.host = "http://localhost/v1"
 api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-array_metadata = rest_api.ArrayMetadataUpdate() # ArrayMetadataUpdate | array metadata to update
+array_metadata = rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | array metadata to update
 
 try:
     api_instance.update_array_metadata(namespace, array, array_metadata)
@@ -1594,7 +1594,7 @@ configuration.host = "http://localhost/v1"
 api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-array_metadata = rest_api.ArrayMetadataUpdate() # ArrayMetadataUpdate | array metadata to update
+array_metadata = rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | array metadata to update
 
 try:
     api_instance.update_array_metadata(namespace, array, array_metadata)
@@ -1608,7 +1608,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
  **array** | **str**| name/uri of array that is url-encoded | 
- **array_metadata** | [**ArrayMetadataUpdate**](ArrayMetadataUpdate.md)| array metadata to update | 
+ **array_metadata** | [**ArrayInfoUpdate**](ArrayInfoUpdate.md)| array metadata to update | 
 
 ### Return type
 

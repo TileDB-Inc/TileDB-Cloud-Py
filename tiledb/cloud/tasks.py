@@ -27,7 +27,13 @@ def task(id):
 
 
 def tasks(
-    namespace=None, array=None, start=None, end=datetime.datetime.utcnow(), status=None
+    namespace=None,
+    array=None,
+    start=None,
+    end=datetime.datetime.utcnow(),
+    status=None,
+    page=None,
+    per_page=None,
 ):
     """
   Fetch all tasks a user has access too
@@ -36,6 +42,8 @@ def tasks(
   :param datetime start: optional start time for listing of tasks, defaults to 7 days ago
   :param datetime end: optional end time for listing of tasks defaults to now
   :param str status: optional filter on status can be one of ['FAILED', 'RUNNING', 'COMPLETED']
+  :param int page: optional page for pagenating results
+  :param int per_page: optional records to return per page
   :return:
   """
     api_instance = client.get_tasks_api()
@@ -73,6 +81,10 @@ def tasks(
             args["end"] = int(end)
         if status is not None:
             args["status"] = status
+        if page is not None:
+            args["page"] = page
+        if per_page is not None:
+            args["per_page"] = per_page
 
         return api_instance.tasks_get(**args)
 
