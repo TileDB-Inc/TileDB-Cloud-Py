@@ -1,10 +1,12 @@
-import os.path
+import os.path, sys
 from pathlib import Path
 import json
 from . import rest_api
 
 config = rest_api.configuration.Configuration()
 default_config_file = Path.joinpath(Path.home(), ".tiledb", "cloud.json")
+if sys.version_info < (3, 6):
+    default_config_file = str(default_config_file)
 
 
 def save_configuration(config_file):
