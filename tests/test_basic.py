@@ -1,5 +1,4 @@
 import tiledb, tiledb.cloud
-import os
 import sys, os, platform, unittest
 
 tiledb.cloud.login(token=os.environ["TILEDB_CLOUD_HELPER_VAR"])
@@ -18,3 +17,6 @@ class BasicTests(unittest.TestCase):
         ) as A:
             print("quickstart_sparse:")
             print(A[:])
+
+            with self.assertRaises(TypeError):
+                A.apply(None, [(0, 1)])

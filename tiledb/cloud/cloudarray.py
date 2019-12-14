@@ -87,6 +87,9 @@ class CloudArray(object):
         (namespace, array_name) = split_uri(self.uri)
         api_instance = client.get_udf_api()
 
+        if not callable(func):
+            raise TypeError("First argument to `apply` must be callable!")
+
         pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
