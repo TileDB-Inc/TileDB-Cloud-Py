@@ -91,7 +91,11 @@ def login(
     :return:
     """
     if host is None:
-        host = "https://api.tiledb.com/v1"
+        host = "https://api.tiledb.com"
+    elif host.endswith("/v1"):
+        host = host[: -len("/v1")]
+    elif host.endswith("/v1/"):
+        host = host[: -len("/v1/")]
 
     if token == "" and username == "" and password == "":
         raise Exception("Username and Password OR token must be set")

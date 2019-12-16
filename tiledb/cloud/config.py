@@ -43,17 +43,25 @@ def load_configuration(config_path):
             username = config_obj["username"]
         if "password" in config_obj:
             password = config_obj["password"]
+
+        host = config_obj["host"]
+        if host.endswith("/v1"):
+            host = host[: -len("/v1")]
+        elif host.endswith("/v1/"):
+            host = host[: -len("/v1/")]
+
         setup_configuration(
             api_key=config_obj["api_key"],
             username=username,
             password=password,
-            host=config_obj["host"],
+            host=host,
             verify_ssl=config_obj["verify_ssl"],
         )
     return True
 
 
 def setup_configuration(api_key, host, username="", password="", verify_ssl=True):
+    host = host + "/v1"
     global config
     config.api_key = api_key
     config.host = host
