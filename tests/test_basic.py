@@ -20,3 +20,11 @@ class BasicTests(unittest.TestCase):
 
             with self.assertRaises(TypeError):
                 A.apply(None, [(0, 1)])
+
+    def test_context(self):
+        with self.assertRaises(ValueError):
+            tiledb.cloud.Ctx({"rest.server_address": "1.1.1.1"})
+
+        test_cache_size = str(int(3.14159 * 100000))
+        ctx = tiledb.cloud.Ctx({"sm.tile_cache_size": test_cache_size})
+        self.assertEqual(ctx.config()["sm.tile_cache_size"], test_cache_size)

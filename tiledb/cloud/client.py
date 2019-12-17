@@ -12,19 +12,26 @@ import tiledb
 TASK_ID_HEADER = "X-TILEDB-CLOUD-TASK-ID"
 
 
-def Config():
+def Config(cfg_dict=None):
     """
   Builds a tiledb config setting the login parameters that exist for the cloud service
   :return: tiledb.Config
   """
+    restricted = ("rest.server_address", "rest.username", "rest.password")
+
+    if not cfg_dict:
+        cfg_dict = dict()
+
+    for r in restricted:
+        if r in cfg_dict:
+            raise ValueError("Unexpected config parameter '{r}' to cloud.Config")
+
     host_parsed = urllib.parse.urlparse(config.config.host)
-    cfg = tiledb.Config(
-        {
-            "rest.server_address": urllib.parse.urlunparse(
-                (host_parsed.scheme, host_parsed.netloc, "", "", "", "")
-            )
-        }
+    cfg_dict["rest.server_address"] = urllib.parse.urlunparse(
+        (host_parsed.scheme, host_parsed.netloc, "", "", "", "")
     )
+    cfg = tiledb.Config(cfg_dict)
+
     if config.config.username != "" and config.config.password != "":
         cfg["rest.username"] = config.config.username
         cfg["rest.password"] = config.config.password
@@ -34,12 +41,12 @@ def Config():
     return cfg
 
 
-def Ctx():
+def Ctx(config=None):
     """
     Builds a TileDB Context that has the tiledb config parameters for tiledb cloud set from stored login
     :return: tiledb.Ctx
     """
-    return tiledb.Ctx(Config())
+    return tiledb.Ctx(Config(config))
 
 
 def get_array_api():
