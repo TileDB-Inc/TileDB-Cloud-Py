@@ -1,9 +1,12 @@
 import tiledb, tiledb.cloud
 import sys, os, platform, unittest
 import numpy as np
-from tiledb.tests.common import DiskTestCase, assert_subarrays_equal
+from tiledb.cloud import cloudarray
 
-tiledb.cloud.login(token=os.environ["TILEDB_CLOUD_HELPER_VAR"])
+tiledb.cloud.login(
+    token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
+    host=os.environ.get("TILEDB_CLOUD_REST_HOST", None),
+)
 
 
 class BasicTests(unittest.TestCase):
@@ -23,6 +26,20 @@ class BasicTests(unittest.TestCase):
             with self.assertRaises(TypeError):
                 A.apply(None, [(0, 1)])
 
+            import numpy
+
+            orig = A[:]
+            self.assertEqual(
+                A.apply(lambda x: numpy.sum(x["a"]), [(1, 4), (1, 4)]),
+                numpy.sum(orig["a"]),
+            )
+
+            orig = A.multi_index[[1, slice(2, 4)], [slice(1, 2), 4]]
+            self.assertEqual(
+                A.apply(lambda x: numpy.sum(x["a"]), [[1, slice(2, 4)], [(1, 2), 4]]),
+                numpy.sum(orig["a"]),
+            )
+
     def test_context(self):
         with self.assertRaises(ValueError):
             tiledb.cloud.Ctx({"rest.server_address": "1.1.1.1"})
@@ -32,47 +49,36 @@ class BasicTests(unittest.TestCase):
         self.assertEqual(ctx.config()["sm.tile_cache_size"], test_cache_size)
 
 
-def threadtest_create_array(uri,):
-    data = np.random.rand(20)
-    schema = tiledb.libtiledb.schema_like(data)
-    tiledb.Array.create(uri, schema)
-    with tiledb.DenseArray(uri, "w") as A:
-        A[:] = data
+class RangesTest(unittest.TestCase):
+    def test_parse_ranges(self):
+        ibid = lambda x, y, z: (x, y, z)
+        parse_ranges = lambda x: cloudarray.parse_ranges(x, ibid)
 
+        a = [1]
+        b = [(0, 1, 1)]
+        self.assertEqual(parse_ranges(a), b)
 
-def threadtest_run_workers(uri):
-    def worker(n, uri):
-        with tiledb.DenseArray(uri) as A:
-            res = A.shape
+        a = [1, 2]
+        b = [(0, 1, 1), (1, 2, 2)]
+        self.assertEqual(parse_ranges(a), b)
 
-        return res
+        a = [[1, 2], 3]
+        b = [(0, 1, 1), (0, 2, 2), (1, 3, 3)]
+        self.assertEqual(parse_ranges(a), b)
 
-    import concurrent.futures
+        # tuples
+        a = [1, (1, 2)]
+        b = [(0, 1, 1), (1, 1, 2)]
+        self.assertEqual(parse_ranges(a), b)
 
-    executor_cls = concurrent.futures.ThreadPoolExecutor
-    with executor_cls(max_workers=2) as executor:
-        futures = [executor.submit(worker, n, uri) for n in range(0, 5)]
-        res = [f.result() for f in concurrent.futures.as_completed(futures)]
+        a = [1, [(1, 2)]]
+        b = [(0, 1, 1), (1, 1, 2)]
+        self.assertEqual(parse_ranges(a), b)
 
+        a = [1, [slice(1, 2)]]
+        b = [(0, 1, 1), (1, 1, 2)]
+        self.assertEqual(parse_ranges(a), b)
 
-class ThreadedImportTest(DiskTestCase):
-    def test_threaded_import(self):
-        import multiprocessing as mp
-
-        uri = self.path("test_threaded_import")
-        mpctx = mp.get_context("spawn")
-
-        p = mpctx.Process(target=threadtest_create_array, args=(uri,))
-        p.start()
-        p.join(5)
-        self.assertEqual(p.exitcode, 0)
-
-        p2 = mpctx.Process(target=threadtest_run_workers, args=(uri,))
-        p2.start()
-        p2.join()
-        self.assertEqual(p2.exitcode, 0)
-
-        with tiledb.DenseArray(uri) as A:
-            from tiledb.cloud.cloudarray import CloudArray
-
-            self.assertTrue(CloudArray in A.__class__.__bases__)
+        a = [1, slice(2, 3)], [(1, 2), 4]
+        b = [(0, 1, 1), (0, 2, 3), (1, 1, 2), (1, 4, 4)]
+        self.assertEqual(parse_ranges(a), b)

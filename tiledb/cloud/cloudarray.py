@@ -13,6 +13,7 @@ tiledb_cloud_protocol = 4
 
 import base64
 import sys
+import numpy as np
 
 last_udf_task_id = None
 
@@ -38,25 +39,25 @@ def build_dimension_coordinate(domain_type, val):
   :return: rest_api.models.DimensionCoordinate: model
   """
 
-    if domain_type == "int8":
+    if domain_type == np.dtype("int8"):
         return rest_api.models.DimensionCoordinate(int8=int(val))
-    elif domain_type == "uint8":
+    elif domain_type == np.dtype("uint8"):
         return rest_api.models.DimensionCoordinate(uint8=int(val))
-    elif domain_type == "int16":
+    elif domain_type == np.dtype("int16"):
         return rest_api.models.DimensionCoordinate(int16=int(val))
-    elif domain_type == "uint16":
+    elif domain_type == np.dtype("uint16"):
         return rest_api.models.DimensionCoordinate(uint16=int(val))
-    elif domain_type == "int32":
+    elif domain_type == np.dtype("int32"):
         return rest_api.models.DimensionCoordinate(int32=int(val))
-    elif domain_type == "uint32":
+    elif domain_type == np.dtype("uint32"):
         return rest_api.models.DimensionCoordinate(uint32=int(val))
-    elif domain_type == "int64":
+    elif domain_type == np.dtype("int64"):
         return rest_api.models.DimensionCoordinate(int64=int(val))
-    elif domain_type == "uint64":
+    elif domain_type == np.dtype("uint64"):
         return rest_api.models.DimensionCoordinate(uint64=int(val))
-    elif domain_type == "float32":
+    elif domain_type == np.dtype("float32"):
         return rest_api.models.DimensionCoordinate(float32=float(val))
-    elif domain_type == "float64":
+    elif domain_type == np.dtype("float64"):
         return rest_api.models.DimensionCoordinate(float64=float(val))
     else:
         raise Exception(
@@ -64,6 +65,47 @@ def build_dimension_coordinate(domain_type, val):
         )
 
     return None
+
+
+def parse_ranges(ranges, builder):
+    """
+    Takes a list of the following objects per dimension:
+
+    - scalar index
+    - (start,end) tuple
+    - list of either of the above types
+
+    :param ranges:
+    :return:
+    """
+
+    def make_range(dim_idx, dim_range):
+        if isinstance(dim_range, (int, float)):
+            start, end = dim_range, dim_range
+        elif isinstance(dim_range, (tuple, list)):
+            start, end = dim_range[0], dim_range[1]
+        elif isinstance(dim_range, slice):
+            assert dim_range.step is None, "slice steps are not supported!"
+            start, end = dim_range.start, dim_range.stop
+        else:
+            raise ValueError(f"Unknown index type! (type: '{type(dim_range)}')")
+
+        return builder(dim_idx, start, end)
+
+    result = list()
+    for dim_idx, dim_range in enumerate(ranges):
+        # TODO handle numpy scalars here?
+        if isinstance(dim_range, (int, float, tuple, slice)):
+            result.append(make_range(dim_idx, dim_range))
+        elif isinstance(dim_range, list):
+            result.extend([make_range(dim_idx, r) for r in dim_range])
+        else:
+            raise ValueError(
+                f"Unknown subarray/index type! (type: '{type(dim_range)}', "
+                f", idx: '{dim_idx}', value: '{dim_range}')"
+            )
+
+    return result
 
 
 class CloudArray(object):
@@ -93,17 +135,19 @@ class CloudArray(object):
         pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
-        ranges = []
-        idx = 0
-        for dim in self.schema.domain:
-            start = build_dimension_coordinate(dim.dtype, subarray[idx][0])
-            end = build_dimension_coordinate(dim.dtype, subarray[idx][1])
-            ranges.append(
-                rest_api.models.UDFSubarrayRange(
-                    dimension_id=idx, range_start=start, range_end=end
-                )
+        dtypes = list(
+            self.schema.domain.dim(idx).dtype
+            for idx in range(0, self.schema.domain.ndim)
+        )
+
+        def build_rest_udfrange(dim_idx, start, end):
+            xstart = build_dimension_coordinate(dtypes[dim_idx], start)
+            xend = build_dimension_coordinate(dtypes[dim_idx], end)
+            return rest_api.models.UDFSubarrayRange(
+                dimension_id=dim_idx, range_start=xstart, range_end=xend
             )
-            idx = idx + 1
+
+        ranges = parse_ranges(subarray, build_rest_udfrange)
 
         converted_layout = "row-major"
 
