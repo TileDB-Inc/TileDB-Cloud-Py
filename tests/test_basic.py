@@ -82,3 +82,6 @@ class RangesTest(unittest.TestCase):
         a = [1, slice(2, 3)], [(1, 2), 4]
         b = [(0, 1, 1), (0, 2, 3), (1, 1, 2), (1, 4, 4)]
         self.assertEqual(parse_ranges(a), b)
+
+        with self.assertRaises(ValueError):
+            parse_ranges(["idx"])

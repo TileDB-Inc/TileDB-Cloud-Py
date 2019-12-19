@@ -75,7 +75,8 @@ def parse_ranges(ranges, builder):
     - (start,end) tuple
     - list of either of the above types
 
-    :param ranges:
+    :param ranges: list of (scalar, tuple, list)
+    :param builder: function taking arguments (dim_idx, start, end)
     :return:
     """
 
@@ -88,7 +89,7 @@ def parse_ranges(ranges, builder):
             assert dim_range.step is None, "slice steps are not supported!"
             start, end = dim_range.start, dim_range.stop
         else:
-            raise ValueError(f"Unknown index type! (type: '{type(dim_range)}')")
+            raise ValueError("Unknown index type! (type: '{}')".format(type(dim_range)))
 
         return builder(dim_idx, start, end)
 
@@ -101,8 +102,8 @@ def parse_ranges(ranges, builder):
             result.extend([make_range(dim_idx, r) for r in dim_range])
         else:
             raise ValueError(
-                f"Unknown subarray/index type! (type: '{type(dim_range)}', "
-                f", idx: '{dim_idx}', value: '{dim_range}')"
+                "Unknown subarray/index type! (type: '{}', "
+                ", idx: '{}', value: '{}')".format(type(dim_range), dim_idx, dim_range)
             )
 
     return result
