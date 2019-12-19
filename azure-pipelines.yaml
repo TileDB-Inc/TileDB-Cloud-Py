@@ -77,10 +77,10 @@ jobs:
   - bash: |
       set -xeo pipefail
       pytest
-    condition: eq(variables['Agent.OS'], 'Linux')
+    condition: ne(variables['Agent.OS'], 'Windows_NT')
     env:
       TILEDB_CLOUD_HELPER_VAR: $(TILEDB_CLOUD_HELPER_VAR)
-    displayName: "Run tests (Linux only)"
+    displayName: "Run tests"
 
 # download the artifact and deploy it only if the build job succeeded
 - job: Deploy
