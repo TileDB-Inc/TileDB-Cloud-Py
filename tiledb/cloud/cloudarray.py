@@ -75,7 +75,8 @@ def parse_ranges(ranges, builder):
     - (start,end) tuple
     - list of either of the above types
 
-    :param ranges:
+    :param ranges: list of (scalar, tuple, list)
+    :param builder: function taking arguments (dim_idx, start, end)
     :return:
     """
 
