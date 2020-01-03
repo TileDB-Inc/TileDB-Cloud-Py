@@ -2,6 +2,7 @@ import os.path, sys
 from pathlib import Path
 import json
 from . import rest_api
+from urllib3 import Retry
 
 config = rest_api.configuration.Configuration()
 default_config_file = Path.joinpath(Path.home(), ".tiledb", "cloud.json")
@@ -68,6 +69,13 @@ def setup_configuration(api_key, host, username="", password="", verify_ssl=True
     config.username = username
     config.password = password
     config.verify_ssl = verify_ssl
+    config.retries = Retry(
+        total=10,
+        backoff_factor=0.25,
+        status_forcelist=[503],
+        method_whitelist=False,
+        raise_on_status=False,
+    )
 
 
 # Load default config file if it exists
