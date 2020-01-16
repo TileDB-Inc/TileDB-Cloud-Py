@@ -111,7 +111,15 @@ def parse_ranges(ranges, builder):
 
 
 class CloudArray(object):
-    def apply(self, func, subarray, attrs=None, layout=None, image_name=None):
+    def apply(
+        self,
+        func,
+        subarray,
+        attrs=None,
+        layout=None,
+        image_name=None,
+        http_compressor="deflate",
+    ):
         """
     Apply a user defined function to a udf
 
@@ -183,6 +191,7 @@ class CloudArray(object):
                     ),
                     image_name=image_name,
                 ),
+                accept_encoding=http_compressor,
                 _preload_content=False,
             )
             response = rest.RESTResponse(response)
