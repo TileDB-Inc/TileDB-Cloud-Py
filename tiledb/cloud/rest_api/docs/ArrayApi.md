@@ -11,6 +11,7 @@ Method | HTTP request | Description
 [**get_all_array_metadata**](ArrayApi.md#get_all_array_metadata) | **GET** /arrays | 
 [**get_array**](ArrayApi.md#get_array) | **GET** /arrays/{namespace}/{array} | 
 [**get_array_max_buffer_sizes**](ArrayApi.md#get_array_max_buffer_sizes) | **GET** /arrays/{namespace}/{array}/max_buffer_sizes | 
+[**get_array_meta_data_json**](ArrayApi.md#get_array_meta_data_json) | **GET** /arrays/{namespace}/{array}/metadata_json | 
 [**get_array_metadata**](ArrayApi.md#get_array_metadata) | **GET** /arrays/{namespace}/{array}/metadata | 
 [**get_array_non_empty_domain**](ArrayApi.md#get_array_non_empty_domain) | **GET** /arrays/{namespace}/{array}/non_empty_domain | 
 [**get_array_sample_data**](ArrayApi.md#get_array_sample_data) | **GET** /arrays/{namespace}/{array}/sample | 
@@ -735,6 +736,105 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | get the max buffer sizes of an array for a subarray |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **get_array_meta_data_json**
+> object get_array_meta_data_json(namespace, array)
+
+
+
+get metadata from the array in json format
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+
+try:
+    api_response = api_instance.get_array_meta_data_json(namespace, array)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ArrayApi->get_array_meta_data_json: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+
+try:
+    api_response = api_instance.get_array_meta_data_json(namespace, array)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ArrayApi->get_array_meta_data_json: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
+ **array** | **str**| name/uri of array that is url-encoded | 
+
+### Return type
+
+**object**
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | get array metadata |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
