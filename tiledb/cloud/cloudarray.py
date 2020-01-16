@@ -110,7 +110,7 @@ def parse_ranges(ranges, builder):
 
 
 class CloudArray(object):
-    def apply(self, func, subarray, attrs=None, layout=None):
+    def apply(self, func, subarray, attrs=None, layout=None, image_name=None):
         """
     Apply a user defined function to a udf
 
@@ -163,6 +163,8 @@ class CloudArray(object):
 
         ranges = rest_api.models.UDFSubarray(layout=converted_layout, ranges=ranges)
 
+        if image_name is None:
+            image_name = "default"
         try:
             # _preload_content must be set to false to avoid trying to decode binary data
             response = api_instance.submit_udf(
@@ -172,11 +174,13 @@ class CloudArray(object):
                     type=rest_api.models.UDFType.PYTHON,
                     _exec=pickledUDF,
                     subarray=ranges,
+                    buffers=attrs,
                     version="{}.{}.{}".format(
                         sys.version_info.major,
                         sys.version_info.minor,
                         sys.version_info.micro,
                     ),
+                    image_name=image_name,
                 ),
                 _preload_content=False,
             )
