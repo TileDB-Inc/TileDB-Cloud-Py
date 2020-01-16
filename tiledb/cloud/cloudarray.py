@@ -14,6 +14,7 @@ tiledb_cloud_protocol = 4
 import base64
 import sys
 import numpy as np
+import zlib
 
 last_udf_task_id = None
 
@@ -190,6 +191,23 @@ class CloudArray(object):
             last_udf_task_id = response.getheader(client.TASK_ID_HEADER)
 
             res = response.data
+
         except GenApiException as exc:
             raise tiledb_cloud_error.check_udf_exc(exc) from None
-        return cloudpickle.loads(res)
+
+        if res[:2].hex() in ["7801", "785e", "789c", "78da"]:
+            try:
+                res = zlib.decompress(res)
+            except zlib.error:
+                raise tiledb_cloud_error.TileDBCloudError(
+                    "Failed to decompress (zlib) result object"
+                )
+
+        try:
+            res = cloudpickle.loads(res)
+        except:
+            raise tiledb_cloud_error.TileDBCloudError(
+                "Failed to load cloudpickle result object"
+            )
+
+        return res
