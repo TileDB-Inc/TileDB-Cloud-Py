@@ -45,6 +45,7 @@ class SqlApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace to run task under is in (an organization name or user's username) (required)
         :param SQLParameters sql: sql being submitted (required)
+        :param str accept_encoding: Encoding to use
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -71,6 +72,7 @@ class SqlApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace to run task under is in (an organization name or user's username) (required)
         :param SQLParameters sql: sql being submitted (required)
+        :param str accept_encoding: Encoding to use
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -87,7 +89,7 @@ class SqlApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace", "sql"]  # noqa: E501
+        all_params = ["namespace", "sql", "accept_encoding"]  # noqa: E501
         all_params.append("async_req")
         all_params.append("_return_http_data_only")
         all_params.append("_preload_content")
@@ -120,6 +122,10 @@ class SqlApi(object):
         query_params = []
 
         header_params = {}
+        if "accept_encoding" in local_var_params:
+            header_params["Accept-Encoding"] = local_var_params[
+                "accept_encoding"
+            ]  # noqa: E501
 
         form_params = []
         local_var_files = {}

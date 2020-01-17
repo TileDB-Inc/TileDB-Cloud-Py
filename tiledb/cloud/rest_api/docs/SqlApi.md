@@ -8,7 +8,7 @@ Method | HTTP request | Description
 
 
 # **run_sql**
-> list[object] run_sql(namespace, sql)
+> list[object] run_sql(namespace, sql, accept_encoding=accept_encoding)
 
 
 
@@ -39,9 +39,10 @@ configuration.host = "http://localhost/v1"
 api_instance = rest_api.SqlApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace to run task under is in (an organization name or user's username)
 sql = rest_api.SQLParameters() # SQLParameters | sql being submitted
+accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
 try:
-    api_response = api_instance.run_sql(namespace, sql)
+    api_response = api_instance.run_sql(namespace, sql, accept_encoding=accept_encoding)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling SqlApi->run_sql: %s\n" % e)
@@ -70,9 +71,10 @@ configuration.host = "http://localhost/v1"
 api_instance = rest_api.SqlApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace to run task under is in (an organization name or user's username)
 sql = rest_api.SQLParameters() # SQLParameters | sql being submitted
+accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
 try:
-    api_response = api_instance.run_sql(namespace, sql)
+    api_response = api_instance.run_sql(namespace, sql, accept_encoding=accept_encoding)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling SqlApi->run_sql: %s\n" % e)
@@ -84,6 +86,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace to run task under is in (an organization name or user&#39;s username) | 
  **sql** | [**SQLParameters**](SQLParameters.md)| sql being submitted | 
+ **accept_encoding** | **str**| Encoding to use | [optional] 
 
 ### Return type
 
