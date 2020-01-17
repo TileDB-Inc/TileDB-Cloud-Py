@@ -47,6 +47,7 @@ class UdfApi(object):
         :param str array: name/uri of array that is url-encoded (required)
         :param UDF udf: udf to run (required)
         :param str x_payer: Name of organization or user who should be charged for this request
+        :param str accept_encoding: Encoding to use
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -77,6 +78,7 @@ class UdfApi(object):
         :param str array: name/uri of array that is url-encoded (required)
         :param UDF udf: udf to run (required)
         :param str x_payer: Name of organization or user who should be charged for this request
+        :param str accept_encoding: Encoding to use
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -93,7 +95,13 @@ class UdfApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace", "array", "udf", "x_payer"]  # noqa: E501
+        all_params = [
+            "namespace",
+            "array",
+            "udf",
+            "x_payer",
+            "accept_encoding",
+        ]  # noqa: E501
         all_params.append("async_req")
         all_params.append("_return_http_data_only")
         all_params.append("_preload_content")
@@ -136,6 +144,10 @@ class UdfApi(object):
         header_params = {}
         if "x_payer" in local_var_params:
             header_params["X-Payer"] = local_var_params["x_payer"]  # noqa: E501
+        if "accept_encoding" in local_var_params:
+            header_params["Accept-Encoding"] = local_var_params[
+                "accept_encoding"
+            ]  # noqa: E501
 
         form_params = []
         local_var_files = {}

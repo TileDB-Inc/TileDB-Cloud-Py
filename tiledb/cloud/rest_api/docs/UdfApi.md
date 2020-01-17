@@ -8,7 +8,7 @@ Method | HTTP request | Description
 
 
 # **submit_udf**
-> file submit_udf(namespace, array, udf, x_payer=x_payer)
+> file submit_udf(namespace, array, udf, x_payer=x_payer, accept_encoding=accept_encoding)
 
 
 
@@ -41,9 +41,10 @@ namespace = 'namespace_example' # str | namespace array is in (an organization n
 array = 'array_example' # str | name/uri of array that is url-encoded
 udf = rest_api.UDF() # UDF | udf to run
 x_payer = 'x_payer_example' # str | Name of organization or user who should be charged for this request (optional)
+accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
 try:
-    api_response = api_instance.submit_udf(namespace, array, udf, x_payer=x_payer)
+    api_response = api_instance.submit_udf(namespace, array, udf, x_payer=x_payer, accept_encoding=accept_encoding)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling UdfApi->submit_udf: %s\n" % e)
@@ -74,9 +75,10 @@ namespace = 'namespace_example' # str | namespace array is in (an organization n
 array = 'array_example' # str | name/uri of array that is url-encoded
 udf = rest_api.UDF() # UDF | udf to run
 x_payer = 'x_payer_example' # str | Name of organization or user who should be charged for this request (optional)
+accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
 try:
-    api_response = api_instance.submit_udf(namespace, array, udf, x_payer=x_payer)
+    api_response = api_instance.submit_udf(namespace, array, udf, x_payer=x_payer, accept_encoding=accept_encoding)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling UdfApi->submit_udf: %s\n" % e)
@@ -90,6 +92,7 @@ Name | Type | Description  | Notes
  **array** | **str**| name/uri of array that is url-encoded | 
  **udf** | [**UDF**](UDF.md)| udf to run | 
  **x_payer** | **str**| Name of organization or user who should be charged for this request | [optional] 
+ **accept_encoding** | **str**| Encoding to use | [optional] 
 
 ### Return type
 
