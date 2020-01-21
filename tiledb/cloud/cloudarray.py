@@ -175,6 +175,11 @@ class CloudArray(object):
         if image_name is None:
             image_name = "default"
         try:
+
+            kwargs = {"_preload_content": False}
+            if http_compressor is not None:
+                kwargs["accept_encoding"] = http_compressor
+
             # _preload_content must be set to false to avoid trying to decode binary data
             response = api_instance.submit_udf(
                 namespace=namespace,
@@ -191,8 +196,7 @@ class CloudArray(object):
                     ),
                     image_name=image_name,
                 ),
-                accept_encoding=http_compressor,
-                _preload_content=False,
+                **kwargs
             )
             response = rest.RESTResponse(response)
 

@@ -23,6 +23,7 @@ def exec(
     task_name=None,
     output_array_name=None,
     raw_results=False,
+    http_compressor="deflate",
 ):
     """
   Run a sql query
@@ -33,6 +34,7 @@ def exec(
   :param str task_name: optional name to assign the task for logging and audit purposes
   :param str output_array_name: optional array name to set if creating new output array
   :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
+  :param string http_compressor: optional http compression method to use
 
   :return: pandas dataframe if no output array is given and query returns results
   """
@@ -85,13 +87,16 @@ def exec(
             )
 
     try:
+        kwargs = {"_preload_content": False}
+        if http_compressor is not None:
+            kwargs["accept_encoding"] = http_compressor
 
         response = api_instance.run_sql(
             namespace=namespace,
             sql=rest_api.models.SQLParameters(
                 name=task_name, query=query, output_uri=output_uri
             ),
-            _preload_content=False,
+            **kwargs
         )
         response = rest.RESTResponse(response)
 
