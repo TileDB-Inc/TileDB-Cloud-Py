@@ -98,7 +98,7 @@ def login(
     :return:
     """
     if host is None:
-        host = "https://api.tiledb.com"
+        host = config.default_host
     elif host.endswith("/v1"):
         host = host[: -len("/v1")]
     elif host.endswith("/v1/"):
