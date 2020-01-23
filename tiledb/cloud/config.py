@@ -76,6 +76,9 @@ def setup_configuration(api_key, host, username="", password="", verify_ssl=True
         method_whitelist=False,
         raise_on_status=False,
     )
+    # Set logged in at this point
+    global logged_in
+    logged_in = True
 
 
 # Load default config file if it exists
