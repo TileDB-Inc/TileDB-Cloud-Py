@@ -32,6 +32,9 @@ configuration = rest_api.Configuration()
 # Configure HTTP basic authorization: BasicAuth
 configuration.username = 'YOUR_USERNAME'
 configuration.password = 'YOUR_PASSWORD'
+configuration = rest_api.Configuration()
+# Configure OAuth2 access token for authorization: OAuth2
+configuration.access_token = 'YOUR_ACCESS_TOKEN'
 
 # Defining host is optional and default to http://localhost/v1
 configuration.host = "http://localhost/v1"
@@ -64,6 +67,44 @@ configuration = rest_api.Configuration()
 # Configure HTTP basic authorization: BasicAuth
 configuration.username = 'YOUR_USERNAME'
 configuration.password = 'YOUR_PASSWORD'
+configuration = rest_api.Configuration()
+# Configure OAuth2 access token for authorization: OAuth2
+configuration.access_token = 'YOUR_ACCESS_TOKEN'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.SqlApi(rest_api.ApiClient(configuration))
+namespace = 'namespace_example' # str | namespace to run task under is in (an organization name or user's username)
+sql = rest_api.SQLParameters() # SQLParameters | sql being submitted
+accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
+
+try:
+    api_response = api_instance.run_sql(namespace, sql, accept_encoding=accept_encoding)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling SqlApi->run_sql: %s\n" % e)
+```
+
+* OAuth Authentication (OAuth2):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+configuration = rest_api.Configuration()
+# Configure OAuth2 access token for authorization: OAuth2
+configuration.access_token = 'YOUR_ACCESS_TOKEN'
 
 # Defining host is optional and default to http://localhost/v1
 configuration.host = "http://localhost/v1"
@@ -94,7 +135,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth), [OAuth2](../README.md#OAuth2)
 
 ### HTTP request headers
 
