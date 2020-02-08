@@ -40,6 +40,70 @@ class BasicTests(unittest.TestCase):
                 numpy.sum(orig["a"]),
             )
 
+    def test_quickstart_async(self):
+        with tiledb.open(
+            "tiledb://TileDB-Inc/quickstart_dense", ctx=tiledb.cloud.Ctx()
+        ) as A:
+            print("quickstart_dense:")
+            print(A[:])
+
+        with tiledb.open(
+            "tiledb://TileDB-Inc/quickstart_sparse", ctx=tiledb.cloud.Ctx()
+        ) as A:
+            print("quickstart_sparse:")
+            print(A[:])
+
+            with self.assertRaises(TypeError):
+                A.apply_async(None, [(0, 1)]).get()
+
+            import numpy
+
+            orig = A[:]
+            self.assertEqual(
+                A.apply_async(lambda x: numpy.sum(x["a"]), [(1, 4), (1, 4)]).get(),
+                numpy.sum(orig["a"]),
+            )
+
+            orig = A.multi_index[[1, slice(2, 4)], [slice(1, 2), 4]]
+            self.assertEqual(
+                A.apply_async(
+                    lambda x: numpy.sum(x["a"]), [[1, slice(2, 4)], [(1, 2), 4]]
+                ).get(),
+                numpy.sum(orig["a"]),
+            )
+
+    def test_quickstart_sql_async(self):
+        with tiledb.open(
+            "tiledb://TileDB-Inc/quickstart_sparse", ctx=tiledb.cloud.Ctx()
+        ) as A:
+            print("quickstart_sparse:")
+            print(A[:])
+
+            with self.assertRaises(TypeError):
+                A.apply(None, [(0, 1)]).get()
+
+            import numpy
+
+            orig = A[:]
+            self.assertEqual(
+                int(
+                    tiledb.cloud.sql.exec_async(
+                        "select sum(a) as sum from `tiledb://TileDB-Inc/quickstart_sparse`"
+                    ).get()["sum"]
+                ),
+                numpy.sum(orig["a"]),
+            )
+
+            orig = A.multi_index[[1, slice(2, 4)], [slice(1, 2), 4]]
+            self.assertEqual(
+                int(
+                    tiledb.cloud.sql.exec_async(
+                        "select sum(a) as sum from `tiledb://TileDB-Inc/quickstart_sparse` WHERE (`rows`, `cols`) in ((1,1), (2,4))"
+                    ).get()["sum"]
+                ),
+                numpy.sum(orig["a"]),
+            )
+
     def test_context(self):
         with self.assertRaises(ValueError):
             tiledb.cloud.Ctx({"rest.server_address": "1.1.1.1"})

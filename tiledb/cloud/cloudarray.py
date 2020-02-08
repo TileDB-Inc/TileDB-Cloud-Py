@@ -1,11 +1,9 @@
 import urllib
 from . import rest_api
-from . import config
+from . import array
 from . import client
-from . import tasks
-from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
-from .rest_api import rest
+from . import tiledb_cloud_error
 
 import cloudpickle
 
@@ -14,7 +12,6 @@ tiledb_cloud_protocol = 4
 import base64
 import sys
 import numpy as np
-import zlib
 
 last_udf_task_id = None
 
@@ -111,33 +108,38 @@ def parse_ranges(ranges, builder):
 
 
 class CloudArray(object):
-    def apply(
+    def apply_async(
         self,
         func,
-        subarray,
+        ranges,
         attrs=None,
         layout=None,
         image_name=None,
         http_compressor="deflate",
     ):
         """
-    Apply a user defined function to a udf
+        Apply a user defined function to an array asynchronous
 
-    **Example**
-    >>> import tiledb, tiledb.cloud, numpy
-    >>> def median(df):
-    ...   return numpy.median(df["a"])
-    >>> # Open the array then run the UDF
-    >>> with tiledb.SparseArray("tiledb://TileDB-Inc/quickstart_dense", ctx=tiledb.cloud.ctx()) as A:
-    ...   A.apply(median, [(0,5), (0,5)], attrs=["a", "b", "c"])
-    2.0
+        **Example**
+        >>> import tiledb, tiledb.cloud, numpy
+        >>> def median(df):
+        ...   return numpy.median(df["a"])
+        >>> # Open the array then run the UDF
+        >>> with tiledb.SparseArray("tiledb://TileDB-Inc/quickstart_dense", ctx=tiledb.cloud.ctx()) as A:
+        ...   A.apply(median, [(0,5), (0,5)], attrs=["a", "b", "c"])
+        2.0
 
-    :param func: user function to run
-    :return: results of applied udf
-    """
+        :param func: user function to run
+        :param ranges: ranges to issue query on
+        :param attrs: list of attributes or dimensions to fetch in query
+        :param layout: tiledb query layout
+        :param image_name: udf image name to use, useful for testing beta features
+        :param http_compressor: set http compressor for results
+        :return: UDFResult object which is a future containing the results of the UDF
+        """
 
         (namespace, array_name) = split_uri(self.uri)
-        api_instance = client.get_udf_api()
+        api_instance = client.client.udf_api
 
         if not callable(func):
             raise TypeError("First argument to `apply` must be callable!")
@@ -157,7 +159,7 @@ class CloudArray(object):
                 dimension_id=dim_idx, range_start=xstart, range_end=xend
             )
 
-        ranges = parse_ranges(subarray, build_rest_udfrange)
+        ranges = parse_ranges(ranges, build_rest_udfrange)
 
         converted_layout = "row-major"
 
@@ -176,7 +178,7 @@ class CloudArray(object):
             image_name = "default"
         try:
 
-            kwargs = {"_preload_content": False}
+            kwargs = {"_preload_content": False, "async_req": True}
             if http_compressor is not None:
                 kwargs["accept_encoding"] = http_compressor
 
@@ -198,29 +200,36 @@ class CloudArray(object):
                 ),
                 **kwargs
             )
-            response = rest.RESTResponse(response)
 
-            global last_udf_task_id
-            last_udf_task_id = response.getheader(client.TASK_ID_HEADER)
-
-            res = response.data
+            return array.UDFResult(response)
 
         except GenApiException as exc:
-            raise tiledb_cloud_error.check_udf_exc(exc) from None
+            raise tiledb_cloud_error.check_sql_exc(exc) from None
 
-        if res[:2].hex() in ["7801", "785e", "789c", "78da"]:
-            try:
-                res = zlib.decompress(res)
-            except zlib.error:
-                raise tiledb_cloud_error.TileDBCloudError(
-                    "Failed to decompress (zlib) result object"
-                )
-
-        try:
-            res = cloudpickle.loads(res)
-        except:
-            raise tiledb_cloud_error.TileDBCloudError(
-                "Failed to load cloudpickle result object"
-            )
-
-        return res
+    def apply(
+        self,
+        func,
+        ranges,
+        attrs=None,
+        layout=None,
+        image_name=None,
+        http_compressor="deflate",
+    ):
+        """
+        Apply a user defined function to an array
+        :param func: user function to run
+        :param ranges: ranges to issue query on
+        :param attrs: list of attributes or dimensions to fetch in query
+        :param layout: tiledb query layout
+        :param image_name: udf image name to use, useful for testing beta features
+        :param http_compressor: set http compressor for results
+        :return: results of the UDF
+        """
+        return self.apply_async(
+            func=func,
+            ranges=ranges,
+            attrs=attrs,
+            layout=layout,
+            image_name=image_name,
+            http_compressor=http_compressor,
+        ).get()

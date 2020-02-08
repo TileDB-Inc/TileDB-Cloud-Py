@@ -17,7 +17,7 @@ def task(id):
     if id is None:
         raise Exception("id parameter can not be empty")
 
-    api_instance = client.get_tasks_api()
+    api_instance = client.client.tasks_api
 
     try:
         return api_instance.task_id_get(id=id)
@@ -46,7 +46,7 @@ def tasks(
   :param int per_page: optional records to return per page
   :return:
   """
-    api_instance = client.get_tasks_api()
+    api_instance = client.client.tasks_api
 
     if end is not None:
         if not isinstance(end, datetime.datetime):

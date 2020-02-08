@@ -2,7 +2,6 @@ from . import rest_api
 from . import config
 from . import client
 from . import cloudarray
-from . import tasks
 from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
 from .rest_api import rest
@@ -11,11 +10,52 @@ import tiledb
 import time
 import pandas
 import json
+import multiprocessing
 
 last_sql_task_id = None
 
 
-def exec(
+class SQLResults(multiprocessing.pool.ApplyResult):
+    def __init__(self, response, raw_results):
+        self.response = response
+        self.raw_results = raw_results
+
+    def get(self, timeout=None):
+        try:
+            response = rest.RESTResponse(self.response.get(timeout=timeout))
+
+            global last_sql_task_id
+            last_sql_task_id = response.getheader(client.TASK_ID_HEADER)
+
+            # Only return the response data if OK or err ignore all other 2xx response bodies
+            if (
+                response.status >= 200
+                and response.status < 300
+                and response.status != 200
+            ):
+                return None
+
+            if response.status == 200:
+                if not self.raw_results:
+                    return pandas.read_json(response.data)
+                else:
+                    return response.data
+
+            # Try to parse results as json, 200 status returns should be handled above and 4xx/5xx should through exceptions
+            # This path is unlikely to be called
+            try:
+                res = json.loads(response.data)
+                return res
+            except:
+                return response.data
+
+        except GenApiException as exc:
+            raise tiledb_cloud_error.check_sql_exc(exc) from None
+        except multiprocessing.TimeoutError as exc:
+            raise tiledb_cloud_error.check_udf_exc(exc) from None
+
+
+def exec_async(
     query,
     output_uri=None,
     output_schema=None,
@@ -26,7 +66,7 @@ def exec(
     http_compressor="deflate",
 ):
     """
-  Run a sql query
+  Run a sql query asynchronous
   :param str query: query to run
   :param str output_uri: optional array to store results to, must be a tiledb:// registered array
   :param tiledb.ArraySchema output_schema: optional schema for creating output array if it does not exist
@@ -36,7 +76,7 @@ def exec(
   :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
   :param string http_compressor: optional http compression method to use
 
-  :return: pandas dataframe if no output array is given and query returns results
+  :return: A SQLResult object which is a future for a pandas dataframe if no output array is given and query returns results
   """
 
     # Make sure the output_uri is remote array
@@ -51,7 +91,7 @@ def exec(
 
         namespace = config.user.username
 
-    api_instance = client.get_sql_api()
+    api_instance = client.client.sql_api
 
     # If the user passes an output schema create the output array
     if output_schema is not None and output_uri is not None:
@@ -59,7 +99,6 @@ def exec(
         tiledb.Array.create(output_uri, output_schema, ctx=client.Ctx())
 
         timeout = time.time() + 10  # 10 second timeout
-        arrays_api = client.get_array_api()
         (array_namespace, array_name) = cloudarray.split_uri(output_uri)
         while True:
             if time.time() > timeout:
@@ -77,7 +116,7 @@ def exec(
 
         # If the user wishes to set a specific array name for the newly registered output array let's update the details
         if output_array_name is not None:
-            array_api = client.get_array_api()
+            array_api = client.client.array_api
             array_api.update_array_metadata(
                 namespace=namespace,
                 output_uri=output_uri,
@@ -87,7 +126,7 @@ def exec(
             )
 
     try:
-        kwargs = {"_preload_content": False}
+        kwargs = {"_preload_content": False, "async_req": True}
         if http_compressor is not None:
             kwargs["accept_encoding"] = http_compressor
 
@@ -98,28 +137,8 @@ def exec(
             ),
             **kwargs
         )
-        response = rest.RESTResponse(response)
 
-        global last_sql_task_id
-        last_sql_task_id = response.getheader(client.TASK_ID_HEADER)
-
-        # Only return the response data if OK or err ignore all other 2xx response bodies
-        if response.status >= 200 and response.status < 300 and response.status != 200:
-            return None
-
-        if response.status == 200:
-            if not raw_results:
-                return pandas.read_json(response.data)
-            else:
-                return response.data
-
-        # Try to parse results as json, 200 status returns should be handled above and 4xx/5xx should through exceptions
-        # This path is unlikely to be called
-        try:
-            res = json.loads(response.data)
-            return res
-        except:
-            return response.data
+        return SQLResults(response, raw_results)
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_sql_exc(exc) from None
@@ -174,3 +193,38 @@ def exec_and_fetch(
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
+
+
+def exec(
+    query,
+    output_uri=None,
+    output_schema=None,
+    namespace=None,
+    task_name=None,
+    output_array_name=None,
+    raw_results=False,
+    http_compressor="deflate",
+):
+    """
+  Run a sql query
+  :param str query: query to run
+  :param str output_uri: optional array to store results to, must be a tiledb:// registered array
+  :param tiledb.ArraySchema output_schema: optional schema for creating output array if it does not exist
+  :param str namespace: optional namespace to charge the query to
+  :param str task_name: optional name to assign the task for logging and audit purposes
+  :param str output_array_name: optional array name to set if creating new output array
+  :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
+  :param string http_compressor: optional http compression method to use
+
+  :return: pandas dataframe if no output array is given and query returns results
+  """
+    return exec_async(
+        query=query,
+        output_uri=output_uri,
+        output_schema=output_schema,
+        namespace=namespace,
+        task_name=task_name,
+        output_array_name=output_array_name,
+        raw_results=raw_results,
+        http_compressor=http_compressor,
+    ).get()
