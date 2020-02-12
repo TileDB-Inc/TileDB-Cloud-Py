@@ -15,12 +15,12 @@ from __future__ import absolute_import
 import unittest
 
 import rest_api
-from tiledb.cloud.rest_api.models.subarray import Subarray  # noqa: E501
+from tiledb.cloud.rest_api.models.generic_udf import GenericUDF  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestSubarray(unittest.TestCase):
-    """Subarray unit test stubs"""
+class TestGenericUDF(unittest.TestCase):
+    """GenericUDF unit test stubs"""
 
     def setUp(self):
         pass
@@ -28,10 +28,10 @@ class TestSubarray(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def testSubarray(self):
-        """Test Subarray"""
+    def testGenericUDF(self):
+        """Test GenericUDF"""
         # FIXME: construct object with mandatory attributes with example values
-        # model = tiledb.cloud.rest_api.models.subarray.Subarray()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.generic_udf.GenericUDF()  # noqa: E501
         pass
 
 
