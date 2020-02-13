@@ -187,7 +187,7 @@ class CloudArray(object):
                 namespace=namespace,
                 array=array_name,
                 udf=rest_api.models.UDF(
-                    type=rest_api.models.UDFType.PYTHON,
+                    language=rest_api.models.UDFLanguage.PYTHON,
                     _exec=pickledUDF,
                     subarray=ranges,
                     buffers=attrs,
