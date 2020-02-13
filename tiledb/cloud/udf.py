@@ -62,7 +62,7 @@ def exec_async(
         response = api_instance.submit_generic_udf(
             namespace=namespace,
             udf=rest_api.models.GenericUDF(
-                type=rest_api.models.UDFType.PYTHON,
+                language=rest_api.models.UDFLanguage.PYTHON,
                 _exec=pickledUDF,
                 argument=arguments,
                 result_format=rest_api.models.UDFResultType.NATIVE,

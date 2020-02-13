@@ -31,7 +31,7 @@ class UDF(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        "type": "UDFType",
+        "language": "UDFLanguage",
         "version": "str",
         "image_name": "str",
         "subarray": "UDFSubarray",
@@ -40,7 +40,7 @@ class UDF(object):
     }
 
     attribute_map = {
-        "type": "type",
+        "language": "language",
         "version": "version",
         "image_name": "image_name",
         "subarray": "subarray",
@@ -50,7 +50,7 @@ class UDF(object):
 
     def __init__(
         self,
-        type=None,
+        language=None,
         version=None,
         image_name=None,
         subarray=None,
@@ -59,7 +59,7 @@ class UDF(object):
     ):  # noqa: E501
         """UDF - a model defined in OpenAPI"""  # noqa: E501
 
-        self._type = None
+        self._language = None
         self._version = None
         self._image_name = None
         self._subarray = None
@@ -67,8 +67,8 @@ class UDF(object):
         self._buffers = None
         self.discriminator = None
 
-        if type is not None:
-            self.type = type
+        if language is not None:
+            self.language = language
         if version is not None:
             self.version = version
         if image_name is not None:
@@ -81,25 +81,25 @@ class UDF(object):
             self.buffers = buffers
 
     @property
-    def type(self):
-        """Gets the type of this UDF.  # noqa: E501
+    def language(self):
+        """Gets the language of this UDF.  # noqa: E501
 
 
-        :return: The type of this UDF.  # noqa: E501
-        :rtype: UDFType
+        :return: The language of this UDF.  # noqa: E501
+        :rtype: UDFLanguage
         """
-        return self._type
+        return self._language
 
-    @type.setter
-    def type(self, type):
-        """Sets the type of this UDF.
+    @language.setter
+    def language(self, language):
+        """Sets the language of this UDF.
 
 
-        :param type: The type of this UDF.  # noqa: E501
-        :type: UDFType
+        :param language: The language of this UDF.  # noqa: E501
+        :type: UDFLanguage
         """
 
-        self._type = type
+        self._language = language
 
     @property
     def version(self):

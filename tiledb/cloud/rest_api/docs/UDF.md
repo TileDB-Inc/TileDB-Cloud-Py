@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | [**UDFType**](UDFType.md) |  | [optional] 
+**language** | [**UDFLanguage**](UDFLanguage.md) |  | [optional] 
 **version** | **str** | Type-specific version | [optional] 
 **image_name** | **str** | Docker image name to use for udf | [optional] 
 **subarray** | [**UDFSubarray**](UDFSubarray.md) |  | [optional] 
