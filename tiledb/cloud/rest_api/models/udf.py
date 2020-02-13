@@ -34,6 +34,7 @@ class UDF(object):
         "language": "UDFLanguage",
         "version": "str",
         "image_name": "str",
+        "ranges": "UDFRanges",
         "subarray": "UDFSubarray",
         "_exec": "str",
         "buffers": "list[str]",
@@ -43,6 +44,7 @@ class UDF(object):
         "language": "language",
         "version": "version",
         "image_name": "image_name",
+        "ranges": "ranges",
         "subarray": "subarray",
         "_exec": "exec",
         "buffers": "buffers",
@@ -53,6 +55,7 @@ class UDF(object):
         language=None,
         version=None,
         image_name=None,
+        ranges=None,
         subarray=None,
         _exec=None,
         buffers=None,
@@ -62,6 +65,7 @@ class UDF(object):
         self._language = None
         self._version = None
         self._image_name = None
+        self._ranges = None
         self._subarray = None
         self.__exec = None
         self._buffers = None
@@ -73,6 +77,8 @@ class UDF(object):
             self.version = version
         if image_name is not None:
             self.image_name = image_name
+        if ranges is not None:
+            self.ranges = ranges
         if subarray is not None:
             self.subarray = subarray
         if _exec is not None:
@@ -146,6 +152,27 @@ class UDF(object):
         """
 
         self._image_name = image_name
+
+    @property
+    def ranges(self):
+        """Gets the ranges of this UDF.  # noqa: E501
+
+
+        :return: The ranges of this UDF.  # noqa: E501
+        :rtype: UDFRanges
+        """
+        return self._ranges
+
+    @ranges.setter
+    def ranges(self, ranges):
+        """Sets the ranges of this UDF.
+
+
+        :param ranges: The ranges of this UDF.  # noqa: E501
+        :type: UDFRanges
+        """
+
+        self._ranges = ranges
 
     @property
     def subarray(self):

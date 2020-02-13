@@ -197,6 +197,7 @@ Class | Method | HTTP request | Description
  - [TokenRequest](rest_api/docs/TokenRequest.md)
  - [UDF](rest_api/docs/UDF.md)
  - [UDFLanguage](rest_api/docs/UDFLanguage.md)
+ - [UDFRanges](rest_api/docs/UDFRanges.md)
  - [UDFResultType](rest_api/docs/UDFResultType.md)
  - [UDFSubarray](rest_api/docs/UDFSubarray.md)
  - [UDFSubarrayRange](rest_api/docs/UDFSubarrayRange.md)
