@@ -1,12 +1,50 @@
-import urllib
 from . import rest_api
 from . import config
 from . import client
-from . import tasks
 from . import cloudarray
 from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
 from .rest_api import rest
+
+import zlib
+import multiprocessing
+import cloudpickle
+
+
+class UDFResult(multiprocessing.pool.ApplyResult):
+    def __init__(self, response):
+        self.response = response
+
+    def get(self, timeout=None):
+        try:
+            response = rest.RESTResponse(self.response.get(timeout=timeout))
+
+            global last_udf_task_id
+            last_udf_task_id = response.getheader(client.TASK_ID_HEADER)
+
+            res = response.data
+
+        except GenApiException as exc:
+            raise tiledb_cloud_error.check_udf_exc(exc) from None
+        except multiprocessing.TimeoutError as exc:
+            raise tiledb_cloud_error.check_udf_exc(exc) from None
+
+        if res[:2].hex() in ["7801", "785e", "789c", "78da"]:
+            try:
+                res = zlib.decompress(res)
+            except zlib.error:
+                raise tiledb_cloud_error.TileDBCloudError(
+                    "Failed to decompress (zlib) result object"
+                )
+
+        try:
+            res = cloudpickle.loads(res)
+        except:
+            raise tiledb_cloud_error.TileDBCloudError(
+                "Failed to load cloudpickle result object"
+            )
+
+        return res
 
 
 def info(uri):
@@ -16,7 +54,7 @@ def info(uri):
   :return: metadata object
   """
     (namespace, array_name) = cloudarray.split_uri(uri)
-    api_instance = client.get_array_api()
+    api_instance = client.client.array_api
 
     try:
         return api_instance.get_array_metadata(namespace=namespace, array=array_name)
@@ -27,7 +65,7 @@ def info(uri):
 def list_shared_with(uri):
     """Return array sharing policies"""
     (namespace, array_name) = cloudarray.split_uri(uri)
-    api_instance = client.get_array_api()
+    api_instance = client.client.array_api
 
     try:
         return api_instance.get_array_sharing_policies(
@@ -57,7 +95,7 @@ def share_array(uri, namespace, permissions):
             raise Exception("Only read or write permissions are accepted")
 
     (array_namespace, array_name) = cloudarray.split_uri(uri)
-    api_instance = client.get_array_api()
+    api_instance = client.client.array_api
 
     try:
         return api_instance.share_array(
@@ -92,7 +130,7 @@ def register_array(
   :param str description: optional description
   :param str access_credentials_name: optional name of access credentials to use, if left blank default for namespace will be used
   """
-    api_instance = client.get_array_api()
+    api_instance = client.client.array_api
 
     if namespace is None:
         if config.user is None:
@@ -122,7 +160,7 @@ def deregister_array(uri):
   """
     (namespace, array_name) = cloudarray.split_uri(uri)
 
-    api_instance = client.get_array_api()
+    api_instance = client.client.array_api
 
     try:
         return api_instance.deregister_array(namespace=namespace, array=array_name)
@@ -138,7 +176,7 @@ def array_activity(uri):
   """
     (namespace, array_name) = cloudarray.split_uri(uri)
 
-    api_instance = client.get_array_api()
+    api_instance = client.client.array_api
 
     try:
         return api_instance.array_activity_log(namespace=namespace, array=array_name)

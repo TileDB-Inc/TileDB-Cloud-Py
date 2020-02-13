@@ -49,42 +49,6 @@ def Ctx(config=None):
     return tiledb.Ctx(Config(config))
 
 
-def get_array_api():
-    if not isinstance(config.logged_in, bool):
-        raise Exception(config.logged_in)
-    return rest_api.ArrayApi(rest_api.ApiClient(config.config))
-
-
-def get_user_api():
-    if not isinstance(config.logged_in, bool):
-        raise Exception(config.logged_in)
-    return rest_api.UserApi(rest_api.ApiClient(config.config))
-
-
-def get_organization_api():
-    if not isinstance(config.logged_in, bool):
-        raise Exception(config.logged_in)
-    return rest_api.OrganizationApi(rest_api.ApiClient(config.config))
-
-
-def get_udf_api():
-    if not isinstance(config.logged_in, bool):
-        raise Exception(config.logged_in)
-    return rest_api.UdfApi(rest_api.ApiClient(config.config))
-
-
-def get_tasks_api():
-    if not isinstance(config.logged_in, bool):
-        raise Exception(config.logged_in)
-    return rest_api.TasksApi(rest_api.ApiClient(config.config))
-
-
-def get_sql_api():
-    if not isinstance(config.logged_in, bool):
-        raise Exception(config.logged_in)
-    return rest_api.SqlApi(rest_api.ApiClient(config.config))
-
-
 def login(
     token="", username="", password="", host=None, verify_ssl=True, no_session=False
 ):
@@ -118,7 +82,7 @@ def login(
             host=host,
             verify_ssl=verify_ssl,
         )
-        user_api = get_user_api()
+        user_api = client.user_api
         session = user_api.get_session(remember_me=True)
         token = session.token
         username = ""
@@ -145,7 +109,7 @@ def list_arrays(include_public=False, namespace=None, permissions=None):
     :return: list of all array metadata you have access to that meet the filter applied
     """
 
-    api_instance = get_array_api()
+    api_instance = client.array_api
 
     public_share = None
     if not include_public:
@@ -185,7 +149,7 @@ def user_profile():
     :return: your user profile
     """
 
-    api_instance = get_user_api()
+    api_instance = client.user_api
 
     try:
         return api_instance.get_user()
@@ -199,7 +163,7 @@ def organizations():
     :return: list of all organizations user is part of
     """
 
-    api_instance = get_organization_api()
+    api_instance = client.organization_api
 
     try:
         return api_instance.get_all_organizations()
@@ -214,9 +178,40 @@ def organization(organization):
     :return: details about organization
     """
 
-    api_instance = get_organization_api()
+    api_instance = client.organization_api
 
     try:
         return api_instance.get_organization(organization=organization)
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
+
+
+class Client:
+    def __init__(self):
+        self.array_api = self.__get_array_api()
+        self.organization_api = self.__get_organization_api()
+        self.sql_api = self.__get_sql_api()
+        self.tasks_api = self.__get_tasks_api()
+        self.udf_api = self.__get_udf_api()
+        self.user_api = self.__get_user_api()
+
+    def __get_array_api(self):
+        return rest_api.ArrayApi(rest_api.ApiClient(config.config))
+
+    def __get_user_api(self):
+        return rest_api.UserApi(rest_api.ApiClient(config.config))
+
+    def __get_organization_api(self):
+        return rest_api.OrganizationApi(rest_api.ApiClient(config.config))
+
+    def __get_udf_api(self):
+        return rest_api.UdfApi(rest_api.ApiClient(config.config))
+
+    def __get_tasks_api(self):
+        return rest_api.TasksApi(rest_api.ApiClient(config.config))
+
+    def __get_sql_api(self):
+        return rest_api.SqlApi(rest_api.ApiClient(config.config))
+
+
+client = Client()
