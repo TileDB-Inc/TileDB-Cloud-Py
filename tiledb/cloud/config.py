@@ -4,6 +4,8 @@ import json
 from . import rest_api
 from urllib3 import Retry
 
+default_host = "https://api.tiledb.com"
+
 config = rest_api.configuration.Configuration()
 default_config_file = Path.joinpath(Path.home(), ".tiledb", "cloud.json")
 if sys.version_info < (3, 6):
@@ -32,32 +34,54 @@ def save_configuration(config_file):
 
 
 def load_configuration(config_path):
-    if not os.path.isfile(config_path):
+    # Look for env variables
+    token = os.getenv("TILEDB_REST_TOKEN")
+    if token is not None and token != "":
+        token = {"X-TILEDB-REST-API-KEY": token}
+    host = os.getenv("TILEDB_REST_HOST")
+    # default username/password to empty strings
+    username = os.getenv("TILEDB_REST_USERNAME", "")
+    password = os.getenv("TILEDB_REST_PASSWORD", "")
+    verify_ssl = True
+
+    if os.path.isfile(config_path):
+        with open(config_path, "r") as f:
+            global config
+            # Parse JSON into an object with attributes corresponding to dict keys.
+            config_obj = json.loads(f.read())
+            if "username" in config_obj:
+                username = config_obj["username"]
+            if "password" in config_obj:
+                password = config_obj["password"]
+
+            # Don't override user env variables
+            if host is None or host == "":
+                host = config_obj["host"]
+
+            if host.endswith("/v1"):
+                host = host[: -len("/v1")]
+            elif host.endswith("/v1/"):
+                host = host[: -len("/v1/")]
+
+            # Don't override user env variables
+            if token is None or token == "":
+                token = config_obj["api_key"]
+            verify_ssl = config_obj["verify_ssl"]
+
+    if (token is None or token == "") and (username is None or username == ""):
         return "You must first login before you can run commands"
-    with open(config_path, "r") as f:
-        global config
-        # Parse JSON into an object with attributes corresponding to dict keys.
-        config_obj = json.loads(f.read())
-        username = ""
-        password = ""
-        if "username" in config_obj:
-            username = config_obj["username"]
-        if "password" in config_obj:
-            password = config_obj["password"]
 
-        host = config_obj["host"]
-        if host.endswith("/v1"):
-            host = host[: -len("/v1")]
-        elif host.endswith("/v1/"):
-            host = host[: -len("/v1/")]
+    if host is None or host == "":
+        global default_host
+        host = default_host
 
-        setup_configuration(
-            api_key=config_obj["api_key"],
-            username=username,
-            password=password,
-            host=host,
-            verify_ssl=config_obj["verify_ssl"],
-        )
+    setup_configuration(
+        api_key=token,
+        username=username,
+        password=password,
+        host=host,
+        verify_ssl=verify_ssl,
+    )
     return True
 
 
