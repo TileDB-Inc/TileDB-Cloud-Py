@@ -12,9 +12,6 @@ jobs:
 - job: Build
   strategy:
     matrix:
-      mac_35:
-        imageName: 'macOS-10.13'
-        python.version: '3.5'
       mac_36:
         imageName: 'macOS-10.13'
         python.version: '3.6'
