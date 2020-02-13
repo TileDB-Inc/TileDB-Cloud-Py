@@ -29,6 +29,7 @@ class ArrayTaskType(object):
     SQL = "SQL"
     UDF = "UDF"
     QUERY = "QUERY"
+    GENERIC_UDF = "GENERIC_UDF"
 
     """
     Attributes:
