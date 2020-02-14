@@ -6,8 +6,9 @@ last_udf_task_id = None
 class CloudArray(object):
     def apply_async(
         self,
-        func,
-        ranges,
+        func=None,
+        ranges=None,
+        name=None,
         attrs=None,
         layout=None,
         image_name=None,
@@ -37,6 +38,7 @@ class CloudArray(object):
             uri=self.uri,
             func=func,
             ranges=ranges,
+            name=name,
             attrs=attrs,
             layout=layout,
             image_name=image_name,
@@ -45,8 +47,9 @@ class CloudArray(object):
 
     def apply(
         self,
-        func,
-        ranges,
+        func=None,
+        ranges=None,
+        name=None,
         attrs=None,
         layout=None,
         image_name=None,
@@ -65,6 +68,7 @@ class CloudArray(object):
         return self.apply_async(
             func=func,
             ranges=ranges,
+            name=name,
             attrs=attrs,
             layout=layout,
             image_name=image_name,

@@ -16,7 +16,12 @@ last_udf_task_id = None
 
 
 def exec_async(
-    func, arguments=None, namespace=None, image_name=None, http_compressor="deflate",
+    func=None,
+    arguments=None,
+    name=None,
+    namespace=None,
+    image_name=None,
+    http_compressor="deflate",
 ):
     """
      Run a user defined function
@@ -40,11 +45,15 @@ def exec_async(
 
         namespace = config.user.username
 
-    if not callable(func):
+    if func is not None and not callable(func):
         raise TypeError("First argument to `exec` must be callable!")
+    elif func is None and name is None or name == "":
+        raise TypeError("name argument to `exec` must be set if no function is passed")
 
-    pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
-    pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
+    pickledUDF = None
+    if func is not None:
+        pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
+        pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
     if arguments != None:
         arguments = cloudpickle.dumps(arguments, protocol=tiledb_cloud_protocol)
@@ -58,22 +67,24 @@ def exec_async(
         if http_compressor is not None:
             kwargs["accept_encoding"] = http_compressor
 
+        udf_model = rest_api.models.GenericUDF(
+            language=rest_api.models.UDFLanguage.PYTHON,
+            argument=arguments,
+            result_format=rest_api.models.UDFResultType.NATIVE,
+            version="{}.{}.{}".format(
+                sys.version_info.major, sys.version_info.minor, sys.version_info.micro,
+            ),
+            image_name=image_name,
+        )
+
+        if pickledUDF is not None:
+            udf_model._exec = pickledUDF
+        elif name is not None:
+            udf_model.registered_udf = name
+
         # _preload_content must be set to false to avoid trying to decode binary data
         response = api_instance.submit_generic_udf(
-            namespace=namespace,
-            udf=rest_api.models.GenericUDF(
-                language=rest_api.models.UDFLanguage.PYTHON,
-                _exec=pickledUDF,
-                argument=arguments,
-                result_format=rest_api.models.UDFResultType.NATIVE,
-                version="{}.{}.{}".format(
-                    sys.version_info.major,
-                    sys.version_info.minor,
-                    sys.version_info.micro,
-                ),
-                image_name=image_name,
-            ),
-            **kwargs
+            namespace=namespace, udf=udf_model, **kwargs
         )
 
         return array.UDFResult(response)
@@ -83,7 +94,12 @@ def exec_async(
 
 
 def exec(
-    func, arguments=None, namespace=None, image_name=None, http_compressor="deflate",
+    func=None,
+    name=None,
+    arguments=None,
+    namespace=None,
+    image_name=None,
+    http_compressor="deflate",
 ):
     """
      Run a user defined function
@@ -98,6 +114,7 @@ def exec(
     """
     return exec_async(
         func=func,
+        name=name,
         arguments=arguments,
         namespace=namespace,
         image_name=image_name,
@@ -133,7 +150,7 @@ def register_udf(func, name, namespace=None, image_name=None, type=None):
         pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
-        udf = rest_api.models.UDFRegistration(
+        udf_model = rest_api.models.UDFRegistration(
             name=name,
             language=rest_api.models.UDFLanguage.PYTHON,
             version="{}.{}.{}".format(
@@ -145,7 +162,7 @@ def register_udf(func, name, namespace=None, image_name=None, type=None):
             exec_raw=None,
         )
 
-        api_instance.register_udf(namespace=namespace, name=name, udf=udf)
+        api_instance.register_udf(namespace=namespace, name=name, udf=udf_model)
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
@@ -215,7 +232,7 @@ def update_udf(func, name, namespace=None, image_name=None, type=None):
         pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
-        udf = rest_api.models.UDFRegistration(
+        udf_model = rest_api.models.UDFRegistration(
             name=name,
             language=rest_api.models.UDFLanguage.PYTHON,
             version="{}.{}.{}".format(
@@ -227,7 +244,9 @@ def update_udf(func, name, namespace=None, image_name=None, type=None):
             exec_raw=None,
         )
 
-        api_instance.updated_registered_udf(namespace=namespace, name=name, udf=udf)
+        api_instance.updated_registered_udf(
+            namespace=namespace, name=name, udf=udf_model
+        )
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
