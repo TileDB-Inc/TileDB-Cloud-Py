@@ -16,6 +16,14 @@ class CloudArray(object):
         """
         Apply a user defined function to an array asynchronous
 
+        :param func: user function to run
+        :param ranges: ranges to issue query on
+        :param attrs: list of attributes or dimensions to fetch in query
+        :param layout: tiledb query layout
+        :param image_name: udf image name to use, useful for testing beta features
+        :param http_compressor: set http compressor for results
+        :return: UDFResult object which is a future containing the results of the UDF
+
         **Example**
         >>> import tiledb, tiledb.cloud, numpy
         >>> def median(df):
@@ -25,13 +33,6 @@ class CloudArray(object):
         ...   A.apply(median, [(0,5), (0,5)], attrs=["a", "b", "c"])
         2.0
 
-        :param func: user function to run
-        :param ranges: ranges to issue query on
-        :param attrs: list of attributes or dimensions to fetch in query
-        :param layout: tiledb query layout
-        :param image_name: udf image name to use, useful for testing beta features
-        :param http_compressor: set http compressor for results
-        :return: UDFResult object which is a future containing the results of the UDF
         """
         return array.apply_async(
             uri=self.uri,
