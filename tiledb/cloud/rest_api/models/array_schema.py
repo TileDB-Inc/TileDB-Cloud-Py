@@ -41,6 +41,7 @@ class ArraySchema(object):
         "offset_filter_pipeline": "FilterPipeline",
         "domain": "Domain",
         "attributes": "list[Attribute]",
+        "allows_duplicates": "bool",
     }
 
     attribute_map = {
@@ -54,6 +55,7 @@ class ArraySchema(object):
         "offset_filter_pipeline": "offsetFilterPipeline",
         "domain": "domain",
         "attributes": "attributes",
+        "allows_duplicates": "allowsDuplicates",
     }
 
     def __init__(
@@ -68,6 +70,7 @@ class ArraySchema(object):
         offset_filter_pipeline=None,
         domain=None,
         attributes=None,
+        allows_duplicates=None,
     ):  # noqa: E501
         """ArraySchema - a model defined in OpenAPI"""  # noqa: E501
 
@@ -81,6 +84,7 @@ class ArraySchema(object):
         self._offset_filter_pipeline = None
         self._domain = None
         self._attributes = None
+        self._allows_duplicates = None
         self.discriminator = None
 
         if uri is not None:
@@ -94,6 +98,8 @@ class ArraySchema(object):
         self.offset_filter_pipeline = offset_filter_pipeline
         self.domain = domain
         self.attributes = attributes
+        if allows_duplicates is not None:
+            self.allows_duplicates = allows_duplicates
 
     @property
     def uri(self):
@@ -348,6 +354,29 @@ class ArraySchema(object):
             )  # noqa: E501
 
         self._attributes = attributes
+
+    @property
+    def allows_duplicates(self):
+        """Gets the allows_duplicates of this ArraySchema.  # noqa: E501
+
+        True if the array allows coordinate duplicates. Applicable only to sparse arrays.  # noqa: E501
+
+        :return: The allows_duplicates of this ArraySchema.  # noqa: E501
+        :rtype: bool
+        """
+        return self._allows_duplicates
+
+    @allows_duplicates.setter
+    def allows_duplicates(self, allows_duplicates):
+        """Sets the allows_duplicates of this ArraySchema.
+
+        True if the array allows coordinate duplicates. Applicable only to sparse arrays.  # noqa: E501
+
+        :param allows_duplicates: The allows_duplicates of this ArraySchema.  # noqa: E501
+        :type: bool
+        """
+
+        self._allows_duplicates = allows_duplicates
 
     def to_dict(self):
         """Returns the model properties as a dict"""

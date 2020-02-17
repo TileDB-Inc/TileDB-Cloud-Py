@@ -38,6 +38,7 @@ class UDFRegistration(object):
         "type": "UDFType",
         "_exec": "str",
         "exec_raw": "str",
+        "readme": "str",
     }
 
     attribute_map = {
@@ -48,6 +49,7 @@ class UDFRegistration(object):
         "type": "type",
         "_exec": "exec",
         "exec_raw": "exec_raw",
+        "readme": "readme",
     }
 
     def __init__(
@@ -59,6 +61,7 @@ class UDFRegistration(object):
         type=None,
         _exec=None,
         exec_raw=None,
+        readme=None,
     ):  # noqa: E501
         """UDFRegistration - a model defined in OpenAPI"""  # noqa: E501
 
@@ -69,6 +72,7 @@ class UDFRegistration(object):
         self._type = None
         self.__exec = None
         self._exec_raw = None
+        self._readme = None
         self.discriminator = None
 
         if name is not None:
@@ -85,6 +89,8 @@ class UDFRegistration(object):
             self._exec = _exec
         if exec_raw is not None:
             self.exec_raw = exec_raw
+        if readme is not None:
+            self.readme = readme
 
     @property
     def name(self):
@@ -242,6 +248,29 @@ class UDFRegistration(object):
         """
 
         self._exec_raw = exec_raw
+
+    @property
+    def readme(self):
+        """Gets the readme of this UDFRegistration.  # noqa: E501
+
+        Markdown readme of udfs  # noqa: E501
+
+        :return: The readme of this UDFRegistration.  # noqa: E501
+        :rtype: str
+        """
+        return self._readme
+
+    @readme.setter
+    def readme(self, readme):
+        """Sets the readme of this UDFRegistration.
+
+        Markdown readme of udfs  # noqa: E501
+
+        :param readme: The readme of this UDFRegistration.  # noqa: E501
+        :type: str
+        """
+
+        self._readme = readme
 
     def to_dict(self):
         """Returns the model properties as a dict"""

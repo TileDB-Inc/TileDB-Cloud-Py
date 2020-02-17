@@ -109,11 +109,13 @@ Class | Method | HTTP request | Description
 *TasksApi* | [**task_id_get**](rest_api/docs/TasksApi.md#task_id_get) | **GET** /task/{id} | 
 *TasksApi* | [**tasks_get**](rest_api/docs/TasksApi.md#tasks_get) | **GET** /tasks | 
 *UdfApi* | [**get_ud_fs**](rest_api/docs/UdfApi.md#get_ud_fs) | **GET** /udfs | 
-*UdfApi* | [**get_udf**](rest_api/docs/UdfApi.md#get_udf) | **GET** /udfs/register/{namespace}/{name} | 
-*UdfApi* | [**register_udf**](rest_api/docs/UdfApi.md#register_udf) | **POST** /udfs/register/{namespace}/{name} | 
+*UdfApi* | [**get_udf**](rest_api/docs/UdfApi.md#get_udf) | **GET** /udf/{namespace}/{name} | 
+*UdfApi* | [**get_udf_sharing_policies**](rest_api/docs/UdfApi.md#get_udf_sharing_policies) | **GET** /udf/{namespace}/{name}/share | 
+*UdfApi* | [**register_udf**](rest_api/docs/UdfApi.md#register_udf) | **POST** /udf/{namespace}/{name} | 
+*UdfApi* | [**share_udf**](rest_api/docs/UdfApi.md#share_udf) | **PATCH** /udf/{namespace}/{name}/share | 
 *UdfApi* | [**submit_generic_udf**](rest_api/docs/UdfApi.md#submit_generic_udf) | **POST** /udfs/generic/{namespace} | 
 *UdfApi* | [**submit_udf**](rest_api/docs/UdfApi.md#submit_udf) | **POST** /arrays/{namespace}/{array}/udf/submit | 
-*UdfApi* | [**updated_registered_udf**](rest_api/docs/UdfApi.md#updated_registered_udf) | **PATCH** /udfs/register/{namespace}/{name} | 
+*UdfApi* | [**updated_registered_udf**](rest_api/docs/UdfApi.md#updated_registered_udf) | **PATCH** /udf/{namespace}/{name} | 
 *UserApi* | [**add_aws_access_credentials**](rest_api/docs/UserApi.md#add_aws_access_credentials) | **POST** /credentials/{namespace}/aws | 
 *UserApi* | [**add_user_to_organization**](rest_api/docs/UserApi.md#add_user_to_organization) | **POST** /organizations/{organization}/user | 
 *UserApi* | [**check_aws_access_credentials**](rest_api/docs/UserApi.md#check_aws_access_credentials) | **GET** /credentials/{namespace}/aws | 
@@ -200,11 +202,13 @@ Class | Method | HTTP request | Description
  - [Token](rest_api/docs/Token.md)
  - [TokenRequest](rest_api/docs/TokenRequest.md)
  - [UDF](rest_api/docs/UDF.md)
+ - [UDFActions](rest_api/docs/UDFActions.md)
  - [UDFLanguage](rest_api/docs/UDFLanguage.md)
  - [UDFListingData](rest_api/docs/UDFListingData.md)
  - [UDFRanges](rest_api/docs/UDFRanges.md)
  - [UDFRegistration](rest_api/docs/UDFRegistration.md)
  - [UDFResultType](rest_api/docs/UDFResultType.md)
+ - [UDFSharing](rest_api/docs/UDFSharing.md)
  - [UDFSubarray](rest_api/docs/UDFSubarray.md)
  - [UDFSubarrayRange](rest_api/docs/UDFSubarrayRange.md)
  - [UDFType](rest_api/docs/UDFType.md)

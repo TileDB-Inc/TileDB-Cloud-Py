@@ -40,6 +40,7 @@ class UDF(object):
         "_exec": "str",
         "exec_raw": "str",
         "buffers": "list[str]",
+        "result_format": "UDFResultType",
     }
 
     attribute_map = {
@@ -52,6 +53,7 @@ class UDF(object):
         "_exec": "exec",
         "exec_raw": "exec_raw",
         "buffers": "buffers",
+        "result_format": "result_format",
     }
 
     def __init__(
@@ -65,6 +67,7 @@ class UDF(object):
         _exec=None,
         exec_raw=None,
         buffers=None,
+        result_format=None,
     ):  # noqa: E501
         """UDF - a model defined in OpenAPI"""  # noqa: E501
 
@@ -77,6 +80,7 @@ class UDF(object):
         self.__exec = None
         self._exec_raw = None
         self._buffers = None
+        self._result_format = None
         self.discriminator = None
 
         if registered_udf is not None:
@@ -97,6 +101,8 @@ class UDF(object):
             self.exec_raw = exec_raw
         if buffers is not None:
             self.buffers = buffers
+        if result_format is not None:
+            self.result_format = result_format
 
     @property
     def registered_udf(self):
@@ -298,6 +304,27 @@ class UDF(object):
         """
 
         self._buffers = buffers
+
+    @property
+    def result_format(self):
+        """Gets the result_format of this UDF.  # noqa: E501
+
+
+        :return: The result_format of this UDF.  # noqa: E501
+        :rtype: UDFResultType
+        """
+        return self._result_format
+
+    @result_format.setter
+    def result_format(self, result_format):
+        """Sets the result_format of this UDF.
+
+
+        :param result_format: The result_format of this UDF.  # noqa: E501
+        :type: UDFResultType
+        """
+
+        self._result_format = result_format
 
     def to_dict(self):
         """Returns the model properties as a dict"""

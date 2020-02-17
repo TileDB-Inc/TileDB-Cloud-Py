@@ -283,7 +283,7 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udfs/register/{namespace}/{name}",
+            "/udf/{namespace}/{name}",
             "GET",
             path_params,
             query_params,
@@ -292,6 +292,133 @@ class UdfApi(object):
             post_params=form_params,
             files=local_var_files,
             response_type="UDFRegistration",  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
+
+    def get_udf_sharing_policies(self, namespace, name, **kwargs):  # noqa: E501
+        """get_udf_sharing_policies  # noqa: E501
+
+        Get all sharing details of the udf  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_udf_sharing_policies(namespace, name, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str name: name of registered ud (required)
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: list[UDFSharing]
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs["_return_http_data_only"] = True
+        return self.get_udf_sharing_policies_with_http_info(
+            namespace, name, **kwargs
+        )  # noqa: E501
+
+    def get_udf_sharing_policies_with_http_info(
+        self, namespace, name, **kwargs
+    ):  # noqa: E501
+        """get_udf_sharing_policies  # noqa: E501
+
+        Get all sharing details of the udf  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_udf_sharing_policies_with_http_info(namespace, name, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str name: name of registered ud (required)
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: tuple(list[UDFSharing], status_code(int), headers(HTTPHeaderDict))
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = ["namespace", "name"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
+
+        for key, val in six.iteritems(local_var_params["kwargs"]):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method get_udf_sharing_policies" % key
+                )
+            local_var_params[key] = val
+        del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `get_udf_sharing_policies`"
+            )  # noqa: E501
+        # verify the required parameter 'name' is set
+        if "name" not in local_var_params or local_var_params["name"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `get_udf_sharing_policies`"
+            )  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+
+        return self.api_client.call_api(
+            "/udf/{namespace}/{name}/share",
+            "GET",
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type="list[UDFSharing]",  # noqa: E501
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -424,8 +551,154 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udfs/register/{namespace}/{name}",
+            "/udf/{namespace}/{name}",
             "POST",
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type=None,  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
+
+    def share_udf(self, namespace, name, udf_sharing, **kwargs):  # noqa: E501
+        """share_udf  # noqa: E501
+
+        Share a UDF with a user  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.share_udf(namespace, name, udf_sharing, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str name: name of registered ud (required)
+        :param UDFSharing udf_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all (required)
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: None
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs["_return_http_data_only"] = True
+        return self.share_udf_with_http_info(
+            namespace, name, udf_sharing, **kwargs
+        )  # noqa: E501
+
+    def share_udf_with_http_info(
+        self, namespace, name, udf_sharing, **kwargs
+    ):  # noqa: E501
+        """share_udf  # noqa: E501
+
+        Share a UDF with a user  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.share_udf_with_http_info(namespace, name, udf_sharing, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str name: name of registered ud (required)
+        :param UDFSharing udf_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all (required)
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: None
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = ["namespace", "name", "udf_sharing"]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
+
+        for key, val in six.iteritems(local_var_params["kwargs"]):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method share_udf" % key
+                )
+            local_var_params[key] = val
+        del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `share_udf`"
+            )  # noqa: E501
+        # verify the required parameter 'name' is set
+        if "name" not in local_var_params or local_var_params["name"] is None:
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `share_udf`"
+            )  # noqa: E501
+        # verify the required parameter 'udf_sharing' is set
+        if (
+            "udf_sharing" not in local_var_params
+            or local_var_params["udf_sharing"] is None
+        ):
+            raise ApiValueError(
+                "Missing the required parameter `udf_sharing` when calling `share_udf`"
+            )  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        if "udf_sharing" in local_var_params:
+            body_params = local_var_params["udf_sharing"]
+        # HTTP header `Accept`
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+
+        return self.api_client.call_api(
+            "/udf/{namespace}/{name}/share",
+            "PATCH",
             path_params,
             query_params,
             header_params,
@@ -862,7 +1135,7 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udfs/register/{namespace}/{name}",
+            "/udf/{namespace}/{name}",
             "PATCH",
             path_params,
             query_params,

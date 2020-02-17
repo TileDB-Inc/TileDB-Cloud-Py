@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **_exec** | **str** | Type-specific executable text | [optional] 
 **exec_raw** | **str** | optional raw text to store of serialized function, used for showing in UI | [optional] 
 **buffers** | **list[str]** | List of buffers to fetch (attributes + coordinates) | [optional] 
+**result_format** | [**UDFResultType**](UDFResultType.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
