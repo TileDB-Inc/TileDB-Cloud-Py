@@ -82,6 +82,7 @@ def login(
             host=host,
             verify_ssl=verify_ssl,
         )
+        client.update_clients()
         user_api = client.user_api
         session = user_api.get_session(remember_me=True)
         token = session.token
@@ -97,6 +98,7 @@ def login(
     )
     config.save_configuration(config.default_config_file)
     config.logged_in = True
+    client.update_clients()
 
 
 def list_arrays(include_public=False, namespace=None, permissions=None):
@@ -187,13 +189,16 @@ def organization(organization):
 
 
 class Client:
-    def __init__(self):
+    def update_clients(self):
         self.array_api = self.__get_array_api()
         self.organization_api = self.__get_organization_api()
         self.sql_api = self.__get_sql_api()
         self.tasks_api = self.__get_tasks_api()
         self.udf_api = self.__get_udf_api()
         self.user_api = self.__get_user_api()
+
+    def __init__(self):
+        self.update_clients()
 
     def __get_array_api(self):
         return rest_api.ArrayApi(rest_api.ApiClient(config.config))

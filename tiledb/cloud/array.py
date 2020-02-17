@@ -5,10 +5,14 @@ from . import cloudarray
 from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
 from .rest_api import rest
+from . import udf
 
 import zlib
 import multiprocessing
 import cloudpickle
+import urllib
+import base64
+import sys
 
 
 class UDFResult(multiprocessing.pool.ApplyResult):
@@ -182,3 +186,177 @@ def array_activity(uri):
         return api_instance.array_activity_log(namespace=namespace, array=array_name)
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
+
+
+def split_uri(uri):
+    """
+  Split a URI into namespace and array name
+
+  :param uri: uri to split into namespace and array name
+  :return: tuple (namespace, array_name)
+  """
+    parsed = urllib.parse.urlparse(uri)
+    if not parsed.scheme == "tiledb":
+        raise Exception("Incorrect array uri, must be in tiledb:// scheme")
+    return parsed.netloc, parsed.path[1:]
+
+
+def parse_ranges(ranges):
+    """
+    Takes a list of the following objects per dimension:
+
+    - scalar index
+    - (start,end) tuple
+    - list of either of the above types
+
+    :param ranges: list of (scalar, tuple, list)
+    :param builder: function taking arguments (dim_idx, start, end)
+    :return:
+    """
+
+    def make_range(dim_range):
+        if isinstance(dim_range, (int, float)):
+            start, end = dim_range, dim_range
+        elif isinstance(dim_range, (tuple, list)):
+            start, end = dim_range[0], dim_range[1]
+        elif isinstance(dim_range, slice):
+            assert dim_range.step is None, "slice steps are not supported!"
+            start, end = dim_range.start, dim_range.stop
+        else:
+            raise ValueError("Unknown index type! (type: '{}')".format(type(dim_range)))
+        return [start, end]
+
+    result = list()
+    for dim_idx, dim_range in enumerate(ranges):
+        dim_list = []
+        # TODO handle numpy scalars here?
+        if isinstance(dim_range, (int, float, tuple, slice)):
+            dim_list.extend(make_range(dim_range))
+        elif isinstance(dim_range, list):
+            for r in dim_range:
+                dim_list.extend(make_range(r))
+        else:
+            raise ValueError(
+                "Unknown subarray/index type! (type: '{}', "
+                ", idx: '{}', value: '{}')".format(type(dim_range), dim_idx, dim_range)
+            )
+        result.append(dim_list)
+
+    return result
+
+
+def apply_async(
+    uri,
+    func,
+    ranges,
+    attrs=None,
+    layout=None,
+    image_name=None,
+    http_compressor="deflate",
+):
+    """
+    Apply a user defined function to an array asynchronous
+
+    **Example**
+    >>> import tiledb, tiledb.cloud, numpy
+    >>> def median(df):
+    ...   return numpy.median(df["a"])
+    >>> # Open the array then run the UDF
+    >>> tiledb.cloud.array.apply_async("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"]).get()
+    2.0
+
+    :param func: user function to run
+    :param ranges: ranges to issue query on
+    :param attrs: list of attributes or dimensions to fetch in query
+    :param layout: tiledb query layout
+    :param image_name: udf image name to use, useful for testing beta features
+    :param http_compressor: set http compressor for results
+    :return: UDFResult object which is a future containing the results of the UDF
+    """
+
+    (namespace, array_name) = split_uri(uri)
+    api_instance = client.client.udf_api
+
+    if not callable(func):
+        raise TypeError("First argument to `apply` must be callable!")
+
+    pickledUDF = cloudpickle.dumps(func, protocol=udf.tiledb_cloud_protocol)
+    pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
+
+    ranges = parse_ranges(ranges)
+
+    converted_layout = "row-major"
+
+    if layout is None:
+        converted_layout = "unordered"
+    elif layout.upper() == "R":
+        converted_layout = "row-major"
+    elif layout.upper() == "C":
+        converted_layout = "col-major"
+    elif layout.upper() == "G":
+        converted_layout = "global-order"
+
+    ranges = rest_api.models.UDFRanges(layout=converted_layout, ranges=ranges)
+
+    if image_name is None:
+        image_name = "default"
+    try:
+
+        kwargs = {"_preload_content": False, "async_req": True}
+        if http_compressor is not None:
+            kwargs["accept_encoding"] = http_compressor
+
+        # _preload_content must be set to false to avoid trying to decode binary data
+        response = api_instance.submit_udf(
+            namespace=namespace,
+            array=array_name,
+            udf=rest_api.models.UDF(
+                language=rest_api.models.UDFLanguage.PYTHON,
+                _exec=pickledUDF,
+                ranges=ranges,
+                buffers=attrs,
+                version="{}.{}.{}".format(
+                    sys.version_info.major,
+                    sys.version_info.minor,
+                    sys.version_info.micro,
+                ),
+                image_name=image_name,
+            ),
+            **kwargs
+        )
+
+        return UDFResult(response)
+
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_sql_exc(exc) from None
+
+
+def apply(
+    uri,
+    func,
+    ranges,
+    attrs=None,
+    layout=None,
+    image_name=None,
+    http_compressor="deflate",
+):
+    """
+    Apply a user defined function to an array asynchronous
+
+    **Example**
+    >>> import tiledb, tiledb.cloud, numpy
+    >>> def median(df):
+    ...   return numpy.median(df["a"])
+    >>> # Open the array then run the UDF
+    >>> tiledb.cloud.array.apply("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"])
+    2.0
+    """
+    return apply_async(
+        uri=uri,
+        func=func,
+        ranges=ranges,
+        attrs=attrs,
+        layout=layout,
+        image_name=image_name,
+        http_compressor=http_compressor,
+    ).get()

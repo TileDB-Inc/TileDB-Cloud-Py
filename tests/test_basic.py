@@ -1,7 +1,7 @@
 import tiledb, tiledb.cloud
 import sys, os, platform, unittest
 import numpy as np
-from tiledb.cloud import cloudarray
+from tiledb.cloud import array
 
 tiledb.cloud.login(
     token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
@@ -115,36 +115,35 @@ class BasicTests(unittest.TestCase):
 
 class RangesTest(unittest.TestCase):
     def test_parse_ranges(self):
-        ibid = lambda x, y, z: (x, y, z)
-        parse_ranges = lambda x: cloudarray.parse_ranges(x, ibid)
+        parse_ranges = lambda x: array.parse_ranges(x)
 
         a = [1]
-        b = [(0, 1, 1)]
+        b = [[1, 1]]
         self.assertEqual(parse_ranges(a), b)
 
         a = [1, 2]
-        b = [(0, 1, 1), (1, 2, 2)]
+        b = [[1, 1], [2, 2]]
         self.assertEqual(parse_ranges(a), b)
 
         a = [[1, 2], 3]
-        b = [(0, 1, 1), (0, 2, 2), (1, 3, 3)]
+        b = [[1, 1, 2, 2], [3, 3]]
         self.assertEqual(parse_ranges(a), b)
 
         # tuples
         a = [1, (1, 2)]
-        b = [(0, 1, 1), (1, 1, 2)]
+        b = [[1, 1], [1, 2]]
         self.assertEqual(parse_ranges(a), b)
 
         a = [1, [(1, 2)]]
-        b = [(0, 1, 1), (1, 1, 2)]
+        b = [[1, 1], [1, 2]]
         self.assertEqual(parse_ranges(a), b)
 
         a = [1, [slice(1, 2)]]
-        b = [(0, 1, 1), (1, 1, 2)]
+        b = [[1, 1], [1, 2]]
         self.assertEqual(parse_ranges(a), b)
 
         a = [1, slice(2, 3)], [(1, 2), 4]
-        b = [(0, 1, 1), (0, 2, 3), (1, 1, 2), (1, 4, 4)]
+        b = [[1, 1, 2, 3], [1, 2, 4, 4]]
         self.assertEqual(parse_ranges(a), b)
 
         with self.assertRaises(ValueError):

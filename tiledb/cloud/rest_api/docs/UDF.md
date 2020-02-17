@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 **language** | [**UDFLanguage**](UDFLanguage.md) |  | [optional] 
 **version** | **str** | Type-specific version | [optional] 
 **image_name** | **str** | Docker image name to use for udf | [optional] 
+**ranges** | [**UDFRanges**](UDFRanges.md) |  | [optional] 
 **subarray** | [**UDFSubarray**](UDFSubarray.md) |  | [optional] 
 **_exec** | **str** | Type-specific executable text | [optional] 
 **buffers** | **list[str]** | List of buffers to fetch (attributes + coordinates) | [optional] 

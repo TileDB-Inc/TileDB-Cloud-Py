@@ -106,6 +106,7 @@ from tiledb.cloud.rest_api.models.token import Token
 from tiledb.cloud.rest_api.models.token_request import TokenRequest
 from tiledb.cloud.rest_api.models.udf import UDF
 from tiledb.cloud.rest_api.models.udf_language import UDFLanguage
+from tiledb.cloud.rest_api.models.udf_ranges import UDFRanges
 from tiledb.cloud.rest_api.models.udf_result_type import UDFResultType
 from tiledb.cloud.rest_api.models.udf_subarray import UDFSubarray
 from tiledb.cloud.rest_api.models.udf_subarray_range import UDFSubarrayRange
