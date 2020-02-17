@@ -257,14 +257,6 @@ def apply_async(
     """
     Apply a user defined function to an array asynchronous
 
-    **Example**
-    >>> import tiledb, tiledb.cloud, numpy
-    >>> def median(df):
-    ...   return numpy.median(df["a"])
-    >>> # Open the array then run the UDF
-    >>> tiledb.cloud.array.apply_async("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"]).get()
-    2.0
-
     :param func: user function to run
     :param ranges: ranges to issue query on
     :param attrs: list of attributes or dimensions to fetch in query
@@ -272,6 +264,14 @@ def apply_async(
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
     :return: UDFResult object which is a future containing the results of the UDF
+
+    **Example**
+    >>> import tiledb, tiledb.cloud, numpy
+    >>> def median(df):
+    ...   return numpy.median(df["a"])
+    >>> # Open the array then run the UDF
+    >>> tiledb.cloud.array.apply_async("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"]).get()
+    2.0
     """
 
     (namespace, array_name) = split_uri(uri)
@@ -341,7 +341,15 @@ def apply(
     http_compressor="deflate",
 ):
     """
-    Apply a user defined function to an array asynchronous
+    Apply a user defined function to an array synchronous
+
+    :param func: user function to run
+    :param ranges: ranges to issue query on
+    :param attrs: list of attributes or dimensions to fetch in query
+    :param layout: tiledb query layout
+    :param image_name: udf image name to use, useful for testing beta features
+    :param http_compressor: set http compressor for results
+    :return: UDFResult object which is a future containing the results of the UDF
 
     **Example**
     >>> import tiledb, tiledb.cloud, numpy
