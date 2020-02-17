@@ -329,3 +329,73 @@ def list_registered_udfs(namespace=None, search=None):
         return api_instance.get_ud_fs(namespace=namespace, search=search)
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
+
+
+def share(name=None, namespace=None):
+    """
+  Share a registered udf
+  :param name: name of udf in "namespace/name" format
+  :param namespace: namespace to share array with
+  :return: registered udf details
+  """
+    (udf_namespace, udf_name) = name.split("/")
+
+    if not (
+        udf_namespace is not None
+        and udf_name is not None
+        and udf_namespace != ""
+        and udf_name != ""
+    ):
+        # If the namespace is not set, we will default to the user's namespace
+        # Fetch the client profile for username if it is not already cached
+        if config.user is None:
+            config.user = client.user_profile()
+
+        udf_namespace = config.user.username
+
+    try:
+        api_instance = client.client.udf_api
+
+        return api_instance.share_udf(
+            udf_namespace,
+            udf_name,
+            udf_sharing=rest_api.models.UDFSharing(
+                namespace=namespace, actions=[rest_api.models.UDFActions.FETCH_UDF]
+            ),
+        )
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
+
+
+def unshare(name=None, namespace=None):
+    """
+  Share a registered udf
+  :param name: name of udf in "namespace/name" format
+  :param namespace: namespace to share array with
+  :return: registered udf details
+  """
+    (udf_namespace, udf_name) = name.split("/")
+
+    if not (
+        udf_namespace is not None
+        and udf_name is not None
+        and udf_namespace != ""
+        and udf_name != ""
+    ):
+        # If the namespace is not set, we will default to the user's namespace
+        # Fetch the client profile for username if it is not already cached
+        if config.user is None:
+            config.user = client.user_profile()
+
+        udf_namespace = config.user.username
+
+    try:
+        api_instance = client.client.udf_api
+
+        return api_instance.share_udf(
+            udf_namespace,
+            udf_name,
+            udf_sharing=rest_api.models.UDFSharing(namespace=namespace),
+        )
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None

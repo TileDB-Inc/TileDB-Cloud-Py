@@ -279,7 +279,7 @@ def apply_async(
     api_instance = client.client.udf_api
 
     if func is not None and not callable(func):
-        raise TypeError("First argument to `apply` must be callable!")
+        raise TypeError("func argument to `apply` must be callable!")
     elif func is None and name is None or name == "":
         raise TypeError("name argument to `apply` must be set if no function is passed")
 
