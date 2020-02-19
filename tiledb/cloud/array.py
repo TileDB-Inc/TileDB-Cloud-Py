@@ -247,8 +247,9 @@ def parse_ranges(ranges):
 
 def apply_async(
     uri,
-    func,
-    ranges,
+    func=None,
+    ranges=None,
+    name=None,
     attrs=None,
     layout=None,
     image_name=None,
@@ -277,11 +278,15 @@ def apply_async(
     (namespace, array_name) = split_uri(uri)
     api_instance = client.client.udf_api
 
-    if not callable(func):
-        raise TypeError("First argument to `apply` must be callable!")
+    if func is not None and not callable(func):
+        raise TypeError("func argument to `apply` must be callable!")
+    elif func is None and name is None or name == "":
+        raise TypeError("name argument to `apply` must be set if no function is passed")
 
-    pickledUDF = cloudpickle.dumps(func, protocol=udf.tiledb_cloud_protocol)
-    pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
+    pickledUDF = None
+    if func is not None:
+        pickledUDF = cloudpickle.dumps(func, protocol=udf.tiledb_cloud_protocol)
+        pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
     ranges = parse_ranges(ranges)
 
@@ -306,23 +311,25 @@ def apply_async(
         if http_compressor is not None:
             kwargs["accept_encoding"] = http_compressor
 
+        udf_model = rest_api.models.UDF(
+            language=rest_api.models.UDFLanguage.PYTHON,
+            _exec=pickledUDF,
+            ranges=ranges,
+            buffers=attrs,
+            version="{}.{}.{}".format(
+                sys.version_info.major, sys.version_info.minor, sys.version_info.micro,
+            ),
+            image_name=image_name,
+        )
+
+        if pickledUDF is not None:
+            udf_model._exec = pickledUDF
+        elif name is not None:
+            udf_model.registered_udf = name
+
         # _preload_content must be set to false to avoid trying to decode binary data
         response = api_instance.submit_udf(
-            namespace=namespace,
-            array=array_name,
-            udf=rest_api.models.UDF(
-                language=rest_api.models.UDFLanguage.PYTHON,
-                _exec=pickledUDF,
-                ranges=ranges,
-                buffers=attrs,
-                version="{}.{}.{}".format(
-                    sys.version_info.major,
-                    sys.version_info.minor,
-                    sys.version_info.micro,
-                ),
-                image_name=image_name,
-            ),
-            **kwargs
+            namespace=namespace, array=array_name, udf=udf_model, **kwargs
         )
 
         return UDFResult(response)
@@ -333,8 +340,9 @@ def apply_async(
 
 def apply(
     uri,
-    func,
-    ranges,
+    func=None,
+    ranges=None,
+    name=None,
     attrs=None,
     layout=None,
     image_name=None,
@@ -363,6 +371,7 @@ def apply(
         uri=uri,
         func=func,
         ranges=ranges,
+        name=name,
         attrs=attrs,
         layout=layout,
         image_name=image_name,

@@ -3,10 +3,12 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**registered_udf** | **str** | name of registered udf to run, format is {namespace}/{udf_name}. Can not be used with exec | [optional] 
 **language** | [**UDFLanguage**](UDFLanguage.md) |  | [optional] 
 **version** | **str** | Type-specific version | [optional] 
 **image_name** | **str** | Docker image name to use for udf | [optional] 
 **_exec** | **str** | Type-specific executable text | [optional] 
+**exec_raw** | **str** | optional raw text to store of serialized function, used for showing in UI | [optional] 
 **argument** | **str** | Argument to pass to udf function | [optional] 
 **result_format** | [**UDFResultType**](UDFResultType.md) |  | [optional] 
 

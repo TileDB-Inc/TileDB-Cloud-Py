@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **offset_filter_pipeline** | [**FilterPipeline**](FilterPipeline.md) |  | 
 **domain** | [**Domain**](Domain.md) |  | 
 **attributes** | [**list[Attribute]**](Attribute.md) | Attributes of array | 
+**allows_duplicates** | **bool** | True if the array allows coordinate duplicates. Applicable only to sparse arrays. | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
