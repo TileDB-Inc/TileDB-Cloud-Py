@@ -6,6 +6,7 @@ from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
 from .rest_api import rest
 from . import udf
+from . import utils
 
 import zlib
 import multiprocessing
@@ -254,6 +255,7 @@ def apply_async(
     layout=None,
     image_name=None,
     http_compressor="deflate",
+    include_source_lines=True,
 ):
     """
     Apply a user defined function to an array asynchronous
@@ -264,6 +266,7 @@ def apply_async(
     :param layout: tiledb query layout
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
+    :param include_source_lines: disables sending sources lines of function along with udf
     :return: UDFResult object which is a future containing the results of the UDF
 
     **Example**
@@ -284,6 +287,7 @@ def apply_async(
         raise TypeError("name argument to `apply` must be set if no function is passed")
 
     pickledUDF = None
+    source_lines = utils.getsourcelines(func) if include_source_lines else None
     if func is not None:
         pickledUDF = cloudpickle.dumps(func, protocol=udf.tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
@@ -326,6 +330,9 @@ def apply_async(
             udf_model._exec = pickledUDF
         elif name is not None:
             udf_model.registered_udf = name
+
+        if source_lines is not None:
+            udf_model.exec_raw = source_lines
 
         # _preload_content must be set to false to avoid trying to decode binary data
         response = api_instance.submit_udf(
