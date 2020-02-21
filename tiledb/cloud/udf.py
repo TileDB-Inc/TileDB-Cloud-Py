@@ -4,6 +4,7 @@ from . import client
 from .rest_api import ApiException as GenApiException
 from . import tiledb_cloud_error
 from . import config
+from . import utils
 
 import cloudpickle
 
@@ -22,6 +23,7 @@ def exec_async(
     namespace=None,
     image_name=None,
     http_compressor="deflate",
+    include_source_lines=True,
 ):
     """
      Run a user defined function
@@ -32,6 +34,7 @@ def exec_async(
     :param namespace: namespace to run udf under
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
+    :param include_source_lines: disables sending sources lines of function along with udf
     :return: UDFResult object which is a future containing the results of the UDF
     """
 
@@ -46,11 +49,12 @@ def exec_async(
         namespace = config.user.username
 
     if func is not None and not callable(func):
-        raise TypeError("First argument to `exec` must be callable!")
+        raise TypeError("func argument to `exec` must be callable!")
     elif func is None and name is None or name == "":
         raise TypeError("name argument to `exec` must be set if no function is passed")
 
     pickledUDF = None
+    source_lines = utils.getsourcelines(func) if include_source_lines else None
     if func is not None:
         pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
@@ -82,6 +86,9 @@ def exec_async(
         elif name is not None:
             udf_model.registered_udf = name
 
+        if source_lines is not None:
+            udf_model.exec_raw = source_lines
+
         # _preload_content must be set to false to avoid trying to decode binary data
         response = api_instance.submit_generic_udf(
             namespace=namespace, udf=udf_model, **kwargs
@@ -100,6 +107,7 @@ def exec(
     namespace=None,
     image_name=None,
     http_compressor="deflate",
+    include_source_lines=True,
 ):
     """
      Run a user defined function
@@ -110,6 +118,7 @@ def exec(
     :param namespace: namespace to run udf under
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
+    :param include_source_lines: disables sending sources lines of function along with udf
     :return: UDFResult object which is a future containing the results of the UDF
     """
     return exec_async(
@@ -119,10 +128,13 @@ def exec(
         namespace=namespace,
         image_name=image_name,
         http_compressor=http_compressor,
+        include_source_lines=include_source_lines,
     ).get()
 
 
-def register_udf(func, name, namespace=None, image_name=None, type=None):
+def register_udf(
+    func, name, namespace=None, image_name=None, type=None, include_source_lines=True,
+):
     """
 
   :param func: function to register
@@ -130,6 +142,7 @@ def register_udf(func, name, namespace=None, image_name=None, type=None):
   :param namespace: namespace to register in
   :param image_name: optional image name
   :param type: type of udf, generic or single_array
+  :param include_source_lines: disables sending sources lines of function along with udf
   :return:
   """
 
@@ -150,6 +163,8 @@ def register_udf(func, name, namespace=None, image_name=None, type=None):
         pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
+        source_lines = utils.getsourcelines(func) if include_source_lines else None
+
         udf_model = rest_api.models.UDFRegistration(
             name=name,
             language=rest_api.models.UDFLanguage.PYTHON,
@@ -162,19 +177,25 @@ def register_udf(func, name, namespace=None, image_name=None, type=None):
             exec_raw=None,
         )
 
+        if source_lines is not None:
+            udf_model.exec_raw = source_lines
+
         api_instance.register_udf(namespace=namespace, name=name, udf=udf_model)
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def register_generic_udf(func, name, namespace=None, image_name=None):
+def register_generic_udf(
+    func, name, namespace=None, image_name=None, include_source_lines=True
+):
     """
 
   :param func: function to register
   :param name: name of udf to register
   :param namespace: namespace to register in
   :param image_name: optional image name
+  :param include_source_lines: disables sending sources lines of function along with udf
   :return:
   """
     return register_udf(
@@ -183,16 +204,20 @@ def register_generic_udf(func, name, namespace=None, image_name=None):
         namespace=namespace,
         image_name=image_name,
         type=rest_api.models.UDFType.GENERIC,
+        include_source_lines=include_source_lines,
     )
 
 
-def register_single_array_udf(func, name, namespace=None, image_name=None):
+def register_single_array_udf(
+    func, name, namespace=None, image_name=None, include_source_lines=True
+):
     """
 
   :param func: function to register
   :param name: name of udf to register
   :param namespace: namespace to register in
   :param image_name: optional image name
+  :param include_source_lines: disables sending sources lines of function along with udf
   :return:
   """
     return register_udf(
@@ -201,10 +226,13 @@ def register_single_array_udf(func, name, namespace=None, image_name=None):
         namespace=namespace,
         image_name=image_name,
         type=rest_api.models.UDFType.SINGLE_ARRAY,
+        include_source_lines=include_source_lines,
     )
 
 
-def update_udf(func, name, namespace=None, image_name=None, type=None):
+def update_udf(
+    func, name, namespace=None, image_name=None, type=None, include_source_lines=True,
+):
     """
 
   :param func: function to register
@@ -212,6 +240,7 @@ def update_udf(func, name, namespace=None, image_name=None, type=None):
   :param namespace: namespace to register in
   :param image_name: optional image name
   :param type: type of udf, generic or single_array
+  :param include_source_lines: disables sending sources lines of function along with udf
   :return:
   """
 
@@ -232,6 +261,8 @@ def update_udf(func, name, namespace=None, image_name=None, type=None):
         pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
+        source_lines = utils.getsourcelines(func) if include_source_lines else None
+
         udf_model = rest_api.models.UDFRegistration(
             name=name,
             language=rest_api.models.UDFLanguage.PYTHON,
@@ -243,6 +274,9 @@ def update_udf(func, name, namespace=None, image_name=None, type=None):
             _exec=pickledUDF,
             exec_raw=None,
         )
+
+        if source_lines is not None:
+            udf_model.exec_raw = source_lines
 
         api_instance.updated_registered_udf(
             namespace=namespace, name=name, udf=udf_model
@@ -252,13 +286,16 @@ def update_udf(func, name, namespace=None, image_name=None, type=None):
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def update_generic_udf(func, name, namespace=None, image_name=None):
+def update_generic_udf(
+    func, name, namespace=None, image_name=None, include_source_lines=True
+):
     """
 
   :param func: function to register
   :param name: name of udf to register
   :param namespace: namespace to register in
   :param image_name: optional image name
+  :param include_source_lines: disables sending sources lines of function along with udf
   :return:
   """
     return update_udf(
@@ -267,16 +304,20 @@ def update_generic_udf(func, name, namespace=None, image_name=None):
         namespace=namespace,
         image_name=image_name,
         type=rest_api.models.UDFType.GENERIC,
+        include_source_lines=include_source_lines,
     )
 
 
-def update_single_array_udf(func, name, namespace=None, image_name=None):
+def update_single_array_udf(
+    func, name, namespace=None, image_name=None, include_source_lines=True
+):
     """
 
   :param func: function to register
   :param name: name of udf to register
   :param namespace: namespace to register in
   :param image_name: optional image name
+  :param include_source_lines: disables sending sources lines of function along with udf
   :return:
   """
     return update_udf(
@@ -285,6 +326,7 @@ def update_single_array_udf(func, name, namespace=None, image_name=None):
         namespace=namespace,
         image_name=image_name,
         type=rest_api.models.UDFType.SINGLE_ARRAY,
+        include_source_lines=include_source_lines,
     )
 
 
