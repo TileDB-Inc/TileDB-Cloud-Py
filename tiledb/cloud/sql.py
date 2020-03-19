@@ -120,9 +120,7 @@ def exec_async(
             array_api.update_array_metadata(
                 namespace=namespace,
                 output_uri=output_uri,
-                array_metadata=rest_api.models.ArrayMetadataUpdate(
-                    name=output_array_name
-                ),
+                array_metadata=rest_api.models.ArrayInfoUpdate(name=output_array_name),
             )
 
     try:
