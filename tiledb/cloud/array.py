@@ -147,7 +147,7 @@ def register_array(
         return api_instance.register_array(
             namespace=namespace,
             array=uri,
-            array_metadata=rest_api.models.ArrayMetadataUpdate(
+            array_metadata=rest_api.models.ArrayInfoUpdate(
                 description=description,
                 name=array_name,
                 uri=uri,
