@@ -2,6 +2,8 @@ import tiledb, tiledb.cloud
 import sys, os, platform, unittest
 import numpy as np
 from tiledb.cloud import array
+from tiledb.cloud import tasks
+from tiledb.cloud import tiledb_cloud_error
 
 tiledb.cloud.login(
     token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
@@ -10,6 +12,20 @@ tiledb.cloud.login(
 
 
 class BasicTests(unittest.TestCase):
+    def test_info(self):
+        self.assertIsNotNone(array.info("tiledb://TileDB-Inc/quickstart_sparse"))
+
+    def test_list_shared_with(self):
+        with self.assertRaises(tiledb_cloud_error.TileDBCloudError):
+            array.list_shared_with("tiledb://TileDB-Inc/quickstart_sparse"),
+
+    def test_array_activity(self):
+        with self.assertRaises(tiledb_cloud_error.TileDBCloudError):
+            array.array_activity("tiledb://TileDB-Inc/quickstart_sparse")
+
+    def test_tasks(self):
+        self.assertIsNotNone(tasks())
+
     def test_quickstart(self):
         with tiledb.open(
             "tiledb://TileDB-Inc/quickstart_dense", ctx=tiledb.cloud.Ctx()

@@ -1,5 +1,6 @@
 from . import client
 from . import tiledb_cloud_error
+from .array import split_uri
 from . import cloudarray
 from . import sql
 from .rest_api import ApiException as GenApiException
@@ -67,7 +68,7 @@ def tasks(
         raise Exception("status must be one of ['FAILED', 'RUNNING', 'COMPLETED']")
 
     if array is not None:
-        (namespace, array) = cloudarray.split_uri(array)
+        (namespace, array) = split_uri(array)
 
     try:
         args = {}
