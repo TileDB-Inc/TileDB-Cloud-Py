@@ -1,7 +1,7 @@
 from . import rest_api
 from . import config
 from . import client
-from . import cloudarray
+from . import array
 from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
 from .rest_api import rest
@@ -81,7 +81,7 @@ def exec_async(
 
     # Make sure the output_uri is remote array
     if not output_uri is None:
-        cloudarray.split_uri(output_uri)
+        array.split_uri(output_uri)
 
     # If the namespace is not set, we will default to the user's namespace
     if namespace is None:
@@ -99,7 +99,7 @@ def exec_async(
         tiledb.Array.create(output_uri, output_schema, ctx=client.Ctx())
 
         timeout = time.time() + 10  # 10 second timeout
-        (array_namespace, array_name) = cloudarray.split_uri(output_uri)
+        (array_namespace, array_name) = array.split_uri(output_uri)
         while True:
             if time.time() > timeout:
                 break

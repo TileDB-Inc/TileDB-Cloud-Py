@@ -58,7 +58,7 @@ def info(uri):
 
   :return: metadata object
   """
-    (namespace, array_name) = cloudarray.split_uri(uri)
+    (namespace, array_name) = split_uri(uri)
     api_instance = client.client.array_api
 
     try:
@@ -69,7 +69,7 @@ def info(uri):
 
 def list_shared_with(uri):
     """Return array sharing policies"""
-    (namespace, array_name) = cloudarray.split_uri(uri)
+    (namespace, array_name) = split_uri(uri)
     api_instance = client.client.array_api
 
     try:
@@ -99,7 +99,7 @@ def share_array(uri, namespace, permissions):
         ):
             raise Exception("Only read or write permissions are accepted")
 
-    (array_namespace, array_name) = cloudarray.split_uri(uri)
+    (array_namespace, array_name) = split_uri(uri)
     api_instance = client.client.array_api
 
     try:
@@ -163,7 +163,7 @@ def deregister_array(uri):
   Deregister the from the tiledb cloud service. This does not physically delete the array, it will remain
   in your bucket. All access to the array and cloud metadata will be removed.
   """
-    (namespace, array_name) = cloudarray.split_uri(uri)
+    (namespace, array_name) = split_uri(uri)
 
     api_instance = client.client.array_api
 
@@ -179,7 +179,7 @@ def array_activity(uri):
   :param uri:
   :return:
   """
-    (namespace, array_name) = cloudarray.split_uri(uri)
+    (namespace, array_name) = split_uri(uri)
 
     api_instance = client.client.array_api
 
