@@ -13,10 +13,10 @@ jobs:
   strategy:
     matrix:
       mac_36:
-        imageName: 'macOS-10.13'
+        imageName: 'macOS-10.14'
         python.version: '3.6'
       mac_37:
-        imageName: 'macOS-10.13'
+        imageName: 'macOS-10.14'
         python.version: '3.7'
       #linux_py35:
       #  imageName: 'ubuntu-16.04'
