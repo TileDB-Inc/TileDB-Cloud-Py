@@ -46,22 +46,33 @@ class Node:
         # Loop through non-default parameters and find any Node objects
         # Node objects will be used to automatically add dependencies
         if self.args is not None:
-            if isinstance(self.args, tuple) and len(self.args) > 1:
-                for arg in self.args:
-                    if isinstance(arg, Node):
-                        self.depends_on(arg)
-            elif isinstance(*self.args, Node):
-                self.depends_on(self.args[0])
+            self.__build_dependencies_list(self.args)
 
         # Loop through defaulted named parameters and find any Node objects
         # Node objects will be used to automatically add dependencies
         if self.kwargs is not None:
-            if isinstance(self.kwargs, dict) and len(self.kwargs) > 0:
-                for arg in self.kwargs.values():
-                    if isinstance(arg, Node):
-                        self.depends_on(arg)
-            # elif isinstance(*self.kwargs, Node):
-            #     self.depends_on(self.kwargs[0])
+            self.__build_dependencies_list(self.kwargs)
+
+    def __build_dependencies_list(self, arg):
+        """
+        Recursively check arg for any Node instances and create graph edges (dependency links)
+        :param arg:
+        :return:
+        """
+        if isinstance(arg, tuple) or isinstance(arg, list):
+            for a in arg:
+                if isinstance(a, Node):
+                    self.depends_on(a)
+                elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
+                    self.__build_dependencies_list(a)
+        elif isinstance(arg, dict):
+            for a in arg.values():
+                if isinstance(a, Node):
+                    self.depends_on(a)
+                elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
+                    self.__build_dependencies_list(a)
+        elif isinstance(arg, Node):
+            self.depends_on(arg)
 
     def __hash__(self):
         return hash(self.id)
@@ -122,6 +133,38 @@ class Node:
                 return self.__get_future_result()
         return False
 
+    def __replace_nodes_with_results(self, arg):
+        """
+        Recursively find arguments of Node instance and replace with the node results
+        :param arg:
+        :return: converted argument
+        """
+        tuple_conversion = False
+        if isinstance(arg, tuple):
+            arg = list(arg)
+            tuple_conversion = True
+
+        if isinstance(arg, tuple) or isinstance(arg, list):
+            for index in range(len(arg)):
+                a = arg[index]
+                if isinstance(a, Node):
+                    arg[index] = a.results()
+                elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
+                    arg[index] = self.__replace_nodes_with_results(a)
+        elif isinstance(arg, dict):
+            for k, a in arg.items():
+                if isinstance(a, Node):
+                    arg[k] = a.results()
+                elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
+                    arg[k] = self.__replace_nodes_with_results(a)
+        elif isinstance(arg, Node):
+            arg = arg.results()
+
+        if tuple_conversion:
+            arg = tuple(arg)
+
+        return arg
+
     def exec(self):
         """
         Execute function for node
@@ -129,42 +172,25 @@ class Node:
         """
         self.status = Status.RUNNING
         try:
-            args = []
-            kwargs = {}
             # First loop though any non-default parameter arguments to find any nodes
             # If there is a node as an argument, the user really just wants the results, so let's fetch them
             # and swap out the parameter
             if self.args is not None:
-                if isinstance(self.args, tuple) and len(self.args) > 0:
-                    for arg in self.args:
-                        if isinstance(arg, Node):
-                            args.append(arg.results())
-                        else:
-                            args.append(arg)
-
-                elif isinstance(*self.args, Node):
-                    args = self.args[0].results()
-                else:
-                    args = self.args
+                self.args = self.__replace_nodes_with_results(self.args)
 
             # First loop though any default named parameter arguments to find any nodes
             # If there is a node as an argument, the user really just wants the results, so let's fetch them
             # and swap out the parameter
             if self.kwargs is not None:
-                if isinstance(self.kwargs, dict) and len(self.kwargs) > 0:
-                    for key, value in self.kwargs.items():
-                        if isinstance(value, Node):
-                            kwargs[key] = value.results()
-                        else:
-                            kwargs[key] = value
+                self.kwargs = self.__replace_nodes_with_results(self.kwargs)
 
             # Execute user function with the parameters that the user requested
-            if len(kwargs) > 0 and len(args) > 0:
-                res = self.func(*args, **kwargs)
-            elif len(args) > 0:
-                res = self.func(*args)
-            elif len(kwargs) > 0:
-                res = self.func(**kwargs)
+            if len(self.kwargs) > 0 and len(self.args) > 0:
+                res = self.func(*self.args, **self.kwargs)
+            elif len(self.args) > 0:
+                res = self.func(*self.args)
+            elif len(self.kwargs) > 0:
+                res = self.func(**self.kwargs)
             else:
                 res = self.func()
 
@@ -177,6 +203,7 @@ class Node:
             else:
                 self.__results = res
                 self.__handle_complete_results()
+
         except Exception as exc:
             self.status = Status.FAILED
             self.error = exc
@@ -236,6 +263,8 @@ class DAG:
         # If there is no running nodes we can assume it is complete and check if we should mark as failed or successful
         if len(self.failed_nodes) > 0:
             self.status = Status.FAILED
+        elif len(self.not_started_nodes) > 0:
+            return False
         else:
             self.status = Status.COMPLETED
 
@@ -251,14 +280,15 @@ class DAG:
         self.not_started_nodes[node.id] = node
         return node
 
-    def add_node(self, func, *args, **kwargs):
+    def add_node(self, func_exec, *args, name=None, **kwargs):
         """
         Create and add a node
-        :param func: function to execute
+        :param func_exec: function to execute
         :param args: arguments for function execution
+        :param name: name
         :return: Node that is created
         """
-        node = Node(func, args, dag=self, kwargs=kwargs)
+        node = Node(func_exec, args, dag=self, name=name, kwargs=kwargs)
         return self.__add_node(node)
 
     def report_node_complete(self, node):
