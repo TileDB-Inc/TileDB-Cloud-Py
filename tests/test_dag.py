@@ -1,6 +1,6 @@
+import time
 import unittest
 import os
-from time import sleep
 
 import numpy as np
 from tiledb.cloud import dag
@@ -130,6 +130,23 @@ class DAGFailureTest(unittest.TestCase):
             self.assertEqual(node2.result(), None)
             self.assertEqual(node2.status, dag.Status.NOT_STARTED)
             self.assertEqual(d.status, dag.Status.FAILED)
+
+
+class DAGCancelTest(unittest.TestCase):
+    def test_dag_cancel(self):
+        d = dag.DAG()
+
+        node = d.add_node(time.sleep, 1)
+        node_2 = d.add_node(np.mean, [1, 1])
+
+        d.exec()
+
+        # Cancel DAG
+        d.cancel()
+
+        self.assertEqual(node.result(), None)
+        self.assertEqual(node.status, dag.Status.CANCELLED)
+        self.assertEqual(d.status, dag.Status.CANCELLED)
 
 
 class DAGCloudApplyTest(unittest.TestCase):

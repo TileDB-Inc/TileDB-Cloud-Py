@@ -5,7 +5,7 @@ import time
 import uuid
 from concurrent.futures.process import ProcessPoolExecutor
 from concurrent.futures.thread import ThreadPoolExecutor
-from concurrent.futures._base import Future
+from concurrent.futures._base import Future, CancelledError
 from enum import Enum
 
 from tiledb.cloud import TileDBCloudError
@@ -16,6 +16,7 @@ class Status(Enum):
     RUNNING = 2
     COMPLETED = 3
     FAILED = 4
+    CANCELLED = 5
 
 
 def handle_complete_node(node, future):
@@ -110,6 +111,8 @@ class Node:
         if self.future is not None:
             try:
                 self.error = self.future.exception()
+            except CancelledError as cancelledExc:
+                pass
             except Exception as exc:
                 self.error = exc
 
@@ -124,7 +127,10 @@ class Node:
         Handle complete results
         :return:
         """
-        self.status = Status.COMPLETED
+        # Set status if it has not already been set for cancelled or failed
+        if self.status == Status.RUNNING:
+            self.status = Status.COMPLETED
+
         self.__report_finished_running()
 
     def handle_completed_future(self):
@@ -134,9 +140,18 @@ class Node:
         """
 
         if self.future is not None:
-            self.__results = self.future.result()
+            try:
+                self.__results = self.future.result()
+            except CancelledError as exc:
+                self.status = Status.CANCELLED
 
         self.__handle_complete_results()
+
+    def cancel(self):
+
+        self.status = Status.CANCELLED
+        if self.future is not None:
+            self.future.cancel()
 
     def finished(self):
         """
@@ -287,6 +302,7 @@ class DAG:
         self.failed_nodes = {}
         self.running_nodes = {}
         self.not_started_nodes = {}
+        self.cancelled_nodes = {}
         if use_processes:
             self.executor = ProcessPoolExecutor(max_workers=max_workers)
         else:
@@ -310,6 +326,8 @@ class DAG:
         # If there is no running nodes we can assume it is complete and check if we should mark as failed or successful
         if len(self.failed_nodes) > 0:
             self.status = Status.FAILED
+        elif len(self.cancelled_nodes) > 0:
+            self.status = Status.CANCELLED
         elif len(self.not_started_nodes) > 0:
             return False
         else:
@@ -355,9 +373,12 @@ class DAG:
             for child in node.children.values():
                 if child.ready_to_exec():
                     self.__exec_node(child)
+        elif node.status == Status.CANCELLED:
+            self.cancelled_nodes[node.id] = node
         else:
             self.failed_nodes[node.id] = node
 
+        # Check if DAG is done to change status
         self.done()
 
     def __find_root_nodes(self):
@@ -398,6 +419,11 @@ class DAG:
             node.exec()
 
     def wait(self, timeout):
+        """
+        Wait for DAG to be completed
+        :param timeout: optional timeout in seconds to wait for DAG to be completed
+        :return: None or raises TimeoutError if timeout occurs
+        """
 
         if timeout is not None and not isinstance(timeout, numbers.Number):
             raise TypeError(
@@ -414,3 +440,9 @@ class DAG:
                 raise TimeoutError(
                     "timeout of {} reached and dag is not complete".format(timeout)
                 )
+
+    def cancel(self):
+
+        self.status = Status.CANCELLED
+        for node in self.running_nodes.values():
+            node.cancel()
