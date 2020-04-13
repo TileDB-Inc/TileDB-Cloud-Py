@@ -1,5 +1,6 @@
 import unittest
 import os
+from time import sleep
 
 import numpy as np
 from tiledb.cloud import dag
@@ -24,9 +25,12 @@ class DAGClassTest(unittest.TestCase):
 
         d.exec()
 
-        self.assertEqual(node_1.results(), 2)
-        self.assertEqual(node_2.results(), 4)
-        self.assertEqual(node_3.results(), 8)
+        # Wait for dag to complete
+        d.wait(30)
+
+        self.assertEqual(node_1.result(), 2)
+        self.assertEqual(node_2.result(), 4)
+        self.assertEqual(node_3.result(), 8)
 
     def test_kwargs(self):
         d = dag.DAG()
@@ -43,9 +47,12 @@ class DAGClassTest(unittest.TestCase):
 
         d.exec()
 
-        self.assertEqual(node_1.results(), 2)
-        self.assertEqual(node_2.results(), 4)
-        self.assertEqual(node_3.results(), "aaaa")
+        # Wait for dag to complete
+        d.wait(30)
+
+        self.assertEqual(node_1.result(), 2)
+        self.assertEqual(node_2.result(), 4)
+        self.assertEqual(node_3.result(), "aaaa")
 
     def test_multi_dependencies_dag(self):
         d = dag.DAG()
@@ -67,49 +74,62 @@ class DAGClassTest(unittest.TestCase):
 
         d.exec()
 
-        self.assertEqual(node_1.results(), 2)
-        self.assertEqual(node_2.results(), 4)
-        self.assertEqual(node_3.results(), 8)
-        self.assertEqual(node_4.results(), 8)
-        self.assertEqual(node_5.results(), 8)
-        self.assertEqual(node_6.results(), 24)
+        # Wait for dag to complete
+        d.wait(30)
+
+        self.assertEqual(node_1.result(), 2)
+        self.assertEqual(node_2.result(), 4)
+        self.assertEqual(node_3.result(), 8)
+        self.assertEqual(node_4.result(), 8)
+        self.assertEqual(node_5.result(), 8)
+        self.assertEqual(node_6.result(), 24)
 
 
 class DAGFailureTest(unittest.TestCase):
     def test_dag_failure(self):
-        d = dag.DAG()
+        with self.assertRaises(TypeError):
+            d = dag.DAG()
 
-        node = d.add_node(lambda x: x * 2, np.median)
-        node.name = "node"
+            node = d.add_node(lambda x: x * 2, np.median)
+            node.name = "node"
 
-        d.exec()
+            d.exec()
 
-        self.assertEqual(node.results(), None)
-        self.assertEqual(node.status, dag.Status.FAILED)
-        self.assertEqual(
-            str(node.error), "unsupported operand type(s) for *: 'function' and 'int'"
-        )
+            # Wait for dag to complete
+            d.wait(30)
+
+            self.assertEqual(node.result(), None)
+            self.assertEqual(node.status, dag.Status.FAILED)
+            self.assertEqual(
+                str(node.error),
+                "unsupported operand type(s) for *: 'function' and 'int'",
+            )
 
     def test_dag_dependency_fail_early(self):
 
-        d = dag.DAG()
+        with self.assertRaises(TypeError):
+            d = dag.DAG()
 
-        node = d.add_node(lambda x: x * 2, np.median)
-        node.name = "node"
-        node2 = d.add_node(lambda x: x * 2, 10)
-        node2.name = "node2"
-        node2.depends_on(node)
+            node = d.add_node(lambda x: x * 2, np.median)
+            node.name = "node"
+            node2 = d.add_node(lambda x: x * 2, 10)
+            node2.name = "node2"
+            node2.depends_on(node)
 
-        d.exec()
+            d.exec()
 
-        self.assertEqual(node.results(), None)
-        self.assertEqual(node.status, dag.Status.FAILED)
-        self.assertEqual(
-            str(node.error), "unsupported operand type(s) for *: 'function' and 'int'"
-        )
-        self.assertEqual(node2.results(), None)
-        self.assertEqual(node2.status, dag.Status.NOT_STARTED)
-        self.assertEqual(d.status, dag.Status.FAILED)
+            # Wait for dag to complete
+            d.wait(30)
+
+            self.assertEqual(node.result(), None)
+            self.assertEqual(node.status, dag.Status.FAILED)
+            self.assertEqual(
+                str(node.error),
+                "unsupported operand type(s) for *: 'function' and 'int'",
+            )
+            self.assertEqual(node2.result(), None)
+            self.assertEqual(node2.status, dag.Status.NOT_STARTED)
+            self.assertEqual(d.status, dag.Status.FAILED)
 
 
 class DAGCloudApplyTest(unittest.TestCase):
@@ -130,7 +150,10 @@ class DAGCloudApplyTest(unittest.TestCase):
 
         d.exec()
 
-        self.assertEqual(node.results(), numpy.sum(orig["a"]))
+        # Wait for dag to complete
+        d.wait(30)
+
+        self.assertEqual(node.result(), numpy.sum(orig["a"]))
 
     def test_dag_udf_exec(self):
         import numpy
@@ -144,7 +167,10 @@ class DAGCloudApplyTest(unittest.TestCase):
 
         d.exec()
 
-        self.assertEqual(node.results(), 55)
+        # Wait for dag to complete
+        d.wait(30)
+
+        self.assertEqual(node.result(), 55)
 
     def test_dag_sql_exec(self):
 
@@ -163,7 +189,10 @@ class DAGCloudApplyTest(unittest.TestCase):
 
         d.exec()
 
-        self.assertEqual(node.results()["a"][0], numpy.sum(orig["a"]))
+        # Wait for dag to complete
+        d.wait(30)
+
+        self.assertEqual(node.result()["a"][0], numpy.sum(orig["a"]))
 
     def test_dag_apply_exec_multiple(self):
 
@@ -212,10 +241,13 @@ class DAGCloudApplyTest(unittest.TestCase):
 
         d.exec()
 
-        self.assertEqual(node_array_apply.results(), numpy.sum(orig["a"]))
-        self.assertEqual(node_sql.results()["a"][0], numpy.sum(orig_dense["a"]))
+        # Wait for dag to complete
+        d.wait(30)
+
+        self.assertEqual(node_array_apply.result(), numpy.sum(orig["a"]))
+        self.assertEqual(node_sql.result()["a"][0], numpy.sum(orig_dense["a"]))
         self.assertEqual(
-            node_exec.results(),
+            node_exec.result(),
             numpy.mean([numpy.sum(orig["a"]), numpy.sum(orig_dense["a"])]),
         )
         self.assertEqual(d.status, dag.Status.COMPLETED)

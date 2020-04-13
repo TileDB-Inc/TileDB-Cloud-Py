@@ -1,7 +1,11 @@
+import functools
 import multiprocessing
+import numbers
+import time
 import uuid
 from concurrent.futures.process import ProcessPoolExecutor
 from concurrent.futures.thread import ThreadPoolExecutor
+from concurrent.futures._base import Future
 from enum import Enum
 
 from tiledb.cloud import TileDBCloudError
@@ -12,6 +16,10 @@ class Status(Enum):
     RUNNING = 2
     COMPLETED = 3
     FAILED = 4
+
+
+def handle_complete_node(node, future):
+    node.handle_completed_future()
 
 
 class Node:
@@ -98,6 +106,16 @@ class Node:
         Report the node as finished to the dag
         :return:
         """
+
+        if self.future is not None:
+            try:
+                self.error = self.future.exception()
+            except Exception as exc:
+                self.error = exc
+
+        if self.error is not None:
+            self.status = Status.FAILED
+
         if self.dag is not None and isinstance(self.dag, DAG):
             self.dag.report_node_complete(self)
 
@@ -109,17 +127,16 @@ class Node:
         self.status = Status.COMPLETED
         self.__report_finished_running()
 
-    def __get_future_result(self):
+    def handle_completed_future(self):
         """
-        If the results are a future we try to get them
-        :return: True if the results can be gotten, false if not finished or not a future
-        """
-        if self.future is not None:
-            self.__results = self.future.get()
-            self.__handle_complete_results()
-            return True
 
-        return False
+        :return:
+        """
+
+        if self.future is not None:
+            self.__results = self.future.result()
+
+        self.__handle_complete_results()
 
     def finished(self):
         """
@@ -129,8 +146,8 @@ class Node:
         if self.status == Status.COMPLETED or self.status == Status.FAILED:
             return True
         elif self.status == Status.RUNNING:
-            if self.future is not None and self.future.is_ready():
-                return self.__get_future_result()
+            if self.future is not None and self.future.done():
+                return True
         return False
 
     def __replace_nodes_with_results(self, arg):
@@ -148,17 +165,17 @@ class Node:
             for index in range(len(arg)):
                 a = arg[index]
                 if isinstance(a, Node):
-                    arg[index] = a.results()
+                    arg[index] = a.result()
                 elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
                     arg[index] = self.__replace_nodes_with_results(a)
         elif isinstance(arg, dict):
             for k, a in arg.items():
                 if isinstance(a, Node):
-                    arg[k] = a.results()
+                    arg[k] = a.result()
                 elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
                     arg[k] = self.__replace_nodes_with_results(a)
         elif isinstance(arg, Node):
-            arg = arg.results()
+            arg = arg.result()
 
         if tuple_conversion:
             arg = tuple(arg)
@@ -171,43 +188,53 @@ class Node:
         :return:
         """
         self.status = Status.RUNNING
-        try:
-            # First loop though any non-default parameter arguments to find any nodes
-            # If there is a node as an argument, the user really just wants the results, so let's fetch them
-            # and swap out the parameter
-            if self.args is not None:
-                self.args = self.__replace_nodes_with_results(self.args)
+        # First loop though any non-default parameter arguments to find any nodes
+        # If there is a node as an argument, the user really just wants the results, so let's fetch them
+        # and swap out the parameter
+        if self.args is not None:
+            self.args = self.__replace_nodes_with_results(self.args)
 
-            # First loop though any default named parameter arguments to find any nodes
-            # If there is a node as an argument, the user really just wants the results, so let's fetch them
-            # and swap out the parameter
-            if self.kwargs is not None:
-                self.kwargs = self.__replace_nodes_with_results(self.kwargs)
+        # First loop though any default named parameter arguments to find any nodes
+        # If there is a node as an argument, the user really just wants the results, so let's fetch them
+        # and swap out the parameter
+        if self.kwargs is not None:
+            self.kwargs = self.__replace_nodes_with_results(self.kwargs)
 
-            # Execute user function with the parameters that the user requested
+        # Execute user function with the parameters that the user requested
+        # The function is executed on the dag's worker pool
+        if self.dag is not None:
             if len(self.kwargs) > 0 and len(self.args) > 0:
-                res = self.func(*self.args, **self.kwargs)
+                res = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
             elif len(self.args) > 0:
-                res = self.func(*self.args)
+                res = self.dag.executor.submit(self.func, *self.args)
             elif len(self.kwargs) > 0:
-                res = self.func(**self.kwargs)
+                res = self.dag.executor.submit(self.func, **self.kwargs)
             else:
-                res = self.func()
+                res = self.dag.executor.submit(self.func)
+        # Handle case when there is no dag, useful for testing
+        else:
+            try:
+                if len(self.kwargs) > 0 and len(self.args) > 0:
+                    res = self.func(*self.args, **self.kwargs)
+                elif len(self.args) > 0:
+                    res = self.func(*self.args)
+                elif len(self.kwargs) > 0:
+                    res = self.func(**self.kwargs)
+                else:
+                    res = self.func()
+            except Exception as exc:
+                self.status = Status.FAILED
+                self.error = exc
+                self.__report_finished_running()
+                raise exc
 
-            # If the results of the function are a future, we need to account for that
-            if isinstance(res, multiprocessing.pool.ApplyResult):
-                # TODO: not sure if this works or not
-                res._callback = self.__handle_complete_results
-                self.future = res
-            # Else the results were a normal (blocking) function and we have the true results
-            else:
-                self.__results = res
-                self.__handle_complete_results()
-
-        except Exception as exc:
-            self.status = Status.FAILED
-            self.error = exc
-            self.__report_finished_running()
+        # If the results were a normal (blocking) function and we have the true results
+        if isinstance(res, Future):
+            self.future = res
+            self.future.add_done_callback(functools.partial(handle_complete_node, self))
+        else:
+            self.__results = res
+            self.__handle_complete_results()
 
     def ready_to_exec(self):
         """
@@ -222,13 +249,28 @@ class Node:
                 return False
         return True
 
-    def results(self):
+    def result(self):
         """
-        Fetch results of functions
+        Fetch results of function, block if not complete
+        :return:
+        """
+        if self.future is not None:
+            # If future, catch exception to store error on node, then raise
+            try:
+                self.__results = self.future.result()
+            except Exception as exc:
+                self.error = exc
+                raise exc
+
+        return self.__results
+
+    def result_or_future(self):
+        """
+        Fetch results of functions or return future if incomplete
         :return:
         """
         if not self.finished() and self.future is not None:
-            self.__get_future_result()
+            return self.future
 
         return self.__results
 
@@ -252,11 +294,16 @@ class DAG:
 
         self.status = Status.NOT_STARTED
 
-    def __check_complete(self):
+    def done(self):
         """
         Checks if DAG is complete
         :return: True if complete, False otherwise
         """
+        if self.status == Status.NOT_STARTED:
+            raise TileDBCloudError(
+                "Can't call done for DAG before starting DAG with `exec()`"
+            )
+
         if len(self.running_nodes) > 0:
             return False
 
@@ -291,6 +338,9 @@ class DAG:
         node = Node(func_exec, args, dag=self, name=name, kwargs=kwargs)
         return self.__add_node(node)
 
+    def submit(self, *args, **kwargs):
+        return self.add_node(*args, **kwargs)
+
     def report_node_complete(self, node):
         """
         Report a node as complete
@@ -308,7 +358,7 @@ class DAG:
         else:
             self.failed_nodes[node.id] = node
 
-        self.__check_complete()
+        self.done()
 
     def __find_root_nodes(self):
         """
@@ -344,5 +394,23 @@ class DAG:
         if node.ready_to_exec():
             del self.not_started_nodes[node.id]
             self.running_nodes[node.id] = node
-            # Submit it async so we can move on
-            self.executor.submit(node.exec())
+            # Execute the node, the node will launch it's task with a worker pool from this dag
+            node.exec()
+
+    def wait(self, timeout):
+
+        if timeout is not None and not isinstance(timeout, numbers.Number):
+            raise TypeError(
+                "timeout must be numeric value representing seconds to wait"
+            )
+
+        start_time = time.time()
+        end_time = None
+        if timeout is not None:
+            end_time = start_time + timeout
+        while not self.done():
+            time.sleep(0.5)
+            if end_time is not None and time.time() >= end_time:
+                raise TimeoutError(
+                    "timeout of {} reached and dag is not complete".format(timeout)
+                )
