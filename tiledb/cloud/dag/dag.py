@@ -486,3 +486,15 @@ class DAG:
         self.status = Status.CANCELLED
         for node in self.running_nodes.values():
             node.cancel()
+
+    def find_end_nodes(self):
+        """
+        Find all end nodes
+        :return: list of end nodes
+        """
+        end = []
+        for node in self.nodes.values():
+            if node.children is None or len(node.children) == 0:
+                end.append(node)
+
+        return end

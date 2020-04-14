@@ -32,6 +32,11 @@ class DAGClassTest(unittest.TestCase):
         self.assertEqual(node_2.result(), 4)
         self.assertEqual(node_3.result(), 8)
 
+        ends = d.find_end_nodes()
+
+        self.assertEqual(len(ends), 1)
+        self.assertEqual(ends[0].name, node_3.name)
+
     def test_kwargs(self):
         d = dag.DAG()
 
