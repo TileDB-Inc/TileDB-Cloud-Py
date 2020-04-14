@@ -340,3 +340,39 @@ class DAGCloudApplyTest(unittest.TestCase):
             numpy.mean([numpy.sum(orig["a"]), numpy.sum(orig_dense["a"])]),
         )
         self.assertEqual(d.status, dag.Status.COMPLETED)
+
+
+status_updates = 0
+done_updates = 0
+
+
+class DAGCallbackTest(unittest.TestCase):
+    def test_simple_dag(self):
+        def status_callback_test(dag):
+            global status_updates
+            status_updates += 1
+
+        def done_callback_test(dag):
+            global done_updates
+            done_updates += 1
+
+        d = dag.DAG(
+            update_callback=status_callback_test, done_callback=done_callback_test
+        )
+
+        node_1 = d.add_node(np.median, [1, 2, 3], name="node_1")
+        node_2 = d.add_node(lambda x: x * 2, node_1, name="node_2")
+        node_3 = d.add_node(lambda x: x * 2, node_2, name="node_3")
+
+        d.exec()
+
+        # Wait for dag to complete
+        d.wait(30)
+
+        self.assertEqual(node_1.result(), 2)
+        self.assertEqual(node_2.result(), 4)
+        self.assertEqual(node_3.result(), 8)
+        global status_updates
+        global done_updates
+        self.assertEqual(status_updates, 3)
+        self.assertEqual(done_updates, 1)

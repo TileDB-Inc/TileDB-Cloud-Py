@@ -301,13 +301,22 @@ class Node:
 
 
 class DAG:
-    def __init__(self, max_workers=None, use_processes=False):
+    def __init__(
+        self,
+        max_workers=None,
+        use_processes=False,
+        done_callback=None,
+        update_callback=None,
+    ):
         """
         DAG is a class for creating and managing direct acyclic graphs
         :param max_workers: how many workers should be used to execute the dag
         :param use_processes: if true will use processes instead of threads, defaults to threads
+        :param done_callback: optional call back function to register for when dag is completed. Function will be passed reference to this dag
+        :param update_callback: optional call back function to register for when dag status is updated. Function will be passed reference to this dag
         """
         self.nodes = {}
+        self.nodes_by_name = {}
         self.completed_nodes = {}
         self.failed_nodes = {}
         self.running_nodes = {}
@@ -319,6 +328,56 @@ class DAG:
             self.executor = ThreadPoolExecutor(max_workers=max_workers)
 
         self.status = Status.NOT_STARTED
+
+        self.done_callbacks = []
+        self.called_done_callbacks = False
+        if done_callback is not None and callable(done_callback):
+            self.done_callbacks.append(done_callback)
+
+        self.update_callbacks = []
+        if update_callback is not None and callable(update_callback):
+            self.update_callbacks.append(update_callback)
+
+    def add_update_callback(self, func):
+        """
+        Add a callback for when DAG status is updated
+        :param func: Function to call when DAG status is updated. The function will be passed reference to this dag
+        :return:
+        """
+        if not callable(func):
+            raise TypeError("func to add_update_callback must be callable")
+
+        self.update_callbacks.append(func)
+
+    def add_done_callback(self, func):
+        """
+        Add a callback for when DAG is completed
+        :param func: Function to call when DAG status is updated. The function will be passed reference to this dag
+        :return:
+        """
+        if not callable(func):
+            raise TypeError("func to add_done_callback must be callable")
+
+        self.done_callbacks.append(func)
+
+    def execute_update_callbacks(self):
+        """
+        Run user specified callbacks for status updates
+        :return:
+        """
+        for func in self.update_callbacks:
+            func(self)
+
+    def execute_done_callbacks(self):
+        """
+        Run user specified callbacks for DAG completion
+        :return:
+        """
+        if not self.called_done_callbacks:
+            for func in self.done_callbacks:
+                func(self)
+
+        self.called_done_callbacks = True
 
     def done(self):
         """
@@ -352,6 +411,7 @@ class DAG:
         :return: node
         """
         self.nodes[node.id] = node
+        self.nodes_by_name[node.name] = node
         self.not_started_nodes[node.id] = node
         return node
 
@@ -425,8 +485,11 @@ class DAG:
         else:
             self.failed_nodes[node.id] = node
 
+        self.execute_update_callbacks()
+
         # Check if DAG is done to change status
-        self.done()
+        if self.done():
+            self.execute_done_callbacks()
 
     def __find_root_nodes(self):
         """
@@ -445,6 +508,7 @@ class DAG:
         Start the DAG by executing root nodes
         :return:
         """
+        self.called_done_callbacks = False
         roots = self.__find_root_nodes()
         if len(roots) == 0:
             raise TileDBCloudError("DAG is circular, there are no root nodes")
