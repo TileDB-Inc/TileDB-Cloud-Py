@@ -1,5 +1,4 @@
 import functools
-import multiprocessing
 import numbers
 import time
 import uuid
@@ -7,6 +6,10 @@ from concurrent.futures.process import ProcessPoolExecutor
 from concurrent.futures.thread import ThreadPoolExecutor
 from concurrent.futures._base import Future, CancelledError
 from enum import Enum
+
+from ..array import apply as array_apply
+from ..sql import exec as sql_exec
+from ..udf import exec as udf_exec
 
 from tiledb.cloud import TileDBCloudError
 
@@ -356,7 +359,44 @@ class DAG:
         node = Node(func_exec, args, dag=self, name=name, kwargs=kwargs)
         return self.__add_node(node)
 
-    def submit(self, *args, **kwargs):
+    def submit_array_udf(self, *args, **kwargs):
+        """
+        Submit a function that will be executed in the cloud serverlessly
+        :param func_exec: function to execute
+        :param args: arguments for function execution
+        :param name: name
+        :return: Node that is created
+        """
+        return self.add_node(array_apply, *args, **kwargs)
+
+    def submit_udf(self, *args, **kwargs):
+        """
+        Submit a function that will be executed in the cloud serverlessly
+        :param func_exec: function to execute
+        :param args: arguments for function execution
+        :param name: name
+        :return: Node that is created
+        """
+        return self.add_node(udf_exec, *args, **kwargs)
+
+    def submit_sql(self, *args, **kwargs):
+        """
+        Submit a sql query to run serverlessly in the cloud
+        :param sql: query to execute
+        :param args: arguments for function execution
+        :param name: name
+        :return: Node that is created
+        """
+        return self.add_node(sql_exec, *args, **kwargs)
+
+    def submit_local(self, *args, **kwargs):
+        """
+        Submit a function that will run locally
+        :param func_exec: function to execute
+        :param args: arguments for function execution
+        :param name: name
+        :return: Node that is created
+        """
         return self.add_node(*args, **kwargs)
 
     def report_node_complete(self, node):

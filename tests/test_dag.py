@@ -268,3 +268,58 @@ class DAGCloudApplyTest(unittest.TestCase):
             numpy.mean([numpy.sum(orig["a"]), numpy.sum(orig_dense["a"])]),
         )
         self.assertEqual(d.status, dag.Status.COMPLETED)
+
+    def test_dag_apply_exec_multiple_2(self):
+
+        uri_sparse = "tiledb://TileDB-Inc/quickstart_sparse"
+        uri_dense = "tiledb://TileDB-Inc/quickstart_dense"
+        with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:
+            orig = A[:]
+
+        with tiledb.open(uri_dense, ctx=tiledb.cloud.Ctx()) as A:
+            orig_dense = A[:]
+
+        import numpy
+
+        d = dag.DAG()
+
+        node_local = d.submit_local(lambda x: x * 2, 100)
+
+        node_array_apply = d.submit_array_udf(
+            uri_sparse,
+            lambda x: numpy.sum(x["a"]),
+            [(1, 4), (1, 4)],
+            name="node_array_apply",
+        )
+        node_sql = d.submit_sql(
+            "select SUM(`a`) as a from `{}`".format(uri_dense), name="node_sql",
+        )
+
+        def mean(args):
+            import numpy
+            import pandas
+
+            for i in range(len(args)):
+                item = args[i]
+                if isinstance(item, pandas.DataFrame):
+                    args[i] = item["a"][0]
+
+            return numpy.mean(args)
+
+        node_exec = d.submit_udf(
+            func=mean, arguments=[node_array_apply, node_sql], name="node_exec",
+        )
+
+        d.exec()
+
+        # Wait for dag to complete
+        d.wait(30)
+
+        self.assertEqual(node_local.result(), 200)
+        self.assertEqual(node_array_apply.result(), numpy.sum(orig["a"]))
+        self.assertEqual(node_sql.result()["a"][0], numpy.sum(orig_dense["a"]))
+        self.assertEqual(
+            node_exec.result(),
+            numpy.mean([numpy.sum(orig["a"]), numpy.sum(orig_dense["a"])]),
+        )
+        self.assertEqual(d.status, dag.Status.COMPLETED)
