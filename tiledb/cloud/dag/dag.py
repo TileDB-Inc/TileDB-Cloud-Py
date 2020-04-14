@@ -249,7 +249,14 @@ class Node:
         # If the results were a normal (blocking) function and we have the true results
         if isinstance(res, Future):
             self.future = res
-            self.future.add_done_callback(functools.partial(handle_complete_node, self))
+            # If the node is already finished by the time we get here, call complete function directly
+            # In python 3.7 if we add a call back to a future with an exception it throws an exception
+            if self.future.done():
+                self.handle_completed_future()
+            else:
+                self.future.add_done_callback(
+                    functools.partial(handle_complete_node, self)
+                )
         else:
             self.__results = res
             self.__handle_complete_results()
