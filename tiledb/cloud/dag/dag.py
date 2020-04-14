@@ -505,3 +505,15 @@ class DAG:
                 end.append(node)
 
         return end
+
+    def stats(self):
+
+        return {
+            "percent_complete": len(self.completed_nodes) / len(self.nodes) * 100,
+            "running": len(self.running_nodes),
+            "failed": len(self.failed_nodes),
+            "completed": len(self.completed_nodes),
+            "cancelled": len(self.cancelled_nodes),
+            "not_started": len(self.not_started_nodes),
+            "total_count": len(self.nodes),
+        }

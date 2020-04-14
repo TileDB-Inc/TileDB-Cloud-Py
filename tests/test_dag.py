@@ -36,6 +36,18 @@ class DAGClassTest(unittest.TestCase):
 
         self.assertEqual(len(ends), 1)
         self.assertEqual(ends[0].name, node_3.name)
+        self.assertDictEqual(
+            d.stats(),
+            {
+                "percent_complete": 100,
+                "running": 0,
+                "failed": 0,
+                "completed": 3,
+                "cancelled": 0,
+                "not_started": 0,
+                "total_count": 3,
+            },
+        )
 
     def test_kwargs(self):
         d = dag.DAG()
