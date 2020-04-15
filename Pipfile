@@ -13,6 +13,9 @@ certifi = "*"
 python-dateutil = "*"
 cloudpickle = "*"
 pandas = "*"
+plotly = ">= 4.0.0"
+networkx = ">= 2.0.0"
+pydot = "*"
 
 [dev-packages]
 
