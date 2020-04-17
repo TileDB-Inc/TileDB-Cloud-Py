@@ -29,6 +29,20 @@ class Status(Enum):
     FAILED = 4
     CANCELLED = 5
 
+    def __str__(self):
+        if self == self.NOT_STARTED:
+            return "Not Started"
+        elif self == self.RUNNING:
+            return "Running"
+        elif self == self.COMPLETED:
+            return "Completed"
+        elif self == self.FAILED:
+            return "Failed"
+        elif self == self.CANCELLED:
+            return "Cancelled"
+
+        return "Unknown Status"
+
 
 def handle_complete_node(node, future):
     node.handle_completed_future()
