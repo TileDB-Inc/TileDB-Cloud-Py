@@ -17,24 +17,26 @@ last_udf_task_id = None
 
 
 def exec_async(
-    func=None,
-    arguments=None,
+    func,
+    *args,
     name=None,
     namespace=None,
     image_name=None,
     http_compressor="deflate",
     include_source_lines=True,
+    **kwargs
 ):
     """
      Run a user defined function
 
 
     :param func: user function to run
-    :param arguments: arguments to pass to function
+    :param args: arguments to pass to function
     :param namespace: namespace to run udf under
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
     :param include_source_lines: disables sending sources lines of function along with udf
+    :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
     """
 
@@ -59,7 +61,14 @@ def exec_async(
         pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
-    if arguments != None:
+    arguments = None
+    if (args is not None and len(args) > 0) or (kwargs is not None and len(kwargs) > 0):
+        arguments = []
+        if len(args) > 0:
+            arguments.append(args)
+        if len(kwargs) > 0:
+            arguments.append(kwargs)
+        arguments = tuple(arguments)
         arguments = cloudpickle.dumps(arguments, protocol=tiledb_cloud_protocol)
         arguments = base64.b64encode(arguments).decode("ascii")
 
@@ -101,34 +110,37 @@ def exec_async(
 
 
 def exec(
-    func=None,
+    func,
+    *args,
     name=None,
-    arguments=None,
     namespace=None,
     image_name=None,
     http_compressor="deflate",
     include_source_lines=True,
+    **kwargs
 ):
     """
      Run a user defined function
 
 
     :param func: user function to run
-    :param arguments: arguments to pass to function
+    :param args: arguments to pass to function
     :param namespace: namespace to run udf under
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
     :param include_source_lines: disables sending sources lines of function along with udf
+    :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
     """
     return exec_async(
-        func=func,
+        func,
+        *args,
         name=name,
-        arguments=arguments,
         namespace=namespace,
         image_name=image_name,
         http_compressor=http_compressor,
         include_source_lines=include_source_lines,
+        **kwargs,
     ).get()
 
 
