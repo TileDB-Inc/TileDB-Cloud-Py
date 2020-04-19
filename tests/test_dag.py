@@ -23,7 +23,7 @@ class DAGClassTest(unittest.TestCase):
         node_3 = d.add_node(lambda x: x * 2, node_2)
         node_3.name = "node_3"
 
-        d.exec()
+        d.compute()
 
         # Wait for dag to complete
         d.wait(30)
@@ -62,7 +62,7 @@ class DAGClassTest(unittest.TestCase):
         node_3 = d.add_node(string_multi, node_2, str="a")
         node_3.name = "node_3"
 
-        d.exec()
+        d.compute()
 
         # Wait for dag to complete
         d.wait(30)
@@ -89,7 +89,7 @@ class DAGClassTest(unittest.TestCase):
         node_6 = d.add_node(lambda *x: np.sum(x), node_3, node_4, node_5)
         node_6.name = "multi_node_6"
 
-        d.exec()
+        d.compute()
 
         # Wait for dag to complete
         d.wait(30)
@@ -110,7 +110,7 @@ class DAGFailureTest(unittest.TestCase):
             node = d.add_node(lambda x: x * 2, np.median)
             node.name = "node"
 
-            d.exec()
+            d.compute()
 
             # Wait for dag to complete
             d.wait(30)
@@ -133,7 +133,7 @@ class DAGFailureTest(unittest.TestCase):
             node2.name = "node2"
             node2.depends_on(node)
 
-            d.exec()
+            d.compute()
 
             # Wait for dag to complete
             d.wait(30)
@@ -156,7 +156,7 @@ class DAGCancelTest(unittest.TestCase):
         node = d.add_node(time.sleep, 1)
         node_2 = d.add_node(np.mean, [1, 1])
 
-        d.exec()
+        d.compute()
 
         # Cancel DAG
         d.cancel()
@@ -182,7 +182,7 @@ class DAGCloudApplyTest(unittest.TestCase):
         )
         node.name = "node"
 
-        d.exec()
+        d.compute()
 
         # Wait for dag to complete
         d.wait(30)
@@ -197,7 +197,7 @@ class DAGCloudApplyTest(unittest.TestCase):
         node = d.add_node(tiledb.cloud.udf.exec, lambda x: numpy.sum(x), [1, 4, 10, 40])
         node.name = "node"
 
-        d.exec()
+        d.compute()
 
         # Wait for dag to complete
         d.wait(30)
@@ -219,7 +219,7 @@ class DAGCloudApplyTest(unittest.TestCase):
         )
         node.name = "node"
 
-        d.exec()
+        d.compute()
 
         # Wait for dag to complete
         d.wait(30)
@@ -268,7 +268,7 @@ class DAGCloudApplyTest(unittest.TestCase):
             tiledb.cloud.udf.exec, mean, [node_array_apply, node_sql], name="node_exec",
         )
 
-        d.exec()
+        d.compute()
 
         # Wait for dag to complete
         d.wait(30)
@@ -320,7 +320,7 @@ class DAGCloudApplyTest(unittest.TestCase):
 
         node_exec = d.submit_udf(mean, [node_array_apply, node_sql], name="node_exec")
 
-        d.exec()
+        d.compute()
 
         # Wait for dag to complete
         d.wait(30)
@@ -357,7 +357,7 @@ class DAGCallbackTest(unittest.TestCase):
         node_2 = d.add_node(lambda x: x * 2, node_1, name="node_2")
         node_3 = d.add_node(lambda x: x * 2, node_2, name="node_3")
 
-        d.exec()
+        d.compute()
 
         # Wait for dag to complete
         d.wait(30)
