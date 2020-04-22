@@ -2,11 +2,19 @@ import functools
 import numbers
 import time
 import uuid
+import networkx as nx
+import plotly.graph_objects as go
+
 from concurrent.futures.process import ProcessPoolExecutor
 from concurrent.futures.thread import ThreadPoolExecutor
 from concurrent.futures._base import Future, CancelledError
 from enum import Enum
 
+from .visualization import (
+    build_graph_node_details,
+    update_graph,
+    build_visualization_positions,
+)
 from ..array import apply as array_apply
 from ..sql import exec as sql_exec
 from ..udf import exec as udf_exec
@@ -20,6 +28,20 @@ class Status(Enum):
     COMPLETED = 3
     FAILED = 4
     CANCELLED = 5
+
+    def __str__(self):
+        if self == self.NOT_STARTED:
+            return "Not Started"
+        elif self == self.RUNNING:
+            return "Running"
+        elif self == self.COMPLETED:
+            return "Completed"
+        elif self == self.FAILED:
+            return "Failed"
+        elif self == self.CANCELLED:
+            return "Cancelled"
+
+        return "Unknown Status"
 
 
 def handle_complete_node(node, future):
@@ -322,6 +344,9 @@ class DAG:
         self.running_nodes = {}
         self.not_started_nodes = {}
         self.cancelled_nodes = {}
+
+        self.visualization = None
+
         if use_processes:
             self.executor = ProcessPoolExecutor(max_workers=max_workers)
         else:
@@ -581,3 +606,100 @@ class DAG:
             "not_started": len(self.not_started_nodes),
             "total_count": len(self.nodes),
         }
+
+    def networkx_graph(self):
+        # Build networkx graph
+        G = nx.DiGraph()
+
+        for n in self.nodes.values():
+            G.add_node(n.name)
+            for child in n.children.values():
+                G.add_node(child.name)
+                G.add_edge(n.name, child.name)
+
+        return G
+
+    @staticmethod
+    def __update_dag_graph(graph):
+        update_graph(graph.visualization["nodes"], graph.visualization["fig"])
+
+    def visualize(self, notebook=True, auto_update=True):
+        """
+        Build and render a tree diagram of the DAG.
+        :param notebook: Is the visualization inside a jupyter notebook? If so we'll use a widget
+        :param auto_update: Should the diagram be auto updated with each status change
+        :return: returns plotly figure
+        """
+        G = self.networkx_graph()
+
+        pos = build_visualization_positions(G)
+
+        # Convert to plotly scatter plot
+        edge_x = []
+        edge_y = []
+        for edge in G.edges():
+            x0, y0 = pos[edge[0]]
+            x1, y1 = pos[edge[1]]
+            edge_x.append(x0)
+            edge_x.append(x1)
+            edge_x.append(None)
+            edge_y.append(y0)
+            edge_y.append(y1)
+            edge_y.append(None)
+
+        edge_trace = go.Scatter(
+            x=edge_x,
+            y=edge_y,
+            line=dict(width=0.5, color="#888"),
+            hoverinfo="none",
+            mode="lines",
+        )
+
+        # Build node x,y and also build a mapping of the graph market numbers to actual node objects so we can fetch status
+        # The graph ends up with each market on a list, so we need to map from this list's order to actual nodes so we can look things up
+        node_x = []
+        node_y = []
+        nodes = []
+        for node in G.nodes():
+            x, y = pos[node]
+            node_x.append(x)
+            node_y.append(y)
+            nodes.append(self.nodes_by_name[node])
+
+        # Build node scatter plot
+        node_trace = go.Scatter(
+            x=node_x,
+            y=node_y,
+            mode="markers",
+            hoverinfo="text",
+            marker=dict(size=15, line_width=2),
+        )
+
+        (node_trace.marker.color, node_trace.text) = build_graph_node_details(nodes)
+
+        fig_obj = go.Figure
+        if notebook:
+            fig_obj = go.FigureWidget
+        # Create plot
+        fig = fig_obj(
+            data=[edge_trace, node_trace],
+            layout=go.Layout(
+                # title="Status",
+                # titlefont_size=16,
+                showlegend=False,
+                hovermode="closest",
+                margin=dict(b=20, l=5, r=5, t=40),
+                annotations=[
+                    dict(showarrow=True, xref="paper", yref="paper", x=0.005, y=-0.002)
+                ],
+                xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+            ),
+        )
+
+        self.visualization = dict(fig=fig, network=G, nodes=nodes)
+
+        if auto_update:
+            self.add_update_callback(self.__update_dag_graph)
+
+        return fig

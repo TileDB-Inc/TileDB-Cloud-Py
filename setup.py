@@ -25,6 +25,9 @@ REQUIRES = [
     "setuptools>=18.0",
     "setuptools_scm>=1.5.4",
     "pandas",
+    "plotly>= 4.0.0",
+    "networkx>= 2.0.0",
+    "pydot",
 ]
 
 # NOTE: we cannot use an __init__.py file in the tiledb/ directory, because it is supplied
