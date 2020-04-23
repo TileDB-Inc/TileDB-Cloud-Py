@@ -3,7 +3,6 @@ import numbers
 import time
 import uuid
 import networkx as nx
-import plotly.graph_objects as go
 
 from concurrent.futures.process import ProcessPoolExecutor
 from concurrent.futures.thread import ThreadPoolExecutor
@@ -12,7 +11,8 @@ from enum import Enum
 
 from .visualization import (
     build_graph_node_details,
-    update_graph,
+    update_plotly_graph,
+    update_tiledb_graph,
     build_visualization_positions,
 )
 from ..array import apply as array_apply
@@ -75,7 +75,7 @@ class Node:
         self.children = {}
         if name is None:
             name = self.id
-        self.name = name
+        self.name = str(name)
 
         # Loop through non-default parameters and find any Node objects
         # Node objects will be used to automatically add dependencies
@@ -476,7 +476,7 @@ class DAG:
         :return: node
         """
         self.nodes[node.id] = node
-        self.nodes_by_name[node.name] = node
+        self.nodes_by_name[str(node.name)] = node
         self.not_started_nodes[node.id] = node
         return node
 
@@ -670,19 +670,90 @@ class DAG:
 
         return G
 
-    @staticmethod
-    def __update_dag_graph(graph):
-        update_graph(graph.visualization["nodes"], graph.visualization["fig"])
+    def get_tiledb_plot_node_details(self):
+        """
+        Build list of details needed for tiledb node graph
+        :return:
+        """
+        node_details = {}
 
-    def visualize(self, notebook=True, auto_update=True):
+        for node_name, node in self.nodes_by_name.items():
+            node_details[node_name] = dict(name=node_name, status=str(node.status))
+
+        return node_details
+
+    @staticmethod
+    def __update_dag_tiledb_graph(graph):
+        graph.visualization["node_details"] = graph.get_tiledb_plot_node_details()
+        update_tiledb_graph(
+            graph.visualization["nodes"],
+            graph.visualization["edges"],
+            graph.visualization["node_details"],
+            graph.visualization["fig"],
+        )
+
+    @staticmethod
+    def __update_dag_plotly_graph(graph):
+        update_plotly_graph(graph.visualization["nodes"], graph.visualization["fig"])
+
+    def visualize(self, notebook=True, auto_update=True, force_plotly=False):
         """
         Build and render a tree diagram of the DAG.
         :param notebook: Is the visualization inside a jupyter notebook? If so we'll use a widget
         :param auto_update: Should the diagram be auto updated with each status change
-        :return: returns plotly figure
+        :param force_plotly: Force the use of plotly graphs
+        :return: returns figure
         """
-        G = self.networkx_graph()
+        if not notebook or force_plotly:
+            return self._visualize_plotly(notebook=notebook, auto_update=auto_update)
 
+        try:
+            import tiledb.plot.widget
+
+            return self.__visualize_tiledb(auto_update=auto_update)
+
+        except ImportError:
+            import plotly.graph_objects as go
+
+            return self._visualize_plotly(notebook=notebook, auto_update=auto_update)
+
+    def __visualize_tiledb(self, auto_update=True):
+        """
+        Create graph visualization with tiledb.plot.widget
+        :param auto_update: Should the diagram be auto updated with each status change
+        :return: figure
+        """
+        import tiledb.plot.widget
+        import json
+
+        G = self.networkx_graph()
+        nodes = list(G.nodes())
+        edges = list(G.edges())
+        node_details = self.get_tiledb_plot_node_details()
+
+        self.visualization = {
+            "nodes": nodes,
+            "edges": edges,
+            "node_details": node_details,
+        }
+        fig = tiledb.plot.widget.Visualize(data=json.dumps(self.visualization))
+        self.visualization["fig"] = fig
+
+        if auto_update:
+            self.add_update_callback(self.__update_dag_tiledb_graph)
+
+        return fig
+
+    def _visualize_plotly(self, notebook=True, auto_update=True):
+        """
+
+        :param notebook: Is the visualization inside a jupyter notebook? If so we'll use a widget
+        :param auto_update: Should the diagram be auto updated with each status change
+        :return: figure
+        """
+        import plotly.graph_objects as go
+
+        G = self.networkx_graph()
         pos = build_visualization_positions(G)
 
         # Convert to plotly scatter plot
@@ -751,6 +822,6 @@ class DAG:
         self.visualization = dict(fig=fig, network=G, nodes=nodes)
 
         if auto_update:
-            self.add_update_callback(self.__update_dag_graph)
+            self.add_update_callback(self.__update_dag_plotly_graph)
 
         return fig
