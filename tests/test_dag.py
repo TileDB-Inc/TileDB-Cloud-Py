@@ -194,9 +194,7 @@ class DAGCloudApplyTest(unittest.TestCase):
 
         d = dag.DAG()
 
-        node = d.add_node(
-            tiledb.cloud.udf.exec, lambda x: numpy.sum(x), arguments=[1, 4, 10, 40]
-        )
+        node = d.add_node(tiledb.cloud.udf.exec, lambda x: numpy.sum(x), [1, 4, 10, 40])
         node.name = "node"
 
         d.exec()
@@ -267,10 +265,7 @@ class DAGCloudApplyTest(unittest.TestCase):
             return numpy.mean(args)
 
         node_exec = d.add_node(
-            tiledb.cloud.udf.exec,
-            func=mean,
-            arguments=[node_array_apply, node_sql],
-            name="node_exec",
+            tiledb.cloud.udf.exec, mean, [node_array_apply, node_sql], name="node_exec",
         )
 
         d.exec()
@@ -323,9 +318,7 @@ class DAGCloudApplyTest(unittest.TestCase):
 
             return numpy.mean(args)
 
-        node_exec = d.submit_udf(
-            func=mean, arguments=[node_array_apply, node_sql], name="node_exec",
-        )
+        node_exec = d.submit_udf(mean, [node_array_apply, node_sql], name="node_exec")
 
         d.exec()
 

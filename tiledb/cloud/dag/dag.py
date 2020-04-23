@@ -49,14 +49,14 @@ def handle_complete_node(node, future):
 
 
 class Node:
-    def __init__(self, func, args, name=None, dag=None, kwargs=None):
+    def __init__(self, func, *args, name=None, dag=None, **kwargs):
         """
         Node is a class that represents a function to run in a DAG
         :param func: function to run
         :param args: tuple of arguments to run
         :param name: optional name of dag
         :param dag: dag this node is associated with
-        :param kwards: dictionary for keyword arguments
+        :param kwargs: dictionary for keyword arguments
         """
         self.id = uuid.uuid4()
         self.error = None
@@ -448,7 +448,7 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        node = Node(func_exec, args, dag=self, name=name, kwargs=kwargs)
+        node = Node(func_exec, *args, dag=self, name=name, **kwargs)
         return self.__add_node(node)
 
     def submit_array_udf(self, *args, **kwargs):
