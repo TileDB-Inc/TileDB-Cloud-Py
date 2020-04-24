@@ -89,7 +89,7 @@ def exec_async(
         if config.user is None:
             config.user = client.user_profile()
 
-        namespace = config.user.username
+        namespace = client.find_organization_or_user_for_default_charges(config.user)
 
     api_instance = client.client.sql_api
 

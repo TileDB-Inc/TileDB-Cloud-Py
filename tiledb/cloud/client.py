@@ -188,6 +188,22 @@ def organization(organization):
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
+def find_organization_or_user_for_default_charges(user):
+    """
+    Takes a user model and finds either the first non public organization or the user itself
+    :param user:
+    :return: namespace name to charge by default (organization or user if not part of any organization)
+    """
+
+    namespace_to_charge = user.username
+    for org in user.organizations:
+        if org.organization_name != "public":
+            namespace_to_charge = org.organization_name
+            break
+
+    return namespace_to_charge
+
+
 class Client:
     def update_clients(self):
         self.array_api = self.__get_array_api()
