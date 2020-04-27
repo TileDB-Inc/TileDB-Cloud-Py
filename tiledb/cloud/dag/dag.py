@@ -80,14 +80,14 @@ class Node:
         # Loop through non-default parameters and find any Node objects
         # Node objects will be used to automatically add dependencies
         if self.args is not None:
-            self.__build_dependencies_list(self.args)
+            self._build_dependencies_list(self.args)
 
         # Loop through defaulted named parameters and find any Node objects
         # Node objects will be used to automatically add dependencies
         if self.kwargs is not None:
-            self.__build_dependencies_list(self.kwargs)
+            self._build_dependencies_list(self.kwargs)
 
-    def __build_dependencies_list(self, arg):
+    def _build_dependencies_list(self, arg):
         """
         Recursively check arg for any Node instances and create graph edges (dependency links)
         :param arg:
@@ -98,13 +98,13 @@ class Node:
                 if isinstance(a, Node):
                     self.depends_on(a)
                 elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    self.__build_dependencies_list(a)
+                    self._build_dependencies_list(a)
         elif isinstance(arg, dict):
             for a in arg.values():
                 if isinstance(a, Node):
                     self.depends_on(a)
                 elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    self.__build_dependencies_list(a)
+                    self._build_dependencies_list(a)
         elif isinstance(arg, Node):
             self.depends_on(arg)
 
@@ -112,7 +112,7 @@ class Node:
         return hash(self.id)
 
     def __eq__(self, other):
-        return self.id == other.id
+        return type(self) == type(other) and self.id == other.id
 
     def __ne__(self, other):
         return not (self == other)
@@ -126,6 +126,9 @@ class Node:
         """
         self.parents[node.id] = node
         node.children[self.id] = self
+
+        if self.dag is None and node.dag is not None:
+            self.dag = node.dag
 
     def __report_finished_running(self):
         """
@@ -190,6 +193,8 @@ class Node:
                 return True
         return False
 
+    done = finished
+
     def __replace_nodes_with_results(self, arg):
         """
         Recursively find arguments of Node instance and replace with the node results
@@ -225,7 +230,7 @@ class Node:
     def exec(self):
         """
         Execute function for node
-        :return:
+        :return: None
         """
         self.status = Status.RUNNING
         # First loop though any non-default parameter arguments to find any nodes
@@ -283,7 +288,9 @@ class Node:
             self.__results = res
             self.__handle_complete_results()
 
-    def ready_to_exec(self):
+    compute = exec
+
+    def ready_to_compute(self):
         """
         Is the node ready to execute? Are all dependencies completed?
         :return: True if node is able to be run
@@ -321,6 +328,29 @@ class Node:
 
         return self.__results
 
+    def wait(self, timeout=None):
+        """
+        Wait for node to be completed
+        :param timeout: optional timeout in seconds to wait for DAG to be completed
+        :return: None or raises TimeoutError if timeout occurs
+        """
+
+        if timeout is not None and not isinstance(timeout, numbers.Number):
+            raise TypeError(
+                "timeout must be numeric value representing seconds to wait"
+            )
+
+        start_time = time.time()
+        end_time = None
+        if timeout is not None:
+            end_time = start_time + timeout
+        while not self.done():
+            time.sleep(0.5)
+            if end_time is not None and time.time() >= end_time:
+                raise TimeoutError(
+                    "timeout of {} reached and dag is not complete".format(timeout)
+                )
+
 
 class DAG:
     def __init__(
@@ -337,6 +367,7 @@ class DAG:
         :param done_callback: optional call back function to register for when dag is completed. Function will be passed reference to this dag
         :param update_callback: optional call back function to register for when dag status is updated. Function will be passed reference to this dag
         """
+        self.id = uuid.uuid4()
         self.nodes = {}
         self.nodes_by_name = {}
         self.completed_nodes = {}
@@ -362,6 +393,15 @@ class DAG:
         self.update_callbacks = []
         if update_callback is not None and callable(update_callback):
             self.update_callbacks.append(update_callback)
+
+    def __hash__(self):
+        return hash(self.id)
+
+    def __eq__(self, other):
+        return type(self) == type(other) and self.id == other.id
+
+    def __ne__(self, other):
+        return not (self == other)
 
     def add_update_callback(self, func):
         """
@@ -429,7 +469,7 @@ class DAG:
 
         return True
 
-    def __add_node(self, node):
+    def add_node_obj(self, node):
         """
         Add node to DAG
         :param node: to add to dag
@@ -449,7 +489,7 @@ class DAG:
         :return: Node that is created
         """
         node = Node(func_exec, *args, dag=self, name=name, **kwargs)
-        return self.__add_node(node)
+        return self.add_node_obj(node)
 
     def submit_array_udf(self, *args, **kwargs):
         """
@@ -464,6 +504,17 @@ class DAG:
     def submit_udf(self, *args, **kwargs):
         """
         Submit a function that will be executed in the cloud serverlessly
+        :param func_exec: function to execute
+        :param args: arguments for function execution
+        :param name: name
+        :return: Node that is created
+        """
+        return self.add_node(udf_exec, *args, **kwargs)
+
+    def submit(self, *args, **kwargs):
+        """
+        Submit a function that will be executed in the cloud serverlessly
+        This function is analogous to submit_udf
         :param func_exec: function to execute
         :param args: arguments for function execution
         :param name: name
@@ -503,8 +554,8 @@ class DAG:
             self.completed_nodes[node.id] = node
 
             for child in node.children.values():
-                if child.ready_to_exec():
-                    self.__exec_node(child)
+                if child.ready_to_compute():
+                    self._exec_node(child)
         elif node.status == Status.CANCELLED:
             self.cancelled_nodes[node.id] = node
         else:
@@ -528,7 +579,7 @@ class DAG:
 
         return roots
 
-    def exec(self):
+    def compute(self):
         """
         Start the DAG by executing root nodes
         :return:
@@ -540,21 +591,21 @@ class DAG:
 
         self.status = Status.RUNNING
         for node in roots:
-            self.__exec_node(node)
+            self._exec_node(node)
 
-    def __exec_node(self, node):
+    def _exec_node(self, node):
         """
         Execute a node
         :param node: node to execute
         :return:
         """
-        if node.ready_to_exec():
+        if node.ready_to_compute():
             del self.not_started_nodes[node.id]
             self.running_nodes[node.id] = node
             # Execute the node, the node will launch it's task with a worker pool from this dag
             node.exec()
 
-    def wait(self, timeout):
+    def wait(self, timeout=None):
         """
         Wait for DAG to be completed
         :param timeout: optional timeout in seconds to wait for DAG to be completed

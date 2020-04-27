@@ -29,3 +29,5 @@ from . import sql
 from . import udf
 
 from . import dag
+
+from . import compute
