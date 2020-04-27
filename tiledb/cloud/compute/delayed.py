@@ -47,18 +47,21 @@ class DelayedBase(Node):
         for node in self.children.values():
             node.__set_all_parent_nodes_same_dag(dag)
 
-    def visualize(self, notebook=True, auto_update=True):
+    def visualize(self, notebook=True, auto_update=True, force_plotly=False):
         """
         Build and render a tree diagram of the DAG.
         :param notebook: Is the visualization inside a jupyter notebook? If so we'll use a widget
         :param auto_update: Should the diagram be auto updated with each status change
+        :param force_plotly: Force the use of plotly graphs
         :return: returns plotly figure
         """
         if self.dag is None:
             self.__set_all_parent_nodes_same_dag(DAG())
 
         if self.dag is not None:
-            return self.dag.visualize(notebook=notebook, auto_update=auto_update)
+            return self.dag.visualize(
+                notebook=notebook, auto_update=auto_update, force_plotly=force_plotly
+            )
 
         return None
 
