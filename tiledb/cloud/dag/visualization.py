@@ -1,5 +1,6 @@
 import networkx as nx
 import random
+import json
 
 from . import dag
 
@@ -34,7 +35,7 @@ def build_graph_node_details(nodes):
     return (node_colors, node_text)
 
 
-def update_graph(nodes, fig=None):
+def update_plotly_graph(nodes, fig=None):
     """
     Update a graph based on based node status and figure
     :param nodes: list of notes to update
@@ -49,6 +50,21 @@ def update_graph(nodes, fig=None):
             marker=dict(color=node_colors),
             text=node_text,
             selector=dict(mode="markers"),
+        )
+
+
+def update_tiledb_graph(nodes, edges, node_details, fig):
+    """
+    Update a tiledb plot widge graph
+    :param nodes: nodes of graph
+    :param edges: edges for graph
+    :param node_details: Node details
+    :param fig: figure
+    :return:
+    """
+    if fig is not None:
+        fig.setData(
+            json.dumps(dict(nodes=nodes, edges=edges, node_details=node_details))
         )
 
 
