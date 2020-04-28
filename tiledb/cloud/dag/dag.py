@@ -375,6 +375,7 @@ class DAG:
         self.running_nodes = {}
         self.not_started_nodes = {}
         self.cancelled_nodes = {}
+        self.root_nodes = []
 
         self.visualization = None
 
@@ -585,12 +586,12 @@ class DAG:
         :return:
         """
         self.called_done_callbacks = False
-        roots = self.__find_root_nodes()
-        if len(roots) == 0:
+        self.root_nodes = self.__find_root_nodes()
+        if len(self.root_nodes) == 0:
             raise TileDBCloudError("DAG is circular, there are no root nodes")
 
         self.status = Status.RUNNING
-        for node in roots:
+        for node in self.root_nodes:
             self._exec_node(node)
 
     def _exec_node(self, node):
@@ -689,6 +690,7 @@ class DAG:
             graph.visualization["nodes"],
             graph.visualization["edges"],
             graph.visualization["node_details"],
+            graph.visualization["root_nodes"],
             graph.visualization["fig"],
         )
 
@@ -731,10 +733,18 @@ class DAG:
         edges = list(G.edges())
         node_details = self.get_tiledb_plot_node_details()
 
+        if len(self.root_nodes) == 0:
+            self.root_nodes = self.__find_root_nodes()
+
+        root_nodes = []
+        for node in self.root_nodes:
+            root_nodes.append(str(node.name))
+
         self.visualization = {
             "nodes": nodes,
             "edges": edges,
             "node_details": node_details,
+            "root_nodes": root_nodes,
         }
         fig = tiledb.plot.widget.Visualize(data=json.dumps(self.visualization))
         self.visualization["fig"] = fig
