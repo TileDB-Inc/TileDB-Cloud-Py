@@ -117,7 +117,7 @@ class DelayedSQL(DelayedBase):
         return self
 
 
-class DelayedArray(DelayedBase):
+class DelayedArrayUDF(DelayedBase):
     def __init__(self, uri, func_exec, *args, **kwargs):
         self.func_exec = func_exec
         self.uri = uri
