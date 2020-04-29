@@ -1,3 +1,3 @@
-from .delayed import Delayed, DelayedSQL, DelayedArray
+from .delayed import Delayed, DelayedSQL, DelayedArrayUDF
 
 from ..dag import Status

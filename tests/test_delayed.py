@@ -3,7 +3,7 @@ import unittest
 import os
 
 import numpy as np
-from tiledb.cloud.compute import Delayed, DelayedSQL, DelayedArray, Status
+from tiledb.cloud.compute import Delayed, DelayedSQL, DelayedArrayUDF, Status
 import tiledb.cloud
 
 tiledb.cloud.login(
@@ -126,7 +126,7 @@ class DelayedCloudApplyTest(unittest.TestCase):
 
         import numpy
 
-        node = DelayedArray(uri, lambda x: numpy.sum(x["a"]), name="node")(
+        node = DelayedArrayUDF(uri, lambda x: numpy.sum(x["a"]), name="node")(
             [(1, 4), (1, 4)]
         )
 
@@ -169,7 +169,7 @@ class DelayedCloudApplyTest(unittest.TestCase):
 
         import numpy
 
-        node_array_apply = DelayedArray(
+        node_array_apply = DelayedArrayUDF(
             uri_sparse, lambda x: numpy.sum(x["a"]), name="node_array_apply"
         )([(1, 4), (1, 4)])
         node_sql = DelayedSQL(
@@ -213,7 +213,7 @@ class DelayedCloudApplyTest(unittest.TestCase):
 
         node_local = Delayed(lambda x: x * 2, local=True)(100)
 
-        node_array_apply = DelayedArray(
+        node_array_apply = DelayedArrayUDF(
             uri_sparse, lambda x: numpy.sum(x["a"]), name="node_array_apply"
         )([(1, 4), (1, 4)])
         node_sql = DelayedSQL(
