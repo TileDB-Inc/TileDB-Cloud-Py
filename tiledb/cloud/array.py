@@ -24,8 +24,7 @@ class UDFResult(multiprocessing.pool.ApplyResult):
         try:
             response = rest.RESTResponse(self.response.get(timeout=timeout))
 
-            global last_udf_task_id
-            last_udf_task_id = response.getheader(client.TASK_ID_HEADER)
+            cloudarray.last_udf_task_id = response.getheader(client.TASK_ID_HEADER)
 
             res = response.data
 
