@@ -696,12 +696,12 @@ class DAG:
     def __update_dag_plotly_graph(graph):
         update_plotly_graph(graph.visualization["nodes"], graph.visualization["fig"])
 
-    def visualize(self, notebook=True, auto_update=True, force_plotly=False):
+    def visualize(self, notebook=True, auto_update=True, force_plotly=True):
         """
         Build and render a tree diagram of the DAG.
         :param notebook: Is the visualization inside a jupyter notebook? If so we'll use a widget
         :param auto_update: Should the diagram be auto updated with each status change
-        :param force_plotly: Force the use of plotly graphs
+        :param force_plotly: Force the use of plotly graphs instead of TileDB Plot Widget
         :return: returns figure
         """
         if not notebook or force_plotly:
