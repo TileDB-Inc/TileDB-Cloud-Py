@@ -34,5 +34,14 @@ class GenericUDFTest(unittest.TestCase):
         def test_func(pos1, pos2, kw1=None, kw2=None):
             return [pos1, pos2, kw1, kw2]
 
-        res = udf.exec(test_func, pos1=1, pos2=[2, 2], kw1=dict(test=1), kw2=[1, 2, 3])
+        task_name = "test_positional_args_and_kwargs"
+        res = udf.exec(
+            test_func,
+            pos1=1,
+            pos2=[2, 2],
+            kw1=dict(test=1),
+            kw2=[1, 2, 3],
+            task_name=task_name,
+        )
         self.assertEqual(res, [1, [2, 2], {"test": 1}, [1, 2, 3]])
+        self.assertEqual(tiledb.cloud.last_udf_task().name, task_name)

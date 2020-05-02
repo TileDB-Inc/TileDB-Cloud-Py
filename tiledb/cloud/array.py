@@ -19,12 +19,14 @@ import sys
 class UDFResult(multiprocessing.pool.ApplyResult):
     def __init__(self, response):
         self.response = response
+        self.task_id = None
 
     def get(self, timeout=None):
         try:
             response = rest.RESTResponse(self.response.get(timeout=timeout))
 
-            cloudarray.last_udf_task_id = response.getheader(client.TASK_ID_HEADER)
+            self.task_id = response.getheader(client.TASK_ID_HEADER)
+            cloudarray.last_udf_task_id = self.task_id
 
             res = response.data
 
@@ -255,6 +257,7 @@ def apply_async(
     image_name=None,
     http_compressor="deflate",
     include_source_lines=True,
+    task_name=None,
 ):
     """
     Apply a user defined function to an array asynchronous
@@ -266,6 +269,7 @@ def apply_async(
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
     :param include_source_lines: disables sending sources lines of function along with udf
+    :param str task_name: optional name to assign the task for logging and audit purposes
     :return: UDFResult object which is a future containing the results of the UDF
 
     **Example**
@@ -323,6 +327,7 @@ def apply_async(
                 sys.version_info.major, sys.version_info.minor, sys.version_info.micro,
             ),
             image_name=image_name,
+            task_name=task_name,
         )
 
         if pickledUDF is not None:
@@ -353,6 +358,7 @@ def apply(
     layout=None,
     image_name=None,
     http_compressor="deflate",
+    task_name=None,
 ):
     """
     Apply a user defined function to an array synchronous
@@ -363,6 +369,7 @@ def apply(
     :param layout: tiledb query layout
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
+    :param str task_name: optional name to assign the task for logging and audit purposes
     :return: UDFResult object which is a future containing the results of the UDF
 
     **Example**
@@ -382,4 +389,5 @@ def apply(
         layout=layout,
         image_name=image_name,
         http_compressor=http_compressor,
+        task_name=task_name,
     ).get()

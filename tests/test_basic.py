@@ -81,12 +81,18 @@ class BasicTests(unittest.TestCase):
             )
 
             orig = A.multi_index[[1, slice(2, 4)], [slice(1, 2), 4]]
+            task_name = "test_quickstart_async"
             self.assertEqual(
                 A.apply_async(
-                    lambda x: numpy.sum(x["a"]), [[1, slice(2, 4)], [(1, 2), 4]]
+                    lambda x: numpy.sum(x["a"]),
+                    [[1, slice(2, 4)], [(1, 2), 4]],
+                    task_name=task_name,
                 ).get(),
                 numpy.sum(orig["a"]),
             )
+
+            # Validate task name was set
+            self.assertEqual(tiledb.cloud.last_udf_task().name, task_name)
 
     def test_quickstart_sql_async(self):
         with tiledb.open(
@@ -101,14 +107,19 @@ class BasicTests(unittest.TestCase):
             import numpy
 
             orig = A[:]
+            task_name = "test_quickstart_sql_async"
             self.assertEqual(
                 int(
                     tiledb.cloud.sql.exec_async(
-                        "select sum(a) as sum from `tiledb://TileDB-Inc/quickstart_sparse`"
+                        "select sum(a) as sum from `tiledb://TileDB-Inc/quickstart_sparse`",
+                        task_name=task_name,
                     ).get()["sum"]
                 ),
                 numpy.sum(orig["a"]),
             )
+
+            # Validate task name was set
+            self.assertEqual(tiledb.cloud.last_sql_task().name, task_name)
 
             orig = A.multi_index[[1, slice(2, 4)], [slice(1, 2), 4]]
             self.assertEqual(

@@ -232,7 +232,54 @@ class DelayedCloudApplyTest(unittest.TestCase):
             return numpy.mean(args)
 
         node_exec = Delayed(func_exec=mean, name="node_exec")(
-            [node_local, node_array_apply, node_sql]
+            [node_local, node_array_apply, node_sql],
+        )
+
+        node_exec.compute()
+
+        self.assertEqual(node_local.result(), 200)
+        self.assertEqual(node_array_apply.result(), numpy.sum(orig["a"]))
+        self.assertEqual(node_sql.result()["a"][0], numpy.sum(orig_dense["a"]))
+        self.assertEqual(
+            node_exec.result(),
+            numpy.mean([200, numpy.sum(orig["a"]), numpy.sum(orig_dense["a"])]),
+        )
+        self.assertEqual(node_exec.status, Status.COMPLETED)
+
+    def test_name_to_task_name(self):
+
+        uri_sparse = "tiledb://TileDB-inc/quickstart_sparse"
+        uri_dense = "tiledb://TileDB-inc/quickstart_dense"
+        with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:
+            orig = A[:]
+
+        with tiledb.open(uri_dense, ctx=tiledb.cloud.Ctx()) as A:
+            orig_dense = A[:]
+
+        import numpy
+
+        node_local = Delayed(lambda x: x * 2, local=True)(100)
+
+        node_array_apply = DelayedArrayUDF(
+            uri_sparse, lambda x: numpy.sum(x["a"]), name="node_array_apply"
+        )([(1, 4), (1, 4)])
+        node_sql = DelayedSQL(
+            "select SUM(`a`) as a from `{}`".format(uri_dense), name="node_sql"
+        )
+
+        def mean(args):
+            import numpy
+            import pandas
+
+            for i in range(len(args)):
+                item = args[i]
+                if isinstance(item, pandas.DataFrame):
+                    args[i] = item["a"][0]
+
+            return numpy.mean(args)
+
+        node_exec = Delayed(func_exec=mean, name="node_exec")(
+            [node_local, node_array_apply, node_sql],
         )
 
         node_exec.compute()

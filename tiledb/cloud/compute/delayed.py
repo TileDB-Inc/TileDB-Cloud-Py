@@ -78,6 +78,11 @@ class Delayed(DelayedBase):
         else:
             super().__init__(func_exec, *args, **kwargs)
 
+        # Set name of task if it won't interfere with user args
+        if not self.local:
+            if "task_name" not in self.kwargs:
+                self.kwargs["task_name"] = self.name
+
     def __call__(self, *args, **kwargs):
         if not self.local:
             self.args = [self.func_exec, *args]
@@ -94,12 +99,21 @@ class Delayed(DelayedBase):
         if self.kwargs is not None:
             super()._build_dependencies_list(self.kwargs)
 
+        # Set name of task if it won't interfere with user args
+        if not self.local:
+            if "task_name" not in self.kwargs:
+                self.kwargs["task_name"] = self.name
+
         return self
 
 
 class DelayedSQL(DelayedBase):
     def __init__(self, *args, **kwargs):
         super().__init__(sql_exec, *args, **kwargs)
+
+        # Set name of task if it won't interfere with user args
+        if "task_name" not in self.kwargs:
+            self.kwargs["task_name"] = self.name
 
     def __call__(self, *args, **kwargs):
         self.args = args
@@ -114,6 +128,10 @@ class DelayedSQL(DelayedBase):
         if self.kwargs is not None:
             super()._build_dependencies_list(self.kwargs)
 
+        # Set name of task if it won't interfere with user args
+        if "task_name" not in self.kwargs:
+            self.kwargs["task_name"] = self.name
+
         return self
 
 
@@ -127,6 +145,10 @@ class DelayedArrayUDF(DelayedBase):
 
         super().__init__(array_apply, self.uri, self.func_exec, *args, **kwargs)
 
+        # Set name of task if it won't interfere with user args
+        if "task_name" not in self.kwargs:
+            self.kwargs["task_name"] = self.name
+
     def __call__(self, *args, **kwargs):
         self.args = [self.uri, self.func_exec, *args]
         self.kwargs = kwargs
@@ -139,5 +161,9 @@ class DelayedArrayUDF(DelayedBase):
         # Node objects will be used to automatically add dependencies
         if self.kwargs is not None:
             super()._build_dependencies_list(self.kwargs)
+
+        # Set name of task if it won't interfere with user args
+        if "task_name" not in self.kwargs:
+            self.kwargs["task_name"] = self.name
 
         return self
