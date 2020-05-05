@@ -5,6 +5,12 @@ All URIs are relative to *http://localhost/v1*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**array_activity_log**](ArrayApi.md#array_activity_log) | **GET** /arrays/{namespace}/{array}/activity | 
+[**arrays_browser_owned_get**](ArrayApi.md#arrays_browser_owned_get) | **GET** /arrays/browser/owned | 
+[**arrays_browser_owned_sidebar_get**](ArrayApi.md#arrays_browser_owned_sidebar_get) | **GET** /arrays/browser/owned/sidebar | 
+[**arrays_browser_public_get**](ArrayApi.md#arrays_browser_public_get) | **GET** /arrays/browser/public | 
+[**arrays_browser_public_sidebar_get**](ArrayApi.md#arrays_browser_public_sidebar_get) | **GET** /arrays/browser/public/sidebar | 
+[**arrays_browser_shared_get**](ArrayApi.md#arrays_browser_shared_get) | **GET** /arrays/browser/shared | 
+[**arrays_browser_shared_sidebar_get**](ArrayApi.md#arrays_browser_shared_sidebar_get) | **GET** /arrays/browser/shared/sidebar | 
 [**create_array**](ArrayApi.md#create_array) | **POST** /arrays/{namespace}/{array} | 
 [**delete_array**](ArrayApi.md#delete_array) | **DELETE** /arrays/{namespace}/{array} | 
 [**deregister_array**](ArrayApi.md#deregister_array) | **DELETE** /arrays/{namespace}/{array}/deregister | 
@@ -130,6 +136,612 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | log of array activity |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **arrays_browser_owned_get**
+> ArrayBrowserData arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+
+
+
+Fetch a list of all arrays that are owned directly by user or user's organizations
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
+search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
+namespace = 'namespace_example' # str | namespace (optional)
+orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
+permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
+
+try:
+    api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ArrayApi->arrays_browser_owned_get: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
+search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
+namespace = 'namespace_example' # str | namespace (optional)
+orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
+permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
+
+try:
+    api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ArrayApi->arrays_browser_owned_get: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **int**| pagination offset | [optional] 
+ **per_page** | **int**| pagination limit | [optional] 
+ **search** | **str**| search string that will look at name, namespace or description fields | [optional] 
+ **namespace** | **str**| namespace | [optional] 
+ **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 
+ **permissions** | **str**| permissions valid values include read, read_write, write, admin | [optional] 
+
+### Return type
+
+[**ArrayBrowserData**](ArrayBrowserData.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Array of array info that are owned directly by user or user&#39;s organizations |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **arrays_browser_owned_sidebar_get**
+> ArrayBrowserSidebar arrays_browser_owned_sidebar_get()
+
+
+
+Fetch a sidebar for arrays that are owned directly by user or user's organizations
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+
+try:
+    api_response = api_instance.arrays_browser_owned_sidebar_get()
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ArrayApi->arrays_browser_owned_sidebar_get: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+
+try:
+    api_response = api_instance.arrays_browser_owned_sidebar_get()
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ArrayApi->arrays_browser_owned_sidebar_get: %s\n" % e)
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**ArrayBrowserSidebar**](ArrayBrowserSidebar.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Array of array info that are owned directly by user or user&#39;s organizations |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **arrays_browser_public_get**
+> ArrayBrowserData arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+
+
+
+Fetch a list of all arrays that have been shared publically
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
+search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
+namespace = 'namespace_example' # str | namespace (optional)
+orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
+permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
+
+try:
+    api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ArrayApi->arrays_browser_public_get: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
+search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
+namespace = 'namespace_example' # str | namespace (optional)
+orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
+permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
+
+try:
+    api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ArrayApi->arrays_browser_public_get: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **int**| pagination offset | [optional] 
+ **per_page** | **int**| pagination limit | [optional] 
+ **search** | **str**| search string that will look at name, namespace or description fields | [optional] 
+ **namespace** | **str**| namespace | [optional] 
+ **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 
+ **permissions** | **str**| permissions valid values include read, read_write, write, admin | [optional] 
+
+### Return type
+
+[**ArrayBrowserData**](ArrayBrowserData.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Array of array info that has been shared publically |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **arrays_browser_public_sidebar_get**
+> ArrayBrowserSidebar arrays_browser_public_sidebar_get()
+
+
+
+Fetch a sidebar of all arrays that have been shared publically
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+
+try:
+    api_response = api_instance.arrays_browser_public_sidebar_get()
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ArrayApi->arrays_browser_public_sidebar_get: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+
+try:
+    api_response = api_instance.arrays_browser_public_sidebar_get()
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ArrayApi->arrays_browser_public_sidebar_get: %s\n" % e)
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**ArrayBrowserSidebar**](ArrayBrowserSidebar.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Array of array info that has been shared publically |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **arrays_browser_shared_get**
+> ArrayBrowserData arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+
+
+
+Fetch a list of all arrays that have been shared with the user
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
+search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
+namespace = 'namespace_example' # str | namespace (optional)
+orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
+permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
+
+try:
+    api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ArrayApi->arrays_browser_shared_get: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
+search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
+namespace = 'namespace_example' # str | namespace (optional)
+orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
+permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
+
+try:
+    api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ArrayApi->arrays_browser_shared_get: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **int**| pagination offset | [optional] 
+ **per_page** | **int**| pagination limit | [optional] 
+ **search** | **str**| search string that will look at name, namespace or description fields | [optional] 
+ **namespace** | **str**| namespace | [optional] 
+ **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 
+ **permissions** | **str**| permissions valid values include read, read_write, write, admin | [optional] 
+
+### Return type
+
+[**ArrayBrowserData**](ArrayBrowserData.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Array of array info that has been shared with the user |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **arrays_browser_shared_sidebar_get**
+> ArrayBrowserSidebar arrays_browser_shared_sidebar_get()
+
+
+
+Fetch a list of all arrays that have been shared with the user
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+
+try:
+    api_response = api_instance.arrays_browser_shared_sidebar_get()
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ArrayApi->arrays_browser_shared_sidebar_get: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
+
+try:
+    api_response = api_instance.arrays_browser_shared_sidebar_get()
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling ArrayApi->arrays_browser_shared_sidebar_get: %s\n" % e)
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**ArrayBrowserSidebar**](ArrayBrowserSidebar.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Array of array info that has been shared with the user |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -741,7 +1353,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_array_meta_data_json**
-> object get_array_meta_data_json(namespace, array)
+> object get_array_meta_data_json(namespace, array, length=length)
 
 
 
@@ -772,9 +1384,10 @@ configuration.host = "http://localhost/v1"
 api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
+length = 56 # int | (optional) limit character length of returned values (optional)
 
 try:
-    api_response = api_instance.get_array_meta_data_json(namespace, array)
+    api_response = api_instance.get_array_meta_data_json(namespace, array, length=length)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->get_array_meta_data_json: %s\n" % e)
@@ -803,9 +1416,10 @@ configuration.host = "http://localhost/v1"
 api_instance = rest_api.ArrayApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
+length = 56 # int | (optional) limit character length of returned values (optional)
 
 try:
-    api_response = api_instance.get_array_meta_data_json(namespace, array)
+    api_response = api_instance.get_array_meta_data_json(namespace, array, length=length)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->get_array_meta_data_json: %s\n" % e)
@@ -817,6 +1431,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
  **array** | **str**| name/uri of array that is url-encoded | 
+ **length** | **int**| (optional) limit character length of returned values | [optional] 
 
 ### Return type
 

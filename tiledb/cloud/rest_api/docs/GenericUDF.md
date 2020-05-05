@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **exec_raw** | **str** | optional raw text to store of serialized function, used for showing in UI | [optional] 
 **argument** | **str** | Argument to pass to udf function | [optional] 
 **result_format** | [**UDFResultType**](UDFResultType.md) |  | [optional] 
+**task_name** | **str** | name of task, optional | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
