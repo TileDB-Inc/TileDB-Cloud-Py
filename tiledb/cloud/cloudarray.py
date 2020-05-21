@@ -13,6 +13,7 @@ class CloudArray(object):
         layout=None,
         image_name=None,
         http_compressor="deflate",
+        task_name=None,
     ):
         """
         Apply a user defined function to an array asynchronous
@@ -23,6 +24,7 @@ class CloudArray(object):
         :param layout: tiledb query layout
         :param image_name: udf image name to use, useful for testing beta features
         :param http_compressor: set http compressor for results
+        :param str task_name: optional name to assign the task for logging and audit purposes
         :return: UDFResult object which is a future containing the results of the UDF
 
         **Example**
@@ -44,6 +46,7 @@ class CloudArray(object):
             layout=layout,
             image_name=image_name,
             http_compressor=http_compressor,
+            task_name=task_name,
         )
 
     def apply(
@@ -55,6 +58,7 @@ class CloudArray(object):
         layout=None,
         image_name=None,
         http_compressor="deflate",
+        task_name=None,
     ):
         """
         Apply a user defined function to an array
@@ -64,6 +68,7 @@ class CloudArray(object):
         :param layout: tiledb query layout
         :param image_name: udf image name to use, useful for testing beta features
         :param http_compressor: set http compressor for results
+        :param str task_name: optional name to assign the task for logging and audit purposes
         :return: results of the UDF
         """
         return self.apply_async(
@@ -74,4 +79,5 @@ class CloudArray(object):
             layout=layout,
             image_name=image_name,
             http_compressor=http_compressor,
+            task_name=task_name,
         ).get()

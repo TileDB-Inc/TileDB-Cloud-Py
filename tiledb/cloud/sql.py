@@ -19,13 +19,15 @@ class SQLResults(multiprocessing.pool.ApplyResult):
     def __init__(self, response, raw_results):
         self.response = response
         self.raw_results = raw_results
+        self.task_id = None
 
     def get(self, timeout=None):
         try:
             response = rest.RESTResponse(self.response.get(timeout=timeout))
 
             global last_sql_task_id
-            last_sql_task_id = response.getheader(client.TASK_ID_HEADER)
+            self.task_id = response.getheader(client.TASK_ID_HEADER)
+            last_sql_task_id = self.task_id
 
             # Only return the response data if OK or err ignore all other 2xx response bodies
             if (

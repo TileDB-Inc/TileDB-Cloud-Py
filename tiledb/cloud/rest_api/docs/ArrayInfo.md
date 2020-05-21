@@ -11,6 +11,8 @@ Name | Type | Description | Notes
 **description** | **str** | description of array | [optional] 
 **name** | **str** | name of array | [optional] 
 **allowed_actions** | [**list[ArrayActions]**](ArrayActions.md) | list of actions user is allowed to do on this array | [optional] 
+**pricing** | [**list[Pricing]**](Pricing.md) | list of pricing created for this array | [optional] 
+**subscriptions** | [**list[Subscription]**](Subscription.md) | list of subscriptions created for this array | [optional] 
 **logo** | **str** | logo (base64 encoded) for the array. Optional | [optional] 
 **access_credentials_name** | **str** | the name of the access credentials to use. if unset, the default credentials will be used | [optional] 
 **type** | **str** | Array type (dense, key-value, sparse) | [optional] 
