@@ -101,45 +101,134 @@ def login(
     client.update_clients()
 
 
-def list_arrays(include_public=False, namespace=None, permissions=None):
+def list_public_arrays(
+    namespace=None, permissions=None, tag=None, search=None, page=None, per_page=None
+):
     """
-    List arrays in a user account
+    List public arrays
 
-    :param bool include_public: include publicly shared arrays or not, defaults to false
     :param str namespace: list arrays in single namespace
     :param list permissions: filter arrays for given permissions
+    :param list tag: zero or more tags to filter on
+    :param str search: search string
+    :param int page: optional page for pagination
+    :param int per_page: optional per_page for pagination
     :return: list of all array metadata you have access to that meet the filter applied
     """
 
     api_instance = client.array_api
-
-    public_share = None
-    if not include_public:
-        public_share = "exclude"
-
     if permissions is not None and not isinstance(permissions, list):
         permissions = [permissions]
 
     try:
-        final_arrays = []
-        res = api_instance.get_all_array_metadata(public_share=public_share)
+        kwargs = {}
+        if namespace is not None:
+            kwargs["namespace"] = namespace
+        if search is not None:
+            kwargs["search"] = search
+        if tag is not None:
+            kwargs["tag"] = tag
+        if permissions is not None:
+            kwargs["permissions"] = permissions
+        if page is not None:
+            kwargs["page"] = page
+        if per_page is not None:
+            kwargs["per_page"] = per_page
+        res = api_instance.arrays_browser_public_get(**kwargs)
 
-        # Loop through results and filter as appropriate
-        for array in res:
-            if namespace is not None and array.namespace != namespace:
-                continue
+        # if the user didn't ask for pagination just return raw array list
+        if page is None:
+            return res.arrays
+        return res
 
-            if permissions is not None and len(permissions) > 0:
-                permission_found = any(
-                    filter(lambda p: p in array.allowed_actions, permissions)
-                )
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
 
-                if not permission_found:
-                    continue
 
-            final_arrays.append(array)
+def list_shared_arrays(
+    namespace=None, permissions=None, tag=None, search=None, page=None, per_page=None
+):
+    """
+    List shared arrays
 
-        return final_arrays
+    :param str namespace: list arrays in single namespace
+    :param list permissions: filter arrays for given permissions
+    :param list tag: zero or more tags to filter on
+    :param str search: search string
+    :param int page: optional page for pagination
+    :param int per_page: optional per_page for pagination
+    :return: list of all array metadata you have access to that meet the filter applied
+    """
+
+    api_instance = client.array_api
+    if permissions is not None and not isinstance(permissions, list):
+        permissions = [permissions]
+
+    try:
+        kwargs = {}
+        if namespace is not None:
+            kwargs["namespace"] = namespace
+        if search is not None:
+            kwargs["search"] = search
+        if tag is not None:
+            kwargs["tag"] = tag
+        if permissions is not None:
+            kwargs["permissions"] = permissions
+        if page is not None:
+            kwargs["page"] = page
+        if per_page is not None:
+            kwargs["per_page"] = per_page
+        res = api_instance.arrays_browser_shared_get(**kwargs)
+
+        # if the user didn't ask for pagination just return raw array list
+        if page is None:
+            return res.arrays
+        return res
+
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
+
+
+def list_arrays(
+    namespace=None, permissions=None, tag=None, search=None, page=None, per_page=None
+):
+    """
+    List arrays in a user account
+
+    :param str namespace: list arrays in single namespace
+    :param list permissions: filter arrays for given permissions
+    :param list tag: zero or more tags to filter on
+    :param str search: search string
+    :param int page: optional page for pagination
+    :param int per_page: optional per_page for pagination
+    :return: list of all array metadata you have access to that meet the filter applied
+    """
+
+    api_instance = client.array_api
+    if permissions is not None and not isinstance(permissions, list):
+        permissions = [permissions]
+
+    try:
+        kwargs = {}
+        if namespace is not None:
+            kwargs["namespace"] = namespace
+        if search is not None:
+            kwargs["search"] = search
+        if tag is not None:
+            kwargs["tag"] = tag
+        if permissions is not None:
+            kwargs["permissions"] = permissions
+        if page is not None:
+            kwargs["page"] = page
+        if per_page is not None:
+            kwargs["per_page"] = per_page
+
+        res = api_instance.arrays_browser_owned_get(**kwargs)
+
+        # if the user didn't ask for pagination just return raw array list
+        if page is None:
+            return res.arrays
+        return res
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
