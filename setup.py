@@ -28,7 +28,7 @@ REQUIRES = [
     "plotly>= 4.0.0",
     "networkx>= 2.0.0",
     "pydot",
-    "tiledb-plot-widget",
+    "tiledb-plot-widget>=0.1.7",
 ]
 
 # NOTE: we cannot use an __init__.py file in the tiledb/ directory, because it is supplied
