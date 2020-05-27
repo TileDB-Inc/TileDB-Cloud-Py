@@ -141,7 +141,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **arrays_browser_owned_get**
-> ArrayBrowserData arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+> ArrayBrowserData arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
 
 
 
@@ -176,9 +176,10 @@ search = 'search_example' # str | search string that will look at name, namespac
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
+tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
 
 try:
-    api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+    api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->arrays_browser_owned_get: %s\n" % e)
@@ -211,9 +212,10 @@ search = 'search_example' # str | search string that will look at name, namespac
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
+tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
 
 try:
-    api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+    api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->arrays_browser_owned_get: %s\n" % e)
@@ -229,6 +231,7 @@ Name | Type | Description  | Notes
  **namespace** | **str**| namespace | [optional] 
  **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 
  **permissions** | **str**| permissions valid values include read, read_write, write, admin | [optional] 
+ **tag** | **str**| tag to search for, more than one can be included | [optional] 
 
 ### Return type
 
@@ -343,7 +346,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **arrays_browser_public_get**
-> ArrayBrowserData arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+> ArrayBrowserData arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
 
 
 
@@ -378,9 +381,10 @@ search = 'search_example' # str | search string that will look at name, namespac
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
+tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
 
 try:
-    api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+    api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->arrays_browser_public_get: %s\n" % e)
@@ -413,9 +417,10 @@ search = 'search_example' # str | search string that will look at name, namespac
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
+tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
 
 try:
-    api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+    api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->arrays_browser_public_get: %s\n" % e)
@@ -431,6 +436,7 @@ Name | Type | Description  | Notes
  **namespace** | **str**| namespace | [optional] 
  **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 
  **permissions** | **str**| permissions valid values include read, read_write, write, admin | [optional] 
+ **tag** | **str**| tag to search for, more than one can be included | [optional] 
 
 ### Return type
 
@@ -545,7 +551,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **arrays_browser_shared_get**
-> ArrayBrowserData arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+> ArrayBrowserData arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
 
 
 
@@ -580,9 +586,10 @@ search = 'search_example' # str | search string that will look at name, namespac
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
+tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
 
 try:
-    api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+    api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->arrays_browser_shared_get: %s\n" % e)
@@ -615,9 +622,10 @@ search = 'search_example' # str | search string that will look at name, namespac
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
+tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
 
 try:
-    api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions)
+    api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->arrays_browser_shared_get: %s\n" % e)
@@ -633,6 +641,7 @@ Name | Type | Description  | Notes
  **namespace** | **str**| namespace | [optional] 
  **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 
  **permissions** | **str**| permissions valid values include read, read_write, write, admin | [optional] 
+ **tag** | **str**| tag to search for, more than one can be included | [optional] 
 
 ### Return type
 

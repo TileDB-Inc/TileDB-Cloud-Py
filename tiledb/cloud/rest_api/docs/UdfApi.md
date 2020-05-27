@@ -15,7 +15,7 @@ Method | HTTP request | Description
 
 
 # **get_ud_fs**
-> UDFListingData get_ud_fs(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby)
+> UDFListingData get_ud_fs(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby, tag=tag)
 
 
 
@@ -51,9 +51,10 @@ per_page = 56 # int | pagination limit (optional)
 type = 'type_example' # str | udf type, \"generic\", \"single_array\" (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include created_at, last_used, name (optional)
+tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
 
 try:
-    api_response = api_instance.get_ud_fs(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby)
+    api_response = api_instance.get_ud_fs(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby, tag=tag)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling UdfApi->get_ud_fs: %s\n" % e)
@@ -87,9 +88,10 @@ per_page = 56 # int | pagination limit (optional)
 type = 'type_example' # str | udf type, \"generic\", \"single_array\" (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include created_at, last_used, name (optional)
+tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
 
 try:
-    api_response = api_instance.get_ud_fs(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby)
+    api_response = api_instance.get_ud_fs(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby, tag=tag)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling UdfApi->get_ud_fs: %s\n" % e)
@@ -106,6 +108,7 @@ Name | Type | Description  | Notes
  **type** | **str**| udf type, \&quot;generic\&quot;, \&quot;single_array\&quot; | [optional] 
  **search** | **str**| search string that will look at name, namespace or description fields | [optional] 
  **orderby** | **str**| sort by which field valid values include created_at, last_used, name | [optional] 
+ **tag** | **str**| tag to search for, more than one can be included | [optional] 
 
 ### Return type
 
@@ -535,7 +538,7 @@ void (empty response body)
 
 
 
-send a generic UDF in the given namespace
+submit a generic UDF in the given namespace
 
 ### Example
 

@@ -19,6 +19,7 @@ Name | Type | Description | Notes
 **share_count** | **float** | number of unique namespaces this array is shared with | [optional] 
 **public_share** | **bool** | Suggests if the array was shared to public by owner | [optional] 
 **tiledb_uri** | **str** | uri for access through TileDB cloud | [optional] 
+**tags** | **list[str]** | optional tags for array | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

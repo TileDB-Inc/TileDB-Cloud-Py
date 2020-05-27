@@ -1,6 +1,7 @@
 import tiledb, tiledb.cloud
 import sys, os, platform, unittest
 import numpy as np
+from tiledb.cloud import client
 from tiledb.cloud import array
 from tiledb.cloud import tasks
 from tiledb.cloud import tiledb_cloud_error
@@ -25,6 +26,15 @@ class BasicTests(unittest.TestCase):
 
     def test_tasks(self):
         self.assertIsNotNone(tasks())
+
+    def test_list_arrays(self):
+        self.assertIsNone(client.list_arrays())
+
+    def test_list_shared_arrays(self):
+        self.assertIsNone(client.list_shared_arrays())
+
+    def test_list_public_arrays(self):
+        self.assertTrue(len(client.list_public_arrays()) > 0)
 
     def test_quickstart(self):
         with tiledb.open(
