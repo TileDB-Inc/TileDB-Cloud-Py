@@ -126,6 +126,36 @@ def unshare_array(uri, namespace):
     return share_array(uri, namespace, list())
 
 
+def update_info(
+    uri, array_name=None, description=None, access_credentials_name=None, tags=None,
+):
+    """
+  Update an array's info
+  :param str namespace: optional username or organization array should be registered under. If unset will default to the user
+  :param str array_name: name of array to rename to
+  :param str description: optional description
+  :param str access_credentials_name: optional name of access credentials to use, if left blank default for namespace will be used
+  :param list tags to update to
+  """
+    api_instance = client.client.array_api
+    (namespace, current_array_name) = split_uri(uri)
+
+    try:
+        return api_instance.update_array_metadata(
+            namespace=namespace,
+            array=current_array_name,
+            array_metadata=rest_api.models.ArrayInfoUpdate(
+                description=description,
+                name=array_name,
+                uri=uri,
+                access_credentials_name=access_credentials_name,
+                tags=tags,
+            ),
+        )
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
+
+
 def register_array(
     uri, namespace=None, array_name=None, description=None, access_credentials_name=None
 ):
