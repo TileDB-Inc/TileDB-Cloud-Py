@@ -39,6 +39,8 @@ class UDFRegistration(object):
         "_exec": "str",
         "exec_raw": "str",
         "readme": "str",
+        "license_id": "str",
+        "license_text": "str",
         "tags": "list[str]",
     }
 
@@ -51,6 +53,8 @@ class UDFRegistration(object):
         "_exec": "exec",
         "exec_raw": "exec_raw",
         "readme": "readme",
+        "license_id": "license_id",
+        "license_text": "license_text",
         "tags": "tags",
     }
 
@@ -64,6 +68,8 @@ class UDFRegistration(object):
         _exec=None,
         exec_raw=None,
         readme=None,
+        license_id=None,
+        license_text=None,
         tags=None,
     ):  # noqa: E501
         """UDFRegistration - a model defined in OpenAPI"""  # noqa: E501
@@ -76,6 +82,8 @@ class UDFRegistration(object):
         self.__exec = None
         self._exec_raw = None
         self._readme = None
+        self._license_id = None
+        self._license_text = None
         self._tags = None
         self.discriminator = None
 
@@ -95,6 +103,10 @@ class UDFRegistration(object):
             self.exec_raw = exec_raw
         if readme is not None:
             self.readme = readme
+        if license_id is not None:
+            self.license_id = license_id
+        if license_text is not None:
+            self.license_text = license_text
         if tags is not None:
             self.tags = tags
 
@@ -277,6 +289,52 @@ class UDFRegistration(object):
         """
 
         self._readme = readme
+
+    @property
+    def license_id(self):
+        """Gets the license_id of this UDFRegistration.  # noqa: E501
+
+        License identifier from SPDX License List or Custom  # noqa: E501
+
+        :return: The license_id of this UDFRegistration.  # noqa: E501
+        :rtype: str
+        """
+        return self._license_id
+
+    @license_id.setter
+    def license_id(self, license_id):
+        """Sets the license_id of this UDFRegistration.
+
+        License identifier from SPDX License List or Custom  # noqa: E501
+
+        :param license_id: The license_id of this UDFRegistration.  # noqa: E501
+        :type: str
+        """
+
+        self._license_id = license_id
+
+    @property
+    def license_text(self):
+        """Gets the license_text of this UDFRegistration.  # noqa: E501
+
+        License text  # noqa: E501
+
+        :return: The license_text of this UDFRegistration.  # noqa: E501
+        :rtype: str
+        """
+        return self._license_text
+
+    @license_text.setter
+    def license_text(self, license_text):
+        """Sets the license_text of this UDFRegistration.
+
+        License text  # noqa: E501
+
+        :param license_text: The license_text of this UDFRegistration.  # noqa: E501
+        :type: str
+        """
+
+        self._license_text = license_text
 
     @property
     def tags(self):

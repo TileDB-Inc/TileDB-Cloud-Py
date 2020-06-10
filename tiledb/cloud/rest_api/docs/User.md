@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **organizations** | [**list[OrganizationUser]**](OrganizationUser.md) | Array of organizations a user is part of and their roles | [optional] 
 **allowed_actions** | [**list[NamespaceActions]**](NamespaceActions.md) | list of actions user is allowed to do on this organization | [optional] 
 **enabled_features** | **list[str]** | List of extra/optional/beta features to enable for namespace | [optional] 
+**notebook_settings** | [**NotebookSettings**](NotebookSettings.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

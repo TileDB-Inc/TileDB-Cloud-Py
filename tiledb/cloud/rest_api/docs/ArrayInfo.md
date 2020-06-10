@@ -20,6 +20,8 @@ Name | Type | Description | Notes
 **public_share** | **bool** | Suggests if the array was shared to public by owner | [optional] 
 **tiledb_uri** | **str** | uri for access through TileDB cloud | [optional] 
 **tags** | **list[str]** | optional tags for array | [optional] 
+**license_id** | **str** | License identifier from SPDX License List or Custom | [optional] 
+**license_text** | **str** | License text | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

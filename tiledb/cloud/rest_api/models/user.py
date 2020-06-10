@@ -43,6 +43,7 @@ class User(object):
         "organizations": "list[OrganizationUser]",
         "allowed_actions": "list[NamespaceActions]",
         "enabled_features": "list[str]",
+        "notebook_settings": "NotebookSettings",
     }
 
     attribute_map = {
@@ -58,6 +59,7 @@ class User(object):
         "organizations": "organizations",
         "allowed_actions": "allowed_actions",
         "enabled_features": "enabled_features",
+        "notebook_settings": "notebook_settings",
     }
 
     def __init__(
@@ -74,6 +76,7 @@ class User(object):
         organizations=None,
         allowed_actions=None,
         enabled_features=None,
+        notebook_settings=None,
     ):  # noqa: E501
         """User - a model defined in OpenAPI"""  # noqa: E501
 
@@ -89,6 +92,7 @@ class User(object):
         self._organizations = None
         self._allowed_actions = None
         self._enabled_features = None
+        self._notebook_settings = None
         self.discriminator = None
 
         if id is not None:
@@ -114,6 +118,8 @@ class User(object):
             self.allowed_actions = allowed_actions
         if enabled_features is not None:
             self.enabled_features = enabled_features
+        if notebook_settings is not None:
+            self.notebook_settings = notebook_settings
 
     @property
     def id(self):
@@ -414,6 +420,27 @@ class User(object):
         """
 
         self._enabled_features = enabled_features
+
+    @property
+    def notebook_settings(self):
+        """Gets the notebook_settings of this User.  # noqa: E501
+
+
+        :return: The notebook_settings of this User.  # noqa: E501
+        :rtype: NotebookSettings
+        """
+        return self._notebook_settings
+
+    @notebook_settings.setter
+    def notebook_settings(self, notebook_settings):
+        """Sets the notebook_settings of this User.
+
+
+        :param notebook_settings: The notebook_settings of this User.  # noqa: E501
+        :type: NotebookSettings
+        """
+
+        self._notebook_settings = notebook_settings
 
     def to_dict(self):
         """Returns the model properties as a dict"""

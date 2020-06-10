@@ -48,6 +48,8 @@ class ArrayInfo(object):
         "public_share": "bool",
         "tiledb_uri": "str",
         "tags": "list[str]",
+        "license_id": "str",
+        "license_text": "str",
     }
 
     attribute_map = {
@@ -68,6 +70,8 @@ class ArrayInfo(object):
         "public_share": "public_share",
         "tiledb_uri": "tiledb_uri",
         "tags": "tags",
+        "license_id": "license_id",
+        "license_text": "license_text",
     }
 
     def __init__(
@@ -89,6 +93,8 @@ class ArrayInfo(object):
         public_share=None,
         tiledb_uri=None,
         tags=None,
+        license_id=None,
+        license_text=None,
     ):  # noqa: E501
         """ArrayInfo - a model defined in OpenAPI"""  # noqa: E501
 
@@ -109,6 +115,8 @@ class ArrayInfo(object):
         self._public_share = None
         self._tiledb_uri = None
         self._tags = None
+        self._license_id = None
+        self._license_text = None
         self.discriminator = None
 
         if id is not None:
@@ -145,6 +153,10 @@ class ArrayInfo(object):
             self.tiledb_uri = tiledb_uri
         if tags is not None:
             self.tags = tags
+        if license_id is not None:
+            self.license_id = license_id
+        if license_text is not None:
+            self.license_text = license_text
 
     @property
     def id(self):
@@ -536,6 +548,52 @@ class ArrayInfo(object):
         """
 
         self._tags = tags
+
+    @property
+    def license_id(self):
+        """Gets the license_id of this ArrayInfo.  # noqa: E501
+
+        License identifier from SPDX License List or Custom  # noqa: E501
+
+        :return: The license_id of this ArrayInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._license_id
+
+    @license_id.setter
+    def license_id(self, license_id):
+        """Sets the license_id of this ArrayInfo.
+
+        License identifier from SPDX License List or Custom  # noqa: E501
+
+        :param license_id: The license_id of this ArrayInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._license_id = license_id
+
+    @property
+    def license_text(self):
+        """Gets the license_text of this ArrayInfo.  # noqa: E501
+
+        License text  # noqa: E501
+
+        :return: The license_text of this ArrayInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._license_text
+
+    @license_text.setter
+    def license_text(self, license_text):
+        """Sets the license_text of this ArrayInfo.
+
+        License text  # noqa: E501
+
+        :param license_text: The license_text of this ArrayInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._license_text = license_text
 
     def to_dict(self):
         """Returns the model properties as a dict"""
