@@ -689,6 +689,7 @@ class DAG:
             graph.visualization["nodes"],
             graph.visualization["edges"],
             graph.visualization["node_details"],
+            graph.visualization["positions"],
             graph.visualization["fig"],
         )
 
@@ -696,7 +697,7 @@ class DAG:
     def __update_dag_plotly_graph(graph):
         update_plotly_graph(graph.visualization["nodes"], graph.visualization["fig"])
 
-    def visualize(self, notebook=True, auto_update=True, force_plotly=True):
+    def visualize(self, notebook=True, auto_update=True, force_plotly=False):
         """
         Build and render a tree diagram of the DAG.
         :param notebook: Is the visualization inside a jupyter notebook? If so we'll use a widget
@@ -730,11 +731,13 @@ class DAG:
         nodes = list(G.nodes())
         edges = list(G.edges())
         node_details = self.get_tiledb_plot_node_details()
+        positions = build_visualization_positions(G)
 
         self.visualization = {
             "nodes": nodes,
             "edges": edges,
             "node_details": node_details,
+            "positions": positions,
         }
         fig = tiledb.plot.widget.Visualize(data=json.dumps(self.visualization))
         self.visualization["fig"] = fig

@@ -53,18 +53,26 @@ def update_plotly_graph(nodes, fig=None):
         )
 
 
-def update_tiledb_graph(nodes, edges, node_details, fig):
+def update_tiledb_graph(nodes, edges, node_details, positions, fig):
     """
     Update a tiledb plot widge graph
     :param nodes: nodes of graph
     :param edges: edges for graph
     :param node_details: Node details
+    :param positions: positions for graph
     :param fig: figure
     :return:
     """
     if fig is not None:
         fig.setData(
-            json.dumps(dict(nodes=nodes, edges=edges, node_details=node_details))
+            json.dumps(
+                dict(
+                    nodes=nodes,
+                    edges=edges,
+                    node_details=node_details,
+                    positions=positions,
+                )
+            )
         )
 
 

@@ -16,7 +16,7 @@ pandas = "*"
 plotly = ">= 4.0.0"
 networkx = ">= 2.0.0"
 pydot = "*"
-tiledb-plot-widget = "*"
+tiledb-plot-widget = ">= 0.1.7"
 
 [dev-packages]
 
