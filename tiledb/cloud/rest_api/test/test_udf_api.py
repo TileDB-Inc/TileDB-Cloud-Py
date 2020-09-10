@@ -29,51 +29,35 @@ class TestUdfApi(unittest.TestCase):
         pass
 
     def test_get_ud_fs(self):
-        """Test case for get_ud_fs
-
-        """
+        """Test case for get_ud_fs"""
         pass
 
     def test_get_udf(self):
-        """Test case for get_udf
-
-        """
+        """Test case for get_udf"""
         pass
 
     def test_get_udf_sharing_policies(self):
-        """Test case for get_udf_sharing_policies
-
-        """
+        """Test case for get_udf_sharing_policies"""
         pass
 
     def test_register_udf(self):
-        """Test case for register_udf
-
-        """
+        """Test case for register_udf"""
         pass
 
     def test_share_udf(self):
-        """Test case for share_udf
-
-        """
+        """Test case for share_udf"""
         pass
 
     def test_submit_generic_udf(self):
-        """Test case for submit_generic_udf
-
-        """
+        """Test case for submit_generic_udf"""
         pass
 
     def test_submit_udf(self):
-        """Test case for submit_udf
-
-        """
+        """Test case for submit_udf"""
         pass
 
     def test_updated_registered_udf(self):
-        """Test case for updated_registered_udf
-
-        """
+        """Test case for updated_registered_udf"""
         pass
 
 

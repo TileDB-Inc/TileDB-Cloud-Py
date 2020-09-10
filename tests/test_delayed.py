@@ -173,7 +173,8 @@ class DelayedCloudApplyTest(unittest.TestCase):
             uri_sparse, lambda x: numpy.sum(x["a"]), name="node_array_apply"
         )([(1, 4), (1, 4)])
         node_sql = DelayedSQL(
-            "select SUM(`a`) as a from `{}`".format(uri_dense), name="node_sql",
+            "select SUM(`a`) as a from `{}`".format(uri_dense),
+            name="node_sql",
         )
 
         def mean(args):

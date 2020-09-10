@@ -87,7 +87,9 @@ def exec_async(
             argument=arguments,
             result_format=rest_api.models.UDFResultType.NATIVE,
             version="{}.{}.{}".format(
-                sys.version_info.major, sys.version_info.minor, sys.version_info.micro,
+                sys.version_info.major,
+                sys.version_info.minor,
+                sys.version_info.micro,
             ),
             image_name=image_name,
             task_name=task_name,
@@ -151,18 +153,23 @@ def exec(
 
 
 def register_udf(
-    func, name, namespace=None, image_name=None, type=None, include_source_lines=True,
+    func,
+    name,
+    namespace=None,
+    image_name=None,
+    type=None,
+    include_source_lines=True,
 ):
     """
 
-  :param func: function to register
-  :param name: name of udf to register
-  :param namespace: namespace to register in
-  :param image_name: optional image name
-  :param type: type of udf, generic or single_array
-  :param include_source_lines: disables sending sources lines of function along with udf
-  :return:
-  """
+    :param func: function to register
+    :param name: name of udf to register
+    :param namespace: namespace to register in
+    :param image_name: optional image name
+    :param type: type of udf, generic or single_array
+    :param include_source_lines: disables sending sources lines of function along with udf
+    :return:
+    """
 
     try:
         api_instance = client.client.udf_api
@@ -187,7 +194,9 @@ def register_udf(
             name=name,
             language=rest_api.models.UDFLanguage.PYTHON,
             version="{}.{}.{}".format(
-                sys.version_info.major, sys.version_info.minor, sys.version_info.micro,
+                sys.version_info.major,
+                sys.version_info.minor,
+                sys.version_info.micro,
             ),
             image_name=image_name,
             type=type,
@@ -209,13 +218,13 @@ def register_generic_udf(
 ):
     """
 
-  :param func: function to register
-  :param name: name of udf to register
-  :param namespace: namespace to register in
-  :param image_name: optional image name
-  :param include_source_lines: disables sending sources lines of function along with udf
-  :return:
-  """
+    :param func: function to register
+    :param name: name of udf to register
+    :param namespace: namespace to register in
+    :param image_name: optional image name
+    :param include_source_lines: disables sending sources lines of function along with udf
+    :return:
+    """
     return register_udf(
         func=func,
         name=name,
@@ -231,13 +240,13 @@ def register_single_array_udf(
 ):
     """
 
-  :param func: function to register
-  :param name: name of udf to register
-  :param namespace: namespace to register in
-  :param image_name: optional image name
-  :param include_source_lines: disables sending sources lines of function along with udf
-  :return:
-  """
+    :param func: function to register
+    :param name: name of udf to register
+    :param namespace: namespace to register in
+    :param image_name: optional image name
+    :param include_source_lines: disables sending sources lines of function along with udf
+    :return:
+    """
     return register_udf(
         func=func,
         name=name,
@@ -249,18 +258,23 @@ def register_single_array_udf(
 
 
 def update_udf(
-    func, name, namespace=None, image_name=None, type=None, include_source_lines=True,
+    func,
+    name,
+    namespace=None,
+    image_name=None,
+    type=None,
+    include_source_lines=True,
 ):
     """
 
-  :param func: function to register
-  :param name: name of udf to register
-  :param namespace: namespace to register in
-  :param image_name: optional image name
-  :param type: type of udf, generic or single_array
-  :param include_source_lines: disables sending sources lines of function along with udf
-  :return:
-  """
+    :param func: function to register
+    :param name: name of udf to register
+    :param namespace: namespace to register in
+    :param image_name: optional image name
+    :param type: type of udf, generic or single_array
+    :param include_source_lines: disables sending sources lines of function along with udf
+    :return:
+    """
 
     try:
         api_instance = client.client.udf_api
@@ -285,7 +299,9 @@ def update_udf(
             name=name,
             language=rest_api.models.UDFLanguage.PYTHON,
             version="{}.{}.{}".format(
-                sys.version_info.major, sys.version_info.minor, sys.version_info.micro,
+                sys.version_info.major,
+                sys.version_info.minor,
+                sys.version_info.micro,
             ),
             image_name=image_name,
             type=type,
@@ -309,13 +325,13 @@ def update_generic_udf(
 ):
     """
 
-  :param func: function to register
-  :param name: name of udf to register
-  :param namespace: namespace to register in
-  :param image_name: optional image name
-  :param include_source_lines: disables sending sources lines of function along with udf
-  :return:
-  """
+    :param func: function to register
+    :param name: name of udf to register
+    :param namespace: namespace to register in
+    :param image_name: optional image name
+    :param include_source_lines: disables sending sources lines of function along with udf
+    :return:
+    """
     return update_udf(
         func=func,
         name=name,
@@ -331,13 +347,13 @@ def update_single_array_udf(
 ):
     """
 
-  :param func: function to register
-  :param name: name of udf to register
-  :param namespace: namespace to register in
-  :param image_name: optional image name
-  :param include_source_lines: disables sending sources lines of function along with udf
-  :return:
-  """
+    :param func: function to register
+    :param name: name of udf to register
+    :param namespace: namespace to register in
+    :param image_name: optional image name
+    :param include_source_lines: disables sending sources lines of function along with udf
+    :return:
+    """
     return update_udf(
         func=func,
         name=name,
@@ -350,10 +366,10 @@ def update_single_array_udf(
 
 def info(name=None):
     """
-  Fetch info on a registered udf
-  :param name: name of udf in "namespace/name" format
-  :return: registered udf details
-  """
+    Fetch info on a registered udf
+    :param name: name of udf in "namespace/name" format
+    :return: registered udf details
+    """
     try:
         api_instance = client.client.udf_api
         (namespace, udf_name) = name.split("/")
@@ -378,11 +394,11 @@ def info(name=None):
 
 def list_registered_udfs(namespace=None, search=None):
     """
-  Fetch all registered udf user has access to
-  :param namespace: namespace to filter to
-  :param search: string search for udfs
-  :return: registered udf details
-  """
+    Fetch all registered udf user has access to
+    :param namespace: namespace to filter to
+    :param search: string search for udfs
+    :return: registered udf details
+    """
     try:
         api_instance = client.client.udf_api
 
@@ -393,11 +409,11 @@ def list_registered_udfs(namespace=None, search=None):
 
 def share(name=None, namespace=None):
     """
-  Share a registered udf
-  :param name: name of udf in "namespace/name" format
-  :param namespace: namespace to share array with
-  :return: registered udf details
-  """
+    Share a registered udf
+    :param name: name of udf in "namespace/name" format
+    :param namespace: namespace to share array with
+    :return: registered udf details
+    """
     (udf_namespace, udf_name) = name.split("/")
 
     if not (
@@ -429,11 +445,11 @@ def share(name=None, namespace=None):
 
 def unshare(name=None, namespace=None):
     """
-  Share a registered udf
-  :param name: name of udf in "namespace/name" format
-  :param namespace: namespace to share array with
-  :return: registered udf details
-  """
+    Share a registered udf
+    :param name: name of udf in "namespace/name" format
+    :param namespace: namespace to share array with
+    :return: registered udf details
+    """
     (udf_namespace, udf_name) = name.split("/")
 
     if not (

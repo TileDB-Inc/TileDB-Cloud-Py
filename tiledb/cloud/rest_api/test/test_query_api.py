@@ -29,21 +29,15 @@ class TestQueryApi(unittest.TestCase):
         pass
 
     def test_finalize_query(self):
-        """Test case for finalize_query
-
-        """
+        """Test case for finalize_query"""
         pass
 
     def test_get_est_result_sizes(self):
-        """Test case for get_est_result_sizes
-
-        """
+        """Test case for get_est_result_sizes"""
         pass
 
     def test_submit_query(self):
-        """Test case for submit_query
-
-        """
+        """Test case for submit_query"""
         pass
 
 

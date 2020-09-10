@@ -29,15 +29,11 @@ class TestNotebookApi(unittest.TestCase):
         pass
 
     def test_get_notebook_server_status(self):
-        """Test case for get_notebook_server_status
-
-        """
+        """Test case for get_notebook_server_status"""
         pass
 
     def test_shutdown_notebook_server(self):
-        """Test case for shutdown_notebook_server
-
-        """
+        """Test case for shutdown_notebook_server"""
         pass
 
 
