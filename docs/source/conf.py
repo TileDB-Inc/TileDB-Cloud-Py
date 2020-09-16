@@ -48,6 +48,8 @@ autosummary_generate = True
 
 source_suffix = ['.rst', '.md']
 
+master_doc = 'index'
+
 #apidoc_module_dir = '../..'
 #apidoc_excluded_paths = ['tests', 'tiledb/cloud/rest_api', 'setup.py', '**/test/**']
 #apidoc_separate_modules = True
