@@ -37,11 +37,14 @@ author = 'TileDB, Inc.'
 extensions = [
     # 'sphinx.ext.autodoc',
     'sphinxcontrib.apidoc',
+    'm2r2',
 ]
+
+source_suffix = ['.rst', '.md']
 
 apidoc_module_dir = '../..'
 #apidoc_output_dir = 'reference'
-apidoc_excluded_paths = ['tests', 'tiledb/cloud/rest_api/test', 'setup.py'],
+apidoc_excluded_paths = ['tests', 'tiledb/cloud/rest_api', 'setup.py', '**/test/**']
 apidoc_separate_modules = True
 
 # Add any paths that contain templates here, relative to this directory.
@@ -70,3 +73,5 @@ else:
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'] }
