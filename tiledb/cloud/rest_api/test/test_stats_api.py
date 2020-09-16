@@ -29,9 +29,7 @@ class TestStatsApi(unittest.TestCase):
         pass
 
     def test_get_tiledb_stats(self):
-        """Test case for get_tiledb_stats
-
-        """
+        """Test case for get_tiledb_stats"""
         pass
 
 

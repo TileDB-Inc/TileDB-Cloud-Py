@@ -14,9 +14,9 @@ TASK_ID_HEADER = "X-TILEDB-CLOUD-TASK-ID"
 
 def Config(cfg_dict=None):
     """
-  Builds a tiledb config setting the login parameters that exist for the cloud service
-  :return: tiledb.Config
-  """
+    Builds a tiledb config setting the login parameters that exist for the cloud service
+    :return: tiledb.Config
+    """
     restricted = ("rest.server_address", "rest.username", "rest.password")
 
     if not cfg_dict:

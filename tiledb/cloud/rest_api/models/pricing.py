@@ -239,7 +239,7 @@ class Pricing(object):
     def product_statement_descriptor(self):
         """Gets the product_statement_descriptor of this Pricing.  # noqa: E501
 
-        Extra information about a product which will appear on your customer’s credit card statement  # noqa: E501
+        Extra information about a product which will appear on the credit card statement of the customer  # noqa: E501
 
         :return: The product_statement_descriptor of this Pricing.  # noqa: E501
         :rtype: str
@@ -250,7 +250,7 @@ class Pricing(object):
     def product_statement_descriptor(self, product_statement_descriptor):
         """Sets the product_statement_descriptor of this Pricing.
 
-        Extra information about a product which will appear on your customer’s credit card statement  # noqa: E501
+        Extra information about a product which will appear on the credit card statement of the customer  # noqa: E501
 
         :param product_statement_descriptor: The product_statement_descriptor of this Pricing.  # noqa: E501
         :type: str

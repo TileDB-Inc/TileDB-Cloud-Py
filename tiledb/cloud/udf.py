@@ -17,8 +17,8 @@ last_udf_task_id = None
 
 
 def exec_async(
-    func,
     *args,
+    func=None,
     name=None,
     namespace=None,
     image_name=None,
@@ -31,8 +31,9 @@ def exec_async(
      Run a user defined function
 
 
-    :param func: user function to run
     :param args: arguments to pass to function
+    :param func: user function to run
+    :param name: registered function name
     :param namespace: namespace to run udf under
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
@@ -55,11 +56,19 @@ def exec_async(
     if func is not None and not callable(func):
         raise TypeError("func argument to `exec` must be callable!")
     elif func is None and name is None or name == "":
-        raise TypeError("name argument to `exec` must be set if no function is passed")
+        if args is not None and len(args) > 0:
+            if callable(args[0]):
+                func = args[0]
+                args = args[1:]
+        if func is None:
+            raise TypeError(
+                "name argument to `exec` must be set if no function is passed"
+            )
 
     pickledUDF = None
-    source_lines = utils.getsourcelines(func) if include_source_lines else None
+    source_lines = None
     if func is not None:
+        source_lines = utils.getsourcelines(func) if include_source_lines else None
         pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
@@ -87,7 +96,9 @@ def exec_async(
             argument=arguments,
             result_format=rest_api.models.UDFResultType.NATIVE,
             version="{}.{}.{}".format(
-                sys.version_info.major, sys.version_info.minor, sys.version_info.micro,
+                sys.version_info.major,
+                sys.version_info.minor,
+                sys.version_info.micro,
             ),
             image_name=image_name,
             task_name=task_name,
@@ -96,7 +107,7 @@ def exec_async(
         if pickledUDF is not None:
             udf_model._exec = pickledUDF
         elif name is not None:
-            udf_model.registered_udf = name
+            udf_model.udf_info_name = name
 
         if source_lines is not None:
             udf_model.exec_raw = source_lines
@@ -113,8 +124,8 @@ def exec_async(
 
 
 def exec(
-    func,
     *args,
+    func=None,
     name=None,
     namespace=None,
     image_name=None,
@@ -127,8 +138,8 @@ def exec(
      Run a user defined function
 
 
-    :param func: user function to run
     :param args: arguments to pass to function
+    :param func: user function to run
     :param namespace: namespace to run udf under
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
@@ -138,8 +149,8 @@ def exec(
     :return: UDFResult object which is a future containing the results of the UDF
     """
     return exec_async(
-        func,
         *args,
+        func=func,
         name=name,
         namespace=namespace,
         image_name=image_name,
@@ -151,18 +162,23 @@ def exec(
 
 
 def register_udf(
-    func, name, namespace=None, image_name=None, type=None, include_source_lines=True,
+    func,
+    name,
+    namespace=None,
+    image_name=None,
+    type=None,
+    include_source_lines=True,
 ):
     """
 
-  :param func: function to register
-  :param name: name of udf to register
-  :param namespace: namespace to register in
-  :param image_name: optional image name
-  :param type: type of udf, generic or single_array
-  :param include_source_lines: disables sending sources lines of function along with udf
-  :return:
-  """
+    :param func: function to register
+    :param name: name of udf to register
+    :param namespace: namespace to register in
+    :param image_name: optional image name
+    :param type: type of udf, generic or single_array
+    :param include_source_lines: disables sending sources lines of function along with udf
+    :return:
+    """
 
     try:
         api_instance = client.client.udf_api
@@ -187,7 +203,9 @@ def register_udf(
             name=name,
             language=rest_api.models.UDFLanguage.PYTHON,
             version="{}.{}.{}".format(
-                sys.version_info.major, sys.version_info.minor, sys.version_info.micro,
+                sys.version_info.major,
+                sys.version_info.minor,
+                sys.version_info.micro,
             ),
             image_name=image_name,
             type=type,
@@ -209,13 +227,13 @@ def register_generic_udf(
 ):
     """
 
-  :param func: function to register
-  :param name: name of udf to register
-  :param namespace: namespace to register in
-  :param image_name: optional image name
-  :param include_source_lines: disables sending sources lines of function along with udf
-  :return:
-  """
+    :param func: function to register
+    :param name: name of udf to register
+    :param namespace: namespace to register in
+    :param image_name: optional image name
+    :param include_source_lines: disables sending sources lines of function along with udf
+    :return:
+    """
     return register_udf(
         func=func,
         name=name,
@@ -231,13 +249,13 @@ def register_single_array_udf(
 ):
     """
 
-  :param func: function to register
-  :param name: name of udf to register
-  :param namespace: namespace to register in
-  :param image_name: optional image name
-  :param include_source_lines: disables sending sources lines of function along with udf
-  :return:
-  """
+    :param func: function to register
+    :param name: name of udf to register
+    :param namespace: namespace to register in
+    :param image_name: optional image name
+    :param include_source_lines: disables sending sources lines of function along with udf
+    :return:
+    """
     return register_udf(
         func=func,
         name=name,
@@ -249,18 +267,23 @@ def register_single_array_udf(
 
 
 def update_udf(
-    func, name, namespace=None, image_name=None, type=None, include_source_lines=True,
+    func,
+    name,
+    namespace=None,
+    image_name=None,
+    type=None,
+    include_source_lines=True,
 ):
     """
 
-  :param func: function to register
-  :param name: name of udf to register
-  :param namespace: namespace to register in
-  :param image_name: optional image name
-  :param type: type of udf, generic or single_array
-  :param include_source_lines: disables sending sources lines of function along with udf
-  :return:
-  """
+    :param func: function to register
+    :param name: name of udf to register
+    :param namespace: namespace to register in
+    :param image_name: optional image name
+    :param type: type of udf, generic or single_array
+    :param include_source_lines: disables sending sources lines of function along with udf
+    :return:
+    """
 
     try:
         api_instance = client.client.udf_api
@@ -285,7 +308,9 @@ def update_udf(
             name=name,
             language=rest_api.models.UDFLanguage.PYTHON,
             version="{}.{}.{}".format(
-                sys.version_info.major, sys.version_info.minor, sys.version_info.micro,
+                sys.version_info.major,
+                sys.version_info.minor,
+                sys.version_info.micro,
             ),
             image_name=image_name,
             type=type,
@@ -309,13 +334,13 @@ def update_generic_udf(
 ):
     """
 
-  :param func: function to register
-  :param name: name of udf to register
-  :param namespace: namespace to register in
-  :param image_name: optional image name
-  :param include_source_lines: disables sending sources lines of function along with udf
-  :return:
-  """
+    :param func: function to register
+    :param name: name of udf to register
+    :param namespace: namespace to register in
+    :param image_name: optional image name
+    :param include_source_lines: disables sending sources lines of function along with udf
+    :return:
+    """
     return update_udf(
         func=func,
         name=name,
@@ -331,13 +356,13 @@ def update_single_array_udf(
 ):
     """
 
-  :param func: function to register
-  :param name: name of udf to register
-  :param namespace: namespace to register in
-  :param image_name: optional image name
-  :param include_source_lines: disables sending sources lines of function along with udf
-  :return:
-  """
+    :param func: function to register
+    :param name: name of udf to register
+    :param namespace: namespace to register in
+    :param image_name: optional image name
+    :param include_source_lines: disables sending sources lines of function along with udf
+    :return:
+    """
     return update_udf(
         func=func,
         name=name,
@@ -350,10 +375,10 @@ def update_single_array_udf(
 
 def info(name=None):
     """
-  Fetch info on a registered udf
-  :param name: name of udf in "namespace/name" format
-  :return: registered udf details
-  """
+    Fetch info on a registered udf
+    :param name: name of udf in "namespace/name" format
+    :return: registered udf details
+    """
     try:
         api_instance = client.client.udf_api
         (namespace, udf_name) = name.split("/")
@@ -378,11 +403,11 @@ def info(name=None):
 
 def list_registered_udfs(namespace=None, search=None):
     """
-  Fetch all registered udf user has access to
-  :param namespace: namespace to filter to
-  :param search: string search for udfs
-  :return: registered udf details
-  """
+    Fetch all registered udf user has access to
+    :param namespace: namespace to filter to
+    :param search: string search for udfs
+    :return: registered udf details
+    """
     try:
         api_instance = client.client.udf_api
 
@@ -393,11 +418,11 @@ def list_registered_udfs(namespace=None, search=None):
 
 def share(name=None, namespace=None):
     """
-  Share a registered udf
-  :param name: name of udf in "namespace/name" format
-  :param namespace: namespace to share array with
-  :return: registered udf details
-  """
+    Share a registered udf
+    :param name: name of udf in "namespace/name" format
+    :param namespace: namespace to share array with
+    :return: registered udf details
+    """
     (udf_namespace, udf_name) = name.split("/")
 
     if not (
@@ -429,11 +454,11 @@ def share(name=None, namespace=None):
 
 def unshare(name=None, namespace=None):
     """
-  Share a registered udf
-  :param name: name of udf in "namespace/name" format
-  :param namespace: namespace to share array with
-  :return: registered udf details
-  """
+    Share a registered udf
+    :param name: name of udf in "namespace/name" format
+    :param namespace: namespace to share array with
+    :return: registered udf details
+    """
     (udf_namespace, udf_name) = name.split("/")
 
     if not (

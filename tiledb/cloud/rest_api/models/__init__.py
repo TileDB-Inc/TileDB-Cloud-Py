@@ -47,6 +47,9 @@ from tiledb.cloud.rest_api.models.dimension_tile_extent import DimensionTileExte
 from tiledb.cloud.rest_api.models.domain import Domain
 from tiledb.cloud.rest_api.models.domain_array import DomainArray
 from tiledb.cloud.rest_api.models.error import Error
+from tiledb.cloud.rest_api.models.favorite import Favorite
+from tiledb.cloud.rest_api.models.favorite_type import FavoriteType
+from tiledb.cloud.rest_api.models.favorite_update import FavoriteUpdate
 from tiledb.cloud.rest_api.models.filter import Filter
 from tiledb.cloud.rest_api.models.filter_data import FilterData
 from tiledb.cloud.rest_api.models.filter_option import FilterOption
@@ -70,6 +73,7 @@ from tiledb.cloud.rest_api.models.layout import Layout
 from tiledb.cloud.rest_api.models.max_buffer_sizes import MaxBufferSizes
 from tiledb.cloud.rest_api.models.namespace_actions import NamespaceActions
 from tiledb.cloud.rest_api.models.non_empty_domain import NonEmptyDomain
+from tiledb.cloud.rest_api.models.notebook_settings import NotebookSettings
 from tiledb.cloud.rest_api.models.notebook_status import NotebookStatus
 from tiledb.cloud.rest_api.models.organization import Organization
 from tiledb.cloud.rest_api.models.organization_roles import OrganizationRoles
@@ -103,10 +107,14 @@ from tiledb.cloud.rest_api.models.token import Token
 from tiledb.cloud.rest_api.models.token_request import TokenRequest
 from tiledb.cloud.rest_api.models.udf import UDF
 from tiledb.cloud.rest_api.models.udf_actions import UDFActions
+from tiledb.cloud.rest_api.models.udf_image import UDFImage
+from tiledb.cloud.rest_api.models.udf_image_version import UDFImageVersion
+from tiledb.cloud.rest_api.models.udf_info import UDFInfo
+from tiledb.cloud.rest_api.models.udf_info_update import UDFInfoUpdate
+from tiledb.cloud.rest_api.models.udf_info_version import UDFInfoVersion
 from tiledb.cloud.rest_api.models.udf_language import UDFLanguage
 from tiledb.cloud.rest_api.models.udf_listing_data import UDFListingData
 from tiledb.cloud.rest_api.models.udf_ranges import UDFRanges
-from tiledb.cloud.rest_api.models.udf_registration import UDFRegistration
 from tiledb.cloud.rest_api.models.udf_result_type import UDFResultType
 from tiledb.cloud.rest_api.models.udf_sharing import UDFSharing
 from tiledb.cloud.rest_api.models.udf_subarray import UDFSubarray

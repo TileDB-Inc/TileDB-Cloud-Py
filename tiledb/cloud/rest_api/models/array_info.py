@@ -46,8 +46,11 @@ class ArrayInfo(object):
         "type": "str",
         "share_count": "float",
         "public_share": "bool",
+        "namespace_subscribed": "bool",
         "tiledb_uri": "str",
         "tags": "list[str]",
+        "license_id": "str",
+        "license_text": "str",
     }
 
     attribute_map = {
@@ -66,8 +69,11 @@ class ArrayInfo(object):
         "type": "type",
         "share_count": "share_count",
         "public_share": "public_share",
+        "namespace_subscribed": "namespace_subscribed",
         "tiledb_uri": "tiledb_uri",
         "tags": "tags",
+        "license_id": "license_id",
+        "license_text": "license_text",
     }
 
     def __init__(
@@ -87,8 +93,11 @@ class ArrayInfo(object):
         type=None,
         share_count=None,
         public_share=None,
+        namespace_subscribed=None,
         tiledb_uri=None,
         tags=None,
+        license_id=None,
+        license_text=None,
     ):  # noqa: E501
         """ArrayInfo - a model defined in OpenAPI"""  # noqa: E501
 
@@ -107,8 +116,11 @@ class ArrayInfo(object):
         self._type = None
         self._share_count = None
         self._public_share = None
+        self._namespace_subscribed = None
         self._tiledb_uri = None
         self._tags = None
+        self._license_id = None
+        self._license_text = None
         self.discriminator = None
 
         if id is not None:
@@ -141,10 +153,16 @@ class ArrayInfo(object):
             self.share_count = share_count
         if public_share is not None:
             self.public_share = public_share
+        if namespace_subscribed is not None:
+            self.namespace_subscribed = namespace_subscribed
         if tiledb_uri is not None:
             self.tiledb_uri = tiledb_uri
         if tags is not None:
             self.tags = tags
+        if license_id is not None:
+            self.license_id = license_id
+        if license_text is not None:
+            self.license_text = license_text
 
     @property
     def id(self):
@@ -492,6 +510,29 @@ class ArrayInfo(object):
         self._public_share = public_share
 
     @property
+    def namespace_subscribed(self):
+        """Gets the namespace_subscribed of this ArrayInfo.  # noqa: E501
+
+        Depends on the namespace asking, denotes the existence of subscription of namespace to this array  # noqa: E501
+
+        :return: The namespace_subscribed of this ArrayInfo.  # noqa: E501
+        :rtype: bool
+        """
+        return self._namespace_subscribed
+
+    @namespace_subscribed.setter
+    def namespace_subscribed(self, namespace_subscribed):
+        """Sets the namespace_subscribed of this ArrayInfo.
+
+        Depends on the namespace asking, denotes the existence of subscription of namespace to this array  # noqa: E501
+
+        :param namespace_subscribed: The namespace_subscribed of this ArrayInfo.  # noqa: E501
+        :type: bool
+        """
+
+        self._namespace_subscribed = namespace_subscribed
+
+    @property
     def tiledb_uri(self):
         """Gets the tiledb_uri of this ArrayInfo.  # noqa: E501
 
@@ -536,6 +577,52 @@ class ArrayInfo(object):
         """
 
         self._tags = tags
+
+    @property
+    def license_id(self):
+        """Gets the license_id of this ArrayInfo.  # noqa: E501
+
+        License identifier from SPDX License List or Custom  # noqa: E501
+
+        :return: The license_id of this ArrayInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._license_id
+
+    @license_id.setter
+    def license_id(self, license_id):
+        """Sets the license_id of this ArrayInfo.
+
+        License identifier from SPDX License List or Custom  # noqa: E501
+
+        :param license_id: The license_id of this ArrayInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._license_id = license_id
+
+    @property
+    def license_text(self):
+        """Gets the license_text of this ArrayInfo.  # noqa: E501
+
+        License text  # noqa: E501
+
+        :return: The license_text of this ArrayInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._license_text
+
+    @license_text.setter
+    def license_text(self, license_text):
+        """Sets the license_text of this ArrayInfo.
+
+        License text  # noqa: E501
+
+        :param license_text: The license_text of this ArrayInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._license_text = license_text
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -93,6 +93,10 @@ Class | Method | HTTP request | Description
 *ArrayApi* | [**share_array**](rest_api/docs/ArrayApi.md#share_array) | **PATCH** /arrays/{namespace}/{array}/share | 
 *ArrayApi* | [**update_array_metadata**](rest_api/docs/ArrayApi.md#update_array_metadata) | **PATCH** /arrays/{namespace}/{array}/metadata | 
 *ArrayTasksApi* | [**get_array_tasks_sidebar**](rest_api/docs/ArrayTasksApi.md#get_array_tasks_sidebar) | **GET** /tasks/sidebar | 
+*FavoritesApi* | [**delete_favorite_id**](rest_api/docs/FavoritesApi.md#delete_favorite_id) | **DELETE** /favorites/{id} | 
+*FavoritesApi* | [**get_favorite**](rest_api/docs/FavoritesApi.md#get_favorite) | **GET** /favorites/{id} | 
+*FavoritesApi* | [**get_favorites**](rest_api/docs/FavoritesApi.md#get_favorites) | **GET** /favorites | 
+*FavoritesApi* | [**post_favorite**](rest_api/docs/FavoritesApi.md#post_favorite) | **POST** /favorites | 
 *InvitationApi* | [**accept_invitation**](rest_api/docs/InvitationApi.md#accept_invitation) | **POST** /invitations/{invitation} | 
 *InvitationApi* | [**cancel_join_organization**](rest_api/docs/InvitationApi.md#cancel_join_organization) | **DELETE** /invitations/{invitation}/{organization}/join | 
 *InvitationApi* | [**cancel_share_array_by_invite**](rest_api/docs/InvitationApi.md#cancel_share_array_by_invite) | **DELETE** /invitations/{invitation}/{namespace}/{array}/share | 
@@ -123,14 +127,14 @@ Class | Method | HTTP request | Description
 *TasksApi* | [**run_sql**](rest_api/docs/TasksApi.md#run_sql) | **POST** /sql/{namespace} | 
 *TasksApi* | [**task_id_get**](rest_api/docs/TasksApi.md#task_id_get) | **GET** /task/{id} | 
 *TasksApi* | [**tasks_get**](rest_api/docs/TasksApi.md#tasks_get) | **GET** /tasks | 
-*UdfApi* | [**get_ud_fs**](rest_api/docs/UdfApi.md#get_ud_fs) | **GET** /udfs | 
-*UdfApi* | [**get_udf**](rest_api/docs/UdfApi.md#get_udf) | **GET** /udf/{namespace}/{name} | 
-*UdfApi* | [**get_udf_sharing_policies**](rest_api/docs/UdfApi.md#get_udf_sharing_policies) | **GET** /udf/{namespace}/{name}/share | 
-*UdfApi* | [**register_udf**](rest_api/docs/UdfApi.md#register_udf) | **POST** /udf/{namespace}/{name} | 
-*UdfApi* | [**share_udf**](rest_api/docs/UdfApi.md#share_udf) | **PATCH** /udf/{namespace}/{name}/share | 
+*UdfApi* | [**get_udf_info**](rest_api/docs/UdfApi.md#get_udf_info) | **GET** /udf/{namespace}/{name} | 
+*UdfApi* | [**get_udf_info_list**](rest_api/docs/UdfApi.md#get_udf_info_list) | **GET** /udfs | 
+*UdfApi* | [**get_udf_info_sharing_policies**](rest_api/docs/UdfApi.md#get_udf_info_sharing_policies) | **GET** /udf/{namespace}/{name}/share | 
+*UdfApi* | [**register_udf_info**](rest_api/docs/UdfApi.md#register_udf_info) | **POST** /udf/{namespace}/{name} | 
+*UdfApi* | [**share_udf_info**](rest_api/docs/UdfApi.md#share_udf_info) | **PATCH** /udf/{namespace}/{name}/share | 
 *UdfApi* | [**submit_generic_udf**](rest_api/docs/UdfApi.md#submit_generic_udf) | **POST** /udfs/generic/{namespace} | 
 *UdfApi* | [**submit_udf**](rest_api/docs/UdfApi.md#submit_udf) | **POST** /arrays/{namespace}/{array}/udf/submit | 
-*UdfApi* | [**updated_registered_udf**](rest_api/docs/UdfApi.md#updated_registered_udf) | **PATCH** /udf/{namespace}/{name} | 
+*UdfApi* | [**update_udf_info**](rest_api/docs/UdfApi.md#update_udf_info) | **PATCH** /udf/{namespace}/{name} | 
 *UserApi* | [**add_aws_access_credentials**](rest_api/docs/UserApi.md#add_aws_access_credentials) | **POST** /credentials/{namespace}/aws | 
 *UserApi* | [**add_user_to_organization**](rest_api/docs/UserApi.md#add_user_to_organization) | **POST** /organizations/{organization}/user | 
 *UserApi* | [**check_aws_access_credentials**](rest_api/docs/UserApi.md#check_aws_access_credentials) | **GET** /credentials/{namespace}/aws | 
@@ -186,6 +190,9 @@ Class | Method | HTTP request | Description
  - [Domain](rest_api/docs/Domain.md)
  - [DomainArray](rest_api/docs/DomainArray.md)
  - [Error](rest_api/docs/Error.md)
+ - [Favorite](rest_api/docs/Favorite.md)
+ - [FavoriteType](rest_api/docs/FavoriteType.md)
+ - [FavoriteUpdate](rest_api/docs/FavoriteUpdate.md)
  - [Filter](rest_api/docs/Filter.md)
  - [FilterData](rest_api/docs/FilterData.md)
  - [FilterOption](rest_api/docs/FilterOption.md)
@@ -205,6 +212,7 @@ Class | Method | HTTP request | Description
  - [MaxBufferSizes](rest_api/docs/MaxBufferSizes.md)
  - [NamespaceActions](rest_api/docs/NamespaceActions.md)
  - [NonEmptyDomain](rest_api/docs/NonEmptyDomain.md)
+ - [NotebookSettings](rest_api/docs/NotebookSettings.md)
  - [NotebookStatus](rest_api/docs/NotebookStatus.md)
  - [Organization](rest_api/docs/Organization.md)
  - [OrganizationRoles](rest_api/docs/OrganizationRoles.md)
@@ -234,10 +242,14 @@ Class | Method | HTTP request | Description
  - [TokenRequest](rest_api/docs/TokenRequest.md)
  - [UDF](rest_api/docs/UDF.md)
  - [UDFActions](rest_api/docs/UDFActions.md)
+ - [UDFImage](rest_api/docs/UDFImage.md)
+ - [UDFImageVersion](rest_api/docs/UDFImageVersion.md)
+ - [UDFInfo](rest_api/docs/UDFInfo.md)
+ - [UDFInfoUpdate](rest_api/docs/UDFInfoUpdate.md)
+ - [UDFInfoVersion](rest_api/docs/UDFInfoVersion.md)
  - [UDFLanguage](rest_api/docs/UDFLanguage.md)
  - [UDFListingData](rest_api/docs/UDFListingData.md)
  - [UDFRanges](rest_api/docs/UDFRanges.md)
- - [UDFRegistration](rest_api/docs/UDFRegistration.md)
  - [UDFResultType](rest_api/docs/UDFResultType.md)
  - [UDFSharing](rest_api/docs/UDFSharing.md)
  - [UDFSubarray](rest_api/docs/UDFSubarray.md)

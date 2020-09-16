@@ -15,12 +15,12 @@ from __future__ import absolute_import
 import unittest
 
 import rest_api
-from tiledb.cloud.rest_api.models.udf_registration import UDFRegistration  # noqa: E501
+from tiledb.cloud.rest_api.models.favorite_update import FavoriteUpdate  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestUDFRegistration(unittest.TestCase):
-    """UDFRegistration unit test stubs"""
+class TestFavoriteUpdate(unittest.TestCase):
+    """FavoriteUpdate unit test stubs"""
 
     def setUp(self):
         pass
@@ -28,10 +28,10 @@ class TestUDFRegistration(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def testUDFRegistration(self):
-        """Test UDFRegistration"""
+    def testFavoriteUpdate(self):
+        """Test FavoriteUpdate"""
         # FIXME: construct object with mandatory attributes with example values
-        # model = tiledb.cloud.rest_api.models.udf_registration.UDFRegistration()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.favorite_update.FavoriteUpdate()  # noqa: E501
         pass
 
 

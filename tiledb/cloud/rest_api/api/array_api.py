@@ -201,7 +201,7 @@ class ArrayApi(object):
         :param str namespace: namespace
         :param str orderby: sort by which field valid values include last_accessed, size, name
         :param str permissions: permissions valid values include read, read_write, write, admin
-        :param str tag: tag to search for, more than one can be included
+        :param list[str] tag: tag to search for, more than one can be included
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -232,7 +232,7 @@ class ArrayApi(object):
         :param str namespace: namespace
         :param str orderby: sort by which field valid values include last_accessed, size, name
         :param str permissions: permissions valid values include read, read_write, write, admin
-        :param str tag: tag to search for, more than one can be included
+        :param list[str] tag: tag to search for, more than one can be included
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -297,6 +297,7 @@ class ArrayApi(object):
             )  # noqa: E501
         if "tag" in local_var_params:
             query_params.append(("tag", local_var_params["tag"]))  # noqa: E501
+            collection_formats["tag"] = "csv"  # noqa: E501
 
         header_params = {}
 
@@ -455,7 +456,7 @@ class ArrayApi(object):
         :param str namespace: namespace
         :param str orderby: sort by which field valid values include last_accessed, size, name
         :param str permissions: permissions valid values include read, read_write, write, admin
-        :param str tag: tag to search for, more than one can be included
+        :param list[str] tag: tag to search for, more than one can be included
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -486,7 +487,7 @@ class ArrayApi(object):
         :param str namespace: namespace
         :param str orderby: sort by which field valid values include last_accessed, size, name
         :param str permissions: permissions valid values include read, read_write, write, admin
-        :param str tag: tag to search for, more than one can be included
+        :param list[str] tag: tag to search for, more than one can be included
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -551,6 +552,7 @@ class ArrayApi(object):
             )  # noqa: E501
         if "tag" in local_var_params:
             query_params.append(("tag", local_var_params["tag"]))  # noqa: E501
+            collection_formats["tag"] = "csv"  # noqa: E501
 
         header_params = {}
 
@@ -709,7 +711,7 @@ class ArrayApi(object):
         :param str namespace: namespace
         :param str orderby: sort by which field valid values include last_accessed, size, name
         :param str permissions: permissions valid values include read, read_write, write, admin
-        :param str tag: tag to search for, more than one can be included
+        :param list[str] tag: tag to search for, more than one can be included
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -740,7 +742,7 @@ class ArrayApi(object):
         :param str namespace: namespace
         :param str orderby: sort by which field valid values include last_accessed, size, name
         :param str permissions: permissions valid values include read, read_write, write, admin
-        :param str tag: tag to search for, more than one can be included
+        :param list[str] tag: tag to search for, more than one can be included
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -805,6 +807,7 @@ class ArrayApi(object):
             )  # noqa: E501
         if "tag" in local_var_params:
             query_params.append(("tag", local_var_params["tag"]))  # noqa: E501
+            collection_formats["tag"] = "csv"  # noqa: E501
 
         header_params = {}
 

@@ -30,6 +30,8 @@ class ArrayActions(object):
     WRITE = "write"
     EDIT = "edit"
     READ_ARRAY_LOGS = "read_array_logs"
+    READ_ARRAY_INFO = "read_array_info"
+    READ_ARRAY_SCHEMA = "read_array_schema"
 
     """
     Attributes:

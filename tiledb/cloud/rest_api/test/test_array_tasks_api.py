@@ -31,9 +31,7 @@ class TestArrayTasksApi(unittest.TestCase):
         pass
 
     def test_get_array_tasks_sidebar(self):
-        """Test case for get_array_tasks_sidebar
-
-        """
+        """Test case for get_array_tasks_sidebar"""
         pass
 
 

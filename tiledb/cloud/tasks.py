@@ -10,10 +10,10 @@ import datetime
 
 def task(id):
     """
-  Fetch a single array task
-  :param str id: id to lookup, if unset will use the id of the last array task run in the current python session
-  :return task : object with task details
-  """
+    Fetch a single array task
+    :param str id: id to lookup, if unset will use the id of the last array task run in the current python session
+    :return task : object with task details
+    """
 
     if id is None:
         raise Exception("id parameter can not be empty")
@@ -37,16 +37,16 @@ def tasks(
     per_page=None,
 ):
     """
-  Fetch all tasks a user has access too
-  :param str namespace: optional filter by namespace
-  :param str array: optional limit tasks to specific array
-  :param datetime start: optional start time for listing of tasks, defaults to 7 days ago
-  :param datetime end: optional end time for listing of tasks defaults to now
-  :param str status: optional filter on status can be one of ['FAILED', 'RUNNING', 'COMPLETED']
-  :param int page: optional page for pagenating results
-  :param int per_page: optional records to return per page
-  :return:
-  """
+    Fetch all tasks a user has access too
+    :param str namespace: optional filter by namespace
+    :param str array: optional limit tasks to specific array
+    :param datetime start: optional start time for listing of tasks, defaults to 7 days ago
+    :param datetime end: optional end time for listing of tasks defaults to now
+    :param str status: optional filter on status can be one of ['FAILED', 'RUNNING', 'COMPLETED']
+    :param int page: optional page for pagenating results
+    :param int per_page: optional records to return per page
+    :return:
+    """
     api_instance = client.client.tasks_api
 
     if end is not None:
@@ -95,9 +95,9 @@ def tasks(
 
 def last_sql_task():
     """
-  Fetch the last run sql array task
-  :return task : object with task details
-  """
+    Fetch the last run sql array task
+    :return task : object with task details
+    """
 
     if sql.last_sql_task_id is None:
         raise Exception("There is no last run sql task in current python session")
@@ -107,9 +107,9 @@ def last_sql_task():
 
 def last_udf_task():
     """
-  Fetch the last run udf task
-  :return task : object with task details
-  """
+    Fetch the last run udf task
+    :return task : object with task details
+    """
 
     if cloudarray.last_udf_task_id is None:
         raise Exception("There is no last run udf task in current python session")

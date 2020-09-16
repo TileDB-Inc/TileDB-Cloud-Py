@@ -37,12 +37,16 @@ class User(object):
         "name": "str",
         "email": "str",
         "is_valid_email": "bool",
+        "stripe_connect": "bool",
+        "company": "str",
         "logo": "str",
         "last_activity_date": "datetime",
         "timezone": "str",
         "organizations": "list[OrganizationUser]",
         "allowed_actions": "list[NamespaceActions]",
         "enabled_features": "list[str]",
+        "unpaid_subscription": "bool",
+        "notebook_settings": "NotebookSettings",
     }
 
     attribute_map = {
@@ -52,12 +56,16 @@ class User(object):
         "name": "name",
         "email": "email",
         "is_valid_email": "is_valid_email",
+        "stripe_connect": "stripe_connect",
+        "company": "company",
         "logo": "logo",
         "last_activity_date": "last_activity_date",
         "timezone": "timezone",
         "organizations": "organizations",
         "allowed_actions": "allowed_actions",
         "enabled_features": "enabled_features",
+        "unpaid_subscription": "unpaid_subscription",
+        "notebook_settings": "notebook_settings",
     }
 
     def __init__(
@@ -68,12 +76,16 @@ class User(object):
         name=None,
         email=None,
         is_valid_email=None,
+        stripe_connect=None,
+        company=None,
         logo=None,
         last_activity_date=None,
         timezone=None,
         organizations=None,
         allowed_actions=None,
         enabled_features=None,
+        unpaid_subscription=None,
+        notebook_settings=None,
     ):  # noqa: E501
         """User - a model defined in OpenAPI"""  # noqa: E501
 
@@ -83,12 +95,16 @@ class User(object):
         self._name = None
         self._email = None
         self._is_valid_email = None
+        self._stripe_connect = None
+        self._company = None
         self._logo = None
         self._last_activity_date = None
         self._timezone = None
         self._organizations = None
         self._allowed_actions = None
         self._enabled_features = None
+        self._unpaid_subscription = None
+        self._notebook_settings = None
         self.discriminator = None
 
         if id is not None:
@@ -102,6 +118,10 @@ class User(object):
             self.email = email
         if is_valid_email is not None:
             self.is_valid_email = is_valid_email
+        if stripe_connect is not None:
+            self.stripe_connect = stripe_connect
+        if company is not None:
+            self.company = company
         if logo is not None:
             self.logo = logo
         if last_activity_date is not None:
@@ -114,6 +134,10 @@ class User(object):
             self.allowed_actions = allowed_actions
         if enabled_features is not None:
             self.enabled_features = enabled_features
+        if unpaid_subscription is not None:
+            self.unpaid_subscription = unpaid_subscription
+        if notebook_settings is not None:
+            self.notebook_settings = notebook_settings
 
     @property
     def id(self):
@@ -280,6 +304,52 @@ class User(object):
         self._is_valid_email = is_valid_email
 
     @property
+    def stripe_connect(self):
+        """Gets the stripe_connect of this User.  # noqa: E501
+
+        Denotes that the user is able to apply pricing to arrays by means of Stripe Connect  # noqa: E501
+
+        :return: The stripe_connect of this User.  # noqa: E501
+        :rtype: bool
+        """
+        return self._stripe_connect
+
+    @stripe_connect.setter
+    def stripe_connect(self, stripe_connect):
+        """Sets the stripe_connect of this User.
+
+        Denotes that the user is able to apply pricing to arrays by means of Stripe Connect  # noqa: E501
+
+        :param stripe_connect: The stripe_connect of this User.  # noqa: E501
+        :type: bool
+        """
+
+        self._stripe_connect = stripe_connect
+
+    @property
+    def company(self):
+        """Gets the company of this User.  # noqa: E501
+
+        the user's company  # noqa: E501
+
+        :return: The company of this User.  # noqa: E501
+        :rtype: str
+        """
+        return self._company
+
+    @company.setter
+    def company(self, company):
+        """Sets the company of this User.
+
+        the user's company  # noqa: E501
+
+        :param company: The company of this User.  # noqa: E501
+        :type: str
+        """
+
+        self._company = company
+
+    @property
     def logo(self):
         """Gets the logo of this User.  # noqa: E501
 
@@ -414,6 +484,50 @@ class User(object):
         """
 
         self._enabled_features = enabled_features
+
+    @property
+    def unpaid_subscription(self):
+        """Gets the unpaid_subscription of this User.  # noqa: E501
+
+        A notice that the user has an unpaid subscription  # noqa: E501
+
+        :return: The unpaid_subscription of this User.  # noqa: E501
+        :rtype: bool
+        """
+        return self._unpaid_subscription
+
+    @unpaid_subscription.setter
+    def unpaid_subscription(self, unpaid_subscription):
+        """Sets the unpaid_subscription of this User.
+
+        A notice that the user has an unpaid subscription  # noqa: E501
+
+        :param unpaid_subscription: The unpaid_subscription of this User.  # noqa: E501
+        :type: bool
+        """
+
+        self._unpaid_subscription = unpaid_subscription
+
+    @property
+    def notebook_settings(self):
+        """Gets the notebook_settings of this User.  # noqa: E501
+
+
+        :return: The notebook_settings of this User.  # noqa: E501
+        :rtype: NotebookSettings
+        """
+        return self._notebook_settings
+
+    @notebook_settings.setter
+    def notebook_settings(self, notebook_settings):
+        """Sets the notebook_settings of this User.
+
+
+        :param notebook_settings: The notebook_settings of this User.  # noqa: E501
+        :type: NotebookSettings
+        """
+
+        self._notebook_settings = notebook_settings
 
     def to_dict(self):
         """Returns the model properties as a dict"""

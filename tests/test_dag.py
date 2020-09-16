@@ -265,7 +265,10 @@ class DAGCloudApplyTest(unittest.TestCase):
             return numpy.mean(args)
 
         node_exec = d.add_node(
-            tiledb.cloud.udf.exec, mean, [node_array_apply, node_sql], name="node_exec",
+            tiledb.cloud.udf.exec,
+            mean,
+            [node_array_apply, node_sql],
+            name="node_exec",
         )
 
         d.compute()
@@ -304,7 +307,8 @@ class DAGCloudApplyTest(unittest.TestCase):
             name="node_array_apply",
         )
         node_sql = d.submit_sql(
-            "select SUM(`a`) as a from `{}`".format(uri_dense), name="node_sql",
+            "select SUM(`a`) as a from `{}`".format(uri_dense),
+            name="node_sql",
         )
 
         def mean(args):

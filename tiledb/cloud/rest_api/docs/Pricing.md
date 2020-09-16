@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **pricing_name** | **str** | Name of pricing | [optional] 
 **pricing_type** | [**PricingType**](PricingType.md) |  | [optional] 
 **product_name** | **str** | Name of product | [optional] 
-**product_statement_descriptor** | **str** | Extra information about a product which will appear on your customer’s credit card statement | [optional] 
+**product_statement_descriptor** | **str** | Extra information about a product which will appear on the credit card statement of the customer | [optional] 
 **product_unit_label** | [**PricingUnitLabel**](PricingUnitLabel.md) |  | [optional] 
 **currency** | [**PricingCurrency**](PricingCurrency.md) |  | [optional] 
 **aggregate_usage** | [**PricingAggregateUsage**](PricingAggregateUsage.md) |  | [optional] 

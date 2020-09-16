@@ -55,10 +55,10 @@ class UDFResult(multiprocessing.pool.ApplyResult):
 
 def info(uri):
     """
-  Returns the cloud metadata
+    Returns the cloud metadata
 
-  :return: metadata object
-  """
+    :return: metadata object
+    """
     (namespace, array_name) = split_uri(uri)
     api_instance = client.client.array_api
 
@@ -83,12 +83,12 @@ def list_shared_with(uri):
 
 def share_array(uri, namespace, permissions):
     """
-  Shares array with give namespace and permissions
+    Shares array with give namespace and permissions
 
-  :param str namespace:
-  :param list(str) permissions:
-  :return:
-  """
+    :param str namespace:
+    :param list(str) permissions:
+    :return:
+    """
 
     if not isinstance(permissions, list):
         permissions = [permissions]
@@ -117,26 +117,30 @@ def share_array(uri, namespace, permissions):
 
 def unshare_array(uri, namespace):
     """
-  Removes sharing of an array from given namespace
+    Removes sharing of an array from given namespace
 
-  :param str namespace: namespace to remove shared access to the array
-  :return:
-  :raises: :py:exc:
-  """
+    :param str namespace: namespace to remove shared access to the array
+    :return:
+    :raises: :py:exc:
+    """
     return share_array(uri, namespace, list())
 
 
 def update_info(
-    uri, array_name=None, description=None, access_credentials_name=None, tags=None,
+    uri,
+    array_name=None,
+    description=None,
+    access_credentials_name=None,
+    tags=None,
 ):
     """
-  Update an array's info
-  :param str namespace: optional username or organization array should be registered under. If unset will default to the user
-  :param str array_name: name of array to rename to
-  :param str description: optional description
-  :param str access_credentials_name: optional name of access credentials to use, if left blank default for namespace will be used
-  :param list tags to update to
-  """
+    Update an array's info
+    :param str namespace: optional username or organization array should be registered under. If unset will default to the user
+    :param str array_name: name of array to rename to
+    :param str description: optional description
+    :param str access_credentials_name: optional name of access credentials to use, if left blank default for namespace will be used
+    :param list tags to update to
+    """
     api_instance = client.client.array_api
     (namespace, current_array_name) = split_uri(uri)
 
@@ -160,12 +164,12 @@ def register_array(
     uri, namespace=None, array_name=None, description=None, access_credentials_name=None
 ):
     """
-  Register this array with the tiledb cloud service
-  :param str namespace: optional username or organization array should be registered under. If unset will default to the user
-  :param str array_name: name of array
-  :param str description: optional description
-  :param str access_credentials_name: optional name of access credentials to use, if left blank default for namespace will be used
-  """
+    Register this array with the tiledb cloud service
+    :param str namespace: optional username or organization array should be registered under. If unset will default to the user
+    :param str array_name: name of array
+    :param str description: optional description
+    :param str access_credentials_name: optional name of access credentials to use, if left blank default for namespace will be used
+    """
     api_instance = client.client.array_api
 
     if namespace is None:
@@ -191,9 +195,9 @@ def register_array(
 
 def deregister_array(uri):
     """
-  Deregister the from the tiledb cloud service. This does not physically delete the array, it will remain
-  in your bucket. All access to the array and cloud metadata will be removed.
-  """
+    Deregister the from the tiledb cloud service. This does not physically delete the array, it will remain
+    in your bucket. All access to the array and cloud metadata will be removed.
+    """
     (namespace, array_name) = split_uri(uri)
 
     api_instance = client.client.array_api
@@ -206,10 +210,10 @@ def deregister_array(uri):
 
 def array_activity(uri):
     """
-  Fetch array activity
-  :param uri:
-  :return:
-  """
+    Fetch array activity
+    :param uri:
+    :return:
+    """
     (namespace, array_name) = split_uri(uri)
 
     api_instance = client.client.array_api
@@ -222,11 +226,11 @@ def array_activity(uri):
 
 def split_uri(uri):
     """
-  Split a URI into namespace and array name
+    Split a URI into namespace and array name
 
-  :param uri: uri to split into namespace and array name
-  :return: tuple (namespace, array_name)
-  """
+    :param uri: uri to split into namespace and array name
+    :return: tuple (namespace, array_name)
+    """
     parsed = urllib.parse.urlparse(uri)
     if not parsed.scheme == "tiledb":
         raise Exception("Incorrect array uri, must be in tiledb:// scheme")
@@ -320,8 +324,9 @@ def apply_async(
         raise TypeError("name argument to `apply` must be set if no function is passed")
 
     pickledUDF = None
-    source_lines = utils.getsourcelines(func) if include_source_lines else None
+    source_lines = None
     if func is not None:
+        source_lines = utils.getsourcelines(func) if include_source_lines else None
         pickledUDF = cloudpickle.dumps(func, protocol=udf.tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
@@ -354,7 +359,9 @@ def apply_async(
             ranges=ranges,
             buffers=attrs,
             version="{}.{}.{}".format(
-                sys.version_info.major, sys.version_info.minor, sys.version_info.micro,
+                sys.version_info.major,
+                sys.version_info.minor,
+                sys.version_info.micro,
             ),
             image_name=image_name,
             task_name=task_name,
@@ -363,7 +370,7 @@ def apply_async(
         if pickledUDF is not None:
             udf_model._exec = pickledUDF
         elif name is not None:
-            udf_model.registered_udf = name
+            udf_model.udf_info_name = name
 
         if source_lines is not None:
             udf_model.exec_raw = source_lines

@@ -21,7 +21,7 @@ REQUIRES = [
     "six>=1.10",
     "certifi",
     "python-dateutil",
-    "cloudpickle",
+    "cloudpickle==1.4.1",
     "setuptools>=18.0",
     "setuptools_scm>=1.5.4",
     "pandas",

@@ -176,7 +176,7 @@ search = 'search_example' # str | search string that will look at name, namespac
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
-tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
+tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 
 try:
     api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
@@ -212,7 +212,7 @@ search = 'search_example' # str | search string that will look at name, namespac
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
-tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
+tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 
 try:
     api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
@@ -231,7 +231,7 @@ Name | Type | Description  | Notes
  **namespace** | **str**| namespace | [optional] 
  **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 
  **permissions** | **str**| permissions valid values include read, read_write, write, admin | [optional] 
- **tag** | **str**| tag to search for, more than one can be included | [optional] 
+ **tag** | [**list[str]**](str.md)| tag to search for, more than one can be included | [optional] 
 
 ### Return type
 
@@ -381,7 +381,7 @@ search = 'search_example' # str | search string that will look at name, namespac
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
-tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
+tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 
 try:
     api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
@@ -417,7 +417,7 @@ search = 'search_example' # str | search string that will look at name, namespac
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
-tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
+tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 
 try:
     api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
@@ -436,7 +436,7 @@ Name | Type | Description  | Notes
  **namespace** | **str**| namespace | [optional] 
  **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 
  **permissions** | **str**| permissions valid values include read, read_write, write, admin | [optional] 
- **tag** | **str**| tag to search for, more than one can be included | [optional] 
+ **tag** | [**list[str]**](str.md)| tag to search for, more than one can be included | [optional] 
 
 ### Return type
 
@@ -586,7 +586,7 @@ search = 'search_example' # str | search string that will look at name, namespac
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
-tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
+tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 
 try:
     api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
@@ -622,7 +622,7 @@ search = 'search_example' # str | search string that will look at name, namespac
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
-tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
+tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 
 try:
     api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
@@ -641,7 +641,7 @@ Name | Type | Description  | Notes
  **namespace** | **str**| namespace | [optional] 
  **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 
  **permissions** | **str**| permissions valid values include read, read_write, write, admin | [optional] 
- **tag** | **str**| tag to search for, more than one can be included | [optional] 
+ **tag** | [**list[str]**](str.md)| tag to search for, more than one can be included | [optional] 
 
 ### Return type
 
