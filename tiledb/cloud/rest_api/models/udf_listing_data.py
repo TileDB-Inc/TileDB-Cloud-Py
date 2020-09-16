@@ -31,46 +31,49 @@ class UDFListingData(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        "udfs": "list[UDFRegistration]",
+        "udf_info_list": "list[UDFInfo]",
         "pagination_metadata": "PaginationMetadata",
     }
 
-    attribute_map = {"udfs": "udfs", "pagination_metadata": "pagination_metadata"}
+    attribute_map = {
+        "udf_info_list": "udf_info_list",
+        "pagination_metadata": "pagination_metadata",
+    }
 
-    def __init__(self, udfs=None, pagination_metadata=None):  # noqa: E501
+    def __init__(self, udf_info_list=None, pagination_metadata=None):  # noqa: E501
         """UDFListingData - a model defined in OpenAPI"""  # noqa: E501
 
-        self._udfs = None
+        self._udf_info_list = None
         self._pagination_metadata = None
         self.discriminator = None
 
-        if udfs is not None:
-            self.udfs = udfs
+        if udf_info_list is not None:
+            self.udf_info_list = udf_info_list
         if pagination_metadata is not None:
             self.pagination_metadata = pagination_metadata
 
     @property
-    def udfs(self):
-        """Gets the udfs of this UDFListingData.  # noqa: E501
+    def udf_info_list(self):
+        """Gets the udf_info_list of this UDFListingData.  # noqa: E501
 
-        Registered UDFs  # noqa: E501
+        List of UDFInfo  # noqa: E501
 
-        :return: The udfs of this UDFListingData.  # noqa: E501
-        :rtype: list[UDFRegistration]
+        :return: The udf_info_list of this UDFListingData.  # noqa: E501
+        :rtype: list[UDFInfo]
         """
-        return self._udfs
+        return self._udf_info_list
 
-    @udfs.setter
-    def udfs(self, udfs):
-        """Sets the udfs of this UDFListingData.
+    @udf_info_list.setter
+    def udf_info_list(self, udf_info_list):
+        """Sets the udf_info_list of this UDFListingData.
 
-        Registered UDFs  # noqa: E501
+        List of UDFInfo  # noqa: E501
 
-        :param udfs: The udfs of this UDFListingData.  # noqa: E501
-        :type: list[UDFRegistration]
+        :param udf_info_list: The udf_info_list of this UDFListingData.  # noqa: E501
+        :type: list[UDFInfo]
         """
 
-        self._udfs = udfs
+        self._udf_info_list = udf_info_list
 
     @property
     def pagination_metadata(self):

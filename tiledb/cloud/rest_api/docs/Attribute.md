@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 **type** | [**Datatype**](Datatype.md) |  | 
 **filter_pipeline** | [**FilterPipeline**](FilterPipeline.md) |  | 
 **cell_val_num** | **int** | Attribute number of values per cell | 
+**fill_value** | **list[int]** | The default fill value | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

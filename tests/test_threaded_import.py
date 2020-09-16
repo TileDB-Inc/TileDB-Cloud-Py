@@ -3,7 +3,9 @@ from tiledb.tests.common import DiskTestCase, assert_subarrays_equal
 import numpy as np
 
 
-def threadtest_create_array(uri,):
+def threadtest_create_array(
+    uri,
+):
     data = np.random.rand(20)
     schema = tiledb.libtiledb.schema_like(data)
     tiledb.Array.create(uri, schema)

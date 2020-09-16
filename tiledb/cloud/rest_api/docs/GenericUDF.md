@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**registered_udf** | **str** | name of registered udf to run, format is {namespace}/{udf_name}. Can not be used with exec | [optional] 
+**udf_info_name** | **str** | name of UDFInfo to run, format is {namespace}/{udf_name}. Can not be used with exec | [optional] 
 **language** | [**UDFLanguage**](UDFLanguage.md) |  | [optional] 
 **version** | **str** | Type-specific version | [optional] 
 **image_name** | **str** | Docker image name to use for udf | [optional] 

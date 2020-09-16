@@ -31,7 +31,7 @@ class UDF(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        "registered_udf": "str",
+        "udf_info_name": "str",
         "language": "UDFLanguage",
         "version": "str",
         "image_name": "str",
@@ -45,7 +45,7 @@ class UDF(object):
     }
 
     attribute_map = {
-        "registered_udf": "registered_udf",
+        "udf_info_name": "udf_info_name",
         "language": "language",
         "version": "version",
         "image_name": "image_name",
@@ -60,7 +60,7 @@ class UDF(object):
 
     def __init__(
         self,
-        registered_udf=None,
+        udf_info_name=None,
         language=None,
         version=None,
         image_name=None,
@@ -74,7 +74,7 @@ class UDF(object):
     ):  # noqa: E501
         """UDF - a model defined in OpenAPI"""  # noqa: E501
 
-        self._registered_udf = None
+        self._udf_info_name = None
         self._language = None
         self._version = None
         self._image_name = None
@@ -87,8 +87,8 @@ class UDF(object):
         self._task_name = None
         self.discriminator = None
 
-        if registered_udf is not None:
-            self.registered_udf = registered_udf
+        if udf_info_name is not None:
+            self.udf_info_name = udf_info_name
         if language is not None:
             self.language = language
         if version is not None:
@@ -111,27 +111,27 @@ class UDF(object):
             self.task_name = task_name
 
     @property
-    def registered_udf(self):
-        """Gets the registered_udf of this UDF.  # noqa: E501
+    def udf_info_name(self):
+        """Gets the udf_info_name of this UDF.  # noqa: E501
 
-        name of registered udf to run, format is {namespace}/{udf_name}. Can not be used with exec  # noqa: E501
+        name of UDFInfo to run, format is {namespace}/{udf_name}. Can not be used with exec  # noqa: E501
 
-        :return: The registered_udf of this UDF.  # noqa: E501
+        :return: The udf_info_name of this UDF.  # noqa: E501
         :rtype: str
         """
-        return self._registered_udf
+        return self._udf_info_name
 
-    @registered_udf.setter
-    def registered_udf(self, registered_udf):
-        """Sets the registered_udf of this UDF.
+    @udf_info_name.setter
+    def udf_info_name(self, udf_info_name):
+        """Sets the udf_info_name of this UDF.
 
-        name of registered udf to run, format is {namespace}/{udf_name}. Can not be used with exec  # noqa: E501
+        name of UDFInfo to run, format is {namespace}/{udf_name}. Can not be used with exec  # noqa: E501
 
-        :param registered_udf: The registered_udf of this UDF.  # noqa: E501
+        :param udf_info_name: The udf_info_name of this UDF.  # noqa: E501
         :type: str
         """
 
-        self._registered_udf = registered_udf
+        self._udf_info_name = udf_info_name
 
     @property
     def language(self):

@@ -42,6 +42,8 @@ class Organization(object):
         "allowed_actions": "list[NamespaceActions]",
         "num_of_arrays": "float",
         "enabled_features": "list[str]",
+        "unpaid_subscription": "bool",
+        "notebook_settings": "NotebookSettings",
     }
 
     attribute_map = {
@@ -56,6 +58,8 @@ class Organization(object):
         "allowed_actions": "allowed_actions",
         "num_of_arrays": "num_of_arrays",
         "enabled_features": "enabled_features",
+        "unpaid_subscription": "unpaid_subscription",
+        "notebook_settings": "notebook_settings",
     }
 
     def __init__(
@@ -71,6 +75,8 @@ class Organization(object):
         allowed_actions=None,
         num_of_arrays=None,
         enabled_features=None,
+        unpaid_subscription=None,
+        notebook_settings=None,
     ):  # noqa: E501
         """Organization - a model defined in OpenAPI"""  # noqa: E501
 
@@ -85,6 +91,8 @@ class Organization(object):
         self._allowed_actions = None
         self._num_of_arrays = None
         self._enabled_features = None
+        self._unpaid_subscription = None
+        self._notebook_settings = None
         self.discriminator = None
 
         if id is not None:
@@ -108,6 +116,10 @@ class Organization(object):
             self.num_of_arrays = num_of_arrays
         if enabled_features is not None:
             self.enabled_features = enabled_features
+        if unpaid_subscription is not None:
+            self.unpaid_subscription = unpaid_subscription
+        if notebook_settings is not None:
+            self.notebook_settings = notebook_settings
 
     @property
     def id(self):
@@ -373,6 +385,50 @@ class Organization(object):
         """
 
         self._enabled_features = enabled_features
+
+    @property
+    def unpaid_subscription(self):
+        """Gets the unpaid_subscription of this Organization.  # noqa: E501
+
+        A notice that the user has an unpaid subscription  # noqa: E501
+
+        :return: The unpaid_subscription of this Organization.  # noqa: E501
+        :rtype: bool
+        """
+        return self._unpaid_subscription
+
+    @unpaid_subscription.setter
+    def unpaid_subscription(self, unpaid_subscription):
+        """Sets the unpaid_subscription of this Organization.
+
+        A notice that the user has an unpaid subscription  # noqa: E501
+
+        :param unpaid_subscription: The unpaid_subscription of this Organization.  # noqa: E501
+        :type: bool
+        """
+
+        self._unpaid_subscription = unpaid_subscription
+
+    @property
+    def notebook_settings(self):
+        """Gets the notebook_settings of this Organization.  # noqa: E501
+
+
+        :return: The notebook_settings of this Organization.  # noqa: E501
+        :rtype: NotebookSettings
+        """
+        return self._notebook_settings
+
+    @notebook_settings.setter
+    def notebook_settings(self, notebook_settings):
+        """Sets the notebook_settings of this Organization.
+
+
+        :param notebook_settings: The notebook_settings of this Organization.  # noqa: E501
+        :type: NotebookSettings
+        """
+
+        self._notebook_settings = notebook_settings
 
     def to_dict(self):
         """Returns the model properties as a dict"""

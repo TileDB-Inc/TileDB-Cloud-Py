@@ -37,6 +37,8 @@ class ArrayInfoUpdate(object):
         "access_credentials_name": "str",
         "logo": "str",
         "tags": "list[str]",
+        "license_id": "str",
+        "license_text": "str",
     }
 
     attribute_map = {
@@ -46,6 +48,8 @@ class ArrayInfoUpdate(object):
         "access_credentials_name": "access_credentials_name",
         "logo": "logo",
         "tags": "tags",
+        "license_id": "license_id",
+        "license_text": "license_text",
     }
 
     def __init__(
@@ -56,6 +60,8 @@ class ArrayInfoUpdate(object):
         access_credentials_name=None,
         logo=None,
         tags=None,
+        license_id=None,
+        license_text=None,
     ):  # noqa: E501
         """ArrayInfoUpdate - a model defined in OpenAPI"""  # noqa: E501
 
@@ -65,6 +71,8 @@ class ArrayInfoUpdate(object):
         self._access_credentials_name = None
         self._logo = None
         self._tags = None
+        self._license_id = None
+        self._license_text = None
         self.discriminator = None
 
         if description is not None:
@@ -79,6 +87,10 @@ class ArrayInfoUpdate(object):
             self.logo = logo
         if tags is not None:
             self.tags = tags
+        if license_id is not None:
+            self.license_id = license_id
+        if license_text is not None:
+            self.license_text = license_text
 
     @property
     def description(self):
@@ -217,6 +229,52 @@ class ArrayInfoUpdate(object):
         """
 
         self._tags = tags
+
+    @property
+    def license_id(self):
+        """Gets the license_id of this ArrayInfoUpdate.  # noqa: E501
+
+        License identifier from SPDX License List or Custom  # noqa: E501
+
+        :return: The license_id of this ArrayInfoUpdate.  # noqa: E501
+        :rtype: str
+        """
+        return self._license_id
+
+    @license_id.setter
+    def license_id(self, license_id):
+        """Sets the license_id of this ArrayInfoUpdate.
+
+        License identifier from SPDX License List or Custom  # noqa: E501
+
+        :param license_id: The license_id of this ArrayInfoUpdate.  # noqa: E501
+        :type: str
+        """
+
+        self._license_id = license_id
+
+    @property
+    def license_text(self):
+        """Gets the license_text of this ArrayInfoUpdate.  # noqa: E501
+
+        License text  # noqa: E501
+
+        :return: The license_text of this ArrayInfoUpdate.  # noqa: E501
+        :rtype: str
+        """
+        return self._license_text
+
+    @license_text.setter
+    def license_text(self, license_text):
+        """Sets the license_text of this ArrayInfoUpdate.
+
+        License text  # noqa: E501
+
+        :param license_text: The license_text of this ArrayInfoUpdate.  # noqa: E501
+        :type: str
+        """
+
+        self._license_text = license_text
 
     def to_dict(self):
         """Returns the model properties as a dict"""

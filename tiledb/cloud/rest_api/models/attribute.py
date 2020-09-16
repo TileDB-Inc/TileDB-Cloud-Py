@@ -35,6 +35,7 @@ class Attribute(object):
         "type": "Datatype",
         "filter_pipeline": "FilterPipeline",
         "cell_val_num": "int",
+        "fill_value": "list[int]",
     }
 
     attribute_map = {
@@ -42,10 +43,16 @@ class Attribute(object):
         "type": "type",
         "filter_pipeline": "filterPipeline",
         "cell_val_num": "cellValNum",
+        "fill_value": "fillValue",
     }
 
     def __init__(
-        self, name=None, type=None, filter_pipeline=None, cell_val_num=None
+        self,
+        name=None,
+        type=None,
+        filter_pipeline=None,
+        cell_val_num=None,
+        fill_value=None,
     ):  # noqa: E501
         """Attribute - a model defined in OpenAPI"""  # noqa: E501
 
@@ -53,12 +60,15 @@ class Attribute(object):
         self._type = None
         self._filter_pipeline = None
         self._cell_val_num = None
+        self._fill_value = None
         self.discriminator = None
 
         self.name = name
         self.type = type
         self.filter_pipeline = filter_pipeline
         self.cell_val_num = cell_val_num
+        if fill_value is not None:
+            self.fill_value = fill_value
 
     @property
     def name(self):
@@ -163,6 +173,29 @@ class Attribute(object):
             )  # noqa: E501
 
         self._cell_val_num = cell_val_num
+
+    @property
+    def fill_value(self):
+        """Gets the fill_value of this Attribute.  # noqa: E501
+
+        The default fill value  # noqa: E501
+
+        :return: The fill_value of this Attribute.  # noqa: E501
+        :rtype: list[int]
+        """
+        return self._fill_value
+
+    @fill_value.setter
+    def fill_value(self, fill_value):
+        """Sets the fill_value of this Attribute.
+
+        The default fill value  # noqa: E501
+
+        :param fill_value: The fill_value of this Attribute.  # noqa: E501
+        :type: list[int]
+        """
+
+        self._fill_value = fill_value
 
     def to_dict(self):
         """Returns the model properties as a dict"""

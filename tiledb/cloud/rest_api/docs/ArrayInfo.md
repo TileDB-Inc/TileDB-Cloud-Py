@@ -18,8 +18,11 @@ Name | Type | Description | Notes
 **type** | **str** | Array type (dense, key-value, sparse) | [optional] 
 **share_count** | **float** | number of unique namespaces this array is shared with | [optional] 
 **public_share** | **bool** | Suggests if the array was shared to public by owner | [optional] 
+**namespace_subscribed** | **bool** | Depends on the namespace asking, denotes the existence of subscription of namespace to this array | [optional] 
 **tiledb_uri** | **str** | uri for access through TileDB cloud | [optional] 
 **tags** | **list[str]** | optional tags for array | [optional] 
+**license_id** | **str** | License identifier from SPDX License List or Custom | [optional] 
+**license_text** | **str** | License text | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

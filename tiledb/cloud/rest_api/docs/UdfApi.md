@@ -4,18 +4,118 @@ All URIs are relative to *http://localhost/v1*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**get_ud_fs**](UdfApi.md#get_ud_fs) | **GET** /udfs | 
-[**get_udf**](UdfApi.md#get_udf) | **GET** /udf/{namespace}/{name} | 
-[**get_udf_sharing_policies**](UdfApi.md#get_udf_sharing_policies) | **GET** /udf/{namespace}/{name}/share | 
-[**register_udf**](UdfApi.md#register_udf) | **POST** /udf/{namespace}/{name} | 
-[**share_udf**](UdfApi.md#share_udf) | **PATCH** /udf/{namespace}/{name}/share | 
+[**get_udf_info**](UdfApi.md#get_udf_info) | **GET** /udf/{namespace}/{name} | 
+[**get_udf_info_list**](UdfApi.md#get_udf_info_list) | **GET** /udfs | 
+[**get_udf_info_sharing_policies**](UdfApi.md#get_udf_info_sharing_policies) | **GET** /udf/{namespace}/{name}/share | 
+[**register_udf_info**](UdfApi.md#register_udf_info) | **POST** /udf/{namespace}/{name} | 
+[**share_udf_info**](UdfApi.md#share_udf_info) | **PATCH** /udf/{namespace}/{name}/share | 
 [**submit_generic_udf**](UdfApi.md#submit_generic_udf) | **POST** /udfs/generic/{namespace} | 
 [**submit_udf**](UdfApi.md#submit_udf) | **POST** /arrays/{namespace}/{array}/udf/submit | 
-[**updated_registered_udf**](UdfApi.md#updated_registered_udf) | **PATCH** /udf/{namespace}/{name} | 
+[**update_udf_info**](UdfApi.md#update_udf_info) | **PATCH** /udf/{namespace}/{name} | 
 
 
-# **get_ud_fs**
-> UDFListingData get_ud_fs(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby, tag=tag)
+# **get_udf_info**
+> UDFInfo get_udf_info(namespace, name)
+
+
+
+get a specific UDF in the given namespace
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
+namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+name = 'name_example' # str | name to register udf under
+
+try:
+    api_response = api_instance.get_udf_info(namespace, name)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling UdfApi->get_udf_info: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
+namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+name = 'name_example' # str | name to register udf under
+
+try:
+    api_response = api_instance.get_udf_info(namespace, name)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling UdfApi->get_udf_info: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
+ **name** | **str**| name to register udf under | 
+
+### Return type
+
+[**UDFInfo**](UDFInfo.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | UDFInfo was retrieved successfully |  -  |
+**404** | udf not found |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **get_udf_info_list**
+> UDFListingData get_udf_info_list(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby, tag=tag)
 
 
 
@@ -51,13 +151,13 @@ per_page = 56 # int | pagination limit (optional)
 type = 'type_example' # str | udf type, \"generic\", \"single_array\" (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include created_at, last_used, name (optional)
-tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
+tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 
 try:
-    api_response = api_instance.get_ud_fs(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby, tag=tag)
+    api_response = api_instance.get_udf_info_list(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby, tag=tag)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling UdfApi->get_ud_fs: %s\n" % e)
+    print("Exception when calling UdfApi->get_udf_info_list: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -88,13 +188,13 @@ per_page = 56 # int | pagination limit (optional)
 type = 'type_example' # str | udf type, \"generic\", \"single_array\" (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include created_at, last_used, name (optional)
-tag = 'tag_example' # str | tag to search for, more than one can be included (optional)
+tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 
 try:
-    api_response = api_instance.get_ud_fs(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby, tag=tag)
+    api_response = api_instance.get_udf_info_list(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby, tag=tag)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling UdfApi->get_ud_fs: %s\n" % e)
+    print("Exception when calling UdfApi->get_udf_info_list: %s\n" % e)
 ```
 
 ### Parameters
@@ -108,7 +208,7 @@ Name | Type | Description  | Notes
  **type** | **str**| udf type, \&quot;generic\&quot;, \&quot;single_array\&quot; | [optional] 
  **search** | **str**| search string that will look at name, namespace or description fields | [optional] 
  **orderby** | **str**| sort by which field valid values include created_at, last_used, name | [optional] 
- **tag** | **str**| tag to search for, more than one can be included | [optional] 
+ **tag** | [**list[str]**](str.md)| tag to search for, more than one can be included | [optional] 
 
 ### Return type
 
@@ -126,114 +226,14 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | registered udfs |  -  |
+**200** | UDFInfo list |  -  |
 **404** | udf not found |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_udf**
-> UDFRegistration get_udf(namespace, name)
-
-
-
-get a specific UDF in the given namespace
-
-### Example
-
-* Api Key Authentication (ApiKeyAuth):
-```python
-from __future__ import print_function
-import time
-import rest_api
-from rest_api.rest import ApiException
-from pprint import pprint
-configuration = rest_api.Configuration()
-# Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
-
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-name = 'name_example' # str | name to register udf under
-
-try:
-    api_response = api_instance.get_udf(namespace, name)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling UdfApi->get_udf: %s\n" % e)
-```
-
-* Basic Authentication (BasicAuth):
-```python
-from __future__ import print_function
-import time
-import rest_api
-from rest_api.rest import ApiException
-from pprint import pprint
-configuration = rest_api.Configuration()
-# Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
-
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-name = 'name_example' # str | name to register udf under
-
-try:
-    api_response = api_instance.get_udf(namespace, name)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling UdfApi->get_udf: %s\n" % e)
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **name** | **str**| name to register udf under | 
-
-### Return type
-
-[**UDFRegistration**](UDFRegistration.md)
-
-### Authorization
-
-[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | udf registered successfully |  -  |
-**404** | udf not found |  -  |
-**0** | error response |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **get_udf_sharing_policies**
-> list[UDFSharing] get_udf_sharing_policies(namespace, name)
+# **get_udf_info_sharing_policies**
+> list[UDFSharing] get_udf_info_sharing_policies(namespace, name)
 
 
 
@@ -263,13 +263,13 @@ configuration.host = "http://localhost/v1"
 # Create an instance of the API class
 api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-name = 'name_example' # str | name of registered ud
+name = 'name_example' # str | name of UDFInfo
 
 try:
-    api_response = api_instance.get_udf_sharing_policies(namespace, name)
+    api_response = api_instance.get_udf_info_sharing_policies(namespace, name)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling UdfApi->get_udf_sharing_policies: %s\n" % e)
+    print("Exception when calling UdfApi->get_udf_info_sharing_policies: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -294,13 +294,13 @@ configuration.host = "http://localhost/v1"
 # Create an instance of the API class
 api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-name = 'name_example' # str | name of registered ud
+name = 'name_example' # str | name of UDFInfo
 
 try:
-    api_response = api_instance.get_udf_sharing_policies(namespace, name)
+    api_response = api_instance.get_udf_info_sharing_policies(namespace, name)
     pprint(api_response)
 except ApiException as e:
-    print("Exception when calling UdfApi->get_udf_sharing_policies: %s\n" % e)
+    print("Exception when calling UdfApi->get_udf_info_sharing_policies: %s\n" % e)
 ```
 
 ### Parameters
@@ -308,7 +308,7 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **name** | **str**| name of registered ud | 
+ **name** | **str**| name of UDFInfo | 
 
 ### Return type
 
@@ -332,8 +332,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **register_udf**
-> register_udf(namespace, name, udf)
+# **register_udf_info**
+> register_udf_info(namespace, name, udf)
 
 
 
@@ -364,12 +364,12 @@ configuration.host = "http://localhost/v1"
 api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
-udf = rest_api.UDFRegistration() # UDFRegistration | udf to register
+udf = rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to register
 
 try:
-    api_instance.register_udf(namespace, name, udf)
+    api_instance.register_udf_info(namespace, name, udf)
 except ApiException as e:
-    print("Exception when calling UdfApi->register_udf: %s\n" % e)
+    print("Exception when calling UdfApi->register_udf_info: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -395,12 +395,12 @@ configuration.host = "http://localhost/v1"
 api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
-udf = rest_api.UDFRegistration() # UDFRegistration | udf to register
+udf = rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to register
 
 try:
-    api_instance.register_udf(namespace, name, udf)
+    api_instance.register_udf_info(namespace, name, udf)
 except ApiException as e:
-    print("Exception when calling UdfApi->register_udf: %s\n" % e)
+    print("Exception when calling UdfApi->register_udf_info: %s\n" % e)
 ```
 
 ### Parameters
@@ -409,7 +409,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
  **name** | **str**| name to register udf under | 
- **udf** | [**UDFRegistration**](UDFRegistration.md)| udf to register | 
+ **udf** | [**UDFInfoUpdate**](UDFInfoUpdate.md)| udf to register | 
 
 ### Return type
 
@@ -432,8 +432,8 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **share_udf**
-> share_udf(namespace, name, udf_sharing)
+# **share_udf_info**
+> share_udf_info(namespace, name, udf_sharing)
 
 
 
@@ -463,13 +463,13 @@ configuration.host = "http://localhost/v1"
 # Create an instance of the API class
 api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-name = 'name_example' # str | name of registered ud
+name = 'name_example' # str | name of UDFInfo
 udf_sharing = rest_api.UDFSharing() # UDFSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all
 
 try:
-    api_instance.share_udf(namespace, name, udf_sharing)
+    api_instance.share_udf_info(namespace, name, udf_sharing)
 except ApiException as e:
-    print("Exception when calling UdfApi->share_udf: %s\n" % e)
+    print("Exception when calling UdfApi->share_udf_info: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -494,13 +494,13 @@ configuration.host = "http://localhost/v1"
 # Create an instance of the API class
 api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-name = 'name_example' # str | name of registered ud
+name = 'name_example' # str | name of UDFInfo
 udf_sharing = rest_api.UDFSharing() # UDFSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all
 
 try:
-    api_instance.share_udf(namespace, name, udf_sharing)
+    api_instance.share_udf_info(namespace, name, udf_sharing)
 except ApiException as e:
-    print("Exception when calling UdfApi->share_udf: %s\n" % e)
+    print("Exception when calling UdfApi->share_udf_info: %s\n" % e)
 ```
 
 ### Parameters
@@ -508,7 +508,7 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **name** | **str**| name of registered ud | 
+ **name** | **str**| name of UDFInfo | 
  **udf_sharing** | [**UDFSharing**](UDFSharing.md)| Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all | 
 
 ### Return type
@@ -743,8 +743,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **updated_registered_udf**
-> updated_registered_udf(namespace, name, udf)
+# **update_udf_info**
+> update_udf_info(namespace, name, udf)
 
 
 
@@ -775,12 +775,12 @@ configuration.host = "http://localhost/v1"
 api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
-udf = rest_api.UDFRegistration() # UDFRegistration | udf to update
+udf = rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to update
 
 try:
-    api_instance.updated_registered_udf(namespace, name, udf)
+    api_instance.update_udf_info(namespace, name, udf)
 except ApiException as e:
-    print("Exception when calling UdfApi->updated_registered_udf: %s\n" % e)
+    print("Exception when calling UdfApi->update_udf_info: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -806,12 +806,12 @@ configuration.host = "http://localhost/v1"
 api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
 namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
-udf = rest_api.UDFRegistration() # UDFRegistration | udf to update
+udf = rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to update
 
 try:
-    api_instance.updated_registered_udf(namespace, name, udf)
+    api_instance.update_udf_info(namespace, name, udf)
 except ApiException as e:
-    print("Exception when calling UdfApi->updated_registered_udf: %s\n" % e)
+    print("Exception when calling UdfApi->update_udf_info: %s\n" % e)
 ```
 
 ### Parameters
@@ -820,7 +820,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
  **name** | **str**| name to register udf under | 
- **udf** | [**UDFRegistration**](UDFRegistration.md)| udf to update | 
+ **udf** | [**UDFInfoUpdate**](UDFInfoUpdate.md)| udf to update | 
 
 ### Return type
 

@@ -68,18 +68,18 @@ def exec_async(
     http_compressor="deflate",
 ):
     """
-  Run a sql query asynchronous
-  :param str query: query to run
-  :param str output_uri: optional array to store results to, must be a tiledb:// registered array
-  :param tiledb.ArraySchema output_schema: optional schema for creating output array if it does not exist
-  :param str namespace: optional namespace to charge the query to
-  :param str task_name: optional name to assign the task for logging and audit purposes
-  :param str output_array_name: optional array name to set if creating new output array
-  :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
-  :param string http_compressor: optional http compression method to use
+    Run a sql query asynchronous
+    :param str query: query to run
+    :param str output_uri: optional array to store results to, must be a tiledb:// registered array
+    :param tiledb.ArraySchema output_schema: optional schema for creating output array if it does not exist
+    :param str namespace: optional namespace to charge the query to
+    :param str task_name: optional name to assign the task for logging and audit purposes
+    :param str output_array_name: optional array name to set if creating new output array
+    :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
+    :param string http_compressor: optional http compression method to use
 
-  :return: A SQLResult object which is a future for a pandas dataframe if no output array is given and query returns results
-  """
+    :return: A SQLResult object which is a future for a pandas dataframe if no output array is given and query returns results
+    """
 
     # Make sure the output_uri is remote array
     if not output_uri is None:
@@ -153,16 +153,16 @@ def exec_and_fetch(
     output_array_name=None,
 ):
     """
-  Run a sql query, results are not stored
-  :param str query: query to run
-  :param str output_uri: array to store results to, must be either a tiledb:// for an already registered array or a s3:// if passing a new schema to create new output array
-  :param tiledb.ArraySchema output_schema: array schema to create output array with
-  :param str namespace: optional namespace to charge the query to
-  :param str task_name: optional name to assign the task for logging and audit purposes
-  :param str output_array_name: optional name for registering new output array if output_schema schema is passed
+    Run a sql query, results are not stored
+    :param str query: query to run
+    :param str output_uri: array to store results to, must be either a tiledb:// for an already registered array or a s3:// if passing a new schema to create new output array
+    :param tiledb.ArraySchema output_schema: array schema to create output array with
+    :param str namespace: optional namespace to charge the query to
+    :param str task_name: optional name to assign the task for logging and audit purposes
+    :param str output_array_name: optional name for registering new output array if output_schema schema is passed
 
-  :return: TileDB Array with results
-  """
+    :return: TileDB Array with results
+    """
 
     # If the namespace is not set, we will default to the user's namespace
     if namespace is None:
@@ -206,18 +206,18 @@ def exec(
     http_compressor="deflate",
 ):
     """
-  Run a sql query
-  :param str query: query to run
-  :param str output_uri: optional array to store results to, must be a tiledb:// registered array
-  :param tiledb.ArraySchema output_schema: optional schema for creating output array if it does not exist
-  :param str namespace: optional namespace to charge the query to
-  :param str task_name: optional name to assign the task for logging and audit purposes
-  :param str output_array_name: optional array name to set if creating new output array
-  :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
-  :param string http_compressor: optional http compression method to use
+    Run a sql query
+    :param str query: query to run
+    :param str output_uri: optional array to store results to, must be a tiledb:// registered array
+    :param tiledb.ArraySchema output_schema: optional schema for creating output array if it does not exist
+    :param str namespace: optional namespace to charge the query to
+    :param str task_name: optional name to assign the task for logging and audit purposes
+    :param str output_array_name: optional array name to set if creating new output array
+    :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
+    :param string http_compressor: optional http compression method to use
 
-  :return: pandas dataframe if no output array is given and query returns results
-  """
+    :return: pandas dataframe if no output array is given and query returns results
+    """
     return exec_async(
         query=query,
         output_uri=output_uri,

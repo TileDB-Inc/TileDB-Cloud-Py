@@ -33,165 +33,13 @@ class UdfApi(object):
             api_client = ApiClient()
         self.api_client = api_client
 
-    def get_ud_fs(self, **kwargs):  # noqa: E501
-        """get_ud_fs  # noqa: E501
-
-        get a all UDFs accessible to the user  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_ud_fs(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace to filter
-        :param str created_by: username to filter
-        :param int page: pagination offset
-        :param int per_page: pagination limit
-        :param str type: udf type, \"generic\", \"single_array\"
-        :param str search: search string that will look at name, namespace or description fields
-        :param str orderby: sort by which field valid values include created_at, last_used, name
-        :param str tag: tag to search for, more than one can be included
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: UDFListingData
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs["_return_http_data_only"] = True
-        return self.get_ud_fs_with_http_info(**kwargs)  # noqa: E501
-
-    def get_ud_fs_with_http_info(self, **kwargs):  # noqa: E501
-        """get_ud_fs  # noqa: E501
-
-        get a all UDFs accessible to the user  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_ud_fs_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace to filter
-        :param str created_by: username to filter
-        :param int page: pagination offset
-        :param int per_page: pagination limit
-        :param str type: udf type, \"generic\", \"single_array\"
-        :param str search: search string that will look at name, namespace or description fields
-        :param str orderby: sort by which field valid values include created_at, last_used, name
-        :param str tag: tag to search for, more than one can be included
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(UDFListingData, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "namespace",
-            "created_by",
-            "page",
-            "per_page",
-            "type",
-            "search",
-            "orderby",
-            "tag",
-        ]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_ud_fs" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-        if "namespace" in local_var_params:
-            query_params.append(
-                ("namespace", local_var_params["namespace"])
-            )  # noqa: E501
-        if "created_by" in local_var_params:
-            query_params.append(
-                ("created_by", local_var_params["created_by"])
-            )  # noqa: E501
-        if "page" in local_var_params:
-            query_params.append(("page", local_var_params["page"]))  # noqa: E501
-        if "per_page" in local_var_params:
-            query_params.append(
-                ("per_page", local_var_params["per_page"])
-            )  # noqa: E501
-        if "type" in local_var_params:
-            query_params.append(("type", local_var_params["type"]))  # noqa: E501
-        if "search" in local_var_params:
-            query_params.append(("search", local_var_params["search"]))  # noqa: E501
-        if "orderby" in local_var_params:
-            query_params.append(("orderby", local_var_params["orderby"]))  # noqa: E501
-        if "tag" in local_var_params:
-            query_params.append(("tag", local_var_params["tag"]))  # noqa: E501
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/udfs",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="UDFListingData",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def get_udf(self, namespace, name, **kwargs):  # noqa: E501
-        """get_udf  # noqa: E501
+    def get_udf_info(self, namespace, name, **kwargs):  # noqa: E501
+        """get_udf_info  # noqa: E501
 
         get a specific UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_udf(namespace, name, async_req=True)
+        >>> thread = api.get_udf_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -204,20 +52,20 @@ class UdfApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: UDFRegistration
+        :return: UDFInfo
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.get_udf_with_http_info(namespace, name, **kwargs)  # noqa: E501
+        return self.get_udf_info_with_http_info(namespace, name, **kwargs)  # noqa: E501
 
-    def get_udf_with_http_info(self, namespace, name, **kwargs):  # noqa: E501
-        """get_udf  # noqa: E501
+    def get_udf_info_with_http_info(self, namespace, name, **kwargs):  # noqa: E501
+        """get_udf_info  # noqa: E501
 
         get a specific UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_udf_with_http_info(namespace, name, async_req=True)
+        >>> thread = api.get_udf_info_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -232,7 +80,7 @@ class UdfApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(UDFRegistration, status_code(int), headers(HTTPHeaderDict))
+        :return: tuple(UDFInfo, status_code(int), headers(HTTPHeaderDict))
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -248,19 +96,20 @@ class UdfApi(object):
         for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'" " to method get_udf" % key
+                    "Got an unexpected keyword argument '%s'"
+                    " to method get_udf_info" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
         if "namespace" not in local_var_params or local_var_params["namespace"] is None:
             raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `get_udf`"
+                "Missing the required parameter `namespace` when calling `get_udf_info`"
             )  # noqa: E501
         # verify the required parameter 'name' is set
         if "name" not in local_var_params or local_var_params["name"] is None:
             raise ApiValueError(
-                "Missing the required parameter `name` when calling `get_udf`"
+                "Missing the required parameter `name` when calling `get_udf_info`"
             )  # noqa: E501
 
         collection_formats = {}
@@ -296,7 +145,7 @@ class UdfApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="UDFRegistration",  # noqa: E501
+            response_type="UDFInfo",  # noqa: E501
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -307,18 +156,171 @@ class UdfApi(object):
             collection_formats=collection_formats,
         )
 
-    def get_udf_sharing_policies(self, namespace, name, **kwargs):  # noqa: E501
-        """get_udf_sharing_policies  # noqa: E501
+    def get_udf_info_list(self, **kwargs):  # noqa: E501
+        """get_udf_info_list  # noqa: E501
+
+        get a all UDFs accessible to the user  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_udf_info_list(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace to filter
+        :param str created_by: username to filter
+        :param int page: pagination offset
+        :param int per_page: pagination limit
+        :param str type: udf type, \"generic\", \"single_array\"
+        :param str search: search string that will look at name, namespace or description fields
+        :param str orderby: sort by which field valid values include created_at, last_used, name
+        :param list[str] tag: tag to search for, more than one can be included
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: UDFListingData
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs["_return_http_data_only"] = True
+        return self.get_udf_info_list_with_http_info(**kwargs)  # noqa: E501
+
+    def get_udf_info_list_with_http_info(self, **kwargs):  # noqa: E501
+        """get_udf_info_list  # noqa: E501
+
+        get a all UDFs accessible to the user  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_udf_info_list_with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace to filter
+        :param str created_by: username to filter
+        :param int page: pagination offset
+        :param int per_page: pagination limit
+        :param str type: udf type, \"generic\", \"single_array\"
+        :param str search: search string that will look at name, namespace or description fields
+        :param str orderby: sort by which field valid values include created_at, last_used, name
+        :param list[str] tag: tag to search for, more than one can be included
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: tuple(UDFListingData, status_code(int), headers(HTTPHeaderDict))
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = [
+            "namespace",
+            "created_by",
+            "page",
+            "per_page",
+            "type",
+            "search",
+            "orderby",
+            "tag",
+        ]  # noqa: E501
+        all_params.append("async_req")
+        all_params.append("_return_http_data_only")
+        all_params.append("_preload_content")
+        all_params.append("_request_timeout")
+
+        for key, val in six.iteritems(local_var_params["kwargs"]):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method get_udf_info_list" % key
+                )
+            local_var_params[key] = val
+        del local_var_params["kwargs"]
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+        if "namespace" in local_var_params:
+            query_params.append(
+                ("namespace", local_var_params["namespace"])
+            )  # noqa: E501
+        if "created_by" in local_var_params:
+            query_params.append(
+                ("created_by", local_var_params["created_by"])
+            )  # noqa: E501
+        if "page" in local_var_params:
+            query_params.append(("page", local_var_params["page"]))  # noqa: E501
+        if "per_page" in local_var_params:
+            query_params.append(
+                ("per_page", local_var_params["per_page"])
+            )  # noqa: E501
+        if "type" in local_var_params:
+            query_params.append(("type", local_var_params["type"]))  # noqa: E501
+        if "search" in local_var_params:
+            query_params.append(("search", local_var_params["search"]))  # noqa: E501
+        if "orderby" in local_var_params:
+            query_params.append(("orderby", local_var_params["orderby"]))  # noqa: E501
+        if "tag" in local_var_params:
+            query_params.append(("tag", local_var_params["tag"]))  # noqa: E501
+            collection_formats["tag"] = "csv"  # noqa: E501
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+
+        return self.api_client.call_api(
+            "/udfs",
+            "GET",
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type="UDFListingData",  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
+
+    def get_udf_info_sharing_policies(self, namespace, name, **kwargs):  # noqa: E501
+        """get_udf_info_sharing_policies  # noqa: E501
 
         Get all sharing details of the udf  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_udf_sharing_policies(namespace, name, async_req=True)
+        >>> thread = api.get_udf_info_sharing_policies(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name of registered ud (required)
+        :param str name: name of UDFInfo (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -331,24 +333,24 @@ class UdfApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.get_udf_sharing_policies_with_http_info(
+        return self.get_udf_info_sharing_policies_with_http_info(
             namespace, name, **kwargs
         )  # noqa: E501
 
-    def get_udf_sharing_policies_with_http_info(
+    def get_udf_info_sharing_policies_with_http_info(
         self, namespace, name, **kwargs
     ):  # noqa: E501
-        """get_udf_sharing_policies  # noqa: E501
+        """get_udf_info_sharing_policies  # noqa: E501
 
         Get all sharing details of the udf  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_udf_sharing_policies_with_http_info(namespace, name, async_req=True)
+        >>> thread = api.get_udf_info_sharing_policies_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name of registered ud (required)
+        :param str name: name of UDFInfo (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -375,19 +377,19 @@ class UdfApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method get_udf_sharing_policies" % key
+                    " to method get_udf_info_sharing_policies" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
         if "namespace" not in local_var_params or local_var_params["namespace"] is None:
             raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `get_udf_sharing_policies`"
+                "Missing the required parameter `namespace` when calling `get_udf_info_sharing_policies`"
             )  # noqa: E501
         # verify the required parameter 'name' is set
         if "name" not in local_var_params or local_var_params["name"] is None:
             raise ApiValueError(
-                "Missing the required parameter `name` when calling `get_udf_sharing_policies`"
+                "Missing the required parameter `name` when calling `get_udf_info_sharing_policies`"
             )  # noqa: E501
 
         collection_formats = {}
@@ -434,19 +436,19 @@ class UdfApi(object):
             collection_formats=collection_formats,
         )
 
-    def register_udf(self, namespace, name, udf, **kwargs):  # noqa: E501
-        """register_udf  # noqa: E501
+    def register_udf_info(self, namespace, name, udf, **kwargs):  # noqa: E501
+        """register_udf_info  # noqa: E501
 
         register a UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.register_udf(namespace, name, udf, async_req=True)
+        >>> thread = api.register_udf_info(namespace, name, udf, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str name: name to register udf under (required)
-        :param UDFRegistration udf: udf to register (required)
+        :param UDFInfoUpdate udf: udf to register (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -459,23 +461,25 @@ class UdfApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.register_udf_with_http_info(
+        return self.register_udf_info_with_http_info(
             namespace, name, udf, **kwargs
         )  # noqa: E501
 
-    def register_udf_with_http_info(self, namespace, name, udf, **kwargs):  # noqa: E501
-        """register_udf  # noqa: E501
+    def register_udf_info_with_http_info(
+        self, namespace, name, udf, **kwargs
+    ):  # noqa: E501
+        """register_udf_info  # noqa: E501
 
         register a UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.register_udf_with_http_info(namespace, name, udf, async_req=True)
+        >>> thread = api.register_udf_info_with_http_info(namespace, name, udf, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str name: name to register udf under (required)
-        :param UDFRegistration udf: udf to register (required)
+        :param UDFInfoUpdate udf: udf to register (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -502,24 +506,24 @@ class UdfApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method register_udf" % key
+                    " to method register_udf_info" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
         if "namespace" not in local_var_params or local_var_params["namespace"] is None:
             raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `register_udf`"
+                "Missing the required parameter `namespace` when calling `register_udf_info`"
             )  # noqa: E501
         # verify the required parameter 'name' is set
         if "name" not in local_var_params or local_var_params["name"] is None:
             raise ApiValueError(
-                "Missing the required parameter `name` when calling `register_udf`"
+                "Missing the required parameter `name` when calling `register_udf_info`"
             )  # noqa: E501
         # verify the required parameter 'udf' is set
         if "udf" not in local_var_params or local_var_params["udf"] is None:
             raise ApiValueError(
-                "Missing the required parameter `udf` when calling `register_udf`"
+                "Missing the required parameter `udf` when calling `register_udf_info`"
             )  # noqa: E501
 
         collection_formats = {}
@@ -575,18 +579,18 @@ class UdfApi(object):
             collection_formats=collection_formats,
         )
 
-    def share_udf(self, namespace, name, udf_sharing, **kwargs):  # noqa: E501
-        """share_udf  # noqa: E501
+    def share_udf_info(self, namespace, name, udf_sharing, **kwargs):  # noqa: E501
+        """share_udf_info  # noqa: E501
 
         Share a UDF with a user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.share_udf(namespace, name, udf_sharing, async_req=True)
+        >>> thread = api.share_udf_info(namespace, name, udf_sharing, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name of registered ud (required)
+        :param str name: name of UDFInfo (required)
         :param UDFSharing udf_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
@@ -600,24 +604,24 @@ class UdfApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.share_udf_with_http_info(
+        return self.share_udf_info_with_http_info(
             namespace, name, udf_sharing, **kwargs
         )  # noqa: E501
 
-    def share_udf_with_http_info(
+    def share_udf_info_with_http_info(
         self, namespace, name, udf_sharing, **kwargs
     ):  # noqa: E501
-        """share_udf  # noqa: E501
+        """share_udf_info  # noqa: E501
 
         Share a UDF with a user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.share_udf_with_http_info(namespace, name, udf_sharing, async_req=True)
+        >>> thread = api.share_udf_info_with_http_info(namespace, name, udf_sharing, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name of registered ud (required)
+        :param str name: name of UDFInfo (required)
         :param UDFSharing udf_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
@@ -645,19 +649,19 @@ class UdfApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method share_udf" % key
+                    " to method share_udf_info" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
         if "namespace" not in local_var_params or local_var_params["namespace"] is None:
             raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `share_udf`"
+                "Missing the required parameter `namespace` when calling `share_udf_info`"
             )  # noqa: E501
         # verify the required parameter 'name' is set
         if "name" not in local_var_params or local_var_params["name"] is None:
             raise ApiValueError(
-                "Missing the required parameter `name` when calling `share_udf`"
+                "Missing the required parameter `name` when calling `share_udf_info`"
             )  # noqa: E501
         # verify the required parameter 'udf_sharing' is set
         if (
@@ -665,7 +669,7 @@ class UdfApi(object):
             or local_var_params["udf_sharing"] is None
         ):
             raise ApiValueError(
-                "Missing the required parameter `udf_sharing` when calling `share_udf`"
+                "Missing the required parameter `udf_sharing` when calling `share_udf_info`"
             )  # noqa: E501
 
         collection_formats = {}
@@ -1016,19 +1020,19 @@ class UdfApi(object):
             collection_formats=collection_formats,
         )
 
-    def updated_registered_udf(self, namespace, name, udf, **kwargs):  # noqa: E501
-        """updated_registered_udf  # noqa: E501
+    def update_udf_info(self, namespace, name, udf, **kwargs):  # noqa: E501
+        """update_udf_info  # noqa: E501
 
         updated an existing registerd UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.updated_registered_udf(namespace, name, udf, async_req=True)
+        >>> thread = api.update_udf_info(namespace, name, udf, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str name: name to register udf under (required)
-        :param UDFRegistration udf: udf to update (required)
+        :param UDFInfoUpdate udf: udf to update (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1041,25 +1045,25 @@ class UdfApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.updated_registered_udf_with_http_info(
+        return self.update_udf_info_with_http_info(
             namespace, name, udf, **kwargs
         )  # noqa: E501
 
-    def updated_registered_udf_with_http_info(
+    def update_udf_info_with_http_info(
         self, namespace, name, udf, **kwargs
     ):  # noqa: E501
-        """updated_registered_udf  # noqa: E501
+        """update_udf_info  # noqa: E501
 
         updated an existing registerd UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.updated_registered_udf_with_http_info(namespace, name, udf, async_req=True)
+        >>> thread = api.update_udf_info_with_http_info(namespace, name, udf, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str name: name to register udf under (required)
-        :param UDFRegistration udf: udf to update (required)
+        :param UDFInfoUpdate udf: udf to update (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1086,24 +1090,24 @@ class UdfApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method updated_registered_udf" % key
+                    " to method update_udf_info" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
         if "namespace" not in local_var_params or local_var_params["namespace"] is None:
             raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `updated_registered_udf`"
+                "Missing the required parameter `namespace` when calling `update_udf_info`"
             )  # noqa: E501
         # verify the required parameter 'name' is set
         if "name" not in local_var_params or local_var_params["name"] is None:
             raise ApiValueError(
-                "Missing the required parameter `name` when calling `updated_registered_udf`"
+                "Missing the required parameter `name` when calling `update_udf_info`"
             )  # noqa: E501
         # verify the required parameter 'udf' is set
         if "udf" not in local_var_params or local_var_params["udf"] is None:
             raise ApiValueError(
-                "Missing the required parameter `udf` when calling `updated_registered_udf`"
+                "Missing the required parameter `udf` when calling `update_udf_info`"
             )  # noqa: E501
 
         collection_formats = {}
