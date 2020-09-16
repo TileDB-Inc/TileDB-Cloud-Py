@@ -6,8 +6,6 @@
 Welcome to TileDB-Cloud-Py's documentation!
 ===========================================
 
-.. mdinclude:: ../../README.md
-   
 .. autosummary::
    :toctree: _autosummary
    :template: custom-module-template.rst

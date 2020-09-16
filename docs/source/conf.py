@@ -43,7 +43,6 @@ extensions = [
     #'sphinxcontrib.apidoc',
     'sphinx.ext.autodoc',  # Core library for html generation from docstrings
     'sphinx.ext.autosummary',  # Create neat summary tables
-    'm2r2',
 ]
 autosummary_generate = True
 
