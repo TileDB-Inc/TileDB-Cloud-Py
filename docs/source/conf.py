@@ -12,7 +12,10 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('../..'))
+print(os.path.abspath('../..'))
+#sys.path.insert(0, os.path.abspath('../../tiledb'))
 
 # -- ReadTheDocs configuration ---------------------------------------------
 
@@ -36,16 +39,18 @@ author = 'TileDB, Inc.'
 # ones.
 extensions = [
     # 'sphinx.ext.autodoc',
-    'sphinxcontrib.apidoc',
+    #'sphinxcontrib.apidoc',
+    'sphinx.ext.autodoc',  # Core library for html generation from docstrings
+    'sphinx.ext.autosummary',  # Create neat summary tables
     'm2r2',
 ]
+autosummary_generate = True
 
 source_suffix = ['.rst', '.md']
 
-apidoc_module_dir = '../..'
-#apidoc_output_dir = 'reference'
-apidoc_excluded_paths = ['tests', 'tiledb/cloud/rest_api', 'setup.py', '**/test/**']
-apidoc_separate_modules = True
+#apidoc_module_dir = '../..'
+#apidoc_excluded_paths = ['tests', 'tiledb/cloud/rest_api', 'setup.py', '**/test/**']
+#apidoc_separate_modules = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -74,4 +79,4 @@ else:
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'] }
+#html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'] }

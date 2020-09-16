@@ -6,15 +6,14 @@
 Welcome to TileDB-Cloud-Py's documentation!
 ===========================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   api/modules
-
-
 .. mdinclude:: ../../README.md
    
+.. autosummary::
+   :toctree: _autosummary
+   :template: custom-module-template.rst
+   :recursive:
+
+   tiledb
 
 
 
