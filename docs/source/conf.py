@@ -13,9 +13,10 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath('../..'))
-print(os.path.abspath('../..'))
-#sys.path.insert(0, os.path.abspath('../../tiledb'))
+#sys.path.insert(0, os.path.abspath('../..'))
+#print(os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('../../tiledb'))
+print(os.path.abspath('../../tiledb'))
 
 # -- ReadTheDocs configuration ---------------------------------------------
 
@@ -58,7 +59,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+exclude_patterns = ["_autosummary/tiledb.test*", "_autosummary/tiledb.cloud.rest_api.test*", "_autosummary/tiledb.version.rst", "_autosummary/tiledb.array*", "_autosummary/tiledb.core*", "_autosummary/tiledb.dataframe*", "_autosummary/tiledb.highlevel", "_autosummary/tiledb.libtiledb*", "_autosummary/tiledb.metadata*", "_autosummary/tiledb.multirange*", "_autosummary/tiledb.version.rst"]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -79,4 +80,4 @@ else:
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-#html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'] }
+html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'] }

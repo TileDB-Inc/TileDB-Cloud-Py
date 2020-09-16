@@ -1,4 +1,5 @@
-﻿me | escape | underline}}
+﻿tiledb
+======
 
 .. automodule:: tiledb
   
@@ -24,8 +25,17 @@
 
 .. autosummary::
    :toctree:
-   :template: custom-module-template.rst                 <-- add this line
+   :template: custom-module-template.rst
    :recursive:
 
+   tiledb.array
+   tiledb.core
+   tiledb.dataframe_
+   tiledb.highlevel
+   tiledb.libtiledb
+   tiledb.metadata
+   tiledb.multirange_indexing
+   tiledb.tests
+   tiledb.version
    tiledb.cloud
 

@@ -13,7 +13,7 @@ Welcome to TileDB-Cloud-Py's documentation!
    :template: custom-module-template.rst
    :recursive:
 
-   tiledb
+   tiledb.cloud
 
 
 
