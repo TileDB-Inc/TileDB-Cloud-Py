@@ -71,6 +71,31 @@ class DelayedBase(Node):
 
         return None
 
+    @staticmethod
+    def all(futures, namespace=None):
+        """
+        Run a list of Delayed object all in parallel
+        :param futures: list of Delayed objects to run
+        :param namespace: optional namespace to run all tasks in
+        :return: list of results in order of futures
+        """
+        if futures is None:
+            raise ValueError("list of delayed object must not be null")
+
+        dag = DAG()
+
+        for delayed in futures:
+            dag.add_node_obj(delayed)
+
+        dag.namespace = namespace
+        dag.compute()
+
+        ret = []
+        for delayed in futures:
+            ret.append(delayed.result())
+
+        return ret
+
 
 class Delayed(DelayedBase):
     def __init__(self, func_exec, *args, local=False, **kwargs):
