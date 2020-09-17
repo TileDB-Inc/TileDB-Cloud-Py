@@ -8,9 +8,11 @@ import numbers
 
 
 class DelayedBase(Node):
-    def __init__(self, func, *args, name=None, dag=None, **kwargs):
+    def __init__(self, func, *args, name=None, dag=None, local_mode=False, **kwargs):
         self.timeout = None
-        super().__init__(func, *args, name=name, dag=dag, **kwargs)
+        super().__init__(
+            func, *args, name=name, dag=dag, local_mode=local_mode, **kwargs
+        )
 
     def set_timeout(self, timeout):
         if timeout is not None and not isinstance(timeout, numbers.Number):
@@ -19,13 +21,17 @@ class DelayedBase(Node):
             )
         self.timeout = timeout
 
-    def compute(self):
+    def compute(self, namespace=None):
         """
         Execute function for node
+        :param namespace: optional namespace to use for task
         :return: results
         """
         if self.dag is None:
-            self.__set_all_parent_nodes_same_dag(DAG())
+            self.__set_all_parent_nodes_same_dag(DAG(namespace=namespace))
+
+        if namespace is not None:
+            self.dag.namespace = namespace
 
         self.dag.compute()
         super().wait(self.timeout)
@@ -69,22 +75,21 @@ class DelayedBase(Node):
 class Delayed(DelayedBase):
     def __init__(self, func_exec, *args, local=False, **kwargs):
         self.func_exec = func_exec
-        self.local = local
         if func_exec is not None and not callable(func_exec):
             raise TypeError("func_exec argument to `Node` must be callable!")
 
         if not local:
-            super().__init__(udf_exec, func_exec, *args, **kwargs)
+            super().__init__(udf_exec, func_exec, *args, local_mode=local, **kwargs)
         else:
-            super().__init__(func_exec, *args, **kwargs)
+            super().__init__(func_exec, *args, local_mode=local, **kwargs)
 
         # Set name of task if it won't interfere with user args
-        if not self.local:
+        if not self.local_mode:
             if "task_name" not in self.kwargs:
                 self.kwargs["task_name"] = self.name
 
     def __call__(self, *args, **kwargs):
-        if not self.local:
+        if not self.local_mode:
             self.args = [self.func_exec, *args]
         else:
             self.args = args
@@ -101,7 +106,7 @@ class Delayed(DelayedBase):
             super()._build_dependencies_list(self.kwargs)
 
         # Set name of task if it won't interfere with user args
-        if not self.local:
+        if not self.local_mode:
             if "task_name" not in self.kwargs:
                 self.kwargs["task_name"] = self.name
 
