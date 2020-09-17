@@ -88,7 +88,8 @@ class Delayed(DelayedBase):
             self.args = [self.func_exec, *args]
         else:
             self.args = args
-        self.kwargs = kwargs
+        self.kwargs.update(kwargs)
+
         # Loop through non-default parameters and find any Node objects
         # Node objects will be used to automatically add dependencies
         if self.args is not None:
@@ -117,7 +118,7 @@ class DelayedSQL(DelayedBase):
 
     def __call__(self, *args, **kwargs):
         self.args = args
-        self.kwargs = kwargs
+        self.kwargs.update(kwargs)
         # Loop through non-default parameters and find any Node objects
         # Node objects will be used to automatically add dependencies
         if self.args is not None:
@@ -151,7 +152,7 @@ class DelayedArrayUDF(DelayedBase):
 
     def __call__(self, *args, **kwargs):
         self.args = [self.uri, self.func_exec, *args]
-        self.kwargs = kwargs
+        self.kwargs.update(kwargs)
         # Loop through non-default parameters and find any Node objects
         # Node objects will be used to automatically add dependencies
         if self.args is not None:
