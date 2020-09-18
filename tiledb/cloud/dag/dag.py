@@ -49,7 +49,7 @@ def handle_complete_node(node, future):
 
 
 class Node:
-    def __init__(self, func, *args, name=None, dag=None, **kwargs):
+    def __init__(self, func, *args, name=None, dag=None, local_mode=False, **kwargs):
         """
         Node is a class that represents a function to run in a DAG
         :param func: function to run
@@ -63,6 +63,7 @@ class Node:
         self.future = None
         self.status = Status.NOT_STARTED
         self.dag = dag
+        self.local_mode = local_mode
 
         if func is not None and not callable(func):
             raise TypeError("func argument to `Node` must be callable!")
@@ -227,12 +228,17 @@ class Node:
 
         return arg
 
-    def exec(self):
+    def exec(self, namespace=None):
         """
         Execute function for node
         :return: None
         """
         self.status = Status.RUNNING
+
+        # Override namespace if passed
+        if namespace is not None and not self.local_mode:
+            self.kwargs["namespace"] = namespace
+
         # First loop though any non-default parameter arguments to find any nodes
         # If there is a node as an argument, the user really just wants the results, so let's fetch them
         # and swap out the parameter
@@ -359,6 +365,7 @@ class DAG:
         use_processes=False,
         done_callback=None,
         update_callback=None,
+        namespace=None,
     ):
         """
         DAG is a class for creating and managing direct acyclic graphs
@@ -366,6 +373,7 @@ class DAG:
         :param use_processes: if true will use processes instead of threads, defaults to threads
         :param done_callback: optional call back function to register for when dag is completed. Function will be passed reference to this dag
         :param update_callback: optional call back function to register for when dag status is updated. Function will be passed reference to this dag
+        :param namespace: optional namespace to use for all tasks in DAG
         """
         self.id = uuid.uuid4()
         self.nodes = {}
@@ -375,6 +383,7 @@ class DAG:
         self.running_nodes = {}
         self.not_started_nodes = {}
         self.cancelled_nodes = {}
+        self.namespace = namespace
 
         self.visualization = None
 
@@ -603,7 +612,7 @@ class DAG:
             del self.not_started_nodes[node.id]
             self.running_nodes[node.id] = node
             # Execute the node, the node will launch it's task with a worker pool from this dag
-            node.exec()
+            node.exec(namespace=self.namespace)
 
     def wait(self, timeout=None):
         """
