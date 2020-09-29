@@ -1,3 +1,11 @@
+"""
+TileDB-Cloud API
+"""
+
+import base64
+import sys
+import cloudpickle
+
 from . import rest_api
 from . import array
 from . import client
@@ -6,12 +14,7 @@ from . import tiledb_cloud_error
 from . import config
 from . import utils
 
-import cloudpickle
-
 tiledb_cloud_protocol = 4
-
-import base64
-import sys
 
 last_udf_task_id = None
 
@@ -53,19 +56,20 @@ def exec_async(
 
         namespace = client.find_organization_or_user_for_default_charges(config.user)
 
-    if func is not None and not callable(func):
-        raise TypeError("func argument to `exec` must be callable!")
-    elif func is None and name is None or name == "":
-        if args is not None and len(args) > 0:
-            if callable(args[0]):
-                func = args[0]
-                args = args[1:]
-        if func is None:
-            raise TypeError(
-                "name argument to `exec` must be set if no function is passed"
-            )
+    if func is not None:
+        if not callable(func):
+            raise TypeError("func argument to `exec` must be callable!")
+        if name is None or name == "":
+            if args is not None and len(args) > 0:
+                if callable(args[0]):
+                    func = args[0]
+                    args = args[1:]
+            if func is None:
+                raise TypeError(
+                    "name argument to `exec` must be set if no function is passed"
+                )
 
-    pickledUDF = None
+    pickledUDF = None  # NOQA
     source_lines = None
     if func is not None:
         source_lines = utils.getsourcelines(func) if include_source_lines else None
