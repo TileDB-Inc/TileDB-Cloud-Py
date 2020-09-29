@@ -45,3 +45,20 @@ class GenericUDFTest(unittest.TestCase):
         )
         self.assertEqual(res, [1, [2, 2], {"test": 1}, [1, 2, 3]])
         self.assertEqual(tiledb.cloud.last_udf_task().name, task_name)
+
+
+class RegisteredUDFTest(unittest.TestCase):
+    def test_register_generic_udf(self):
+        def test_register_me(arg, kwarg1=None):
+            if kwarg1:
+                return kwarg1
+            else:
+                return arg
+
+        udf.register_generic_udf(test_register_udf, "registered_generic_udf")
+
+        res = udf.exec("test arg", func="unittest/registered_generic_udf")
+        self.assertEqual(res, "test arg")
+
+        res = udf.exec(kwarg1="test kwarg1", func="unittest/registered_generic_udf")
+        self.assertEqual(res, "test kwarg1")
