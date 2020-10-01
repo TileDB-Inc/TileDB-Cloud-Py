@@ -20,6 +20,10 @@ from .array import (
     array_activity,
 )
 
+from .notebook import (
+    rename_notebook,
+)
+
 from .tiledb_cloud_error import TileDBCloudError
 
 from .tasks import task, tasks, last_sql_task, last_udf_task

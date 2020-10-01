@@ -301,6 +301,7 @@ class Client:
         self.tasks_api = self.__get_tasks_api()
         self.udf_api = self.__get_udf_api()
         self.user_api = self.__get_user_api()
+        self.notebook_api = self.__get_notebook_api()
 
     def __init__(self):
         self.update_clients()
@@ -322,6 +323,9 @@ class Client:
 
     def __get_sql_api(self):
         return rest_api.SqlApi(rest_api.ApiClient(config.config))
+
+    def __get_notebook_api(self):
+        return rest_api.NotebookApi(rest_api.ApiClient(config.config))
 
 
 client = Client()
