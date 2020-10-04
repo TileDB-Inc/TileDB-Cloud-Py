@@ -144,8 +144,6 @@ def list_public_arrays(
         res = api_instance.arrays_browser_public_get(**kwargs)
 
         # if the user didn't ask for pagination just return raw array list
-        if page is None:
-            return res.arrays
         return res
 
     except GenApiException as exc:
@@ -195,8 +193,6 @@ def list_shared_arrays(
         res = api_instance.arrays_browser_shared_get(**kwargs)
 
         # if the user didn't ask for pagination just return raw array list
-        if page is None:
-            return res.arrays
         return res
 
     except GenApiException as exc:
@@ -247,8 +243,6 @@ def list_arrays(
         res = api_instance.arrays_browser_owned_get(**kwargs)
 
         # if the user didn't ask for pagination just return raw array list
-        if page is None:
-            return res.arrays
         return res
 
     except GenApiException as exc:
