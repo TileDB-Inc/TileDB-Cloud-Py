@@ -8,10 +8,11 @@ from .rest_api import ApiException as GenApiException
 import datetime
 
 
-def task(id):
+def task(id, async_req=False):
     """
     Fetch a single array task
     :param str id: id to lookup, if unset will use the id of the last array task run in the current python session
+    :param async_req: return future instead of results for async support
     :return task : object with task details
     """
 
@@ -21,7 +22,7 @@ def task(id):
     api_instance = client.client.tasks_api
 
     try:
-        return api_instance.task_id_get(id=id)
+        return api_instance.task_id_get(id=id, async_req=async_req)
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
@@ -35,6 +36,7 @@ def tasks(
     status=None,
     page=None,
     per_page=None,
+    async_req=False,
 ):
     """
     Fetch all tasks a user has access too
@@ -45,6 +47,7 @@ def tasks(
     :param str status: optional filter on status can be one of ['FAILED', 'RUNNING', 'COMPLETED']
     :param int page: optional page for pagenating results
     :param int per_page: optional records to return per page
+    :param async_req: return future instead of results for async support
     :return:
     """
     api_instance = client.client.tasks_api
@@ -71,7 +74,7 @@ def tasks(
         (namespace, array) = split_uri(array)
 
     try:
-        args = {}
+        args = {"async_req": async_req}
         if namespace is not None:
             args["namespace"] = namespace
         if array is not None:

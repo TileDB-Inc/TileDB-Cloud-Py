@@ -102,7 +102,13 @@ def login(
 
 
 def list_public_arrays(
-    namespace=None, permissions=None, tag=None, search=None, page=None, per_page=None
+    namespace=None,
+    permissions=None,
+    tag=None,
+    search=None,
+    page=None,
+    per_page=None,
+    async_req=False,
 ):
     """
     List public arrays
@@ -113,6 +119,7 @@ def list_public_arrays(
     :param str search: search string
     :param int page: optional page for pagination
     :param int per_page: optional per_page for pagination
+    :param async_req: return future instead of results for async support
     :return: list of all array metadata you have access to that meet the filter applied
     """
 
@@ -121,7 +128,7 @@ def list_public_arrays(
         permissions = [permissions]
 
     try:
-        kwargs = {}
+        kwargs = {"async_req": async_req}
         if namespace is not None:
             kwargs["namespace"] = namespace
         if search is not None:
@@ -146,7 +153,13 @@ def list_public_arrays(
 
 
 def list_shared_arrays(
-    namespace=None, permissions=None, tag=None, search=None, page=None, per_page=None
+    namespace=None,
+    permissions=None,
+    tag=None,
+    search=None,
+    page=None,
+    per_page=None,
+    async_req=False,
 ):
     """
     List shared arrays
@@ -157,6 +170,7 @@ def list_shared_arrays(
     :param str search: search string
     :param int page: optional page for pagination
     :param int per_page: optional per_page for pagination
+    :param async_req: return future instead of results for async support
     :return: list of all array metadata you have access to that meet the filter applied
     """
 
@@ -165,7 +179,7 @@ def list_shared_arrays(
         permissions = [permissions]
 
     try:
-        kwargs = {}
+        kwargs = {"async_req": async_req}
         if namespace is not None:
             kwargs["namespace"] = namespace
         if search is not None:
@@ -190,7 +204,13 @@ def list_shared_arrays(
 
 
 def list_arrays(
-    namespace=None, permissions=None, tag=None, search=None, page=None, per_page=None
+    namespace=None,
+    permissions=None,
+    tag=None,
+    search=None,
+    page=None,
+    per_page=None,
+    async_req=False,
 ):
     """
     List arrays in a user account
@@ -201,6 +221,7 @@ def list_arrays(
     :param str search: search string
     :param int page: optional page for pagination
     :param int per_page: optional per_page for pagination
+    :param async_req: return future instead of results for async support
     :return: list of all array metadata you have access to that meet the filter applied
     """
 
@@ -209,7 +230,7 @@ def list_arrays(
         permissions = [permissions]
 
     try:
-        kwargs = {}
+        kwargs = {"async_req": async_req}
         if namespace is not None:
             kwargs["namespace"] = namespace
         if search is not None:
@@ -234,8 +255,9 @@ def list_arrays(
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def user_profile():
+def user_profile(async_req=False):
     """
+    :param async_req: return future instead of results for async support
 
     :return: your user profile
     """
@@ -243,36 +265,40 @@ def user_profile():
     api_instance = client.user_api
 
     try:
-        return api_instance.get_user()
+        return api_instance.get_user(async_req=async_req)
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def organizations():
+def organizations(async_req=False):
     """
 
+    :param async_req: return future instead of results for async support
     :return: list of all organizations user is part of
     """
 
     api_instance = client.organization_api
 
     try:
-        return api_instance.get_all_organizations()
+        return api_instance.get_all_organizations(async_req=async_req)
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def organization(organization):
+def organization(organization, async_req=False):
     """
 
     :param str organization: organization to fetct
+    :param async_req: return future instead of results for async support
     :return: details about organization
     """
 
     api_instance = client.organization_api
 
     try:
-        return api_instance.get_organization(organization=organization)
+        return api_instance.get_organization(
+            organization=organization, async_req=async_req
+        )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 

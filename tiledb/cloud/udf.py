@@ -168,6 +168,7 @@ def register_udf(
     image_name=None,
     type=None,
     include_source_lines=True,
+    async_req=False,
 ):
     """
 
@@ -177,6 +178,7 @@ def register_udf(
     :param image_name: optional image name
     :param type: type of udf, generic or single_array
     :param include_source_lines: disables sending sources lines of function along with udf
+    :param async_req: return future instead of results for async support
     :return:
     """
 
@@ -216,14 +218,21 @@ def register_udf(
         if source_lines is not None:
             udf_model.exec_raw = source_lines
 
-        api_instance.register_udf(namespace=namespace, name=name, udf=udf_model)
+        api_instance.register_udf(
+            namespace=namespace, name=name, udf=udf_model, async_req=async_req
+        )
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
 def register_generic_udf(
-    func, name, namespace=None, image_name=None, include_source_lines=True
+    func,
+    name,
+    namespace=None,
+    image_name=None,
+    include_source_lines=True,
+    async_req=False,
 ):
     """
 
@@ -232,6 +241,7 @@ def register_generic_udf(
     :param namespace: namespace to register in
     :param image_name: optional image name
     :param include_source_lines: disables sending sources lines of function along with udf
+    :param async_req: return future instead of results for async support
     :return:
     """
     return register_udf(
@@ -241,11 +251,17 @@ def register_generic_udf(
         image_name=image_name,
         type=rest_api.models.UDFType.GENERIC,
         include_source_lines=include_source_lines,
+        async_req=async_req,
     )
 
 
 def register_single_array_udf(
-    func, name, namespace=None, image_name=None, include_source_lines=True
+    func,
+    name,
+    namespace=None,
+    image_name=None,
+    include_source_lines=True,
+    async_req=False,
 ):
     """
 
@@ -254,6 +270,7 @@ def register_single_array_udf(
     :param namespace: namespace to register in
     :param image_name: optional image name
     :param include_source_lines: disables sending sources lines of function along with udf
+    :param async_req: return future instead of results for async support
     :return:
     """
     return register_udf(
@@ -263,6 +280,7 @@ def register_single_array_udf(
         image_name=image_name,
         type=rest_api.models.UDFType.SINGLE_ARRAY,
         include_source_lines=include_source_lines,
+        async_req=async_req,
     )
 
 
@@ -273,6 +291,7 @@ def update_udf(
     image_name=None,
     type=None,
     include_source_lines=True,
+    async_req=False,
 ):
     """
 
@@ -282,6 +301,7 @@ def update_udf(
     :param image_name: optional image name
     :param type: type of udf, generic or single_array
     :param include_source_lines: disables sending sources lines of function along with udf
+    :param async_req: return future instead of results for async support
     :return:
     """
 
@@ -322,7 +342,7 @@ def update_udf(
             udf_model.exec_raw = source_lines
 
         api_instance.updated_registered_udf(
-            namespace=namespace, name=name, udf=udf_model
+            namespace=namespace, name=name, udf=udf_model, async_req=async_req
         )
 
     except GenApiException as exc:
@@ -330,7 +350,12 @@ def update_udf(
 
 
 def update_generic_udf(
-    func, name, namespace=None, image_name=None, include_source_lines=True
+    func,
+    name,
+    namespace=None,
+    image_name=None,
+    include_source_lines=True,
+    async_req=False,
 ):
     """
 
@@ -339,6 +364,7 @@ def update_generic_udf(
     :param namespace: namespace to register in
     :param image_name: optional image name
     :param include_source_lines: disables sending sources lines of function along with udf
+    :param async_req: return future instead of results for async support
     :return:
     """
     return update_udf(
@@ -348,11 +374,17 @@ def update_generic_udf(
         image_name=image_name,
         type=rest_api.models.UDFType.GENERIC,
         include_source_lines=include_source_lines,
+        async_req=async_req,
     )
 
 
 def update_single_array_udf(
-    func, name, namespace=None, image_name=None, include_source_lines=True
+    func,
+    name,
+    namespace=None,
+    image_name=None,
+    include_source_lines=True,
+    async_req=False,
 ):
     """
 
@@ -361,6 +393,7 @@ def update_single_array_udf(
     :param namespace: namespace to register in
     :param image_name: optional image name
     :param include_source_lines: disables sending sources lines of function along with udf
+    :param async_req: return future instead of results for async support
     :return:
     """
     return update_udf(
@@ -370,13 +403,15 @@ def update_single_array_udf(
         image_name=image_name,
         type=rest_api.models.UDFType.SINGLE_ARRAY,
         include_source_lines=include_source_lines,
+        async_req=async_req,
     )
 
 
-def info(name=None):
+def info(name=None, async_req=False):
     """
     Fetch info on a registered udf
     :param name: name of udf in "namespace/name" format
+    :param async_req: return future instead of results for async support
     :return: registered udf details
     """
     try:
@@ -396,31 +431,35 @@ def info(name=None):
 
             namespace = config.user.username
 
-        return api_instance.get_udf(namespace=namespace, name=name)
+        return api_instance.get_udf(namespace=namespace, name=name, async_req=async_req)
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def list_registered_udfs(namespace=None, search=None):
+def list_registered_udfs(namespace=None, search=None, async_req=False):
     """
     Fetch all registered udf user has access to
     :param namespace: namespace to filter to
     :param search: string search for udfs
+    :param async_req: return future instead of results for async support
     :return: registered udf details
     """
     try:
         api_instance = client.client.udf_api
 
-        return api_instance.get_ud_fs(namespace=namespace, search=search)
+        return api_instance.get_ud_fs(
+            namespace=namespace, search=search, async_req=async_req
+        )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def share(name=None, namespace=None):
+def share(name=None, namespace=None, async_req=False):
     """
     Share a registered udf
     :param name: name of udf in "namespace/name" format
     :param namespace: namespace to share array with
+    :param async_req: return future instead of results for async support
     :return: registered udf details
     """
     (udf_namespace, udf_name) = name.split("/")
@@ -447,16 +486,18 @@ def share(name=None, namespace=None):
             udf_sharing=rest_api.models.UDFSharing(
                 namespace=namespace, actions=[rest_api.models.UDFActions.FETCH_UDF]
             ),
+            async_req=async_req,
         )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def unshare(name=None, namespace=None):
+def unshare(name=None, namespace=None, async_req=False):
     """
     Share a registered udf
     :param name: name of udf in "namespace/name" format
     :param namespace: namespace to share array with
+    :param async_req: return future instead of results for async support
     :return: registered udf details
     """
     (udf_namespace, udf_name) = name.split("/")
@@ -481,6 +522,7 @@ def unshare(name=None, namespace=None):
             udf_namespace,
             udf_name,
             udf_sharing=rest_api.models.UDFSharing(namespace=namespace),
+            async_req=async_req,
         )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
