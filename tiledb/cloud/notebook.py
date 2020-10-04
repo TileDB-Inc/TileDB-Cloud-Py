@@ -10,12 +10,14 @@ def rename_notebook(
     uri,
     notebook_name=None,
     access_credentials_name=None,
+    async_req=False,
 ):
     """
     Update an array's info
     :param str namespace: optional username or organization array should be registered under. If unset will default to the user
     :param str array_name: name of notebook to rename to
     :param str access_credentials_name: optional name of access credentials to use, if left blank default for namespace will be used
+    :param async_req: return future instead of results for async support
     """
     api_instance = client.client.notebook_api
     (namespace, current_notebook_name) = array.split_uri(uri)
@@ -29,6 +31,7 @@ def rename_notebook(
                 uri=uri,
                 access_credentials_name=access_credentials_name,
             ),
+            async_req=async_req,
         )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None

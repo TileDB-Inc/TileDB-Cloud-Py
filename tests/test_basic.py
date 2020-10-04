@@ -28,13 +28,13 @@ class BasicTests(unittest.TestCase):
         self.assertIsNotNone(tasks())
 
     def test_list_arrays(self):
-        self.assertIsNone(client.list_arrays())
+        self.assertIsNone(client.list_arrays().arrays)
 
     def test_list_shared_arrays(self):
-        self.assertIsNone(client.list_shared_arrays())
+        self.assertIsNone(client.list_shared_arrays().arrays)
 
     def test_list_public_arrays(self):
-        self.assertTrue(len(client.list_public_arrays()) > 0)
+        self.assertTrue(len(client.list_public_arrays().arrays) > 0)
 
     def test_quickstart(self):
         with tiledb.open(

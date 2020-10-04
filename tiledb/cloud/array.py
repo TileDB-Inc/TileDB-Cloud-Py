@@ -53,9 +53,11 @@ class UDFResult(multiprocessing.pool.ApplyResult):
         return res
 
 
-def info(uri):
+def info(uri, async_req=False):
     """
     Returns the cloud metadata
+
+    :param async_req: return future instead of results for async support
 
     :return: metadata object
     """
@@ -63,30 +65,33 @@ def info(uri):
     api_instance = client.client.array_api
 
     try:
-        return api_instance.get_array_metadata(namespace=namespace, array=array_name)
+        return api_instance.get_array_metadata(
+            namespace=namespace, array=array_name, async_req=async_req
+        )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def list_shared_with(uri):
+def list_shared_with(uri, async_req=False):
     """Return array sharing policies"""
     (namespace, array_name) = split_uri(uri)
     api_instance = client.client.array_api
 
     try:
         return api_instance.get_array_sharing_policies(
-            namespace=namespace, array=array_name
+            namespace=namespace, array=array_name, async_req=async_req
         )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def share_array(uri, namespace, permissions):
+def share_array(uri, namespace, permissions, async_req=False):
     """
     Shares array with give namespace and permissions
 
     :param str namespace:
     :param list(str) permissions:
+    :param async_req: return future instead of results for async support
     :return:
     """
 
@@ -110,20 +115,22 @@ def share_array(uri, namespace, permissions):
             array_sharing=rest_api.models.ArraySharing(
                 namespace=namespace, actions=permissions
             ),
+            async_req=async_req,
         )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def unshare_array(uri, namespace):
+def unshare_array(uri, namespace, async_req=False):
     """
     Removes sharing of an array from given namespace
 
     :param str namespace: namespace to remove shared access to the array
+    :param async_req: return future instead of results for async support
     :return:
     :raises: :py:exc:
     """
-    return share_array(uri, namespace, list())
+    return share_array(uri, namespace, list(), async_req=async_req)
 
 
 def update_info(
@@ -132,6 +139,7 @@ def update_info(
     description=None,
     access_credentials_name=None,
     tags=None,
+    async_req=False,
 ):
     """
     Update an array's info
@@ -140,6 +148,7 @@ def update_info(
     :param str description: optional description
     :param str access_credentials_name: optional name of access credentials to use, if left blank default for namespace will be used
     :param list tags to update to
+    :param async_req: return future instead of results for async support
     """
     api_instance = client.client.array_api
     (namespace, current_array_name) = split_uri(uri)
@@ -155,13 +164,19 @@ def update_info(
                 access_credentials_name=access_credentials_name,
                 tags=tags,
             ),
+            async_req=async_req,
         )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
 def register_array(
-    uri, namespace=None, array_name=None, description=None, access_credentials_name=None
+    uri,
+    namespace=None,
+    array_name=None,
+    description=None,
+    access_credentials_name=None,
+    async_req=False,
 ):
     """
     Register this array with the tiledb cloud service
@@ -169,6 +184,7 @@ def register_array(
     :param str array_name: name of array
     :param str description: optional description
     :param str access_credentials_name: optional name of access credentials to use, if left blank default for namespace will be used
+    :param async_req: return future instead of results for async support
     """
     api_instance = client.client.array_api
 
@@ -193,25 +209,32 @@ def register_array(
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def deregister_array(uri):
+def deregister_array(uri, async_req=False):
     """
     Deregister the from the tiledb cloud service. This does not physically delete the array, it will remain
     in your bucket. All access to the array and cloud metadata will be removed.
+
+    :param async_req: return future instead of results for async support
+
+    :return success or error
     """
     (namespace, array_name) = split_uri(uri)
 
     api_instance = client.client.array_api
 
     try:
-        return api_instance.deregister_array(namespace=namespace, array=array_name)
+        return api_instance.deregister_array(
+            namespace=namespace, array=array_name, async_req=async_req
+        )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def array_activity(uri):
+def array_activity(uri, async_req=False):
     """
     Fetch array activity
     :param uri:
+    :param async_req: return future instead of results for async support
     :return:
     """
     (namespace, array_name) = split_uri(uri)
@@ -219,7 +242,9 @@ def array_activity(uri):
     api_instance = client.client.array_api
 
     try:
-        return api_instance.array_activity_log(namespace=namespace, array=array_name)
+        return api_instance.array_activity_log(
+            namespace=namespace, array=array_name, async_req=async_req
+        )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
@@ -229,6 +254,7 @@ def split_uri(uri):
     Split a URI into namespace and array name
 
     :param uri: uri to split into namespace and array name
+    :param async_req: return future instead of results for async support
     :return: tuple (namespace, array_name)
     """
     parsed = urllib.parse.urlparse(uri)
