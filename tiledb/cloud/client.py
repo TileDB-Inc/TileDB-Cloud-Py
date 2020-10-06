@@ -305,6 +305,13 @@ def find_organization_or_user_for_default_charges(user):
     """
 
     namespace_to_charge = user.username
+
+    if (
+        user.default_namespace_charged is not None
+        and user.default_namespace_charged != ""
+    ):
+        return user.default_namespace_charged
+
     for org in user.organizations:
         if org.organization_name != "public":
             namespace_to_charge = org.organization_name
