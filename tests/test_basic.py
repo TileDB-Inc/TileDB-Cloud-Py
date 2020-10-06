@@ -66,6 +66,23 @@ class BasicTests(unittest.TestCase):
                 numpy.sum(orig["a"]),
             )
 
+            # v2 UDFs
+            orig = A[:]
+            self.assertEqual(
+                A.apply(lambda x: numpy.sum(x["a"]), [(1, 4), (1, 4)], v2=True),
+                numpy.sum(orig["a"]),
+            )
+
+            orig = A.multi_index[[1, slice(2, 4)], [slice(1, 2), 4]]
+            self.assertEqual(
+                A.apply(
+                    lambda x: numpy.sum(x["a"]),
+                    [[1, slice(2, 4)], [(1, 2), 4]],
+                    v2=True,
+                ),
+                numpy.sum(orig["a"]),
+            )
+
     def test_quickstart_async(self):
         with tiledb.open(
             "tiledb://TileDB-Inc/quickstart_dense", ctx=tiledb.cloud.Ctx()
@@ -97,6 +114,29 @@ class BasicTests(unittest.TestCase):
                     lambda x: numpy.sum(x["a"]),
                     [[1, slice(2, 4)], [(1, 2), 4]],
                     task_name=task_name,
+                ).get(),
+                numpy.sum(orig["a"]),
+            )
+            # Validate task name was set
+            self.assertEqual(tiledb.cloud.last_udf_task().name, task_name)
+
+            # v2 UDFs
+            orig = A[:]
+            self.assertEqual(
+                A.apply_async(
+                    lambda x: numpy.sum(x["a"]), [(1, 4), (1, 4)], v2=True
+                ).get(),
+                numpy.sum(orig["a"]),
+            )
+
+            orig = A.multi_index[[1, slice(2, 4)], [slice(1, 2), 4]]
+            task_name = "test_quickstart_async_v2"
+            self.assertEqual(
+                A.apply_async(
+                    lambda x: numpy.sum(x["a"]),
+                    [[1, slice(2, 4)], [(1, 2), 4]],
+                    task_name=task_name,
+                    v2=True,
                 ).get(),
                 numpy.sum(orig["a"]),
             )

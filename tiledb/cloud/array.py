@@ -318,6 +318,7 @@ def apply_async(
     http_compressor="deflate",
     include_source_lines=True,
     task_name=None,
+    v2=False,
 ):
     """
     Apply a user defined function to an array asynchronous
@@ -330,6 +331,7 @@ def apply_async(
     :param http_compressor: set http compressor for results
     :param include_source_lines: disables sending sources lines of function along with udf
     :param str task_name: optional name to assign the task for logging and audit purposes
+    :param bool v2: use v2 array udfs
     :return: UDFResult object which is a future containing the results of the UDF
 
     **Example**
@@ -379,6 +381,9 @@ def apply_async(
         if http_compressor is not None:
             kwargs["accept_encoding"] = http_compressor
 
+        if v2:
+            kwargs["v2"] = True
+
         udf_model = rest_api.models.UDF(
             language=rest_api.models.UDFLanguage.PYTHON,
             _exec=pickledUDF,
@@ -422,6 +427,7 @@ def apply(
     image_name=None,
     http_compressor="deflate",
     task_name=None,
+    v2=False,
 ):
     """
     Apply a user defined function to an array synchronous
@@ -433,6 +439,7 @@ def apply(
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
     :param str task_name: optional name to assign the task for logging and audit purposes
+    :param bool v2: use v2 array udfs
     :return: UDFResult object which is a future containing the results of the UDF
 
     **Example**
@@ -453,4 +460,5 @@ def apply(
         image_name=image_name,
         http_compressor=http_compressor,
         task_name=task_name,
+        v2=v2,
     ).get()
