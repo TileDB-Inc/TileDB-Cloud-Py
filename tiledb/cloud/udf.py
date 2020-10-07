@@ -341,7 +341,7 @@ def update_udf(
         if source_lines is not None:
             udf_model.exec_raw = source_lines
 
-        api_instance.updated_registered_udf(
+        api_instance.update_udf_info(
             namespace=namespace, name=name, udf=udf_model, async_req=async_req
         )
 
