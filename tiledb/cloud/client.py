@@ -6,6 +6,7 @@ from . import config
 from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
 import urllib
+import os
 
 import tiledb
 
@@ -50,7 +51,13 @@ def Ctx(config=None):
 
 
 def login(
-    token="", username="", password="", host=None, verify_ssl=True, no_session=False
+    token="",
+    username="",
+    password="",
+    host=None,
+    verify_ssl=True,
+    no_session=False,
+    threads=os.cpu_count() * 2,
 ):
     """
     Login to cloud service
@@ -82,6 +89,7 @@ def login(
             host=host,
             verify_ssl=verify_ssl,
         )
+        client.pool_threads = threads
         client.update_clients()
         user_api = client.user_api
         session = user_api.get_session(remember_me=True)
@@ -98,6 +106,7 @@ def login(
     )
     config.save_configuration(config.default_config_file)
     config.logged_in = True
+    client.pool_threads = threads
     client.update_clients()
 
 
@@ -330,29 +339,67 @@ class Client:
         self.user_api = self.__get_user_api()
         self.notebook_api = self.__get_notebook_api()
 
-    def __init__(self):
+    def __init__(self, pool_threads=os.cpu_count() * 2):
+        self.pool_threads = pool_threads
+        self.update_clients()
+
+    def set_threads(self, threads=os.cpu_count() * 2):
+        """
+        Update thread pool sizes for async functionality
+        :param threads:
+        :return:
+        """
+        self.pool_threads = threads
         self.update_clients()
 
     def __get_array_api(self):
-        return rest_api.ArrayApi(rest_api.ApiClient(config.config))
+        return rest_api.ArrayApi(
+            rest_api.ApiClient(
+                configuration=config.config, pool_threads=self.pool_threads
+            )
+        )
 
     def __get_user_api(self):
-        return rest_api.UserApi(rest_api.ApiClient(config.config))
+        return rest_api.UserApi(
+            rest_api.ApiClient(
+                configuration=config.config, pool_threads=self.pool_threads
+            )
+        )
 
     def __get_organization_api(self):
-        return rest_api.OrganizationApi(rest_api.ApiClient(config.config))
+        return rest_api.OrganizationApi(
+            rest_api.ApiClient(
+                configuration=config.config, pool_threads=self.pool_threads
+            )
+        )
 
     def __get_udf_api(self):
-        return rest_api.UdfApi(rest_api.ApiClient(config.config))
+        return rest_api.UdfApi(
+            rest_api.ApiClient(
+                configuration=config.config, pool_threads=self.pool_threads
+            )
+        )
 
     def __get_tasks_api(self):
-        return rest_api.TasksApi(rest_api.ApiClient(config.config))
+        return rest_api.TasksApi(
+            rest_api.ApiClient(
+                configuration=config.config, pool_threads=self.pool_threads
+            )
+        )
 
     def __get_sql_api(self):
-        return rest_api.SqlApi(rest_api.ApiClient(config.config))
+        return rest_api.SqlApi(
+            rest_api.ApiClient(
+                configuration=config.config, pool_threads=self.pool_threads
+            )
+        )
 
     def __get_notebook_api(self):
-        return rest_api.NotebookApi(rest_api.ApiClient(config.config))
+        return rest_api.NotebookApi(
+            rest_api.ApiClient(
+                configuration=config.config, pool_threads=self.pool_threads
+            )
+        )
 
 
 client = Client()
