@@ -20,6 +20,8 @@ class DelayedClassTest(unittest.TestCase):
         node_2 = Delayed(lambda x: x * 2, name="node_2", local=True)(node_1)
         node_3 = Delayed(lambda x: x * 2, name="node_3", local=True)(node_2)
 
+        # Add timeout so we don't wait forever in CI
+        node_3.set_timeout(30)
         node_3.compute()
 
         self.assertEqual(node_1.result(), 2)
@@ -34,6 +36,8 @@ class DelayedClassTest(unittest.TestCase):
         node_2 = Delayed(lambda x: x * 2, name="node_2")(node_1)
         node_3 = Delayed(string_multi, local=True, name="node_3")(node_2, str="a")
 
+        # Add timeout so we don't wait forever in CI
+        node_3.set_timeout(30)
         node_3.compute()
 
         self.assertEqual(node_1.result(), 2)
@@ -52,6 +56,8 @@ class DelayedClassTest(unittest.TestCase):
             node_3, node_4, node_5
         )
 
+        # Add timeout so we don't wait forever in CI
+        node_6.set_timeout(30)
         node_6.compute()
 
         self.assertEqual(node_1.result(), 2)
@@ -67,6 +73,8 @@ class DelayedFailureTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             node = Delayed(lambda x: x * 2, local=True, name="node")(np.median)
 
+            # Add timeout so we don't wait forever in CI
+            node.set_timeout(30)
             node.compute()
 
             self.assertEqual(node.result(), None)
@@ -84,6 +92,8 @@ class DelayedFailureTest(unittest.TestCase):
             node2 = Delayed(lambda x: x * 2, local=True, name="node2")(10)
             node2.depends_on(node)
 
+            # Add timeout so we don't wait forever in CI
+            node2.set_timeout(30)
             node2.compute()
 
             self.assertEqual(node.result(), None)
@@ -130,6 +140,8 @@ class DelayedCloudApplyTest(unittest.TestCase):
             [(1, 4), (1, 4)]
         )
 
+        # Add timeout so we don't wait forever in CI
+        node.set_timeout(30)
         node.compute()
 
         self.assertEqual(node.result(), numpy.sum(orig["a"]))
@@ -139,6 +151,8 @@ class DelayedCloudApplyTest(unittest.TestCase):
 
         node = Delayed(lambda x: numpy.sum(x), name="node")([1, 4, 10, 40])
 
+        # Add timeout so we don't wait forever in CI
+        node.set_timeout(30)
         node.compute()
 
         self.assertEqual(node.result(), 55)
@@ -153,6 +167,8 @@ class DelayedCloudApplyTest(unittest.TestCase):
 
         node = DelayedSQL("select SUM(`a`) as a from `{}`".format(uri), name="node")
 
+        # Add timeout so we don't wait forever in CI
+        node.set_timeout(30)
         node.compute()
 
         self.assertEqual(node.result()["a"][0], numpy.sum(orig["a"]))
@@ -190,6 +206,8 @@ class DelayedCloudApplyTest(unittest.TestCase):
 
         node_exec = Delayed(mean, name="node_exec")([node_array_apply, node_sql])
 
+        # Add timeout so we don't wait forever in CI
+        node_exec.set_timeout(30)
         node_exec.compute()
 
         self.assertEqual(node_array_apply.result(), numpy.sum(orig["a"]))
@@ -236,6 +254,8 @@ class DelayedCloudApplyTest(unittest.TestCase):
             [node_local, node_array_apply, node_sql],
         )
 
+        # Add timeout so we don't wait forever in CI
+        node_exec.set_timeout(30)
         node_exec.compute()
 
         self.assertEqual(node_local.result(), 200)
@@ -283,6 +303,8 @@ class DelayedCloudApplyTest(unittest.TestCase):
             [node_local, node_array_apply, node_sql],
         )
 
+        # Add timeout so we don't wait forever in CI
+        node_exec.set_timeout(30)
         node_exec.compute()
 
         self.assertEqual(node_local.result(), 200)
