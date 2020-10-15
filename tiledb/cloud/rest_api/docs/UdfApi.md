@@ -4,6 +4,7 @@ All URIs are relative to *http://localhost/v1*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**delete_udf_info**](UdfApi.md#delete_udf_info) | **DELETE** /udf/{namespace}/{name} | 
 [**get_udf_info**](UdfApi.md#get_udf_info) | **GET** /udf/{namespace}/{name} | 
 [**get_udf_info_list**](UdfApi.md#get_udf_info_list) | **GET** /udfs | 
 [**get_udf_info_sharing_policies**](UdfApi.md#get_udf_info_sharing_policies) | **GET** /udf/{namespace}/{name}/share | 
@@ -13,6 +14,103 @@ Method | HTTP request | Description
 [**submit_udf**](UdfApi.md#submit_udf) | **POST** /arrays/{namespace}/{array}/udf/submit | 
 [**update_udf_info**](UdfApi.md#update_udf_info) | **PATCH** /udf/{namespace}/{name} | 
 
+
+# **delete_udf_info**
+> delete_udf_info(namespace, name)
+
+
+
+delete a registerd UDF, this will remove all sharing and can not be undone
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
+namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+name = 'name_example' # str | name to register udf under
+
+try:
+    api_instance.delete_udf_info(namespace, name)
+except ApiException as e:
+    print("Exception when calling UdfApi->delete_udf_info: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
+namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+name = 'name_example' # str | name to register udf under
+
+try:
+    api_instance.delete_udf_info(namespace, name)
+except ApiException as e:
+    print("Exception when calling UdfApi->delete_udf_info: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
+ **name** | **str**| name to register udf under | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**202** | UDF delete successfully |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_udf_info**
 > UDFInfo get_udf_info(namespace, name)
@@ -670,7 +768,7 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 udf = rest_api.UDF() # UDF | udf to run
 x_payer = 'x_payer_example' # str | Name of organization or user who should be charged for this request (optional)
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
-v2 = 'v2_example' # str | If this parameter is present array udfs will use v2 code (optional)
+v2 = 'v2_example' # str | flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs (optional)
 
 try:
     api_response = api_instance.submit_udf(namespace, array, udf, x_payer=x_payer, accept_encoding=accept_encoding, v2=v2)
@@ -705,7 +803,7 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 udf = rest_api.UDF() # UDF | udf to run
 x_payer = 'x_payer_example' # str | Name of organization or user who should be charged for this request (optional)
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
-v2 = 'v2_example' # str | If this parameter is present array udfs will use v2 code (optional)
+v2 = 'v2_example' # str | flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs (optional)
 
 try:
     api_response = api_instance.submit_udf(namespace, array, udf, x_payer=x_payer, accept_encoding=accept_encoding, v2=v2)
@@ -723,7 +821,7 @@ Name | Type | Description  | Notes
  **udf** | [**UDF**](UDF.md)| udf to run | 
  **x_payer** | **str**| Name of organization or user who should be charged for this request | [optional] 
  **accept_encoding** | **str**| Encoding to use | [optional] 
- **v2** | **str**| If this parameter is present array udfs will use v2 code | [optional] 
+ **v2** | **str**| flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs | [optional] 
 
 ### Return type
 

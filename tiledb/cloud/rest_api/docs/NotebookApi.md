@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**get_notebook_server_status**](NotebookApi.md#get_notebook_server_status) | **GET** /notebooks/server/{namespace}/status | 
 [**shutdown_notebook_server**](NotebookApi.md#shutdown_notebook_server) | **DELETE** /notebooks/server/{namespace} | 
+[**update_notebook_name**](NotebookApi.md#update_notebook_name) | **PATCH** /notebooks/{namespace}/{array}/rename | 
 
 
 # **get_notebook_server_status**
@@ -197,6 +198,106 @@ void (empty response body)
 |-------------|-------------|------------------|
 **204** | Notebook shutdown successfully |  -  |
 **404** | Notebook is not running |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **update_notebook_name**
+> update_notebook_name(namespace, array, notebook_metadata)
+
+
+
+update name on a notebok, moving related s3 object to new location
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.NotebookApi(rest_api.ApiClient(configuration))
+namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of notebook (array) that is url-encoded
+notebook_metadata = rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | notebook (array) metadata to update
+
+try:
+    api_instance.update_notebook_name(namespace, array, notebook_metadata)
+except ApiException as e:
+    print("Exception when calling NotebookApi->update_notebook_name: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+configuration = rest_api.Configuration()
+# Configure API key authorization: ApiKeyAuth
+configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+configuration = rest_api.Configuration()
+# Configure HTTP basic authorization: BasicAuth
+configuration.username = 'YOUR_USERNAME'
+configuration.password = 'YOUR_PASSWORD'
+
+# Defining host is optional and default to http://localhost/v1
+configuration.host = "http://localhost/v1"
+# Create an instance of the API class
+api_instance = rest_api.NotebookApi(rest_api.ApiClient(configuration))
+namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of notebook (array) that is url-encoded
+notebook_metadata = rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | notebook (array) metadata to update
+
+try:
+    api_instance.update_notebook_name(namespace, array, notebook_metadata)
+except ApiException as e:
+    print("Exception when calling NotebookApi->update_notebook_name: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
+ **array** | **str**| name/uri of notebook (array) that is url-encoded | 
+ **notebook_metadata** | [**ArrayInfoUpdate**](ArrayInfoUpdate.md)| notebook (array) metadata to update | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**204** | notebook name updated successfully |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

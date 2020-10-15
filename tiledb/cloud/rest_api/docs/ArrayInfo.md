@@ -4,6 +4,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **str** | unique id of registered array | [optional] 
+**file_type** | [**FileType**](FileType.md) |  | [optional] 
+**file_properties** | **dict(str, str)** | map of file properties created for this array | [optional] 
 **uri** | **str** | uri of array | [optional] 
 **namespace** | **str** | namespace array is in | [optional] 
 **size** | **float** | size in bytes of array | [optional] 
