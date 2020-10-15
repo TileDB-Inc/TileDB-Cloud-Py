@@ -147,7 +147,9 @@ def update_info(
     :param str array_name: name of array to rename to
     :param str description: optional description
     :param str access_credentials_name: optional name of access credentials to use, if left blank default for namespace will be used
-    :param list tags to update to
+    :param list tags: to update to
+    :param str file_type: array represents give file type
+    :param str file_properties: set file properties on array
     :param async_req: return future instead of results for async support
     """
     api_instance = client.client.array_api
@@ -163,6 +165,31 @@ def update_info(
                 uri=uri,
                 access_credentials_name=access_credentials_name,
                 tags=tags,
+            ),
+            async_req=async_req,
+        )
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
+
+
+def update_file_properties(uri, file_type=None, file_properties=None, async_req=False):
+    """
+    Update an Array to indicate its a file and has given properties. Any properties set are returned with the array info
+    :param str uri: uri of array to update
+    :param str file_type: file type to set
+    :param dict file_properties: dictionary of properties to set
+    :return:
+    """
+
+    api_instance = client.client.array_api
+    (namespace, current_array_name) = split_uri(uri)
+
+    try:
+        return api_instance.update_array_metadata(
+            namespace=namespace,
+            array=current_array_name,
+            array_metadata=rest_api.models.ArrayInfoUpdate(
+                file_type=file_type, file_properties=file_properties
             ),
             async_req=async_req,
         )
