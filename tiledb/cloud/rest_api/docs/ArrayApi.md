@@ -141,7 +141,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **arrays_browser_owned_get**
-> ArrayBrowserData arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
+> ArrayBrowserData arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag)
 
 
 
@@ -177,9 +177,10 @@ namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
 tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
+exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 
 try:
-    api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
+    api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->arrays_browser_owned_get: %s\n" % e)
@@ -213,9 +214,10 @@ namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
 tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
+exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 
 try:
-    api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
+    api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->arrays_browser_owned_get: %s\n" % e)
@@ -232,6 +234,7 @@ Name | Type | Description  | Notes
  **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 
  **permissions** | **str**| permissions valid values include read, read_write, write, admin | [optional] 
  **tag** | [**list[str]**](str.md)| tag to search for, more than one can be included | [optional] 
+ **exclude_tag** | [**list[str]**](str.md)| tags to exclude matching array in results, more than one can be included | [optional] 
 
 ### Return type
 
@@ -346,7 +349,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **arrays_browser_public_get**
-> ArrayBrowserData arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
+> ArrayBrowserData arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag)
 
 
 
@@ -382,9 +385,10 @@ namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
 tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
+exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 
 try:
-    api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
+    api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->arrays_browser_public_get: %s\n" % e)
@@ -418,9 +422,10 @@ namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
 tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
+exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 
 try:
-    api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
+    api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->arrays_browser_public_get: %s\n" % e)
@@ -437,6 +442,7 @@ Name | Type | Description  | Notes
  **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 
  **permissions** | **str**| permissions valid values include read, read_write, write, admin | [optional] 
  **tag** | [**list[str]**](str.md)| tag to search for, more than one can be included | [optional] 
+ **exclude_tag** | [**list[str]**](str.md)| tags to exclude matching array in results, more than one can be included | [optional] 
 
 ### Return type
 
@@ -551,7 +557,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **arrays_browser_shared_get**
-> ArrayBrowserData arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
+> ArrayBrowserData arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag)
 
 
 
@@ -587,9 +593,10 @@ namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
 tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
+exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 
 try:
-    api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
+    api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->arrays_browser_shared_get: %s\n" % e)
@@ -623,9 +630,10 @@ namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
 tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
+exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 
 try:
-    api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag)
+    api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ArrayApi->arrays_browser_shared_get: %s\n" % e)
@@ -642,6 +650,7 @@ Name | Type | Description  | Notes
  **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 
  **permissions** | **str**| permissions valid values include read, read_write, write, admin | [optional] 
  **tag** | [**list[str]**](str.md)| tag to search for, more than one can be included | [optional] 
+ **exclude_tag** | [**list[str]**](str.md)| tags to exclude matching array in results, more than one can be included | [optional] 
 
 ### Return type
 
