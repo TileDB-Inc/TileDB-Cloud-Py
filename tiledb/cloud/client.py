@@ -114,7 +114,10 @@ def list_public_arrays(
     namespace=None,
     permissions=None,
     tag=None,
+    exclude_tag=None,
     search=None,
+    file_type=None,
+    exclude_file_type=None,
     page=None,
     per_page=None,
     async_req=False,
@@ -125,7 +128,10 @@ def list_public_arrays(
     :param str namespace: list arrays in single namespace
     :param list permissions: filter arrays for given permissions
     :param list tag: zero or more tags to filter on
+    :param list exclude_tag: zero or more tags to filter on
     :param str search: search string
+    :param list file_type: zero or more file_types to filter on
+    :param list exclude_file_type: zero or more file_types to filter on
     :param int page: optional page for pagination
     :param int per_page: optional per_page for pagination
     :param async_req: return future instead of results for async support
@@ -144,8 +150,14 @@ def list_public_arrays(
             kwargs["search"] = search
         if tag is not None:
             kwargs["tag"] = tag
+        if exclude_tag is not None:
+            kwargs["exclude_tag"] = exclude_tag
         if permissions is not None:
             kwargs["permissions"] = permissions
+        if file_type is not None:
+            kwargs["file_type"] = file_type
+        if exclude_file_type is not None:
+            kwargs["exclude_file_type"] = exclude_file_type
         if page is not None:
             kwargs["page"] = page
         if per_page is not None:
@@ -163,7 +175,10 @@ def list_shared_arrays(
     namespace=None,
     permissions=None,
     tag=None,
+    exclude_tag=None,
     search=None,
+    file_type=None,
+    exclude_file_type=None,
     page=None,
     per_page=None,
     async_req=False,
@@ -174,7 +189,10 @@ def list_shared_arrays(
     :param str namespace: list arrays in single namespace
     :param list permissions: filter arrays for given permissions
     :param list tag: zero or more tags to filter on
+    :param list exclude_tag: zero or more tags to filter on
     :param str search: search string
+    :param list file_type: zero or more file_types to filter on
+    :param list exclude_file_type: zero or more file_types to filter on
     :param int page: optional page for pagination
     :param int per_page: optional per_page for pagination
     :param async_req: return future instead of results for async support
@@ -193,8 +211,14 @@ def list_shared_arrays(
             kwargs["search"] = search
         if tag is not None:
             kwargs["tag"] = tag
+        if exclude_tag is not None:
+            kwargs["exclude_tag"] = exclude_tag
         if permissions is not None:
             kwargs["permissions"] = permissions
+        if file_type is not None:
+            kwargs["file_type"] = file_type
+        if exclude_file_type is not None:
+            kwargs["exclude_file_type"] = exclude_file_type
         if page is not None:
             kwargs["page"] = page
         if per_page is not None:
@@ -212,7 +236,10 @@ def list_arrays(
     namespace=None,
     permissions=None,
     tag=None,
+    exclude_tag=None,
     search=None,
+    file_type=None,
+    exclude_file_type=None,
     page=None,
     per_page=None,
     async_req=False,
@@ -223,7 +250,10 @@ def list_arrays(
     :param str namespace: list arrays in single namespace
     :param list permissions: filter arrays for given permissions
     :param list tag: zero or more tags to filter on
+    :param list exclude_tag: zero or more tags to filter on
     :param str search: search string
+    :param list file_type: zero or more file_types to filter on
+    :param list exclude_file_type: zero or more file_types to filter on
     :param int page: optional page for pagination
     :param int per_page: optional per_page for pagination
     :param async_req: return future instead of results for async support
@@ -242,8 +272,14 @@ def list_arrays(
             kwargs["search"] = search
         if tag is not None:
             kwargs["tag"] = tag
+        if exclude_tag is not None:
+            kwargs["exclude_tag"] = exclude_tag
         if permissions is not None:
             kwargs["permissions"] = permissions
+        if file_type is not None:
+            kwargs["file_type"] = file_type
+        if exclude_file_type is not None:
+            kwargs["exclude_file_type"] = exclude_file_type
         if page is not None:
             kwargs["page"] = page
         if per_page is not None:
