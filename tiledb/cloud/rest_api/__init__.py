@@ -101,7 +101,6 @@ from tiledb.cloud.rest_api.models.layout import Layout
 from tiledb.cloud.rest_api.models.max_buffer_sizes import MaxBufferSizes
 from tiledb.cloud.rest_api.models.namespace_actions import NamespaceActions
 from tiledb.cloud.rest_api.models.non_empty_domain import NonEmptyDomain
-from tiledb.cloud.rest_api.models.notebook_settings import NotebookSettings
 from tiledb.cloud.rest_api.models.notebook_status import NotebookStatus
 from tiledb.cloud.rest_api.models.organization import Organization
 from tiledb.cloud.rest_api.models.organization_roles import OrganizationRoles
