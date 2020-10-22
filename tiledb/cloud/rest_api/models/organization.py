@@ -43,7 +43,7 @@ class Organization(object):
         "num_of_arrays": "float",
         "enabled_features": "list[str]",
         "unpaid_subscription": "bool",
-        "notebook_settings": "NotebookSettings",
+        "default_s3_path": "str",
     }
 
     attribute_map = {
@@ -59,7 +59,7 @@ class Organization(object):
         "num_of_arrays": "num_of_arrays",
         "enabled_features": "enabled_features",
         "unpaid_subscription": "unpaid_subscription",
-        "notebook_settings": "notebook_settings",
+        "default_s3_path": "default_s3_path",
     }
 
     def __init__(
@@ -76,7 +76,7 @@ class Organization(object):
         num_of_arrays=None,
         enabled_features=None,
         unpaid_subscription=None,
-        notebook_settings=None,
+        default_s3_path=None,
     ):  # noqa: E501
         """Organization - a model defined in OpenAPI"""  # noqa: E501
 
@@ -92,7 +92,7 @@ class Organization(object):
         self._num_of_arrays = None
         self._enabled_features = None
         self._unpaid_subscription = None
-        self._notebook_settings = None
+        self._default_s3_path = None
         self.discriminator = None
 
         if id is not None:
@@ -118,8 +118,8 @@ class Organization(object):
             self.enabled_features = enabled_features
         if unpaid_subscription is not None:
             self.unpaid_subscription = unpaid_subscription
-        if notebook_settings is not None:
-            self.notebook_settings = notebook_settings
+        if default_s3_path is not None:
+            self.default_s3_path = default_s3_path
 
     @property
     def id(self):
@@ -410,25 +410,27 @@ class Organization(object):
         self._unpaid_subscription = unpaid_subscription
 
     @property
-    def notebook_settings(self):
-        """Gets the notebook_settings of this Organization.  # noqa: E501
+    def default_s3_path(self):
+        """Gets the default_s3_path of this Organization.  # noqa: E501
 
+        default s3 path to store newly created notebooks  # noqa: E501
 
-        :return: The notebook_settings of this Organization.  # noqa: E501
-        :rtype: NotebookSettings
+        :return: The default_s3_path of this Organization.  # noqa: E501
+        :rtype: str
         """
-        return self._notebook_settings
+        return self._default_s3_path
 
-    @notebook_settings.setter
-    def notebook_settings(self, notebook_settings):
-        """Sets the notebook_settings of this Organization.
+    @default_s3_path.setter
+    def default_s3_path(self, default_s3_path):
+        """Sets the default_s3_path of this Organization.
 
+        default s3 path to store newly created notebooks  # noqa: E501
 
-        :param notebook_settings: The notebook_settings of this Organization.  # noqa: E501
-        :type: NotebookSettings
+        :param default_s3_path: The default_s3_path of this Organization.  # noqa: E501
+        :type: str
         """
 
-        self._notebook_settings = notebook_settings
+        self._default_s3_path = default_s3_path
 
     def to_dict(self):
         """Returns the model properties as a dict"""

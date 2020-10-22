@@ -218,7 +218,6 @@ Class | Method | HTTP request | Description
  - [MaxBufferSizes](rest_api/docs/MaxBufferSizes.md)
  - [NamespaceActions](rest_api/docs/NamespaceActions.md)
  - [NonEmptyDomain](rest_api/docs/NonEmptyDomain.md)
- - [NotebookSettings](rest_api/docs/NotebookSettings.md)
  - [NotebookStatus](rest_api/docs/NotebookStatus.md)
  - [Organization](rest_api/docs/Organization.md)
  - [OrganizationRoles](rest_api/docs/OrganizationRoles.md)
