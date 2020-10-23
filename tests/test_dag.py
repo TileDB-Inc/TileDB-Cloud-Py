@@ -101,6 +101,48 @@ class DAGClassTest(unittest.TestCase):
         self.assertEqual(node_5.result(), 8)
         self.assertEqual(node_6.result(), 24)
 
+    def test_end_nodes_dag(self):
+        d = dag.DAG()
+
+        node_1 = d.add_node(np.median, [1, 2, 3])
+        node_1.name = "multi_node_1"
+        l = lambda x: x * 2
+        node_2 = d.add_node(l, node_1)
+        node_2.name = "multi_node_2"
+        node_3 = d.add_node(l, node_2)
+        node_3.name = "multi_node_3"
+        node_4 = d.add_node(l, node_2)
+        node_4.name = "multi_node_4"
+        node_5 = d.add_node(l, node_2)
+        node_5.name = "multi_node_5"
+
+        node_6 = d.add_node(lambda *x: np.sum(x), node_3, node_4, node_5)
+        node_6.name = "multi_node_6"
+
+        d.compute()
+
+        # Wait for dag to complete
+        d.wait(30)
+
+        self.assertEqual(node_1.result(), 2)
+        self.assertEqual(node_2.result(), 4)
+        self.assertEqual(node_3.result(), 8)
+        self.assertEqual(node_4.result(), 8)
+        self.assertEqual(node_5.result(), 8)
+        self.assertEqual(node_6.result(), 24)
+
+        end_nodes = d.end_nodes()
+        self.assertEqual(1, len(end_nodes))
+        self.assertEqual(node_6.id, end_nodes[0].id)
+
+        end_results = d.end_results()
+        self.assertEqual(1, len(end_results))
+        self.assertEqual(node_6.result(), end_results[node_6.id])
+
+        end_results = d.end_results_by_name()
+        self.assertEqual(1, len(end_results))
+        self.assertEqual(node_6.result(), end_results[node_6.name])
+
 
 class DAGFailureTest(unittest.TestCase):
     def test_dag_failure(self):
