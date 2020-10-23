@@ -837,3 +837,57 @@ class DAG:
             self.add_update_callback(self.__update_dag_plotly_graph)
 
         return fig
+
+    def end_nodes(self):
+        """
+        Find all ends nodes
+
+        dag = DAG()
+        dag.add_node(Node())
+
+        end_nodes = dag.end_nodes()
+
+        :return: list of root nodes
+        """
+        ends = []
+        for node in self.nodes.values():
+            if node.children is None or len(node.children) == 0:
+                ends.append(node)
+
+        return ends
+
+    def end_results(self):
+        """
+        Get all end results, will block if all results are not ready
+
+        dag = DAG()
+        dag.add_node(Node())
+
+        end_results = dag.end_results()
+
+        :return: map of results by node ID
+        """
+
+        results = {}
+        for node in self.end_nodes():
+            results[node.id] = node.result()
+
+        return results
+
+    def end_results_by_name(self):
+        """
+        Get all end results, will block if all results are not ready
+
+        dag = DAG()
+        dag.add_node(Node())
+
+        end_results = dag.end_results_by_name()
+
+        :return: map of results by node name
+        """
+
+        results = {}
+        for node in self.end_nodes():
+            results[node.name] = node.result()
+
+        return results
