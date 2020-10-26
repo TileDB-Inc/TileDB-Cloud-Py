@@ -40,7 +40,7 @@ class CloudArray(object):
 
         """
         return array.apply_async(
-            uri=self.uri,
+            uri=self.uri,  # pylint: disable=E1101
             func=func,
             ranges=ranges,
             name=name,
