@@ -407,22 +407,22 @@ def update_single_array_udf(
     )
 
 
-def info(name=None, async_req=False):
+def info(namespace=None, name=None, async_req=False):
     """
     Fetch info on a registered udf
-    :param name: name of udf in "namespace/name" format
+    :param namespace: namespace to filter to
+    :param name: name of udf to get info
     :param async_req: return future instead of results for async support
     :return: registered udf details
     """
     try:
         api_instance = client.client.udf_api
-        (namespace, udf_name) = name.split("/")
 
         if not (
             namespace is not None
-            and udf_name is not None
+            and name is not None
             and namespace != ""
-            and udf_name != ""
+            and name != ""
         ):
             # If the namespace is not set, we will default to the user's namespace
             # Fetch the client profile for username if it is not already cached
