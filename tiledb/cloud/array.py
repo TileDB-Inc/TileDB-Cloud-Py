@@ -346,10 +346,12 @@ def apply_async(
     include_source_lines=True,
     task_name=None,
     v2=True,
+    **kwargs
 ):
     """
     Apply a user defined function to an array asynchronous
 
+    :param uri: array to apply on
     :param func: user function to run
     :param ranges: ranges to issue query on
     :param attrs: list of attributes or dimensions to fetch in query
@@ -359,6 +361,7 @@ def apply_async(
     :param include_source_lines: disables sending sources lines of function along with udf
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param bool v2: use v2 array udfs
+    :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
 
     **Example**
@@ -400,6 +403,15 @@ def apply_async(
 
     ranges = rest_api.models.UDFRanges(layout=converted_layout, ranges=ranges)
 
+    arguments = None
+    if kwargs is not None and len(kwargs) > 0:
+        arguments = []
+        if len(kwargs) > 0:
+            arguments.append(kwargs)
+        arguments = tuple(arguments)
+        arguments = cloudpickle.dumps(arguments, protocol=udf.tiledb_cloud_protocol)
+        arguments = base64.b64encode(arguments).decode("ascii")
+
     if image_name is None:
         image_name = "default"
     try:
@@ -422,6 +434,7 @@ def apply_async(
             ),
             image_name=image_name,
             task_name=task_name,
+            argument=arguments,
         )
 
         if pickledUDF is not None:
@@ -454,10 +467,12 @@ def apply(
     http_compressor="deflate",
     task_name=None,
     v2=True,
+    **kwargs
 ):
     """
     Apply a user defined function to an array synchronous
 
+    :param uri: array to apply on
     :param func: user function to run
     :param ranges: ranges to issue query on
     :param attrs: list of attributes or dimensions to fetch in query
@@ -466,6 +481,7 @@ def apply(
     :param http_compressor: set http compressor for results
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param bool v2: use v2 array udfs
+    :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
 
     **Example**
@@ -487,4 +503,5 @@ def apply(
         http_compressor=http_compressor,
         task_name=task_name,
         v2=v2,
+        **kwargs,
     ).get()

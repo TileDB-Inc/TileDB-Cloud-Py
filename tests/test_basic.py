@@ -83,6 +83,21 @@ class BasicTests(unittest.TestCase):
                 numpy.sum(orig["a"]),
             )
 
+    def test_quickstart_arbitrary_parameters(self):
+        with tiledb.open(
+            "tiledb://TileDB-Inc/quickstart_sparse", ctx=tiledb.cloud.Ctx()
+        ) as A:
+            print("quickstart_sparse:")
+            print(A[:])
+
+            def hello(data_ignored, param):
+                return "hello " + param
+
+            self.assertEqual(
+                A.apply(hello, [[1, slice(2, 4)], [(1, 2), 4]], v2=True, param="world"),
+                "hello world",
+            )
+
     def test_quickstart_async(self):
         with tiledb.open(
             "tiledb://TileDB-Inc/quickstart_dense", ctx=tiledb.cloud.Ctx()

@@ -15,6 +15,7 @@ class CloudArray(object):
         http_compressor="deflate",
         task_name=None,
         v2=False,
+        **kwargs
     ):
         """
         Apply a user defined function to an array asynchronous
@@ -27,6 +28,7 @@ class CloudArray(object):
         :param http_compressor: set http compressor for results
         :param str task_name: optional name to assign the task for logging and audit purposes
         :param bool v2: use v2 array udfs
+        :param kwargs: named arguments to pass to function
         :return: UDFResult object which is a future containing the results of the UDF
 
         **Example**
@@ -50,6 +52,7 @@ class CloudArray(object):
             http_compressor=http_compressor,
             task_name=task_name,
             v2=v2,
+            **kwargs,
         )
 
     def apply(
@@ -63,6 +66,7 @@ class CloudArray(object):
         http_compressor="deflate",
         task_name=None,
         v2=False,
+        **kwargs
     ):
         """
         Apply a user defined function to an array
@@ -74,6 +78,7 @@ class CloudArray(object):
         :param http_compressor: set http compressor for results
         :param str task_name: optional name to assign the task for logging and audit purposes
         :param bool v2: use v2 array udfs
+        :param kwargs: named arguments to pass to function
         :return: results of the UDF
         """
         return self.apply_async(
@@ -86,4 +91,5 @@ class CloudArray(object):
             http_compressor=http_compressor,
             task_name=task_name,
             v2=v2,
+            **kwargs,
         ).get()
