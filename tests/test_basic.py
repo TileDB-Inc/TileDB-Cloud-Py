@@ -90,7 +90,7 @@ class BasicTests(unittest.TestCase):
             print("quickstart_sparse:")
             print(A[:])
 
-            def hello(data_ignored, param):
+            def hello(data_ignored, param=""):
                 return "hello " + param
 
             self.assertEqual(
