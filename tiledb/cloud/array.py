@@ -345,7 +345,7 @@ def apply_async(
     http_compressor="deflate",
     include_source_lines=True,
     task_name=None,
-    v2=False,
+    v2=True,
 ):
     """
     Apply a user defined function to an array asynchronous
@@ -408,8 +408,7 @@ def apply_async(
         if http_compressor is not None:
             kwargs["accept_encoding"] = http_compressor
 
-        if v2:
-            kwargs["v2"] = True
+        kwargs["v2"] = v2
 
         udf_model = rest_api.models.UDF(
             language=rest_api.models.UDFLanguage.PYTHON,
@@ -454,7 +453,7 @@ def apply(
     image_name=None,
     http_compressor="deflate",
     task_name=None,
-    v2=False,
+    v2=True,
 ):
     """
     Apply a user defined function to an array synchronous
