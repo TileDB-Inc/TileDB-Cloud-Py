@@ -25,7 +25,7 @@ def Config(cfg_dict=None):
 
     for r in restricted:
         if r in cfg_dict:
-            raise ValueError("Unexpected config parameter '{r}' to cloud.Config")
+            raise ValueError(f"Unexpected config parameter '{r}' to cloud.Config")
 
     host_parsed = urllib.parse.urlparse(config.config.host)
     cfg_dict["rest.server_address"] = urllib.parse.urlunparse(
