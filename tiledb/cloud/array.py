@@ -416,7 +416,9 @@ def apply_async(
             ranges=ranges,
             buffers=attrs,
             version="{}.{}.{}".format(
-                sys.version_info.major, sys.version_info.minor, sys.version_info.micro,
+                sys.version_info.major,
+                sys.version_info.minor,
+                sys.version_info.micro,
             ),
             image_name=image_name,
             task_name=task_name,

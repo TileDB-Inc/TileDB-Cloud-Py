@@ -7,7 +7,10 @@ from .rest_api import rest
 
 
 def rename_notebook(
-    uri, notebook_name=None, access_credentials_name=None, async_req=False,
+    uri,
+    notebook_name=None,
+    access_credentials_name=None,
+    async_req=False,
 ):
     """
     Update an array's info

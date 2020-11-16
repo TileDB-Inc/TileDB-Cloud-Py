@@ -297,7 +297,12 @@ class Configuration(six.with_metaclass(TypeWithDefault, object)):
 
         :return: An array of host settings
         """
-        return [{"url": "/v1", "description": "No description provided",}]
+        return [
+            {
+                "url": "/v1",
+                "description": "No description provided",
+            }
+        ]
 
     def get_host_from_settings(self, index, variables={}):
         """Gets host URL based on the index and variables
