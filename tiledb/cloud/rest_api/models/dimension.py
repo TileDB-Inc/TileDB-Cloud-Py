@@ -33,24 +33,33 @@ class Dimension(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'name': 'str',
-        'type': 'Datatype',
-        'domain': 'DomainArray',
-        'null_tile_extent': 'bool',
-        'tile_extent': 'DimensionTileExtent',
-        'filter_pipeline': 'FilterPipeline'
+        "name": "str",
+        "type": "Datatype",
+        "domain": "DomainArray",
+        "null_tile_extent": "bool",
+        "tile_extent": "DimensionTileExtent",
+        "filter_pipeline": "FilterPipeline",
     }
 
     attribute_map = {
-        'name': 'name',
-        'type': 'type',
-        'domain': 'domain',
-        'null_tile_extent': 'nullTileExtent',
-        'tile_extent': 'tileExtent',
-        'filter_pipeline': 'filterPipeline'
+        "name": "name",
+        "type": "type",
+        "domain": "domain",
+        "null_tile_extent": "nullTileExtent",
+        "tile_extent": "tileExtent",
+        "filter_pipeline": "filterPipeline",
     }
 
-    def __init__(self, name=None, type=None, domain=None, null_tile_extent=None, tile_extent=None, filter_pipeline=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        name=None,
+        type=None,
+        domain=None,
+        null_tile_extent=None,
+        tile_extent=None,
+        filter_pipeline=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """Dimension - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -115,8 +124,12 @@ class Dimension(object):
         :param type: The type of this Dimension.  # noqa: E501
         :type: Datatype
         """
-        if self.local_vars_configuration.client_side_validation and type is None:  # noqa: E501
-            raise ValueError("Invalid value for `type`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and type is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `type`, must not be `None`"
+            )  # noqa: E501
 
         self._type = type
 
@@ -138,8 +151,12 @@ class Dimension(object):
         :param domain: The domain of this Dimension.  # noqa: E501
         :type: DomainArray
         """
-        if self.local_vars_configuration.client_side_validation and domain is None:  # noqa: E501
-            raise ValueError("Invalid value for `domain`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and domain is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `domain`, must not be `None`"
+            )  # noqa: E501
 
         self._domain = domain
 
@@ -163,8 +180,13 @@ class Dimension(object):
         :param null_tile_extent: The null_tile_extent of this Dimension.  # noqa: E501
         :type: bool
         """
-        if self.local_vars_configuration.client_side_validation and null_tile_extent is None:  # noqa: E501
-            raise ValueError("Invalid value for `null_tile_extent`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and null_tile_extent is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `null_tile_extent`, must not be `None`"
+            )  # noqa: E501
 
         self._null_tile_extent = null_tile_extent
 
@@ -217,18 +239,20 @@ class Dimension(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

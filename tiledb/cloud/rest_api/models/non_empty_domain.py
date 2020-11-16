@@ -32,17 +32,13 @@ class NonEmptyDomain(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'non_empty_domain': 'DomainArray',
-        'is_empty': 'bool'
-    }
+    openapi_types = {"non_empty_domain": "DomainArray", "is_empty": "bool"}
 
-    attribute_map = {
-        'non_empty_domain': 'nonEmptyDomain',
-        'is_empty': 'isEmpty'
-    }
+    attribute_map = {"non_empty_domain": "nonEmptyDomain", "is_empty": "isEmpty"}
 
-    def __init__(self, non_empty_domain=None, is_empty=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self, non_empty_domain=None, is_empty=None, local_vars_configuration=None
+    ):  # noqa: E501
         """NonEmptyDomain - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -73,8 +69,13 @@ class NonEmptyDomain(object):
         :param non_empty_domain: The non_empty_domain of this NonEmptyDomain.  # noqa: E501
         :type: DomainArray
         """
-        if self.local_vars_configuration.client_side_validation and non_empty_domain is None:  # noqa: E501
-            raise ValueError("Invalid value for `non_empty_domain`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and non_empty_domain is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `non_empty_domain`, must not be `None`"
+            )  # noqa: E501
 
         self._non_empty_domain = non_empty_domain
 
@@ -98,8 +99,12 @@ class NonEmptyDomain(object):
         :param is_empty: The is_empty of this NonEmptyDomain.  # noqa: E501
         :type: bool
         """
-        if self.local_vars_configuration.client_side_validation and is_empty is None:  # noqa: E501
-            raise ValueError("Invalid value for `is_empty`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and is_empty is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `is_empty`, must not be `None`"
+            )  # noqa: E501
 
         self._is_empty = is_empty
 
@@ -110,18 +115,20 @@ class NonEmptyDomain(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

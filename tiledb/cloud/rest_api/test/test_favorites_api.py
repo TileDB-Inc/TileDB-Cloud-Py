@@ -29,29 +29,21 @@ class TestFavoritesApi(unittest.TestCase):
         pass
 
     def test_delete_favorite_id(self):
-        """Test case for delete_favorite_id
-
-        """
+        """Test case for delete_favorite_id"""
         pass
 
     def test_get_favorite(self):
-        """Test case for get_favorite
-
-        """
+        """Test case for get_favorite"""
         pass
 
     def test_get_favorites(self):
-        """Test case for get_favorites
-
-        """
+        """Test case for get_favorites"""
         pass
 
     def test_post_favorite(self):
-        """Test case for post_favorite
-
-        """
+        """Test case for post_favorite"""
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

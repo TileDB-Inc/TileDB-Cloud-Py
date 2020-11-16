@@ -23,95 +23,69 @@ class TestOrganizationApi(unittest.TestCase):
     """OrganizationApi unit test stubs"""
 
     def setUp(self):
-        self.api = tiledb.cloud.rest_api.api.organization_api.OrganizationApi()  # noqa: E501
+        self.api = (
+            tiledb.cloud.rest_api.api.organization_api.OrganizationApi()
+        )  # noqa: E501
 
     def tearDown(self):
         pass
 
     def test_add_aws_access_credentials(self):
-        """Test case for add_aws_access_credentials
-
-        """
+        """Test case for add_aws_access_credentials"""
         pass
 
     def test_add_user_to_organization(self):
-        """Test case for add_user_to_organization
-
-        """
+        """Test case for add_user_to_organization"""
         pass
 
     def test_check_aws_access_credentials(self):
-        """Test case for check_aws_access_credentials
-
-        """
+        """Test case for check_aws_access_credentials"""
         pass
 
     def test_check_aws_access_credentials_by_name(self):
-        """Test case for check_aws_access_credentials_by_name
-
-        """
+        """Test case for check_aws_access_credentials_by_name"""
         pass
 
     def test_create_organization(self):
-        """Test case for create_organization
-
-        """
+        """Test case for create_organization"""
         pass
 
     def test_delete_aws_access_credentials(self):
-        """Test case for delete_aws_access_credentials
-
-        """
+        """Test case for delete_aws_access_credentials"""
         pass
 
     def test_delete_organization(self):
-        """Test case for delete_organization
-
-        """
+        """Test case for delete_organization"""
         pass
 
     def test_delete_user_from_organization(self):
-        """Test case for delete_user_from_organization
-
-        """
+        """Test case for delete_user_from_organization"""
         pass
 
     def test_get_all_organizations(self):
-        """Test case for get_all_organizations
-
-        """
+        """Test case for get_all_organizations"""
         pass
 
     def test_get_organization(self):
-        """Test case for get_organization
-
-        """
+        """Test case for get_organization"""
         pass
 
     def test_get_organization_user(self):
-        """Test case for get_organization_user
-
-        """
+        """Test case for get_organization_user"""
         pass
 
     def test_update_aws_access_credentials(self):
-        """Test case for update_aws_access_credentials
-
-        """
+        """Test case for update_aws_access_credentials"""
         pass
 
     def test_update_organization(self):
-        """Test case for update_organization
-
-        """
+        """Test case for update_organization"""
         pass
 
     def test_update_user_in_organization(self):
-        """Test case for update_user_in_organization
-
-        """
+        """Test case for update_user_in_organization"""
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

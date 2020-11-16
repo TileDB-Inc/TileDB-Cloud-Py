@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.udf_image_version import UDFImageVersion  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestUDFImageVersion(unittest.TestCase):
     """UDFImageVersion unit test stubs"""
 
@@ -30,23 +31,22 @@ class TestUDFImageVersion(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test UDFImageVersion
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.udf_image_version.UDFImageVersion()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return UDFImageVersion(
-                id = '00000000-0000-0000-0000-000000000000', 
-                name = '0', 
-                udf_image_uuid = '00000000-0000-0000-0000-000000000000', 
-                docker_image = '0', 
-                version = 2.0, 
-                default = True, 
-                latest = True
+                id="00000000-0000-0000-0000-000000000000",
+                name="0",
+                udf_image_uuid="00000000-0000-0000-0000-000000000000",
+                docker_image="0",
+                version=2.0,
+                default=True,
+                latest=True,
             )
-        else :
-            return UDFImageVersion(
-        )
+        else:
+            return UDFImageVersion()
 
     def testUDFImageVersion(self):
         """Test UDFImageVersion"""
@@ -54,5 +54,5 @@ class TestUDFImageVersion(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

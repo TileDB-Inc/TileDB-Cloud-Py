@@ -29,23 +29,17 @@ class TestNotebookApi(unittest.TestCase):
         pass
 
     def test_get_notebook_server_status(self):
-        """Test case for get_notebook_server_status
-
-        """
+        """Test case for get_notebook_server_status"""
         pass
 
     def test_shutdown_notebook_server(self):
-        """Test case for shutdown_notebook_server
-
-        """
+        """Test case for shutdown_notebook_server"""
         pass
 
     def test_update_notebook_name(self):
-        """Test case for update_notebook_name
-
-        """
+        """Test case for update_notebook_name"""
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

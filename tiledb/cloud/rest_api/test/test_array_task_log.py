@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.array_task_log import ArrayTaskLog  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestArrayTaskLog(unittest.TestCase):
     """ArrayTaskLog unit test stubs"""
 
@@ -30,18 +31,14 @@ class TestArrayTaskLog(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test ArrayTaskLog
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.array_task_log.ArrayTaskLog()  # noqa: E501
-        if include_optional :
-            return ArrayTaskLog(
-                array_task_id = '0', 
-                logs = '0'
-            )
-        else :
-            return ArrayTaskLog(
-        )
+        if include_optional:
+            return ArrayTaskLog(array_task_id="0", logs="0")
+        else:
+            return ArrayTaskLog()
 
     def testArrayTaskLog(self):
         """Test ArrayTaskLog"""
@@ -49,5 +46,5 @@ class TestArrayTaskLog(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

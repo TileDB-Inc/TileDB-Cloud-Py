@@ -33,34 +33,48 @@ class ArraySchema(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'uri': 'str',
-        'version': 'list[int]',
-        'array_type': 'ArrayType',
-        'tile_order': 'Layout',
-        'cell_order': 'Layout',
-        'capacity': 'int',
-        'coords_filter_pipeline': 'FilterPipeline',
-        'offset_filter_pipeline': 'FilterPipeline',
-        'domain': 'Domain',
-        'attributes': 'list[Attribute]',
-        'allows_duplicates': 'bool'
+        "uri": "str",
+        "version": "list[int]",
+        "array_type": "ArrayType",
+        "tile_order": "Layout",
+        "cell_order": "Layout",
+        "capacity": "int",
+        "coords_filter_pipeline": "FilterPipeline",
+        "offset_filter_pipeline": "FilterPipeline",
+        "domain": "Domain",
+        "attributes": "list[Attribute]",
+        "allows_duplicates": "bool",
     }
 
     attribute_map = {
-        'uri': 'uri',
-        'version': 'version',
-        'array_type': 'arrayType',
-        'tile_order': 'tileOrder',
-        'cell_order': 'cellOrder',
-        'capacity': 'capacity',
-        'coords_filter_pipeline': 'coordsFilterPipeline',
-        'offset_filter_pipeline': 'offsetFilterPipeline',
-        'domain': 'domain',
-        'attributes': 'attributes',
-        'allows_duplicates': 'allowsDuplicates'
+        "uri": "uri",
+        "version": "version",
+        "array_type": "arrayType",
+        "tile_order": "tileOrder",
+        "cell_order": "cellOrder",
+        "capacity": "capacity",
+        "coords_filter_pipeline": "coordsFilterPipeline",
+        "offset_filter_pipeline": "offsetFilterPipeline",
+        "domain": "domain",
+        "attributes": "attributes",
+        "allows_duplicates": "allowsDuplicates",
     }
 
-    def __init__(self, uri=None, version=None, array_type=None, tile_order=None, cell_order=None, capacity=None, coords_filter_pipeline=None, offset_filter_pipeline=None, domain=None, attributes=None, allows_duplicates=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        uri=None,
+        version=None,
+        array_type=None,
+        tile_order=None,
+        cell_order=None,
+        capacity=None,
+        coords_filter_pipeline=None,
+        offset_filter_pipeline=None,
+        domain=None,
+        attributes=None,
+        allows_duplicates=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """ArraySchema - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -136,8 +150,12 @@ class ArraySchema(object):
         :param version: The version of this ArraySchema.  # noqa: E501
         :type: list[int]
         """
-        if self.local_vars_configuration.client_side_validation and version is None:  # noqa: E501
-            raise ValueError("Invalid value for `version`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and version is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `version`, must not be `None`"
+            )  # noqa: E501
 
         self._version = version
 
@@ -159,8 +177,12 @@ class ArraySchema(object):
         :param array_type: The array_type of this ArraySchema.  # noqa: E501
         :type: ArrayType
         """
-        if self.local_vars_configuration.client_side_validation and array_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `array_type`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and array_type is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `array_type`, must not be `None`"
+            )  # noqa: E501
 
         self._array_type = array_type
 
@@ -182,8 +204,12 @@ class ArraySchema(object):
         :param tile_order: The tile_order of this ArraySchema.  # noqa: E501
         :type: Layout
         """
-        if self.local_vars_configuration.client_side_validation and tile_order is None:  # noqa: E501
-            raise ValueError("Invalid value for `tile_order`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and tile_order is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `tile_order`, must not be `None`"
+            )  # noqa: E501
 
         self._tile_order = tile_order
 
@@ -205,8 +231,12 @@ class ArraySchema(object):
         :param cell_order: The cell_order of this ArraySchema.  # noqa: E501
         :type: Layout
         """
-        if self.local_vars_configuration.client_side_validation and cell_order is None:  # noqa: E501
-            raise ValueError("Invalid value for `cell_order`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and cell_order is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `cell_order`, must not be `None`"
+            )  # noqa: E501
 
         self._cell_order = cell_order
 
@@ -230,8 +260,12 @@ class ArraySchema(object):
         :param capacity: The capacity of this ArraySchema.  # noqa: E501
         :type: int
         """
-        if self.local_vars_configuration.client_side_validation and capacity is None:  # noqa: E501
-            raise ValueError("Invalid value for `capacity`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and capacity is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `capacity`, must not be `None`"
+            )  # noqa: E501
 
         self._capacity = capacity
 
@@ -253,8 +287,13 @@ class ArraySchema(object):
         :param coords_filter_pipeline: The coords_filter_pipeline of this ArraySchema.  # noqa: E501
         :type: FilterPipeline
         """
-        if self.local_vars_configuration.client_side_validation and coords_filter_pipeline is None:  # noqa: E501
-            raise ValueError("Invalid value for `coords_filter_pipeline`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and coords_filter_pipeline is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `coords_filter_pipeline`, must not be `None`"
+            )  # noqa: E501
 
         self._coords_filter_pipeline = coords_filter_pipeline
 
@@ -276,8 +315,13 @@ class ArraySchema(object):
         :param offset_filter_pipeline: The offset_filter_pipeline of this ArraySchema.  # noqa: E501
         :type: FilterPipeline
         """
-        if self.local_vars_configuration.client_side_validation and offset_filter_pipeline is None:  # noqa: E501
-            raise ValueError("Invalid value for `offset_filter_pipeline`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and offset_filter_pipeline is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `offset_filter_pipeline`, must not be `None`"
+            )  # noqa: E501
 
         self._offset_filter_pipeline = offset_filter_pipeline
 
@@ -299,8 +343,12 @@ class ArraySchema(object):
         :param domain: The domain of this ArraySchema.  # noqa: E501
         :type: Domain
         """
-        if self.local_vars_configuration.client_side_validation and domain is None:  # noqa: E501
-            raise ValueError("Invalid value for `domain`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and domain is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `domain`, must not be `None`"
+            )  # noqa: E501
 
         self._domain = domain
 
@@ -324,8 +372,12 @@ class ArraySchema(object):
         :param attributes: The attributes of this ArraySchema.  # noqa: E501
         :type: list[Attribute]
         """
-        if self.local_vars_configuration.client_side_validation and attributes is None:  # noqa: E501
-            raise ValueError("Invalid value for `attributes`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and attributes is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `attributes`, must not be `None`"
+            )  # noqa: E501
 
         self._attributes = attributes
 
@@ -359,18 +411,20 @@ class ArraySchema(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

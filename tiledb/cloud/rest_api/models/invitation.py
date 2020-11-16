@@ -33,42 +33,60 @@ class Invitation(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'id': 'str',
-        'invitation_type': 'InvitationType',
-        'owner_namespace_uuid': 'str',
-        'user_namespace_uuid': 'str',
-        'organization_user_uuid': 'str',
-        'organization_name': 'str',
-        'organization_role': 'OrganizationRoles',
-        'array_uuid': 'str',
-        'array_name': 'str',
-        'email': 'str',
-        'actions': 'str',
-        'status': 'InvitationStatus',
-        'created_at': 'datetime',
-        'expires_at': 'datetime',
-        'accepted_at': 'datetime'
+        "id": "str",
+        "invitation_type": "InvitationType",
+        "owner_namespace_uuid": "str",
+        "user_namespace_uuid": "str",
+        "organization_user_uuid": "str",
+        "organization_name": "str",
+        "organization_role": "OrganizationRoles",
+        "array_uuid": "str",
+        "array_name": "str",
+        "email": "str",
+        "actions": "str",
+        "status": "InvitationStatus",
+        "created_at": "datetime",
+        "expires_at": "datetime",
+        "accepted_at": "datetime",
     }
 
     attribute_map = {
-        'id': 'id',
-        'invitation_type': 'invitation_type',
-        'owner_namespace_uuid': 'owner_namespace_uuid',
-        'user_namespace_uuid': 'user_namespace_uuid',
-        'organization_user_uuid': 'organization_user_uuid',
-        'organization_name': 'organization_name',
-        'organization_role': 'organization_role',
-        'array_uuid': 'array_uuid',
-        'array_name': 'array_name',
-        'email': 'email',
-        'actions': 'actions',
-        'status': 'status',
-        'created_at': 'created_at',
-        'expires_at': 'expires_at',
-        'accepted_at': 'accepted_at'
+        "id": "id",
+        "invitation_type": "invitation_type",
+        "owner_namespace_uuid": "owner_namespace_uuid",
+        "user_namespace_uuid": "user_namespace_uuid",
+        "organization_user_uuid": "organization_user_uuid",
+        "organization_name": "organization_name",
+        "organization_role": "organization_role",
+        "array_uuid": "array_uuid",
+        "array_name": "array_name",
+        "email": "email",
+        "actions": "actions",
+        "status": "status",
+        "created_at": "created_at",
+        "expires_at": "expires_at",
+        "accepted_at": "accepted_at",
     }
 
-    def __init__(self, id=None, invitation_type=None, owner_namespace_uuid=None, user_namespace_uuid=None, organization_user_uuid=None, organization_name=None, organization_role=None, array_uuid=None, array_name=None, email=None, actions=None, status=None, created_at=None, expires_at=None, accepted_at=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        id=None,
+        invitation_type=None,
+        owner_namespace_uuid=None,
+        user_namespace_uuid=None,
+        organization_user_uuid=None,
+        organization_name=None,
+        organization_role=None,
+        array_uuid=None,
+        array_name=None,
+        email=None,
+        actions=None,
+        status=None,
+        created_at=None,
+        expires_at=None,
+        accepted_at=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """Invitation - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -468,18 +486,20 @@ class Invitation(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

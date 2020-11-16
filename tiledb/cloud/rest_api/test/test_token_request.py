@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.token_request import TokenRequest  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestTokenRequest(unittest.TestCase):
     """TokenRequest unit test stubs"""
 
@@ -30,19 +31,20 @@ class TestTokenRequest(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test TokenRequest
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.token_request.TokenRequest()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return TokenRequest(
-                expires = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
-                name = 'myToken', 
-                scope = '*'
+                expires=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                name="myToken",
+                scope="*",
             )
-        else :
-            return TokenRequest(
-        )
+        else:
+            return TokenRequest()
 
     def testTokenRequest(self):
         """Test TokenRequest"""
@@ -50,5 +52,5 @@ class TestTokenRequest(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

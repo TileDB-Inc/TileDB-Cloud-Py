@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.subarray import Subarray  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestSubarray(unittest.TestCase):
     """Subarray unit test stubs"""
 
@@ -30,25 +31,23 @@ class TestSubarray(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test Subarray
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.subarray.Subarray()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return Subarray(
-                layout = 'row-major', 
-                ranges = [
+                layout="row-major",
+                ranges=[
                     tiledb.cloud.rest_api.models.subarray_ranges.SubarrayRanges(
-                        type = 'INT32', 
-                        has_default_range = True, 
-                        buffer = [
-                            56
-                            ], )
-                    ]
+                        type="INT32",
+                        has_default_range=True,
+                        buffer=[56],
+                    )
+                ],
             )
-        else :
-            return Subarray(
-        )
+        else:
+            return Subarray()
 
     def testSubarray(self):
         """Test Subarray"""
@@ -56,5 +55,5 @@ class TestSubarray(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

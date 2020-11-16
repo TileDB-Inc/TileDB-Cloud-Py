@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.array_task_type import ArrayTaskType  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestArrayTaskType(unittest.TestCase):
     """ArrayTaskType unit test stubs"""
 
@@ -30,16 +31,14 @@ class TestArrayTaskType(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test ArrayTaskType
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.array_task_type.ArrayTaskType()  # noqa: E501
-        if include_optional :
-            return ArrayTaskType(
-            )
-        else :
-            return ArrayTaskType(
-        )
+        if include_optional:
+            return ArrayTaskType()
+        else:
+            return ArrayTaskType()
 
     def testArrayTaskType(self):
         """Test ArrayTaskType"""
@@ -47,5 +46,5 @@ class TestArrayTaskType(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

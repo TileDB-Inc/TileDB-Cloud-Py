@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.filter_data import FilterData  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestFilterData(unittest.TestCase):
     """FilterData unit test stubs"""
 
@@ -30,26 +31,25 @@ class TestFilterData(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test FilterData
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.filter_data.FilterData()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return FilterData(
-                int8 = 56, 
-                uint8 = 56, 
-                int16 = 56, 
-                uint16 = 56, 
-                int32 = 56, 
-                uint32 = 56, 
-                int64 = 56, 
-                uint64 = 56, 
-                float32 = 56, 
-                float64 = 56
+                int8=56,
+                uint8=56,
+                int16=56,
+                uint16=56,
+                int32=56,
+                uint32=56,
+                int64=56,
+                uint64=56,
+                float32=56,
+                float64=56,
             )
-        else :
-            return FilterData(
-        )
+        else:
+            return FilterData()
 
     def testFilterData(self):
         """Test FilterData"""
@@ -57,5 +57,5 @@ class TestFilterData(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

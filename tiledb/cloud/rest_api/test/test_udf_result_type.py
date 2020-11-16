@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.udf_result_type import UDFResultType  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestUDFResultType(unittest.TestCase):
     """UDFResultType unit test stubs"""
 
@@ -30,16 +31,14 @@ class TestUDFResultType(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test UDFResultType
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.udf_result_type.UDFResultType()  # noqa: E501
-        if include_optional :
-            return UDFResultType(
-            )
-        else :
-            return UDFResultType(
-        )
+        if include_optional:
+            return UDFResultType()
+        else:
+            return UDFResultType()
 
     def testUDFResultType(self):
         """Test UDFResultType"""
@@ -47,5 +46,5 @@ class TestUDFResultType(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

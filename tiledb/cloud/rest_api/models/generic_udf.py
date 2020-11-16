@@ -33,30 +33,42 @@ class GenericUDF(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'udf_info_name': 'str',
-        'language': 'UDFLanguage',
-        'version': 'str',
-        'image_name': 'str',
-        '_exec': 'str',
-        'exec_raw': 'str',
-        'argument': 'str',
-        'result_format': 'UDFResultType',
-        'task_name': 'str'
+        "udf_info_name": "str",
+        "language": "UDFLanguage",
+        "version": "str",
+        "image_name": "str",
+        "_exec": "str",
+        "exec_raw": "str",
+        "argument": "str",
+        "result_format": "UDFResultType",
+        "task_name": "str",
     }
 
     attribute_map = {
-        'udf_info_name': 'udf_info_name',
-        'language': 'language',
-        'version': 'version',
-        'image_name': 'image_name',
-        '_exec': 'exec',
-        'exec_raw': 'exec_raw',
-        'argument': 'argument',
-        'result_format': 'result_format',
-        'task_name': 'task_name'
+        "udf_info_name": "udf_info_name",
+        "language": "language",
+        "version": "version",
+        "image_name": "image_name",
+        "_exec": "exec",
+        "exec_raw": "exec_raw",
+        "argument": "argument",
+        "result_format": "result_format",
+        "task_name": "task_name",
     }
 
-    def __init__(self, udf_info_name=None, language=None, version=None, image_name=None, _exec=None, exec_raw=None, argument=None, result_format=None, task_name=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        udf_info_name=None,
+        language=None,
+        version=None,
+        image_name=None,
+        _exec=None,
+        exec_raw=None,
+        argument=None,
+        result_format=None,
+        task_name=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """GenericUDF - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -302,18 +314,20 @@ class GenericUDF(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

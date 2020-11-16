@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.pricing import Pricing  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestPricing(unittest.TestCase):
     """Pricing unit test stubs"""
 
@@ -30,29 +31,28 @@ class TestPricing(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test Pricing
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.pricing.Pricing()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return Pricing(
-                id = 'planID', 
-                array_uuid = '00000000-0000-0000-0000-000000000000', 
-                pricing_name = '0', 
-                pricing_type = 'egress', 
-                product_name = '0', 
-                product_statement_descriptor = '0', 
-                product_unit_label = 'byte', 
-                currency = 'USD', 
-                aggregate_usage = 'sum', 
-                interval = 'month', 
-                divided_by = 1048576, 
-                charge = 1.337, 
-                activated = False
+                id="planID",
+                array_uuid="00000000-0000-0000-0000-000000000000",
+                pricing_name="0",
+                pricing_type="egress",
+                product_name="0",
+                product_statement_descriptor="0",
+                product_unit_label="byte",
+                currency="USD",
+                aggregate_usage="sum",
+                interval="month",
+                divided_by=1048576,
+                charge=1.337,
+                activated=False,
             )
-        else :
-            return Pricing(
-        )
+        else:
+            return Pricing()
 
     def testPricing(self):
         """Test Pricing"""
@@ -60,5 +60,5 @@ class TestPricing(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

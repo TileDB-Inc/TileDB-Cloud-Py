@@ -33,24 +33,33 @@ class NotebookStatus(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'namespace': 'str',
-        'uptime': 'int',
-        'cpu_usage': 'int',
-        'memory_usage': 'int',
-        'memory_limit': 'int',
-        'cpu_count': 'int'
+        "namespace": "str",
+        "uptime": "int",
+        "cpu_usage": "int",
+        "memory_usage": "int",
+        "memory_limit": "int",
+        "cpu_count": "int",
     }
 
     attribute_map = {
-        'namespace': 'namespace',
-        'uptime': 'uptime',
-        'cpu_usage': 'cpu_usage',
-        'memory_usage': 'memory_usage',
-        'memory_limit': 'memory_limit',
-        'cpu_count': 'cpu_count'
+        "namespace": "namespace",
+        "uptime": "uptime",
+        "cpu_usage": "cpu_usage",
+        "memory_usage": "memory_usage",
+        "memory_limit": "memory_limit",
+        "cpu_count": "cpu_count",
     }
 
-    def __init__(self, namespace=None, uptime=None, cpu_usage=None, memory_usage=None, memory_limit=None, cpu_count=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        namespace=None,
+        uptime=None,
+        cpu_usage=None,
+        memory_usage=None,
+        memory_limit=None,
+        cpu_count=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """NotebookStatus - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -222,18 +231,20 @@ class NotebookStatus(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

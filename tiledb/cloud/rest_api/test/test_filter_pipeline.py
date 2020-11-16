@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.filter_pipeline import FilterPipeline  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestFilterPipeline(unittest.TestCase):
     """FilterPipeline unit test stubs"""
 
@@ -30,31 +31,32 @@ class TestFilterPipeline(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test FilterPipeline
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return FilterPipeline(
-                filters = [
+                filters=[
                     tiledb.cloud.rest_api.models.filter.Filter(
-                        type = 'FILTER_NONE', 
-                        data = tiledb.cloud.rest_api.models.filter_data.Filter_data(
-                            int8 = 56, 
-                            uint8 = 56, 
-                            int16 = 56, 
-                            uint16 = 56, 
-                            int32 = 56, 
-                            uint32 = 56, 
-                            int64 = 56, 
-                            uint64 = 56, 
-                            float32 = 56, 
-                            float64 = 56, ), )
-                    ]
+                        type="FILTER_NONE",
+                        data=tiledb.cloud.rest_api.models.filter_data.Filter_data(
+                            int8=56,
+                            uint8=56,
+                            int16=56,
+                            uint16=56,
+                            int32=56,
+                            uint32=56,
+                            int64=56,
+                            uint64=56,
+                            float32=56,
+                            float64=56,
+                        ),
+                    )
+                ]
             )
-        else :
-            return FilterPipeline(
-        )
+        else:
+            return FilterPipeline()
 
     def testFilterPipeline(self):
         """Test FilterPipeline"""
@@ -62,5 +64,5 @@ class TestFilterPipeline(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

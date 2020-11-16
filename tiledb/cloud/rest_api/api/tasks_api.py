@@ -18,10 +18,7 @@ import re  # noqa: F401
 import six
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import (  # noqa: F401
-    ApiTypeError,
-    ApiValueError
-)
+from tiledb.cloud.rest_api.exceptions import ApiTypeError, ApiValueError  # noqa: F401
 
 
 class TasksApi(object):
@@ -60,7 +57,7 @@ class TasksApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.run_sql_with_http_info(namespace, sql, **kwargs)  # noqa: E501
 
     def run_sql_with_http_info(self, namespace, sql, **kwargs):  # noqa: E501
@@ -92,81 +89,94 @@ class TasksApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'namespace',
-            'sql',
-            'accept_encoding'
-        ]
+        all_params = ["namespace", "sql", "accept_encoding"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method run_sql" % key
+                    "Got an unexpected keyword argument '%s'" " to method run_sql" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
-                                                        local_var_params['namespace'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `namespace` when calling `run_sql`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `run_sql`"
+            )  # noqa: E501
         # verify the required parameter 'sql' is set
-        if self.api_client.client_side_validation and ('sql' not in local_var_params or  # noqa: E501
-                                                        local_var_params['sql'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `sql` when calling `run_sql`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "sql" not in local_var_params
+            or local_var_params["sql"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `sql` when calling `run_sql`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
 
         query_params = []
 
         header_params = {}
-        if 'accept_encoding' in local_var_params:
-            header_params['Accept-Encoding'] = local_var_params['accept_encoding']  # noqa: E501
+        if "accept_encoding" in local_var_params:
+            header_params["Accept-Encoding"] = local_var_params[
+                "accept_encoding"
+            ]  # noqa: E501
 
         form_params = []
         local_var_files = {}
 
         body_params = None
-        if 'sql' in local_var_params:
-            body_params = local_var_params['sql']
+        if "sql" in local_var_params:
+            body_params = local_var_params["sql"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/sql/{namespace}', 'POST',
+            "/sql/{namespace}",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[object]',  # noqa: E501
+            response_type="list[object]",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def task_id_get(self, id, **kwargs):  # noqa: E501
         """task_id_get  # noqa: E501
@@ -190,7 +200,7 @@ class TasksApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.task_id_get_with_http_info(id, **kwargs)  # noqa: E501
 
     def task_id_get_with_http_info(self, id, **kwargs):  # noqa: E501
@@ -220,36 +230,37 @@ class TasksApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'id'
-        ]
+        all_params = ["id"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method task_id_get" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'id' is set
-        if self.api_client.client_side_validation and ('id' not in local_var_params or  # noqa: E501
-                                                        local_var_params['id'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `id` when calling `task_id_get`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `id` when calling `task_id_get`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'id' in local_var_params:
-            path_params['id'] = local_var_params['id']  # noqa: E501
+        if "id" in local_var_params:
+            path_params["id"] = local_var_params["id"]  # noqa: E501
 
         query_params = []
 
@@ -260,27 +271,32 @@ class TasksApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/task/{id}', 'GET',
+            "/task/{id}",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='ArrayTask',  # noqa: E501
+            response_type="ArrayTask",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def tasks_get(self, **kwargs):  # noqa: E501
         """tasks_get  # noqa: E501
@@ -314,7 +330,7 @@ class TasksApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.tasks_get_with_http_info(**kwargs)  # noqa: E501
 
     def tasks_get_with_http_info(self, **kwargs):  # noqa: E501
@@ -355,63 +371,93 @@ class TasksApi(object):
         local_var_params = locals()
 
         all_params = [
-            'namespace',
-            'created_by',
-            'array',
-            'start',
-            'end',
-            'page',
-            'per_page',
-            'type',
-            'status',
-            'search',
-            'orderby'
+            "namespace",
+            "created_by",
+            "array",
+            "start",
+            "end",
+            "page",
+            "per_page",
+            "type",
+            "status",
+            "search",
+            "orderby",
         ]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method tasks_get" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
-        if 'namespace' in local_var_params and local_var_params['namespace'] is not None:  # noqa: E501
-            query_params.append(('namespace', local_var_params['namespace']))  # noqa: E501
-        if 'created_by' in local_var_params and local_var_params['created_by'] is not None:  # noqa: E501
-            query_params.append(('created_by', local_var_params['created_by']))  # noqa: E501
-        if 'array' in local_var_params and local_var_params['array'] is not None:  # noqa: E501
-            query_params.append(('array', local_var_params['array']))  # noqa: E501
-        if 'start' in local_var_params and local_var_params['start'] is not None:  # noqa: E501
-            query_params.append(('start', local_var_params['start']))  # noqa: E501
-        if 'end' in local_var_params and local_var_params['end'] is not None:  # noqa: E501
-            query_params.append(('end', local_var_params['end']))  # noqa: E501
-        if 'page' in local_var_params and local_var_params['page'] is not None:  # noqa: E501
-            query_params.append(('page', local_var_params['page']))  # noqa: E501
-        if 'per_page' in local_var_params and local_var_params['per_page'] is not None:  # noqa: E501
-            query_params.append(('per_page', local_var_params['per_page']))  # noqa: E501
-        if 'type' in local_var_params and local_var_params['type'] is not None:  # noqa: E501
-            query_params.append(('type', local_var_params['type']))  # noqa: E501
-        if 'status' in local_var_params and local_var_params['status'] is not None:  # noqa: E501
-            query_params.append(('status', local_var_params['status']))  # noqa: E501
-        if 'search' in local_var_params and local_var_params['search'] is not None:  # noqa: E501
-            query_params.append(('search', local_var_params['search']))  # noqa: E501
-        if 'orderby' in local_var_params and local_var_params['orderby'] is not None:  # noqa: E501
-            query_params.append(('orderby', local_var_params['orderby']))  # noqa: E501
+        if (
+            "namespace" in local_var_params
+            and local_var_params["namespace"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("namespace", local_var_params["namespace"])
+            )  # noqa: E501
+        if (
+            "created_by" in local_var_params
+            and local_var_params["created_by"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("created_by", local_var_params["created_by"])
+            )  # noqa: E501
+        if (
+            "array" in local_var_params and local_var_params["array"] is not None
+        ):  # noqa: E501
+            query_params.append(("array", local_var_params["array"]))  # noqa: E501
+        if (
+            "start" in local_var_params and local_var_params["start"] is not None
+        ):  # noqa: E501
+            query_params.append(("start", local_var_params["start"]))  # noqa: E501
+        if (
+            "end" in local_var_params and local_var_params["end"] is not None
+        ):  # noqa: E501
+            query_params.append(("end", local_var_params["end"]))  # noqa: E501
+        if (
+            "page" in local_var_params and local_var_params["page"] is not None
+        ):  # noqa: E501
+            query_params.append(("page", local_var_params["page"]))  # noqa: E501
+        if (
+            "per_page" in local_var_params and local_var_params["per_page"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("per_page", local_var_params["per_page"])
+            )  # noqa: E501
+        if (
+            "type" in local_var_params and local_var_params["type"] is not None
+        ):  # noqa: E501
+            query_params.append(("type", local_var_params["type"]))  # noqa: E501
+        if (
+            "status" in local_var_params and local_var_params["status"] is not None
+        ):  # noqa: E501
+            query_params.append(("status", local_var_params["status"]))  # noqa: E501
+        if (
+            "search" in local_var_params and local_var_params["search"] is not None
+        ):  # noqa: E501
+            query_params.append(("search", local_var_params["search"]))  # noqa: E501
+        if (
+            "orderby" in local_var_params and local_var_params["orderby"] is not None
+        ):  # noqa: E501
+            query_params.append(("orderby", local_var_params["orderby"]))  # noqa: E501
 
         header_params = {}
 
@@ -420,24 +466,29 @@ class TasksApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/tasks', 'GET',
+            "/tasks",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='ArrayTaskData',  # noqa: E501
+            response_type="ArrayTaskData",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )

@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.notebook_status import NotebookStatus  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestNotebookStatus(unittest.TestCase):
     """NotebookStatus unit test stubs"""
 
@@ -30,22 +31,21 @@ class TestNotebookStatus(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test NotebookStatus
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.notebook_status.NotebookStatus()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return NotebookStatus(
-                namespace = '0', 
-                uptime = 120, 
-                cpu_usage = 4000, 
-                memory_usage = 1073741824, 
-                memory_limit = 1073741824, 
-                cpu_count = 4000
+                namespace="0",
+                uptime=120,
+                cpu_usage=4000,
+                memory_usage=1073741824,
+                memory_limit=1073741824,
+                cpu_count=4000,
             )
-        else :
-            return NotebookStatus(
-        )
+        else:
+            return NotebookStatus()
 
     def testNotebookStatus(self):
         """Test NotebookStatus"""
@@ -53,5 +53,5 @@ class TestNotebookStatus(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

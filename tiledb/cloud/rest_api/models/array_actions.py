@@ -35,7 +35,14 @@ class ArrayActions(object):
     READ_ARRAY_INFO = "read_array_info"
     READ_ARRAY_SCHEMA = "read_array_schema"
 
-    allowable_values = [READ, WRITE, EDIT, READ_ARRAY_LOGS, READ_ARRAY_INFO, READ_ARRAY_SCHEMA]  # noqa: E501
+    allowable_values = [
+        READ,
+        WRITE,
+        EDIT,
+        READ_ARRAY_LOGS,
+        READ_ARRAY_INFO,
+        READ_ARRAY_SCHEMA,
+    ]  # noqa: E501
 
     """
     Attributes:
@@ -44,11 +51,9 @@ class ArrayActions(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-    }
+    openapi_types = {}
 
-    attribute_map = {
-    }
+    attribute_map = {}
 
     def __init__(self, local_vars_configuration=None):  # noqa: E501
         """ArrayActions - a model defined in OpenAPI"""  # noqa: E501
@@ -64,18 +69,20 @@ class ArrayActions(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

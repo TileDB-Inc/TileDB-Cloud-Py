@@ -33,46 +33,66 @@ class User(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'id': 'str',
-        'username': 'str',
-        'password': 'str',
-        'name': 'str',
-        'email': 'str',
-        'is_valid_email': 'bool',
-        'stripe_connect': 'bool',
-        'company': 'str',
-        'logo': 'str',
-        'last_activity_date': 'datetime',
-        'timezone': 'str',
-        'organizations': 'list[OrganizationUser]',
-        'allowed_actions': 'list[NamespaceActions]',
-        'enabled_features': 'list[str]',
-        'unpaid_subscription': 'bool',
-        'default_s3_path': 'str',
-        'default_namespace_charged': 'str'
+        "id": "str",
+        "username": "str",
+        "password": "str",
+        "name": "str",
+        "email": "str",
+        "is_valid_email": "bool",
+        "stripe_connect": "bool",
+        "company": "str",
+        "logo": "str",
+        "last_activity_date": "datetime",
+        "timezone": "str",
+        "organizations": "list[OrganizationUser]",
+        "allowed_actions": "list[NamespaceActions]",
+        "enabled_features": "list[str]",
+        "unpaid_subscription": "bool",
+        "default_s3_path": "str",
+        "default_namespace_charged": "str",
     }
 
     attribute_map = {
-        'id': 'id',
-        'username': 'username',
-        'password': 'password',
-        'name': 'name',
-        'email': 'email',
-        'is_valid_email': 'is_valid_email',
-        'stripe_connect': 'stripe_connect',
-        'company': 'company',
-        'logo': 'logo',
-        'last_activity_date': 'last_activity_date',
-        'timezone': 'timezone',
-        'organizations': 'organizations',
-        'allowed_actions': 'allowed_actions',
-        'enabled_features': 'enabled_features',
-        'unpaid_subscription': 'unpaid_subscription',
-        'default_s3_path': 'default_s3_path',
-        'default_namespace_charged': 'default_namespace_charged'
+        "id": "id",
+        "username": "username",
+        "password": "password",
+        "name": "name",
+        "email": "email",
+        "is_valid_email": "is_valid_email",
+        "stripe_connect": "stripe_connect",
+        "company": "company",
+        "logo": "logo",
+        "last_activity_date": "last_activity_date",
+        "timezone": "timezone",
+        "organizations": "organizations",
+        "allowed_actions": "allowed_actions",
+        "enabled_features": "enabled_features",
+        "unpaid_subscription": "unpaid_subscription",
+        "default_s3_path": "default_s3_path",
+        "default_namespace_charged": "default_namespace_charged",
     }
 
-    def __init__(self, id=None, username=None, password=None, name=None, email=None, is_valid_email=None, stripe_connect=None, company=None, logo=None, last_activity_date=None, timezone=None, organizations=None, allowed_actions=None, enabled_features=None, unpaid_subscription=None, default_s3_path=None, default_namespace_charged=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        id=None,
+        username=None,
+        password=None,
+        name=None,
+        email=None,
+        is_valid_email=None,
+        stripe_connect=None,
+        company=None,
+        logo=None,
+        last_activity_date=None,
+        timezone=None,
+        organizations=None,
+        allowed_actions=None,
+        enabled_features=None,
+        unpaid_subscription=None,
+        default_s3_path=None,
+        default_namespace_charged=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """User - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -174,17 +194,36 @@ class User(object):
         :param username: The username of this User.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and username is None:  # noqa: E501
-            raise ValueError("Invalid value for `username`, must not be `None`")  # noqa: E501
-        if (self.local_vars_configuration.client_side_validation and
-                username is not None and len(username) > 20):
-            raise ValueError("Invalid value for `username`, length must be less than or equal to `20`")  # noqa: E501
-        if (self.local_vars_configuration.client_side_validation and
-                username is not None and len(username) < 4):
-            raise ValueError("Invalid value for `username`, length must be greater than or equal to `4`")  # noqa: E501
-        if (self.local_vars_configuration.client_side_validation and
-                username is not None and not re.search(r'^[\w.\-]+$', username)):  # noqa: E501
-            raise ValueError(r"Invalid value for `username`, must be a follow pattern or equal to `/^[\w.\-]+$/`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and username is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `username`, must not be `None`"
+            )  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and username is not None
+            and len(username) > 20
+        ):
+            raise ValueError(
+                "Invalid value for `username`, length must be less than or equal to `20`"
+            )  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and username is not None
+            and len(username) < 4
+        ):
+            raise ValueError(
+                "Invalid value for `username`, length must be greater than or equal to `4`"
+            )  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and username is not None
+            and not re.search(r"^[\w.\-]+$", username)
+        ):  # noqa: E501
+            raise ValueError(
+                r"Invalid value for `username`, must be a follow pattern or equal to `/^[\w.\-]+$/`"
+            )  # noqa: E501
 
         self._username = username
 
@@ -208,9 +247,14 @@ class User(object):
         :param password: The password of this User.  # noqa: E501
         :type: str
         """
-        if (self.local_vars_configuration.client_side_validation and
-                password is not None and len(password) < 8):
-            raise ValueError("Invalid value for `password`, length must be greater than or equal to `8`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and password is not None
+            and len(password) < 8
+        ):
+            raise ValueError(
+                "Invalid value for `password`, length must be greater than or equal to `8`"
+            )  # noqa: E501
 
         self._password = password
 
@@ -234,9 +278,14 @@ class User(object):
         :param name: The name of this User.  # noqa: E501
         :type: str
         """
-        if (self.local_vars_configuration.client_side_validation and
-                name is not None and len(name) < 1):
-            raise ValueError("Invalid value for `name`, length must be greater than or equal to `1`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and name is not None
+            and len(name) < 1
+        ):
+            raise ValueError(
+                "Invalid value for `name`, length must be greater than or equal to `1`"
+            )  # noqa: E501
 
         self._name = name
 
@@ -544,18 +593,20 @@ class User(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

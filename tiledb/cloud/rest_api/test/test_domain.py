@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.domain import Domain  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestDomain(unittest.TestCase):
     """Domain unit test stubs"""
 
@@ -30,110 +31,78 @@ class TestDomain(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test Domain
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.domain.Domain()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return Domain(
-                type = 'INT32', 
-                tile_order = 'row-major', 
-                cell_order = 'row-major', 
-                dimensions = [
+                type="INT32",
+                tile_order="row-major",
+                cell_order="row-major",
+                dimensions=[
                     tiledb.cloud.rest_api.models.dimension.Dimension(
-                        name = 'row', 
-                        type = 'INT32', 
-                        domain = tiledb.cloud.rest_api.models.domain_array.DomainArray(
-                            int8 = [
-                                56
-                                ], 
-                            uint8 = [
-                                56
-                                ], 
-                            int16 = [
-                                56
-                                ], 
-                            uint16 = [
-                                56
-                                ], 
-                            int32 = [
-                                56
-                                ], 
-                            uint32 = [
-                                56
-                                ], 
-                            int64 = [
-                                56
-                                ], 
-                            uint64 = [
-                                56
-                                ], 
-                            float32 = [
-                                1.337
-                                ], 
-                            float64 = [
-                                1.337
-                                ], ), 
-                        null_tile_extent = True, 
-                        tile_extent = tiledb.cloud.rest_api.models.dimension_tile_extent.Dimension_tileExtent(), 
-                        filter_pipeline = tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
-                            filters = [
+                        name="row",
+                        type="INT32",
+                        domain=tiledb.cloud.rest_api.models.domain_array.DomainArray(
+                            int8=[56],
+                            uint8=[56],
+                            int16=[56],
+                            uint16=[56],
+                            int32=[56],
+                            uint32=[56],
+                            int64=[56],
+                            uint64=[56],
+                            float32=[1.337],
+                            float64=[1.337],
+                        ),
+                        null_tile_extent=True,
+                        tile_extent=tiledb.cloud.rest_api.models.dimension_tile_extent.Dimension_tileExtent(),
+                        filter_pipeline=tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
+                            filters=[
                                 tiledb.cloud.rest_api.models.filter.Filter(
-                                    type = 'FILTER_NONE', 
-                                    data = tiledb.cloud.rest_api.models.filter_data.Filter_data(), )
-                                ], ), )
-                    ]
+                                    type="FILTER_NONE",
+                                    data=tiledb.cloud.rest_api.models.filter_data.Filter_data(),
+                                )
+                            ],
+                        ),
+                    )
+                ],
             )
-        else :
+        else:
             return Domain(
-                type = 'INT32',
-                tile_order = 'row-major',
-                cell_order = 'row-major',
-                dimensions = [
+                type="INT32",
+                tile_order="row-major",
+                cell_order="row-major",
+                dimensions=[
                     tiledb.cloud.rest_api.models.dimension.Dimension(
-                        name = 'row', 
-                        type = 'INT32', 
-                        domain = tiledb.cloud.rest_api.models.domain_array.DomainArray(
-                            int8 = [
-                                56
-                                ], 
-                            uint8 = [
-                                56
-                                ], 
-                            int16 = [
-                                56
-                                ], 
-                            uint16 = [
-                                56
-                                ], 
-                            int32 = [
-                                56
-                                ], 
-                            uint32 = [
-                                56
-                                ], 
-                            int64 = [
-                                56
-                                ], 
-                            uint64 = [
-                                56
-                                ], 
-                            float32 = [
-                                1.337
-                                ], 
-                            float64 = [
-                                1.337
-                                ], ), 
-                        null_tile_extent = True, 
-                        tile_extent = tiledb.cloud.rest_api.models.dimension_tile_extent.Dimension_tileExtent(), 
-                        filter_pipeline = tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
-                            filters = [
+                        name="row",
+                        type="INT32",
+                        domain=tiledb.cloud.rest_api.models.domain_array.DomainArray(
+                            int8=[56],
+                            uint8=[56],
+                            int16=[56],
+                            uint16=[56],
+                            int32=[56],
+                            uint32=[56],
+                            int64=[56],
+                            uint64=[56],
+                            float32=[1.337],
+                            float64=[1.337],
+                        ),
+                        null_tile_extent=True,
+                        tile_extent=tiledb.cloud.rest_api.models.dimension_tile_extent.Dimension_tileExtent(),
+                        filter_pipeline=tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
+                            filters=[
                                 tiledb.cloud.rest_api.models.filter.Filter(
-                                    type = 'FILTER_NONE', 
-                                    data = tiledb.cloud.rest_api.models.filter_data.Filter_data(), )
-                                ], ), )
-                    ],
-        )
+                                    type="FILTER_NONE",
+                                    data=tiledb.cloud.rest_api.models.filter_data.Filter_data(),
+                                )
+                            ],
+                        ),
+                    )
+                ],
+            )
 
     def testDomain(self):
         """Test Domain"""
@@ -141,5 +110,5 @@ class TestDomain(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

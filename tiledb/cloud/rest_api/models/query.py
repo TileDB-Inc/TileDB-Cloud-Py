@@ -33,30 +33,42 @@ class Query(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'type': 'Querytype',
-        'layout': 'Layout',
-        'status': 'Querystatus',
-        'attribute_buffer_headers': 'list[AttributeBufferHeader]',
-        'writer': 'Writer',
-        'reader': 'QueryReader',
-        'array': 'Array',
-        'total_fixed_length_buffer_bytes': 'int',
-        'total_var_len_buffer_bytes': 'int'
+        "type": "Querytype",
+        "layout": "Layout",
+        "status": "Querystatus",
+        "attribute_buffer_headers": "list[AttributeBufferHeader]",
+        "writer": "Writer",
+        "reader": "QueryReader",
+        "array": "Array",
+        "total_fixed_length_buffer_bytes": "int",
+        "total_var_len_buffer_bytes": "int",
     }
 
     attribute_map = {
-        'type': 'type',
-        'layout': 'layout',
-        'status': 'status',
-        'attribute_buffer_headers': 'attributeBufferHeaders',
-        'writer': 'writer',
-        'reader': 'reader',
-        'array': 'array',
-        'total_fixed_length_buffer_bytes': 'totalFixedLengthBufferBytes',
-        'total_var_len_buffer_bytes': 'totalVarLenBufferBytes'
+        "type": "type",
+        "layout": "layout",
+        "status": "status",
+        "attribute_buffer_headers": "attributeBufferHeaders",
+        "writer": "writer",
+        "reader": "reader",
+        "array": "array",
+        "total_fixed_length_buffer_bytes": "totalFixedLengthBufferBytes",
+        "total_var_len_buffer_bytes": "totalVarLenBufferBytes",
     }
 
-    def __init__(self, type=None, layout=None, status=None, attribute_buffer_headers=None, writer=None, reader=None, array=None, total_fixed_length_buffer_bytes=None, total_var_len_buffer_bytes=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        type=None,
+        layout=None,
+        status=None,
+        attribute_buffer_headers=None,
+        writer=None,
+        reader=None,
+        array=None,
+        total_fixed_length_buffer_bytes=None,
+        total_var_len_buffer_bytes=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """Query - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -103,8 +115,12 @@ class Query(object):
         :param type: The type of this Query.  # noqa: E501
         :type: Querytype
         """
-        if self.local_vars_configuration.client_side_validation and type is None:  # noqa: E501
-            raise ValueError("Invalid value for `type`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and type is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `type`, must not be `None`"
+            )  # noqa: E501
 
         self._type = type
 
@@ -126,8 +142,12 @@ class Query(object):
         :param layout: The layout of this Query.  # noqa: E501
         :type: Layout
         """
-        if self.local_vars_configuration.client_side_validation and layout is None:  # noqa: E501
-            raise ValueError("Invalid value for `layout`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and layout is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `layout`, must not be `None`"
+            )  # noqa: E501
 
         self._layout = layout
 
@@ -149,8 +169,12 @@ class Query(object):
         :param status: The status of this Query.  # noqa: E501
         :type: Querystatus
         """
-        if self.local_vars_configuration.client_side_validation and status is None:  # noqa: E501
-            raise ValueError("Invalid value for `status`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and status is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `status`, must not be `None`"
+            )  # noqa: E501
 
         self._status = status
 
@@ -174,8 +198,13 @@ class Query(object):
         :param attribute_buffer_headers: The attribute_buffer_headers of this Query.  # noqa: E501
         :type: list[AttributeBufferHeader]
         """
-        if self.local_vars_configuration.client_side_validation and attribute_buffer_headers is None:  # noqa: E501
-            raise ValueError("Invalid value for `attribute_buffer_headers`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and attribute_buffer_headers is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `attribute_buffer_headers`, must not be `None`"
+            )  # noqa: E501
 
         self._attribute_buffer_headers = attribute_buffer_headers
 
@@ -239,8 +268,12 @@ class Query(object):
         :param array: The array of this Query.  # noqa: E501
         :type: Array
         """
-        if self.local_vars_configuration.client_side_validation and array is None:  # noqa: E501
-            raise ValueError("Invalid value for `array`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and array is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `array`, must not be `None`"
+            )  # noqa: E501
 
         self._array = array
 
@@ -264,8 +297,13 @@ class Query(object):
         :param total_fixed_length_buffer_bytes: The total_fixed_length_buffer_bytes of this Query.  # noqa: E501
         :type: int
         """
-        if self.local_vars_configuration.client_side_validation and total_fixed_length_buffer_bytes is None:  # noqa: E501
-            raise ValueError("Invalid value for `total_fixed_length_buffer_bytes`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and total_fixed_length_buffer_bytes is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `total_fixed_length_buffer_bytes`, must not be `None`"
+            )  # noqa: E501
 
         self._total_fixed_length_buffer_bytes = total_fixed_length_buffer_bytes
 
@@ -289,8 +327,13 @@ class Query(object):
         :param total_var_len_buffer_bytes: The total_var_len_buffer_bytes of this Query.  # noqa: E501
         :type: int
         """
-        if self.local_vars_configuration.client_side_validation and total_var_len_buffer_bytes is None:  # noqa: E501
-            raise ValueError("Invalid value for `total_var_len_buffer_bytes`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and total_var_len_buffer_bytes is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `total_var_len_buffer_bytes`, must not be `None`"
+            )  # noqa: E501
 
         self._total_var_len_buffer_bytes = total_var_len_buffer_bytes
 
@@ -301,18 +344,20 @@ class Query(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

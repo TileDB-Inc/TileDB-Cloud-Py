@@ -18,10 +18,7 @@ import re  # noqa: F401
 import six
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import (  # noqa: F401
-    ApiTypeError,
-    ApiValueError
-)
+from tiledb.cloud.rest_api.exceptions import ApiTypeError, ApiValueError  # noqa: F401
 
 
 class UdfApi(object):
@@ -59,8 +56,10 @@ class UdfApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.delete_udf_info_with_http_info(namespace, name, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.delete_udf_info_with_http_info(
+            namespace, name, **kwargs
+        )  # noqa: E501
 
     def delete_udf_info_with_http_info(self, namespace, name, **kwargs):  # noqa: E501
         """delete_udf_info  # noqa: E501
@@ -90,43 +89,48 @@ class UdfApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'namespace',
-            'name'
-        ]
+        all_params = ["namespace", "name"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method delete_udf_info" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
-                                                        local_var_params['namespace'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `namespace` when calling `delete_udf_info`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `delete_udf_info`"
+            )  # noqa: E501
         # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and ('name' not in local_var_params or  # noqa: E501
-                                                        local_var_params['name'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `name` when calling `delete_udf_info`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `delete_udf_info`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'name' in local_var_params:
-            path_params['name'] = local_var_params['name']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
 
         query_params = []
 
@@ -137,14 +141,16 @@ class UdfApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/udf/{namespace}/{name}', 'DELETE',
+            "/udf/{namespace}/{name}",
+            "DELETE",
             path_params,
             query_params,
             header_params,
@@ -153,11 +159,14 @@ class UdfApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def get_udf_info(self, namespace, name, **kwargs):  # noqa: E501
         """get_udf_info  # noqa: E501
@@ -182,7 +191,7 @@ class UdfApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.get_udf_info_with_http_info(namespace, name, **kwargs)  # noqa: E501
 
     def get_udf_info_with_http_info(self, namespace, name, **kwargs):  # noqa: E501
@@ -213,43 +222,48 @@ class UdfApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'namespace',
-            'name'
-        ]
+        all_params = ["namespace", "name"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_udf_info" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
-                                                        local_var_params['namespace'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `namespace` when calling `get_udf_info`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `get_udf_info`"
+            )  # noqa: E501
         # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and ('name' not in local_var_params or  # noqa: E501
-                                                        local_var_params['name'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `name` when calling `get_udf_info`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `get_udf_info`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'name' in local_var_params:
-            path_params['name'] = local_var_params['name']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
 
         query_params = []
 
@@ -260,27 +274,32 @@ class UdfApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/udf/{namespace}/{name}', 'GET',
+            "/udf/{namespace}/{name}",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='UDFInfo',  # noqa: E501
+            response_type="UDFInfo",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def get_udf_info_list(self, **kwargs):  # noqa: E501
         """get_udf_info_list  # noqa: E501
@@ -311,7 +330,7 @@ class UdfApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.get_udf_info_list_with_http_info(**kwargs)  # noqa: E501
 
     def get_udf_info_list_with_http_info(self, **kwargs):  # noqa: E501
@@ -349,55 +368,79 @@ class UdfApi(object):
         local_var_params = locals()
 
         all_params = [
-            'namespace',
-            'created_by',
-            'page',
-            'per_page',
-            'type',
-            'search',
-            'orderby',
-            'tag'
+            "namespace",
+            "created_by",
+            "page",
+            "per_page",
+            "type",
+            "search",
+            "orderby",
+            "tag",
         ]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_udf_info_list" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
-        if 'namespace' in local_var_params and local_var_params['namespace'] is not None:  # noqa: E501
-            query_params.append(('namespace', local_var_params['namespace']))  # noqa: E501
-        if 'created_by' in local_var_params and local_var_params['created_by'] is not None:  # noqa: E501
-            query_params.append(('created_by', local_var_params['created_by']))  # noqa: E501
-        if 'page' in local_var_params and local_var_params['page'] is not None:  # noqa: E501
-            query_params.append(('page', local_var_params['page']))  # noqa: E501
-        if 'per_page' in local_var_params and local_var_params['per_page'] is not None:  # noqa: E501
-            query_params.append(('per_page', local_var_params['per_page']))  # noqa: E501
-        if 'type' in local_var_params and local_var_params['type'] is not None:  # noqa: E501
-            query_params.append(('type', local_var_params['type']))  # noqa: E501
-        if 'search' in local_var_params and local_var_params['search'] is not None:  # noqa: E501
-            query_params.append(('search', local_var_params['search']))  # noqa: E501
-        if 'orderby' in local_var_params and local_var_params['orderby'] is not None:  # noqa: E501
-            query_params.append(('orderby', local_var_params['orderby']))  # noqa: E501
-        if 'tag' in local_var_params and local_var_params['tag'] is not None:  # noqa: E501
-            query_params.append(('tag', local_var_params['tag']))  # noqa: E501
-            collection_formats['tag'] = 'csv'  # noqa: E501
+        if (
+            "namespace" in local_var_params
+            and local_var_params["namespace"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("namespace", local_var_params["namespace"])
+            )  # noqa: E501
+        if (
+            "created_by" in local_var_params
+            and local_var_params["created_by"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("created_by", local_var_params["created_by"])
+            )  # noqa: E501
+        if (
+            "page" in local_var_params and local_var_params["page"] is not None
+        ):  # noqa: E501
+            query_params.append(("page", local_var_params["page"]))  # noqa: E501
+        if (
+            "per_page" in local_var_params and local_var_params["per_page"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("per_page", local_var_params["per_page"])
+            )  # noqa: E501
+        if (
+            "type" in local_var_params and local_var_params["type"] is not None
+        ):  # noqa: E501
+            query_params.append(("type", local_var_params["type"]))  # noqa: E501
+        if (
+            "search" in local_var_params and local_var_params["search"] is not None
+        ):  # noqa: E501
+            query_params.append(("search", local_var_params["search"]))  # noqa: E501
+        if (
+            "orderby" in local_var_params and local_var_params["orderby"] is not None
+        ):  # noqa: E501
+            query_params.append(("orderby", local_var_params["orderby"]))  # noqa: E501
+        if (
+            "tag" in local_var_params and local_var_params["tag"] is not None
+        ):  # noqa: E501
+            query_params.append(("tag", local_var_params["tag"]))  # noqa: E501
+            collection_formats["tag"] = "csv"  # noqa: E501
 
         header_params = {}
 
@@ -406,27 +449,32 @@ class UdfApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/udfs', 'GET',
+            "/udfs",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='UDFListingData',  # noqa: E501
+            response_type="UDFListingData",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def get_udf_info_sharing_policies(self, namespace, name, **kwargs):  # noqa: E501
         """get_udf_info_sharing_policies  # noqa: E501
@@ -451,10 +499,14 @@ class UdfApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.get_udf_info_sharing_policies_with_http_info(namespace, name, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.get_udf_info_sharing_policies_with_http_info(
+            namespace, name, **kwargs
+        )  # noqa: E501
 
-    def get_udf_info_sharing_policies_with_http_info(self, namespace, name, **kwargs):  # noqa: E501
+    def get_udf_info_sharing_policies_with_http_info(
+        self, namespace, name, **kwargs
+    ):  # noqa: E501
         """get_udf_info_sharing_policies  # noqa: E501
 
         Get all sharing details of the udf  # noqa: E501
@@ -482,43 +534,48 @@ class UdfApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'namespace',
-            'name'
-        ]
+        all_params = ["namespace", "name"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_udf_info_sharing_policies" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
-                                                        local_var_params['namespace'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `namespace` when calling `get_udf_info_sharing_policies`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `get_udf_info_sharing_policies`"
+            )  # noqa: E501
         # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and ('name' not in local_var_params or  # noqa: E501
-                                                        local_var_params['name'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `name` when calling `get_udf_info_sharing_policies`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `get_udf_info_sharing_policies`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'name' in local_var_params:
-            path_params['name'] = local_var_params['name']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
 
         query_params = []
 
@@ -529,27 +586,32 @@ class UdfApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/udf/{namespace}/{name}/share', 'GET',
+            "/udf/{namespace}/{name}/share",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[UDFSharing]',  # noqa: E501
+            response_type="list[UDFSharing]",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def register_udf_info(self, namespace, name, udf, **kwargs):  # noqa: E501
         """register_udf_info  # noqa: E501
@@ -575,10 +637,14 @@ class UdfApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.register_udf_info_with_http_info(namespace, name, udf, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.register_udf_info_with_http_info(
+            namespace, name, udf, **kwargs
+        )  # noqa: E501
 
-    def register_udf_info_with_http_info(self, namespace, name, udf, **kwargs):  # noqa: E501
+    def register_udf_info_with_http_info(
+        self, namespace, name, udf, **kwargs
+    ):  # noqa: E501
         """register_udf_info  # noqa: E501
 
         register a UDF in the given namespace  # noqa: E501
@@ -607,48 +673,56 @@ class UdfApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'namespace',
-            'name',
-            'udf'
-        ]
+        all_params = ["namespace", "name", "udf"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method register_udf_info" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
-                                                        local_var_params['namespace'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `namespace` when calling `register_udf_info`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `register_udf_info`"
+            )  # noqa: E501
         # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and ('name' not in local_var_params or  # noqa: E501
-                                                        local_var_params['name'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `name` when calling `register_udf_info`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `register_udf_info`"
+            )  # noqa: E501
         # verify the required parameter 'udf' is set
-        if self.api_client.client_side_validation and ('udf' not in local_var_params or  # noqa: E501
-                                                        local_var_params['udf'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `udf` when calling `register_udf_info`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "udf" not in local_var_params
+            or local_var_params["udf"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `udf` when calling `register_udf_info`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'name' in local_var_params:
-            path_params['name'] = local_var_params['name']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
 
         query_params = []
 
@@ -658,21 +732,26 @@ class UdfApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'udf' in local_var_params:
-            body_params = local_var_params['udf']
+        if "udf" in local_var_params:
+            body_params = local_var_params["udf"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/udf/{namespace}/{name}', 'POST',
+            "/udf/{namespace}/{name}",
+            "POST",
             path_params,
             query_params,
             header_params,
@@ -681,11 +760,14 @@ class UdfApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def share_udf_info(self, namespace, name, udf_sharing, **kwargs):  # noqa: E501
         """share_udf_info  # noqa: E501
@@ -711,10 +793,14 @@ class UdfApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.share_udf_info_with_http_info(namespace, name, udf_sharing, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.share_udf_info_with_http_info(
+            namespace, name, udf_sharing, **kwargs
+        )  # noqa: E501
 
-    def share_udf_info_with_http_info(self, namespace, name, udf_sharing, **kwargs):  # noqa: E501
+    def share_udf_info_with_http_info(
+        self, namespace, name, udf_sharing, **kwargs
+    ):  # noqa: E501
         """share_udf_info  # noqa: E501
 
         Share a UDF with a user  # noqa: E501
@@ -743,48 +829,56 @@ class UdfApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'namespace',
-            'name',
-            'udf_sharing'
-        ]
+        all_params = ["namespace", "name", "udf_sharing"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method share_udf_info" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
-                                                        local_var_params['namespace'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `namespace` when calling `share_udf_info`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `share_udf_info`"
+            )  # noqa: E501
         # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and ('name' not in local_var_params or  # noqa: E501
-                                                        local_var_params['name'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `name` when calling `share_udf_info`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `share_udf_info`"
+            )  # noqa: E501
         # verify the required parameter 'udf_sharing' is set
-        if self.api_client.client_side_validation and ('udf_sharing' not in local_var_params or  # noqa: E501
-                                                        local_var_params['udf_sharing'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `udf_sharing` when calling `share_udf_info`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "udf_sharing" not in local_var_params
+            or local_var_params["udf_sharing"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `udf_sharing` when calling `share_udf_info`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'name' in local_var_params:
-            path_params['name'] = local_var_params['name']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
 
         query_params = []
 
@@ -794,21 +888,26 @@ class UdfApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'udf_sharing' in local_var_params:
-            body_params = local_var_params['udf_sharing']
+        if "udf_sharing" in local_var_params:
+            body_params = local_var_params["udf_sharing"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/udf/{namespace}/{name}/share', 'PATCH',
+            "/udf/{namespace}/{name}/share",
+            "PATCH",
             path_params,
             query_params,
             header_params,
@@ -817,11 +916,14 @@ class UdfApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def submit_generic_udf(self, namespace, udf, **kwargs):  # noqa: E501
         """submit_generic_udf  # noqa: E501
@@ -847,8 +949,10 @@ class UdfApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.submit_generic_udf_with_http_info(namespace, udf, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.submit_generic_udf_with_http_info(
+            namespace, udf, **kwargs
+        )  # noqa: E501
 
     def submit_generic_udf_with_http_info(self, namespace, udf, **kwargs):  # noqa: E501
         """submit_generic_udf  # noqa: E501
@@ -879,81 +983,95 @@ class UdfApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'namespace',
-            'udf',
-            'accept_encoding'
-        ]
+        all_params = ["namespace", "udf", "accept_encoding"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method submit_generic_udf" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
-                                                        local_var_params['namespace'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `namespace` when calling `submit_generic_udf`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `submit_generic_udf`"
+            )  # noqa: E501
         # verify the required parameter 'udf' is set
-        if self.api_client.client_side_validation and ('udf' not in local_var_params or  # noqa: E501
-                                                        local_var_params['udf'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `udf` when calling `submit_generic_udf`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "udf" not in local_var_params
+            or local_var_params["udf"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `udf` when calling `submit_generic_udf`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
 
         query_params = []
 
         header_params = {}
-        if 'accept_encoding' in local_var_params:
-            header_params['Accept-Encoding'] = local_var_params['accept_encoding']  # noqa: E501
+        if "accept_encoding" in local_var_params:
+            header_params["Accept-Encoding"] = local_var_params[
+                "accept_encoding"
+            ]  # noqa: E501
 
         form_params = []
         local_var_files = {}
 
         body_params = None
-        if 'udf' in local_var_params:
-            body_params = local_var_params['udf']
+        if "udf" in local_var_params:
+            body_params = local_var_params["udf"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/octet-stream'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/octet-stream"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/udfs/generic/{namespace}', 'POST',
+            "/udfs/generic/{namespace}",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='file',  # noqa: E501
+            response_type="file",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def submit_udf(self, namespace, array, udf, **kwargs):  # noqa: E501
         """submit_udf  # noqa: E501
@@ -982,8 +1100,10 @@ class UdfApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.submit_udf_with_http_info(namespace, array, udf, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.submit_udf_with_http_info(
+            namespace, array, udf, **kwargs
+        )  # noqa: E501
 
     def submit_udf_with_http_info(self, namespace, array, udf, **kwargs):  # noqa: E501
         """submit_udf  # noqa: E501
@@ -1017,94 +1137,111 @@ class UdfApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'namespace',
-            'array',
-            'udf',
-            'x_payer',
-            'accept_encoding',
-            'v2'
-        ]
+        all_params = ["namespace", "array", "udf", "x_payer", "accept_encoding", "v2"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method submit_udf" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
-                                                        local_var_params['namespace'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `namespace` when calling `submit_udf`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `submit_udf`"
+            )  # noqa: E501
         # verify the required parameter 'array' is set
-        if self.api_client.client_side_validation and ('array' not in local_var_params or  # noqa: E501
-                                                        local_var_params['array'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `array` when calling `submit_udf`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "array" not in local_var_params
+            or local_var_params["array"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `submit_udf`"
+            )  # noqa: E501
         # verify the required parameter 'udf' is set
-        if self.api_client.client_side_validation and ('udf' not in local_var_params or  # noqa: E501
-                                                        local_var_params['udf'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `udf` when calling `submit_udf`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "udf" not in local_var_params
+            or local_var_params["udf"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `udf` when calling `submit_udf`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'array' in local_var_params:
-            path_params['array'] = local_var_params['array']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
-        if 'v2' in local_var_params and local_var_params['v2'] is not None:  # noqa: E501
-            query_params.append(('v2', local_var_params['v2']))  # noqa: E501
+        if (
+            "v2" in local_var_params and local_var_params["v2"] is not None
+        ):  # noqa: E501
+            query_params.append(("v2", local_var_params["v2"]))  # noqa: E501
 
         header_params = {}
-        if 'x_payer' in local_var_params:
-            header_params['X-Payer'] = local_var_params['x_payer']  # noqa: E501
-        if 'accept_encoding' in local_var_params:
-            header_params['Accept-Encoding'] = local_var_params['accept_encoding']  # noqa: E501
+        if "x_payer" in local_var_params:
+            header_params["X-Payer"] = local_var_params["x_payer"]  # noqa: E501
+        if "accept_encoding" in local_var_params:
+            header_params["Accept-Encoding"] = local_var_params[
+                "accept_encoding"
+            ]  # noqa: E501
 
         form_params = []
         local_var_files = {}
 
         body_params = None
-        if 'udf' in local_var_params:
-            body_params = local_var_params['udf']
+        if "udf" in local_var_params:
+            body_params = local_var_params["udf"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/octet-stream'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/octet-stream"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/arrays/{namespace}/{array}/udf/submit', 'POST',
+            "/arrays/{namespace}/{array}/udf/submit",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='file',  # noqa: E501
+            response_type="file",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def update_udf_info(self, namespace, name, udf, **kwargs):  # noqa: E501
         """update_udf_info  # noqa: E501
@@ -1130,10 +1267,14 @@ class UdfApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.update_udf_info_with_http_info(namespace, name, udf, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.update_udf_info_with_http_info(
+            namespace, name, udf, **kwargs
+        )  # noqa: E501
 
-    def update_udf_info_with_http_info(self, namespace, name, udf, **kwargs):  # noqa: E501
+    def update_udf_info_with_http_info(
+        self, namespace, name, udf, **kwargs
+    ):  # noqa: E501
         """update_udf_info  # noqa: E501
 
         updated an existing registerd UDF in the given namespace  # noqa: E501
@@ -1162,48 +1303,56 @@ class UdfApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'namespace',
-            'name',
-            'udf'
-        ]
+        all_params = ["namespace", "name", "udf"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method update_udf_info" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
-                                                        local_var_params['namespace'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `namespace` when calling `update_udf_info`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `update_udf_info`"
+            )  # noqa: E501
         # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and ('name' not in local_var_params or  # noqa: E501
-                                                        local_var_params['name'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `name` when calling `update_udf_info`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `update_udf_info`"
+            )  # noqa: E501
         # verify the required parameter 'udf' is set
-        if self.api_client.client_side_validation and ('udf' not in local_var_params or  # noqa: E501
-                                                        local_var_params['udf'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `udf` when calling `update_udf_info`")  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "udf" not in local_var_params
+            or local_var_params["udf"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `udf` when calling `update_udf_info`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if 'namespace' in local_var_params:
-            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
-        if 'name' in local_var_params:
-            path_params['name'] = local_var_params['name']  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
 
         query_params = []
 
@@ -1213,21 +1362,26 @@ class UdfApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'udf' in local_var_params:
-            body_params = local_var_params['udf']
+        if "udf" in local_var_params:
+            body_params = local_var_params["udf"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
-        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            '/udf/{namespace}/{name}', 'PATCH',
+            "/udf/{namespace}/{name}",
+            "PATCH",
             path_params,
             query_params,
             header_params,
@@ -1236,8 +1390,11 @@ class UdfApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )

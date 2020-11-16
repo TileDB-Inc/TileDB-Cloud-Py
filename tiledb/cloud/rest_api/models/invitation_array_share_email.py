@@ -32,17 +32,13 @@ class InvitationArrayShareEmail(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'actions': 'list[ArrayActions]',
-        'invitee_email': 'list[str]'
-    }
+    openapi_types = {"actions": "list[ArrayActions]", "invitee_email": "list[str]"}
 
-    attribute_map = {
-        'actions': 'actions',
-        'invitee_email': 'invitee_email'
-    }
+    attribute_map = {"actions": "actions", "invitee_email": "invitee_email"}
 
-    def __init__(self, actions=None, invitee_email=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self, actions=None, invitee_email=None, local_vars_configuration=None
+    ):  # noqa: E501
         """InvitationArrayShareEmail - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -75,8 +71,12 @@ class InvitationArrayShareEmail(object):
         :param actions: The actions of this InvitationArrayShareEmail.  # noqa: E501
         :type: list[ArrayActions]
         """
-        if self.local_vars_configuration.client_side_validation and actions is None:  # noqa: E501
-            raise ValueError("Invalid value for `actions`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and actions is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `actions`, must not be `None`"
+            )  # noqa: E501
 
         self._actions = actions
 
@@ -98,8 +98,13 @@ class InvitationArrayShareEmail(object):
         :param invitee_email: The invitee_email of this InvitationArrayShareEmail.  # noqa: E501
         :type: list[str]
         """
-        if self.local_vars_configuration.client_side_validation and invitee_email is None:  # noqa: E501
-            raise ValueError("Invalid value for `invitee_email`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and invitee_email is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `invitee_email`, must not be `None`"
+            )  # noqa: E501
 
         self._invitee_email = invitee_email
 
@@ -110,18 +115,20 @@ class InvitationArrayShareEmail(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

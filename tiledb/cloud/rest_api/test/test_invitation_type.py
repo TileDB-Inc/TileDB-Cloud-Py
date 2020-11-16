@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.invitation_type import InvitationType  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestInvitationType(unittest.TestCase):
     """InvitationType unit test stubs"""
 
@@ -30,16 +31,14 @@ class TestInvitationType(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test InvitationType
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.invitation_type.InvitationType()  # noqa: E501
-        if include_optional :
-            return InvitationType(
-            )
-        else :
-            return InvitationType(
-        )
+        if include_optional:
+            return InvitationType()
+        else:
+            return InvitationType()
 
     def testInvitationType(self):
         """Test InvitationType"""
@@ -47,5 +46,5 @@ class TestInvitationType(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
