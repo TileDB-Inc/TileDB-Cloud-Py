@@ -23,17 +23,17 @@ class TestArrayTasksApi(unittest.TestCase):
     """ArrayTasksApi unit test stubs"""
 
     def setUp(self):
-        self.api = (
-            tiledb.cloud.rest_api.api.array_tasks_api.ArrayTasksApi()
-        )  # noqa: E501
+        self.api = tiledb.cloud.rest_api.api.array_tasks_api.ArrayTasksApi()  # noqa: E501
 
     def tearDown(self):
         pass
 
     def test_get_array_tasks_sidebar(self):
-        """Test case for get_array_tasks_sidebar"""
+        """Test case for get_array_tasks_sidebar
+
+        """
         pass
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

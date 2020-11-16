@@ -1,5 +1,6 @@
 # UDFInfoVersion
 
+Version of User-defined function that can persist in db
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

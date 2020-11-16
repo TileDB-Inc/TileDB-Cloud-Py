@@ -13,11 +13,11 @@
 from __future__ import absolute_import
 
 import unittest
+import datetime
 
 import rest_api
 from tiledb.cloud.rest_api.models.udf_actions import UDFActions  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
-
 
 class TestUDFActions(unittest.TestCase):
     """UDFActions unit test stubs"""
@@ -28,12 +28,24 @@ class TestUDFActions(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def make_instance(self, include_optional):
+        """Test UDFActions
+            include_option is a boolean, when False only required
+            params are included, when True both required and
+            optional params are included """
+        # model = tiledb.cloud.rest_api.models.udf_actions.UDFActions()  # noqa: E501
+        if include_optional :
+            return UDFActions(
+            )
+        else :
+            return UDFActions(
+        )
+
     def testUDFActions(self):
         """Test UDFActions"""
-        # FIXME: construct object with mandatory attributes with example values
-        # model = tiledb.cloud.rest_api.models.udf_actions.UDFActions()  # noqa: E501
-        pass
+        inst_req_only = self.make_instance(include_optional=False)
+        inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

@@ -1,5 +1,6 @@
 # InvitationOrganizationJoinEmail
 
+Encapsulates information regarding inviting people using email to join organization, same permissions for all invitees
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

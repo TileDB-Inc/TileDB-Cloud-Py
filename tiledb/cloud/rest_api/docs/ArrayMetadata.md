@@ -1,5 +1,6 @@
 # ArrayMetadata
 
+user's TileDB array metadata
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

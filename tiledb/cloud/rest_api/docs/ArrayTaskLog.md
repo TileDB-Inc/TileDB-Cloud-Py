@@ -1,5 +1,6 @@
 # ArrayTaskLog
 
+Array task stderr/stdout logs
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

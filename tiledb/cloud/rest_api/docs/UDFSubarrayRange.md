@@ -1,5 +1,6 @@
 # UDFSubarrayRange
 
+A dimension range to query
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

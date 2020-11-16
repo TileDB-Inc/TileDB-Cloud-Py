@@ -1,5 +1,6 @@
 # SQLParameters
 
+Parameters for running sql query
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

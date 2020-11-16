@@ -28,26 +28,43 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
+
 # Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.InvitationApi(rest_api.ApiClient(configuration))
-invitation = 'invitation_example' # str | the id of invitation about to be accepted
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.InvitationApi(api_client)
+    invitation = 'invitation_example' # str | the id of invitation about to be accepted
 
-try:
-    api_instance.accept_invitation(invitation)
-except ApiException as e:
-    print("Exception when calling InvitationApi->accept_invitation: %s\n" % e)
+    try:
+        api_instance.accept_invitation(invitation)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->accept_invitation: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -57,26 +74,43 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
+
 # Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.InvitationApi(rest_api.ApiClient(configuration))
-invitation = 'invitation_example' # str | the id of invitation about to be accepted
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.InvitationApi(api_client)
+    invitation = 'invitation_example' # str | the id of invitation about to be accepted
 
-try:
-    api_instance.accept_invitation(invitation)
-except ApiException as e:
-    print("Exception when calling InvitationApi->accept_invitation: %s\n" % e)
+    try:
+        api_instance.accept_invitation(invitation)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->accept_invitation: %s\n" % e)
 ```
 
 ### Parameters
@@ -123,27 +157,44 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.InvitationApi(rest_api.ApiClient(configuration))
-invitation = 'invitation_example' # str | the id of invitation about to be cancelled
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.InvitationApi(api_client)
+    invitation = 'invitation_example' # str | the id of invitation about to be cancelled
 organization = 'organization_example' # str | name or uuid of organization
 
-try:
-    api_instance.cancel_join_organization(invitation, organization)
-except ApiException as e:
-    print("Exception when calling InvitationApi->cancel_join_organization: %s\n" % e)
+    try:
+        api_instance.cancel_join_organization(invitation, organization)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->cancel_join_organization: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -153,27 +204,44 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.InvitationApi(rest_api.ApiClient(configuration))
-invitation = 'invitation_example' # str | the id of invitation about to be cancelled
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.InvitationApi(api_client)
+    invitation = 'invitation_example' # str | the id of invitation about to be cancelled
 organization = 'organization_example' # str | name or uuid of organization
 
-try:
-    api_instance.cancel_join_organization(invitation, organization)
-except ApiException as e:
-    print("Exception when calling InvitationApi->cancel_join_organization: %s\n" % e)
+    try:
+        api_instance.cancel_join_organization(invitation, organization)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->cancel_join_organization: %s\n" % e)
 ```
 
 ### Parameters
@@ -221,28 +289,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.InvitationApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.InvitationApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 invitation = 'invitation_example' # str | the id of invitation about to be cancelled
 array = 'array_example' # str | name/uri of array that is url-encoded
 
-try:
-    api_instance.cancel_share_array_by_invite(namespace, invitation, array)
-except ApiException as e:
-    print("Exception when calling InvitationApi->cancel_share_array_by_invite: %s\n" % e)
+    try:
+        api_instance.cancel_share_array_by_invite(namespace, invitation, array)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->cancel_share_array_by_invite: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -252,28 +337,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.InvitationApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.InvitationApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 invitation = 'invitation_example' # str | the id of invitation about to be cancelled
 array = 'array_example' # str | name/uri of array that is url-encoded
 
-try:
-    api_instance.cancel_share_array_by_invite(namespace, invitation, array)
-except ApiException as e:
-    print("Exception when calling InvitationApi->cancel_share_array_by_invite: %s\n" % e)
+    try:
+        api_instance.cancel_share_array_by_invite(namespace, invitation, array)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->cancel_share_array_by_invite: %s\n" % e)
 ```
 
 ### Parameters
@@ -322,21 +424,38 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.InvitationApi(rest_api.ApiClient(configuration))
-organization = 'organization_example' # str | name or id of organization to filter (optional)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.InvitationApi(api_client)
+    organization = 'organization_example' # str | name or id of organization to filter (optional)
 array = 'array_example' # str | name/uri of array that is url-encoded to filter (optional)
 start = 56 # int | start time for tasks to filter by (optional)
 end = 56 # int | end time for tasks to filter by (optional)
@@ -346,11 +465,11 @@ type = 'type_example' # str | invitation type, \"ARRAY_SHARE\", \"JOIN_ORGANIZAT
 status = 'status_example' # str | Filter to only return \"PENDING\", \"ACCEPTED\" (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include timestamp, array_name, organization_name (optional)
 
-try:
-    api_response = api_instance.fetch_invitations(organization=organization, array=array, start=start, end=end, page=page, per_page=per_page, type=type, status=status, orderby=orderby)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling InvitationApi->fetch_invitations: %s\n" % e)
+    try:
+        api_response = api_instance.fetch_invitations(organization=organization, array=array, start=start, end=end, page=page, per_page=per_page, type=type, status=status, orderby=orderby)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->fetch_invitations: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -360,21 +479,38 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.InvitationApi(rest_api.ApiClient(configuration))
-organization = 'organization_example' # str | name or id of organization to filter (optional)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.InvitationApi(api_client)
+    organization = 'organization_example' # str | name or id of organization to filter (optional)
 array = 'array_example' # str | name/uri of array that is url-encoded to filter (optional)
 start = 56 # int | start time for tasks to filter by (optional)
 end = 56 # int | end time for tasks to filter by (optional)
@@ -384,11 +520,11 @@ type = 'type_example' # str | invitation type, \"ARRAY_SHARE\", \"JOIN_ORGANIZAT
 status = 'status_example' # str | Filter to only return \"PENDING\", \"ACCEPTED\" (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include timestamp, array_name, organization_name (optional)
 
-try:
-    api_response = api_instance.fetch_invitations(organization=organization, array=array, start=start, end=end, page=page, per_page=per_page, type=type, status=status, orderby=orderby)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling InvitationApi->fetch_invitations: %s\n" % e)
+    try:
+        api_response = api_instance.fetch_invitations(organization=organization, array=array, start=start, end=end, page=page, per_page=per_page, type=type, status=status, orderby=orderby)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->fetch_invitations: %s\n" % e)
 ```
 
 ### Parameters
@@ -442,27 +578,44 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.InvitationApi(rest_api.ApiClient(configuration))
-organization = 'organization_example' # str | name or uuid of organization
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.InvitationApi(api_client)
+    organization = 'organization_example' # str | name or uuid of organization
 email_invite = rest_api.InvitationOrganizationJoinEmail() # InvitationOrganizationJoinEmail | list of email recipients
 
-try:
-    api_instance.join_organization(organization, email_invite)
-except ApiException as e:
-    print("Exception when calling InvitationApi->join_organization: %s\n" % e)
+    try:
+        api_instance.join_organization(organization, email_invite)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->join_organization: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -472,27 +625,44 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.InvitationApi(rest_api.ApiClient(configuration))
-organization = 'organization_example' # str | name or uuid of organization
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.InvitationApi(api_client)
+    organization = 'organization_example' # str | name or uuid of organization
 email_invite = rest_api.InvitationOrganizationJoinEmail() # InvitationOrganizationJoinEmail | list of email recipients
 
-try:
-    api_instance.join_organization(organization, email_invite)
-except ApiException as e:
-    print("Exception when calling InvitationApi->join_organization: %s\n" % e)
+    try:
+        api_instance.join_organization(organization, email_invite)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->join_organization: %s\n" % e)
 ```
 
 ### Parameters
@@ -540,28 +710,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.InvitationApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.InvitationApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 email_invite = rest_api.InvitationArrayShareEmail() # InvitationArrayShareEmail | list of email recipients
 
-try:
-    api_instance.share_array_by_invite(namespace, array, email_invite)
-except ApiException as e:
-    print("Exception when calling InvitationApi->share_array_by_invite: %s\n" % e)
+    try:
+        api_instance.share_array_by_invite(namespace, array, email_invite)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->share_array_by_invite: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -571,28 +758,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.InvitationApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.InvitationApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 email_invite = rest_api.InvitationArrayShareEmail() # InvitationArrayShareEmail | list of email recipients
 
-try:
-    api_instance.share_array_by_invite(namespace, array, email_invite)
-except ApiException as e:
-    print("Exception when calling InvitationApi->share_array_by_invite: %s\n" % e)
+    try:
+        api_instance.share_array_by_invite(namespace, array, email_invite)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->share_array_by_invite: %s\n" % e)
 ```
 
 ### Parameters

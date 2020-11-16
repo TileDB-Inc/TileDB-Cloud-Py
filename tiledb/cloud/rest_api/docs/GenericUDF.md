@@ -1,5 +1,6 @@
 # GenericUDF
 
+User-defined function
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
@@ -9,7 +10,7 @@ Name | Type | Description | Notes
 **image_name** | **str** | Docker image name to use for udf | [optional] 
 **_exec** | **str** | Type-specific executable text | [optional] 
 **exec_raw** | **str** | optional raw text to store of serialized function, used for showing in UI | [optional] 
-**argument** | **str** | Argument to pass to udf function | [optional] 
+**argument** | **str** | Argument(s) to pass to udf function, tuple or list of args/kwargs which can be in native or json format | [optional] 
 **result_format** | [**UDFResultType**](UDFResultType.md) |  | [optional] 
 **task_name** | **str** | name of task, optional | [optional] 
 

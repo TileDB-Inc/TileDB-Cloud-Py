@@ -13,11 +13,11 @@
 from __future__ import absolute_import
 
 import unittest
+import datetime
 
 import rest_api
 from tiledb.cloud.rest_api.models.udf_listing_data import UDFListingData  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
-
 
 class TestUDFListingData(unittest.TestCase):
     """UDFListingData unit test stubs"""
@@ -28,12 +28,42 @@ class TestUDFListingData(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def make_instance(self, include_optional):
+        """Test UDFListingData
+            include_option is a boolean, when False only required
+            params are included, when True both required and
+            optional params are included """
+        # model = tiledb.cloud.rest_api.models.udf_listing_data.UDFListingData()  # noqa: E501
+        if include_optional :
+            return UDFListingData(
+                udf_info_list = [
+                    tiledb.cloud.rest_api.models.udf_info.UDFInfo(
+                        id = '00000000-0000-0000-0000-000000000000', 
+                        name = '0', 
+                        language = 'python', 
+                        type = 'single_array', 
+                        readme = '0', 
+                        license_id = '0', 
+                        license_text = '0', 
+                        tags = [
+                            '0'
+                            ], )
+                    ], 
+                pagination_metadata = tiledb.cloud.rest_api.models.pagination_metadata.PaginationMetadata(
+                    page = 1.0, 
+                    per_page = 10.0, 
+                    total_pages = 14.0, 
+                    total_items = 138.0, )
+            )
+        else :
+            return UDFListingData(
+        )
+
     def testUDFListingData(self):
         """Test UDFListingData"""
-        # FIXME: construct object with mandatory attributes with example values
-        # model = tiledb.cloud.rest_api.models.udf_listing_data.UDFListingData()  # noqa: E501
-        pass
+        inst_req_only = self.make_instance(include_optional=False)
+        inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

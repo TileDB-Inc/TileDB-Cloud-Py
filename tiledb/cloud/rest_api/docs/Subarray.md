@@ -1,5 +1,6 @@
 # Subarray
 
+A Subarray
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

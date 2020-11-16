@@ -1,5 +1,6 @@
 # ArrayTaskData
 
+Object including array tasks and metadata
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

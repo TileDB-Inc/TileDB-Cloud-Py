@@ -1,5 +1,6 @@
 # ArrayTaskBrowserSidebar
 
+Object for ui array tasks browser page
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

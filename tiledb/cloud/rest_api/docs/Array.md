@@ -1,5 +1,6 @@
 # Array
 
+Represents an open array
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

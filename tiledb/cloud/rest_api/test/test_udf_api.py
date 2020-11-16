@@ -29,41 +29,59 @@ class TestUdfApi(unittest.TestCase):
         pass
 
     def test_delete_udf_info(self):
-        """Test case for delete_udf_info"""
+        """Test case for delete_udf_info
+
+        """
         pass
 
     def test_get_udf_info(self):
-        """Test case for get_udf_info"""
+        """Test case for get_udf_info
+
+        """
         pass
 
     def test_get_udf_info_list(self):
-        """Test case for get_udf_info_list"""
+        """Test case for get_udf_info_list
+
+        """
         pass
 
     def test_get_udf_info_sharing_policies(self):
-        """Test case for get_udf_info_sharing_policies"""
+        """Test case for get_udf_info_sharing_policies
+
+        """
         pass
 
     def test_register_udf_info(self):
-        """Test case for register_udf_info"""
+        """Test case for register_udf_info
+
+        """
         pass
 
     def test_share_udf_info(self):
-        """Test case for share_udf_info"""
+        """Test case for share_udf_info
+
+        """
         pass
 
     def test_submit_generic_udf(self):
-        """Test case for submit_generic_udf"""
+        """Test case for submit_generic_udf
+
+        """
         pass
 
     def test_submit_udf(self):
-        """Test case for submit_udf"""
+        """Test case for submit_udf
+
+        """
         pass
 
     def test_update_udf_info(self):
-        """Test case for update_udf_info"""
+        """Test case for update_udf_info
+
+        """
         pass
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

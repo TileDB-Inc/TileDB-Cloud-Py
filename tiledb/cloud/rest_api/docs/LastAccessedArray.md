@@ -1,5 +1,6 @@
 # LastAccessedArray
 
+Information related to last access of an array
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

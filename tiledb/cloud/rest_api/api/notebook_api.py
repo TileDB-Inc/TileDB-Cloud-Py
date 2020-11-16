@@ -18,7 +18,10 @@ import re  # noqa: F401
 import six
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import ApiTypeError, ApiValueError
+from tiledb.cloud.rest_api.exceptions import (  # noqa: F401
+    ApiTypeError,
+    ApiValueError
+)
 
 
 class NotebookApi(object):
@@ -55,14 +58,10 @@ class NotebookApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_notebook_server_status_with_http_info(
-            namespace, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.get_notebook_server_status_with_http_info(namespace, **kwargs)  # noqa: E501
 
-    def get_notebook_server_status_with_http_info(
-        self, namespace, **kwargs
-    ):  # noqa: E501
+    def get_notebook_server_status_with_http_info(self, namespace, **kwargs):  # noqa: E501
         """get_notebook_server_status  # noqa: E501
 
         Get status of the notebook server  # noqa: E501
@@ -89,31 +88,36 @@ class NotebookApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'namespace'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_notebook_server_status" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'namespace' is set
-        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `get_notebook_server_status`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
+                                                        local_var_params['namespace'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `namespace` when calling `get_notebook_server_status`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if 'namespace' in local_var_params:
+            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
 
         query_params = []
 
@@ -124,32 +128,27 @@ class NotebookApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/server/{namespace}/status",
-            "GET",
+            '/notebooks/server/{namespace}/status', 'GET',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="NotebookStatus",  # noqa: E501
+            response_type='NotebookStatus',  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
     def shutdown_notebook_server(self, namespace, **kwargs):  # noqa: E501
         """shutdown_notebook_server  # noqa: E501
@@ -173,14 +172,10 @@ class NotebookApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.shutdown_notebook_server_with_http_info(
-            namespace, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.shutdown_notebook_server_with_http_info(namespace, **kwargs)  # noqa: E501
 
-    def shutdown_notebook_server_with_http_info(
-        self, namespace, **kwargs
-    ):  # noqa: E501
+    def shutdown_notebook_server_with_http_info(self, namespace, **kwargs):  # noqa: E501
         """shutdown_notebook_server  # noqa: E501
 
         Shutdown a notebook server  # noqa: E501
@@ -207,31 +202,36 @@ class NotebookApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'namespace'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method shutdown_notebook_server" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'namespace' is set
-        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `shutdown_notebook_server`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
+                                                        local_var_params['namespace'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `namespace` when calling `shutdown_notebook_server`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if 'namespace' in local_var_params:
+            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
 
         query_params = []
 
@@ -242,16 +242,14 @@ class NotebookApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/server/{namespace}",
-            "DELETE",
+            '/notebooks/server/{namespace}', 'DELETE',
             path_params,
             query_params,
             header_params,
@@ -260,18 +258,13 @@ class NotebookApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
-    def update_notebook_name(
-        self, namespace, array, notebook_metadata, **kwargs
-    ):  # noqa: E501
+    def update_notebook_name(self, namespace, array, notebook_metadata, **kwargs):  # noqa: E501
         """update_notebook_name  # noqa: E501
 
         update name on a notebok, moving related s3 object to new location  # noqa: E501
@@ -295,14 +288,10 @@ class NotebookApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.update_notebook_name_with_http_info(
-            namespace, array, notebook_metadata, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.update_notebook_name_with_http_info(namespace, array, notebook_metadata, **kwargs)  # noqa: E501
 
-    def update_notebook_name_with_http_info(
-        self, namespace, array, notebook_metadata, **kwargs
-    ):  # noqa: E501
+    def update_notebook_name_with_http_info(self, namespace, array, notebook_metadata, **kwargs):  # noqa: E501
         """update_notebook_name  # noqa: E501
 
         update name on a notebok, moving related s3 object to new location  # noqa: E501
@@ -331,46 +320,48 @@ class NotebookApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace", "array", "notebook_metadata"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'namespace',
+            'array',
+            'notebook_metadata'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method update_notebook_name" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'namespace' is set
-        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `update_notebook_name`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
+                                                        local_var_params['namespace'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `namespace` when calling `update_notebook_name`")  # noqa: E501
         # verify the required parameter 'array' is set
-        if "array" not in local_var_params or local_var_params["array"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `array` when calling `update_notebook_name`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('array' not in local_var_params or  # noqa: E501
+                                                        local_var_params['array'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `array` when calling `update_notebook_name`")  # noqa: E501
         # verify the required parameter 'notebook_metadata' is set
-        if (
-            "notebook_metadata" not in local_var_params
-            or local_var_params["notebook_metadata"] is None
-        ):
-            raise ApiValueError(
-                "Missing the required parameter `notebook_metadata` when calling `update_notebook_name`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('notebook_metadata' not in local_var_params or  # noqa: E501
+                                                        local_var_params['notebook_metadata'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `notebook_metadata` when calling `update_notebook_name`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "array" in local_var_params:
-            path_params["array"] = local_var_params["array"]  # noqa: E501
+        if 'namespace' in local_var_params:
+            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
+        if 'array' in local_var_params:
+            path_params['array'] = local_var_params['array']  # noqa: E501
 
         query_params = []
 
@@ -380,26 +371,21 @@ class NotebookApi(object):
         local_var_files = {}
 
         body_params = None
-        if "notebook_metadata" in local_var_params:
-            body_params = local_var_params["notebook_metadata"]
+        if 'notebook_metadata' in local_var_params:
+            body_params = local_var_params['notebook_metadata']
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/{namespace}/{array}/rename",
-            "PATCH",
+            '/notebooks/{namespace}/{array}/rename', 'PATCH',
             path_params,
             query_params,
             header_params,
@@ -408,11 +394,8 @@ class NotebookApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)

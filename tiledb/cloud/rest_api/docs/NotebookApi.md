@@ -25,27 +25,44 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
+
 # Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.NotebookApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace notebook is in (an organization name or user's username)
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.NotebookApi(api_client)
+    namespace = 'namespace_example' # str | namespace notebook is in (an organization name or user's username)
 
-try:
-    api_response = api_instance.get_notebook_server_status(namespace)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling NotebookApi->get_notebook_server_status: %s\n" % e)
+    try:
+        api_response = api_instance.get_notebook_server_status(namespace)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling NotebookApi->get_notebook_server_status: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -55,27 +72,44 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
+
 # Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.NotebookApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace notebook is in (an organization name or user's username)
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.NotebookApi(api_client)
+    namespace = 'namespace_example' # str | namespace notebook is in (an organization name or user's username)
 
-try:
-    api_response = api_instance.get_notebook_server_status(namespace)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling NotebookApi->get_notebook_server_status: %s\n" % e)
+    try:
+        api_response = api_instance.get_notebook_server_status(namespace)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling NotebookApi->get_notebook_server_status: %s\n" % e)
 ```
 
 ### Parameters
@@ -123,26 +157,43 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
+
 # Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.NotebookApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace notebook is in (an organization name or user's username)
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.NotebookApi(api_client)
+    namespace = 'namespace_example' # str | namespace notebook is in (an organization name or user's username)
 
-try:
-    api_instance.shutdown_notebook_server(namespace)
-except ApiException as e:
-    print("Exception when calling NotebookApi->shutdown_notebook_server: %s\n" % e)
+    try:
+        api_instance.shutdown_notebook_server(namespace)
+    except ApiException as e:
+        print("Exception when calling NotebookApi->shutdown_notebook_server: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -152,26 +203,43 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
+
 # Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.NotebookApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace notebook is in (an organization name or user's username)
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.NotebookApi(api_client)
+    namespace = 'namespace_example' # str | namespace notebook is in (an organization name or user's username)
 
-try:
-    api_instance.shutdown_notebook_server(namespace)
-except ApiException as e:
-    print("Exception when calling NotebookApi->shutdown_notebook_server: %s\n" % e)
+    try:
+        api_instance.shutdown_notebook_server(namespace)
+    except ApiException as e:
+        print("Exception when calling NotebookApi->shutdown_notebook_server: %s\n" % e)
 ```
 
 ### Parameters
@@ -218,28 +286,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.NotebookApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.NotebookApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of notebook (array) that is url-encoded
 notebook_metadata = rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | notebook (array) metadata to update
 
-try:
-    api_instance.update_notebook_name(namespace, array, notebook_metadata)
-except ApiException as e:
-    print("Exception when calling NotebookApi->update_notebook_name: %s\n" % e)
+    try:
+        api_instance.update_notebook_name(namespace, array, notebook_metadata)
+    except ApiException as e:
+        print("Exception when calling NotebookApi->update_notebook_name: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -249,28 +334,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.NotebookApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.NotebookApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of notebook (array) that is url-encoded
 notebook_metadata = rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | notebook (array) metadata to update
 
-try:
-    api_instance.update_notebook_name(namespace, array, notebook_metadata)
-except ApiException as e:
-    print("Exception when calling NotebookApi->update_notebook_name: %s\n" % e)
+    try:
+        api_instance.update_notebook_name(namespace, array, notebook_metadata)
+    except ApiException as e:
+        print("Exception when calling NotebookApi->update_notebook_name: %s\n" % e)
 ```
 
 ### Parameters

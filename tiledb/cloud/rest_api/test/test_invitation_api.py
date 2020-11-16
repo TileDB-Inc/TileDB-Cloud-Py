@@ -23,37 +23,47 @@ class TestInvitationApi(unittest.TestCase):
     """InvitationApi unit test stubs"""
 
     def setUp(self):
-        self.api = (
-            tiledb.cloud.rest_api.api.invitation_api.InvitationApi()
-        )  # noqa: E501
+        self.api = tiledb.cloud.rest_api.api.invitation_api.InvitationApi()  # noqa: E501
 
     def tearDown(self):
         pass
 
     def test_accept_invitation(self):
-        """Test case for accept_invitation"""
+        """Test case for accept_invitation
+
+        """
         pass
 
     def test_cancel_join_organization(self):
-        """Test case for cancel_join_organization"""
+        """Test case for cancel_join_organization
+
+        """
         pass
 
     def test_cancel_share_array_by_invite(self):
-        """Test case for cancel_share_array_by_invite"""
+        """Test case for cancel_share_array_by_invite
+
+        """
         pass
 
     def test_fetch_invitations(self):
-        """Test case for fetch_invitations"""
+        """Test case for fetch_invitations
+
+        """
         pass
 
     def test_join_organization(self):
-        """Test case for join_organization"""
+        """Test case for join_organization
+
+        """
         pass
 
     def test_share_array_by_invite(self):
-        """Test case for share_array_by_invite"""
+        """Test case for share_array_by_invite
+
+        """
         pass
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

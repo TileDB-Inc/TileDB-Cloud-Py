@@ -13,11 +13,11 @@
 from __future__ import absolute_import
 
 import unittest
+import datetime
 
 import rest_api
 from tiledb.cloud.rest_api.models.udf_info_version import UDFInfoVersion  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
-
 
 class TestUDFInfoVersion(unittest.TestCase):
     """UDFInfoVersion unit test stubs"""
@@ -28,12 +28,32 @@ class TestUDFInfoVersion(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def make_instance(self, include_optional):
+        """Test UDFInfoVersion
+            include_option is a boolean, when False only required
+            params are included, when True both required and
+            optional params are included """
+        # model = tiledb.cloud.rest_api.models.udf_info_version.UDFInfoVersion()  # noqa: E501
+        if include_optional :
+            return UDFInfoVersion(
+                id = '00000000-0000-0000-0000-000000000000', 
+                udf_image_uuid = '00000000-0000-0000-0000-000000000000', 
+                name = '0', 
+                version = '0', 
+                image_name = '0', 
+                _exec = '0', 
+                exec_raw = '0', 
+                default = True
+            )
+        else :
+            return UDFInfoVersion(
+        )
+
     def testUDFInfoVersion(self):
         """Test UDFInfoVersion"""
-        # FIXME: construct object with mandatory attributes with example values
-        # model = tiledb.cloud.rest_api.models.udf_info_version.UDFInfoVersion()  # noqa: E501
-        pass
+        inst_req_only = self.make_instance(include_optional=False)
+        inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
