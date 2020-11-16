@@ -1,5 +1,6 @@
 # Subscription
 
+Subscription of a user (customer) to another user's arrays
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

@@ -23,29 +23,46 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.SqlApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace to run task under is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.SqlApi(api_client)
+    namespace = 'namespace_example' # str | namespace to run task under is in (an organization name or user's username)
 sql = rest_api.SQLParameters() # SQLParameters | sql being submitted
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
-try:
-    api_response = api_instance.run_sql(namespace, sql, accept_encoding=accept_encoding)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling SqlApi->run_sql: %s\n" % e)
+    try:
+        api_response = api_instance.run_sql(namespace, sql, accept_encoding=accept_encoding)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling SqlApi->run_sql: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -55,29 +72,46 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.SqlApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace to run task under is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.SqlApi(api_client)
+    namespace = 'namespace_example' # str | namespace to run task under is in (an organization name or user's username)
 sql = rest_api.SQLParameters() # SQLParameters | sql being submitted
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
-try:
-    api_response = api_instance.run_sql(namespace, sql, accept_encoding=accept_encoding)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling SqlApi->run_sql: %s\n" % e)
+    try:
+        api_response = api_instance.run_sql(namespace, sql, accept_encoding=accept_encoding)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling SqlApi->run_sql: %s\n" % e)
 ```
 
 ### Parameters

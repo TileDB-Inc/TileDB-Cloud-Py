@@ -1,5 +1,6 @@
 # InvitationData
 
+Object including invitations and metadata
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

@@ -1,5 +1,6 @@
 # ReadState
 
+state for reads
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

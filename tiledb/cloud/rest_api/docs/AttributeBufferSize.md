@@ -1,5 +1,6 @@
 # AttributeBufferSize
 
+object representing buffer size of an attribute
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

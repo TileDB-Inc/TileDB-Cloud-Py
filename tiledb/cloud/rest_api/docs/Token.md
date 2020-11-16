@@ -1,5 +1,6 @@
 # Token
 
+A api token and its metadata
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

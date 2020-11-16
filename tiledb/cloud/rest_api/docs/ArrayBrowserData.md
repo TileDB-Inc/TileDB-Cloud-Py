@@ -1,5 +1,6 @@
 # ArrayBrowserData
 
+Object including array info and pagination metadata
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

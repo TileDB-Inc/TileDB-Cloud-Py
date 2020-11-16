@@ -18,7 +18,10 @@ import re  # noqa: F401
 import six
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import ApiTypeError, ApiValueError
+from tiledb.cloud.rest_api.exceptions import (  # noqa: F401
+    ApiTypeError,
+    ApiValueError
+)
 
 
 class OrganizationApi(object):
@@ -33,9 +36,7 @@ class OrganizationApi(object):
             api_client = ApiClient()
         self.api_client = api_client
 
-    def add_aws_access_credentials(
-        self, namespace, aws_access_credentials, **kwargs
-    ):  # noqa: E501
+    def add_aws_access_credentials(self, namespace, aws_access_credentials, **kwargs):  # noqa: E501
         """add_aws_access_credentials  # noqa: E501
 
         Add aws keys  # noqa: E501
@@ -58,14 +59,10 @@ class OrganizationApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.add_aws_access_credentials_with_http_info(
-            namespace, aws_access_credentials, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.add_aws_access_credentials_with_http_info(namespace, aws_access_credentials, **kwargs)  # noqa: E501
 
-    def add_aws_access_credentials_with_http_info(
-        self, namespace, aws_access_credentials, **kwargs
-    ):  # noqa: E501
+    def add_aws_access_credentials_with_http_info(self, namespace, aws_access_credentials, **kwargs):  # noqa: E501
         """add_aws_access_credentials  # noqa: E501
 
         Add aws keys  # noqa: E501
@@ -93,39 +90,41 @@ class OrganizationApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace", "aws_access_credentials"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'namespace',
+            'aws_access_credentials'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method add_aws_access_credentials" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'namespace' is set
-        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `add_aws_access_credentials`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
+                                                        local_var_params['namespace'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `namespace` when calling `add_aws_access_credentials`")  # noqa: E501
         # verify the required parameter 'aws_access_credentials' is set
-        if (
-            "aws_access_credentials" not in local_var_params
-            or local_var_params["aws_access_credentials"] is None
-        ):
-            raise ApiValueError(
-                "Missing the required parameter `aws_access_credentials` when calling `add_aws_access_credentials`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('aws_access_credentials' not in local_var_params or  # noqa: E501
+                                                        local_var_params['aws_access_credentials'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `aws_access_credentials` when calling `add_aws_access_credentials`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if 'namespace' in local_var_params:
+            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
 
         query_params = []
 
@@ -135,26 +134,21 @@ class OrganizationApi(object):
         local_var_files = {}
 
         body_params = None
-        if "aws_access_credentials" in local_var_params:
-            body_params = local_var_params["aws_access_credentials"]
+        if 'aws_access_credentials' in local_var_params:
+            body_params = local_var_params['aws_access_credentials']
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws",
-            "POST",
+            '/credentials/{namespace}/aws', 'POST',
             path_params,
             query_params,
             header_params,
@@ -163,14 +157,11 @@ class OrganizationApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
     def add_user_to_organization(self, organization, user, **kwargs):  # noqa: E501
         """add_user_to_organization  # noqa: E501
@@ -195,14 +186,10 @@ class OrganizationApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.add_user_to_organization_with_http_info(
-            organization, user, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.add_user_to_organization_with_http_info(organization, user, **kwargs)  # noqa: E501
 
-    def add_user_to_organization_with_http_info(
-        self, organization, user, **kwargs
-    ):  # noqa: E501
+    def add_user_to_organization_with_http_info(self, organization, user, **kwargs):  # noqa: E501
         """add_user_to_organization  # noqa: E501
 
         add a user to an organization  # noqa: E501
@@ -230,39 +217,41 @@ class OrganizationApi(object):
 
         local_var_params = locals()
 
-        all_params = ["organization", "user"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'organization',
+            'user'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method add_user_to_organization" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'organization' is set
-        if (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None
-        ):
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `add_user_to_organization`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('organization' not in local_var_params or  # noqa: E501
+                                                        local_var_params['organization'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `organization` when calling `add_user_to_organization`")  # noqa: E501
         # verify the required parameter 'user' is set
-        if "user" not in local_var_params or local_var_params["user"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `user` when calling `add_user_to_organization`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('user' not in local_var_params or  # noqa: E501
+                                                        local_var_params['user'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `user` when calling `add_user_to_organization`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
+        if 'organization' in local_var_params:
+            path_params['organization'] = local_var_params['organization']  # noqa: E501
 
         query_params = []
 
@@ -272,26 +261,21 @@ class OrganizationApi(object):
         local_var_files = {}
 
         body_params = None
-        if "user" in local_var_params:
-            body_params = local_var_params["user"]
+        if 'user' in local_var_params:
+            body_params = local_var_params['user']
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}/user",
-            "POST",
+            '/organizations/{organization}/user', 'POST',
             path_params,
             query_params,
             header_params,
@@ -300,14 +284,11 @@ class OrganizationApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
     def check_aws_access_credentials(self, namespace, **kwargs):  # noqa: E501
         """check_aws_access_credentials  # noqa: E501
@@ -331,14 +312,10 @@ class OrganizationApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.check_aws_access_credentials_with_http_info(
-            namespace, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.check_aws_access_credentials_with_http_info(namespace, **kwargs)  # noqa: E501
 
-    def check_aws_access_credentials_with_http_info(
-        self, namespace, **kwargs
-    ):  # noqa: E501
+    def check_aws_access_credentials_with_http_info(self, namespace, **kwargs):  # noqa: E501
         """check_aws_access_credentials  # noqa: E501
 
         Check if aws keys are set  # noqa: E501
@@ -365,31 +342,36 @@ class OrganizationApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'namespace'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method check_aws_access_credentials" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'namespace' is set
-        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `check_aws_access_credentials`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
+                                                        local_var_params['namespace'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `namespace` when calling `check_aws_access_credentials`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if 'namespace' in local_var_params:
+            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
 
         query_params = []
 
@@ -400,36 +382,29 @@ class OrganizationApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws",
-            "GET",
+            '/credentials/{namespace}/aws', 'GET',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="list[AWSAccessCredentials]",  # noqa: E501
+            response_type='list[AWSAccessCredentials]',  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
-    def check_aws_access_credentials_by_name(
-        self, namespace, name, **kwargs
-    ):  # noqa: E501
+    def check_aws_access_credentials_by_name(self, namespace, name, **kwargs):  # noqa: E501
         """check_aws_access_credentials_by_name  # noqa: E501
 
         Check if aws keys are set by name  # noqa: E501
@@ -452,14 +427,10 @@ class OrganizationApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.check_aws_access_credentials_by_name_with_http_info(
-            namespace, name, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.check_aws_access_credentials_by_name_with_http_info(namespace, name, **kwargs)  # noqa: E501
 
-    def check_aws_access_credentials_by_name_with_http_info(
-        self, namespace, name, **kwargs
-    ):  # noqa: E501
+    def check_aws_access_credentials_by_name_with_http_info(self, namespace, name, **kwargs):  # noqa: E501
         """check_aws_access_credentials_by_name  # noqa: E501
 
         Check if aws keys are set by name  # noqa: E501
@@ -487,38 +458,43 @@ class OrganizationApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace", "name"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'namespace',
+            'name'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method check_aws_access_credentials_by_name" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'namespace' is set
-        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `check_aws_access_credentials_by_name`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
+                                                        local_var_params['namespace'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `namespace` when calling `check_aws_access_credentials_by_name`")  # noqa: E501
         # verify the required parameter 'name' is set
-        if "name" not in local_var_params or local_var_params["name"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `name` when calling `check_aws_access_credentials_by_name`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('name' not in local_var_params or  # noqa: E501
+                                                        local_var_params['name'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `name` when calling `check_aws_access_credentials_by_name`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "name" in local_var_params:
-            path_params["name"] = local_var_params["name"]  # noqa: E501
+        if 'namespace' in local_var_params:
+            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
+        if 'name' in local_var_params:
+            path_params['name'] = local_var_params['name']  # noqa: E501
 
         query_params = []
 
@@ -529,32 +505,27 @@ class OrganizationApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws/{name}",
-            "GET",
+            '/credentials/{namespace}/aws/{name}', 'GET',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="AWSAccessCredentials",  # noqa: E501
+            response_type='AWSAccessCredentials',  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
     def create_organization(self, organization, **kwargs):  # noqa: E501
         """create_organization  # noqa: E501
@@ -578,10 +549,8 @@ class OrganizationApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.create_organization_with_http_info(
-            organization, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.create_organization_with_http_info(organization, **kwargs)  # noqa: E501
 
     def create_organization_with_http_info(self, organization, **kwargs):  # noqa: E501
         """create_organization  # noqa: E501
@@ -610,28 +579,30 @@ class OrganizationApi(object):
 
         local_var_params = locals()
 
-        all_params = ["organization"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'organization'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method create_organization" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'organization' is set
-        if (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None
-        ):
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `create_organization`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('organization' not in local_var_params or  # noqa: E501
+                                                        local_var_params['organization'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `organization` when calling `create_organization`")  # noqa: E501
 
         collection_formats = {}
 
@@ -645,26 +616,21 @@ class OrganizationApi(object):
         local_var_files = {}
 
         body_params = None
-        if "organization" in local_var_params:
-            body_params = local_var_params["organization"]
+        if 'organization' in local_var_params:
+            body_params = local_var_params['organization']
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/organization",
-            "POST",
+            '/organization', 'POST',
             path_params,
             query_params,
             header_params,
@@ -673,14 +639,11 @@ class OrganizationApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
     def delete_aws_access_credentials(self, namespace, name, **kwargs):  # noqa: E501
         """delete_aws_access_credentials  # noqa: E501
@@ -705,14 +668,10 @@ class OrganizationApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.delete_aws_access_credentials_with_http_info(
-            namespace, name, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.delete_aws_access_credentials_with_http_info(namespace, name, **kwargs)  # noqa: E501
 
-    def delete_aws_access_credentials_with_http_info(
-        self, namespace, name, **kwargs
-    ):  # noqa: E501
+    def delete_aws_access_credentials_with_http_info(self, namespace, name, **kwargs):  # noqa: E501
         """delete_aws_access_credentials  # noqa: E501
 
         delete a AWS Access credentials in a namespace. This will likely cause arrays to become unreachable  # noqa: E501
@@ -740,38 +699,43 @@ class OrganizationApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace", "name"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'namespace',
+            'name'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method delete_aws_access_credentials" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'namespace' is set
-        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `delete_aws_access_credentials`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
+                                                        local_var_params['namespace'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `namespace` when calling `delete_aws_access_credentials`")  # noqa: E501
         # verify the required parameter 'name' is set
-        if "name" not in local_var_params or local_var_params["name"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `name` when calling `delete_aws_access_credentials`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('name' not in local_var_params or  # noqa: E501
+                                                        local_var_params['name'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `name` when calling `delete_aws_access_credentials`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "name" in local_var_params:
-            path_params["name"] = local_var_params["name"]  # noqa: E501
+        if 'namespace' in local_var_params:
+            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
+        if 'name' in local_var_params:
+            path_params['name'] = local_var_params['name']  # noqa: E501
 
         query_params = []
 
@@ -782,16 +746,14 @@ class OrganizationApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws/{name}",
-            "DELETE",
+            '/credentials/{namespace}/aws/{name}', 'DELETE',
             path_params,
             query_params,
             header_params,
@@ -800,14 +762,11 @@ class OrganizationApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
     def delete_organization(self, organization, **kwargs):  # noqa: E501
         """delete_organization  # noqa: E501
@@ -831,10 +790,8 @@ class OrganizationApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.delete_organization_with_http_info(
-            organization, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.delete_organization_with_http_info(organization, **kwargs)  # noqa: E501
 
     def delete_organization_with_http_info(self, organization, **kwargs):  # noqa: E501
         """delete_organization  # noqa: E501
@@ -863,34 +820,36 @@ class OrganizationApi(object):
 
         local_var_params = locals()
 
-        all_params = ["organization"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'organization'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method delete_organization" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'organization' is set
-        if (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None
-        ):
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `delete_organization`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('organization' not in local_var_params or  # noqa: E501
+                                                        local_var_params['organization'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `organization` when calling `delete_organization`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
+        if 'organization' in local_var_params:
+            path_params['organization'] = local_var_params['organization']  # noqa: E501
 
         query_params = []
 
@@ -901,16 +860,14 @@ class OrganizationApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}",
-            "DELETE",
+            '/organizations/{organization}', 'DELETE',
             path_params,
             query_params,
             header_params,
@@ -919,18 +876,13 @@ class OrganizationApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
-    def delete_user_from_organization(
-        self, organization, username, **kwargs
-    ):  # noqa: E501
+    def delete_user_from_organization(self, organization, username, **kwargs):  # noqa: E501
         """delete_user_from_organization  # noqa: E501
 
         delete a user from an organization  # noqa: E501
@@ -953,14 +905,10 @@ class OrganizationApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.delete_user_from_organization_with_http_info(
-            organization, username, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.delete_user_from_organization_with_http_info(organization, username, **kwargs)  # noqa: E501
 
-    def delete_user_from_organization_with_http_info(
-        self, organization, username, **kwargs
-    ):  # noqa: E501
+    def delete_user_from_organization_with_http_info(self, organization, username, **kwargs):  # noqa: E501
         """delete_user_from_organization  # noqa: E501
 
         delete a user from an organization  # noqa: E501
@@ -988,41 +936,43 @@ class OrganizationApi(object):
 
         local_var_params = locals()
 
-        all_params = ["organization", "username"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'organization',
+            'username'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method delete_user_from_organization" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'organization' is set
-        if (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None
-        ):
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `delete_user_from_organization`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('organization' not in local_var_params or  # noqa: E501
+                                                        local_var_params['organization'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `organization` when calling `delete_user_from_organization`")  # noqa: E501
         # verify the required parameter 'username' is set
-        if "username" not in local_var_params or local_var_params["username"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `username` when calling `delete_user_from_organization`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('username' not in local_var_params or  # noqa: E501
+                                                        local_var_params['username'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `username` when calling `delete_user_from_organization`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
-        if "username" in local_var_params:
-            path_params["username"] = local_var_params["username"]  # noqa: E501
+        if 'organization' in local_var_params:
+            path_params['organization'] = local_var_params['organization']  # noqa: E501
+        if 'username' in local_var_params:
+            path_params['username'] = local_var_params['username']  # noqa: E501
 
         query_params = []
 
@@ -1033,16 +983,14 @@ class OrganizationApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}/{username}",
-            "DELETE",
+            '/organizations/{organization}/{username}', 'DELETE',
             path_params,
             query_params,
             header_params,
@@ -1051,14 +999,11 @@ class OrganizationApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
     def get_all_organizations(self, **kwargs):  # noqa: E501
         """get_all_organizations  # noqa: E501
@@ -1081,7 +1026,7 @@ class OrganizationApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
+        kwargs['_return_http_data_only'] = True
         return self.get_all_organizations_with_http_info(**kwargs)  # noqa: E501
 
     def get_all_organizations_with_http_info(self, **kwargs):  # noqa: E501
@@ -1110,20 +1055,25 @@ class OrganizationApi(object):
 
         local_var_params = locals()
 
-        all_params = []  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_all_organizations" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
 
         collection_formats = {}
 
@@ -1138,32 +1088,27 @@ class OrganizationApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations",
-            "GET",
+            '/organizations', 'GET',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="list[Organization]",  # noqa: E501
+            response_type='list[Organization]',  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
     def get_organization(self, organization, **kwargs):  # noqa: E501
         """get_organization  # noqa: E501
@@ -1187,10 +1132,8 @@ class OrganizationApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_organization_with_http_info(
-            organization, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.get_organization_with_http_info(organization, **kwargs)  # noqa: E501
 
     def get_organization_with_http_info(self, organization, **kwargs):  # noqa: E501
         """get_organization  # noqa: E501
@@ -1219,34 +1162,36 @@ class OrganizationApi(object):
 
         local_var_params = locals()
 
-        all_params = ["organization"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'organization'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_organization" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'organization' is set
-        if (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None
-        ):
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `get_organization`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('organization' not in local_var_params or  # noqa: E501
+                                                        local_var_params['organization'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `organization` when calling `get_organization`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
+        if 'organization' in local_var_params:
+            path_params['organization'] = local_var_params['organization']  # noqa: E501
 
         query_params = []
 
@@ -1257,32 +1202,27 @@ class OrganizationApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}",
-            "GET",
+            '/organizations/{organization}', 'GET',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="Organization",  # noqa: E501
+            response_type='Organization',  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
     def get_organization_user(self, organization, username, **kwargs):  # noqa: E501
         """get_organization_user  # noqa: E501
@@ -1307,14 +1247,10 @@ class OrganizationApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_organization_user_with_http_info(
-            organization, username, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.get_organization_user_with_http_info(organization, username, **kwargs)  # noqa: E501
 
-    def get_organization_user_with_http_info(
-        self, organization, username, **kwargs
-    ):  # noqa: E501
+    def get_organization_user_with_http_info(self, organization, username, **kwargs):  # noqa: E501
         """get_organization_user  # noqa: E501
 
         get a user from an organization  # noqa: E501
@@ -1342,41 +1278,43 @@ class OrganizationApi(object):
 
         local_var_params = locals()
 
-        all_params = ["organization", "username"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'organization',
+            'username'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method get_organization_user" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'organization' is set
-        if (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None
-        ):
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `get_organization_user`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('organization' not in local_var_params or  # noqa: E501
+                                                        local_var_params['organization'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `organization` when calling `get_organization_user`")  # noqa: E501
         # verify the required parameter 'username' is set
-        if "username" not in local_var_params or local_var_params["username"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `username` when calling `get_organization_user`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('username' not in local_var_params or  # noqa: E501
+                                                        local_var_params['username'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `username` when calling `get_organization_user`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
-        if "username" in local_var_params:
-            path_params["username"] = local_var_params["username"]  # noqa: E501
+        if 'organization' in local_var_params:
+            path_params['organization'] = local_var_params['organization']  # noqa: E501
+        if 'username' in local_var_params:
+            path_params['username'] = local_var_params['username']  # noqa: E501
 
         query_params = []
 
@@ -1387,36 +1325,29 @@ class OrganizationApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}/{username}",
-            "GET",
+            '/organizations/{organization}/{username}', 'GET',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="OrganizationUser",  # noqa: E501
+            response_type='OrganizationUser',  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
-    def update_aws_access_credentials(
-        self, namespace, name, aws_access_credentials, **kwargs
-    ):  # noqa: E501
+    def update_aws_access_credentials(self, namespace, name, aws_access_credentials, **kwargs):  # noqa: E501
         """update_aws_access_credentials  # noqa: E501
 
         Update aws keys or associated buckets. This will update the key associations for each array in the namespace  # noqa: E501
@@ -1440,14 +1371,10 @@ class OrganizationApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.update_aws_access_credentials_with_http_info(
-            namespace, name, aws_access_credentials, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.update_aws_access_credentials_with_http_info(namespace, name, aws_access_credentials, **kwargs)  # noqa: E501
 
-    def update_aws_access_credentials_with_http_info(
-        self, namespace, name, aws_access_credentials, **kwargs
-    ):  # noqa: E501
+    def update_aws_access_credentials_with_http_info(self, namespace, name, aws_access_credentials, **kwargs):  # noqa: E501
         """update_aws_access_credentials  # noqa: E501
 
         Update aws keys or associated buckets. This will update the key associations for each array in the namespace  # noqa: E501
@@ -1476,46 +1403,48 @@ class OrganizationApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace", "name", "aws_access_credentials"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'namespace',
+            'name',
+            'aws_access_credentials'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method update_aws_access_credentials" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'namespace' is set
-        if "namespace" not in local_var_params or local_var_params["namespace"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `update_aws_access_credentials`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('namespace' not in local_var_params or  # noqa: E501
+                                                        local_var_params['namespace'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `namespace` when calling `update_aws_access_credentials`")  # noqa: E501
         # verify the required parameter 'name' is set
-        if "name" not in local_var_params or local_var_params["name"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `name` when calling `update_aws_access_credentials`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('name' not in local_var_params or  # noqa: E501
+                                                        local_var_params['name'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `name` when calling `update_aws_access_credentials`")  # noqa: E501
         # verify the required parameter 'aws_access_credentials' is set
-        if (
-            "aws_access_credentials" not in local_var_params
-            or local_var_params["aws_access_credentials"] is None
-        ):
-            raise ApiValueError(
-                "Missing the required parameter `aws_access_credentials` when calling `update_aws_access_credentials`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('aws_access_credentials' not in local_var_params or  # noqa: E501
+                                                        local_var_params['aws_access_credentials'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `aws_access_credentials` when calling `update_aws_access_credentials`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "name" in local_var_params:
-            path_params["name"] = local_var_params["name"]  # noqa: E501
+        if 'namespace' in local_var_params:
+            path_params['namespace'] = local_var_params['namespace']  # noqa: E501
+        if 'name' in local_var_params:
+            path_params['name'] = local_var_params['name']  # noqa: E501
 
         query_params = []
 
@@ -1525,26 +1454,21 @@ class OrganizationApi(object):
         local_var_files = {}
 
         body_params = None
-        if "aws_access_credentials" in local_var_params:
-            body_params = local_var_params["aws_access_credentials"]
+        if 'aws_access_credentials' in local_var_params:
+            body_params = local_var_params['aws_access_credentials']
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws/{name}",
-            "PATCH",
+            '/credentials/{namespace}/aws/{name}', 'PATCH',
             path_params,
             query_params,
             header_params,
@@ -1553,18 +1477,13 @@ class OrganizationApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
-    def update_organization(
-        self, organization, organization_details, **kwargs
-    ):  # noqa: E501
+    def update_organization(self, organization, organization_details, **kwargs):  # noqa: E501
         """update_organization  # noqa: E501
 
         update a organization  # noqa: E501
@@ -1587,14 +1506,10 @@ class OrganizationApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.update_organization_with_http_info(
-            organization, organization_details, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.update_organization_with_http_info(organization, organization_details, **kwargs)  # noqa: E501
 
-    def update_organization_with_http_info(
-        self, organization, organization_details, **kwargs
-    ):  # noqa: E501
+    def update_organization_with_http_info(self, organization, organization_details, **kwargs):  # noqa: E501
         """update_organization  # noqa: E501
 
         update a organization  # noqa: E501
@@ -1622,42 +1537,41 @@ class OrganizationApi(object):
 
         local_var_params = locals()
 
-        all_params = ["organization", "organization_details"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'organization',
+            'organization_details'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method update_organization" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'organization' is set
-        if (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None
-        ):
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `update_organization`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('organization' not in local_var_params or  # noqa: E501
+                                                        local_var_params['organization'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `organization` when calling `update_organization`")  # noqa: E501
         # verify the required parameter 'organization_details' is set
-        if (
-            "organization_details" not in local_var_params
-            or local_var_params["organization_details"] is None
-        ):
-            raise ApiValueError(
-                "Missing the required parameter `organization_details` when calling `update_organization`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('organization_details' not in local_var_params or  # noqa: E501
+                                                        local_var_params['organization_details'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `organization_details` when calling `update_organization`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
+        if 'organization' in local_var_params:
+            path_params['organization'] = local_var_params['organization']  # noqa: E501
 
         query_params = []
 
@@ -1667,26 +1581,21 @@ class OrganizationApi(object):
         local_var_files = {}
 
         body_params = None
-        if "organization_details" in local_var_params:
-            body_params = local_var_params["organization_details"]
+        if 'organization_details' in local_var_params:
+            body_params = local_var_params['organization_details']
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}",
-            "PATCH",
+            '/organizations/{organization}', 'PATCH',
             path_params,
             query_params,
             header_params,
@@ -1695,18 +1604,13 @@ class OrganizationApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
-    def update_user_in_organization(
-        self, organization, username, user, **kwargs
-    ):  # noqa: E501
+    def update_user_in_organization(self, organization, username, user, **kwargs):  # noqa: E501
         """update_user_in_organization  # noqa: E501
 
         update a user in an organization  # noqa: E501
@@ -1730,14 +1634,10 @@ class OrganizationApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.update_user_in_organization_with_http_info(
-            organization, username, user, **kwargs
-        )  # noqa: E501
+        kwargs['_return_http_data_only'] = True
+        return self.update_user_in_organization_with_http_info(organization, username, user, **kwargs)  # noqa: E501
 
-    def update_user_in_organization_with_http_info(
-        self, organization, username, user, **kwargs
-    ):  # noqa: E501
+    def update_user_in_organization_with_http_info(self, organization, username, user, **kwargs):  # noqa: E501
         """update_user_in_organization  # noqa: E501
 
         update a user in an organization  # noqa: E501
@@ -1766,46 +1666,48 @@ class OrganizationApi(object):
 
         local_var_params = locals()
 
-        all_params = ["organization", "username", "user"]  # noqa: E501
-        all_params.append("async_req")
-        all_params.append("_return_http_data_only")
-        all_params.append("_preload_content")
-        all_params.append("_request_timeout")
+        all_params = [
+            'organization',
+            'username',
+            'user'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
+            ]
+        )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method update_user_in_organization" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
         # verify the required parameter 'organization' is set
-        if (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None
-        ):
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `update_user_in_organization`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('organization' not in local_var_params or  # noqa: E501
+                                                        local_var_params['organization'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `organization` when calling `update_user_in_organization`")  # noqa: E501
         # verify the required parameter 'username' is set
-        if "username" not in local_var_params or local_var_params["username"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `username` when calling `update_user_in_organization`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('username' not in local_var_params or  # noqa: E501
+                                                        local_var_params['username'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `username` when calling `update_user_in_organization`")  # noqa: E501
         # verify the required parameter 'user' is set
-        if "user" not in local_var_params or local_var_params["user"] is None:
-            raise ApiValueError(
-                "Missing the required parameter `user` when calling `update_user_in_organization`"
-            )  # noqa: E501
+        if self.api_client.client_side_validation and ('user' not in local_var_params or  # noqa: E501
+                                                        local_var_params['user'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `user` when calling `update_user_in_organization`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
-        if "username" in local_var_params:
-            path_params["username"] = local_var_params["username"]  # noqa: E501
+        if 'organization' in local_var_params:
+            path_params['organization'] = local_var_params['organization']  # noqa: E501
+        if 'username' in local_var_params:
+            path_params['username'] = local_var_params['username']  # noqa: E501
 
         query_params = []
 
@@ -1815,26 +1717,21 @@ class OrganizationApi(object):
         local_var_files = {}
 
         body_params = None
-        if "user" in local_var_params:
-            body_params = local_var_params["user"]
+        if 'user' in local_var_params:
+            body_params = local_var_params['user']
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+        auth_settings = ['ApiKeyAuth', 'BasicAuth']  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}/{username}",
-            "PATCH",
+            '/organizations/{organization}/{username}', 'PATCH',
             path_params,
             query_params,
             header_params,
@@ -1843,11 +1740,8 @@ class OrganizationApi(object):
             files=local_var_files,
             response_type=None,  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)

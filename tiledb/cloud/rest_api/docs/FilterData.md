@@ -1,5 +1,6 @@
 # FilterData
 
+Filter data
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

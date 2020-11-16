@@ -1,5 +1,6 @@
 # UDFInfoUpdate
 
+User-defined function that can persist in db, used and shared multiple times
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

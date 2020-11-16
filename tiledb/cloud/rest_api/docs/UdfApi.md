@@ -31,27 +31,44 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
 
-try:
-    api_instance.delete_udf_info(namespace, name)
-except ApiException as e:
-    print("Exception when calling UdfApi->delete_udf_info: %s\n" % e)
+    try:
+        api_instance.delete_udf_info(namespace, name)
+    except ApiException as e:
+        print("Exception when calling UdfApi->delete_udf_info: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -61,27 +78,44 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
 
-try:
-    api_instance.delete_udf_info(namespace, name)
-except ApiException as e:
-    print("Exception when calling UdfApi->delete_udf_info: %s\n" % e)
+    try:
+        api_instance.delete_udf_info(namespace, name)
+    except ApiException as e:
+        print("Exception when calling UdfApi->delete_udf_info: %s\n" % e)
 ```
 
 ### Parameters
@@ -128,28 +162,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
 
-try:
-    api_response = api_instance.get_udf_info(namespace, name)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling UdfApi->get_udf_info: %s\n" % e)
+    try:
+        api_response = api_instance.get_udf_info(namespace, name)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling UdfApi->get_udf_info: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -159,28 +210,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
 
-try:
-    api_response = api_instance.get_udf_info(namespace, name)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling UdfApi->get_udf_info: %s\n" % e)
+    try:
+        api_response = api_instance.get_udf_info(namespace, name)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling UdfApi->get_udf_info: %s\n" % e)
 ```
 
 ### Parameters
@@ -228,21 +296,38 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace to filter (optional)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace to filter (optional)
 created_by = 'created_by_example' # str | username to filter (optional)
 page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
@@ -251,11 +336,11 @@ search = 'search_example' # str | search string that will look at name, namespac
 orderby = 'orderby_example' # str | sort by which field valid values include created_at, last_used, name (optional)
 tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 
-try:
-    api_response = api_instance.get_udf_info_list(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby, tag=tag)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling UdfApi->get_udf_info_list: %s\n" % e)
+    try:
+        api_response = api_instance.get_udf_info_list(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby, tag=tag)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling UdfApi->get_udf_info_list: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -265,21 +350,38 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace to filter (optional)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace to filter (optional)
 created_by = 'created_by_example' # str | username to filter (optional)
 page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
@@ -288,11 +390,11 @@ search = 'search_example' # str | search string that will look at name, namespac
 orderby = 'orderby_example' # str | sort by which field valid values include created_at, last_used, name (optional)
 tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 
-try:
-    api_response = api_instance.get_udf_info_list(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby, tag=tag)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling UdfApi->get_udf_info_list: %s\n" % e)
+    try:
+        api_response = api_instance.get_udf_info_list(namespace=namespace, created_by=created_by, page=page, per_page=per_page, type=type, search=search, orderby=orderby, tag=tag)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling UdfApi->get_udf_info_list: %s\n" % e)
 ```
 
 ### Parameters
@@ -346,28 +448,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name of UDFInfo
 
-try:
-    api_response = api_instance.get_udf_info_sharing_policies(namespace, name)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling UdfApi->get_udf_info_sharing_policies: %s\n" % e)
+    try:
+        api_response = api_instance.get_udf_info_sharing_policies(namespace, name)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling UdfApi->get_udf_info_sharing_policies: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -377,28 +496,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name of UDFInfo
 
-try:
-    api_response = api_instance.get_udf_info_sharing_policies(namespace, name)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling UdfApi->get_udf_info_sharing_policies: %s\n" % e)
+    try:
+        api_response = api_instance.get_udf_info_sharing_policies(namespace, name)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling UdfApi->get_udf_info_sharing_policies: %s\n" % e)
 ```
 
 ### Parameters
@@ -446,28 +582,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
 udf = rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to register
 
-try:
-    api_instance.register_udf_info(namespace, name, udf)
-except ApiException as e:
-    print("Exception when calling UdfApi->register_udf_info: %s\n" % e)
+    try:
+        api_instance.register_udf_info(namespace, name, udf)
+    except ApiException as e:
+        print("Exception when calling UdfApi->register_udf_info: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -477,28 +630,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
 udf = rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to register
 
-try:
-    api_instance.register_udf_info(namespace, name, udf)
-except ApiException as e:
-    print("Exception when calling UdfApi->register_udf_info: %s\n" % e)
+    try:
+        api_instance.register_udf_info(namespace, name, udf)
+    except ApiException as e:
+        print("Exception when calling UdfApi->register_udf_info: %s\n" % e)
 ```
 
 ### Parameters
@@ -546,28 +716,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name of UDFInfo
 udf_sharing = rest_api.UDFSharing() # UDFSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all
 
-try:
-    api_instance.share_udf_info(namespace, name, udf_sharing)
-except ApiException as e:
-    print("Exception when calling UdfApi->share_udf_info: %s\n" % e)
+    try:
+        api_instance.share_udf_info(namespace, name, udf_sharing)
+    except ApiException as e:
+        print("Exception when calling UdfApi->share_udf_info: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -577,28 +764,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name of UDFInfo
 udf_sharing = rest_api.UDFSharing() # UDFSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all
 
-try:
-    api_instance.share_udf_info(namespace, name, udf_sharing)
-except ApiException as e:
-    print("Exception when calling UdfApi->share_udf_info: %s\n" % e)
+    try:
+        api_instance.share_udf_info(namespace, name, udf_sharing)
+    except ApiException as e:
+        print("Exception when calling UdfApi->share_udf_info: %s\n" % e)
 ```
 
 ### Parameters
@@ -647,29 +851,46 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 udf = rest_api.GenericUDF() # GenericUDF | udf to run
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
-try:
-    api_response = api_instance.submit_generic_udf(namespace, udf, accept_encoding=accept_encoding)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling UdfApi->submit_generic_udf: %s\n" % e)
+    try:
+        api_response = api_instance.submit_generic_udf(namespace, udf, accept_encoding=accept_encoding)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling UdfApi->submit_generic_udf: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -679,29 +900,46 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 udf = rest_api.GenericUDF() # GenericUDF | udf to run
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
-try:
-    api_response = api_instance.submit_generic_udf(namespace, udf, accept_encoding=accept_encoding)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling UdfApi->submit_generic_udf: %s\n" % e)
+    try:
+        api_response = api_instance.submit_generic_udf(namespace, udf, accept_encoding=accept_encoding)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling UdfApi->submit_generic_udf: %s\n" % e)
 ```
 
 ### Parameters
@@ -749,32 +987,49 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 udf = rest_api.UDF() # UDF | udf to run
 x_payer = 'x_payer_example' # str | Name of organization or user who should be charged for this request (optional)
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 v2 = 'v2_example' # str | flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs (optional)
 
-try:
-    api_response = api_instance.submit_udf(namespace, array, udf, x_payer=x_payer, accept_encoding=accept_encoding, v2=v2)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling UdfApi->submit_udf: %s\n" % e)
+    try:
+        api_response = api_instance.submit_udf(namespace, array, udf, x_payer=x_payer, accept_encoding=accept_encoding, v2=v2)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling UdfApi->submit_udf: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -784,32 +1039,49 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 udf = rest_api.UDF() # UDF | udf to run
 x_payer = 'x_payer_example' # str | Name of organization or user who should be charged for this request (optional)
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 v2 = 'v2_example' # str | flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs (optional)
 
-try:
-    api_response = api_instance.submit_udf(namespace, array, udf, x_payer=x_payer, accept_encoding=accept_encoding, v2=v2)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling UdfApi->submit_udf: %s\n" % e)
+    try:
+        api_response = api_instance.submit_udf(namespace, array, udf, x_payer=x_payer, accept_encoding=accept_encoding, v2=v2)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling UdfApi->submit_udf: %s\n" % e)
 ```
 
 ### Parameters
@@ -860,28 +1132,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
 udf = rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to update
 
-try:
-    api_instance.update_udf_info(namespace, name, udf)
-except ApiException as e:
-    print("Exception when calling UdfApi->update_udf_info: %s\n" % e)
+    try:
+        api_instance.update_udf_info(namespace, name, udf)
+    except ApiException as e:
+        print("Exception when calling UdfApi->update_udf_info: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -891,28 +1180,45 @@ import time
 import rest_api
 from rest_api.rest import ApiException
 from pprint import pprint
-configuration = rest_api.Configuration()
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: ApiKeyAuth
-configuration.api_key['X-TILEDB-REST-API-KEY'] = 'YOUR_API_KEY'
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
-configuration = rest_api.Configuration()
-# Configure HTTP basic authorization: BasicAuth
-configuration.username = 'YOUR_USERNAME'
-configuration.password = 'YOUR_PASSWORD'
 
-# Defining host is optional and default to http://localhost/v1
-configuration.host = "http://localhost/v1"
-# Create an instance of the API class
-api_instance = rest_api.UdfApi(rest_api.ApiClient(configuration))
-namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
 udf = rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to update
 
-try:
-    api_instance.update_udf_info(namespace, name, udf)
-except ApiException as e:
-    print("Exception when calling UdfApi->update_udf_info: %s\n" % e)
+    try:
+        api_instance.update_udf_info(namespace, name, udf)
+    except ApiException as e:
+        print("Exception when calling UdfApi->update_udf_info: %s\n" % e)
 ```
 
 ### Parameters

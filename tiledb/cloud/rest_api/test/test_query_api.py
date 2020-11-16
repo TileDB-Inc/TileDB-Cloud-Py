@@ -29,25 +29,35 @@ class TestQueryApi(unittest.TestCase):
         pass
 
     def test_finalize_query(self):
-        """Test case for finalize_query"""
+        """Test case for finalize_query
+
+        """
         pass
 
     def test_get_est_result_sizes(self):
-        """Test case for get_est_result_sizes"""
+        """Test case for get_est_result_sizes
+
+        """
         pass
 
     def test_get_file(self):
-        """Test case for get_file"""
+        """Test case for get_file
+
+        """
         pass
 
     def test_submit_query(self):
-        """Test case for submit_query"""
+        """Test case for submit_query
+
+        """
         pass
 
     def test_submit_query_json(self):
-        """Test case for submit_query_json"""
+        """Test case for submit_query_json
+
+        """
         pass
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

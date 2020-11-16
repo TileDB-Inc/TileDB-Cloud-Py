@@ -1,5 +1,6 @@
 # UDFSharing
 
+details for sharing a given udf
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

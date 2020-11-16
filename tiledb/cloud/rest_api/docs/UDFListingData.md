@@ -1,5 +1,6 @@
 # UDFListingData
 
+Object including udfs and metadata
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

@@ -1,5 +1,6 @@
 # Dimension
 
+Dimension of array
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

@@ -1,5 +1,6 @@
 # DimensionTileExtent
 
+Extent of tile
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

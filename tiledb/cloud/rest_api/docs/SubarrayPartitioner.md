@@ -1,5 +1,6 @@
 # SubarrayPartitioner
 
+The subarray partitioner
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

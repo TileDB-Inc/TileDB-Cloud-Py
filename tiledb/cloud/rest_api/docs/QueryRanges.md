@@ -1,5 +1,6 @@
 # QueryRanges
 
+Subarray bounds to query
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
