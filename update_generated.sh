@@ -53,7 +53,7 @@ EOF
 docker run --rm  \
   -v ${REST_SRC}/:/dc_src \
   -v ${OUTPUT_PATH}:/gen \
-  openapitools/openapi-generator-cli:v4.1.3 generate \
+  openapitools/openapi-generator-cli:v4.3.1 generate \
     -c /gen/openapi_config-api -o /gen \
     -i /dc_src/openapi-v1.yaml -g python
 
