@@ -16,8 +16,11 @@ import unittest
 import datetime
 
 import rest_api
-from tiledb.cloud.rest_api.models.attribute_buffer_header import AttributeBufferHeader  # noqa: E501
+from tiledb.cloud.rest_api.models.attribute_buffer_header import (
+    AttributeBufferHeader,
+)  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
+
 
 class TestAttributeBufferHeader(unittest.TestCase):
     """AttributeBufferHeader unit test stubs"""
@@ -30,22 +33,22 @@ class TestAttributeBufferHeader(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test AttributeBufferHeader
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.attribute_buffer_header.AttributeBufferHeader()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return AttributeBufferHeader(
-                name = 'attribute1', 
-                fixed_len_buffer_size_in_bytes = 56, 
-                var_len_buffer_size_in_bytes = 56
+                name="attribute1",
+                fixed_len_buffer_size_in_bytes=56,
+                var_len_buffer_size_in_bytes=56,
             )
-        else :
+        else:
             return AttributeBufferHeader(
-                name = 'attribute1',
-                fixed_len_buffer_size_in_bytes = 56,
-                var_len_buffer_size_in_bytes = 56,
-        )
+                name="attribute1",
+                fixed_len_buffer_size_in_bytes=56,
+                var_len_buffer_size_in_bytes=56,
+            )
 
     def testAttributeBufferHeader(self):
         """Test AttributeBufferHeader"""
@@ -53,5 +56,5 @@ class TestAttributeBufferHeader(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

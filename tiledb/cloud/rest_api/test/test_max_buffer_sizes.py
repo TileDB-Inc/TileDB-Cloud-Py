@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.max_buffer_sizes import MaxBufferSizes  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestMaxBufferSizes(unittest.TestCase):
     """MaxBufferSizes unit test stubs"""
 
@@ -30,22 +31,22 @@ class TestMaxBufferSizes(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test MaxBufferSizes
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.max_buffer_sizes.MaxBufferSizes()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return MaxBufferSizes(
-                max_buffer_sizes = [
+                max_buffer_sizes=[
                     tiledb.cloud.rest_api.models.attribute_buffer_size.AttributeBufferSize(
-                        attribute = '0', 
-                        offset_bytes = 56, 
-                        data_bytes = 56, )
-                    ]
+                        attribute="0",
+                        offset_bytes=56,
+                        data_bytes=56,
+                    )
+                ]
             )
-        else :
-            return MaxBufferSizes(
-        )
+        else:
+            return MaxBufferSizes()
 
     def testMaxBufferSizes(self):
         """Test MaxBufferSizes"""
@@ -53,5 +54,5 @@ class TestMaxBufferSizes(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

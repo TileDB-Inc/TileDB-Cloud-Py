@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.query_reader import QueryReader  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestQueryReader(unittest.TestCase):
     """QueryReader unit test stubs"""
 
@@ -30,63 +31,67 @@ class TestQueryReader(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test QueryReader
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.query_reader.QueryReader()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return QueryReader(
-                layout = 'row-major', 
-                subarray = tiledb.cloud.rest_api.models.subarray.Subarray(
-                    layout = 'row-major', 
-                    ranges = [
+                layout="row-major",
+                subarray=tiledb.cloud.rest_api.models.subarray.Subarray(
+                    layout="row-major",
+                    ranges=[
                         tiledb.cloud.rest_api.models.subarray_ranges.SubarrayRanges(
-                            type = 'INT32', 
-                            has_default_range = True, 
-                            buffer = [
-                                56
-                                ], )
-                        ], ), 
-                read_state = tiledb.cloud.rest_api.models.read_state.ReadState(
-                    initialized = True, 
-                    overflowed = True, 
-                    unsplittable = True, 
-                    subarray_partitioner = tiledb.cloud.rest_api.models.subarray_partitioner.SubarrayPartitioner(
-                        subarray = tiledb.cloud.rest_api.models.subarray.Subarray(
-                            layout = 'row-major', 
-                            ranges = [
+                            type="INT32",
+                            has_default_range=True,
+                            buffer=[56],
+                        )
+                    ],
+                ),
+                read_state=tiledb.cloud.rest_api.models.read_state.ReadState(
+                    initialized=True,
+                    overflowed=True,
+                    unsplittable=True,
+                    subarray_partitioner=tiledb.cloud.rest_api.models.subarray_partitioner.SubarrayPartitioner(
+                        subarray=tiledb.cloud.rest_api.models.subarray.Subarray(
+                            layout="row-major",
+                            ranges=[
                                 tiledb.cloud.rest_api.models.subarray_ranges.SubarrayRanges(
-                                    type = 'INT32', 
-                                    has_default_range = True, 
-                                    buffer = [
-                                        56
-                                        ], )
-                                ], ), 
-                        budget = [
+                                    type="INT32",
+                                    has_default_range=True,
+                                    buffer=[56],
+                                )
+                            ],
+                        ),
+                        budget=[
                             tiledb.cloud.rest_api.models.attribute_buffer_size.AttributeBufferSize(
-                                attribute = '0', 
-                                offset_bytes = 56, 
-                                data_bytes = 56, )
-                            ], 
-                        current = tiledb.cloud.rest_api.models.subarray_partitioner_current.SubarrayPartitioner_current(
-                            start = 56, 
-                            end = 56, 
-                            split_multi_range = True, ), 
-                        state = tiledb.cloud.rest_api.models.subarray_partitioner_state.SubarrayPartitioner_state(
-                            start = 56, 
-                            end = 56, 
-                            single_range = [
+                                attribute="0",
+                                offset_bytes=56,
+                                data_bytes=56,
+                            )
+                        ],
+                        current=tiledb.cloud.rest_api.models.subarray_partitioner_current.SubarrayPartitioner_current(
+                            start=56,
+                            end=56,
+                            split_multi_range=True,
+                        ),
+                        state=tiledb.cloud.rest_api.models.subarray_partitioner_state.SubarrayPartitioner_state(
+                            start=56,
+                            end=56,
+                            single_range=[
                                 tiledb.cloud.rest_api.models.subarray.Subarray()
-                                ], 
-                            multi_range = [
+                            ],
+                            multi_range=[
                                 tiledb.cloud.rest_api.models.subarray.Subarray()
-                                ], ), 
-                        memory_budget = 56, 
-                        memory_budget_var = 56, ), )
+                            ],
+                        ),
+                        memory_budget=56,
+                        memory_budget_var=56,
+                    ),
+                ),
             )
-        else :
-            return QueryReader(
-        )
+        else:
+            return QueryReader()
 
     def testQueryReader(self):
         """Test QueryReader"""
@@ -94,5 +99,5 @@ class TestQueryReader(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

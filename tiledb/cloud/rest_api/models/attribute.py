@@ -33,22 +33,30 @@ class Attribute(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'name': 'str',
-        'type': 'Datatype',
-        'filter_pipeline': 'FilterPipeline',
-        'cell_val_num': 'int',
-        'fill_value': 'list[int]'
+        "name": "str",
+        "type": "Datatype",
+        "filter_pipeline": "FilterPipeline",
+        "cell_val_num": "int",
+        "fill_value": "list[int]",
     }
 
     attribute_map = {
-        'name': 'name',
-        'type': 'type',
-        'filter_pipeline': 'filterPipeline',
-        'cell_val_num': 'cellValNum',
-        'fill_value': 'fillValue'
+        "name": "name",
+        "type": "type",
+        "filter_pipeline": "filterPipeline",
+        "cell_val_num": "cellValNum",
+        "fill_value": "fillValue",
     }
 
-    def __init__(self, name=None, type=None, filter_pipeline=None, cell_val_num=None, fill_value=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        name=None,
+        type=None,
+        filter_pipeline=None,
+        cell_val_num=None,
+        fill_value=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """Attribute - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -88,8 +96,12 @@ class Attribute(object):
         :param name: The name of this Attribute.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and name is None:  # noqa: E501
-            raise ValueError("Invalid value for `name`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and name is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `name`, must not be `None`"
+            )  # noqa: E501
 
         self._name = name
 
@@ -111,8 +123,12 @@ class Attribute(object):
         :param type: The type of this Attribute.  # noqa: E501
         :type: Datatype
         """
-        if self.local_vars_configuration.client_side_validation and type is None:  # noqa: E501
-            raise ValueError("Invalid value for `type`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and type is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `type`, must not be `None`"
+            )  # noqa: E501
 
         self._type = type
 
@@ -134,8 +150,13 @@ class Attribute(object):
         :param filter_pipeline: The filter_pipeline of this Attribute.  # noqa: E501
         :type: FilterPipeline
         """
-        if self.local_vars_configuration.client_side_validation and filter_pipeline is None:  # noqa: E501
-            raise ValueError("Invalid value for `filter_pipeline`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and filter_pipeline is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `filter_pipeline`, must not be `None`"
+            )  # noqa: E501
 
         self._filter_pipeline = filter_pipeline
 
@@ -159,8 +180,13 @@ class Attribute(object):
         :param cell_val_num: The cell_val_num of this Attribute.  # noqa: E501
         :type: int
         """
-        if self.local_vars_configuration.client_side_validation and cell_val_num is None:  # noqa: E501
-            raise ValueError("Invalid value for `cell_val_num`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and cell_val_num is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `cell_val_num`, must not be `None`"
+            )  # noqa: E501
 
         self._cell_val_num = cell_val_num
 
@@ -194,18 +220,20 @@ class Attribute(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

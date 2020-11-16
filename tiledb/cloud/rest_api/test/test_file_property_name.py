@@ -16,8 +16,11 @@ import unittest
 import datetime
 
 import rest_api
-from tiledb.cloud.rest_api.models.file_property_name import FilePropertyName  # noqa: E501
+from tiledb.cloud.rest_api.models.file_property_name import (
+    FilePropertyName,
+)  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
+
 
 class TestFilePropertyName(unittest.TestCase):
     """FilePropertyName unit test stubs"""
@@ -30,16 +33,14 @@ class TestFilePropertyName(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test FilePropertyName
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.file_property_name.FilePropertyName()  # noqa: E501
-        if include_optional :
-            return FilePropertyName(
-            )
-        else :
-            return FilePropertyName(
-        )
+        if include_optional:
+            return FilePropertyName()
+        else:
+            return FilePropertyName()
 
     def testFilePropertyName(self):
         """Test FilePropertyName"""
@@ -47,5 +48,5 @@ class TestFilePropertyName(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -33,56 +33,81 @@ class ArrayInfo(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'id': 'str',
-        'file_type': 'FileType',
-        'file_properties': 'dict(str, str)',
-        'uri': 'str',
-        'namespace': 'str',
-        'size': 'float',
-        'last_accessed': 'datetime',
-        'description': 'str',
-        'name': 'str',
-        'allowed_actions': 'list[ArrayActions]',
-        'pricing': 'list[Pricing]',
-        'subscriptions': 'list[Subscription]',
-        'logo': 'str',
-        'access_credentials_name': 'str',
-        'type': 'str',
-        'share_count': 'float',
-        'public_share': 'bool',
-        'namespace_subscribed': 'bool',
-        'tiledb_uri': 'str',
-        'tags': 'list[str]',
-        'license_id': 'str',
-        'license_text': 'str'
+        "id": "str",
+        "file_type": "FileType",
+        "file_properties": "dict(str, str)",
+        "uri": "str",
+        "namespace": "str",
+        "size": "float",
+        "last_accessed": "datetime",
+        "description": "str",
+        "name": "str",
+        "allowed_actions": "list[ArrayActions]",
+        "pricing": "list[Pricing]",
+        "subscriptions": "list[Subscription]",
+        "logo": "str",
+        "access_credentials_name": "str",
+        "type": "str",
+        "share_count": "float",
+        "public_share": "bool",
+        "namespace_subscribed": "bool",
+        "tiledb_uri": "str",
+        "tags": "list[str]",
+        "license_id": "str",
+        "license_text": "str",
     }
 
     attribute_map = {
-        'id': 'id',
-        'file_type': 'file_type',
-        'file_properties': 'file_properties',
-        'uri': 'uri',
-        'namespace': 'namespace',
-        'size': 'size',
-        'last_accessed': 'last_accessed',
-        'description': 'description',
-        'name': 'name',
-        'allowed_actions': 'allowed_actions',
-        'pricing': 'pricing',
-        'subscriptions': 'subscriptions',
-        'logo': 'logo',
-        'access_credentials_name': 'access_credentials_name',
-        'type': 'type',
-        'share_count': 'share_count',
-        'public_share': 'public_share',
-        'namespace_subscribed': 'namespace_subscribed',
-        'tiledb_uri': 'tiledb_uri',
-        'tags': 'tags',
-        'license_id': 'license_id',
-        'license_text': 'license_text'
+        "id": "id",
+        "file_type": "file_type",
+        "file_properties": "file_properties",
+        "uri": "uri",
+        "namespace": "namespace",
+        "size": "size",
+        "last_accessed": "last_accessed",
+        "description": "description",
+        "name": "name",
+        "allowed_actions": "allowed_actions",
+        "pricing": "pricing",
+        "subscriptions": "subscriptions",
+        "logo": "logo",
+        "access_credentials_name": "access_credentials_name",
+        "type": "type",
+        "share_count": "share_count",
+        "public_share": "public_share",
+        "namespace_subscribed": "namespace_subscribed",
+        "tiledb_uri": "tiledb_uri",
+        "tags": "tags",
+        "license_id": "license_id",
+        "license_text": "license_text",
     }
 
-    def __init__(self, id=None, file_type=None, file_properties=None, uri=None, namespace=None, size=None, last_accessed=None, description=None, name=None, allowed_actions=None, pricing=None, subscriptions=None, logo=None, access_credentials_name=None, type=None, share_count=None, public_share=None, namespace_subscribed=None, tiledb_uri=None, tags=None, license_id=None, license_text=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        id=None,
+        file_type=None,
+        file_properties=None,
+        uri=None,
+        namespace=None,
+        size=None,
+        last_accessed=None,
+        description=None,
+        name=None,
+        allowed_actions=None,
+        pricing=None,
+        subscriptions=None,
+        logo=None,
+        access_credentials_name=None,
+        type=None,
+        share_count=None,
+        public_share=None,
+        namespace_subscribed=None,
+        tiledb_uri=None,
+        tags=None,
+        license_id=None,
+        license_text=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """ArrayInfo - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -668,18 +693,20 @@ class ArrayInfo(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

@@ -16,8 +16,11 @@ import unittest
 import datetime
 
 import rest_api
-from tiledb.cloud.rest_api.models.invitation_status import InvitationStatus  # noqa: E501
+from tiledb.cloud.rest_api.models.invitation_status import (
+    InvitationStatus,
+)  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
+
 
 class TestInvitationStatus(unittest.TestCase):
     """InvitationStatus unit test stubs"""
@@ -30,16 +33,14 @@ class TestInvitationStatus(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test InvitationStatus
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.invitation_status.InvitationStatus()  # noqa: E501
-        if include_optional :
-            return InvitationStatus(
-            )
-        else :
-            return InvitationStatus(
-        )
+        if include_optional:
+            return InvitationStatus()
+        else:
+            return InvitationStatus()
 
     def testInvitationStatus(self):
         """Test InvitationStatus"""
@@ -47,5 +48,5 @@ class TestInvitationStatus(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.file_type import FileType  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestFileType(unittest.TestCase):
     """FileType unit test stubs"""
 
@@ -30,16 +31,14 @@ class TestFileType(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test FileType
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.file_type.FileType()  # noqa: E501
-        if include_optional :
-            return FileType(
-            )
-        else :
-            return FileType(
-        )
+        if include_optional:
+            return FileType()
+        else:
+            return FileType()
 
     def testFileType(self):
         """Test FileType"""
@@ -47,5 +46,5 @@ class TestFileType(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.array_schema import ArraySchema  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestArraySchema(unittest.TestCase):
     """ArraySchema unit test stubs"""
 
@@ -30,238 +31,224 @@ class TestArraySchema(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test ArraySchema
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.array_schema.ArraySchema()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return ArraySchema(
-                uri = 's3://<bucket>/test_array', 
-                version = [1, 3, 0], 
-                array_type = 'dense', 
-                tile_order = 'row-major', 
-                cell_order = 'row-major', 
-                capacity = 100000, 
-                coords_filter_pipeline = tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
-                    filters = [
+                uri="s3://<bucket>/test_array",
+                version=[1, 3, 0],
+                array_type="dense",
+                tile_order="row-major",
+                cell_order="row-major",
+                capacity=100000,
+                coords_filter_pipeline=tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
+                    filters=[
                         tiledb.cloud.rest_api.models.filter.Filter(
-                            type = 'FILTER_NONE', 
-                            data = tiledb.cloud.rest_api.models.filter_data.Filter_data(
-                                int8 = 56, 
-                                uint8 = 56, 
-                                int16 = 56, 
-                                uint16 = 56, 
-                                int32 = 56, 
-                                uint32 = 56, 
-                                int64 = 56, 
-                                uint64 = 56, 
-                                float32 = 56, 
-                                float64 = 56, ), )
-                        ], ), 
-                offset_filter_pipeline = tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
-                    filters = [
-                        tiledb.cloud.rest_api.models.filter.Filter(
-                            type = 'FILTER_NONE', 
-                            data = tiledb.cloud.rest_api.models.filter_data.Filter_data(
-                                int8 = 56, 
-                                uint8 = 56, 
-                                int16 = 56, 
-                                uint16 = 56, 
-                                int32 = 56, 
-                                uint32 = 56, 
-                                int64 = 56, 
-                                uint64 = 56, 
-                                float32 = 56, 
-                                float64 = 56, ), )
-                        ], ), 
-                domain = tiledb.cloud.rest_api.models.domain.Domain(
-                    type = 'INT32', 
-                    tile_order = 'row-major', 
-                    cell_order = 'row-major', 
-                    dimensions = [
-                        tiledb.cloud.rest_api.models.dimension.Dimension(
-                            name = 'row', 
-                            type = 'INT32', 
-                            domain = tiledb.cloud.rest_api.models.domain_array.DomainArray(
-                                int8 = [
-                                    56
-                                    ], 
-                                uint8 = [
-                                    56
-                                    ], 
-                                int16 = [
-                                    56
-                                    ], 
-                                uint16 = [
-                                    56
-                                    ], 
-                                int32 = [
-                                    56
-                                    ], 
-                                uint32 = [
-                                    56
-                                    ], 
-                                int64 = [
-                                    56
-                                    ], 
-                                uint64 = [
-                                    56
-                                    ], 
-                                float32 = [
-                                    1.337
-                                    ], 
-                                float64 = [
-                                    1.337
-                                    ], ), 
-                            null_tile_extent = True, 
-                            tile_extent = tiledb.cloud.rest_api.models.dimension_tile_extent.Dimension_tileExtent(), 
-                            filter_pipeline = tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
-                                filters = [
-                                    tiledb.cloud.rest_api.models.filter.Filter(
-                                        type = 'FILTER_NONE', 
-                                        data = tiledb.cloud.rest_api.models.filter_data.Filter_data(), )
-                                    ], ), )
-                        ], ), 
-                attributes = [
-                    tiledb.cloud.rest_api.models.attribute.Attribute(
-                        name = 'attribute1', 
-                        type = 'INT32', 
-                        filter_pipeline = tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
-                            filters = [
-                                tiledb.cloud.rest_api.models.filter.Filter(
-                                    type = 'FILTER_NONE', 
-                                    data = tiledb.cloud.rest_api.models.filter_data.Filter_data(
-                                        int8 = 56, 
-                                        uint8 = 56, 
-                                        int16 = 56, 
-                                        uint16 = 56, 
-                                        int32 = 56, 
-                                        uint32 = 56, 
-                                        int64 = 56, 
-                                        uint64 = 56, 
-                                        float32 = 56, 
-                                        float64 = 56, ), )
-                                ], ), 
-                        cell_val_num = 1, 
-                        fill_value = [
-                            56
-                            ], )
-                    ], 
-                allows_duplicates = True
-            )
-        else :
-            return ArraySchema(
-                version = [1, 3, 0],
-                array_type = 'dense',
-                tile_order = 'row-major',
-                cell_order = 'row-major',
-                capacity = 100000,
-                coords_filter_pipeline = tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
-                    filters = [
-                        tiledb.cloud.rest_api.models.filter.Filter(
-                            type = 'FILTER_NONE', 
-                            data = tiledb.cloud.rest_api.models.filter_data.Filter_data(
-                                int8 = 56, 
-                                uint8 = 56, 
-                                int16 = 56, 
-                                uint16 = 56, 
-                                int32 = 56, 
-                                uint32 = 56, 
-                                int64 = 56, 
-                                uint64 = 56, 
-                                float32 = 56, 
-                                float64 = 56, ), )
-                        ], ),
-                offset_filter_pipeline = tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
-                    filters = [
-                        tiledb.cloud.rest_api.models.filter.Filter(
-                            type = 'FILTER_NONE', 
-                            data = tiledb.cloud.rest_api.models.filter_data.Filter_data(
-                                int8 = 56, 
-                                uint8 = 56, 
-                                int16 = 56, 
-                                uint16 = 56, 
-                                int32 = 56, 
-                                uint32 = 56, 
-                                int64 = 56, 
-                                uint64 = 56, 
-                                float32 = 56, 
-                                float64 = 56, ), )
-                        ], ),
-                domain = tiledb.cloud.rest_api.models.domain.Domain(
-                    type = 'INT32', 
-                    tile_order = 'row-major', 
-                    cell_order = 'row-major', 
-                    dimensions = [
-                        tiledb.cloud.rest_api.models.dimension.Dimension(
-                            name = 'row', 
-                            type = 'INT32', 
-                            domain = tiledb.cloud.rest_api.models.domain_array.DomainArray(
-                                int8 = [
-                                    56
-                                    ], 
-                                uint8 = [
-                                    56
-                                    ], 
-                                int16 = [
-                                    56
-                                    ], 
-                                uint16 = [
-                                    56
-                                    ], 
-                                int32 = [
-                                    56
-                                    ], 
-                                uint32 = [
-                                    56
-                                    ], 
-                                int64 = [
-                                    56
-                                    ], 
-                                uint64 = [
-                                    56
-                                    ], 
-                                float32 = [
-                                    1.337
-                                    ], 
-                                float64 = [
-                                    1.337
-                                    ], ), 
-                            null_tile_extent = True, 
-                            tile_extent = tiledb.cloud.rest_api.models.dimension_tile_extent.Dimension_tileExtent(), 
-                            filter_pipeline = tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
-                                filters = [
-                                    tiledb.cloud.rest_api.models.filter.Filter(
-                                        type = 'FILTER_NONE', 
-                                        data = tiledb.cloud.rest_api.models.filter_data.Filter_data(), )
-                                    ], ), )
-                        ], ),
-                attributes = [
-                    tiledb.cloud.rest_api.models.attribute.Attribute(
-                        name = 'attribute1', 
-                        type = 'INT32', 
-                        filter_pipeline = tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
-                            filters = [
-                                tiledb.cloud.rest_api.models.filter.Filter(
-                                    type = 'FILTER_NONE', 
-                                    data = tiledb.cloud.rest_api.models.filter_data.Filter_data(
-                                        int8 = 56, 
-                                        uint8 = 56, 
-                                        int16 = 56, 
-                                        uint16 = 56, 
-                                        int32 = 56, 
-                                        uint32 = 56, 
-                                        int64 = 56, 
-                                        uint64 = 56, 
-                                        float32 = 56, 
-                                        float64 = 56, ), )
-                                ], ), 
-                        cell_val_num = 1, 
-                        fill_value = [
-                            56
-                            ], )
+                            type="FILTER_NONE",
+                            data=tiledb.cloud.rest_api.models.filter_data.Filter_data(
+                                int8=56,
+                                uint8=56,
+                                int16=56,
+                                uint16=56,
+                                int32=56,
+                                uint32=56,
+                                int64=56,
+                                uint64=56,
+                                float32=56,
+                                float64=56,
+                            ),
+                        )
                     ],
-        )
+                ),
+                offset_filter_pipeline=tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
+                    filters=[
+                        tiledb.cloud.rest_api.models.filter.Filter(
+                            type="FILTER_NONE",
+                            data=tiledb.cloud.rest_api.models.filter_data.Filter_data(
+                                int8=56,
+                                uint8=56,
+                                int16=56,
+                                uint16=56,
+                                int32=56,
+                                uint32=56,
+                                int64=56,
+                                uint64=56,
+                                float32=56,
+                                float64=56,
+                            ),
+                        )
+                    ],
+                ),
+                domain=tiledb.cloud.rest_api.models.domain.Domain(
+                    type="INT32",
+                    tile_order="row-major",
+                    cell_order="row-major",
+                    dimensions=[
+                        tiledb.cloud.rest_api.models.dimension.Dimension(
+                            name="row",
+                            type="INT32",
+                            domain=tiledb.cloud.rest_api.models.domain_array.DomainArray(
+                                int8=[56],
+                                uint8=[56],
+                                int16=[56],
+                                uint16=[56],
+                                int32=[56],
+                                uint32=[56],
+                                int64=[56],
+                                uint64=[56],
+                                float32=[1.337],
+                                float64=[1.337],
+                            ),
+                            null_tile_extent=True,
+                            tile_extent=tiledb.cloud.rest_api.models.dimension_tile_extent.Dimension_tileExtent(),
+                            filter_pipeline=tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
+                                filters=[
+                                    tiledb.cloud.rest_api.models.filter.Filter(
+                                        type="FILTER_NONE",
+                                        data=tiledb.cloud.rest_api.models.filter_data.Filter_data(),
+                                    )
+                                ],
+                            ),
+                        )
+                    ],
+                ),
+                attributes=[
+                    tiledb.cloud.rest_api.models.attribute.Attribute(
+                        name="attribute1",
+                        type="INT32",
+                        filter_pipeline=tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
+                            filters=[
+                                tiledb.cloud.rest_api.models.filter.Filter(
+                                    type="FILTER_NONE",
+                                    data=tiledb.cloud.rest_api.models.filter_data.Filter_data(
+                                        int8=56,
+                                        uint8=56,
+                                        int16=56,
+                                        uint16=56,
+                                        int32=56,
+                                        uint32=56,
+                                        int64=56,
+                                        uint64=56,
+                                        float32=56,
+                                        float64=56,
+                                    ),
+                                )
+                            ],
+                        ),
+                        cell_val_num=1,
+                        fill_value=[56],
+                    )
+                ],
+                allows_duplicates=True,
+            )
+        else:
+            return ArraySchema(
+                version=[1, 3, 0],
+                array_type="dense",
+                tile_order="row-major",
+                cell_order="row-major",
+                capacity=100000,
+                coords_filter_pipeline=tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
+                    filters=[
+                        tiledb.cloud.rest_api.models.filter.Filter(
+                            type="FILTER_NONE",
+                            data=tiledb.cloud.rest_api.models.filter_data.Filter_data(
+                                int8=56,
+                                uint8=56,
+                                int16=56,
+                                uint16=56,
+                                int32=56,
+                                uint32=56,
+                                int64=56,
+                                uint64=56,
+                                float32=56,
+                                float64=56,
+                            ),
+                        )
+                    ],
+                ),
+                offset_filter_pipeline=tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
+                    filters=[
+                        tiledb.cloud.rest_api.models.filter.Filter(
+                            type="FILTER_NONE",
+                            data=tiledb.cloud.rest_api.models.filter_data.Filter_data(
+                                int8=56,
+                                uint8=56,
+                                int16=56,
+                                uint16=56,
+                                int32=56,
+                                uint32=56,
+                                int64=56,
+                                uint64=56,
+                                float32=56,
+                                float64=56,
+                            ),
+                        )
+                    ],
+                ),
+                domain=tiledb.cloud.rest_api.models.domain.Domain(
+                    type="INT32",
+                    tile_order="row-major",
+                    cell_order="row-major",
+                    dimensions=[
+                        tiledb.cloud.rest_api.models.dimension.Dimension(
+                            name="row",
+                            type="INT32",
+                            domain=tiledb.cloud.rest_api.models.domain_array.DomainArray(
+                                int8=[56],
+                                uint8=[56],
+                                int16=[56],
+                                uint16=[56],
+                                int32=[56],
+                                uint32=[56],
+                                int64=[56],
+                                uint64=[56],
+                                float32=[1.337],
+                                float64=[1.337],
+                            ),
+                            null_tile_extent=True,
+                            tile_extent=tiledb.cloud.rest_api.models.dimension_tile_extent.Dimension_tileExtent(),
+                            filter_pipeline=tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
+                                filters=[
+                                    tiledb.cloud.rest_api.models.filter.Filter(
+                                        type="FILTER_NONE",
+                                        data=tiledb.cloud.rest_api.models.filter_data.Filter_data(),
+                                    )
+                                ],
+                            ),
+                        )
+                    ],
+                ),
+                attributes=[
+                    tiledb.cloud.rest_api.models.attribute.Attribute(
+                        name="attribute1",
+                        type="INT32",
+                        filter_pipeline=tiledb.cloud.rest_api.models.filter_pipeline.FilterPipeline(
+                            filters=[
+                                tiledb.cloud.rest_api.models.filter.Filter(
+                                    type="FILTER_NONE",
+                                    data=tiledb.cloud.rest_api.models.filter_data.Filter_data(
+                                        int8=56,
+                                        uint8=56,
+                                        int16=56,
+                                        uint16=56,
+                                        int32=56,
+                                        uint32=56,
+                                        int64=56,
+                                        uint64=56,
+                                        float32=56,
+                                        float64=56,
+                                    ),
+                                )
+                            ],
+                        ),
+                        cell_val_num=1,
+                        fill_value=[56],
+                    )
+                ],
+            )
 
     def testArraySchema(self):
         """Test ArraySchema"""
@@ -269,5 +256,5 @@ class TestArraySchema(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

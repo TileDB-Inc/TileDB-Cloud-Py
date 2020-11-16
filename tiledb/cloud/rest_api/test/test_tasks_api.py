@@ -29,23 +29,17 @@ class TestTasksApi(unittest.TestCase):
         pass
 
     def test_run_sql(self):
-        """Test case for run_sql
-
-        """
+        """Test case for run_sql"""
         pass
 
     def test_task_id_get(self):
-        """Test case for task_id_get
-
-        """
+        """Test case for task_id_get"""
         pass
 
     def test_tasks_get(self):
-        """Test case for tasks_get
-
-        """
+        """Test case for tasks_get"""
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

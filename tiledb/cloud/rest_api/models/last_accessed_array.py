@@ -33,22 +33,30 @@ class LastAccessedArray(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'array_id': 'str',
-        'array_name': 'str',
-        'namespace': 'str',
-        'accessed_time': 'float',
-        'access_type': 'ActivityEventType'
+        "array_id": "str",
+        "array_name": "str",
+        "namespace": "str",
+        "accessed_time": "float",
+        "access_type": "ActivityEventType",
     }
 
     attribute_map = {
-        'array_id': 'array_id',
-        'array_name': 'array_name',
-        'namespace': 'namespace',
-        'accessed_time': 'accessed_time',
-        'access_type': 'access_type'
+        "array_id": "array_id",
+        "array_name": "array_name",
+        "namespace": "namespace",
+        "accessed_time": "accessed_time",
+        "access_type": "access_type",
     }
 
-    def __init__(self, array_id=None, array_name=None, namespace=None, accessed_time=None, access_type=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        array_id=None,
+        array_name=None,
+        namespace=None,
+        accessed_time=None,
+        access_type=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """LastAccessedArray - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -192,18 +200,20 @@ class LastAccessedArray(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

@@ -16,8 +16,11 @@ import unittest
 import datetime
 
 import rest_api
-from tiledb.cloud.rest_api.models.inline_response200 import InlineResponse200  # noqa: E501
+from tiledb.cloud.rest_api.models.inline_response200 import (
+    InlineResponse200,
+)  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
+
 
 class TestInlineResponse200(unittest.TestCase):
     """InlineResponse200 unit test stubs"""
@@ -30,17 +33,14 @@ class TestInlineResponse200(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test InlineResponse200
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.inline_response200.InlineResponse200()  # noqa: E501
-        if include_optional :
-            return InlineResponse200(
-                stats = '123'
-            )
-        else :
-            return InlineResponse200(
-        )
+        if include_optional:
+            return InlineResponse200(stats="123")
+        else:
+            return InlineResponse200()
 
     def testInlineResponse200(self):
         """Test InlineResponse200"""
@@ -48,5 +48,5 @@ class TestInlineResponse200(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -16,8 +16,11 @@ import unittest
 import datetime
 
 import rest_api
-from tiledb.cloud.rest_api.models.last_accessed_array import LastAccessedArray  # noqa: E501
+from tiledb.cloud.rest_api.models.last_accessed_array import (
+    LastAccessedArray,
+)  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
+
 
 class TestLastAccessedArray(unittest.TestCase):
     """LastAccessedArray unit test stubs"""
@@ -30,21 +33,20 @@ class TestLastAccessedArray(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test LastAccessedArray
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.last_accessed_array.LastAccessedArray()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return LastAccessedArray(
-                array_id = '00000000-0000-0000-0000-000000000000', 
-                array_name = 'array1', 
-                namespace = 'mockuser', 
-                accessed_time = 1540471791873, 
-                access_type = 'read_schema'
+                array_id="00000000-0000-0000-0000-000000000000",
+                array_name="array1",
+                namespace="mockuser",
+                accessed_time=1540471791873,
+                access_type="read_schema",
             )
-        else :
-            return LastAccessedArray(
-        )
+        else:
+            return LastAccessedArray()
 
     def testLastAccessedArray(self):
         """Test LastAccessedArray"""
@@ -52,5 +54,5 @@ class TestLastAccessedArray(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

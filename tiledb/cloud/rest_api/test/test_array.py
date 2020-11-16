@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.array import Array  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestArray(unittest.TestCase):
     """Array unit test stubs"""
 
@@ -30,22 +31,18 @@ class TestArray(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test Array
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.array.Array()  # noqa: E501
-        if include_optional :
+        if include_optional:
+            return Array(timestamp=1540471791873, query_type="READ", uri="0")
+        else:
             return Array(
-                timestamp = 1540471791873, 
-                query_type = 'READ', 
-                uri = '0'
+                timestamp=1540471791873,
+                query_type="READ",
+                uri="0",
             )
-        else :
-            return Array(
-                timestamp = 1540471791873,
-                query_type = 'READ',
-                uri = '0',
-        )
 
     def testArray(self):
         """Test Array"""
@@ -53,5 +50,5 @@ class TestArray(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

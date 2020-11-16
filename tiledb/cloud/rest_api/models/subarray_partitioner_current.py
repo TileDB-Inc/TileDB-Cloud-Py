@@ -33,20 +33,27 @@ class SubarrayPartitionerCurrent(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'subarray': 'Subarray',
-        'start': 'int',
-        'end': 'int',
-        'split_multi_range': 'bool'
+        "subarray": "Subarray",
+        "start": "int",
+        "end": "int",
+        "split_multi_range": "bool",
     }
 
     attribute_map = {
-        'subarray': 'subarray',
-        'start': 'start',
-        'end': 'end',
-        'split_multi_range': 'splitMultiRange'
+        "subarray": "subarray",
+        "start": "start",
+        "end": "end",
+        "split_multi_range": "splitMultiRange",
     }
 
-    def __init__(self, subarray=None, start=None, end=None, split_multi_range=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        subarray=None,
+        start=None,
+        end=None,
+        split_multi_range=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """SubarrayPartitionerCurrent - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -164,18 +171,20 @@ class SubarrayPartitionerCurrent(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

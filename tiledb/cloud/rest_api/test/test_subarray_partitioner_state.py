@@ -16,8 +16,11 @@ import unittest
 import datetime
 
 import rest_api
-from tiledb.cloud.rest_api.models.subarray_partitioner_state import SubarrayPartitionerState  # noqa: E501
+from tiledb.cloud.rest_api.models.subarray_partitioner_state import (
+    SubarrayPartitionerState,
+)  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
+
 
 class TestSubarrayPartitionerState(unittest.TestCase):
     """SubarrayPartitionerState unit test stubs"""
@@ -30,42 +33,41 @@ class TestSubarrayPartitionerState(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test SubarrayPartitionerState
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.subarray_partitioner_state.SubarrayPartitionerState()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return SubarrayPartitionerState(
-                start = 56, 
-                end = 56, 
-                single_range = [
+                start=56,
+                end=56,
+                single_range=[
                     tiledb.cloud.rest_api.models.subarray.Subarray(
-                        layout = 'row-major', 
-                        ranges = [
+                        layout="row-major",
+                        ranges=[
                             tiledb.cloud.rest_api.models.subarray_ranges.SubarrayRanges(
-                                type = 'INT32', 
-                                has_default_range = True, 
-                                buffer = [
-                                    56
-                                    ], )
-                            ], )
-                    ], 
-                multi_range = [
+                                type="INT32",
+                                has_default_range=True,
+                                buffer=[56],
+                            )
+                        ],
+                    )
+                ],
+                multi_range=[
                     tiledb.cloud.rest_api.models.subarray.Subarray(
-                        layout = 'row-major', 
-                        ranges = [
+                        layout="row-major",
+                        ranges=[
                             tiledb.cloud.rest_api.models.subarray_ranges.SubarrayRanges(
-                                type = 'INT32', 
-                                has_default_range = True, 
-                                buffer = [
-                                    56
-                                    ], )
-                            ], )
-                    ]
+                                type="INT32",
+                                has_default_range=True,
+                                buffer=[56],
+                            )
+                        ],
+                    )
+                ],
             )
-        else :
-            return SubarrayPartitionerState(
-        )
+        else:
+            return SubarrayPartitionerState()
 
     def testSubarrayPartitionerState(self):
         """Test SubarrayPartitionerState"""
@@ -73,5 +75,5 @@ class TestSubarrayPartitionerState(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

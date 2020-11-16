@@ -16,8 +16,11 @@ import unittest
 import datetime
 
 import rest_api
-from tiledb.cloud.rest_api.models.array_browser_sidebar import ArrayBrowserSidebar  # noqa: E501
+from tiledb.cloud.rest_api.models.array_browser_sidebar import (
+    ArrayBrowserSidebar,
+)  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
+
 
 class TestArrayBrowserSidebar(unittest.TestCase):
     """ArrayBrowserSidebar unit test stubs"""
@@ -30,21 +33,18 @@ class TestArrayBrowserSidebar(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test ArrayBrowserSidebar
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.array_browser_sidebar.ArrayBrowserSidebar()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return ArrayBrowserSidebar(
-                namespaces = [
-                    '0'
-                    ], 
-                result_count_for_all = 56, 
-                result_count_by_namespace = None
+                namespaces=["0"],
+                result_count_for_all=56,
+                result_count_by_namespace=None,
             )
-        else :
-            return ArrayBrowserSidebar(
-        )
+        else:
+            return ArrayBrowserSidebar()
 
     def testArrayBrowserSidebar(self):
         """Test ArrayBrowserSidebar"""
@@ -52,5 +52,5 @@ class TestArrayBrowserSidebar(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

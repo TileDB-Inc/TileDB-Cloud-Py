@@ -33,34 +33,48 @@ class UDFInfoUpdate(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'name': 'str',
-        'language': 'UDFLanguage',
-        'version': 'str',
-        'image_name': 'str',
-        'type': 'UDFType',
-        '_exec': 'str',
-        'exec_raw': 'str',
-        'readme': 'str',
-        'license_id': 'str',
-        'license_text': 'str',
-        'tags': 'list[str]'
+        "name": "str",
+        "language": "UDFLanguage",
+        "version": "str",
+        "image_name": "str",
+        "type": "UDFType",
+        "_exec": "str",
+        "exec_raw": "str",
+        "readme": "str",
+        "license_id": "str",
+        "license_text": "str",
+        "tags": "list[str]",
     }
 
     attribute_map = {
-        'name': 'name',
-        'language': 'language',
-        'version': 'version',
-        'image_name': 'image_name',
-        'type': 'type',
-        '_exec': 'exec',
-        'exec_raw': 'exec_raw',
-        'readme': 'readme',
-        'license_id': 'license_id',
-        'license_text': 'license_text',
-        'tags': 'tags'
+        "name": "name",
+        "language": "language",
+        "version": "version",
+        "image_name": "image_name",
+        "type": "type",
+        "_exec": "exec",
+        "exec_raw": "exec_raw",
+        "readme": "readme",
+        "license_id": "license_id",
+        "license_text": "license_text",
+        "tags": "tags",
     }
 
-    def __init__(self, name=None, language=None, version=None, image_name=None, type=None, _exec=None, exec_raw=None, readme=None, license_id=None, license_text=None, tags=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        name=None,
+        language=None,
+        version=None,
+        image_name=None,
+        type=None,
+        _exec=None,
+        exec_raw=None,
+        readme=None,
+        license_id=None,
+        license_text=None,
+        tags=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """UDFInfoUpdate - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -358,18 +372,20 @@ class UDFInfoUpdate(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

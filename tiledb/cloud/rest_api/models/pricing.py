@@ -33,38 +33,54 @@ class Pricing(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'id': 'str',
-        'array_uuid': 'str',
-        'pricing_name': 'str',
-        'pricing_type': 'PricingType',
-        'product_name': 'str',
-        'product_statement_descriptor': 'str',
-        'product_unit_label': 'PricingUnitLabel',
-        'currency': 'PricingCurrency',
-        'aggregate_usage': 'PricingAggregateUsage',
-        'interval': 'PricingInterval',
-        'divided_by': 'int',
-        'charge': 'float',
-        'activated': 'bool'
+        "id": "str",
+        "array_uuid": "str",
+        "pricing_name": "str",
+        "pricing_type": "PricingType",
+        "product_name": "str",
+        "product_statement_descriptor": "str",
+        "product_unit_label": "PricingUnitLabel",
+        "currency": "PricingCurrency",
+        "aggregate_usage": "PricingAggregateUsage",
+        "interval": "PricingInterval",
+        "divided_by": "int",
+        "charge": "float",
+        "activated": "bool",
     }
 
     attribute_map = {
-        'id': 'id',
-        'array_uuid': 'array_uuid',
-        'pricing_name': 'pricing_name',
-        'pricing_type': 'pricing_type',
-        'product_name': 'product_name',
-        'product_statement_descriptor': 'product_statement_descriptor',
-        'product_unit_label': 'product_unit_label',
-        'currency': 'currency',
-        'aggregate_usage': 'aggregate_usage',
-        'interval': 'interval',
-        'divided_by': 'divided_by',
-        'charge': 'charge',
-        'activated': 'activated'
+        "id": "id",
+        "array_uuid": "array_uuid",
+        "pricing_name": "pricing_name",
+        "pricing_type": "pricing_type",
+        "product_name": "product_name",
+        "product_statement_descriptor": "product_statement_descriptor",
+        "product_unit_label": "product_unit_label",
+        "currency": "currency",
+        "aggregate_usage": "aggregate_usage",
+        "interval": "interval",
+        "divided_by": "divided_by",
+        "charge": "charge",
+        "activated": "activated",
     }
 
-    def __init__(self, id=None, array_uuid=None, pricing_name=None, pricing_type=None, product_name=None, product_statement_descriptor=None, product_unit_label=None, currency=None, aggregate_usage=None, interval=None, divided_by=None, charge=None, activated=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        id=None,
+        array_uuid=None,
+        pricing_name=None,
+        pricing_type=None,
+        product_name=None,
+        product_statement_descriptor=None,
+        product_unit_label=None,
+        currency=None,
+        aggregate_usage=None,
+        interval=None,
+        divided_by=None,
+        charge=None,
+        activated=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """Pricing - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -408,18 +424,20 @@ class Pricing(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

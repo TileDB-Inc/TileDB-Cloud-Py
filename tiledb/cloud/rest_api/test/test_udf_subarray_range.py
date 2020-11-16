@@ -16,8 +16,11 @@ import unittest
 import datetime
 
 import rest_api
-from tiledb.cloud.rest_api.models.udf_subarray_range import UDFSubarrayRange  # noqa: E501
+from tiledb.cloud.rest_api.models.udf_subarray_range import (
+    UDFSubarrayRange,
+)  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
+
 
 class TestUDFSubarrayRange(unittest.TestCase):
     """UDFSubarrayRange unit test stubs"""
@@ -30,39 +33,40 @@ class TestUDFSubarrayRange(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test UDFSubarrayRange
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.udf_subarray_range.UDFSubarrayRange()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return UDFSubarrayRange(
-                dimension_id = 56, 
-                range_start = tiledb.cloud.rest_api.models.dimension_coordinate.DimensionCoordinate(
-                    int8 = 56, 
-                    uint8 = 56, 
-                    int16 = 56, 
-                    uint16 = 56, 
-                    int32 = 56, 
-                    uint32 = 56, 
-                    int64 = 56, 
-                    uint64 = 56, 
-                    float32 = 1.337, 
-                    float64 = 1.337, ), 
-                range_end = tiledb.cloud.rest_api.models.dimension_coordinate.DimensionCoordinate(
-                    int8 = 56, 
-                    uint8 = 56, 
-                    int16 = 56, 
-                    uint16 = 56, 
-                    int32 = 56, 
-                    uint32 = 56, 
-                    int64 = 56, 
-                    uint64 = 56, 
-                    float32 = 1.337, 
-                    float64 = 1.337, )
+                dimension_id=56,
+                range_start=tiledb.cloud.rest_api.models.dimension_coordinate.DimensionCoordinate(
+                    int8=56,
+                    uint8=56,
+                    int16=56,
+                    uint16=56,
+                    int32=56,
+                    uint32=56,
+                    int64=56,
+                    uint64=56,
+                    float32=1.337,
+                    float64=1.337,
+                ),
+                range_end=tiledb.cloud.rest_api.models.dimension_coordinate.DimensionCoordinate(
+                    int8=56,
+                    uint8=56,
+                    int16=56,
+                    uint16=56,
+                    int32=56,
+                    uint32=56,
+                    int64=56,
+                    uint64=56,
+                    float32=1.337,
+                    float64=1.337,
+                ),
             )
-        else :
-            return UDFSubarrayRange(
-        )
+        else:
+            return UDFSubarrayRange()
 
     def testUDFSubarrayRange(self):
         """Test UDFSubarrayRange"""
@@ -70,5 +74,5 @@ class TestUDFSubarrayRange(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

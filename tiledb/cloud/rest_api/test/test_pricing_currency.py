@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.pricing_currency import PricingCurrency  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestPricingCurrency(unittest.TestCase):
     """PricingCurrency unit test stubs"""
 
@@ -30,16 +31,14 @@ class TestPricingCurrency(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test PricingCurrency
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.pricing_currency.PricingCurrency()  # noqa: E501
-        if include_optional :
-            return PricingCurrency(
-            )
-        else :
-            return PricingCurrency(
-        )
+        if include_optional:
+            return PricingCurrency()
+        else:
+            return PricingCurrency()
 
     def testPricingCurrency(self):
         """Test PricingCurrency"""
@@ -47,5 +46,5 @@ class TestPricingCurrency(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

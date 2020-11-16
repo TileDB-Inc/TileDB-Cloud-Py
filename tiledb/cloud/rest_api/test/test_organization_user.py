@@ -16,8 +16,11 @@ import unittest
 import datetime
 
 import rest_api
-from tiledb.cloud.rest_api.models.organization_user import OrganizationUser  # noqa: E501
+from tiledb.cloud.rest_api.models.organization_user import (
+    OrganizationUser,
+)  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
+
 
 class TestOrganizationUser(unittest.TestCase):
     """OrganizationUser unit test stubs"""
@@ -30,24 +33,21 @@ class TestOrganizationUser(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test OrganizationUser
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.organization_user.OrganizationUser()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return OrganizationUser(
-                user_id = '00000000-0000-0000-0000-000000000000', 
-                organization_id = '00000000-0000-0000-0000-000000000000', 
-                username = 'username', 
-                organization_name = 'MyOrganization', 
-                role = 'owner', 
-                allowed_actions = [
-                    'read'
-                    ]
+                user_id="00000000-0000-0000-0000-000000000000",
+                organization_id="00000000-0000-0000-0000-000000000000",
+                username="username",
+                organization_name="MyOrganization",
+                role="owner",
+                allowed_actions=["read"],
             )
-        else :
-            return OrganizationUser(
-        )
+        else:
+            return OrganizationUser()
 
     def testOrganizationUser(self):
         """Test OrganizationUser"""
@@ -55,5 +55,5 @@ class TestOrganizationUser(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

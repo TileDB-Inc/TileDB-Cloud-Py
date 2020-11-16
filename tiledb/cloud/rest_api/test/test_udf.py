@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.udf import UDF  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestUDF(unittest.TestCase):
     """UDF unit test stubs"""
 
@@ -30,63 +31,61 @@ class TestUDF(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test UDF
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.udf.UDF()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return UDF(
-                udf_info_name = 'TileDB-Inc/quickstart_median', 
-                language = 'python', 
-                version = '0', 
-                image_name = '0', 
-                ranges = tiledb.cloud.rest_api.models.udf_ranges.UDFRanges(
-                    layout = 'row-major', 
-                    ranges = [
-                        [
-                            1.337
-                            ]
-                        ], ), 
-                subarray = tiledb.cloud.rest_api.models.udf_subarray.UDFSubarray(
-                    layout = 'row-major', 
-                    ranges = [
+                udf_info_name="TileDB-Inc/quickstart_median",
+                language="python",
+                version="0",
+                image_name="0",
+                ranges=tiledb.cloud.rest_api.models.udf_ranges.UDFRanges(
+                    layout="row-major",
+                    ranges=[[1.337]],
+                ),
+                subarray=tiledb.cloud.rest_api.models.udf_subarray.UDFSubarray(
+                    layout="row-major",
+                    ranges=[
                         tiledb.cloud.rest_api.models.udf_subarray_range.UDFSubarrayRange(
-                            dimension_id = 56, 
-                            range_start = tiledb.cloud.rest_api.models.dimension_coordinate.DimensionCoordinate(
-                                int8 = 56, 
-                                uint8 = 56, 
-                                int16 = 56, 
-                                uint16 = 56, 
-                                int32 = 56, 
-                                uint32 = 56, 
-                                int64 = 56, 
-                                uint64 = 56, 
-                                float32 = 1.337, 
-                                float64 = 1.337, ), 
-                            range_end = tiledb.cloud.rest_api.models.dimension_coordinate.DimensionCoordinate(
-                                int8 = 56, 
-                                uint8 = 56, 
-                                int16 = 56, 
-                                uint16 = 56, 
-                                int32 = 56, 
-                                uint32 = 56, 
-                                int64 = 56, 
-                                uint64 = 56, 
-                                float32 = 1.337, 
-                                float64 = 1.337, ), )
-                        ], ), 
-                _exec = '0', 
-                exec_raw = '0', 
-                buffers = [
-                    '0'
-                    ], 
-                result_format = 'native', 
-                task_name = '0', 
-                argument = '0'
+                            dimension_id=56,
+                            range_start=tiledb.cloud.rest_api.models.dimension_coordinate.DimensionCoordinate(
+                                int8=56,
+                                uint8=56,
+                                int16=56,
+                                uint16=56,
+                                int32=56,
+                                uint32=56,
+                                int64=56,
+                                uint64=56,
+                                float32=1.337,
+                                float64=1.337,
+                            ),
+                            range_end=tiledb.cloud.rest_api.models.dimension_coordinate.DimensionCoordinate(
+                                int8=56,
+                                uint8=56,
+                                int16=56,
+                                uint16=56,
+                                int32=56,
+                                uint32=56,
+                                int64=56,
+                                uint64=56,
+                                float32=1.337,
+                                float64=1.337,
+                            ),
+                        )
+                    ],
+                ),
+                _exec="0",
+                exec_raw="0",
+                buffers=["0"],
+                result_format="native",
+                task_name="0",
+                argument="0",
             )
-        else :
-            return UDF(
-        )
+        else:
+            return UDF()
 
     def testUDF(self):
         """Test UDF"""
@@ -94,5 +93,5 @@ class TestUDF(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

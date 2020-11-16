@@ -33,32 +33,45 @@ class DomainArray(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'int8': 'list[int]',
-        'uint8': 'list[int]',
-        'int16': 'list[int]',
-        'uint16': 'list[int]',
-        'int32': 'list[int]',
-        'uint32': 'list[int]',
-        'int64': 'list[int]',
-        'uint64': 'list[int]',
-        'float32': 'list[float]',
-        'float64': 'list[float]'
+        "int8": "list[int]",
+        "uint8": "list[int]",
+        "int16": "list[int]",
+        "uint16": "list[int]",
+        "int32": "list[int]",
+        "uint32": "list[int]",
+        "int64": "list[int]",
+        "uint64": "list[int]",
+        "float32": "list[float]",
+        "float64": "list[float]",
     }
 
     attribute_map = {
-        'int8': 'int8',
-        'uint8': 'uint8',
-        'int16': 'int16',
-        'uint16': 'uint16',
-        'int32': 'int32',
-        'uint32': 'uint32',
-        'int64': 'int64',
-        'uint64': 'uint64',
-        'float32': 'float32',
-        'float64': 'float64'
+        "int8": "int8",
+        "uint8": "uint8",
+        "int16": "int16",
+        "uint16": "uint16",
+        "int32": "int32",
+        "uint32": "uint32",
+        "int64": "int64",
+        "uint64": "uint64",
+        "float32": "float32",
+        "float64": "float64",
     }
 
-    def __init__(self, int8=None, uint8=None, int16=None, uint16=None, int32=None, uint32=None, int64=None, uint64=None, float32=None, float64=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        int8=None,
+        uint8=None,
+        int16=None,
+        uint16=None,
+        int32=None,
+        uint32=None,
+        int64=None,
+        uint64=None,
+        float32=None,
+        float64=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """DomainArray - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -314,18 +327,20 @@ class DomainArray(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

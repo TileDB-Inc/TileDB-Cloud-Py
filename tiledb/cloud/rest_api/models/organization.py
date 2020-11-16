@@ -33,40 +33,57 @@ class Organization(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'id': 'str',
-        'role': 'OrganizationRoles',
-        'name': 'str',
-        'created_at': 'datetime',
-        'updated_at': 'datetime',
-        'logo': 'str',
-        'description': 'str',
-        'users': 'list[OrganizationUser]',
-        'allowed_actions': 'list[NamespaceActions]',
-        'num_of_arrays': 'float',
-        'enabled_features': 'list[str]',
-        'unpaid_subscription': 'bool',
-        'default_s3_path': 'str',
-        'stripe_connect': 'bool'
+        "id": "str",
+        "role": "OrganizationRoles",
+        "name": "str",
+        "created_at": "datetime",
+        "updated_at": "datetime",
+        "logo": "str",
+        "description": "str",
+        "users": "list[OrganizationUser]",
+        "allowed_actions": "list[NamespaceActions]",
+        "num_of_arrays": "float",
+        "enabled_features": "list[str]",
+        "unpaid_subscription": "bool",
+        "default_s3_path": "str",
+        "stripe_connect": "bool",
     }
 
     attribute_map = {
-        'id': 'id',
-        'role': 'role',
-        'name': 'name',
-        'created_at': 'created_at',
-        'updated_at': 'updated_at',
-        'logo': 'logo',
-        'description': 'description',
-        'users': 'users',
-        'allowed_actions': 'allowed_actions',
-        'num_of_arrays': 'num_of_arrays',
-        'enabled_features': 'enabled_features',
-        'unpaid_subscription': 'unpaid_subscription',
-        'default_s3_path': 'default_s3_path',
-        'stripe_connect': 'stripe_connect'
+        "id": "id",
+        "role": "role",
+        "name": "name",
+        "created_at": "created_at",
+        "updated_at": "updated_at",
+        "logo": "logo",
+        "description": "description",
+        "users": "users",
+        "allowed_actions": "allowed_actions",
+        "num_of_arrays": "num_of_arrays",
+        "enabled_features": "enabled_features",
+        "unpaid_subscription": "unpaid_subscription",
+        "default_s3_path": "default_s3_path",
+        "stripe_connect": "stripe_connect",
     }
 
-    def __init__(self, id=None, role=None, name=None, created_at=None, updated_at=None, logo=None, description=None, users=None, allowed_actions=None, num_of_arrays=None, enabled_features=None, unpaid_subscription=None, default_s3_path=None, stripe_connect=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        id=None,
+        role=None,
+        name=None,
+        created_at=None,
+        updated_at=None,
+        logo=None,
+        description=None,
+        users=None,
+        allowed_actions=None,
+        num_of_arrays=None,
+        enabled_features=None,
+        unpaid_subscription=None,
+        default_s3_path=None,
+        stripe_connect=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """Organization - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -180,17 +197,36 @@ class Organization(object):
         :param name: The name of this Organization.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and name is None:  # noqa: E501
-            raise ValueError("Invalid value for `name`, must not be `None`")  # noqa: E501
-        if (self.local_vars_configuration.client_side_validation and
-                name is not None and len(name) > 20):
-            raise ValueError("Invalid value for `name`, length must be less than or equal to `20`")  # noqa: E501
-        if (self.local_vars_configuration.client_side_validation and
-                name is not None and len(name) < 4):
-            raise ValueError("Invalid value for `name`, length must be greater than or equal to `4`")  # noqa: E501
-        if (self.local_vars_configuration.client_side_validation and
-                name is not None and not re.search(r'^[\w.\-]+$', name)):  # noqa: E501
-            raise ValueError(r"Invalid value for `name`, must be a follow pattern or equal to `/^[\w.\-]+$/`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and name is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `name`, must not be `None`"
+            )  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and name is not None
+            and len(name) > 20
+        ):
+            raise ValueError(
+                "Invalid value for `name`, length must be less than or equal to `20`"
+            )  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and name is not None
+            and len(name) < 4
+        ):
+            raise ValueError(
+                "Invalid value for `name`, length must be greater than or equal to `4`"
+            )  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and name is not None
+            and not re.search(r"^[\w.\-]+$", name)
+        ):  # noqa: E501
+            raise ValueError(
+                r"Invalid value for `name`, must be a follow pattern or equal to `/^[\w.\-]+$/`"
+            )  # noqa: E501
 
         self._name = name
 
@@ -452,18 +488,20 @@ class Organization(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

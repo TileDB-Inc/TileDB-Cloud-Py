@@ -29,11 +29,9 @@ class TestSqlApi(unittest.TestCase):
         pass
 
     def test_run_sql(self):
-        """Test case for run_sql
-
-        """
+        """Test case for run_sql"""
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

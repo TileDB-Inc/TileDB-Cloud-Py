@@ -33,18 +33,24 @@ class InvitationOrganizationJoinEmail(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'actions': 'list[NamespaceActions]',
-        'organization_role': 'OrganizationRoles',
-        'invitee_email': 'list[str]'
+        "actions": "list[NamespaceActions]",
+        "organization_role": "OrganizationRoles",
+        "invitee_email": "list[str]",
     }
 
     attribute_map = {
-        'actions': 'actions',
-        'organization_role': 'organization_role',
-        'invitee_email': 'invitee_email'
+        "actions": "actions",
+        "organization_role": "organization_role",
+        "invitee_email": "invitee_email",
     }
 
-    def __init__(self, actions=None, organization_role=None, invitee_email=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        actions=None,
+        organization_role=None,
+        invitee_email=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """InvitationOrganizationJoinEmail - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -101,8 +107,13 @@ class InvitationOrganizationJoinEmail(object):
         :param organization_role: The organization_role of this InvitationOrganizationJoinEmail.  # noqa: E501
         :type: OrganizationRoles
         """
-        if self.local_vars_configuration.client_side_validation and organization_role is None:  # noqa: E501
-            raise ValueError("Invalid value for `organization_role`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and organization_role is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `organization_role`, must not be `None`"
+            )  # noqa: E501
 
         self._organization_role = organization_role
 
@@ -124,8 +135,13 @@ class InvitationOrganizationJoinEmail(object):
         :param invitee_email: The invitee_email of this InvitationOrganizationJoinEmail.  # noqa: E501
         :type: list[str]
         """
-        if self.local_vars_configuration.client_side_validation and invitee_email is None:  # noqa: E501
-            raise ValueError("Invalid value for `invitee_email`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and invitee_email is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `invitee_email`, must not be `None`"
+            )  # noqa: E501
 
         self._invitee_email = invitee_email
 
@@ -136,18 +152,20 @@ class InvitationOrganizationJoinEmail(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

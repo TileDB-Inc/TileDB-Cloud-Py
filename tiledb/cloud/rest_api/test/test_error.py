@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.error import Error  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestError(unittest.TestCase):
     """Error unit test stubs"""
 
@@ -30,18 +31,14 @@ class TestError(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test Error
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.error.Error()  # noqa: E501
-        if include_optional :
-            return Error(
-                code = 56, 
-                message = '0'
-            )
-        else :
-            return Error(
-        )
+        if include_optional:
+            return Error(code=56, message="0")
+        else:
+            return Error()
 
     def testError(self):
         """Test Error"""
@@ -49,5 +46,5 @@ class TestError(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

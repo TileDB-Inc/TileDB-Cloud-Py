@@ -19,6 +19,7 @@ import rest_api
 from tiledb.cloud.rest_api.models.non_empty_domain import NonEmptyDomain  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
+
 class TestNonEmptyDomain(unittest.TestCase):
     """NonEmptyDomain unit test stubs"""
 
@@ -30,80 +31,42 @@ class TestNonEmptyDomain(unittest.TestCase):
 
     def make_instance(self, include_optional):
         """Test NonEmptyDomain
-            include_option is a boolean, when False only required
-            params are included, when True both required and
-            optional params are included """
+        include_option is a boolean, when False only required
+        params are included, when True both required and
+        optional params are included"""
         # model = tiledb.cloud.rest_api.models.non_empty_domain.NonEmptyDomain()  # noqa: E501
-        if include_optional :
+        if include_optional:
             return NonEmptyDomain(
-                non_empty_domain = tiledb.cloud.rest_api.models.domain_array.DomainArray(
-                    int8 = [
-                        56
-                        ], 
-                    uint8 = [
-                        56
-                        ], 
-                    int16 = [
-                        56
-                        ], 
-                    uint16 = [
-                        56
-                        ], 
-                    int32 = [
-                        56
-                        ], 
-                    uint32 = [
-                        56
-                        ], 
-                    int64 = [
-                        56
-                        ], 
-                    uint64 = [
-                        56
-                        ], 
-                    float32 = [
-                        1.337
-                        ], 
-                    float64 = [
-                        1.337
-                        ], ), 
-                is_empty = False
+                non_empty_domain=tiledb.cloud.rest_api.models.domain_array.DomainArray(
+                    int8=[56],
+                    uint8=[56],
+                    int16=[56],
+                    uint16=[56],
+                    int32=[56],
+                    uint32=[56],
+                    int64=[56],
+                    uint64=[56],
+                    float32=[1.337],
+                    float64=[1.337],
+                ),
+                is_empty=False,
             )
-        else :
+        else:
             return NonEmptyDomain(
-                non_empty_domain = tiledb.cloud.rest_api.models.domain_array.DomainArray(
-                    int8 = [
-                        56
-                        ], 
-                    uint8 = [
-                        56
-                        ], 
-                    int16 = [
-                        56
-                        ], 
-                    uint16 = [
-                        56
-                        ], 
-                    int32 = [
-                        56
-                        ], 
-                    uint32 = [
-                        56
-                        ], 
-                    int64 = [
-                        56
-                        ], 
-                    uint64 = [
-                        56
-                        ], 
-                    float32 = [
-                        1.337
-                        ], 
-                    float64 = [
-                        1.337
-                        ], ),
-                is_empty = False,
-        )
+                non_empty_domain=tiledb.cloud.rest_api.models.domain_array.DomainArray(
+                    int8=[56],
+                    uint8=[56],
+                    int16=[56],
+                    uint16=[56],
+                    int32=[56],
+                    uint32=[56],
+                    int64=[56],
+                    uint64=[56],
+                    float32=[1.337],
+                    float64=[1.337],
+                ),
+                is_empty=False,
+            )
 
     def testNonEmptyDomain(self):
         """Test NonEmptyDomain"""
@@ -111,5 +74,5 @@ class TestNonEmptyDomain(unittest.TestCase):
         inst_req_and_optional = self.make_instance(include_optional=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
