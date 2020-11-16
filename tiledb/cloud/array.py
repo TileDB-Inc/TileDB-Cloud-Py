@@ -387,16 +387,16 @@ def apply_async(
 
     ranges = parse_ranges(ranges)
 
-    converted_layout = "row-major"
-
     if layout is None:
-        converted_layout = "unordered"
+        converted_layout = None
     elif layout.upper() == "R":
         converted_layout = "row-major"
     elif layout.upper() == "C":
         converted_layout = "col-major"
     elif layout.upper() == "G":
         converted_layout = "global-order"
+    elif layout.upper() == "U":
+        converted_layout = "unordered"
 
     ranges = rest_api.models.UDFRanges(layout=converted_layout, ranges=ranges)
 

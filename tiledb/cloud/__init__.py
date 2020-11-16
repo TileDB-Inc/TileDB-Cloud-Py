@@ -20,9 +20,7 @@ from .array import (
     array_activity,
 )
 
-from .notebook import (
-    rename_notebook,
-)
+from .notebook import rename_notebook
 
 from .tiledb_cloud_error import TileDBCloudError
 
