@@ -116,8 +116,19 @@ def setup_configuration(
         total=10,
         backoff_factor=0.25,
         status_forcelist=[503],
-        method_whitelist=False,
+        allowed_methods=[
+            "HEAD",
+            "GET",
+            "PUT",
+            "DELETE",
+            "OPTIONS",
+            "TRACE",
+            "POST",
+            "PATCH",
+        ],
         raise_on_status=False,
+        # Don't remove any headers on redirect
+        remove_headers_on_redirect=[],
     )
     # Set logged in at this point
     global logged_in
