@@ -53,7 +53,7 @@ class DelayedBase(Node):
         for node in self.children.values():
             node.__set_all_parent_nodes_same_dag(dag)
 
-    def visualize(self, notebook=True, auto_update=True, force_plotly=True):
+    def visualize(self, notebook=True, auto_update=True, force_plotly=False):
         """
         Build and render a tree diagram of the DAG.
         :param notebook: Is the visualization inside a jupyter notebook? If so we'll use a widget
