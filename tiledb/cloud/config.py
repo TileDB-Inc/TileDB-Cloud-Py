@@ -20,9 +20,11 @@ def save_configuration(config_file):
         global config
         config_to_save = {
             "host": config.host,
-            "api_key": config.api_key,
             "verify_ssl": config.verify_ssl,
         }
+
+        if config.api_key is not None and config.api_key != "":
+            config_to_save["api_key"] = config.api_key
 
         if config.username is not None and config.username != "":
             config_to_save["username"] = config.username
@@ -35,13 +37,13 @@ def save_configuration(config_file):
 
 def load_configuration(config_path):
     # Look for env variables
-    token = os.getenv("TILEDB_REST_TOKEN")
+    token = os.getenv("TILEDB_REST_TOKEN", None)
     if token is not None and token != "":
         token = {"X-TILEDB-REST-API-KEY": token}
     host = os.getenv("TILEDB_REST_HOST")
     # default username/password to empty strings
-    username = os.getenv("TILEDB_REST_USERNAME", "")
-    password = os.getenv("TILEDB_REST_PASSWORD", "")
+    username = os.getenv("TILEDB_REST_USERNAME", None)
+    password = os.getenv("TILEDB_REST_PASSWORD", None)
     verify_ssl = True
 
     if os.path.isfile(config_path):
@@ -49,9 +51,17 @@ def load_configuration(config_path):
             global config
             # Parse JSON into an object with attributes corresponding to dict keys.
             config_obj = json.loads(f.read())
-            if "username" in config_obj:
+            if (
+                "username" in config_obj
+                and config_obj["username"] is not None
+                and config_obj["username"] != ""
+            ):
                 username = config_obj["username"]
-            if "password" in config_obj:
+            if (
+                "password" in config_obj
+                and config_obj["password"] is not None
+                and config_obj["password"] != ""
+            ):
                 password = config_obj["password"]
 
             # Don't override user env variables
@@ -64,7 +74,12 @@ def load_configuration(config_path):
                 host = host[: -len("/v1/")]
 
             # Don't override user env variables
-            if token is None or token == "":
+            if (
+                (token is None or token == "")
+                and "api_key" in config_obj
+                and config_obj["api_key"] is not None
+                and config_obj["api_key"] != ""
+            ):
                 token = config_obj["api_key"]
             verify_ssl = config_obj["verify_ssl"]
 
@@ -85,9 +100,13 @@ def load_configuration(config_path):
     return True
 
 
-def setup_configuration(api_key, host, username="", password="", verify_ssl=True):
+def setup_configuration(
+    api_key=None, host="", username=None, password=None, verify_ssl=True
+):
     host = host + "/v1"
     global config
+    if api_key is None:
+        api_key = {}
     config.api_key = api_key
     config.host = host
     config.username = username
