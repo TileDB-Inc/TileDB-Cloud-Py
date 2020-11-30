@@ -33,7 +33,12 @@ def Config(cfg_dict=None):
     )
     cfg = tiledb.Config(cfg_dict)
 
-    if config.config.username != "" and config.config.password != "":
+    if (
+        config.config.username is not None
+        and config.config.username != ""
+        and config.config.password is not None
+        and config.config.password != ""
+    ):
         cfg["rest.username"] = config.config.username
         cfg["rest.password"] = config.config.password
     else:
@@ -51,9 +56,9 @@ def Ctx(config=None):
 
 
 def login(
-    token="",
-    username="",
-    password="",
+    token=None,
+    username=None,
+    password=None,
     host=None,
     verify_ssl=True,
     no_session=False,
@@ -66,6 +71,9 @@ def login(
     :param username: username for login
     :param password: password for login
     :param host: host to login to
+    :param verify_ssl: Enable strict SSL verification
+    :param no_session: don't create a session token on login, store instead username/password
+    :param threads: number of threads to enable for concurrent requests
     :return:
     """
     if host is None:
@@ -75,35 +83,37 @@ def login(
     elif host.endswith("/v1/"):
         host = host[: -len("/v1/")]
 
-    if token == "" and username == "" and password == "":
+    if (token is None or token == "") and (
+        (username is None or username == "") and (password is None or password == "")
+    ):
         raise Exception("Username and Password OR token must be set")
-    if (username == "" or password == "") and token == "":
+    if (username is None or username == "" or password is None or password == "") and (
+        token is None or token == ""
+    ):
         raise Exception("Username and Password are both required")
 
+    kwargs = {
+        "username": username,
+        "password": password,
+        "host": host,
+        "verify_ssl": verify_ssl,
+        "api_key": {},
+    }
     # Is user logs in with username/password we need to create a session
-    if token == "" and not no_session:
-        config.setup_configuration(
-            api_key={"X-TILEDB-REST-API-KEY": token},
-            username=username,
-            password=password,
-            host=host,
-            verify_ssl=verify_ssl,
-        )
+    if (token is None or token == "") and not no_session:
+        config.setup_configuration(**kwargs)
         client.pool_threads = threads
         client.update_clients()
         user_api = client.user_api
         session = user_api.get_session(remember_me=True)
         token = session.token
-        username = ""
-        password = ""
 
-    config.setup_configuration(
-        api_key={"X-TILEDB-REST-API-KEY": token},
-        username=username,
-        password=password,
-        host=host,
-        verify_ssl=verify_ssl,
-    )
+    if token is not None and token != "":
+        kwargs["api_key"] = {"X-TILEDB-REST-API-KEY": token}
+        del kwargs["username"]
+        del kwargs["password"]
+
+    config.setup_configuration(**kwargs)
     config.save_configuration(config.default_config_file)
     config.logged_in = True
     client.pool_threads = threads
