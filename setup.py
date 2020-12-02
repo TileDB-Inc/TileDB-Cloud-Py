@@ -17,7 +17,7 @@ NAME = "tiledb-cloud"
 
 REQUIRES = [
     "tiledb>=0.5.0",
-    "urllib3>=1.15",
+    "urllib3>=1.26",
     "six>=1.10",
     "certifi",
     "python-dateutil",
