@@ -14,6 +14,7 @@ import cloudpickle
 import urllib
 import base64
 import sys
+import numpy
 
 
 class UDFResult(multiprocessing.pool.ApplyResult):
@@ -337,6 +338,13 @@ def parse_ranges(ranges):
             start, end = dim_range.start, dim_range.stop
         else:
             raise ValueError("Unknown index type! (type: '{}')".format(type(dim_range)))
+
+        # Convert datetimes to int64
+        if type(start) == numpy.datetime64:
+            start = start.astype("int64").item()
+        if type(end) == numpy.datetime64:
+            end = end.astype("int64").item()
+
         return [start, end]
 
     result = list()
