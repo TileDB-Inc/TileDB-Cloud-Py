@@ -29,8 +29,9 @@ class FileType(object):
     allowed enum values
     """
     NOTEBOOK = "notebook"
+    USER_DEFINED_FUNCTION = "user_defined_function"
 
-    allowable_values = [NOTEBOOK]  # noqa: E501
+    allowable_values = [NOTEBOOK, USER_DEFINED_FUNCTION]  # noqa: E501
 
     """
     Attributes:
