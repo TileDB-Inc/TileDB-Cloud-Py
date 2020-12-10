@@ -141,9 +141,7 @@ from tiledb.cloud.rest_api.models.udf_image import UDFImage
 from tiledb.cloud.rest_api.models.udf_image_version import UDFImageVersion
 from tiledb.cloud.rest_api.models.udf_info import UDFInfo
 from tiledb.cloud.rest_api.models.udf_info_update import UDFInfoUpdate
-from tiledb.cloud.rest_api.models.udf_info_version import UDFInfoVersion
 from tiledb.cloud.rest_api.models.udf_language import UDFLanguage
-from tiledb.cloud.rest_api.models.udf_listing_data import UDFListingData
 from tiledb.cloud.rest_api.models.udf_ranges import UDFRanges
 from tiledb.cloud.rest_api.models.udf_result_type import UDFResultType
 from tiledb.cloud.rest_api.models.udf_sharing import UDFSharing

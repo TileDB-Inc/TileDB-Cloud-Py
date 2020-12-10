@@ -438,22 +438,9 @@ def info(namespace=None, name=None, async_req=False):
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def list_registered_udfs(namespace=None, search=None, async_req=False):
-    """
-    Fetch all registered udf user has access to
-    :param namespace: namespace to filter to
-    :param search: string search for udfs
-    :param async_req: return future instead of results for async support
-    :return: registered udf details
-    """
-    try:
-        api_instance = client.client.udf_api
-
-        return api_instance.get_udf_info_list(
-            namespace=namespace, search=search, async_req=async_req
-        )
-    except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+"""
+Share a registered udf
+"""
 
 
 def share(name=None, namespace=None, async_req=False):
