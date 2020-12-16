@@ -272,7 +272,10 @@ def delete_array(uri, content_type, async_req=False):
 
     try:
         return api_instance.delete_array(
-            namespace=namespace, array=array_name, content_type=content_type, async_req=async_req
+            namespace=namespace,
+            array=array_name,
+            content_type=content_type,
+            async_req=async_req,
         )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
