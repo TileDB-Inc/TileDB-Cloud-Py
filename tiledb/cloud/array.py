@@ -257,6 +257,30 @@ def deregister_array(uri, async_req=False):
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
+def delete_array(uri, content_type, async_req=False):
+    """
+    Deregister the array from the tiledb cloud service, then deletes physical array from disk.
+    All access to the array and cloud metadata will be removed.
+
+    :param async_req: return future instead of results for async support
+
+    :return success or error
+    """
+    (namespace, array_name) = split_uri(uri)
+
+    api_instance = client.client.array_api
+
+    try:
+        return api_instance.delete_array(
+            namespace=namespace,
+            array=array_name,
+            content_type=content_type,
+            async_req=async_req,
+        )
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
+
+
 def array_activity(uri, async_req=False):
     """
     Fetch array activity
