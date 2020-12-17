@@ -288,18 +288,26 @@ def update_udf(
     func,
     name,
     namespace=None,
+    update_name=None,
     image_name=None,
     type=None,
+    license_id=None,
+    license_text=None,
+    readme=None,
     include_source_lines=True,
     async_req=False,
 ):
     """
 
-    :param func: function to register
+    :param func: function to update register
     :param name: name of udf to register
     :param namespace: namespace to register in
+    :param update_name: new name for udf - physical folder will not be renamed, just the registered array name
     :param image_name: optional image name
     :param type: type of udf, generic or single_array
+    :param license_id: license id for udf according to https://spdx.org/licenses/
+    :param license_text: text of license for udf
+    :param readme: readme of udf
     :param include_source_lines: disables sending sources lines of function along with udf
     :param async_req: return future instead of results for async support
     :return:
@@ -324,8 +332,12 @@ def update_udf(
 
         source_lines = utils.getsourcelines(func) if include_source_lines else None
 
+        update_udf_name = name
+        if update_name is not None and update_name != "":
+            update_udf_name = update_name
+
         udf_model = rest_api.models.UDFInfoUpdate(
-            name=name,
+            name=update_udf_name,
             language=rest_api.models.UDFLanguage.PYTHON,
             version="{}.{}.{}".format(
                 sys.version_info.major,
@@ -333,6 +345,9 @@ def update_udf(
                 sys.version_info.micro,
             ),
             image_name=image_name,
+            license_id=license_text,
+            license_text=license_id,
+            readme=readme,
             type=type,
             _exec=pickledUDF,
             exec_raw=None,
@@ -511,6 +526,31 @@ def unshare(name=None, namespace=None, async_req=False):
             udf_namespace,
             udf_name,
             udf_sharing=rest_api.models.UDFSharing(namespace=namespace),
+            async_req=async_req,
+        )
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
+
+
+"""
+Delete a registered udf
+"""
+
+
+def delete(name, namespace, async_req=False):
+    """
+    Deletes a registered udf
+    :param name: name of udf
+    :param namespace: namespace the udf belongs to
+    :param async_req: return future instead of results for async support
+    :return: deleted udf details
+    """
+    try:
+        api_instance = client.client.udf_api
+
+        return api_instance.delete_udf_info(
+            namespace,
+            name,
             async_req=async_req,
         )
     except GenApiException as exc:
