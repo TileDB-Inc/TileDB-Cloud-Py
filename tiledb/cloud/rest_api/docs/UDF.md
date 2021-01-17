@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **language** | [**UDFLanguage**](UDFLanguage.md) |  | [optional] 
 **version** | **str** | Type-specific version | [optional] 
 **image_name** | **str** | Docker image name to use for udf | [optional] 
-**ranges** | [**UDFRanges**](UDFRanges.md) |  | [optional] 
+**ranges** | [**QueryRanges**](QueryRanges.md) |  | [optional] 
 **subarray** | [**UDFSubarray**](UDFSubarray.md) |  | [optional] 
 **_exec** | **str** | Type-specific executable text | [optional] 
 **exec_raw** | **str** | optional raw text to store of serialized function, used for showing in UI | [optional] 

@@ -36,7 +36,7 @@ class TestError(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.error.Error()  # noqa: E501
         if include_optional:
-            return Error(code=56, message="0")
+            return Error(code=56, message="0", request_id="0")
         else:
             return Error()
 

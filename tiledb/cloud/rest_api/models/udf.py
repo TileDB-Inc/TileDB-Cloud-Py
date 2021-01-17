@@ -37,7 +37,7 @@ class UDF(object):
         "language": "UDFLanguage",
         "version": "str",
         "image_name": "str",
-        "ranges": "UDFRanges",
+        "ranges": "QueryRanges",
         "subarray": "UDFSubarray",
         "_exec": "str",
         "exec_raw": "str",
@@ -218,7 +218,7 @@ class UDF(object):
 
 
         :return: The ranges of this UDF.  # noqa: E501
-        :rtype: UDFRanges
+        :rtype: QueryRanges
         """
         return self._ranges
 
@@ -228,7 +228,7 @@ class UDF(object):
 
 
         :param ranges: The ranges of this UDF.  # noqa: E501
-        :type: UDFRanges
+        :type: QueryRanges
         """
 
         self._ranges = ranges

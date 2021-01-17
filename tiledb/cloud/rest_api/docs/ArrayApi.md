@@ -32,7 +32,7 @@ Method | HTTP request | Description
 
 
 # **array_activity_log**
-> list[ArrayActivityLog] array_activity_log(namespace, array, start=start, end=end, event_types=event_types, task_id=task_id)
+> list[ArrayActivityLog] array_activity_log(namespace, array, start=start, end=end, event_types=event_types, task_id=task_id, has_task_id=has_task_id)
 
 
 
@@ -84,9 +84,10 @@ start = 56 # int | Start time of window of fetch logs, unix epoch in seconds (de
 end = 56 # int | End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) (optional)
 event_types = 'event_types_example' # str | Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated (optional)
 task_id = 'task_id_example' # str | Array task id To filter activity to (optional)
+has_task_id = True # bool | Excludes activity log results that does not contain an array task uuid (optional)
 
     try:
-        api_response = api_instance.array_activity_log(namespace, array, start=start, end=end, event_types=event_types, task_id=task_id)
+        api_response = api_instance.array_activity_log(namespace, array, start=start, end=end, event_types=event_types, task_id=task_id, has_task_id=has_task_id)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->array_activity_log: %s\n" % e)
@@ -136,9 +137,10 @@ start = 56 # int | Start time of window of fetch logs, unix epoch in seconds (de
 end = 56 # int | End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) (optional)
 event_types = 'event_types_example' # str | Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated (optional)
 task_id = 'task_id_example' # str | Array task id To filter activity to (optional)
+has_task_id = True # bool | Excludes activity log results that does not contain an array task uuid (optional)
 
     try:
-        api_response = api_instance.array_activity_log(namespace, array, start=start, end=end, event_types=event_types, task_id=task_id)
+        api_response = api_instance.array_activity_log(namespace, array, start=start, end=end, event_types=event_types, task_id=task_id, has_task_id=has_task_id)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->array_activity_log: %s\n" % e)
@@ -154,6 +156,7 @@ Name | Type | Description  | Notes
  **end** | **int**| End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) | [optional] 
  **event_types** | **str**| Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated | [optional] 
  **task_id** | **str**| Array task id To filter activity to | [optional] 
+ **has_task_id** | **bool**| Excludes activity log results that does not contain an array task uuid | [optional] 
 
 ### Return type
 
