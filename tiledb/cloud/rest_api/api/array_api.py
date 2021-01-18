@@ -1421,6 +1421,8 @@ class ArrayApi(object):
             header_params["Content-Type"] = local_var_params[
                 "content_type"
             ]  # noqa: E501
+        if 'x_tiledb_cloud_access_credentials_name' in local_var_params:
+            header_params['X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME'] = local_var_params['x_tiledb_cloud_access_credentials_name']  # noqa: E501    
 
         form_params = []
         local_var_files = {}
