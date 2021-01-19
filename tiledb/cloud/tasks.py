@@ -28,6 +28,43 @@ def task(id, async_req=False):
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
+def result(id, async_req=False, raw_results=False, http_compressor="deflate"):
+    """
+    Fetch results of a single task
+    :param str id: id to retry
+    :param async_req: return future instead of results for async support
+    :param bool raw_results: optional flag for sql tasks to return raw json bytes of results instead of converting to pandas dataframe
+    :param string http_compressor: optional http compression method to use
+    :return results or future if async
+    """
+
+    if id is None:
+        raise Exception("id parameter can not be empty")
+
+    t = task(id)
+
+    api_instance = client.client.tasks_api
+
+    try:
+        kwargs = {"_preload_content": False, "async_req": True}
+        if http_compressor is not None:
+            kwargs["accept_encoding"] = http_compressor
+        response = api_instance.task_id_result_get(id=id, **kwargs)
+
+        if t.type == ArrayTaskType.GENERIC_UDF or t.type == ArrayTaskType.UDF:
+            response = array.UDFResult(response)
+        elif t.type == ArrayTaskType.SQL:
+            response = sql.SQLResults(response, raw_results)
+
+        if not async_req:
+            return response.get()
+
+        return response
+
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
+
+
 def tasks(
     namespace=None,
     array=None,

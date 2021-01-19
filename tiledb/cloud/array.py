@@ -446,6 +446,7 @@ def apply_async(
     v2=True,
     result_format=rest_api.models.UDFResultType.NATIVE,
     result_format_version=None,
+    store_results=False,
     **kwargs
 ):
     """
@@ -463,6 +464,7 @@ def apply_async(
     :param bool v2: use v2 array udfs
     :param UDFResultType result_format: result serialization format
     :param str result_format_version: set a format version for cloudpickle or arrow IPC
+    :param bool store_results: enable temporary (24 hours) storage of task results for async retrieval
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
 
@@ -539,6 +541,7 @@ def apply_async(
             argument=arguments,
             result_format=result_format,
             result_format_version=result_format_version,
+            store_results=store_results,
         )
 
         if pickledUDF is not None:
@@ -573,6 +576,7 @@ def apply(
     v2=True,
     result_format=rest_api.models.UDFResultType.NATIVE,
     result_format_version=None,
+    store_results=False,
     **kwargs
 ):
     """
@@ -589,6 +593,7 @@ def apply(
     :param bool v2: use v2 array udfs
     :param UDFResultType result_format: result serialization format
     :param str result_format_version: set a format version for cloudpickle or arrow IPC
+    :param bool store_results: enable temporary (24 hours) storage of task results for async retrieval
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
 
@@ -613,6 +618,7 @@ def apply(
         v2=v2,
         result_format=result_format,
         result_format_version=result_format_version,
+        store_results=store_results,
         **kwargs,
     ).get()
 

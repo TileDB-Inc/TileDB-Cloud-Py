@@ -25,6 +25,7 @@ def exec_async(
     task_name=None,
     result_format=rest_api.models.UDFResultType.NATIVE,
     result_format_version=None,
+    store_results=False,
     **kwargs
 ):
     """
@@ -41,6 +42,7 @@ def exec_async(
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param UDFResultType result_format: result serialization format
     :param str result_format_version: set a format version for cloudpickle or arrow IPC
+    :param bool store_results: enable temporary (24 hours) storage of task results for async retrieval
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
     """
@@ -105,6 +107,7 @@ def exec_async(
             ),
             image_name=image_name,
             task_name=task_name,
+            store_results=store_results,
         )
 
         if pickledUDF is not None:
@@ -137,6 +140,7 @@ def exec(
     task_name=None,
     result_format=rest_api.models.UDFResultType.NATIVE,
     result_format_version=None,
+    store_results=False,
     **kwargs
 ):
     """
@@ -152,6 +156,7 @@ def exec(
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param UDFResultType result_format: result serialization format
     :param str result_format_version: set a format version for cloudpickle or arrow IPC
+    :param bool store_results: enable temporary (24 hours) storage of task results for async retrieval
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
     """
@@ -166,6 +171,7 @@ def exec(
         task_name=task_name,
         result_format=result_format,
         result_format_version=result_format_version,
+        store_results=store_results,
         **kwargs,
     ).get()
 
