@@ -26,6 +26,7 @@ from .tiledb_cloud_error import TileDBCloudError
 
 from .tasks import task, tasks, last_sql_task, last_udf_task
 from .tasks import retry as retry_task
+from .tasks import result as task_results
 
 from . import sql
 

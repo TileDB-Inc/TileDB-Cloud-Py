@@ -25,6 +25,7 @@ def exec_async(
     http_compressor="deflate",
     include_source_lines=True,
     task_name=None,
+    store_results=False,
     **kwargs
 ):
     """
@@ -39,6 +40,7 @@ def exec_async(
     :param http_compressor: set http compressor for results
     :param include_source_lines: disables sending sources lines of function along with udf
     :param str task_name: optional name to assign the task for logging and audit purposes
+    :param bool store_results: enable temporary (24 hours) storage of task results for async retrieval
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
     """
@@ -102,6 +104,7 @@ def exec_async(
             ),
             image_name=image_name,
             task_name=task_name,
+            store_results=store_results,
         )
 
         if pickledUDF is not None:
@@ -132,6 +135,7 @@ def exec(
     http_compressor="deflate",
     include_source_lines=True,
     task_name=None,
+    store_results=False,
     **kwargs
 ):
     """
@@ -145,6 +149,7 @@ def exec(
     :param http_compressor: set http compressor for results
     :param include_source_lines: disables sending sources lines of function along with udf
     :param str task_name: optional name to assign the task for logging and audit purposes
+    :param bool store_results: enable temporary (24 hours) storage of task results for async retrieval
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
     """
@@ -157,6 +162,7 @@ def exec(
         http_compressor=http_compressor,
         include_source_lines=include_source_lines,
         task_name=task_name,
+        store_results=store_results,
         **kwargs,
     ).get()
 

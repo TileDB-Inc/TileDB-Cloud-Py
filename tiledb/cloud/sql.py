@@ -66,6 +66,7 @@ def exec_async(
     output_array_name=None,
     raw_results=False,
     http_compressor="deflate",
+    store_results=False,
 ):
     """
     Run a sql query asynchronous
@@ -77,6 +78,7 @@ def exec_async(
     :param str output_array_name: optional array name to set if creating new output array
     :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
     :param string http_compressor: optional http compression method to use
+    :param bool store_results: enable temporary (24 hours) storage of task results for async retrieval
 
     :return: A SQLResult object which is a future for a pandas dataframe if no output array is given and query returns results
     """
@@ -133,7 +135,10 @@ def exec_async(
         response = api_instance.run_sql(
             namespace=namespace,
             sql=rest_api.models.SQLParameters(
-                name=task_name, query=query, output_uri=output_uri
+                name=task_name,
+                query=query,
+                output_uri=output_uri,
+                store_results=store_results,
             ),
             **kwargs
         )
@@ -204,6 +209,7 @@ def exec(
     output_array_name=None,
     raw_results=False,
     http_compressor="deflate",
+    store_results=False,
 ):
     """
     Run a sql query
@@ -214,6 +220,7 @@ def exec(
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param str output_array_name: optional array name to set if creating new output array
     :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
+    :param bool store_results: enable temporary (24 hours) storage of task results for async retrieval
     :param string http_compressor: optional http compression method to use
 
     :return: pandas dataframe if no output array is given and query returns results
@@ -227,4 +234,5 @@ def exec(
         output_array_name=output_array_name,
         raw_results=raw_results,
         http_compressor=http_compressor,
+        store_results=store_results,
     ).get()
