@@ -46,7 +46,7 @@ class Organization(object):
         "enabled_features": "list[str]",
         "unpaid_subscription": "bool",
         "default_s3_path": "str",
-        'default_s3_path_credentials_name': 'str',
+        "default_s3_path_credentials_name": "str",
         "stripe_connect": "bool",
     }
 
@@ -64,7 +64,7 @@ class Organization(object):
         "enabled_features": "enabled_features",
         "unpaid_subscription": "unpaid_subscription",
         "default_s3_path": "default_s3_path",
-        'default_s3_path_credentials_name': 'default_s3_path_credentials_name',
+        "default_s3_path_credentials_name": "default_s3_path_credentials_name",
         "stripe_connect": "stripe_connect",
     }
 

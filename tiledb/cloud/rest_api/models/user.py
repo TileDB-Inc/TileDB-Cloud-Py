@@ -49,7 +49,7 @@ class User(object):
         "enabled_features": "list[str]",
         "unpaid_subscription": "bool",
         "default_s3_path": "str",
-        'default_s3_path_credentials_name': 'str',
+        "default_s3_path_credentials_name": "str",
         "default_namespace_charged": "str",
     }
 
@@ -70,7 +70,7 @@ class User(object):
         "enabled_features": "enabled_features",
         "unpaid_subscription": "unpaid_subscription",
         "default_s3_path": "default_s3_path",
-        'default_s3_path_credentials_name': 'default_s3_path_credentials_name',
+        "default_s3_path_credentials_name": "default_s3_path_credentials_name",
         "default_namespace_charged": "default_namespace_charged",
     }
 
