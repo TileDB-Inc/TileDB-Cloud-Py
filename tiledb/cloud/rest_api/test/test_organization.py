@@ -63,6 +63,7 @@ class TestOrganization(unittest.TestCase):
                 enabled_features=["0"],
                 unpaid_subscription=True,
                 default_s3_path="0",
+                default_s3_path_credentials_name="0",
                 stripe_connect=False,
             )
         else:

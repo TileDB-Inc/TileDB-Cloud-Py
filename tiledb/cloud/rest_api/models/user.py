@@ -49,6 +49,7 @@ class User(object):
         "enabled_features": "list[str]",
         "unpaid_subscription": "bool",
         "default_s3_path": "str",
+        'default_s3_path_credentials_name': 'str',
         "default_namespace_charged": "str",
     }
 
@@ -69,6 +70,7 @@ class User(object):
         "enabled_features": "enabled_features",
         "unpaid_subscription": "unpaid_subscription",
         "default_s3_path": "default_s3_path",
+        'default_s3_path_credentials_name': 'default_s3_path_credentials_name',
         "default_namespace_charged": "default_namespace_charged",
     }
 
@@ -90,6 +92,7 @@ class User(object):
         enabled_features=None,
         unpaid_subscription=None,
         default_s3_path=None,
+        default_s3_path_credentials_name=None,
         default_namespace_charged=None,
         local_vars_configuration=None,
     ):  # noqa: E501
@@ -114,6 +117,7 @@ class User(object):
         self._enabled_features = None
         self._unpaid_subscription = None
         self._default_s3_path = None
+        self._default_s3_path_credentials_name = None
         self._default_namespace_charged = None
         self.discriminator = None
 
@@ -148,6 +152,8 @@ class User(object):
             self.unpaid_subscription = unpaid_subscription
         if default_s3_path is not None:
             self.default_s3_path = default_s3_path
+        if default_s3_path_credentials_name is not None:
+            self.default_s3_path_credentials_name = default_s3_path_credentials_name
         if default_namespace_charged is not None:
             self.default_namespace_charged = default_namespace_charged
 
@@ -562,6 +568,29 @@ class User(object):
         """
 
         self._default_s3_path = default_s3_path
+
+    @property
+    def default_s3_path_credentials_name(self):
+        """Gets the default_s3_path_credentials_name of this User.  # noqa: E501
+
+        Default s3 path credentials name is the credentials name to use along with default_s3_path  # noqa: E501
+
+        :return: The default_s3_path_credentials_name of this User.  # noqa: E501
+        :rtype: str
+        """
+        return self._default_s3_path_credentials_name
+
+    @default_s3_path_credentials_name.setter
+    def default_s3_path_credentials_name(self, default_s3_path_credentials_name):
+        """Sets the default_s3_path_credentials_name of this User.
+
+        Default s3 path credentials name is the credentials name to use along with default_s3_path  # noqa: E501
+
+        :param default_s3_path_credentials_name: The default_s3_path_credentials_name of this User.  # noqa: E501
+        :type: str
+        """
+
+        self._default_s3_path_credentials_name = default_s3_path_credentials_name
 
     @property
     def default_namespace_charged(self):
