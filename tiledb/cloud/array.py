@@ -433,7 +433,7 @@ def apply_async(
     elif layout.upper() == "U":
         converted_layout = "unordered"
 
-    ranges = rest_api.models.UDFRanges(layout=converted_layout, ranges=ranges)
+    ranges = rest_api.models.QueryRanges(layout=converted_layout, ranges=ranges)
 
     arguments = None
     if kwargs is not None and len(kwargs) > 0:

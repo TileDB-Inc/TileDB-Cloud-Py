@@ -49,6 +49,7 @@ class ArrayApi(object):
         :param int end: End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
         :param str event_types: Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
         :param str task_id: Array task id To filter activity to
+        :param bool has_task_id: Excludes activity log results that does not contain an array task uuid
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -83,6 +84,7 @@ class ArrayApi(object):
         :param int end: End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
         :param str event_types: Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
         :param str task_id: Array task id To filter activity to
+        :param bool has_task_id: Excludes activity log results that does not contain an array task uuid
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -99,7 +101,15 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace", "array", "start", "end", "event_types", "task_id"]
+        all_params = [
+            "namespace",
+            "array",
+            "start",
+            "end",
+            "event_types",
+            "task_id",
+            "has_task_id",
+        ]
         all_params.extend(
             [
                 "async_req",
@@ -162,6 +172,13 @@ class ArrayApi(object):
             "task_id" in local_var_params and local_var_params["task_id"] is not None
         ):  # noqa: E501
             query_params.append(("task_id", local_var_params["task_id"]))  # noqa: E501
+        if (
+            "has_task_id" in local_var_params
+            and local_var_params["has_task_id"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("has_task_id", local_var_params["has_task_id"])
+            )  # noqa: E501
 
         header_params = {}
 

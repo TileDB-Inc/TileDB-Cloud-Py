@@ -20,7 +20,7 @@ Name | Type | Description | Notes
 **enabled_features** | **list[str]** | List of extra/optional/beta features to enable for namespace | [optional] [readonly] 
 **unpaid_subscription** | **bool** | A notice that the user has an unpaid subscription | [optional] [readonly] 
 **default_s3_path** | **str** | default s3 path to store newly created notebooks | [optional] 
-**default_s3_path_credentials_name** | **str** | default credentials to use for default s3 path for newly created notebooks | [optional]
+**default_s3_path_credentials_name** | **str** | Default s3 path credentials name is the credentials name to use along with default_s3_path | [optional] 
 **default_namespace_charged** | **str** | Override the default namespace charged for actions when no namespace is specified | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

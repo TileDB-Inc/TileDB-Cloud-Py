@@ -41,7 +41,7 @@ class TestUDF(unittest.TestCase):
                 language="python",
                 version="0",
                 image_name="0",
-                ranges=tiledb.cloud.rest_api.models.udf_ranges.UDFRanges(
+                ranges=tiledb.cloud.rest_api.models.query_ranges.QueryRanges(
                     layout="row-major",
                     ranges=[[1.337]],
                 ),

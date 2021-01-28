@@ -36,16 +36,29 @@ class QueryReader(object):
         "layout": "Layout",
         "subarray": "Subarray",
         "read_state": "ReadState",
+        "var_offsets_mode": "str",
+        "var_offsets_add_extra_element": "bool",
+        "var_offsets_bitsize": "int",
     }
 
     attribute_map = {
         "layout": "layout",
         "subarray": "subarray",
         "read_state": "readState",
+        "var_offsets_mode": "varOffsetsMode",
+        "var_offsets_add_extra_element": "varOffsetsAddExtraElement",
+        "var_offsets_bitsize": "varOffsetsBitsize",
     }
 
     def __init__(
-        self, layout=None, subarray=None, read_state=None, local_vars_configuration=None
+        self,
+        layout=None,
+        subarray=None,
+        read_state=None,
+        var_offsets_mode=None,
+        var_offsets_add_extra_element=None,
+        var_offsets_bitsize=None,
+        local_vars_configuration=None,
     ):  # noqa: E501
         """QueryReader - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
@@ -55,6 +68,9 @@ class QueryReader(object):
         self._layout = None
         self._subarray = None
         self._read_state = None
+        self._var_offsets_mode = None
+        self._var_offsets_add_extra_element = None
+        self._var_offsets_bitsize = None
         self.discriminator = None
 
         if layout is not None:
@@ -63,6 +79,12 @@ class QueryReader(object):
             self.subarray = subarray
         if read_state is not None:
             self.read_state = read_state
+        if var_offsets_mode is not None:
+            self.var_offsets_mode = var_offsets_mode
+        if var_offsets_add_extra_element is not None:
+            self.var_offsets_add_extra_element = var_offsets_add_extra_element
+        if var_offsets_bitsize is not None:
+            self.var_offsets_bitsize = var_offsets_bitsize
 
     @property
     def layout(self):
@@ -126,6 +148,75 @@ class QueryReader(object):
         """
 
         self._read_state = read_state
+
+    @property
+    def var_offsets_mode(self):
+        """Gets the var_offsets_mode of this QueryReader.  # noqa: E501
+
+        The offsets format (bytes or elements) to be used.  # noqa: E501
+
+        :return: The var_offsets_mode of this QueryReader.  # noqa: E501
+        :rtype: str
+        """
+        return self._var_offsets_mode
+
+    @var_offsets_mode.setter
+    def var_offsets_mode(self, var_offsets_mode):
+        """Sets the var_offsets_mode of this QueryReader.
+
+        The offsets format (bytes or elements) to be used.  # noqa: E501
+
+        :param var_offsets_mode: The var_offsets_mode of this QueryReader.  # noqa: E501
+        :type: str
+        """
+
+        self._var_offsets_mode = var_offsets_mode
+
+    @property
+    def var_offsets_add_extra_element(self):
+        """Gets the var_offsets_add_extra_element of this QueryReader.  # noqa: E501
+
+        True if an extra element will be added to the end of the offsets buffer.  # noqa: E501
+
+        :return: The var_offsets_add_extra_element of this QueryReader.  # noqa: E501
+        :rtype: bool
+        """
+        return self._var_offsets_add_extra_element
+
+    @var_offsets_add_extra_element.setter
+    def var_offsets_add_extra_element(self, var_offsets_add_extra_element):
+        """Sets the var_offsets_add_extra_element of this QueryReader.
+
+        True if an extra element will be added to the end of the offsets buffer.  # noqa: E501
+
+        :param var_offsets_add_extra_element: The var_offsets_add_extra_element of this QueryReader.  # noqa: E501
+        :type: bool
+        """
+
+        self._var_offsets_add_extra_element = var_offsets_add_extra_element
+
+    @property
+    def var_offsets_bitsize(self):
+        """Gets the var_offsets_bitsize of this QueryReader.  # noqa: E501
+
+        The offsets bitsize (32 or 64) to be used.  # noqa: E501
+
+        :return: The var_offsets_bitsize of this QueryReader.  # noqa: E501
+        :rtype: int
+        """
+        return self._var_offsets_bitsize
+
+    @var_offsets_bitsize.setter
+    def var_offsets_bitsize(self, var_offsets_bitsize):
+        """Sets the var_offsets_bitsize of this QueryReader.
+
+        The offsets bitsize (32 or 64) to be used.  # noqa: E501
+
+        :param var_offsets_bitsize: The var_offsets_bitsize of this QueryReader.  # noqa: E501
+        :type: int
+        """
+
+        self._var_offsets_bitsize = var_offsets_bitsize
 
     def to_dict(self):
         """Returns the model properties as a dict"""

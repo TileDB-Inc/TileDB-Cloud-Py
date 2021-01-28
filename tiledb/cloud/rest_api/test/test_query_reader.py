@@ -89,6 +89,9 @@ class TestQueryReader(unittest.TestCase):
                         memory_budget_var=56,
                     ),
                 ),
+                var_offsets_mode="0",
+                var_offsets_add_extra_element=True,
+                var_offsets_bitsize=56,
             )
         else:
             return QueryReader()

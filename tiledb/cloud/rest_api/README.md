@@ -73,9 +73,10 @@ start = 56 # int | Start time of window of fetch logs, unix epoch in seconds (de
 end = 56 # int | End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) (optional)
 event_types = 'event_types_example' # str | Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated (optional)
 task_id = 'task_id_example' # str | Array task id To filter activity to (optional)
+has_task_id = True # bool | Excludes activity log results that does not contain an array task uuid (optional)
 
     try:
-        api_response = api_instance.array_activity_log(namespace, array, start=start, end=end, event_types=event_types, task_id=task_id)
+        api_response = api_instance.array_activity_log(namespace, array, start=start, end=end, event_types=event_types, task_id=task_id, has_task_id=has_task_id)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->array_activity_log: %s\n" % e)
@@ -150,10 +151,10 @@ Class | Method | HTTP request | Description
 *StatsApi* | [**get_tiledb_stats**](rest_api/docs/StatsApi.md#get_tiledb_stats) | **GET** /.stats | 
 *TasksApi* | [**run_sql**](rest_api/docs/TasksApi.md#run_sql) | **POST** /sql/{namespace} | 
 *TasksApi* | [**task_id_get**](rest_api/docs/TasksApi.md#task_id_get) | **GET** /task/{id} | 
+*TasksApi* | [**task_id_retry_post**](rest_api/docs/TasksApi.md#task_id_retry_post) | **POST** /task/{id}/retry | 
 *TasksApi* | [**tasks_get**](rest_api/docs/TasksApi.md#tasks_get) | **GET** /tasks | 
 *UdfApi* | [**delete_udf_info**](rest_api/docs/UdfApi.md#delete_udf_info) | **DELETE** /udf/{namespace}/{name} | 
 *UdfApi* | [**get_udf_info**](rest_api/docs/UdfApi.md#get_udf_info) | **GET** /udf/{namespace}/{name} | 
-*UdfApi* | [**get_udf_info_list**](rest_api/docs/UdfApi.md#get_udf_info_list) | **GET** /udfs | 
 *UdfApi* | [**get_udf_info_sharing_policies**](rest_api/docs/UdfApi.md#get_udf_info_sharing_policies) | **GET** /udf/{namespace}/{name}/share | 
 *UdfApi* | [**register_udf_info**](rest_api/docs/UdfApi.md#register_udf_info) | **POST** /udf/{namespace}/{name} | 
 *UdfApi* | [**share_udf_info**](rest_api/docs/UdfApi.md#share_udf_info) | **PATCH** /udf/{namespace}/{name}/share | 
@@ -275,10 +276,7 @@ Class | Method | HTTP request | Description
  - [UDFImageVersion](rest_api/docs/UDFImageVersion.md)
  - [UDFInfo](rest_api/docs/UDFInfo.md)
  - [UDFInfoUpdate](rest_api/docs/UDFInfoUpdate.md)
- - [UDFInfoVersion](rest_api/docs/UDFInfoVersion.md)
  - [UDFLanguage](rest_api/docs/UDFLanguage.md)
- - [UDFListingData](rest_api/docs/UDFListingData.md)
- - [UDFRanges](rest_api/docs/UDFRanges.md)
  - [UDFResultType](rest_api/docs/UDFResultType.md)
  - [UDFSharing](rest_api/docs/UDFSharing.md)
  - [UDFSubarray](rest_api/docs/UDFSubarray.md)
