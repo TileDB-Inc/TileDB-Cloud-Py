@@ -46,6 +46,7 @@ class Organization(object):
         "enabled_features": "list[str]",
         "unpaid_subscription": "bool",
         "default_s3_path": "str",
+        "default_s3_path_credentials_name": "str",
         "stripe_connect": "bool",
     }
 
@@ -63,6 +64,7 @@ class Organization(object):
         "enabled_features": "enabled_features",
         "unpaid_subscription": "unpaid_subscription",
         "default_s3_path": "default_s3_path",
+        "default_s3_path_credentials_name": "default_s3_path_credentials_name",
         "stripe_connect": "stripe_connect",
     }
 
@@ -81,6 +83,7 @@ class Organization(object):
         enabled_features=None,
         unpaid_subscription=None,
         default_s3_path=None,
+        default_s3_path_credentials_name=None,
         stripe_connect=None,
         local_vars_configuration=None,
     ):  # noqa: E501
@@ -102,6 +105,7 @@ class Organization(object):
         self._enabled_features = None
         self._unpaid_subscription = None
         self._default_s3_path = None
+        self._default_s3_path_credentials_name = None
         self._stripe_connect = None
         self.discriminator = None
 
@@ -130,6 +134,8 @@ class Organization(object):
             self.unpaid_subscription = unpaid_subscription
         if default_s3_path is not None:
             self.default_s3_path = default_s3_path
+        if default_s3_path_credentials_name is not None:
+            self.default_s3_path_credentials_name = default_s3_path_credentials_name
         if stripe_connect is not None:
             self.stripe_connect = stripe_connect
 
@@ -457,6 +463,29 @@ class Organization(object):
         """
 
         self._default_s3_path = default_s3_path
+
+    @property
+    def default_s3_path_credentials_name(self):
+        """Gets the default_s3_path_credentials_name of this Organization.  # noqa: E501
+
+        Default s3 path credentials name is the credentials name to use along with default_s3_path  # noqa: E501
+
+        :return: The default_s3_path_credentials_name of this Organization.  # noqa: E501
+        :rtype: str
+        """
+        return self._default_s3_path_credentials_name
+
+    @default_s3_path_credentials_name.setter
+    def default_s3_path_credentials_name(self, default_s3_path_credentials_name):
+        """Sets the default_s3_path_credentials_name of this Organization.
+
+        Default s3 path credentials name is the credentials name to use along with default_s3_path  # noqa: E501
+
+        :param default_s3_path_credentials_name: The default_s3_path_credentials_name of this Organization.  # noqa: E501
+        :type: str
+        """
+
+        self._default_s3_path_credentials_name = default_s3_path_credentials_name
 
     @property
     def stripe_connect(self):

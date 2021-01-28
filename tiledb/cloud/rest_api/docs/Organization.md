@@ -17,6 +17,7 @@ Name | Type | Description | Notes
 **enabled_features** | **list[str]** | List of extra/optional/beta features to enable for namespace | [optional] [readonly] 
 **unpaid_subscription** | **bool** | A notice that the user has an unpaid subscription | [optional] [readonly] 
 **default_s3_path** | **str** | default s3 path to store newly created notebooks | [optional] 
+**default_s3_path_credentials_name** | **str** | default credentials to use for default s3 path for newly created notebooks | [optional]
 **stripe_connect** | **bool** | Denotes that the organization is able to apply pricing to arrays by means of Stripe Connect | [optional] [readonly] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
