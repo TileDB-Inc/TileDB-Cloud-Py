@@ -25,16 +25,17 @@ class UDFResult(multiprocessing.pool.ApplyResult):
     def get(self, timeout=None):
         try:
             response = rest.RESTResponse(self.response.get(timeout=timeout))
-
             self.task_id = response.getheader(client.TASK_ID_HEADER)
-            cloudarray.last_udf_task_id = self.task_id
-
             res = response.data
-
         except GenApiException as exc:
+            if exc.headers:
+                self.task_id = exc.headers.get(client.TASK_ID_HEADER)
             raise tiledb_cloud_error.check_udf_exc(exc) from None
         except multiprocessing.TimeoutError as exc:
             raise tiledb_cloud_error.check_udf_exc(exc) from None
+        finally:
+            if self.task_id:
+                cloudarray.last_udf_task_id = self.task_id
 
         if res[:2].hex() in ["7801", "785e", "789c", "78da"]:
             try:
