@@ -24,7 +24,8 @@ class SQLResults(multiprocessing.pool.ApplyResult):
     def get(self, timeout=None):
         try:
             response = rest.RESTResponse(self.response.get(timeout=timeout))
-            self.task_id = response.getheader(client.TASK_ID_HEADER)
+            global last_sql_task_id
+            self.task_id = last_sql_task_id = response.getheader(client.TASK_ID_HEADER)
             # Only return the response data if OK or err ignore all other 2xx response bodies
             if 200 < response.status < 300:
                 return None
@@ -35,10 +36,6 @@ class SQLResults(multiprocessing.pool.ApplyResult):
             raise tiledb_cloud_error.check_sql_exc(exc) from None
         except multiprocessing.TimeoutError as exc:
             raise tiledb_cloud_error.check_udf_exc(exc) from None
-        finally:
-            global last_sql_task_id
-            if self.task_id:
-                last_sql_task_id = self.task_id
 
         if response.status == 200:
             return pandas.read_json(res) if not self.raw_results else res
