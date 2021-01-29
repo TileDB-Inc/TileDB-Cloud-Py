@@ -1,7 +1,5 @@
 from . import array
 
-last_udf_task_id = None
-
 
 class CloudArray(object):
     def apply_async(

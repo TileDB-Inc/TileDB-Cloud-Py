@@ -24,37 +24,28 @@ class SQLResults(multiprocessing.pool.ApplyResult):
     def get(self, timeout=None):
         try:
             response = rest.RESTResponse(self.response.get(timeout=timeout))
-
             global last_sql_task_id
-            self.task_id = response.getheader(client.TASK_ID_HEADER)
-            last_sql_task_id = self.task_id
-
+            self.task_id = last_sql_task_id = response.getheader(client.TASK_ID_HEADER)
             # Only return the response data if OK or err ignore all other 2xx response bodies
-            if (
-                response.status >= 200
-                and response.status < 300
-                and response.status != 200
-            ):
+            if 200 < response.status < 300:
                 return None
-
-            if response.status == 200:
-                if not self.raw_results:
-                    return pandas.read_json(response.data)
-                else:
-                    return response.data
-
-            # Try to parse results as json, 200 status returns should be handled above and 4xx/5xx should through exceptions
-            # This path is unlikely to be called
-            try:
-                res = json.loads(response.data)
-                return res
-            except:
-                return response.data
-
+            res = response.data
         except GenApiException as exc:
+            if exc.headers:
+                self.task_id = exc.headers.get(client.TASK_ID_HEADER)
             raise tiledb_cloud_error.check_sql_exc(exc) from None
         except multiprocessing.TimeoutError as exc:
             raise tiledb_cloud_error.check_udf_exc(exc) from None
+
+        if response.status == 200:
+            return pandas.read_json(res) if not self.raw_results else res
+
+        # Try to parse results as json, 200 status returns should be handled above
+        # and 4xx/5xx should through exceptions. This path is unlikely to be called
+        try:
+            return json.loads(res)
+        except:
+            return res
 
 
 def exec_async(

@@ -13,8 +13,6 @@ tiledb_cloud_protocol = 4
 import base64
 import sys
 
-last_udf_task_id = None
-
 
 def exec_async(
     *args,

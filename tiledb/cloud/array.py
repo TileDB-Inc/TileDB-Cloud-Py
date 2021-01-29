@@ -1,7 +1,6 @@
 from . import rest_api
 from . import config
 from . import client
-from . import cloudarray
 from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
 from .rest_api import rest
@@ -16,6 +15,8 @@ import base64
 import sys
 import numpy
 
+last_udf_task_id = None
+
 
 class UDFResult(multiprocessing.pool.ApplyResult):
     def __init__(self, response):
@@ -25,13 +26,12 @@ class UDFResult(multiprocessing.pool.ApplyResult):
     def get(self, timeout=None):
         try:
             response = rest.RESTResponse(self.response.get(timeout=timeout))
-
-            self.task_id = response.getheader(client.TASK_ID_HEADER)
-            cloudarray.last_udf_task_id = self.task_id
-
+            global last_udf_task_id
+            self.task_id = last_udf_task_id = response.getheader(client.TASK_ID_HEADER)
             res = response.data
-
         except GenApiException as exc:
+            if exc.headers:
+                self.task_id = exc.headers.get(client.TASK_ID_HEADER)
             raise tiledb_cloud_error.check_udf_exc(exc) from None
         except multiprocessing.TimeoutError as exc:
             raise tiledb_cloud_error.check_udf_exc(exc) from None

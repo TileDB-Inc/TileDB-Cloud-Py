@@ -1,7 +1,6 @@
 from . import client
 from . import tiledb_cloud_error
 from .array import split_uri
-from . import cloudarray
 from . import sql
 from . import array
 from .rest_api import ApiException as GenApiException
@@ -153,7 +152,7 @@ def last_udf_task():
     :return task : object with task details
     """
 
-    if cloudarray.last_udf_task_id is None:
+    if array.last_udf_task_id is None:
         raise Exception("There is no last run udf task in current python session")
 
-    return task(id=cloudarray.last_udf_task_id)
+    return task(id=array.last_udf_task_id)
