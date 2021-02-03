@@ -98,20 +98,18 @@ class DelayedBase(Node):
 
 
 class Delayed(DelayedBase):
-    def __init__(self, func_exec, *args, local=False, **kwargs):
+    def __init__(self, func_exec, *args, **kwargs):
         self.func_exec = func_exec
         if func_exec is not None and not callable(func_exec):
             raise TypeError("func_exec argument to `Node` must be callable!")
 
-        if not local:
-            super().__init__(udf_exec, func_exec, *args, local_mode=local, **kwargs)
+        kwargs["local_mode"] = kwargs.pop("local", False)
+        if not kwargs["local_mode"]:
+            super().__init__(udf_exec, func_exec, *args, **kwargs)
+            # Set name of task if it won't interfere with user args
+            self.kwargs.setdefault("task_name", self.name)
         else:
-            super().__init__(func_exec, *args, local_mode=local, **kwargs)
-
-        # Set name of task if it won't interfere with user args
-        if not self.local_mode:
-            if "task_name" not in self.kwargs:
-                self.kwargs["task_name"] = self.name
+            super().__init__(func_exec, *args, **kwargs)
 
     def __call__(self, *args, **kwargs):
         if not self.local_mode:
@@ -132,8 +130,7 @@ class Delayed(DelayedBase):
 
         # Set name of task if it won't interfere with user args
         if not self.local_mode:
-            if "task_name" not in self.kwargs:
-                self.kwargs["task_name"] = self.name
+            self.kwargs.setdefault("task_name", self.name)
 
         return self
 
@@ -143,8 +140,7 @@ class DelayedSQL(DelayedBase):
         super().__init__(sql_exec, *args, **kwargs)
 
         # Set name of task if it won't interfere with user args
-        if "task_name" not in self.kwargs:
-            self.kwargs["task_name"] = self.name
+        self.kwargs.setdefault("task_name", self.name)
 
     def __call__(self, *args, **kwargs):
         self.args = args
@@ -160,25 +156,21 @@ class DelayedSQL(DelayedBase):
             super()._build_dependencies_list(self.kwargs)
 
         # Set name of task if it won't interfere with user args
-        if "task_name" not in self.kwargs:
-            self.kwargs["task_name"] = self.name
+        self.kwargs.setdefault("task_name", self.name)
 
         return self
 
 
 class DelayedArrayUDF(DelayedBase):
     def __init__(self, uri, func_exec, *args, **kwargs):
-        self.func_exec = func_exec
-        self.uri = uri
-
         if func_exec is not None and not callable(func_exec):
             raise TypeError("func_exec argument to `Node` must be callable!")
 
-        super().__init__(array_apply, self.uri, self.func_exec, *args, **kwargs)
-
+        self.uri = uri
+        self.func_exec = func_exec
+        super().__init__(array_apply, uri, func_exec, *args, **kwargs)
         # Set name of task if it won't interfere with user args
-        if "task_name" not in self.kwargs:
-            self.kwargs["task_name"] = self.name
+        self.kwargs.setdefault("task_name", self.name)
 
     def __call__(self, *args, **kwargs):
         self.args = [self.uri, self.func_exec, *args]
@@ -194,7 +186,6 @@ class DelayedArrayUDF(DelayedBase):
             super()._build_dependencies_list(self.kwargs)
 
         # Set name of task if it won't interfere with user args
-        if "task_name" not in self.kwargs:
-            self.kwargs["task_name"] = self.name
+        self.kwargs.setdefault("task_name", self.name)
 
         return self
