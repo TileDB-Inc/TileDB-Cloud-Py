@@ -44,10 +44,6 @@ class Status(Enum):
         return "Unknown Status"
 
 
-def handle_complete_node(node, future):
-    node.handle_completed_future()
-
-
 class Node:
     def __init__(self, func, *args, name=None, dag=None, local_mode=False, **kwargs):
         """
@@ -252,47 +248,14 @@ class Node:
 
         # Execute user function with the parameters that the user requested
         # The function is executed on the dag's worker pool
-        assert self.dag is not None
-        if self.dag is not None:
-            if len(self.kwargs) > 0 and len(self.args) > 0:
-                res = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
-            elif len(self.args) > 0:
-                res = self.dag.executor.submit(self.func, *self.args)
-            elif len(self.kwargs) > 0:
-                res = self.dag.executor.submit(self.func, **self.kwargs)
-            else:
-                res = self.dag.executor.submit(self.func)
-        # Handle case when there is no dag, useful for testing
-        else:
-            try:
-                if len(self.kwargs) > 0 and len(self.args) > 0:
-                    res = self.func(*self.args, **self.kwargs)
-                elif len(self.args) > 0:
-                    res = self.func(*self.args)
-                elif len(self.kwargs) > 0:
-                    res = self.func(**self.kwargs)
-                else:
-                    res = self.func()
-            except Exception as exc:
-                self.status = Status.FAILED
-                self.error = exc
-                self.__report_finished_running()
-                raise exc
+        self.future = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
 
-        # If the results were a normal (blocking) function and we have the true results
-        if isinstance(res, Future):
-            self.future = res
-            # If the node is already finished by the time we get here, call complete function directly
-            # In python 3.7 if we add a call back to a future with an exception it throws an exception
-            if self.future.done():
-                self.handle_completed_future()
-            else:
-                self.future.add_done_callback(
-                    functools.partial(handle_complete_node, self)
-                )
+        # If the node is already finished by the time we get here, call complete function directly
+        # In python 3.7 if we add a call back to a future with an exception it throws an exception
+        if self.future.done():
+            self.handle_completed_future()
         else:
-            self.__results = res
-            self.__handle_complete_results()
+            self.future.add_done_callback(lambda _: self.handle_completed_future())
 
     compute = exec
 
