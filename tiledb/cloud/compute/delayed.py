@@ -1,8 +1,5 @@
 from ..dag.dag import Node, DAG
-
-from ..array import apply as array_apply
-from ..sql import exec as sql_exec
-from ..udf import exec as udf_exec
+from .. import array, sql, udf, retry_task
 
 import numbers
 
@@ -99,17 +96,25 @@ class DelayedBase(Node):
 
 class Delayed(DelayedBase):
     def __init__(self, func_exec, *args, **kwargs):
-        self.func_exec = func_exec
         if func_exec is not None and not callable(func_exec):
             raise TypeError("func_exec argument to `Node` must be callable!")
 
+        retrying = kwargs.pop("retrying", None)
         kwargs["local_mode"] = kwargs.pop("local", False)
         if not kwargs["local_mode"]:
-            super().__init__(udf_exec, func_exec, *args, **kwargs)
+            if retrying is None:
+                func = udf.exec
+            else:
+                func = get_retriable_exec(udf.exec_async, retrying)
+            super().__init__(func, func_exec, *args, **kwargs)
             # Set name of task if it won't interfere with user args
             self.kwargs.setdefault("task_name", self.name)
         else:
+            if retrying is not None:
+                func_exec = retrying.wraps(func_exec)
             super().__init__(func_exec, *args, **kwargs)
+
+        self.func_exec = func_exec
 
     def __call__(self, *args, **kwargs):
         if not self.local_mode:
@@ -137,8 +142,12 @@ class Delayed(DelayedBase):
 
 class DelayedSQL(DelayedBase):
     def __init__(self, *args, **kwargs):
-        super().__init__(sql_exec, *args, **kwargs)
-
+        retrying = kwargs.pop("retrying", None)
+        if retrying is None:
+            func = sql.exec
+        else:
+            func = get_retriable_exec(sql.exec_async, retrying)
+        super().__init__(func, *args, **kwargs)
         # Set name of task if it won't interfere with user args
         self.kwargs.setdefault("task_name", self.name)
 
@@ -168,7 +177,12 @@ class DelayedArrayUDF(DelayedBase):
 
         self.uri = uri
         self.func_exec = func_exec
-        super().__init__(array_apply, uri, func_exec, *args, **kwargs)
+        retrying = kwargs.pop("retrying", None)
+        if retrying is None:
+            func = array.apply
+        else:
+            func = get_retriable_exec(array.apply_async, retrying)
+        super().__init__(func, uri, func_exec, *args, **kwargs)
         # Set name of task if it won't interfere with user args
         self.kwargs.setdefault("task_name", self.name)
 
@@ -189,3 +203,25 @@ class DelayedArrayUDF(DelayedBase):
         self.kwargs.setdefault("task_name", self.name)
 
         return self
+
+
+def get_retriable_exec(exec_async, retrying):
+    def retriable_exec(*args, **kwargs):
+        task_apply_result = exec_async(*args, **kwargs)
+        retry_task_kwargs = {
+            k: kwargs[k] for k in ("raw_results", "http_compressor") if k in kwargs
+        }
+
+        def get_or_retry():
+            task_id = task_apply_result.task_id
+            if task_id is None:
+                return task_apply_result.get()
+            return retry_task(task_id, **retry_task_kwargs)
+
+        # override __module__ and __qualname__ so that logging logs the task name
+        # instead of the func name
+        get_or_retry.__module__ = None
+        get_or_retry.__qualname__ = kwargs["task_name"]
+        return retrying(get_or_retry)
+
+    return retriable_exec
