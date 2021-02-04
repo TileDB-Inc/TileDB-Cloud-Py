@@ -124,52 +124,7 @@ class Node:
         if self.dag is None and node.dag is not None:
             self.dag = node.dag
 
-    def __report_finished_running(self):
-        """
-        Report the node as finished to the dag
-        :return:
-        """
-
-        if self.future is not None:
-            try:
-                self.error = self.future.exception()
-            except CancelledError as cancelledExc:
-                pass
-            except Exception as exc:
-                self.error = exc
-
-        if self.error is not None:
-            self.status = Status.FAILED
-
-        self.dag.report_node_complete(self)
-
-    def __handle_complete_results(self):
-        """
-        Handle complete results
-        :return:
-        """
-        # Set status if it has not already been set for cancelled or failed
-        if self.status == Status.RUNNING:
-            self.status = Status.COMPLETED
-
-        self.__report_finished_running()
-
-    def handle_completed_future(self):
-        """
-
-        :return:
-        """
-
-        if self.future is not None:
-            try:
-                self.__results = self.future.result()
-            except CancelledError as exc:
-                self.status = Status.CANCELLED
-
-        self.__handle_complete_results()
-
     def cancel(self):
-
         self.status = Status.CANCELLED
         if self.future is not None:
             self.future.cancel()
@@ -245,16 +200,38 @@ class Node:
 
         # Execute user function with the parameters that the user requested
         # The function is executed on the dag's worker pool
-        self.future = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
-
+        future = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
         # If the node is already finished by the time we get here, call complete function directly
         # In python 3.7 if we add a call back to a future with an exception it throws an exception
-        if self.future.done():
-            self.handle_completed_future()
+        if future.done():
+            self.__handle_completed_future(future)
         else:
-            self.future.add_done_callback(lambda _: self.handle_completed_future())
+            future.add_done_callback(self.__handle_completed_future)
+        self.future = future
 
     compute = exec
+
+    def __handle_completed_future(self, future):
+        try:
+            self.__results = future.result()
+        except CancelledError:
+            self.status = Status.CANCELLED
+
+        # Set status if it has not already been set for cancelled or failed
+        if self.status == Status.RUNNING:
+            self.status = Status.COMPLETED
+
+        try:
+            self.error = future.exception()
+        except CancelledError:
+            pass
+        except Exception as exc:
+            self.error = exc
+
+        if self.error is not None:
+            self.status = Status.FAILED
+
+        self.dag.report_node_complete(self)
 
     def ready_to_compute(self):
         """
