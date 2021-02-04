@@ -70,41 +70,43 @@ class DelayedClassTest(unittest.TestCase):
 
 class DelayedFailureTest(unittest.TestCase):
     def test_failure(self):
-        with self.assertRaises(TypeError):
-            node = Delayed(lambda x: x * 2, local=True, name="node")(np.median)
+        node = Delayed(lambda x: x * 2, local=True, name="node")(np.median)
+        # Add timeout so we don't wait forever in CI
+        node.set_timeout(30)
 
-            # Add timeout so we don't wait forever in CI
-            node.set_timeout(30)
+        with self.assertRaises(TypeError):
             node.compute()
 
-            self.assertEqual(node.result(), None)
-            self.assertIsNotNone(node.dag)
-            self.assertEqual(node.status, Status.FAILED)
-            self.assertEqual(
-                str(node.error),
-                "unsupported operand type(s) for *: 'function' and 'int'",
-            )
+        self.assertIsNotNone(node.dag)
+        self.assertEqual(node.status, Status.FAILED)
+        self.assertEqual(
+            str(node.error),
+            "unsupported operand type(s) for *: 'function' and 'int'",
+        )
+        with self.assertRaises(TypeError):
+            node.result()
 
     def test_dependency_fail_early(self):
+        node = Delayed(lambda x: x * 2, local=True, name="node")(np.median)
+        node2 = Delayed(lambda x: x * 2, local=True, name="node2")(10)
+        node2.depends_on(node)
+        # Add timeout so we don't wait forever in CI
+        node2.set_timeout(30)
 
         with self.assertRaises(TypeError):
-            node = Delayed(lambda x: x * 2, local=True, name="node")(np.median)
-            node2 = Delayed(lambda x: x * 2, local=True, name="node2")(10)
-            node2.depends_on(node)
-
-            # Add timeout so we don't wait forever in CI
-            node2.set_timeout(30)
             node2.compute()
 
-            self.assertEqual(node.result(), None)
-            self.assertEqual(node.status, Status.FAILED)
-            self.assertEqual(
-                str(node.error),
-                "unsupported operand type(s) for *: 'function' and 'int'",
-            )
-            self.assertEqual(node2.result(), None)
-            self.assertEqual(node2.status, Status.NOT_STARTED)
-            self.assertEqual(node2.dag.status, Status.FAILED)
+        self.assertEqual(node.status, Status.FAILED)
+        self.assertEqual(
+            str(node.error),
+            "unsupported operand type(s) for *: 'function' and 'int'",
+        )
+        with self.assertRaises(TypeError):
+            node.result()
+
+        self.assertEqual(node2.status, Status.NOT_STARTED)
+        self.assertEqual(node2.result(), None)
+        self.assertEqual(node2.dag.status, Status.FAILED)
 
 
 class DelayedCancelTest(unittest.TestCase):
