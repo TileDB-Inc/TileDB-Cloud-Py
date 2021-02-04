@@ -148,8 +148,7 @@ class Node:
         if self.error is not None:
             self.status = Status.FAILED
 
-        if self.dag is not None and isinstance(self.dag, DAG):
-            self.dag.report_node_complete(self)
+        self.dag.report_node_complete(self)
 
     def __handle_complete_results(self):
         """
@@ -253,6 +252,7 @@ class Node:
 
         # Execute user function with the parameters that the user requested
         # The function is executed on the dag's worker pool
+        assert self.dag is not None
         if self.dag is not None:
             if len(self.kwargs) > 0 and len(self.args) > 0:
                 res = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
