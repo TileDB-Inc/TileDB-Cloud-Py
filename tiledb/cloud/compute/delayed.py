@@ -64,12 +64,9 @@ class DelayedBase(Node):
         if self.dag is None:
             self.__set_all_parent_nodes_same_dag(DAG())
 
-        if self.dag is not None:
-            return self.dag.visualize(
-                notebook=notebook, auto_update=auto_update, force_plotly=force_plotly
-            )
-
-        return None
+        return self.dag.visualize(
+            notebook=notebook, auto_update=auto_update, force_plotly=force_plotly
+        )
 
     @staticmethod
     def all(futures, namespace=None):
