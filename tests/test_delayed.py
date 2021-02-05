@@ -123,14 +123,14 @@ class DelayedCancelTest(unittest.TestCase):
 
         node_2.dag.cancel()
 
-        self.assertIs(node.dag, node_2.dag)
-        self.assertEqual(node.dag.status, Status.CANCELLED)
-
         self.assertEqual(node.status, Status.CANCELLED)
         self.assertEqual(node.result(), None)
 
         self.assertEqual(node_2.status, Status.CANCELLED)
         self.assertEqual(node_2.result(), None)
+
+        self.assertIs(node.dag, node_2.dag)
+        self.assertEqual(node.dag.status, Status.CANCELLED)
 
 
 class DelayedCloudApplyTest(unittest.TestCase):
