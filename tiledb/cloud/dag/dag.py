@@ -134,12 +134,7 @@ class Node:
         Is the node finished
         :return: True if the node's function is finished
         """
-        if self.status == Status.COMPLETED or self.status == Status.FAILED:
-            return True
-        elif self.status == Status.RUNNING:
-            if self.future is not None and self.future.done():
-                return True
-        return False
+        return self.status in (Status.COMPLETED, Status.FAILED, Status.CANCELLED)
 
     done = finished
 
@@ -482,14 +477,14 @@ class DAG:
 
         if node.status == Status.COMPLETED:
             self.completed_nodes[node.id] = node
-
             for child in node.children.values():
-                if child.ready_to_compute():
-                    self._exec_node(child)
+                self._exec_node(child)
         elif node.status == Status.CANCELLED:
             self.cancelled_nodes[node.id] = node
         else:
             self.failed_nodes[node.id] = node
+            for node in self.not_started_nodes.values():
+                node.cancel()
 
         self.execute_update_callbacks()
 

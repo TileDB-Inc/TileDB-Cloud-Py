@@ -1,4 +1,4 @@
-from ..dag.dag import Node, DAG
+from ..dag.dag import Node, DAG, Status
 
 from ..array import apply as array_apply
 from ..sql import exec as sql_exec
@@ -34,12 +34,13 @@ class DelayedBase(Node):
             self.dag.namespace = namespace
 
         self.dag.compute()
-        super().wait(self.timeout)
+        self.dag.wait(self.timeout)
 
-        if not super().done():
-            self.dag.cancel()
+        if self.dag.status == Status.FAILED:
+            # reraise the first failed node exception
+            raise next(iter(self.dag.failed_nodes.values())).error
 
-        return super().result()
+        return self.result()
 
     def __set_all_parent_nodes_same_dag(self, dag):
         # If this node already has the day we have reached a base case
