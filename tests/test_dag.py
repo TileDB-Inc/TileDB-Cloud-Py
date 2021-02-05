@@ -182,7 +182,7 @@ class DAGFailureTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             node.result()
 
-        self.assertEqual(node2.status, dag.Status.NOT_STARTED)
+        self.assertEqual(node2.status, dag.Status.CANCELLED)
         self.assertEqual(node2.result(), None)
         self.assertEqual(d.status, dag.Status.FAILED)
 
