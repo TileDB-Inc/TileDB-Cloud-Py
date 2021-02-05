@@ -198,13 +198,13 @@ class DAGCancelTest(unittest.TestCase):
         # Cancel DAG
         d.cancel()
 
-        self.assertEqual(d.status, dag.Status.CANCELLED)
-
         self.assertEqual(node.status, dag.Status.CANCELLED)
         self.assertEqual(node.result(), None)
 
         self.assertEqual(node_2.status, dag.Status.CANCELLED)
         self.assertEqual(node_2.result(), None)
+
+        self.assertEqual(d.status, dag.Status.CANCELLED)
 
 
 class DAGCloudApplyTest(unittest.TestCase):

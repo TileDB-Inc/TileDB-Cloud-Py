@@ -298,8 +298,6 @@ class DAG:
         else:
             self.executor = ThreadPoolExecutor(max_workers=max_workers)
 
-        self.status = Status.NOT_STARTED
-
         self.done_callbacks = []
         self.called_done_callbacks = False
         if done_callback is not None and callable(done_callback):
@@ -359,30 +357,24 @@ class DAG:
 
         self.called_done_callbacks = True
 
+    @property
+    def status(self):
+        return (
+            # fmt: off
+            Status.RUNNING if self.running_nodes else
+            Status.FAILED if self.failed_nodes else
+            Status.CANCELLED if self.cancelled_nodes else
+            Status.COMPLETED if self.completed_nodes and not self.not_started_nodes else
+            Status.NOT_STARTED
+            # fmt: on
+        )
+
     def done(self):
         """
         Checks if DAG is complete
         :return: True if complete, False otherwise
         """
-        if self.status == Status.NOT_STARTED:
-            raise TileDBCloudError(
-                "Can't call done for DAG before starting DAG with `exec()`"
-            )
-
-        if len(self.running_nodes) > 0:
-            return False
-
-        # If there is no running nodes we can assume it is complete and check if we should mark as failed or successful
-        if len(self.failed_nodes) > 0:
-            self.status = Status.FAILED
-        elif len(self.cancelled_nodes) > 0:
-            self.status = Status.CANCELLED
-        elif len(self.not_started_nodes) > 0:
-            return False
-        else:
-            self.status = Status.COMPLETED
-
-        return True
+        return self.status in (Status.COMPLETED, Status.FAILED, Status.CANCELLED)
 
     def add_node_obj(self, node):
         """
@@ -503,7 +495,6 @@ class DAG:
         if len(roots) == 0:
             raise TileDBCloudError("DAG is circular, there are no root nodes")
 
-        self.status = Status.RUNNING
         for node in roots:
             self._exec_node(node)
 
@@ -543,7 +534,6 @@ class DAG:
                 )
 
     def cancel(self):
-        self.status = Status.CANCELLED
         for node in self.running_nodes.values():
             node.cancel()
         for node in self.not_started_nodes.values():
