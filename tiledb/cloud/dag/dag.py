@@ -195,14 +195,8 @@ class Node:
 
         # Execute user function with the parameters that the user requested
         # The function is executed on the dag's worker pool
-        future = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
-        # If the node is already finished by the time we get here, call complete function directly
-        # In python 3.7 if we add a call back to a future with an exception it throws an exception
-        if future.done():
-            self.__handle_completed_future(future)
-        else:
-            future.add_done_callback(self.__handle_completed_future)
-        self.future = future
+        self.future = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
+        self.future.add_done_callback(self.__handle_completed_future)
 
     compute = exec
 
