@@ -190,18 +190,21 @@ class DAGFailureTest(unittest.TestCase):
 class DAGCancelTest(unittest.TestCase):
     def test_dag_cancel(self):
         d = dag.DAG()
-
         node = d.add_node(time.sleep, 1)
         node_2 = d.add_node(np.mean, [1, 1])
+        node_2.depends_on(node)
 
         d.compute()
-
         # Cancel DAG
         d.cancel()
 
-        self.assertEqual(node.result(), None)
-        self.assertEqual(node.status, dag.Status.CANCELLED)
         self.assertEqual(d.status, dag.Status.CANCELLED)
+
+        self.assertEqual(node.status, dag.Status.CANCELLED)
+        self.assertEqual(node.result(), None)
+
+        self.assertEqual(node_2.status, dag.Status.CANCELLED)
+        self.assertEqual(node_2.result(), None)
 
 
 class DAGCloudApplyTest(unittest.TestCase):
