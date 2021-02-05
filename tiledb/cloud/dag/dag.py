@@ -483,8 +483,7 @@ class DAG:
             self.cancelled_nodes[node.id] = node
         else:
             self.failed_nodes[node.id] = node
-            for node in self.not_started_nodes.values():
-                node.cancel()
+            self.cancel()
 
         self.execute_update_callbacks()
 
@@ -559,9 +558,10 @@ class DAG:
                 )
 
     def cancel(self):
-
         self.status = Status.CANCELLED
         for node in self.running_nodes.values():
+            node.cancel()
+        for node in self.not_started_nodes.values():
             node.cancel()
 
     def find_end_nodes(self):
