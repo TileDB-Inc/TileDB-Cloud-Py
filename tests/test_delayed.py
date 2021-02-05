@@ -104,7 +104,7 @@ class DelayedFailureTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             node.result()
 
-        self.assertEqual(node2.status, Status.NOT_STARTED)
+        self.assertEqual(node2.status, Status.CANCELLED)
         self.assertEqual(node2.result(), None)
         self.assertEqual(node2.dag.status, Status.FAILED)
 
