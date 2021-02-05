@@ -155,12 +155,12 @@ class DAGFailureTest(unittest.TestCase):
         d.wait(30)
 
         self.assertEqual(node.status, dag.Status.FAILED)
+        with self.assertRaises(TypeError) as ctx:
+            node.result()
         self.assertEqual(
-            str(node.error),
+            str(ctx.exception),
             "unsupported operand type(s) for *: 'function' and 'int'",
         )
-        with self.assertRaises(TypeError):
-            node.result()
 
     def test_dag_dependency_fail_early(self):
         d = dag.DAG()
@@ -175,12 +175,12 @@ class DAGFailureTest(unittest.TestCase):
         d.wait(30)
 
         self.assertEqual(node.status, dag.Status.FAILED)
+        with self.assertRaises(TypeError) as ctx:
+            node.result()
         self.assertEqual(
-            str(node.error),
+            str(ctx.exception),
             "unsupported operand type(s) for *: 'function' and 'int'",
         )
-        with self.assertRaises(TypeError):
-            node.result()
 
         self.assertEqual(node2.status, dag.Status.CANCELLED)
         self.assertEqual(node2.result(), None)

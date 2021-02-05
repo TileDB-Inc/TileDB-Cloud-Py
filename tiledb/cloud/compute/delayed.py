@@ -38,7 +38,7 @@ class DelayedBase(Node):
 
         if self.dag.status == Status.FAILED:
             # reraise the first failed node exception
-            raise next(iter(self.dag.failed_nodes.values())).error
+            raise next(iter(self.dag.failed_nodes.values())).future.exception()
 
         return self.result()
 
