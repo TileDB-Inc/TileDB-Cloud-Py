@@ -52,7 +52,6 @@ class Node:
         :param kwargs: dictionary for keyword arguments
         """
         self.id = uuid.uuid4()
-        self.error = None
         self.future = None
         self.status = Status.NOT_STARTED
         self.dag = dag
@@ -64,7 +63,6 @@ class Node:
 
         self.args = args
         self.kwargs = kwargs
-        self.__results = None
         self.parents = {}
         self.children = {}
         if name is None:
@@ -196,20 +194,20 @@ class Node:
         # Execute user function with the parameters that the user requested
         # The function is executed on the dag's worker pool
         self.future = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
-        self.future.add_done_callback(self.__handle_completed_future)
+        self.future.add_done_callback(self.__update_status)
 
     compute = exec
 
-    def __handle_completed_future(self, future):
+    def __update_status(self, future):
         try:
-            self.__results = future.result()
-            if self.status == Status.RUNNING:
-                self.status = Status.COMPLETED
+            future.result()
         except CancelledError:
             self.status = Status.CANCELLED
-        except Exception as exc:
-            self.error = exc
+        except:
             self.status = Status.FAILED
+        else:
+            if self.status == Status.RUNNING:
+                self.status = Status.COMPLETED
         self.dag.report_node_complete(self)
 
     def ready_to_compute(self):
@@ -230,15 +228,7 @@ class Node:
         Fetch results of function, block if not complete
         :return:
         """
-        if self.future is not None:
-            # If future, catch exception to store error on node, then raise
-            try:
-                self.__results = self.future.result()
-            except Exception as exc:
-                self.error = exc
-                raise exc
-
-        return self.__results
+        return self.future.result() if self.future is not None else None
 
     def result_or_future(self):
         """
@@ -248,7 +238,7 @@ class Node:
         if not self.finished() and self.future is not None:
             return self.future
 
-        return self.__results
+        return self.result()
 
     def wait(self, timeout=None):
         """
