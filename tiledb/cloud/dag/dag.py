@@ -214,23 +214,13 @@ class Node:
     def __handle_completed_future(self, future):
         try:
             self.__results = future.result()
+            if self.status == Status.RUNNING:
+                self.status = Status.COMPLETED
         except CancelledError:
             self.status = Status.CANCELLED
-
-        # Set status if it has not already been set for cancelled or failed
-        if self.status == Status.RUNNING:
-            self.status = Status.COMPLETED
-
-        try:
-            self.error = future.exception()
-        except CancelledError:
-            pass
         except Exception as exc:
             self.error = exc
-
-        if self.error is not None:
             self.status = Status.FAILED
-
         self.dag.report_node_complete(self)
 
     def ready_to_compute(self):
