@@ -3,6 +3,7 @@ import time
 import uuid
 import networkx as nx
 
+from collections import abc
 from concurrent.futures import CancelledError, ProcessPoolExecutor, ThreadPoolExecutor
 from enum import Enum
 
@@ -65,27 +66,6 @@ class Node:
         if self.kwargs is not None:
             self._build_dependencies_list(self.kwargs)
 
-    def _build_dependencies_list(self, arg):
-        """
-        Recursively check arg for any Node instances and create graph edges (dependency links)
-        :param arg:
-        :return:
-        """
-        if isinstance(arg, tuple) or isinstance(arg, list):
-            for a in arg:
-                if isinstance(a, Node):
-                    self.depends_on(a)
-                elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    self._build_dependencies_list(a)
-        elif isinstance(arg, dict):
-            for a in arg.values():
-                if isinstance(a, Node):
-                    self.depends_on(a)
-                elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    self._build_dependencies_list(a)
-        elif isinstance(arg, Node):
-            self.depends_on(arg)
-
     def __hash__(self):
         return hash(self.id)
 
@@ -122,35 +102,30 @@ class Node:
 
     done = finished
 
-    def __replace_nodes_with_results(self, arg):
+    def _build_dependencies_list(self, arg):
+        """
+        Recursively check arg for any Node instances and create graph edges (dependency links)
+        """
+        if isinstance(arg, Node):
+            self.depends_on(arg)
+        elif isinstance(arg, abc.Iterable) and not isinstance(arg, str):
+            if isinstance(arg, abc.Mapping):
+                arg = arg.values()
+            for v in arg:
+                self._build_dependencies_list(v)
+
+    def _replace_nodes_with_results(self, arg):
         """
         Recursively find arguments of Node instance and replace with the node results
-        :param arg:
-        :return: converted argument
         """
-        tuple_conversion = False
-        if isinstance(arg, tuple):
-            arg = list(arg)
-            tuple_conversion = True
+        if isinstance(arg, Node):
+            return arg.result()
 
-        if isinstance(arg, tuple) or isinstance(arg, list):
-            for index in range(len(arg)):
-                a = arg[index]
-                if isinstance(a, Node):
-                    arg[index] = a.result()
-                elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    arg[index] = self.__replace_nodes_with_results(a)
-        elif isinstance(arg, dict):
-            for k, a in arg.items():
-                if isinstance(a, Node):
-                    arg[k] = a.result()
-                elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    arg[k] = self.__replace_nodes_with_results(a)
-        elif isinstance(arg, Node):
-            arg = arg.result()
+        if isinstance(arg, abc.Mapping):
+            return {k: self._replace_nodes_with_results(v) for k, v in arg.items()}
 
-        if tuple_conversion:
-            arg = tuple(arg)
+        if isinstance(arg, abc.Collection) and not isinstance(arg, str):
+            return arg.__class__(map(self._replace_nodes_with_results, arg))
 
         return arg
 
@@ -169,13 +144,13 @@ class Node:
         # If there is a node as an argument, the user really just wants the results, so let's fetch them
         # and swap out the parameter
         if self.args is not None:
-            self.args = self.__replace_nodes_with_results(self.args)
+            self.args = self._replace_nodes_with_results(self.args)
 
         # First loop though any default named parameter arguments to find any nodes
         # If there is a node as an argument, the user really just wants the results, so let's fetch them
         # and swap out the parameter
         if self.kwargs is not None:
-            self.kwargs = self.__replace_nodes_with_results(self.kwargs)
+            self.kwargs = self._replace_nodes_with_results(self.kwargs)
 
         # Execute user function with the parameters that the user requested
         # The function is executed on the dag's worker pool
