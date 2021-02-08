@@ -210,19 +210,6 @@ class Node:
                 self.status = Status.COMPLETED
         self.dag.report_node_complete(self)
 
-    def ready_to_compute(self):
-        """
-        Is the node ready to execute? Are all dependencies completed?
-        :return: True if node is able to be run
-        """
-        if self.status != Status.NOT_STARTED:
-            return False
-
-        for node in self.parents.values():
-            if not node.finished() or node.status != Status.COMPLETED:
-                return False
-        return True
-
     def result(self):
         """
         Fetch results of function, block if not complete
@@ -492,12 +479,13 @@ class DAG:
         """
         Execute a node
         :param node: node to execute
-        :return:
         """
-        if node.ready_to_compute():
+        ready_to_compute = node.status == Status.NOT_STARTED and all(
+            parent.status == Status.COMPLETED for parent in node.parents.values()
+        )
+        if ready_to_compute:
             del self.not_started_nodes[node.id]
             self.running_nodes[node.id] = node
-            # Execute the node, the node will launch it's task with a worker pool from this dag
             node.exec(namespace=self.namespace)
 
     def wait(self, timeout=None):
