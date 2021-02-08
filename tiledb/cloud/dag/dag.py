@@ -231,12 +231,12 @@ class DAG:
 
         self.done_callbacks = []
         self.called_done_callbacks = False
-        if done_callback is not None and callable(done_callback):
-            self.done_callbacks.append(done_callback)
+        if done_callback is not None:
+            self.add_done_callback(done_callback)
 
         self.update_callbacks = []
-        if update_callback is not None and callable(update_callback):
-            self.update_callbacks.append(update_callback)
+        if update_callback is not None:
+            self.add_update_callback(update_callback)
 
     def __hash__(self):
         return hash(self.id)
@@ -268,25 +268,6 @@ class DAG:
             raise TypeError("func to add_done_callback must be callable")
 
         self.done_callbacks.append(func)
-
-    def execute_update_callbacks(self):
-        """
-        Run user specified callbacks for status updates
-        :return:
-        """
-        for func in self.update_callbacks:
-            func(self)
-
-    def execute_done_callbacks(self):
-        """
-        Run user specified callbacks for DAG completion
-        :return:
-        """
-        if not self.called_done_callbacks:
-            for func in self.done_callbacks:
-                func(self)
-
-        self.called_done_callbacks = True
 
     @property
     def status(self):
@@ -349,17 +330,6 @@ class DAG:
         """
         return self.add_node(udf_exec, *args, **kwargs)
 
-    def submit(self, *args, **kwargs):
-        """
-        Submit a function that will be executed in the cloud serverlessly
-        This function is analogous to submit_udf
-        :param func_exec: function to execute
-        :param args: arguments for function execution
-        :param name: name
-        :return: Node that is created
-        """
-        return self.add_node(udf_exec, *args, **kwargs)
-
     def submit_sql(self, *args, **kwargs):
         """
         Submit a sql query to run serverlessly in the cloud
@@ -370,15 +340,7 @@ class DAG:
         """
         return self.add_node(sql_exec, *args, **kwargs)
 
-    def submit_local(self, *args, **kwargs):
-        """
-        Submit a function that will run locally
-        :param func_exec: function to execute
-        :param args: arguments for function execution
-        :param name: name
-        :return: Node that is created
-        """
-        return self.add_node(*args, **kwargs)
+    submit_local = add_node
 
     def report_node_complete(self, node):
         """
@@ -398,23 +360,14 @@ class DAG:
             self.failed_nodes[node.id] = node
             self.cancel()
 
-        self.execute_update_callbacks()
+        for func in self.update_callbacks:
+            func(self)
 
         # Check if DAG is done to change status
-        if self.done():
-            self.execute_done_callbacks()
-
-    def __find_root_nodes(self):
-        """
-        Find all root nodes
-        :return: list of root nodes
-        """
-        roots = []
-        for node in self.nodes.values():
-            if node.parents is None or len(node.parents) == 0:
-                roots.append(node)
-
-        return roots
+        if self.done() and not self.called_done_callbacks:
+            for func in self.done_callbacks:
+                func(self)
+            self.called_done_callbacks = True
 
     def compute(self):
         """
@@ -422,10 +375,9 @@ class DAG:
         :return:
         """
         self.called_done_callbacks = False
-        roots = self.__find_root_nodes()
-        if len(roots) == 0:
+        roots = [node for node in self.nodes.values() if not node.parents]
+        if not roots:
             raise TileDBCloudError("DAG is circular, there are no root nodes")
-
         for node in roots:
             self._exec_node(node)
 
@@ -448,7 +400,6 @@ class DAG:
         :param timeout: optional timeout in seconds to wait for DAG to be completed
         :return: None or raises TimeoutError if timeout occurs
         """
-
         if timeout is not None and not isinstance(timeout, numbers.Number):
             raise TypeError(
                 "timeout must be numeric value representing seconds to wait"
@@ -471,20 +422,7 @@ class DAG:
         for node in self.not_started_nodes.values():
             node.cancel()
 
-    def find_end_nodes(self):
-        """
-        Find all end nodes
-        :return: list of end nodes
-        """
-        end = []
-        for node in self.nodes.values():
-            if node.children is None or len(node.children) == 0:
-                end.append(node)
-
-        return end
-
     def stats(self):
-
         return {
             "percent_complete": len(self.completed_nodes) / len(self.nodes) * 100,
             "running": len(self.running_nodes),
@@ -496,9 +434,7 @@ class DAG:
         }
 
     def networkx_graph(self):
-        # Build networkx graph
         G = nx.DiGraph()
-
         for n in self.nodes.values():
             G.add_node(n.name)
             for child in n.children.values():
@@ -507,32 +443,30 @@ class DAG:
 
         return G
 
-    def get_tiledb_plot_node_details(self):
+    def _get_node_details(self):
         """
         Build list of details needed for tiledb node graph
         :return:
         """
-        node_details = {}
-
-        for node_name, node in self.nodes_by_name.items():
-            node_details[node_name] = dict(name=node_name, status=str(node.status))
-
-        return node_details
+        return {
+            name: dict(name=name, status=node.status.value)
+            for name, node in self.nodes_by_name.items()
+        }
 
     @staticmethod
-    def __update_dag_tiledb_graph(graph):
-        graph.visualization["node_details"] = graph.get_tiledb_plot_node_details()
+    def _update_dag_tiledb_graph(self):
+        self.visualization["node_details"] = self._get_node_details()
         update_tiledb_graph(
-            graph.visualization["nodes"],
-            graph.visualization["edges"],
-            graph.visualization["node_details"],
-            graph.visualization["positions"],
-            graph.visualization["fig"],
+            self.visualization["nodes"],
+            self.visualization["edges"],
+            self.visualization["node_details"],
+            self.visualization["positions"],
+            self.visualization["fig"],
         )
 
     @staticmethod
-    def __update_dag_plotly_graph(graph):
-        update_plotly_graph(graph.visualization["nodes"], graph.visualization["fig"])
+    def _update_dag_plotly_graph(self):
+        update_plotly_graph(self.visualization["nodes"], self.visualization["fig"])
 
     def visualize(self, notebook=True, auto_update=True, force_plotly=False):
         """
@@ -544,18 +478,12 @@ class DAG:
         """
         if not notebook or force_plotly:
             return self._visualize_plotly(notebook=notebook, auto_update=auto_update)
-
         try:
-            import tiledb.plot.widget
-
-            return self.__visualize_tiledb(auto_update=auto_update)
-
+            return self._visualize_tiledb(auto_update=auto_update)
         except ImportError:
-            import plotly.graph_objects as go
-
             return self._visualize_plotly(notebook=notebook, auto_update=auto_update)
 
-    def __visualize_tiledb(self, auto_update=True):
+    def _visualize_tiledb(self, auto_update=True):
         """
         Create graph visualization with tiledb.plot.widget
         :param auto_update: Should the diagram be auto updated with each status change
@@ -565,22 +493,17 @@ class DAG:
         import json
 
         G = self.networkx_graph()
-        nodes = list(G.nodes())
-        edges = list(G.edges())
-        node_details = self.get_tiledb_plot_node_details()
-        positions = build_visualization_positions(G)
-
         self.visualization = {
-            "nodes": nodes,
-            "edges": edges,
-            "node_details": node_details,
-            "positions": positions,
+            "nodes": list(G.nodes()),
+            "edges": list(G.edges()),
+            "node_details": self._get_node_details(),
+            "positions": build_visualization_positions(G),
         }
         fig = tiledb.plot.widget.Visualize(data=json.dumps(self.visualization))
         self.visualization["fig"] = fig
 
         if auto_update:
-            self.add_update_callback(self.__update_dag_tiledb_graph)
+            self.add_update_callback(self._update_dag_tiledb_graph)
 
         return fig
 
@@ -662,7 +585,7 @@ class DAG:
         self.visualization = dict(fig=fig, network=G, nodes=nodes)
 
         if auto_update:
-            self.add_update_callback(self.__update_dag_plotly_graph)
+            self.add_update_callback(self._update_dag_plotly_graph)
 
         return fig
 
@@ -677,12 +600,7 @@ class DAG:
 
         :return: list of root nodes
         """
-        ends = []
-        for node in self.nodes.values():
-            if node.children is None or len(node.children) == 0:
-                ends.append(node)
-
-        return ends
+        return [node for node in self.nodes.values() if not node.children]
 
     def end_results(self):
         """
@@ -695,12 +613,7 @@ class DAG:
 
         :return: map of results by node ID
         """
-
-        results = {}
-        for node in self.end_nodes():
-            results[node.id] = node.result()
-
-        return results
+        return {node.id: node.result() for node in self.end_nodes()}
 
     def end_results_by_name(self):
         """
@@ -713,9 +626,4 @@ class DAG:
 
         :return: map of results by node name
         """
-
-        results = {}
-        for node in self.end_nodes():
-            results[node.name] = node.result()
-
-        return results
+        return {node.name: node.result() for node in self.end_nodes()}
