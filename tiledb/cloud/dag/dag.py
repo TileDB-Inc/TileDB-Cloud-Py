@@ -230,16 +230,6 @@ class Node:
         """
         return self.future.result() if self.future is not None else None
 
-    def result_or_future(self):
-        """
-        Fetch results of functions or return future if incomplete
-        :return:
-        """
-        if not self.finished() and self.future is not None:
-            return self.future
-
-        return self.result()
-
     def wait(self, timeout=None):
         """
         Wait for node to be completed
