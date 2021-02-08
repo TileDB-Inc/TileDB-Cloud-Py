@@ -93,14 +93,9 @@ class Node:
         if self.future is not None:
             self.future.cancel()
 
-    def finished(self):
-        """
-        Is the node finished
-        :return: True if the node's function is finished
-        """
+    def done(self):
+        """Return True if the the node's function was cancelled or finished executing."""
         return self.status in (Status.COMPLETED, Status.FAILED, Status.CANCELLED)
-
-    done = finished
 
     def _build_dependencies_list(self, arg):
         """
@@ -156,8 +151,6 @@ class Node:
         # The function is executed on the dag's worker pool
         self.future = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
         self.future.add_done_callback(self.__update_status)
-
-    compute = exec
 
     def __update_status(self, future):
         try:
