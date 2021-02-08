@@ -20,25 +20,11 @@ from tiledb.cloud import TileDBCloudError
 
 
 class Status(Enum):
-    NOT_STARTED = 1
-    RUNNING = 2
-    COMPLETED = 3
-    FAILED = 4
-    CANCELLED = 5
-
-    def __str__(self):
-        if self == self.NOT_STARTED:
-            return "Not Started"
-        elif self == self.RUNNING:
-            return "Running"
-        elif self == self.COMPLETED:
-            return "Completed"
-        elif self == self.FAILED:
-            return "Failed"
-        elif self == self.CANCELLED:
-            return "Cancelled"
-
-        return "Unknown Status"
+    NOT_STARTED = "Not Started"
+    RUNNING = "Running"
+    COMPLETED = "Completed"
+    FAILED = "Failed"
+    CANCELLED = "Cancelled"
 
 
 class Node:
