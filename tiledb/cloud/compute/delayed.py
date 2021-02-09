@@ -1,8 +1,5 @@
-from ..dag.dag import Node, DAG, Status
-
-from ..array import apply as array_apply
-from ..sql import exec as sql_exec
-from ..udf import exec as udf_exec
+from .. import array, sql, udf
+from ..dag import DAG, Node, Status
 
 import numbers
 
@@ -102,7 +99,7 @@ class Delayed(DelayedBase):
             raise TypeError("func_exec argument to `Node` must be callable!")
 
         if not local:
-            super().__init__(udf_exec, func_exec, *args, local_mode=local, **kwargs)
+            super().__init__(udf.exec, func_exec, *args, local_mode=local, **kwargs)
         else:
             super().__init__(func_exec, *args, local_mode=local, **kwargs)
 
@@ -138,7 +135,7 @@ class Delayed(DelayedBase):
 
 class DelayedSQL(DelayedBase):
     def __init__(self, *args, **kwargs):
-        super().__init__(sql_exec, *args, **kwargs)
+        super().__init__(sql.exec, *args, **kwargs)
 
         # Set name of task if it won't interfere with user args
         if "task_name" not in self.kwargs:
@@ -172,7 +169,7 @@ class DelayedArrayUDF(DelayedBase):
         if func_exec is not None and not callable(func_exec):
             raise TypeError("func_exec argument to `Node` must be callable!")
 
-        super().__init__(array_apply, self.uri, self.func_exec, *args, **kwargs)
+        super().__init__(array.apply, self.uri, self.func_exec, *args, **kwargs)
 
         # Set name of task if it won't interfere with user args
         if "task_name" not in self.kwargs:
