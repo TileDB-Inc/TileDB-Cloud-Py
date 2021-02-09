@@ -149,26 +149,3 @@ class Node:
         :return:
         """
         return self.future.result() if self.future is not None else None
-
-    def wait(self, timeout=None):
-        """
-        Wait for node to be completed
-        :param timeout: optional timeout in seconds to wait for DAG to be completed
-        :return: None or raises TimeoutError if timeout occurs
-        """
-
-        if timeout is not None and not isinstance(timeout, numbers.Number):
-            raise TypeError(
-                "timeout must be numeric value representing seconds to wait"
-            )
-
-        start_time = time.time()
-        end_time = None
-        if timeout is not None:
-            end_time = start_time + timeout
-        while not self.done():
-            time.sleep(0.5)
-            if end_time is not None and time.time() >= end_time:
-                raise TimeoutError(
-                    "timeout of {} reached and dag is not complete".format(timeout)
-                )
