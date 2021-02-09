@@ -2,78 +2,155 @@ import networkx as nx
 import random
 import json
 
-from . import dag
+from .status import Status
+
+STATUS_COLOR = {
+    Status.NOT_STARTED: "black",
+    Status.RUNNING: "blue",
+    Status.COMPLETED: "green",
+    Status.FAILED: "red",
+    Status.CANCELLED: "yellow",
+}
 
 
-def build_graph_node_details(nodes):
-    """
-    :param nodes: List of nodes to get status of
-    :return: tuple of node_colors and node_text
-    """
-    # Loop over statuses to set color and label.
-    # If you rerun this cell and the one below you can update the graph
-    node_colors = []
-    node_text = []
-    for node in nodes:
-        status = node.status
-        if status == dag.Status.NOT_STARTED:
-            node_text.append("{} - Not Started".format(node.name))
-            node_colors.append("black")
-        elif status == dag.Status.RUNNING:
-            node_text.append("{} - Running".format(node.name))
-            node_colors.append("blue")
-        elif status == dag.Status.COMPLETED:
-            node_text.append("{} - Completed".format(node.name))
-            node_colors.append("green")
-        elif status == dag.Status.FAILED:
-            node_text.append("{} - Failed".format(node.name))
-            node_colors.append("red")
-        elif status == dag.Status.CANCELLED:
-            node_text.append("{} - Cancelled".format(node.name))
-            node_colors.append("yellow")
-
-    return (node_colors, node_text)
-
-
-def update_plotly_graph(nodes, fig=None):
-    """
-    Update a graph based on based node status and figure
-    :param nodes: list of notes to update
-    :param fig:
-    :return:
+def visualize_plotly(dag, notebook=True, auto_update=True):
     """
 
-    (node_colors, node_text) = build_graph_node_details(nodes)
-
-    if fig is not None:
-        fig.update_traces(
-            marker=dict(color=node_colors),
-            text=node_text,
-            selector=dict(mode="markers"),
-        )
-
-
-def update_tiledb_graph(nodes, edges, node_details, positions, fig):
+    :param notebook: Is the visualization inside a jupyter notebook? If so we'll use a widget
+    :param auto_update: Should the diagram be auto updated with each status change
+    :return: figure
     """
-    Update a tiledb plot widge graph
-    :param nodes: nodes of graph
-    :param edges: edges for graph
-    :param node_details: Node details
-    :param positions: positions for graph
-    :param fig: figure
-    :return:
-    """
-    if fig is not None:
-        fig.setData(
-            json.dumps(
-                dict(
-                    nodes=nodes,
-                    edges=edges,
-                    node_details=node_details,
-                    positions=positions,
-                )
+    import plotly.graph_objects as go
+
+    G = dag.networkx_graph()
+    pos = build_visualization_positions(G)
+
+    # Convert to plotly scatter plot
+    edge_x = []
+    edge_y = []
+    for edge in G.edges():
+        x0, y0 = pos[edge[0]]
+        x1, y1 = pos[edge[1]]
+        edge_x.extend((x0, x1, None))
+        edge_y.extend((y0, y1, None))
+
+    edge_trace = go.Scatter(
+        x=edge_x,
+        y=edge_y,
+        line=dict(width=0.5, color="#888"),
+        hoverinfo="none",
+        mode="lines",
+    )
+
+    # Build node x,y and also build a mapping of the graph market numbers to actual
+    # node objects so we can fetch status. The graph ends up with each market on a
+    # list, so we need to map from this list's order to actual nodes so we can look things up
+    node_x = []
+    node_y = []
+    nodes = []
+    for node in G.nodes():
+        x, y = pos[node]
+        node_x.append(x)
+        node_y.append(y)
+        nodes.append(dag.nodes_by_name[node])
+
+    def get_node_colors():
+        return [STATUS_COLOR[node.status] for node in nodes]
+
+    def get_node_labels():
+        return [f"{node.name} - {node.status.value}" for node in nodes]
+
+    # Build node scatter plot
+    node_trace = go.Scatter(
+        x=node_x,
+        y=node_y,
+        mode="markers",
+        hoverinfo="text",
+        marker=dict(size=15, line_width=2),
+    )
+
+    node_trace.marker.color = get_node_colors()
+    node_trace.text = get_node_labels()
+
+    fig_cls = go.FigureWidget if notebook else go.Figure
+    # Create plot
+    fig = fig_cls(
+        data=[edge_trace, node_trace],
+        layout=go.Layout(
+            # title="Status",
+            # titlefont_size=16,
+            showlegend=False,
+            hovermode="closest",
+            margin=dict(b=20, l=5, r=5, t=40),
+            annotations=[
+                dict(showarrow=True, xref="paper", yref="paper", x=0.005, y=-0.002)
+            ],
+            xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+        ),
+    )
+
+    if auto_update:
+
+        @dag.add_update_callback
+        def update_callback(_):
+            fig.update_traces(
+                marker={"color": get_node_colors()},
+                text=get_node_labels(),
+                selector={"mode": "markers"},
             )
-        )
+
+    return fig
+
+
+def visualize_tiledb(dag, auto_update=True):
+    """
+    Create graph visualization with tiledb.plot.widget
+    :param auto_update: Should the diagram be auto updated with each status change
+    :return: figure
+    """
+    import tiledb.plot.widget
+
+    def get_node_details():
+        return {
+            name: dict(name=name, status=node.status.value)
+            for name, node in dag.nodes_by_name.items()
+        }
+
+    G = dag.networkx_graph()
+    visualization = {
+        "nodes": list(G.nodes()),
+        "edges": list(G.edges()),
+        "node_details": get_node_details(),
+        "positions": build_visualization_positions(G),
+    }
+    fig = tiledb.plot.widget.Visualize(data=json.dumps(visualization))
+
+    if auto_update:
+
+        @dag.add_update_callback
+        def update_callback(_):
+            visualization["node_details"] = get_node_details()
+            fig.setData(json.dumps(visualization))
+
+    return fig
+
+
+def build_visualization_positions(network):
+    """
+    Builds the positional spacing of all nodes(markers) based on either pydot if available or falling back
+    to a python computation
+    :param network:
+    :return: position array
+    """
+    try:
+        # First try to use pydot and dot, as it produces the most aesthetically pleasing trees
+        from networkx.drawing.nx_pydot import pydot_layout
+
+        return pydot_layout(network, prog="dot")
+    except:
+        # Fall back to python function so we don't have to require users to install graphviz
+        return hierarchy_pos(network, width=2.0, leaf_vs_root_factor=1.0)
 
 
 def hierarchy_pos(
@@ -236,20 +313,3 @@ def hierarchy_pos(
     for node in pos:
         pos[node] = (pos[node][0] * width / xmax, pos[node][1])
     return pos
-
-
-def build_visualization_positions(network):
-    """
-    Builds the positional spacing of all nodes(markers) based on either pydot if available or falling back
-    to a python computation
-    :param network:
-    :return: position array
-    """
-    try:
-        # First try to use pydot and dot, as it produces the most aesthetically pleasing trees
-        from networkx.drawing.nx_pydot import pydot_layout
-
-        return pydot_layout(network, prog="dot")
-    except:
-        # Fall back to python function so we don't have to require users to install graphviz
-        return hierarchy_pos(network, width=2.0, leaf_vs_root_factor=1.0)

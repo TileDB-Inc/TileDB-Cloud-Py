@@ -5,27 +5,15 @@ import networkx as nx
 
 from collections import abc
 from concurrent.futures import CancelledError, ProcessPoolExecutor, ThreadPoolExecutor
-from enum import Enum
 
-from .visualization import (
-    build_graph_node_details,
-    update_plotly_graph,
-    update_tiledb_graph,
-    build_visualization_positions,
-)
+from .status import Status
+from .visualization import visualize_plotly, visualize_tiledb
+
 from ..array import apply as array_apply
 from ..sql import exec as sql_exec
 from ..udf import exec as udf_exec
 
 from tiledb.cloud import TileDBCloudError
-
-
-class Status(Enum):
-    NOT_STARTED = "Not Started"
-    RUNNING = "Running"
-    COMPLETED = "Completed"
-    FAILED = "Failed"
-    CANCELLED = "Cancelled"
 
 
 class Node:
@@ -221,8 +209,6 @@ class DAG:
         self.not_started_nodes = {}
         self.cancelled_nodes = {}
         self.namespace = namespace
-
-        self.visualization = None
 
         if use_processes:
             self.executor = ProcessPoolExecutor(max_workers=max_workers)
@@ -443,31 +429,6 @@ class DAG:
 
         return G
 
-    def _get_node_details(self):
-        """
-        Build list of details needed for tiledb node graph
-        :return:
-        """
-        return {
-            name: dict(name=name, status=node.status.value)
-            for name, node in self.nodes_by_name.items()
-        }
-
-    @staticmethod
-    def _update_dag_tiledb_graph(self):
-        self.visualization["node_details"] = self._get_node_details()
-        update_tiledb_graph(
-            self.visualization["nodes"],
-            self.visualization["edges"],
-            self.visualization["node_details"],
-            self.visualization["positions"],
-            self.visualization["fig"],
-        )
-
-    @staticmethod
-    def _update_dag_plotly_graph(self):
-        update_plotly_graph(self.visualization["nodes"], self.visualization["fig"])
-
     def visualize(self, notebook=True, auto_update=True, force_plotly=False):
         """
         Build and render a tree diagram of the DAG.
@@ -476,118 +437,12 @@ class DAG:
         :param force_plotly: Force the use of plotly graphs instead of TileDB Plot Widget
         :return: returns figure
         """
-        if not notebook or force_plotly:
-            return self._visualize_plotly(notebook=notebook, auto_update=auto_update)
-        try:
-            return self._visualize_tiledb(auto_update=auto_update)
-        except ImportError:
-            return self._visualize_plotly(notebook=notebook, auto_update=auto_update)
-
-    def _visualize_tiledb(self, auto_update=True):
-        """
-        Create graph visualization with tiledb.plot.widget
-        :param auto_update: Should the diagram be auto updated with each status change
-        :return: figure
-        """
-        import tiledb.plot.widget
-        import json
-
-        G = self.networkx_graph()
-        self.visualization = {
-            "nodes": list(G.nodes()),
-            "edges": list(G.edges()),
-            "node_details": self._get_node_details(),
-            "positions": build_visualization_positions(G),
-        }
-        fig = tiledb.plot.widget.Visualize(data=json.dumps(self.visualization))
-        self.visualization["fig"] = fig
-
-        if auto_update:
-            self.add_update_callback(self._update_dag_tiledb_graph)
-
-        return fig
-
-    def _visualize_plotly(self, notebook=True, auto_update=True):
-        """
-
-        :param notebook: Is the visualization inside a jupyter notebook? If so we'll use a widget
-        :param auto_update: Should the diagram be auto updated with each status change
-        :return: figure
-        """
-        import plotly.graph_objects as go
-
-        G = self.networkx_graph()
-        pos = build_visualization_positions(G)
-
-        # Convert to plotly scatter plot
-        edge_x = []
-        edge_y = []
-        for edge in G.edges():
-            x0, y0 = pos[edge[0]]
-            x1, y1 = pos[edge[1]]
-            edge_x.append(x0)
-            edge_x.append(x1)
-            edge_x.append(None)
-            edge_y.append(y0)
-            edge_y.append(y1)
-            edge_y.append(None)
-
-        edge_trace = go.Scatter(
-            x=edge_x,
-            y=edge_y,
-            line=dict(width=0.5, color="#888"),
-            hoverinfo="none",
-            mode="lines",
-        )
-
-        # Build node x,y and also build a mapping of the graph market numbers to actual node objects so we can fetch status
-        # The graph ends up with each market on a list, so we need to map from this list's order to actual nodes so we can look things up
-        node_x = []
-        node_y = []
-        nodes = []
-        for node in G.nodes():
-            x, y = pos[node]
-            node_x.append(x)
-            node_y.append(y)
-            nodes.append(self.nodes_by_name[node])
-
-        # Build node scatter plot
-        node_trace = go.Scatter(
-            x=node_x,
-            y=node_y,
-            mode="markers",
-            hoverinfo="text",
-            marker=dict(size=15, line_width=2),
-        )
-
-        (node_trace.marker.color, node_trace.text) = build_graph_node_details(nodes)
-
-        fig_obj = go.Figure
-        if notebook:
-            fig_obj = go.FigureWidget
-        # Create plot
-        fig = fig_obj(
-            data=[edge_trace, node_trace],
-            layout=go.Layout(
-                # title="Status",
-                # titlefont_size=16,
-                showlegend=False,
-                hovermode="closest",
-                margin=dict(b=20, l=5, r=5, t=40),
-                annotations=[
-                    dict(showarrow=True, xref="paper", yref="paper", x=0.005, y=-0.002)
-                ],
-                xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-                yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-            ),
-        )
-
-        self.visualization = dict(fig=fig, network=G, nodes=nodes)
-
-        if auto_update:
-            self.add_update_callback(self._update_dag_plotly_graph)
-
-        return fig
+        if notebook and not force_plotly:
+            try:
+                return visualize_tiledb(self, auto_update=auto_update)
+            except ImportError:
+                pass
+        return visualize_plotly(self, notebook=notebook, auto_update=auto_update)
 
     def end_nodes(self):
         """
