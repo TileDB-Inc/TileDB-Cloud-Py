@@ -34,7 +34,7 @@ class DelayedBase(Node):
             self.dag.namespace = namespace
 
         self.dag.compute()
-        self.wait(self.timeout)
+        self.dag.wait(self.timeout)
 
         if self.dag.status == Status.FAILED:
             # reraise the first failed node exception
