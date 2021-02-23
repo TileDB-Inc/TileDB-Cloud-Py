@@ -209,18 +209,18 @@ class User(object):
         if (
             self.local_vars_configuration.client_side_validation
             and username is not None
-            and len(username) > 20
+            and len(username) > 63
         ):
             raise ValueError(
-                "Invalid value for `username`, length must be less than or equal to `20`"
+                "Invalid value for `username`, length must be less than or equal to `63`"
             )  # noqa: E501
         if (
             self.local_vars_configuration.client_side_validation
             and username is not None
-            and len(username) < 4
+            and len(username) < 1
         ):
             raise ValueError(
-                "Invalid value for `username`, length must be greater than or equal to `4`"
+                "Invalid value for `username`, length must be greater than or equal to `1`"
             )  # noqa: E501
         if (
             self.local_vars_configuration.client_side_validation
