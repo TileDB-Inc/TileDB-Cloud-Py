@@ -7,6 +7,7 @@ from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
 import urllib
 import os
+from urllib3 import Retry
 
 import tiledb
 
@@ -385,8 +386,81 @@ class Client:
         self.user_api = self.__get_user_api()
         self.notebook_api = self.__get_notebook_api()
 
-    def __init__(self, pool_threads=os.cpu_count() * 2):
+    def __init__(self, pool_threads=os.cpu_count() * 2, retry_mode="default"):
+        """
+
+        :param pool_threads: Number of threads to use for http requests
+        :param retry_mode: Retry mode ["default", "forceful", "disabled"]
+        """
         self.pool_threads = pool_threads
+        self.retry_mode(retry_mode)
+        self.update_clients()
+
+    def set_disable_retries(self):
+        config.config.retries = False
+        self.update_clients()
+
+    def set_default_retries(self):
+        config.config.retries = Retry(
+            total=10,
+            backoff_factor=0.25,
+            status_forcelist=[503],
+            allowed_methods=[
+                "HEAD",
+                "GET",
+                "PUT",
+                "DELETE",
+                "OPTIONS",
+                "TRACE",
+                "POST",
+                "PATCH",
+            ],
+            raise_on_status=False,
+            # Don't remove any headers on redirect
+            remove_headers_on_redirect=[],
+        )
+        self.update_clients()
+
+    def set_forceful_retries(self):
+        config.config.retries = Retry(
+            total=10,
+            backoff_factor=0.25,
+            status_forcelist=[400, 500, 501, 502, 503],
+            allowed_methods=[
+                "HEAD",
+                "GET",
+                "PUT",
+                "DELETE",
+                "OPTIONS",
+                "TRACE",
+                "POST",
+                "PATCH",
+            ],
+            raise_on_status=False,
+            # Don't remove any headers on redirect
+            remove_headers_on_redirect=[],
+        )
+        self.update_clients()
+
+    def retry_mode(self, mode="default"):
+        """
+
+        :param mode: Retry mode ["default", "forceful", "disabled"]
+        :return:
+        """
+        if mode == "default":
+            self.set_default_retries()
+        elif mode == "forceful":
+            self.set_forceful_retries()
+        elif mode == "disabled":
+            self.set_disable_retries()
+        else:
+            raise Exception(
+                "unsupported retry mode %s. Valid options are default, forceful or disabled".format(
+                    model
+                )
+            )
+
         self.update_clients()
 
     def set_threads(self, threads=os.cpu_count() * 2):
