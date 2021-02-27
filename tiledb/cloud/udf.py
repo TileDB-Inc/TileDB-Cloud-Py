@@ -117,7 +117,7 @@ def exec_async(
             namespace=namespace, udf=udf_model, **kwargs
         )
 
-        return array.UDFResult(response)
+        return array.UDFResult(response, result_format=result_format)
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_sql_exc(exc) from None

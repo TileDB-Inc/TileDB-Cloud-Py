@@ -14,14 +14,16 @@ import urllib
 import base64
 import sys
 import numpy
+import json
 
 last_udf_task_id = None
 
 
 class UDFResult(multiprocessing.pool.ApplyResult):
-    def __init__(self, response):
+    def __init__(self, response, result_format):
         self.response = response
         self.task_id = None
+        self.result_format = result_format
 
     def get(self, timeout=None):
         try:
@@ -45,7 +47,15 @@ class UDFResult(multiprocessing.pool.ApplyResult):
                 )
 
         try:
-            res = cloudpickle.loads(res)
+            if self.result_format == rest_api.models.UDFResultType.NATIVE:
+                res = cloudpickle.loads(res)
+            elif self.result_format == rest_api.models.UDFResultType.JSON:
+                res = json.loads(res)
+            elif self.result_format == rest_api.models.UDFResultType.ARROW:
+                import pyarrow
+
+                reader = pyarrow.RecordBatchStreamReader(res)
+                res = reader.read_all()
         except:
             raise tiledb_cloud_error.TileDBCloudError(
                 "Failed to load cloudpickle result object"
@@ -485,7 +495,7 @@ def apply_async(
             namespace=namespace, array=array_name, udf=udf_model, **kwargs
         )
 
-        return UDFResult(response)
+        return UDFResult(response, result_format=result_format)
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_sql_exc(exc) from None
