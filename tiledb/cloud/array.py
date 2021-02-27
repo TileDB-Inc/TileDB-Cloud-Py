@@ -378,6 +378,7 @@ def apply_async(
     include_source_lines=True,
     task_name=None,
     v2=True,
+    result_format=rest_api.models.UDFResultType.NATIVE,
     **kwargs
 ):
     """
@@ -393,6 +394,7 @@ def apply_async(
     :param include_source_lines: disables sending sources lines of function along with udf
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param bool v2: use v2 array udfs
+    :param UDFResultType result_format: result serialization format
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
 
@@ -467,6 +469,7 @@ def apply_async(
             image_name=image_name,
             task_name=task_name,
             argument=arguments,
+            result_format=result_format,
         )
 
         if pickledUDF is not None:
@@ -499,6 +502,7 @@ def apply(
     http_compressor="deflate",
     task_name=None,
     v2=True,
+    result_format=rest_api.models.UDFResultType.NATIVE,
     **kwargs
 ):
     """
@@ -513,6 +517,7 @@ def apply(
     :param http_compressor: set http compressor for results
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param bool v2: use v2 array udfs
+    :param UDFResultType result_format: result serialization format
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
 
@@ -535,5 +540,6 @@ def apply(
         http_compressor=http_compressor,
         task_name=task_name,
         v2=v2,
+        result_format=result_format,
         **kwargs,
     ).get()
