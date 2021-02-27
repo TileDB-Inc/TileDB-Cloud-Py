@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **result_format** | [**UDFResultType**](UDFResultType.md) |  | [optional] 
 **task_name** | **str** | name of task, optional | [optional] 
 **argument** | **str** | Argument(s) to pass to udf function, tuple or list of args/kwargs which can be in native or json format | [optional] 
+**store_results** | **bool** | store results for later retrieval | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
