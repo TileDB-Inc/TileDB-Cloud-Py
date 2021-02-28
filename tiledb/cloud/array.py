@@ -20,10 +20,11 @@ last_udf_task_id = None
 
 
 class UDFResult(multiprocessing.pool.ApplyResult):
-    def __init__(self, response, result_format):
+    def __init__(self, response, result_format, result_format_version=None):
         self.response = response
         self.task_id = None
         self.result_format = result_format
+        self.result_format_version = result_format_version
 
     def get(self, timeout=None):
         try:
@@ -389,6 +390,7 @@ def apply_async(
     task_name=None,
     v2=True,
     result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format_version=None,
     **kwargs
 ):
     """
@@ -405,6 +407,7 @@ def apply_async(
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param bool v2: use v2 array udfs
     :param UDFResultType result_format: result serialization format
+    :param str result_format_version: set a format version for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
 
@@ -480,6 +483,7 @@ def apply_async(
             task_name=task_name,
             argument=arguments,
             result_format=result_format,
+            result_format_version=result_format_version,
         )
 
         if pickledUDF is not None:
@@ -513,6 +517,7 @@ def apply(
     task_name=None,
     v2=True,
     result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format_version=None,
     **kwargs
 ):
     """
@@ -528,6 +533,7 @@ def apply(
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param bool v2: use v2 array udfs
     :param UDFResultType result_format: result serialization format
+    :param str result_format_version: set a format version for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
 
@@ -551,5 +557,6 @@ def apply(
         task_name=task_name,
         v2=v2,
         result_format=result_format,
+        result_format_version=result_format_version,
         **kwargs,
     ).get()

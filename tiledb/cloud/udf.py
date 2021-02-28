@@ -24,6 +24,7 @@ def exec_async(
     include_source_lines=True,
     task_name=None,
     result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format_version=None,
     **kwargs
 ):
     """
@@ -39,6 +40,7 @@ def exec_async(
     :param include_source_lines: disables sending sources lines of function along with udf
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param UDFResultType result_format: result serialization format
+    :param str result_format_version: set a format version for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
     """
@@ -95,6 +97,7 @@ def exec_async(
             language=rest_api.models.UDFLanguage.PYTHON,
             argument=arguments,
             result_format=result_format,
+            result_format_version=result_format_version,
             version="{}.{}.{}".format(
                 sys.version_info.major,
                 sys.version_info.minor,
@@ -133,6 +136,7 @@ def exec(
     include_source_lines=True,
     task_name=None,
     result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format_version=None,
     **kwargs
 ):
     """
@@ -147,6 +151,7 @@ def exec(
     :param include_source_lines: disables sending sources lines of function along with udf
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param UDFResultType result_format: result serialization format
+    :param str result_format_version: set a format version for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
     """
@@ -160,6 +165,7 @@ def exec(
         include_source_lines=include_source_lines,
         task_name=task_name,
         result_format=result_format,
+        result_format_version=result_format_version,
         **kwargs,
     ).get()
 
