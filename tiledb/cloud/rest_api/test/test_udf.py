@@ -81,6 +81,7 @@ class TestUDF(unittest.TestCase):
                 exec_raw="0",
                 buffers=["0"],
                 result_format="native",
+                result_format_version="0",
                 task_name="0",
                 argument="0",
                 store_results=True,

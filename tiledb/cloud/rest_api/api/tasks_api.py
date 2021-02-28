@@ -435,6 +435,7 @@ class TasksApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str id: task id to retry (required)
+        :param str accept_encoding: Encoding to use
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -460,6 +461,7 @@ class TasksApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str id: task id to retry (required)
+        :param str accept_encoding: Encoding to use
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -476,7 +478,7 @@ class TasksApi(object):
 
         local_var_params = locals()
 
-        all_params = ["id"]
+        all_params = ["id", "accept_encoding"]
         all_params.extend(
             [
                 "async_req",
@@ -511,6 +513,10 @@ class TasksApi(object):
         query_params = []
 
         header_params = {}
+        if "accept_encoding" in local_var_params:
+            header_params["Accept-Encoding"] = local_var_params[
+                "accept_encoding"
+            ]  # noqa: E501
 
         form_params = []
         local_var_files = {}

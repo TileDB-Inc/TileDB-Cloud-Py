@@ -41,6 +41,7 @@ class GenericUDF(object):
         "exec_raw": "str",
         "argument": "str",
         "result_format": "UDFResultType",
+        "result_format_version": "str",
         "task_name": "str",
         "store_results": "bool",
     }
@@ -54,6 +55,7 @@ class GenericUDF(object):
         "exec_raw": "exec_raw",
         "argument": "argument",
         "result_format": "result_format",
+        "result_format_version": "result_format_version",
         "task_name": "task_name",
         "store_results": "store_results",
     }
@@ -68,6 +70,7 @@ class GenericUDF(object):
         exec_raw=None,
         argument=None,
         result_format=None,
+        result_format_version=None,
         task_name=None,
         store_results=None,
         local_vars_configuration=None,
@@ -85,6 +88,7 @@ class GenericUDF(object):
         self._exec_raw = None
         self._argument = None
         self._result_format = None
+        self._result_format_version = None
         self._task_name = None
         self._store_results = None
         self.discriminator = None
@@ -105,6 +109,8 @@ class GenericUDF(object):
             self.argument = argument
         if result_format is not None:
             self.result_format = result_format
+        if result_format_version is not None:
+            self.result_format_version = result_format_version
         if task_name is not None:
             self.task_name = task_name
         if store_results is not None:
@@ -289,6 +295,29 @@ class GenericUDF(object):
         """
 
         self._result_format = result_format
+
+    @property
+    def result_format_version(self):
+        """Gets the result_format_version of this GenericUDF.  # noqa: E501
+
+        string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison  # noqa: E501
+
+        :return: The result_format_version of this GenericUDF.  # noqa: E501
+        :rtype: str
+        """
+        return self._result_format_version
+
+    @result_format_version.setter
+    def result_format_version(self, result_format_version):
+        """Sets the result_format_version of this GenericUDF.
+
+        string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison  # noqa: E501
+
+        :param result_format_version: The result_format_version of this GenericUDF.  # noqa: E501
+        :type: str
+        """
+
+        self._result_format_version = result_format_version
 
     @property
     def task_name(self):

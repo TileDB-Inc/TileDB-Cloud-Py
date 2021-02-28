@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **exec_raw** | **str** | optional raw text to store of serialized function, used for showing in UI | [optional] 
 **buffers** | **list[str]** | List of buffers to fetch (attributes + coordinates) | [optional] 
 **result_format** | [**UDFResultType**](UDFResultType.md) |  | [optional] 
+**result_format_version** | **str** | string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison | [optional] 
 **task_name** | **str** | name of task, optional | [optional] 
 **argument** | **str** | Argument(s) to pass to udf function, tuple or list of args/kwargs which can be in native or json format | [optional] 
 **store_results** | **bool** | store results for later retrieval | [optional] 

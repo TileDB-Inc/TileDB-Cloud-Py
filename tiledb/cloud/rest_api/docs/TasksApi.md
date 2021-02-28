@@ -414,7 +414,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **task_id_retry_post**
-> ArrayTask task_id_retry_post(id)
+> ArrayTask task_id_retry_post(id, accept_encoding=accept_encoding)
 
 
 
@@ -461,9 +461,10 @@ with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = rest_api.TasksApi(api_client)
     id = 'id_example' # str | task id to retry
+accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
     try:
-        api_response = api_instance.task_id_retry_post(id)
+        api_response = api_instance.task_id_retry_post(id, accept_encoding=accept_encoding)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling TasksApi->task_id_retry_post: %s\n" % e)
@@ -508,9 +509,10 @@ with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = rest_api.TasksApi(api_client)
     id = 'id_example' # str | task id to retry
+accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
     try:
-        api_response = api_instance.task_id_retry_post(id)
+        api_response = api_instance.task_id_retry_post(id, accept_encoding=accept_encoding)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling TasksApi->task_id_retry_post: %s\n" % e)
@@ -521,6 +523,7 @@ with rest_api.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **str**| task id to retry | 
+ **accept_encoding** | **str**| Encoding to use | [optional] 
 
 ### Return type
 
