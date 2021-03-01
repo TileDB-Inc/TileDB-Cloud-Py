@@ -1160,7 +1160,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **create_array**
-> create_array(namespace, array, content_type, array_schema)
+> create_array(namespace, array, content_type, array_schema, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name)
 
 
 
@@ -1210,9 +1210,10 @@ with rest_api.ApiClient(configuration) as api_client:
 array = 'array_example' # str | name/uri of array that is url-encoded
 content_type = 'application/json' # str | Content Type of input and return mime (default to 'application/json')
 array_schema = rest_api.ArraySchema() # ArraySchema | ArraySchema being created
+x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name_example' # str | Optional registered access credentials to use for creation (optional)
 
     try:
-        api_instance.create_array(namespace, array, content_type, array_schema)
+        api_instance.create_array(namespace, array, content_type, array_schema, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name)
     except ApiException as e:
         print("Exception when calling ArrayApi->create_array: %s\n" % e)
 ```
@@ -1259,9 +1260,10 @@ with rest_api.ApiClient(configuration) as api_client:
 array = 'array_example' # str | name/uri of array that is url-encoded
 content_type = 'application/json' # str | Content Type of input and return mime (default to 'application/json')
 array_schema = rest_api.ArraySchema() # ArraySchema | ArraySchema being created
+x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name_example' # str | Optional registered access credentials to use for creation (optional)
 
     try:
-        api_instance.create_array(namespace, array, content_type, array_schema)
+        api_instance.create_array(namespace, array, content_type, array_schema, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name)
     except ApiException as e:
         print("Exception when calling ArrayApi->create_array: %s\n" % e)
 ```
@@ -1274,6 +1276,7 @@ Name | Type | Description  | Notes
  **array** | **str**| name/uri of array that is url-encoded | 
  **content_type** | **str**| Content Type of input and return mime | [default to &#39;application/json&#39;]
  **array_schema** | [**ArraySchema**](ArraySchema.md)| ArraySchema being created | 
+ **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
 
 ### Return type
 

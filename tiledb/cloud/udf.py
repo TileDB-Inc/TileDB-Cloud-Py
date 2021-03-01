@@ -23,6 +23,8 @@ def exec_async(
     http_compressor="deflate",
     include_source_lines=True,
     task_name=None,
+    result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format_version=None,
     **kwargs
 ):
     """
@@ -37,6 +39,8 @@ def exec_async(
     :param http_compressor: set http compressor for results
     :param include_source_lines: disables sending sources lines of function along with udf
     :param str task_name: optional name to assign the task for logging and audit purposes
+    :param UDFResultType result_format: result serialization format
+    :param str result_format_version: set a format version for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
     """
@@ -92,7 +96,8 @@ def exec_async(
         udf_model = rest_api.models.GenericUDF(
             language=rest_api.models.UDFLanguage.PYTHON,
             argument=arguments,
-            result_format=rest_api.models.UDFResultType.NATIVE,
+            result_format=result_format,
+            result_format_version=result_format_version,
             version="{}.{}.{}".format(
                 sys.version_info.major,
                 sys.version_info.minor,
@@ -115,7 +120,7 @@ def exec_async(
             namespace=namespace, udf=udf_model, **kwargs
         )
 
-        return array.UDFResult(response)
+        return array.UDFResult(response, result_format=result_format)
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_sql_exc(exc) from None
@@ -130,6 +135,8 @@ def exec(
     http_compressor="deflate",
     include_source_lines=True,
     task_name=None,
+    result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format_version=None,
     **kwargs
 ):
     """
@@ -143,6 +150,8 @@ def exec(
     :param http_compressor: set http compressor for results
     :param include_source_lines: disables sending sources lines of function along with udf
     :param str task_name: optional name to assign the task for logging and audit purposes
+    :param UDFResultType result_format: result serialization format
+    :param str result_format_version: set a format version for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
     """
@@ -155,6 +164,8 @@ def exec(
         http_compressor=http_compressor,
         include_source_lines=include_source_lines,
         task_name=task_name,
+        result_format=result_format,
+        result_format_version=result_format_version,
         **kwargs,
     ).get()
 

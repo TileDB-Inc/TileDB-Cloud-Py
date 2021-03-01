@@ -16,14 +16,12 @@ import unittest
 import datetime
 
 import rest_api
-from tiledb.cloud.rest_api.models.inline_response200 import (
-    InlineResponse200,
-)  # noqa: E501
+from tiledb.cloud.rest_api.models.array_metadata import ArrayMetadata  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestInlineResponse200(unittest.TestCase):
-    """InlineResponse200 unit test stubs"""
+class TestArrayMetadata(unittest.TestCase):
+    """ArrayMetadata unit test stubs"""
 
     def setUp(self):
         pass
@@ -32,18 +30,27 @@ class TestInlineResponse200(unittest.TestCase):
         pass
 
     def make_instance(self, include_optional):
-        """Test InlineResponse200
+        """Test ArrayMetadata
         include_option is a boolean, when False only required
         params are included, when True both required and
         optional params are included"""
-        # model = tiledb.cloud.rest_api.models.inline_response200.InlineResponse200()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.array_metadata.ArrayMetadata()  # noqa: E501
         if include_optional:
-            return InlineResponse200(stats="123")
+            return ArrayMetadata(
+                ranges=[
+                    tiledb.cloud.rest_api.models.array_metadata_entry.ArrayMetadataEntry(
+                        key="0",
+                        type="0",
+                        value_num=56,
+                        value=[56],
+                    )
+                ]
+            )
         else:
-            return InlineResponse200()
+            return ArrayMetadata()
 
-    def testInlineResponse200(self):
-        """Test InlineResponse200"""
+    def testArrayMetadata(self):
+        """Test ArrayMetadata"""
         inst_req_only = self.make_instance(include_optional=False)
         inst_req_and_optional = self.make_instance(include_optional=True)
 

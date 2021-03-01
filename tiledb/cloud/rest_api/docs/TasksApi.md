@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**run_sql**](TasksApi.md#run_sql) | **POST** /sql/{namespace} | 
 [**task_id_get**](TasksApi.md#task_id_get) | **GET** /task/{id} | 
+[**task_id_result_get**](TasksApi.md#task_id_result_get) | **GET** /task/{id}/result | 
 [**task_id_retry_post**](TasksApi.md#task_id_retry_post) | **POST** /task/{id}/retry | 
 [**tasks_get**](TasksApi.md#tasks_get) | **GET** /tasks | 
 
@@ -277,6 +278,141 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **task_id_result_get**
+> str task_id_result_get(id, accept_encoding=accept_encoding)
+
+
+
+Retrieve results of an array task
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.TasksApi(api_client)
+    id = 'id_example' # str | task id to retrieve stored results
+accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
+
+    try:
+        api_response = api_instance.task_id_result_get(id, accept_encoding=accept_encoding)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling TasksApi->task_id_result_get: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.TasksApi(api_client)
+    id = 'id_example' # str | task id to retrieve stored results
+accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
+
+    try:
+        api_response = api_instance.task_id_result_get(id, accept_encoding=accept_encoding)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling TasksApi->task_id_result_get: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **str**| task id to retrieve stored results | 
+ **accept_encoding** | **str**| Encoding to use | [optional] 
+
+### Return type
+
+**str**
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | output and format of originating request |  * Content-Type - format results are delivered in <br>  |
+**202** | task is still executing |  -  |
+**404** | results were not saved, or results have expored |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **task_id_retry_post**
 > ArrayTask task_id_retry_post(id, accept_encoding=accept_encoding)
 
@@ -411,7 +547,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **tasks_get**
-> ArrayTaskData tasks_get(namespace=namespace, created_by=created_by, array=array, start=start, end=end, page=page, per_page=per_page, type=type, status=status, search=search, orderby=orderby)
+> ArrayTaskData tasks_get(namespace=namespace, created_by=created_by, array=array, start=start, end=end, page=page, per_page=per_page, type=type, exclude_type=exclude_type, status=status, search=search, orderby=orderby)
 
 
 
@@ -464,13 +600,14 @@ start = 56 # int | start time for tasks to filter by (optional)
 end = 56 # int | end time for tasks to filter by (optional)
 page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
-type = 'type_example' # str | task type, \"QUERY\", \"SQL\", \"UDF\" (optional)
+type = 'type_example' # str | task type, \"QUERY\", \"SQL\", \"UDF\", \"GENERIC_UDF\" (optional)
+exclude_type = ['exclude_type_example'] # list[str] | task_type to exclude matching array in results, more than one can be included (optional)
 status = 'status_example' # str | Filter to only return these statuses (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include start_time, name (optional)
 
     try:
-        api_response = api_instance.tasks_get(namespace=namespace, created_by=created_by, array=array, start=start, end=end, page=page, per_page=per_page, type=type, status=status, search=search, orderby=orderby)
+        api_response = api_instance.tasks_get(namespace=namespace, created_by=created_by, array=array, start=start, end=end, page=page, per_page=per_page, type=type, exclude_type=exclude_type, status=status, search=search, orderby=orderby)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling TasksApi->tasks_get: %s\n" % e)
@@ -521,13 +658,14 @@ start = 56 # int | start time for tasks to filter by (optional)
 end = 56 # int | end time for tasks to filter by (optional)
 page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
-type = 'type_example' # str | task type, \"QUERY\", \"SQL\", \"UDF\" (optional)
+type = 'type_example' # str | task type, \"QUERY\", \"SQL\", \"UDF\", \"GENERIC_UDF\" (optional)
+exclude_type = ['exclude_type_example'] # list[str] | task_type to exclude matching array in results, more than one can be included (optional)
 status = 'status_example' # str | Filter to only return these statuses (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include start_time, name (optional)
 
     try:
-        api_response = api_instance.tasks_get(namespace=namespace, created_by=created_by, array=array, start=start, end=end, page=page, per_page=per_page, type=type, status=status, search=search, orderby=orderby)
+        api_response = api_instance.tasks_get(namespace=namespace, created_by=created_by, array=array, start=start, end=end, page=page, per_page=per_page, type=type, exclude_type=exclude_type, status=status, search=search, orderby=orderby)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling TasksApi->tasks_get: %s\n" % e)
@@ -544,7 +682,8 @@ Name | Type | Description  | Notes
  **end** | **int**| end time for tasks to filter by | [optional] 
  **page** | **int**| pagination offset | [optional] 
  **per_page** | **int**| pagination limit | [optional] 
- **type** | **str**| task type, \&quot;QUERY\&quot;, \&quot;SQL\&quot;, \&quot;UDF\&quot; | [optional] 
+ **type** | **str**| task type, \&quot;QUERY\&quot;, \&quot;SQL\&quot;, \&quot;UDF\&quot;, \&quot;GENERIC_UDF\&quot; | [optional] 
+ **exclude_type** | [**list[str]**](str.md)| task_type to exclude matching array in results, more than one can be included | [optional] 
  **status** | **str**| Filter to only return these statuses | [optional] 
  **search** | **str**| search string that will look at name, namespace or description fields | [optional] 
  **orderby** | **str**| sort by which field valid values include start_time, name | [optional] 

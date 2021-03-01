@@ -14,14 +14,17 @@ import urllib
 import base64
 import sys
 import numpy
+import json
 
 last_udf_task_id = None
 
 
 class UDFResult(multiprocessing.pool.ApplyResult):
-    def __init__(self, response):
+    def __init__(self, response, result_format, result_format_version=None):
         self.response = response
         self.task_id = None
+        self.result_format = result_format
+        self.result_format_version = result_format_version
 
     def get(self, timeout=None):
         try:
@@ -45,7 +48,15 @@ class UDFResult(multiprocessing.pool.ApplyResult):
                 )
 
         try:
-            res = cloudpickle.loads(res)
+            if self.result_format == rest_api.models.UDFResultType.NATIVE:
+                res = cloudpickle.loads(res)
+            elif self.result_format == rest_api.models.UDFResultType.JSON:
+                res = json.loads(res)
+            elif self.result_format == rest_api.models.UDFResultType.ARROW:
+                import pyarrow
+
+                reader = pyarrow.RecordBatchStreamReader(res)
+                res = reader.read_all()
         except:
             raise tiledb_cloud_error.TileDBCloudError(
                 "Failed to load cloudpickle result object"
@@ -378,6 +389,8 @@ def apply_async(
     include_source_lines=True,
     task_name=None,
     v2=True,
+    result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format_version=None,
     **kwargs
 ):
     """
@@ -393,6 +406,8 @@ def apply_async(
     :param include_source_lines: disables sending sources lines of function along with udf
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param bool v2: use v2 array udfs
+    :param UDFResultType result_format: result serialization format
+    :param str result_format_version: set a format version for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
 
@@ -467,6 +482,8 @@ def apply_async(
             image_name=image_name,
             task_name=task_name,
             argument=arguments,
+            result_format=result_format,
+            result_format_version=result_format_version,
         )
 
         if pickledUDF is not None:
@@ -482,7 +499,7 @@ def apply_async(
             namespace=namespace, array=array_name, udf=udf_model, **kwargs
         )
 
-        return UDFResult(response)
+        return UDFResult(response, result_format=result_format)
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_sql_exc(exc) from None
@@ -499,6 +516,8 @@ def apply(
     http_compressor="deflate",
     task_name=None,
     v2=True,
+    result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format_version=None,
     **kwargs
 ):
     """
@@ -513,6 +532,8 @@ def apply(
     :param http_compressor: set http compressor for results
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param bool v2: use v2 array udfs
+    :param UDFResultType result_format: result serialization format
+    :param str result_format_version: set a format version for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
 
@@ -535,5 +556,7 @@ def apply(
         http_compressor=http_compressor,
         task_name=task_name,
         v2=v2,
+        result_format=result_format,
+        result_format_version=result_format_version,
         **kwargs,
     ).get()

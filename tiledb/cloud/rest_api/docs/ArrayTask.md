@@ -23,6 +23,7 @@ Name | Type | Description | Notes
 **type** | [**ArrayTaskType**](ArrayTaskType.md) |  | [optional] 
 **activity** | [**list[ArrayActivityLog]**](ArrayActivityLog.md) | Array activity logs for task | [optional] 
 **logs** | **str** | logs from array task | [optional] 
+**duration** | **float** | duration in nanoseconds of an array task | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
