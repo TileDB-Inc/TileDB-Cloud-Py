@@ -601,6 +601,11 @@ class DAG:
         self.status = Status.RUNNING
         for node in roots:
             self._exec_node(node)
+            # Make sure to execute any callbacks to signal this node has started
+            self.execute_update_callbacks()
+
+        # Make sure to execute any callbacks to signal things have started
+        self.execute_update_callbacks()
 
     def _exec_node(self, node):
         """

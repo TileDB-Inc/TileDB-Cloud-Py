@@ -413,5 +413,5 @@ class DAGCallbackTest(unittest.TestCase):
         self.assertEqual(node_3.result(), 8)
         global status_updates
         global done_updates
-        self.assertEqual(status_updates, 3)
+        self.assertEqual(status_updates, 5)
         self.assertEqual(done_updates, 1)
