@@ -55,6 +55,11 @@ class UDFResult(multiprocessing.pool.ApplyResult):
             elif self.result_format == rest_api.models.UDFResultType.ARROW:
                 import pyarrow
 
+                # Arrow optimized empty results by not serializing anything
+                # We need to account for this and return None to the user instead of trying to read it (which will produce an error)
+                if len(res) == 0:
+                    return None
+
                 reader = pyarrow.RecordBatchStreamReader(res)
                 res = reader.read_all()
         except:
