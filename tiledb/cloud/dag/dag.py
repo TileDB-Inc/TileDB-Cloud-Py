@@ -64,6 +64,7 @@ class Node:
         self.status = Status.NOT_STARTED
         self.dag = dag
         self.local_mode = local_mode
+        self.task = None
 
         if func is not None and not callable(func):
             raise TypeError("func argument to `Node` must be callable!")

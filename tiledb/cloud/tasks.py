@@ -4,10 +4,22 @@ from .array import split_uri
 from . import sql
 from . import array
 from .rest_api import ApiException as GenApiException
-from .rest_api.models import ArrayTaskType
+from .rest_api.models import ArrayTaskType, ArrayTask
 
 import datetime
 
+class Task(ArrayTask):
+    def __init__(self, id):
+        self.id = id
+        # How can I set all the attributes of ArrayTask (parent class)
+        # task(id) will return an ArrayTask object and I want to override all values with that object
+        #self = task(id)
+
+    def set_id(self, id):
+        self.id = id
+        # How can I set all the attributes of ArrayTask (parent class)
+        # task(id) will return an ArrayTask object and I want to override all values with that object
+        #self = task(id)
 
 def task(id, async_req=False):
     """

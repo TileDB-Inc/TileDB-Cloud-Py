@@ -20,11 +20,12 @@ last_udf_task_id = None
 
 
 class UDFResult(multiprocessing.pool.ApplyResult):
-    def __init__(self, response, result_format, result_format_version=None):
+    def __init__(self, response, result_format, result_format_version=None, task=rest_api.models.ArrayTask()):
         self.response = response
         self.task_id = None
         self.result_format = result_format
         self.result_format_version = result_format_version
+        self.task = task
 
     def get(self, timeout=None):
         try:
