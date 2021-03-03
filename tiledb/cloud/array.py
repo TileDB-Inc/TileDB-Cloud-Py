@@ -63,9 +63,7 @@ class UDFResult(multiprocessing.pool.ApplyResult):
                 reader = pyarrow.RecordBatchStreamReader(res)
                 res = reader.read_all()
         except:
-            raise tiledb_cloud_error.TileDBCloudError(
-                "Failed to load cloudpickle result object"
-            )
+            raise tiledb_cloud_error.TileDBCloudError("Failed to load result object")
 
         return res
 
