@@ -472,7 +472,7 @@ def apply_async(
 
         kwargs["v2"] = v2
 
-        udf_model = rest_api.models.UDF(
+        udf_model = rest_api.models.MultiArrayUDF(
             language=rest_api.models.UDFLanguage.PYTHON,
             _exec=pickledUDF,
             ranges=ranges,
