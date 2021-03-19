@@ -52,7 +52,7 @@ def result(id, async_req=False, raw_results=False, http_compressor="deflate"):
         response = api_instance.task_id_result_get(id=id, **kwargs)
 
         if t.type == ArrayTaskType.GENERIC_UDF or t.type == ArrayTaskType.UDF:
-            response = array.UDFResult(response)
+            response = array.UDFResult(response, t.result_format)
         elif t.type == ArrayTaskType.SQL:
             response = sql.SQLResults(response, raw_results)
 
