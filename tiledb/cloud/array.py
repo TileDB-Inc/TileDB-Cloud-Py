@@ -380,6 +380,112 @@ def parse_ranges(ranges):
     return result
 
 
+def multi_array(
+    func=None,
+    ranges=None,
+    name=None,
+    attrs=None,
+    layout=None,
+    image_name=None,
+    http_compressor="deflate",
+    include_source_lines=True,
+    task_name=None,
+    result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format_version=None,
+    **kwargs
+):
+    api_instance = client.client.udf_api
+
+    if func is not None and not callable(func):
+        raise TypeError("func argument to `apply` must be callable!")
+    elif func is None and name is None or name == "":
+        raise TypeError("name argument to `apply` must be set if no function is passed")
+
+    pickledUDF = None
+    source_lines = None
+    if func is not None:
+        source_lines = utils.getsourcelines(func) if include_source_lines else None
+        pickledUDF = cloudpickle.dumps(func, protocol=udf.tiledb_cloud_protocol)
+        pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
+
+    if layout is None:
+        converted_layout = None
+    elif layout.upper() == "R":
+        converted_layout = "row-major"
+    elif layout.upper() == "C":
+        converted_layout = "col-major"
+    elif layout.upper() == "G":
+        converted_layout = "global-order"
+    elif layout.upper() == "U":
+        converted_layout = "unordered"
+
+    arrays = [] # list[UDFArrayDetails]
+    for uri, array_range in ranges.items():
+        array_ranges = parse_ranges(array_range)
+        udf_array_details = rest_api.models.UDFArrayDetails(
+            uri = uri,
+            ranges = rest_api.models.QueryRanges(layout=converted_layout, ranges=array_ranges)
+        )
+        arrays.append(udf_array_details)
+
+    if len(arrays) == 0:
+        raise TypeError("arrays need to have passed in order to call multi array udfs")
+
+    (namespace, array_name) = split_uri(arrays[0].uri)
+
+    arguments = None
+    if kwargs is not None and len(kwargs) > 0:
+        arguments = []
+        if len(kwargs) > 0:
+            arguments.append(kwargs)
+        arguments = tuple(arguments)
+        arguments = cloudpickle.dumps(arguments, protocol=udf.tiledb_cloud_protocol)
+        arguments = base64.b64encode(arguments).decode("ascii")
+
+    if image_name is None:
+        image_name = "default"
+    try:
+
+        kwargs = {"_preload_content": False, "async_req": True}
+        if http_compressor is not None:
+            kwargs["accept_encoding"] = http_compressor
+
+        udf_model = rest_api.models.MultiArrayUDF(
+            language=rest_api.models.UDFLanguage.PYTHON,
+            _exec=pickledUDF,
+            # ranges=ranges,
+            # buffers=attrs,
+            arrays=arrays,
+            version="{}.{}.{}".format(
+                sys.version_info.major,
+                sys.version_info.minor,
+                sys.version_info.micro,
+            ),
+            image_name=image_name,
+            task_name=task_name,
+            argument=arguments,
+            result_format=result_format,
+            result_format_version=result_format_version,
+        )
+
+        if pickledUDF is not None:
+            udf_model._exec = pickledUDF
+        elif name is not None:
+            udf_model.udf_info_name = name
+
+        if source_lines is not None:
+            udf_model.exec_raw = source_lines
+
+        # _preload_content must be set to false to avoid trying to decode binary data
+        response = api_instance.submit_multi_array_udf(
+            namespace=namespace, udf=udf_model, **kwargs
+        )
+
+        return UDFResult(response, result_format=result_format)
+
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_udf_exc(exc) from None
+
 def apply_async(
     uri,
     func=None,
@@ -422,6 +528,21 @@ def apply_async(
     >>> tiledb.cloud.array.apply_async("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"]).get()
     2.0
     """
+
+    if isinstance(ranges, dict):
+        return multi_array(
+            func=func,
+            ranges=ranges,
+            name=name,
+            attrs=attrs,
+            layout=layout,
+            image_name=image_name,
+            http_compressor=http_compressor,
+            task_name=task_name,
+            result_format=result_format,
+            result_format_version=result_format_version,
+            **kwargs,
+        )
 
     (namespace, array_name) = split_uri(uri)
     api_instance = client.client.udf_api
@@ -505,7 +626,7 @@ def apply_async(
         return UDFResult(response, result_format=result_format)
 
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_sql_exc(exc) from None
+        raise tiledb_cloud_error.check_udf_exc(exc) from None
 
 
 def apply(

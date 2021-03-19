@@ -137,6 +137,7 @@ from tiledb.cloud.rest_api.models.token import Token
 from tiledb.cloud.rest_api.models.token_request import TokenRequest
 from tiledb.cloud.rest_api.models.multi_array_udf import MultiArrayUDF
 from tiledb.cloud.rest_api.models.udf_actions import UDFActions
+from tiledb.cloud.rest_api.models.udf_array_details import UDFArrayDetails
 from tiledb.cloud.rest_api.models.udf_image import UDFImage
 from tiledb.cloud.rest_api.models.udf_image_version import UDFImageVersion
 from tiledb.cloud.rest_api.models.udf_info import UDFInfo
