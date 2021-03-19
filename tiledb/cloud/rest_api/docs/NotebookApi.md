@@ -136,6 +136,7 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **200** | status of running notebook |  -  |
 **202** | Notebook server is pending |  -  |
+**402** | Payment required |  -  |
 **404** | Notebook is not running |  -  |
 **0** | error response |  -  |
 
