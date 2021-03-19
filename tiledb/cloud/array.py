@@ -380,11 +380,27 @@ def parse_ranges(ranges):
     return result
 
 
-def multi_array(
+"""
+>>> import numpy as np
+>>> from tiledb.cloud import array
+>>> import tiledb.cloud
+>>> def median(numpy_ordered_dictionary):
+>>>     return np.median(numpy_ordered_dictionary["a"])
+
+>>> dense_array = "tiledb://TileDB-Inc/quickstart_dense"
+>>> sparse_array = "tiledb://TileDB-Inc/quickstart_sparse"
+>>> array_details = dict([
+>>>     (dense_array, ([(1, 4), (1, 4)], ["a"])),
+>>>     (sparse_array, ([(1, 2), (1, 4)], ["a"]))
+>>> ])
+
+>>> res = array.exec_multi_array_udf(median, array_details)
+>>> print("Median Multi UDF:\n{}\n".format(res))
+"""
+def exec_multi_array_udf(
     func=None,
-    ranges=None,
+    array_details=None,
     name=None,
-    attrs=None,
     layout=None,
     image_name=None,
     http_compressor="deflate",
@@ -420,17 +436,21 @@ def multi_array(
         converted_layout = "unordered"
 
     arrays = [] # list[UDFArrayDetails]
-    for uri, array_range in ranges.items():
+    for uri, a_d in array_details.items():
+        array_range = a_d[0]
+        attr = a_d[1]
         array_ranges = parse_ranges(array_range)
         udf_array_details = rest_api.models.UDFArrayDetails(
             uri = uri,
-            ranges = rest_api.models.QueryRanges(layout=converted_layout, ranges=array_ranges)
+            ranges = rest_api.models.QueryRanges(layout=converted_layout, ranges=array_ranges),
+            # buffers = attr
         )
         arrays.append(udf_array_details)
 
     if len(arrays) == 0:
         raise TypeError("arrays need to have passed in order to call multi array udfs")
 
+    # Get the namespace from the first array in list
     (namespace, array_name) = split_uri(arrays[0].uri)
 
     arguments = None
@@ -528,21 +548,6 @@ def apply_async(
     >>> tiledb.cloud.array.apply_async("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"]).get()
     2.0
     """
-
-    if isinstance(ranges, dict):
-        return multi_array(
-            func=func,
-            ranges=ranges,
-            name=name,
-            attrs=attrs,
-            layout=layout,
-            image_name=image_name,
-            http_compressor=http_compressor,
-            task_name=task_name,
-            result_format=result_format,
-            result_format_version=result_format_version,
-            **kwargs,
-        )
 
     (namespace, array_name) = split_uri(uri)
     api_instance = client.client.udf_api
