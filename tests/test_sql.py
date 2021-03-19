@@ -1,0 +1,65 @@
+import tiledb, tiledb.cloud
+import sys, os, platform, unittest
+import numpy as np
+from tiledb.cloud import client
+from tiledb.cloud import array
+from tiledb.cloud import tasks
+from tiledb.cloud import tiledb_cloud_error
+
+tiledb.cloud.login(
+    token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
+    host=os.environ.get("TILEDB_CLOUD_REST_HOST", None),
+)
+
+
+class BasicTests(unittest.TestCase):
+    def test_quickstart_sql_async(self):
+        with tiledb.open(
+            "tiledb://TileDB-Inc/quickstart_sparse", ctx=tiledb.cloud.Ctx()
+        ) as A:
+            print("quickstart_sparse:")
+            print(A[:])
+
+            with self.assertRaises(TypeError):
+                A.apply(None, [(0, 1)]).get()
+
+            import numpy
+
+            orig = A[:]
+            task_name = "test_quickstart_sql_async"
+            self.assertEqual(
+                int(
+                    tiledb.cloud.sql.exec_async(
+                        "select sum(a) as sum from `tiledb://TileDB-Inc/quickstart_sparse`",
+                        task_name=task_name,
+                    ).get()["sum"]
+                ),
+                numpy.sum(orig["a"]),
+            )
+
+            # Validate task name was set
+            self.assertEqual(tiledb.cloud.last_sql_task().name, task_name)
+
+            orig = A.multi_index[[1, slice(2, 4)], [slice(1, 2), 4]]
+            self.assertEqual(
+                int(
+                    tiledb.cloud.sql.exec_async(
+                        "select sum(a) as sum from `tiledb://TileDB-Inc/quickstart_sparse` WHERE (`rows`, `cols`) in ((1,1), (2,4))"
+                    ).get()["sum"]
+                ),
+                numpy.sum(orig["a"]),
+            )
+
+    def test_sql_init_commands(self):
+        task_name = "test_sql_init_commands"
+        self.assertEqual(
+            int(
+                tiledb.cloud.sql.exec_async(
+                    "select @A a", task_name=task_name, init_commands=["SET @A=1"]
+                ).get()["a"]
+            ),
+            1,
+        )
+
+        # Validate task name was set
+        self.assertEqual(tiledb.cloud.last_sql_task().name, task_name)

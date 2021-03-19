@@ -57,6 +57,7 @@ def exec_async(
     output_array_name=None,
     raw_results=False,
     http_compressor="deflate",
+    init_commands=None,
 ):
     """
     Run a sql query asynchronous
@@ -68,6 +69,7 @@ def exec_async(
     :param str output_array_name: optional array name to set if creating new output array
     :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
     :param string http_compressor: optional http compression method to use
+    :param list init_commands: optional list of sql queries or commands to run before main query
 
     :return: A SQLResult object which is a future for a pandas dataframe if no output array is given and query returns results
     """
@@ -85,6 +87,9 @@ def exec_async(
         namespace = client.find_organization_or_user_for_default_charges(config.user)
 
     api_instance = client.client.sql_api
+
+    if init_commands is not None and not isinstance(init_commands, list):
+        raise Exception("init_commands must be a list of query strings")
 
     # If the user passes an output schema create the output array
     if output_schema is not None and output_uri is not None:
@@ -124,7 +129,10 @@ def exec_async(
         response = api_instance.run_sql(
             namespace=namespace,
             sql=rest_api.models.SQLParameters(
-                name=task_name, query=query, output_uri=output_uri
+                name=task_name,
+                query=query,
+                output_uri=output_uri,
+                init_commands=init_commands,
             ),
             **kwargs
         )
@@ -142,6 +150,7 @@ def exec_and_fetch(
     namespace=None,
     task_name=None,
     output_array_name=None,
+    init_commands=None,
 ):
     """
     Run a sql query, results are not stored
@@ -151,6 +160,7 @@ def exec_and_fetch(
     :param str namespace: optional namespace to charge the query to
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param str output_array_name: optional name for registering new output array if output_schema schema is passed
+    :param list init_commands: optional list of sql queries or commands to run before main query
 
     :return: TileDB Array with results
     """
@@ -172,6 +182,7 @@ def exec_and_fetch(
             namespace=namespace,
             task_name=task_name,
             output_array_name=output_array_name,
+            init_commands=init_commands,
         )
 
         # Fetch output schema to check if its sparse or dense
@@ -195,6 +206,7 @@ def exec(
     output_array_name=None,
     raw_results=False,
     http_compressor="deflate",
+    init_commands=None,
 ):
     """
     Run a sql query
@@ -206,6 +218,7 @@ def exec(
     :param str output_array_name: optional array name to set if creating new output array
     :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
     :param string http_compressor: optional http compression method to use
+    :param list init_commands: optional list of sql queries or commands to run before main query
 
     :return: pandas dataframe if no output array is given and query returns results
     """
@@ -218,4 +231,5 @@ def exec(
         output_array_name=output_array_name,
         raw_results=raw_results,
         http_compressor=http_compressor,
+        init_commands=init_commands,
     ).get()
