@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **output_uri** | **str** | Output array uri | [optional] 
 **store_results** | **bool** | store results for later retrieval | [optional] 
 **init_commands** | **list[str]** | Queries or commands to run before main query | [optional] 
+**parameters** | **list[object]** | SQL query parameters | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

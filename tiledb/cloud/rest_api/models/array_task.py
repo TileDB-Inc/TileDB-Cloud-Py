@@ -56,6 +56,7 @@ class ArrayTask(object):
         "logs": "str",
         "duration": "float",
         "sql_init_commands": "list[str]",
+        "sql_parameters": "list[object]",
     }
 
     attribute_map = {
@@ -82,6 +83,7 @@ class ArrayTask(object):
         "logs": "logs",
         "duration": "duration",
         "sql_init_commands": "sql_init_commands",
+        "sql_parameters": "sql_parameters",
     }
 
     def __init__(
@@ -109,6 +111,7 @@ class ArrayTask(object):
         logs=None,
         duration=None,
         sql_init_commands=None,
+        sql_parameters=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """ArrayTask - a model defined in OpenAPI"""  # noqa: E501
@@ -139,6 +142,7 @@ class ArrayTask(object):
         self._logs = None
         self._duration = None
         self._sql_init_commands = None
+        self._sql_parameters = None
         self.discriminator = None
 
         if id is not None:
@@ -187,6 +191,8 @@ class ArrayTask(object):
             self.duration = duration
         if sql_init_commands is not None:
             self.sql_init_commands = sql_init_commands
+        if sql_parameters is not None:
+            self.sql_parameters = sql_parameters
 
     @property
     def id(self):
@@ -706,6 +712,29 @@ class ArrayTask(object):
         """
 
         self._sql_init_commands = sql_init_commands
+
+    @property
+    def sql_parameters(self):
+        """Gets the sql_parameters of this ArrayTask.  # noqa: E501
+
+        SQL query parameters  # noqa: E501
+
+        :return: The sql_parameters of this ArrayTask.  # noqa: E501
+        :rtype: list[object]
+        """
+        return self._sql_parameters
+
+    @sql_parameters.setter
+    def sql_parameters(self, sql_parameters):
+        """Sets the sql_parameters of this ArrayTask.
+
+        SQL query parameters  # noqa: E501
+
+        :param sql_parameters: The sql_parameters of this ArrayTask.  # noqa: E501
+        :type: list[object]
+        """
+
+        self._sql_parameters = sql_parameters
 
     def to_dict(self):
         """Returns the model properties as a dict"""

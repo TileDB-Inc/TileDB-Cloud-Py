@@ -38,6 +38,7 @@ class SQLParameters(object):
         "output_uri": "str",
         "store_results": "bool",
         "init_commands": "list[str]",
+        "parameters": "list[object]",
     }
 
     attribute_map = {
@@ -46,6 +47,7 @@ class SQLParameters(object):
         "output_uri": "output_uri",
         "store_results": "store_results",
         "init_commands": "init_commands",
+        "parameters": "parameters",
     }
 
     def __init__(
@@ -55,6 +57,7 @@ class SQLParameters(object):
         output_uri=None,
         store_results=None,
         init_commands=None,
+        parameters=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """SQLParameters - a model defined in OpenAPI"""  # noqa: E501
@@ -67,6 +70,7 @@ class SQLParameters(object):
         self._output_uri = None
         self._store_results = None
         self._init_commands = None
+        self._parameters = None
         self.discriminator = None
 
         if name is not None:
@@ -79,6 +83,8 @@ class SQLParameters(object):
             self.store_results = store_results
         if init_commands is not None:
             self.init_commands = init_commands
+        if parameters is not None:
+            self.parameters = parameters
 
     @property
     def name(self):
@@ -194,6 +200,29 @@ class SQLParameters(object):
         """
 
         self._init_commands = init_commands
+
+    @property
+    def parameters(self):
+        """Gets the parameters of this SQLParameters.  # noqa: E501
+
+        SQL query parameters  # noqa: E501
+
+        :return: The parameters of this SQLParameters.  # noqa: E501
+        :rtype: list[object]
+        """
+        return self._parameters
+
+    @parameters.setter
+    def parameters(self, parameters):
+        """Sets the parameters of this SQLParameters.
+
+        SQL query parameters  # noqa: E501
+
+        :param parameters: The parameters of this SQLParameters.  # noqa: E501
+        :type: list[object]
+        """
+
+        self._parameters = parameters
 
     def to_dict(self):
         """Returns the model properties as a dict"""
