@@ -1060,7 +1060,7 @@ class UdfApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
-        :param UDF udf: udf to run (required)
+        :param MultiArrayUDF udf: udf to run (required)
         :param str x_payer: Name of organization or user who should be charged for this request
         :param str accept_encoding: Encoding to use
         :param str v2: flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs
@@ -1092,7 +1092,7 @@ class UdfApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
-        :param UDF udf: udf to run (required)
+        :param MultiArrayUDF udf: udf to run (required)
         :param str x_payer: Name of organization or user who should be charged for this request
         :param str accept_encoding: Encoding to use
         :param str v2: flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs
