@@ -638,7 +638,7 @@ def exec_multi_array_udf_async(
         udf_array_details = rest_api.models.UDFArrayDetails(
             uri = uri,
             ranges = rest_api.models.QueryRanges(layout=converted_layout, ranges=array_ranges),
-            # buffers = attr
+            buffers = attr
         )
         arrays.append(udf_array_details)
 
@@ -668,8 +668,6 @@ def exec_multi_array_udf_async(
         udf_model = rest_api.models.MultiArrayUDF(
             language=rest_api.models.UDFLanguage.PYTHON,
             _exec=pickledUDF,
-            # ranges=ranges,
-            # buffers=attrs,
             arrays=arrays,
             version="{}.{}.{}".format(
                 sys.version_info.major,
