@@ -67,6 +67,43 @@ class UDFResult(multiprocessing.pool.ApplyResult):
 
         return res
 
+class ArrayList:
+    def __init__(self):
+        """
+        This class incrementally builds a list of UDFArrayDetails for use in
+        multi array UDFs
+        """
+        """list[UDFArrayDetails]"""
+        self.arrayList = []
+
+    def add(self, uri=None, ranges=None, buffers=None, layout=None):
+        """
+        Adds an array to list
+        """
+        if layout is None:
+            converted_layout = None
+        elif layout.upper() == "R":
+            converted_layout = "row-major"
+        elif layout.upper() == "C":
+            converted_layout = "col-major"
+        elif layout.upper() == "G":
+            converted_layout = "global-order"
+        elif layout.upper() == "U":
+            converted_layout = "unordered"
+
+        array_ranges = parse_ranges(ranges)
+        udf_array_details = rest_api.models.UDFArrayDetails(
+            uri = uri,
+            ranges = rest_api.models.QueryRanges(layout=converted_layout, ranges=ranges),
+            buffers = buffers
+        )
+        self.arrayList.append(udf_array_details)
+
+    def get(self):
+        """
+        Returns the list of UDFArrayDetails
+        """
+        return self.arrayList
 
 def info(uri, async_req=False):
     """
@@ -565,7 +602,7 @@ def apply(
 
 def exec_multi_array_udf_async(
     func=None,
-    array_details=None,
+    array_list=None,
     name=None,
     layout=None,
     image_name=None,
@@ -619,28 +656,11 @@ def exec_multi_array_udf_async(
         pickledUDF = cloudpickle.dumps(func, protocol=udf.tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
-    if layout is None:
-        converted_layout = None
-    elif layout.upper() == "R":
-        converted_layout = "row-major"
-    elif layout.upper() == "C":
-        converted_layout = "col-major"
-    elif layout.upper() == "G":
-        converted_layout = "global-order"
-    elif layout.upper() == "U":
-        converted_layout = "unordered"
+    if array_list is None:
+        raise TypeError("arrays need to have passed in order to call multi array udfs")
 
-    arrays = [] # list[UDFArrayDetails]
-    for uri, a_d in array_details.items():
-        array_range = a_d[0]
-        attr = a_d[1]
-        array_ranges = parse_ranges(array_range)
-        udf_array_details = rest_api.models.UDFArrayDetails(
-            uri = uri,
-            ranges = rest_api.models.QueryRanges(layout=converted_layout, ranges=array_ranges),
-            buffers = attr
-        )
-        arrays.append(udf_array_details)
+    # Get the list of arrays
+    arrays = array_list.get()
 
     if len(arrays) == 0:
         raise TypeError("arrays need to have passed in order to call multi array udfs")
@@ -700,7 +720,7 @@ def exec_multi_array_udf_async(
 
 def exec_multi_array_udf(
     func=None,
-    array_details=None,
+    array_list=None,
     name=None,
     layout=None,
     image_name=None,
@@ -713,7 +733,7 @@ def exec_multi_array_udf(
 ):
     return exec_multi_array_udf_async(
         func=func,
-        array_details=array_details,
+        array_list=array_list,
         name=name,
         layout=layout,
         image_name=image_name,
