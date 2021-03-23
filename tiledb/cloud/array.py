@@ -67,6 +67,7 @@ class UDFResult(multiprocessing.pool.ApplyResult):
 
         return res
 
+
 class ArrayList:
     def __init__(self):
         """
@@ -93,9 +94,9 @@ class ArrayList:
 
         array_ranges = parse_ranges(ranges)
         udf_array_details = rest_api.models.UDFArrayDetails(
-            uri = uri,
-            ranges = rest_api.models.QueryRanges(layout=converted_layout, ranges=ranges),
-            buffers = buffers
+            uri=uri,
+            ranges=rest_api.models.QueryRanges(layout=converted_layout, ranges=ranges),
+            buffers=buffers,
         )
         self.arrayList.append(udf_array_details)
 
@@ -104,6 +105,7 @@ class ArrayList:
         Returns the list of UDFArrayDetails
         """
         return self.arrayList
+
 
 def info(uri, async_req=False):
     """
@@ -416,6 +418,7 @@ def parse_ranges(ranges):
 
     return result
 
+
 def apply_async(
     uri,
     func=None,
@@ -600,9 +603,11 @@ def apply(
         **kwargs,
     ).get()
 
+
 def exec_multi_array_udf_async(
     func=None,
     array_list=None,
+    namespace=None,
     name=None,
     layout=None,
     image_name=None,
@@ -616,7 +621,8 @@ def exec_multi_array_udf_async(
     """
     Apply a user defined function to multiple arrays
     :param func: user function to run
-    :param array_details: dict from array name (tiledb format) to tuple (ranges, attributes)
+    :param namespace: namespace to run udf under
+    :param array_list: ArrayList object build incrementally to contain list of UDFArrayDetails for use in multi array UDFs
     :param layout: tiledb query layout
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
@@ -628,21 +634,27 @@ def exec_multi_array_udf_async(
     >>> import numpy as np
     >>> from tiledb.cloud import array
     >>> import tiledb.cloud
+    >>> dense_array = "tiledb://andreas/quickstart_dense_local"
+    >>> sparse_array = "tiledb://andreas/quickstart_sparse_local"
     >>> def median(numpy_ordered_dictionary):
-    ...     return np.median(numpy_ordered_dictionary["a"])
-
-    >>> dense_array = "tiledb://TileDB-Inc/quickstart_dense"
-    >>> sparse_array = "tiledb://TileDB-Inc/quickstart_sparse"
-    >>> array_details = dict([
-    >>>     (dense_array, ([(1, 4), (1, 4)], ["a"])),
-    >>>     (sparse_array, ([(1, 2), (1, 4)], ["a"]))
-    >>> ])
-
-    >>> res = array.exec_multi_array_udf(median, array_details)
+    ...    return np.median(numpy_ordered_dictionary[0]["a"]) + np.median(numpy_ordered_dictionary[1]["a"])
+    >>> array_list = array.ArrayList()
+    >>> array_list.add(dense_array, [(1, 4), (1, 4)], ["a"])
+    >>> array_list.add(sparse_array, [(1, 2), (1, 4)], ["a"])
+    >>> namespace = "namespace"
+    >>> res = array.exec_multi_array_udf(median, array_list, namespace)
     >>> print("Median Multi UDF:\n{}\n".format(res))
     """
 
     api_instance = client.client.udf_api
+
+    # If the namespace is not set, we will default to the user's namespace
+    if namespace is None:
+        # Fetch the client profile for username if it is not already cached
+        if config.user is None:
+            config.user = client.user_profile()
+
+        namespace = client.find_organization_or_user_for_default_charges(config.user)
 
     if func is not None and not callable(func):
         raise TypeError("func argument to `exec_multi_array_udf` must be callable!")
@@ -659,14 +671,14 @@ def exec_multi_array_udf_async(
     if array_list is None:
         raise TypeError("arrays need to have passed in order to call multi array udfs")
 
+    if type(array_list) is not ArrayList:
+        raise TypeError("array details passed not of correct type (ArrayList)")
+
     # Get the list of arrays
     arrays = array_list.get()
 
     if len(arrays) == 0:
         raise TypeError("arrays need to have passed in order to call multi array udfs")
-
-    # Get the namespace from the first array in list
-    (namespace, array_name) = split_uri(arrays[0].uri)
 
     arguments = None
     if kwargs is not None and len(kwargs) > 0:
@@ -718,9 +730,11 @@ def exec_multi_array_udf_async(
     except GenApiException as exc:
         raise tiledb_cloud_error.check_udf_exc(exc) from None
 
+
 def exec_multi_array_udf(
     func=None,
     array_list=None,
+    namespace=None,
     name=None,
     layout=None,
     image_name=None,
@@ -734,6 +748,7 @@ def exec_multi_array_udf(
     return exec_multi_array_udf_async(
         func=func,
         array_list=array_list,
+        namespace=namespace,
         name=name,
         layout=layout,
         image_name=image_name,
@@ -742,5 +757,5 @@ def exec_multi_array_udf(
         task_name=task_name,
         result_format=result_format,
         result_format_version=result_format_version,
-        **kwargs
+        **kwargs,
     ).get()
