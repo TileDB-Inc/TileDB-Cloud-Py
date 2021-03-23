@@ -63,3 +63,20 @@ class BasicTests(unittest.TestCase):
 
         # Validate task name was set
         self.assertEqual(tiledb.cloud.last_sql_task().name, task_name)
+
+    def test_sql_parameters(self):
+        task_name = "test_sql_parameters"
+        self.assertEqual(
+            float(
+                tiledb.cloud.sql.exec_async(
+                    "select @A a, ? param1",
+                    task_name=task_name,
+                    init_commands=["SET @A=1"],
+                    parameters=["1.1"],
+                ).get()["param1"]
+            ),
+            1.1,
+        )
+
+        # Validate task name was set
+        self.assertEqual(tiledb.cloud.last_sql_task().name, task_name)
