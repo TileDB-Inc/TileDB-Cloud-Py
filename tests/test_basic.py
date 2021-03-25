@@ -5,6 +5,7 @@ from tiledb.cloud import client
 from tiledb.cloud import array
 from tiledb.cloud import tasks
 from tiledb.cloud import tiledb_cloud_error
+import numpy
 
 tiledb.cloud.login(
     token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
@@ -156,6 +157,45 @@ class BasicTests(unittest.TestCase):
                 numpy.sum(orig["a"]),
             )
 
+            # Test empty list on second dimension
+            orig = A.multi_index[[1, slice(2, 4)], :]
+            task_name = "test_quickstart_async_v2"
+            self.assertEqual(
+                A.apply_async(
+                    lambda x: numpy.sum(x["a"]),
+                    [[1, slice(2, 4)], []],
+                    task_name=task_name,
+                    v2=True,
+                ).get(),
+                numpy.sum(orig["a"]),
+            )
+
+            # Test empty tuple on second dimension
+            orig = A.multi_index[[1, slice(2, 4)], :]
+            task_name = "test_quickstart_async_v2"
+            self.assertEqual(
+                A.apply_async(
+                    lambda x: numpy.sum(x["a"]),
+                    [[1, slice(2, 4)], ()],
+                    task_name=task_name,
+                    v2=True,
+                ).get(),
+                numpy.sum(orig["a"]),
+            )
+
+            # Test None on second dimension
+            orig = A.multi_index[[1, slice(2, 4)], :]
+            task_name = "test_quickstart_async_v2"
+            self.assertEqual(
+                A.apply_async(
+                    lambda x: numpy.sum(x["a"]),
+                    [[1, slice(2, 4)], None],
+                    task_name=task_name,
+                    v2=True,
+                ).get(),
+                numpy.sum(orig["a"]),
+            )
+
             # Validate task name was set
             self.assertEqual(tiledb.cloud.last_udf_task().name, task_name)
 
@@ -271,6 +311,77 @@ class RangesTest(unittest.TestCase):
 
         a = [1, slice(2, 3)], [(1, 2), 4]
         b = [[1, 1, 2, 3], [1, 2, 4, 4]]
+        self.assertEqual(parse_ranges(a), b)
+
+        a = [
+            [
+                (
+                    numpy.datetime64("2012-02-02", "D"),
+                    numpy.datetime64("2020-12-31", "D"),
+                ),
+                numpy.datetime64("2040-06-06", "D"),
+            ],
+            (
+                numpy.datetime64("2012-02-02", "ns"),
+                numpy.datetime64("2020-12-31", "ns"),
+            ),
+        ]
+        b = [[15372, 18627, 25724, 25724], [1328140800000000000, 1609372800000000000]]
+        self.assertEqual(parse_ranges(a), b)
+
+        a = [
+            [
+                (
+                    numpy.datetime64("2012-02-02", "D"),
+                    numpy.datetime64("2020-12-31", "D"),
+                ),
+                numpy.datetime64("2040-06-06", "D"),
+            ],
+            (
+                numpy.datetime64("2012-02-02", "ns"),
+                numpy.datetime64("2020-12-31", "ns"),
+            ),
+        ]
+        b = [[15372, 18627, 25724, 25724], [1328140800000000000, 1609372800000000000]]
+        self.assertEqual(parse_ranges(a), b)
+
+        a = [
+            [
+                (
+                    numpy.timedelta64("2012", "Y"),
+                    numpy.timedelta64("2020", "Y"),
+                ),
+                numpy.timedelta64("6", "D"),
+            ],
+            (
+                numpy.timedelta64(1000000000 * 60 * 24, "ns"),
+                numpy.timedelta64(1000000000 * 60 * 24 * 5, "ns"),
+            ),
+        ]
+        b = [[2012, 2020, 6, 6], [1440000000000, 7200000000000]]
+        self.assertEqual(parse_ranges(a), b)
+
+        start = numpy.datetime64("2019-07-01T00:00:00")
+        end = numpy.datetime64("2019-08-01T23:59:59")
+        weeks = numpy.arange(start, end, np.timedelta64(1, "W"))
+        a = [weeks[0], weeks[1]]
+        b = [[1561939200, 1561939200], [1562544000, 1562544000]]
+        self.assertEqual(parse_ranges(a), b)
+
+        a = [None, [(1, 2), 4]]
+        b = [[], [1, 2, 4, 4]]
+        self.assertEqual(parse_ranges(a), b)
+
+        a = [[], [(1, 2), 4]]
+        b = [[], [1, 2, 4, 4]]
+        self.assertEqual(parse_ranges(a), b)
+
+        a = [(), [(1, 2), 4]]
+        b = [[], [1, 2, 4, 4]]
+        self.assertEqual(parse_ranges(a), b)
+
+        a = [[1, 2, 3], [(1, 2), 4]]
+        b = [[1, 1, 2, 2, 3, 3], [1, 2, 4, 4]]
         self.assertEqual(parse_ranges(a), b)
 
         with self.assertRaises(ValueError):

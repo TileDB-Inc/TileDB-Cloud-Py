@@ -343,20 +343,29 @@ def parse_ranges(ranges):
     """
 
     def make_range(dim_range):
-        if isinstance(dim_range, (int, float)):
+        if isinstance(dim_range, (int, float, numpy.datetime64, numpy.timedelta64)):
             start, end = dim_range, dim_range
         elif isinstance(dim_range, (tuple, list)):
-            start, end = dim_range[0], dim_range[1]
+            if len(dim_range) == 0:
+                return []
+            elif len(dim_range) == 1:
+                start, end = dim_range[0]
+            elif len(dim_range) == 2:
+                start, end = dim_range[0], dim_range[1]
+            else:
+                raise ValueError("List or tuple has count greater than 2 element")
         elif isinstance(dim_range, slice):
             assert dim_range.step is None, "slice steps are not supported!"
             start, end = dim_range.start, dim_range.stop
+        elif dim_range is None:
+            return []
         else:
             raise ValueError("Unknown index type! (type: '{}')".format(type(dim_range)))
 
         # Convert datetimes to int64
-        if type(start) == numpy.datetime64:
+        if type(start) == numpy.datetime64 or type(start) == numpy.timedelta64:
             start = start.astype("int64").item()
-        if type(end) == numpy.datetime64:
+        if type(end) == numpy.datetime64 or type(end) == numpy.timedelta64:
             end = end.astype("int64").item()
 
         return [start, end]
@@ -365,11 +374,15 @@ def parse_ranges(ranges):
     for dim_idx, dim_range in enumerate(ranges):
         dim_list = []
         # TODO handle numpy scalars here?
-        if isinstance(dim_range, (int, float, tuple, slice)):
+        if isinstance(
+            dim_range, (int, float, tuple, slice, numpy.datetime64, numpy.timedelta64)
+        ):
             dim_list.extend(make_range(dim_range))
         elif isinstance(dim_range, list):
             for r in dim_range:
                 dim_list.extend(make_range(r))
+        elif dim_range is None:
+            pass
         else:
             raise ValueError(
                 "Unknown subarray/index type! (type: '{}', "
