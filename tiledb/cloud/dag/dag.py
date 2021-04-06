@@ -557,6 +557,10 @@ class DAG:
                     "timeout of {} reached and dag is not complete".format(timeout)
                 )
 
+        # in case of failure reraise the first failed node exception
+        if self.status == Status.FAILED:
+            raise next(iter(self.failed_nodes.values())).error
+
     def cancel(self):
         self.status = Status.CANCELLED
         for node in self.running_nodes.values():

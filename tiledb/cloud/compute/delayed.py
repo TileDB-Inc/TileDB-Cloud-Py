@@ -36,10 +36,6 @@ class DelayedBase(Node):
         self.dag.compute()
         self.dag.wait(self.timeout)
 
-        if self.dag.status == Status.FAILED:
-            # reraise the first failed node exception
-            raise next(iter(self.dag.failed_nodes.values())).error
-
         return self.result()
 
     def __set_all_parent_nodes_same_dag(self, dag):

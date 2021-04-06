@@ -151,8 +151,10 @@ class DAGFailureTest(unittest.TestCase):
         node.name = "node"
 
         d.compute()
-        # Wait for dag to complete
-        d.wait(30)
+        with self.assertRaises(TypeError):
+            # Wait for dag to complete
+            d.wait(30)
+        self.assertEqual(d.status, dag.Status.FAILED)
 
         self.assertEqual(node.status, dag.Status.FAILED)
         self.assertEqual(
@@ -171,8 +173,10 @@ class DAGFailureTest(unittest.TestCase):
         node2.depends_on(node)
 
         d.compute()
-        # Wait for dag to complete
-        d.wait(30)
+        with self.assertRaises(TypeError):
+            # Wait for dag to complete
+            d.wait(30)
+        self.assertEqual(d.status, dag.Status.FAILED)
 
         self.assertEqual(node.status, dag.Status.FAILED)
         self.assertEqual(
@@ -184,7 +188,6 @@ class DAGFailureTest(unittest.TestCase):
 
         self.assertEqual(node2.status, dag.Status.CANCELLED)
         self.assertEqual(node2.result(), None)
-        self.assertEqual(d.status, dag.Status.FAILED)
 
 
 class DAGCancelTest(unittest.TestCase):
