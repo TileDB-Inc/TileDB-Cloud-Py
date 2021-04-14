@@ -160,6 +160,7 @@ Class | Method | HTTP request | Description
 *UdfApi* | [**register_udf_info**](rest_api/docs/UdfApi.md#register_udf_info) | **POST** /udf/{namespace}/{name} | 
 *UdfApi* | [**share_udf_info**](rest_api/docs/UdfApi.md#share_udf_info) | **PATCH** /udf/{namespace}/{name}/share | 
 *UdfApi* | [**submit_generic_udf**](rest_api/docs/UdfApi.md#submit_generic_udf) | **POST** /udfs/generic/{namespace} | 
+*UdfApi* | [**submit_multi_array_udf**](rest_api/docs/UdfApi.md#submit_multi_array_udf) | **POST** /udfs/arrays/{namespace} | 
 *UdfApi* | [**submit_udf**](rest_api/docs/UdfApi.md#submit_udf) | **POST** /arrays/{namespace}/{array}/udf/submit | 
 *UdfApi* | [**update_udf_info**](rest_api/docs/UdfApi.md#update_udf_info) | **PATCH** /udf/{namespace}/{name} | 
 *UserApi* | [**add_aws_access_credentials**](rest_api/docs/UserApi.md#add_aws_access_credentials) | **POST** /credentials/{namespace}/aws | 
@@ -239,6 +240,7 @@ Class | Method | HTTP request | Description
  - [LastAccessedArray](rest_api/docs/LastAccessedArray.md)
  - [Layout](rest_api/docs/Layout.md)
  - [MaxBufferSizes](rest_api/docs/MaxBufferSizes.md)
+ - [MultiArrayUDF](rest_api/docs/MultiArrayUDF.md)
  - [NamespaceActions](rest_api/docs/NamespaceActions.md)
  - [NonEmptyDomain](rest_api/docs/NonEmptyDomain.md)
  - [NotebookStatus](rest_api/docs/NotebookStatus.md)
@@ -260,6 +262,7 @@ Class | Method | HTTP request | Description
  - [Querystatus](rest_api/docs/Querystatus.md)
  - [Querytype](rest_api/docs/Querytype.md)
  - [ReadState](rest_api/docs/ReadState.md)
+ - [ResultFormat](rest_api/docs/ResultFormat.md)
  - [SQLParameters](rest_api/docs/SQLParameters.md)
  - [SSOProvider](rest_api/docs/SSOProvider.md)
  - [Subarray](rest_api/docs/Subarray.md)
@@ -271,14 +274,13 @@ Class | Method | HTTP request | Description
  - [TileDBConfig](rest_api/docs/TileDBConfig.md)
  - [Token](rest_api/docs/Token.md)
  - [TokenRequest](rest_api/docs/TokenRequest.md)
- - [UDF](rest_api/docs/UDF.md)
  - [UDFActions](rest_api/docs/UDFActions.md)
+ - [UDFArrayDetails](rest_api/docs/UDFArrayDetails.md)
  - [UDFImage](rest_api/docs/UDFImage.md)
  - [UDFImageVersion](rest_api/docs/UDFImageVersion.md)
  - [UDFInfo](rest_api/docs/UDFInfo.md)
  - [UDFInfoUpdate](rest_api/docs/UDFInfoUpdate.md)
  - [UDFLanguage](rest_api/docs/UDFLanguage.md)
- - [UDFResultType](rest_api/docs/UDFResultType.md)
  - [UDFSharing](rest_api/docs/UDFSharing.md)
  - [UDFSubarray](rest_api/docs/UDFSubarray.md)
  - [UDFSubarrayRange](rest_api/docs/UDFSubarrayRange.md)
