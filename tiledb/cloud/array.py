@@ -48,11 +48,11 @@ class UDFResult(multiprocessing.pool.ApplyResult):
                 )
 
         try:
-            if self.result_format == rest_api.models.UDFResultType.NATIVE:
+            if self.result_format == rest_api.models.ResultFormat.NATIVE:
                 res = cloudpickle.loads(res)
-            elif self.result_format == rest_api.models.UDFResultType.JSON:
+            elif self.result_format == rest_api.models.ResultFormat.JSON:
                 res = json.loads(res)
-            elif self.result_format == rest_api.models.UDFResultType.ARROW:
+            elif self.result_format == rest_api.models.ResultFormat.ARROW:
                 import pyarrow
 
                 # Arrow optimized empty results by not serializing anything
@@ -444,7 +444,7 @@ def apply_async(
     include_source_lines=True,
     task_name=None,
     v2=True,
-    result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format=rest_api.models.ResultFormat.NATIVE,
     result_format_version=None,
     store_results=False,
     **kwargs
@@ -462,7 +462,7 @@ def apply_async(
     :param include_source_lines: disables sending sources lines of function along with udf
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param bool v2: use v2 array udfs
-    :param UDFResultType result_format: result serialization format
+    :param ResultFormat result_format: result serialization format
     :param str result_format_version: set a format version for cloudpickle or arrow IPC
     :param bool store_results: enable temporary (24 hours) storage of task results for async retrieval
     :param kwargs: named arguments to pass to function
@@ -574,7 +574,7 @@ def apply(
     http_compressor="deflate",
     task_name=None,
     v2=True,
-    result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format=rest_api.models.ResultFormat.NATIVE,
     result_format_version=None,
     store_results=False,
     **kwargs
@@ -591,7 +591,7 @@ def apply(
     :param http_compressor: set http compressor for results
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param bool v2: use v2 array udfs
-    :param UDFResultType result_format: result serialization format
+    :param ResultFormat result_format: result serialization format
     :param str result_format_version: set a format version for cloudpickle or arrow IPC
     :param bool store_results: enable temporary (24 hours) storage of task results for async retrieval
     :param kwargs: named arguments to pass to function
@@ -633,7 +633,7 @@ def exec_multi_array_udf_async(
     http_compressor="deflate",
     include_source_lines=True,
     task_name=None,
-    result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format=rest_api.models.ResultFormat.NATIVE,
     result_format_version=None,
     **kwargs
 ):
@@ -646,7 +646,7 @@ def exec_multi_array_udf_async(
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
     :param str task_name: optional name to assign the task for logging and audit purposes
-    :param UDFResultType result_format: result serialization format
+    :param ResultFormat result_format: result serialization format
     :param str result_format_version: set a format version for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
@@ -760,7 +760,7 @@ def exec_multi_array_udf(
     http_compressor="deflate",
     include_source_lines=True,
     task_name=None,
-    result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format=rest_api.models.ResultFormat.NATIVE,
     result_format_version=None,
     **kwargs
 ):

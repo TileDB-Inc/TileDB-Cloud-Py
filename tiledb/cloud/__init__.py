@@ -42,4 +42,4 @@ from . import dag
 
 from . import compute
 
-from .rest_api.models import UDFResultType
+from .rest_api.models import ResultFormat
