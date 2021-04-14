@@ -29,7 +29,7 @@ class BasicTests(unittest.TestCase):
         self.assertIsNotNone(tasks())
 
     def test_list_arrays(self):
-        self.assertIsNone(client.list_arrays().arrays)
+        self.assertIsNotNone(client.list_arrays().arrays)
 
     def test_list_shared_arrays(self):
         self.assertIsNone(client.list_shared_arrays().arrays)
