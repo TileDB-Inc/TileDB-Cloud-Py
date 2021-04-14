@@ -70,61 +70,67 @@ class DelayedClassTest(unittest.TestCase):
 
 class DelayedFailureTest(unittest.TestCase):
     def test_failure(self):
-        with self.assertRaises(TypeError):
-            node = Delayed(lambda x: x * 2, local=True, name="node")(np.median)
+        node = Delayed(lambda x: x * 2, local=True, name="node")(np.median)
+        # Add timeout so we don't wait forever in CI
+        node.set_timeout(30)
 
-            # Add timeout so we don't wait forever in CI
-            node.set_timeout(30)
+        with self.assertRaises(TypeError):
             node.compute()
 
-            self.assertEqual(node.result(), None)
-            self.assertIsNotNone(node.dag)
-            self.assertEqual(node.status, Status.FAILED)
-            self.assertEqual(
-                str(node.error),
-                "unsupported operand type(s) for *: 'function' and 'int'",
-            )
+        self.assertIsNotNone(node.dag)
+        self.assertEqual(node.status, Status.FAILED)
+        self.assertEqual(
+            str(node.error),
+            "unsupported operand type(s) for *: 'function' and 'int'",
+        )
+        with self.assertRaises(TypeError):
+            node.result()
 
     def test_dependency_fail_early(self):
+        node = Delayed(lambda x: x * 2, local=True, name="node")(np.median)
+        node2 = Delayed(lambda x: x * 2, local=True, name="node2")(10)
+        node2.depends_on(node)
+        # Add timeout so we don't wait forever in CI
+        node2.set_timeout(30)
 
         with self.assertRaises(TypeError):
-            node = Delayed(lambda x: x * 2, local=True, name="node")(np.median)
-            node2 = Delayed(lambda x: x * 2, local=True, name="node2")(10)
-            node2.depends_on(node)
-
-            # Add timeout so we don't wait forever in CI
-            node2.set_timeout(30)
             node2.compute()
 
-            self.assertEqual(node.result(), None)
-            self.assertEqual(node.status, Status.FAILED)
-            self.assertEqual(
-                str(node.error),
-                "unsupported operand type(s) for *: 'function' and 'int'",
-            )
-            self.assertEqual(node2.result(), None)
-            self.assertEqual(node2.status, Status.NOT_STARTED)
-            self.assertEqual(node2.dag.status, Status.FAILED)
+        self.assertEqual(node.status, Status.FAILED)
+        self.assertEqual(
+            str(node.error),
+            "unsupported operand type(s) for *: 'function' and 'int'",
+        )
+        with self.assertRaises(TypeError):
+            node.result()
+
+        self.assertEqual(node2.status, Status.CANCELLED)
+        self.assertEqual(node2.result(), None)
+        self.assertEqual(node2.dag.status, Status.FAILED)
 
 
 class DelayedCancelTest(unittest.TestCase):
     def test_cancel(self):
+        node = Delayed(time.sleep, local=True, name="multi_node_2")(3)
+        node_2 = Delayed(np.mean, local=True, name="multi_node_2")([1, 1])
+        node_2.depends_on(node)
+
         with self.assertRaises(TimeoutError):
-            node = Delayed(time.sleep, local=True, name="multi_node_2")(100)
-            node_2 = Delayed(np.mean, local=True, name="multi_node_2")([1, 1])
-            node_2.depends_on(node)
-
-            # Set timeout to 1 second, the dependency on node will wait for 100 second, so we'll timeout and cancel
+            # Set timeout to 1 second, the dependency on node will wait for 3 seconds,
+            # so we'll timeout and cancel
             node_2.set_timeout(1)
-
             node_2.compute()
 
-            # Cancel DAG
-            node_2.dag.cancel()
+        node_2.dag.cancel()
 
-            self.assertEqual(node.result(), None)
-            self.assertEqual(node.status, Status.CANCELLED)
-            self.assertEqual(node_2.dag.status, Status.CANCELLED)
+        self.assertIs(node.dag, node_2.dag)
+        self.assertEqual(node.dag.status, Status.CANCELLED)
+
+        self.assertEqual(node.status, Status.CANCELLED)
+        self.assertEqual(node.result(), None)
+
+        self.assertEqual(node_2.status, Status.CANCELLED)
+        self.assertEqual(node_2.result(), None)
 
 
 class DelayedCloudApplyTest(unittest.TestCase):

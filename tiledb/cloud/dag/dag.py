@@ -1,12 +1,9 @@
-import functools
 import numbers
 import time
 import uuid
 import networkx as nx
 
-from concurrent.futures.process import ProcessPoolExecutor
-from concurrent.futures.thread import ThreadPoolExecutor
-from concurrent.futures._base import Future, CancelledError
+from concurrent.futures import CancelledError, ProcessPoolExecutor, ThreadPoolExecutor
 from enum import Enum
 
 from .visualization import (
@@ -42,10 +39,6 @@ class Status(Enum):
             return "Cancelled"
 
         return "Unknown Status"
-
-
-def handle_complete_node(node, future):
-    node.handle_completed_future()
 
 
 class Node:
@@ -131,53 +124,7 @@ class Node:
         if self.dag is None and node.dag is not None:
             self.dag = node.dag
 
-    def __report_finished_running(self):
-        """
-        Report the node as finished to the dag
-        :return:
-        """
-
-        if self.future is not None:
-            try:
-                self.error = self.future.exception()
-            except CancelledError as cancelledExc:
-                pass
-            except Exception as exc:
-                self.error = exc
-
-        if self.error is not None:
-            self.status = Status.FAILED
-
-        if self.dag is not None and isinstance(self.dag, DAG):
-            self.dag.report_node_complete(self)
-
-    def __handle_complete_results(self):
-        """
-        Handle complete results
-        :return:
-        """
-        # Set status if it has not already been set for cancelled or failed
-        if self.status == Status.RUNNING:
-            self.status = Status.COMPLETED
-
-        self.__report_finished_running()
-
-    def handle_completed_future(self):
-        """
-
-        :return:
-        """
-
-        if self.future is not None:
-            try:
-                self.__results = self.future.result()
-            except CancelledError as exc:
-                self.status = Status.CANCELLED
-
-        self.__handle_complete_results()
-
     def cancel(self):
-
         self.status = Status.CANCELLED
         if self.future is not None:
             self.future.cancel()
@@ -187,12 +134,7 @@ class Node:
         Is the node finished
         :return: True if the node's function is finished
         """
-        if self.status == Status.COMPLETED or self.status == Status.FAILED:
-            return True
-        elif self.status == Status.RUNNING:
-            if self.future is not None and self.future.done():
-                return True
-        return False
+        return self.status in (Status.COMPLETED, Status.FAILED, Status.CANCELLED)
 
     done = finished
 
@@ -253,48 +195,22 @@ class Node:
 
         # Execute user function with the parameters that the user requested
         # The function is executed on the dag's worker pool
-        if self.dag is not None:
-            if len(self.kwargs) > 0 and len(self.args) > 0:
-                res = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
-            elif len(self.args) > 0:
-                res = self.dag.executor.submit(self.func, *self.args)
-            elif len(self.kwargs) > 0:
-                res = self.dag.executor.submit(self.func, **self.kwargs)
-            else:
-                res = self.dag.executor.submit(self.func)
-        # Handle case when there is no dag, useful for testing
-        else:
-            try:
-                if len(self.kwargs) > 0 and len(self.args) > 0:
-                    res = self.func(*self.args, **self.kwargs)
-                elif len(self.args) > 0:
-                    res = self.func(*self.args)
-                elif len(self.kwargs) > 0:
-                    res = self.func(**self.kwargs)
-                else:
-                    res = self.func()
-            except Exception as exc:
-                self.status = Status.FAILED
-                self.error = exc
-                self.__report_finished_running()
-                raise exc
-
-        # If the results were a normal (blocking) function and we have the true results
-        if isinstance(res, Future):
-            self.future = res
-            # If the node is already finished by the time we get here, call complete function directly
-            # In python 3.7 if we add a call back to a future with an exception it throws an exception
-            if self.future.done():
-                self.handle_completed_future()
-            else:
-                self.future.add_done_callback(
-                    functools.partial(handle_complete_node, self)
-                )
-        else:
-            self.__results = res
-            self.__handle_complete_results()
+        self.future = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
+        self.future.add_done_callback(self.__handle_completed_future)
 
     compute = exec
+
+    def __handle_completed_future(self, future):
+        try:
+            self.__results = future.result()
+            if self.status == Status.RUNNING:
+                self.status = Status.COMPLETED
+        except CancelledError:
+            self.status = Status.CANCELLED
+        except Exception as exc:
+            self.error = exc
+            self.status = Status.FAILED
+        self.dag.report_node_complete(self)
 
     def ready_to_compute(self):
         """
@@ -561,14 +477,13 @@ class DAG:
 
         if node.status == Status.COMPLETED:
             self.completed_nodes[node.id] = node
-
             for child in node.children.values():
-                if child.ready_to_compute():
-                    self._exec_node(child)
+                self._exec_node(child)
         elif node.status == Status.CANCELLED:
             self.cancelled_nodes[node.id] = node
         else:
             self.failed_nodes[node.id] = node
+            self.cancel()
 
         self.execute_update_callbacks()
 
@@ -642,10 +557,15 @@ class DAG:
                     "timeout of {} reached and dag is not complete".format(timeout)
                 )
 
-    def cancel(self):
+        # in case of failure reraise the first failed node exception
+        if self.status == Status.FAILED:
+            raise next(iter(self.failed_nodes.values())).error
 
+    def cancel(self):
         self.status = Status.CANCELLED
         for node in self.running_nodes.values():
+            node.cancel()
+        for node in self.not_started_nodes.values():
             node.cancel()
 
     def find_end_nodes(self):

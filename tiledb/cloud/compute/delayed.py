@@ -1,4 +1,4 @@
-from ..dag.dag import Node, DAG
+from ..dag.dag import Node, DAG, Status
 
 from ..array import apply as array_apply
 from ..sql import exec as sql_exec
@@ -34,12 +34,9 @@ class DelayedBase(Node):
             self.dag.namespace = namespace
 
         self.dag.compute()
-        super().wait(self.timeout)
+        self.dag.wait(self.timeout)
 
-        if not super().done():
-            self.dag.cancel()
-
-        return super().result()
+        return self.result()
 
     def __set_all_parent_nodes_same_dag(self, dag):
         # If this node already has the day we have reached a base case
@@ -64,12 +61,9 @@ class DelayedBase(Node):
         if self.dag is None:
             self.__set_all_parent_nodes_same_dag(DAG())
 
-        if self.dag is not None:
-            return self.dag.visualize(
-                notebook=notebook, auto_update=auto_update, force_plotly=force_plotly
-            )
-
-        return None
+        return self.dag.visualize(
+            notebook=notebook, auto_update=auto_update, force_plotly=force_plotly
+        )
 
     @staticmethod
     def all(futures, namespace=None):

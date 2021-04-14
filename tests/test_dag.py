@@ -146,66 +146,68 @@ class DAGClassTest(unittest.TestCase):
 
 class DAGFailureTest(unittest.TestCase):
     def test_dag_failure(self):
+        d = dag.DAG()
+        node = d.add_node(lambda x: x * 2, np.median)
+        node.name = "node"
+
+        d.compute()
         with self.assertRaises(TypeError):
-            d = dag.DAG()
-
-            node = d.add_node(lambda x: x * 2, np.median)
-            node.name = "node"
-
-            d.compute()
-
             # Wait for dag to complete
             d.wait(30)
+        self.assertEqual(d.status, dag.Status.FAILED)
 
-            self.assertEqual(node.result(), None)
-            self.assertEqual(node.status, dag.Status.FAILED)
-            self.assertEqual(
-                str(node.error),
-                "unsupported operand type(s) for *: 'function' and 'int'",
-            )
+        self.assertEqual(node.status, dag.Status.FAILED)
+        self.assertEqual(
+            str(node.error),
+            "unsupported operand type(s) for *: 'function' and 'int'",
+        )
+        with self.assertRaises(TypeError):
+            node.result()
 
     def test_dag_dependency_fail_early(self):
+        d = dag.DAG()
+        node = d.add_node(lambda x: x * 2, np.median)
+        node.name = "node"
+        node2 = d.add_node(lambda x: x * 2, 10)
+        node2.name = "node2"
+        node2.depends_on(node)
 
+        d.compute()
         with self.assertRaises(TypeError):
-            d = dag.DAG()
-
-            node = d.add_node(lambda x: x * 2, np.median)
-            node.name = "node"
-            node2 = d.add_node(lambda x: x * 2, 10)
-            node2.name = "node2"
-            node2.depends_on(node)
-
-            d.compute()
-
             # Wait for dag to complete
             d.wait(30)
+        self.assertEqual(d.status, dag.Status.FAILED)
 
-            self.assertEqual(node.result(), None)
-            self.assertEqual(node.status, dag.Status.FAILED)
-            self.assertEqual(
-                str(node.error),
-                "unsupported operand type(s) for *: 'function' and 'int'",
-            )
-            self.assertEqual(node2.result(), None)
-            self.assertEqual(node2.status, dag.Status.NOT_STARTED)
-            self.assertEqual(d.status, dag.Status.FAILED)
+        self.assertEqual(node.status, dag.Status.FAILED)
+        self.assertEqual(
+            str(node.error),
+            "unsupported operand type(s) for *: 'function' and 'int'",
+        )
+        with self.assertRaises(TypeError):
+            node.result()
+
+        self.assertEqual(node2.status, dag.Status.CANCELLED)
+        self.assertEqual(node2.result(), None)
 
 
 class DAGCancelTest(unittest.TestCase):
     def test_dag_cancel(self):
         d = dag.DAG()
-
         node = d.add_node(time.sleep, 1)
         node_2 = d.add_node(np.mean, [1, 1])
+        node_2.depends_on(node)
 
         d.compute()
-
         # Cancel DAG
         d.cancel()
 
-        self.assertEqual(node.result(), None)
-        self.assertEqual(node.status, dag.Status.CANCELLED)
         self.assertEqual(d.status, dag.Status.CANCELLED)
+
+        self.assertEqual(node.status, dag.Status.CANCELLED)
+        self.assertEqual(node.result(), None)
+
+        self.assertEqual(node_2.status, dag.Status.CANCELLED)
+        self.assertEqual(node_2.result(), None)
 
 
 class DAGCloudApplyTest(unittest.TestCase):
