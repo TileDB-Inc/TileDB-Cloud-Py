@@ -3,7 +3,7 @@ from . import tiledb_cloud_error
 from .array import split_uri
 from . import sql
 from . import array
-from .rest_api import ApiException as GenApiException
+from .rest_api import ApiException as GenApiException, ArrayTaskType
 
 import datetime
 

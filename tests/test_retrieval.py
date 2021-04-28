@@ -27,11 +27,12 @@ class ResultsRetrievalTests(unittest.TestCase):
 
             orig = A[:]
             task_name = "test_quickstart_sql_retrieval"
-            tiledb.cloud.sql.exec_async(
+            res = tiledb.cloud.sql.exec(
                 "select sum(a) as sum from `tiledb://TileDB-Inc/quickstart_sparse`",
                 task_name=task_name,
                 store_results=True,
             )
+            print(res)
 
             # Validate we can retrieve last sql task's results
             task = tiledb.cloud.last_sql_task()
@@ -58,12 +59,13 @@ class ResultsRetrievalTests(unittest.TestCase):
 
             orig = A[:]
             task_name = "test_quickstart_array_udf_retrieval"
-            A.apply(
+            res = A.apply(
                 lambda x: numpy.sum(x["a"]),
                 [(1, 4), (1, 4)],
                 task_name=task_name,
                 store_results=True,
             )
+            print(res)
 
             task = tiledb.cloud.last_udf_task()
             self.assertEqual(task.name, task_name)
@@ -76,25 +78,18 @@ class ResultsRetrievalTests(unittest.TestCase):
             )
 
     def test_generic_udf_task_result_retrieval(self):
-        with tiledb.open(
-            "tiledb://TileDB-Inc/quickstart_sparse", ctx=tiledb.cloud.Ctx()
-        ) as A:
-            print("quickstart_sparse:")
-            print(A[:])
+        task_name = "test_generic_udf_retrieval"
 
-            with self.assertRaises(TypeError):
-                A.apply(None, [(0, 1)]).get()
+        def ten():
+            return 10
 
-            task_name = "test_generic_udf_retrieval"
+        res = tiledb.cloud.udf.exec(ten, task_name=task_name, store_results=False)
+        print(f"res={res}")
 
-            def ten():
-                return 10
+        task = tiledb.cloud.last_udf_task()
+        self.assertEqual(task.name, task_name)
 
-            tiledb.cloud.udf.exec(ten, task_name=task_name, store_results=True)
+        array_udf_res_from_retrieval = tiledb.cloud.task_results(task.id)
+        print(f"array_udf_res_from_retrieval={array_udf_res_from_retrieval}")
 
-            task = tiledb.cloud.last_udf_task()
-            self.assertEqual(task.name, task_name)
-
-            array_udf_res_from_retrieval = tiledb.cloud.task_results(task.id)
-
-            self.assertEqual(int(array_udf_res_from_retrieval), 10)
+        self.assertEqual(int(res), 10)

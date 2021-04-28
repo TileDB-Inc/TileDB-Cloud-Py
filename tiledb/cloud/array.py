@@ -32,6 +32,11 @@ class UDFResult(multiprocessing.pool.ApplyResult):
             global last_udf_task_id
             self.task_id = last_udf_task_id = response.getheader(client.TASK_ID_HEADER)
             res = response.data
+
+            if response.status == 202:
+                raise RuntimeWarning(f"Task {self.task_id} is still running")
+            return None
+
         except GenApiException as exc:
             if exc.headers:
                 self.task_id = exc.headers.get(client.TASK_ID_HEADER)
