@@ -65,7 +65,9 @@ def check_udf_exc(exc):
             array.last_udf_task_id = exc.headers[client.TASK_ID_HEADER]
         body = json.loads(exc.body)
         new_exc = TileDBCloudError(
-            "{} - Code: {}".format(body["message"], body["code"])
+            "{} - Code: {} - Request ID: {}".format(
+                body["message"], body["code"], body["request_id"]
+            )
         )
     except:
         raise Exception(internal_err_msg) from exc
