@@ -4,6 +4,8 @@ from .client import (
     Config,
     Ctx,
     list_arrays,
+    list_public_arrays,
+    list_shared_arrays,
     login,
     organizations,
     organization,
