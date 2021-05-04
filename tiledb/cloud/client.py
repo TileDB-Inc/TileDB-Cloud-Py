@@ -5,8 +5,9 @@ from . import rest_api
 from . import config
 from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
-import urllib
 import os
+from typing import Optional, Sequence, Union
+import urllib.parse
 from urllib3 import Retry
 
 import tiledb
@@ -137,7 +138,7 @@ def list_public_arrays(
     List public arrays
 
     :param str namespace: list arrays in single namespace
-    :param list permissions: filter arrays for given permissions
+    :param str permissions: filter arrays for given permissions
     :param list tag: zero or more tags to filter on
     :param list exclude_tag: zero or more tags to filter on
     :param str search: search string
@@ -150,8 +151,7 @@ def list_public_arrays(
     """
 
     api_instance = client.array_api
-    if permissions is not None and not isinstance(permissions, list):
-        permissions = [permissions]
+    permissions = _maybe_unwrap(permissions)
 
     try:
         kwargs = {"async_req": async_req}
@@ -198,7 +198,7 @@ def list_shared_arrays(
     List shared arrays
 
     :param str namespace: list arrays in single namespace
-    :param list permissions: filter arrays for given permissions
+    :param str permissions: filter arrays for given permissions
     :param list tag: zero or more tags to filter on
     :param list exclude_tag: zero or more tags to filter on
     :param str search: search string
@@ -211,8 +211,7 @@ def list_shared_arrays(
     """
 
     api_instance = client.array_api
-    if permissions is not None and not isinstance(permissions, list):
-        permissions = [permissions]
+    permissions = _maybe_unwrap(permissions)
 
     try:
         kwargs = {"async_req": async_req}
@@ -259,7 +258,7 @@ def list_arrays(
     List arrays in a user account
 
     :param str namespace: list arrays in single namespace
-    :param list permissions: filter arrays for given permissions
+    :param str permissions: filter arrays for given permissions
     :param list tag: zero or more tags to filter on
     :param list exclude_tag: zero or more tags to filter on
     :param str search: search string
@@ -272,8 +271,7 @@ def list_arrays(
     """
 
     api_instance = client.array_api
-    if permissions is not None and not isinstance(permissions, list):
-        permissions = [permissions]
+    permissions = _maybe_unwrap(permissions)
 
     try:
         kwargs = {"async_req": async_req}
@@ -523,3 +521,14 @@ class Client:
 
 
 client = Client()
+
+
+def _maybe_unwrap(param: Union[None, str, Sequence[str]]) -> Optional[str]:
+    """Unwraps the first value if passed a sequence of strings."""
+    if param is None or isinstance(param, str):
+        return param
+    try:
+        return param[0]
+    except IndexError:
+        # If we're passed an empty sequence, treat it as no parameter.
+        return None
