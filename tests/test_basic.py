@@ -236,41 +236,6 @@ class BasicTests(unittest.TestCase):
                 numpy.sum(orig["a"]),
             )
 
-    def test_task_retry(self):
-        with tiledb.open(
-            "tiledb://TileDB-Inc/quickstart_sparse", ctx=tiledb.cloud.Ctx()
-        ) as A:
-            print("quickstart_sparse:")
-            print(A[:])
-
-            with self.assertRaises(TypeError):
-                A.apply(None, [(0, 1)]).get()
-
-            import numpy
-
-            orig = A[:]
-            task_name = "test_quickstart_sql_retry"
-            self.assertEqual(
-                int(
-                    tiledb.cloud.sql.exec_async(
-                        "select sum(a) as sum from `tiledb://TileDB-Inc/quickstart_sparse`",
-                        task_name=task_name,
-                    ).get()["sum"]
-                ),
-                numpy.sum(orig["a"]),
-            )
-
-            # Validate task name was set
-            task = tiledb.cloud.last_sql_task()
-            self.assertEqual(task.name, task_name)
-
-            sql_res_from_retry = tiledb.cloud.retry_task(task.id)
-
-            self.assertEqual(
-                int(sql_res_from_retry["sum"]),
-                numpy.sum(orig["a"]),
-            )
-
     def test_context(self):
         with self.assertRaises(ValueError):
             tiledb.cloud.Ctx({"rest.server_address": "1.1.1.1"})
