@@ -454,9 +454,7 @@ class Client:
             self.set_disable_retries()
         else:
             raise Exception(
-                "unsupported retry mode %s. Valid options are default, forceful or disabled".format(
-                    model
-                )
+                f"unsupported retry mode {mode!r}. Valid options are default, forceful or disabled"
             )
 
         self.update_clients()
