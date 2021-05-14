@@ -42,12 +42,14 @@ class Status(Enum):
 
 
 class Node:
-    def __init__(self, func, *args, name=None, dag=None, local_mode=False, **kwargs):
+    def __init__(
+        self, func, *args, node_name=None, dag=None, local_mode=False, **kwargs
+    ):
         """
         Node is a class that represents a function to run in a DAG
         :param func: function to run
         :param args: tuple of arguments to run
-        :param name: optional name of dag
+        :param name: optional name of node
         :param dag: dag this node is associated with
         :param kwargs: dictionary for keyword arguments
         """
@@ -67,9 +69,9 @@ class Node:
         self.__results = None
         self.parents = {}
         self.children = {}
-        if name is None:
-            name = self.id
-        self.name = str(name)
+        if node_name is None:
+            node_name = self.id
+        self.name = str(node_name)
 
         # Loop through non-default parameters and find any Node objects
         # Node objects will be used to automatically add dependencies

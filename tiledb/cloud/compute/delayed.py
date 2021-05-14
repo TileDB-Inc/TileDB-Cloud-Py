@@ -8,10 +8,24 @@ import numbers
 
 
 class DelayedBase(Node):
-    def __init__(self, func, *args, name=None, dag=None, local_mode=False, **kwargs):
+    def __init__(
+        self,
+        func,
+        *args,
+        name=None,
+        dag=None,
+        local_mode=False,
+        registered_udf_name=None,
+        **kwargs
+    ):
         self.timeout = None
+
+        # Allow setting the udf registered name (name arg) via registered_udf_name
+        if registered_udf_name is not None:
+            kwargs["name"] = registered_udf_name
+
         super().__init__(
-            func, *args, name=name, dag=dag, local_mode=local_mode, **kwargs
+            func, *args, node_name=name, dag=dag, local_mode=local_mode, **kwargs
         )
 
     def set_timeout(self, timeout):
@@ -92,13 +106,22 @@ class DelayedBase(Node):
 
 
 class Delayed(DelayedBase):
-    def __init__(self, func_exec, *args, local=False, **kwargs):
+    def __init__(
+        self, func_exec, *args, registered_udf_name=None, local=False, **kwargs
+    ):
         self.func_exec = func_exec
         if func_exec is not None and not callable(func_exec):
             raise TypeError("func_exec argument to `Node` must be callable!")
 
         if not local:
-            super().__init__(udf_exec, func_exec, *args, local_mode=local, **kwargs)
+            super().__init__(
+                udf_exec,
+                func_exec,
+                *args,
+                local_mode=local,
+                registered_udf_name=registered_udf_name,
+                **kwargs
+            )
         else:
             super().__init__(func_exec, *args, local_mode=local, **kwargs)
 
@@ -161,14 +184,21 @@ class DelayedSQL(DelayedBase):
 
 
 class DelayedArrayUDF(DelayedBase):
-    def __init__(self, uri, func_exec, *args, **kwargs):
+    def __init__(self, uri, func_exec, *args, registered_udf_name=None, **kwargs):
         self.func_exec = func_exec
         self.uri = uri
 
         if func_exec is not None and not callable(func_exec):
             raise TypeError("func_exec argument to `Node` must be callable!")
 
-        super().__init__(array_apply, self.uri, self.func_exec, *args, **kwargs)
+        super().__init__(
+            array_apply,
+            self.uri,
+            self.func_exec,
+            *args,
+            registered_udf_name=registered_udf_name,
+            **kwargs
+        )
 
         # Set name of task if it won't interfere with user args
         if "task_name" not in self.kwargs:
