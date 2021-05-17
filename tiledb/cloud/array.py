@@ -368,7 +368,7 @@ def split_uri(uri):
     return parsed.netloc, parsed.path[1:]
 
 
-def parse_ranges(ranges):
+def parse_ranges(ranges, schema=None):
     """
     Takes a list of the following objects per dimension:
 
@@ -381,7 +381,7 @@ def parse_ranges(ranges):
     :return:
     """
 
-    def make_range(dim_range):
+    def make_range(dim_idx, dim_range):
         if isinstance(dim_range, (int, float, numpy.datetime64, numpy.timedelta64)):
             start, end = dim_range, dim_range
         elif isinstance(dim_range, (tuple, list)):
@@ -403,9 +403,10 @@ def parse_ranges(ranges):
 
         # Convert datetimes to int64
         if type(start) == numpy.datetime64 or type(start) == numpy.timedelta64:
-            start = start.astype("int64").item()
+            dim_dtype = schema.domain.dim(dim_idx).dtype if schema else start.dtype
+            start = start.astype(dim_dtype).astype("int64").item()
         if type(end) == numpy.datetime64 or type(end) == numpy.timedelta64:
-            end = end.astype("int64").item()
+            end = end.astype(dim_dtype).astype("int64").item()
 
         return [start, end]
 
@@ -416,10 +417,10 @@ def parse_ranges(ranges):
         if isinstance(
             dim_range, (int, float, tuple, slice, numpy.datetime64, numpy.timedelta64)
         ):
-            dim_list.extend(make_range(dim_range))
+            dim_list.extend(make_range(dim_idx, dim_range))
         elif isinstance(dim_range, list):
             for r in dim_range:
-                dim_list.extend(make_range(r))
+                dim_list.extend(make_range(dim_idx, r))
         elif dim_range is None:
             pass
         else:
@@ -446,6 +447,7 @@ def apply_async(
     v2=True,
     result_format=rest_api.models.UDFResultType.NATIVE,
     result_format_version=None,
+    schema=None,
     **kwargs
 ):
     """
@@ -490,7 +492,8 @@ def apply_async(
         pickledUDF = cloudpickle.dumps(func, protocol=udf.tiledb_cloud_protocol)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
-    ranges = parse_ranges(ranges)
+    print(schema)
+    ranges = parse_ranges(ranges, schema)
 
     if layout is None:
         converted_layout = None
@@ -562,6 +565,7 @@ def apply_async(
 
 def apply(
     uri,
+    schema=None,
     func=None,
     ranges=None,
     name=None,
@@ -602,6 +606,7 @@ def apply(
     """
     return apply_async(
         uri=uri,
+        schema=schema,
         func=func,
         ranges=ranges,
         name=name,

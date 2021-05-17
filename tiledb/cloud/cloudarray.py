@@ -50,6 +50,7 @@ class CloudArray(object):
             http_compressor=http_compressor,
             task_name=task_name,
             v2=v2,
+            schema=self.schema,
             **kwargs,
         )
 
