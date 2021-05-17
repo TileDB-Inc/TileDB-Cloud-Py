@@ -29,6 +29,7 @@ REQUIRES = [
     "networkx>= 2.0.0",
     "pydot",
     "tiledb-plot-widget>=0.1.7",
+    "pyarrow==3.0.0",
 ]
 
 # NOTE: we cannot use an __init__.py file in the tiledb/ directory, because it is supplied
