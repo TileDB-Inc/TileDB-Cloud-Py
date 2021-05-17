@@ -15,37 +15,29 @@ import multiprocessing
 last_sql_task_id = None
 
 
-class SQLResults(multiprocessing.pool.ApplyResult):
-    def __init__(self, response, raw_results):
-        self.response = response
-        self.raw_results = raw_results
-        self.task_id = None
+class SQLResult(array.TaskResult):
+    def __init__(
+        self, response, result_format, result_format_version=None, result_type="pandas"
+    ):
+        super().__init__(response, result_format, result_format_version)
+
+        self.result_type = result_type
 
     def get(self, timeout=None):
-        try:
-            response = rest.RESTResponse(self.response.get(timeout=timeout))
-            global last_sql_task_id
-            self.task_id = last_sql_task_id = response.getheader(client.TASK_ID_HEADER)
-            # Only return the response data if OK or err ignore all other 2xx response bodies
-            if 200 < response.status < 300:
-                return None
-            res = response.data
-        except GenApiException as exc:
-            if exc.headers:
-                self.task_id = exc.headers.get(client.TASK_ID_HEADER)
-            raise tiledb_cloud_error.check_sql_exc(exc) from None
-        except multiprocessing.TimeoutError as exc:
-            raise tiledb_cloud_error.check_udf_exc(exc) from None
+        res = super().get()
 
-        if response.status == 200:
-            return pandas.read_json(res) if not self.raw_results else res
+        # Set last udf task id
+        global last_sql_task_id
+        last_sql_task_id = self.task_id
 
-        # Try to parse results as json, 200 status returns should be handled above
-        # and 4xx/5xx should through exceptions. This path is unlikely to be called
-        try:
-            return json.loads(res)
-        except:
-            return res
+        if self.result_type == "pandas":
+            if self.result_format == rest_api.models.ResultFormat.JSON:
+                return pandas.DataFrame(res)
+            elif self.result_format == rest_api.models.ResultFormat.ARROW:
+                return res.to_pandas()
+
+        # Fall back to just returning base results
+        return res
 
 
 def exec_async(
@@ -59,6 +51,8 @@ def exec_async(
     http_compressor="deflate",
     init_commands=None,
     parameters=None,
+    result_format=rest_api.models.ResultFormat.ARROW,
+    result_format_version=None,
 ):
     """
     Run a sql query asynchronous
@@ -72,6 +66,8 @@ def exec_async(
     :param string http_compressor: optional http compression method to use
     :param list init_commands: optional list of sql queries or commands to run before main query
     :param list parameters: optional list of sql parameters for use in query
+    :param UDFResultType result_format: result serialization format
+    :param str result_format_version: set a format version for cloudpickle or arrow IPC
 
     :return: A SQLResult object which is a future for a pandas dataframe if no output array is given and query returns results
     """
@@ -136,11 +132,18 @@ def exec_async(
                 output_uri=output_uri,
                 init_commands=init_commands,
                 parameters=parameters,
+                result_format=result_format,
+                result_format_version=result_format_version,
             ),
             **kwargs
         )
 
-        return SQLResults(response, raw_results)
+        return SQLResult(
+            response,
+            result_format,
+            result_format_version,
+            None if raw_results else "pandas",
+        )
 
     except GenApiException as exc:
         raise tiledb_cloud_error.check_sql_exc(exc) from None
@@ -155,6 +158,8 @@ def exec_and_fetch(
     output_array_name=None,
     init_commands=None,
     parameters=None,
+    result_format=rest_api.models.ResultFormat.ARROW,
+    result_format_version=None,
 ):
     """
     Run a sql query, results are not stored
@@ -166,6 +171,8 @@ def exec_and_fetch(
     :param str output_array_name: optional name for registering new output array if output_schema schema is passed
     :param list init_commands: optional list of sql queries or commands to run before main query
     :param list parameters: optional list of sql parameters for use in query
+    :param UDFResultType result_format: result serialization format
+    :param str result_format_version: set a format version for cloudpickle or arrow IPC
 
     :return: TileDB Array with results
     """
@@ -189,6 +196,8 @@ def exec_and_fetch(
             output_array_name=output_array_name,
             init_commands=init_commands,
             parameters=parameters,
+            result_format=result_format,
+            result_format_version=result_format_version,
         )
 
         # Fetch output schema to check if its sparse or dense
@@ -214,6 +223,8 @@ def exec(
     http_compressor="deflate",
     init_commands=None,
     parameters=None,
+    result_format=rest_api.models.ResultFormat.ARROW,
+    result_format_version=None,
 ):
     """
     Run a sql query
@@ -227,6 +238,8 @@ def exec(
     :param string http_compressor: optional http compression method to use
     :param list init_commands: optional list of sql queries or commands to run before main query
     :param list parameters: optional list of sql parameters for use in query
+    :param UDFResultType result_format: result serialization format
+    :param str result_format_version: set a format version for cloudpickle or arrow IPC
 
     :return: pandas dataframe if no output array is given and query returns results
     """
@@ -241,4 +254,6 @@ def exec(
         http_compressor=http_compressor,
         init_commands=init_commands,
         parameters=parameters,
+        result_format=result_format,
+        result_format_version=result_format_version,
     ).get()

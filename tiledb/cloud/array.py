@@ -20,7 +20,7 @@ from .rest_api import rest
 last_udf_task_id = None
 
 
-class UDFResult(multiprocessing.pool.ApplyResult):
+class TaskResult(multiprocessing.pool.ApplyResult):
     def __init__(self, response, result_format, result_format_version=None):
         self.response = response
         self.task_id = None
@@ -30,8 +30,6 @@ class UDFResult(multiprocessing.pool.ApplyResult):
     def get(self, timeout=None):
         try:
             response = rest.RESTResponse(self.response.get(timeout=timeout))
-            global last_udf_task_id
-            self.task_id = last_udf_task_id = response.getheader(client.TASK_ID_HEADER)
             res = response.data
         except GenApiException as exc:
             if exc.headers:
@@ -39,6 +37,8 @@ class UDFResult(multiprocessing.pool.ApplyResult):
             raise tiledb_cloud_error.check_udf_exc(exc) from None
         except multiprocessing.TimeoutError as exc:
             raise tiledb_cloud_error.check_udf_exc(exc) from None
+
+        self.task_id = response.getheader(client.TASK_ID_HEADER)
 
         if res[:2].hex() in ["7801", "785e", "789c", "78da"]:
             try:
@@ -65,6 +65,20 @@ class UDFResult(multiprocessing.pool.ApplyResult):
                 res = reader.read_all()
         except:
             raise tiledb_cloud_error.TileDBCloudError("Failed to load result object")
+
+        return res
+
+
+class UDFResult(TaskResult):
+    def __init__(self, response, result_format, result_format_version=None):
+        super().__init__(response, result_format, result_format_version)
+
+    def get(self, timeout=None):
+        res = super().get(timeout=timeout)
+
+        # Set last udf task id
+        global last_udf_task_id
+        last_udf_task_id = self.task_id
 
         return res
 
