@@ -28,6 +28,8 @@ Name | Type | Description | Notes
 **duration** | **float** | duration in nanoseconds of an array task | [optional] 
 **sql_init_commands** | **list[str]** | SQL queries or commands to run before main sql query | [optional] 
 **sql_parameters** | **list[object]** | SQL query parameters | [optional] 
+**result_format** | [**ResultFormat**](ResultFormat.md) |  | [optional] 
+**result_format_version** | **str** | string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

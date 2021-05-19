@@ -59,6 +59,7 @@ def exec_async(
     http_compressor="deflate",
     init_commands=None,
     parameters=None,
+    store_results=False,
 ):
     """
     Run a sql query asynchronous
@@ -72,6 +73,7 @@ def exec_async(
     :param string http_compressor: optional http compression method to use
     :param list init_commands: optional list of sql queries or commands to run before main query
     :param list parameters: optional list of sql parameters for use in query
+    :param bool store_results: enable temporary (24 hours) storage of task results for async retrieval
 
     :return: A SQLResult object which is a future for a pandas dataframe if no output array is given and query returns results
     """
@@ -136,6 +138,7 @@ def exec_async(
                 output_uri=output_uri,
                 init_commands=init_commands,
                 parameters=parameters,
+                store_results=store_results,
             ),
             **kwargs
         )
@@ -214,6 +217,7 @@ def exec(
     http_compressor="deflate",
     init_commands=None,
     parameters=None,
+    store_results=False,
 ):
     """
     Run a sql query
@@ -224,6 +228,7 @@ def exec(
     :param str task_name: optional name to assign the task for logging and audit purposes
     :param str output_array_name: optional array name to set if creating new output array
     :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
+    :param bool store_results: enable temporary (24 hours) storage of task results for async retrieval
     :param string http_compressor: optional http compression method to use
     :param list init_commands: optional list of sql queries or commands to run before main query
     :param list parameters: optional list of sql parameters for use in query
@@ -241,4 +246,5 @@ def exec(
         http_compressor=http_compressor,
         init_commands=init_commands,
         parameters=parameters,
+        store_results=store_results,
     ).get()

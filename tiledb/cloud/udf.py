@@ -23,8 +23,9 @@ def exec_async(
     http_compressor="deflate",
     include_source_lines=True,
     task_name=None,
-    result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format=rest_api.models.ResultFormat.NATIVE,
     result_format_version=None,
+    store_results=False,
     **kwargs
 ):
     """
@@ -39,8 +40,9 @@ def exec_async(
     :param http_compressor: set http compressor for results
     :param include_source_lines: disables sending sources lines of function along with udf
     :param str task_name: optional name to assign the task for logging and audit purposes
-    :param UDFResultType result_format: result serialization format
+    :param ResultFormat result_format: result serialization format
     :param str result_format_version: set a format version for cloudpickle or arrow IPC
+    :param bool store_results: enable temporary (24 hours) storage of task results for async retrieval
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
     """
@@ -105,6 +107,7 @@ def exec_async(
             ),
             image_name=image_name,
             task_name=task_name,
+            store_results=store_results,
         )
 
         if pickledUDF is not None:
@@ -135,8 +138,9 @@ def exec(
     http_compressor="deflate",
     include_source_lines=True,
     task_name=None,
-    result_format=rest_api.models.UDFResultType.NATIVE,
+    result_format=rest_api.models.ResultFormat.NATIVE,
     result_format_version=None,
+    store_results=False,
     **kwargs
 ):
     """
@@ -150,8 +154,9 @@ def exec(
     :param http_compressor: set http compressor for results
     :param include_source_lines: disables sending sources lines of function along with udf
     :param str task_name: optional name to assign the task for logging and audit purposes
-    :param UDFResultType result_format: result serialization format
+    :param ResultFormat result_format: result serialization format
     :param str result_format_version: set a format version for cloudpickle or arrow IPC
+    :param bool store_results: enable temporary (24 hours) storage of task results for async retrieval
     :param kwargs: named arguments to pass to function
     :return: UDFResult object which is a future containing the results of the UDF
     """
@@ -166,6 +171,7 @@ def exec(
         task_name=task_name,
         result_format=result_format,
         result_format_version=result_format_version,
+        store_results=store_results,
         **kwargs,
     ).get()
 

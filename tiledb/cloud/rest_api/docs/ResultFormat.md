@@ -1,4 +1,4 @@
-# UDFResultType
+# ResultFormat
 
 Results type
 ## Properties

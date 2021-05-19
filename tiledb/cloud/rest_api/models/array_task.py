@@ -57,6 +57,8 @@ class ArrayTask(object):
         "duration": "float",
         "sql_init_commands": "list[str]",
         "sql_parameters": "list[object]",
+        "result_format": "ResultFormat",
+        "result_format_version": "str",
     }
 
     attribute_map = {
@@ -84,6 +86,8 @@ class ArrayTask(object):
         "duration": "duration",
         "sql_init_commands": "sql_init_commands",
         "sql_parameters": "sql_parameters",
+        "result_format": "result_format",
+        "result_format_version": "result_format_version",
     }
 
     def __init__(
@@ -112,6 +116,8 @@ class ArrayTask(object):
         duration=None,
         sql_init_commands=None,
         sql_parameters=None,
+        result_format=None,
+        result_format_version=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """ArrayTask - a model defined in OpenAPI"""  # noqa: E501
@@ -143,6 +149,8 @@ class ArrayTask(object):
         self._duration = None
         self._sql_init_commands = None
         self._sql_parameters = None
+        self._result_format = None
+        self._result_format_version = None
         self.discriminator = None
 
         if id is not None:
@@ -193,6 +201,10 @@ class ArrayTask(object):
             self.sql_init_commands = sql_init_commands
         if sql_parameters is not None:
             self.sql_parameters = sql_parameters
+        if result_format is not None:
+            self.result_format = result_format
+        if result_format_version is not None:
+            self.result_format_version = result_format_version
 
     @property
     def id(self):
@@ -735,6 +747,50 @@ class ArrayTask(object):
         """
 
         self._sql_parameters = sql_parameters
+
+    @property
+    def result_format(self):
+        """Gets the result_format of this ArrayTask.  # noqa: E501
+
+
+        :return: The result_format of this ArrayTask.  # noqa: E501
+        :rtype: ResultFormat
+        """
+        return self._result_format
+
+    @result_format.setter
+    def result_format(self, result_format):
+        """Sets the result_format of this ArrayTask.
+
+
+        :param result_format: The result_format of this ArrayTask.  # noqa: E501
+        :type: ResultFormat
+        """
+
+        self._result_format = result_format
+
+    @property
+    def result_format_version(self):
+        """Gets the result_format_version of this ArrayTask.  # noqa: E501
+
+        string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison  # noqa: E501
+
+        :return: The result_format_version of this ArrayTask.  # noqa: E501
+        :rtype: str
+        """
+        return self._result_format_version
+
+    @result_format_version.setter
+    def result_format_version(self, result_format_version):
+        """Sets the result_format_version of this ArrayTask.
+
+        string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison  # noqa: E501
+
+        :param result_format_version: The result_format_version of this ArrayTask.  # noqa: E501
+        :type: str
+        """
+
+        self._result_format_version = result_format_version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

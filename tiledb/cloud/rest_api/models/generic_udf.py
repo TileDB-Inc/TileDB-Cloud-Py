@@ -40,7 +40,7 @@ class GenericUDF(object):
         "_exec": "str",
         "exec_raw": "str",
         "argument": "str",
-        "result_format": "UDFResultType",
+        "result_format": "ResultFormat",
         "result_format_version": "str",
         "task_name": "str",
         "store_results": "bool",
@@ -281,7 +281,7 @@ class GenericUDF(object):
 
 
         :return: The result_format of this GenericUDF.  # noqa: E501
-        :rtype: UDFResultType
+        :rtype: ResultFormat
         """
         return self._result_format
 
@@ -291,7 +291,7 @@ class GenericUDF(object):
 
 
         :param result_format: The result_format of this GenericUDF.  # noqa: E501
-        :type: UDFResultType
+        :type: ResultFormat
         """
 
         self._result_format = result_format

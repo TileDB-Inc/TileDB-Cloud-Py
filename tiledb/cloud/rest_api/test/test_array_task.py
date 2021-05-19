@@ -135,6 +135,8 @@ class TestArrayTask(unittest.TestCase):
                 duration=3.41e11,
                 sql_init_commands=["0"],
                 sql_parameters=[None],
+                result_format="native",
+                result_format_version="0",
             )
         else:
             return ArrayTask()
