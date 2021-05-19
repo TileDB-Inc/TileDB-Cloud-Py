@@ -28,6 +28,9 @@ class BasicTests(unittest.TestCase):
     def test_tasks(self):
         self.assertIsNotNone(tasks())
 
+    def test_tasks_array_filter(self):
+        self.assertIsNotNone(tasks(array="tiledb://TileDB-Inc/quickstart_sparse"))
+
     def test_list_arrays(self):
         self.assertIsNotNone(client.list_arrays().arrays)
 
