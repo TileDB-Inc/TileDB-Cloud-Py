@@ -1,24 +1,20 @@
 import inspect
 import logging
+from typing import Callable, Optional
 
 logger = logging.getLogger("tiledb.cloud")
 
 
-def getsourcelines(func):
-    if func is not None and not callable(func):
-        raise TypeError("func argument to `apply` must be callable!")
-
-    # try to include the original source code
+def getsourcelines(func: Callable) -> Optional[str]:
+    """Attempt to extract the source code of ``func``, but accept failure."""
     try:
-        # get source lines to serialize with UDF
-        # (functions defined in files may not always be available)
-        source_lines = inspect.getsourcelines(func)[0]
-        return "".join(source_lines)
-    except Exception as exc:
+        # Attempt to find and serialize the original source...
+        return "".join(inspect.getsourcelines(func)[0])
+    except OSError as exc:
+        # ...but if it's not available, don't panic; just go on without it.
         logger.warning(
-            "Failed to serialize function source text, proceeding with bytecode only: %s".format(
-                exec
-            )
+            "Failed to serialize function source text, "
+            "proceeding with bytecode only: %s",
+            exc,
         )
-
     return None
