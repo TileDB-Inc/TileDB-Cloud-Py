@@ -560,39 +560,15 @@ def apply_async(
         raise tiledb_cloud_error.check_udf_exc(exc) from None
 
 
-def apply(
-    uri,
-    func=None,
-    ranges=None,
-    name=None,
-    attrs=None,
-    layout=None,
-    image_name=None,
-    http_compressor="deflate",
-    task_name=None,
-    v2=True,
-    result_format=rest_api.models.UDFResultType.NATIVE,
-    result_format_version=None,
-    **kwargs
-):
+@utils.signature_of(apply_async)
+def apply(*args, **kwargs):
     """
-    Apply a user defined function to an array synchronous
+    Apply a user defined function to an array, synchronously.
 
-    :param uri: array to apply on
-    :param func: user function to run
-    :param ranges: ranges to issue query on
-    :param attrs: list of attributes or dimensions to fetch in query
-    :param layout: tiledb query layout
-    :param image_name: udf image name to use, useful for testing beta features
-    :param http_compressor: set http compressor for results
-    :param str task_name: optional name to assign the task for logging and audit purposes
-    :param bool v2: use v2 array udfs
-    :param UDFResultType result_format: result serialization format
-    :param str result_format_version: set a format version for cloudpickle or arrow IPC
-    :param kwargs: named arguments to pass to function
-    :return: UDFResult object which is a future containing the results of the UDF
+    All arguments are exactly as in :func:`apply_async`.
 
-    **Example**
+    **Example:**
+
     >>> import tiledb, tiledb.cloud, numpy
     >>> def median(df):
     ...   return numpy.median(df["a"])
@@ -600,21 +576,7 @@ def apply(
     >>> tiledb.cloud.array.apply("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"])
     2.0
     """
-    return apply_async(
-        uri=uri,
-        func=func,
-        ranges=ranges,
-        name=name,
-        attrs=attrs,
-        layout=layout,
-        image_name=image_name,
-        http_compressor=http_compressor,
-        task_name=task_name,
-        v2=v2,
-        result_format=result_format,
-        result_format_version=result_format_version,
-        **kwargs,
-    ).get()
+    return apply_async(*args, **kwargs).get()
 
 
 def exec_multi_array_udf_async(
@@ -658,6 +620,7 @@ def exec_multi_array_udf_async(
     >>> res = array.exec_multi_array_udf(median, array_list, namespace)
     >>> print("Median Multi UDF:\n{}\n".format(res))
     """
+    del layout  # unused
 
     api_instance = client.client.udf_api
 
@@ -744,31 +707,10 @@ def exec_multi_array_udf_async(
         raise tiledb_cloud_error.check_udf_exc(exc) from None
 
 
-def exec_multi_array_udf(
-    func=None,
-    array_list=None,
-    namespace=None,
-    name=None,
-    layout=None,
-    image_name=None,
-    http_compressor="deflate",
-    include_source_lines=True,
-    task_name=None,
-    result_format=rest_api.models.UDFResultType.NATIVE,
-    result_format_version=None,
-    **kwargs
-):
-    return exec_multi_array_udf_async(
-        func=func,
-        array_list=array_list,
-        namespace=namespace,
-        name=name,
-        layout=layout,
-        image_name=image_name,
-        http_compressor=http_compressor,
-        include_source_lines=include_source_lines,
-        task_name=task_name,
-        result_format=result_format,
-        result_format_version=result_format_version,
-        **kwargs,
-    ).get()
+@utils.signature_of(exec_multi_array_udf_async)
+def exec_multi_array_udf(*args, **kwargs):
+    """Apply a user-defined function to multiple arrays, synchronously.
+
+    All arguments are exactly as in :func:`exec_multi_array_udf_async`.
+    """
+    return exec_multi_array_udf_async(*args, **kwargs).get()

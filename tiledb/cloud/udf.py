@@ -126,48 +126,14 @@ def exec_async(
         raise tiledb_cloud_error.check_sql_exc(exc) from None
 
 
-def exec(
-    *args,
-    func=None,
-    name=None,
-    namespace=None,
-    image_name=None,
-    http_compressor="deflate",
-    include_source_lines=True,
-    task_name=None,
-    result_format=rest_api.models.UDFResultType.NATIVE,
-    result_format_version=None,
-    **kwargs
-):
-    """
-     Run a user defined function
+@utils.signature_of(exec_async)
+def exec(*args, **kwargs):
+    """Run a user defined function, synchronously.
 
-
-    :param args: arguments to pass to function
-    :param func: user function to run
-    :param namespace: namespace to run udf under
-    :param image_name: udf image name to use, useful for testing beta features
-    :param http_compressor: set http compressor for results
-    :param include_source_lines: disables sending sources lines of function along with udf
-    :param str task_name: optional name to assign the task for logging and audit purposes
-    :param UDFResultType result_format: result serialization format
-    :param str result_format_version: set a format version for cloudpickle or arrow IPC
-    :param kwargs: named arguments to pass to function
-    :return: UDFResult object which is a future containing the results of the UDF
+    Arguments are exactly as in :func:`exec_async`. Returns an immediate value
+    rather than a future.
     """
-    return exec_async(
-        *args,
-        func=func,
-        name=name,
-        namespace=namespace,
-        image_name=image_name,
-        http_compressor=http_compressor,
-        include_source_lines=include_source_lines,
-        task_name=task_name,
-        result_format=result_format,
-        result_format_version=result_format_version,
-        **kwargs,
-    ).get()
+    return exec_async(*args, **kwargs).get()
 
 
 def register_udf(
