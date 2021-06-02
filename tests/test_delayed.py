@@ -1,10 +1,15 @@
+import os
 import time
 import unittest
-import os
 
 import numpy as np
-from tiledb.cloud.compute import Delayed, DelayedSQL, DelayedArrayUDF, Status
 import tiledb.cloud
+from tiledb.cloud import testonly
+from tiledb.cloud.compute import Delayed
+from tiledb.cloud.compute import DelayedArrayUDF
+from tiledb.cloud.compute import DelayedSQL
+from tiledb.cloud.compute import Status
+
 
 tiledb.cloud.login(
     token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
@@ -152,6 +157,28 @@ class DelayedCloudApplyTest(unittest.TestCase):
 
         self.assertEqual(node.result(), numpy.sum(orig["a"]))
 
+    def test_array_apply_by_name(self):
+
+        uri = "tiledb://TileDB-inc/quickstart_sparse"
+        with tiledb.open(uri, ctx=tiledb.cloud.Ctx()) as A:
+            orig = A[:]
+
+        def sum_a(x):
+            import numpy
+
+            return numpy.sum(x["a"])
+
+        with testonly.register_udf(sum_a) as sum_a_name:
+            node = DelayedArrayUDF(uri, sum_a_name, name="node")([(1, 4), (1, 4)])
+
+            # Add timeout so we don't wait forever in CI
+            node.set_timeout(30)
+            node.compute()
+
+        import numpy
+
+        self.assertEqual(node.result(), numpy.sum(orig["a"]))
+
     def test_udf_exec(self):
         import numpy
 
@@ -238,31 +265,37 @@ class DelayedCloudApplyTest(unittest.TestCase):
 
         node_local = Delayed(lambda x: x * 2, local=True)(100)
 
-        node_array_apply = DelayedArrayUDF(
-            uri_sparse, lambda x: numpy.sum(x["a"]), name="node_array_apply"
-        )([(1, 4), (1, 4)])
-        node_sql = DelayedSQL(
-            "select SUM(`a`) as a from `{}`".format(uri_dense), name="node_sql"
-        )
-
-        def mean(args):
+        def sum_a(x):
             import numpy
-            import pandas
 
-            for i in range(len(args)):
-                item = args[i]
-                if isinstance(item, pandas.DataFrame):
-                    args[i] = item["a"][0]
+            return numpy.sum(x["a"])
 
-            return numpy.mean(args)
+        with testonly.register_udf(sum_a) as sum_a_name:
+            node_array_apply = DelayedArrayUDF(
+                uri_sparse, sum_a_name, name="node_array_apply"
+            )([(1, 4), (1, 4)])
+            node_sql = DelayedSQL(
+                "select SUM(`a`) as a from `{}`".format(uri_dense), name="node_sql"
+            )
 
-        node_exec = Delayed(func_exec=mean, name="node_exec")(
-            [node_local, node_array_apply, node_sql],
-        )
+            def mean(args):
+                import numpy
+                import pandas
 
-        # Add timeout so we don't wait forever in CI
-        node_exec.set_timeout(30)
-        node_exec.compute()
+                for i in range(len(args)):
+                    item = args[i]
+                    if isinstance(item, pandas.DataFrame):
+                        args[i] = item["a"][0]
+
+                return numpy.mean(args)
+
+            node_exec = Delayed(func_exec=mean, name="node_exec")(
+                [node_local, node_array_apply, node_sql],
+            )
+
+            # Add timeout so we don't wait forever in CI
+            node_exec.set_timeout(30)
+            node_exec.compute()
 
         self.assertEqual(node_local.result(), 200)
         self.assertEqual(node_array_apply.result(), numpy.sum(orig["a"]))

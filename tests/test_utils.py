@@ -1,6 +1,8 @@
+import base64
 import importlib
 import os
 import os.path
+import pickle
 import sys
 import tempfile
 import textwrap
@@ -38,9 +40,19 @@ class SourceLinesTest(unittest.TestCase):
 
 
 class PickleTest(unittest.TestCase):
-    def test_b64_pickle(self):
-        self.assertEqual(utils.b64_pickle(None), "gAROLg==")
-        self.assertEqual(
-            utils.b64_pickle(("a", 1)),
-            "gASVCQAAAAAAAACMAWGUSwGGlC4=",
+    def test_roundtrip(self):
+        cases = (
+            None,
+            ("a", 1),
+            {"some": "dict"},
         )
+        for c in cases:
+            with self.subTest(f"roundtrip {c!r}"):
+                pickled = utils.b64_pickle(c)
+                unpickled = _b64_unpickle(pickled)
+                self.assertEqual(unpickled, c)
+
+
+def _b64_unpickle(x):
+    raw = base64.b64decode(x)
+    return pickle.loads(raw)
