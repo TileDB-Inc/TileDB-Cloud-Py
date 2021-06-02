@@ -1,48 +1,57 @@
-from . import rest_api
-from . import array
-from . import client
-from .rest_api import ApiException as GenApiException
-from . import tiledb_cloud_error
-from . import config
-from . import utils
+import base64
+import sys
+import warnings
+from typing import Any, Callable, Optional, Union
 
 import cloudpickle
 
-tiledb_cloud_protocol = 4
+from . import array
+from . import client
+from . import config
+from . import tiledb_cloud_error
+from . import utils
+from .rest_api import ApiException as GenApiException
+from .rest_api import models
 
-import base64
-import sys
+# Deprecated; re-exported for backwards compatibility.
+tiledb_cloud_protocol = utils.TILEDB_CLOUD_PROTOCOL
 
 
 def exec_async(
-    *args,
-    func=None,
-    name=None,
-    namespace=None,
-    image_name=None,
-    http_compressor="deflate",
-    include_source_lines=True,
-    task_name=None,
-    result_format=rest_api.models.UDFResultType.NATIVE,
+    func: Union[str, Callable, Any],
+    *args: Any,
+    name: Optional[str] = None,
+    namespace: Optional[str] = None,
+    image_name: str = "default",
+    http_compressor: Optional[str] = "deflate",
+    include_source_lines: bool = True,
+    task_name: Optional[str] = None,
+    result_format: str = models.UDFResultType.NATIVE,
     result_format_version=None,
-    **kwargs
-):
-    """
-     Run a user defined function
+    **kwargs,
+) -> array.UDFResult:
+    """Run a user defined function, asynchronously.
 
-
-    :param args: arguments to pass to function
-    :param func: user function to run
-    :param name: registered function name
+    :param func: The function to call, either as a callable function, or as
+        the name of a registered user-defined function. (If ``name`` is set,
+        this is instead prepended to ``args`` for backwards compatibility.)
+    :param args: The arguments to pass to the function.
+    :param name: DEPRECATED. If present, the name of the user-defined function
+        to run.
     :param namespace: namespace to run udf under
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
-    :param include_source_lines: disables sending sources lines of function along with udf
-    :param str task_name: optional name to assign the task for logging and audit purposes
+    :param include_source_lines: True to send the source code of your UDF to
+        the server with your request. (This means it can be shown to you
+        in stack traces if an error occurs.) False to send only compiled Python
+        bytecode.
+    :param str task_name: optional name to assign the task
+        for logging and audit purposes
     :param UDFResultType result_format: result serialization format
-    :param str result_format_version: set a format version for cloudpickle or arrow IPC
+    :param str result_format_version: set a format version
+        for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function
-    :return: UDFResult object which is a future containing the results of the UDF
+    :return: UDFResult, a future containing the results of the UDF
     """
 
     api_instance = client.client.udf_api
@@ -55,71 +64,62 @@ def exec_async(
 
         namespace = client.find_organization_or_user_for_default_charges(config.user)
 
-    if func is not None and not callable(func):
-        raise TypeError("func argument to `exec` must be callable!")
-    elif func is None and name is None or name == "":
-        if args is not None and len(args) > 0:
-            if callable(args[0]):
-                func = args[0]
-                args = args[1:]
-        if func is None:
-            raise TypeError(
-                "name argument to `exec` must be set if no function is passed"
+    user_func: Union[str, Callable]
+    if name:
+        warnings.warn(
+            DeprecationWarning(
+                "Use of `name` to set a function name is deprecated. "
+                "Pass the function name in `func` instead."
             )
+        )
+        if type(name) is not str:
+            raise TypeError("`name` (if used) must be the name of a function.")
+        args = (func,) + args
+        user_func = name
+    else:
+        if not callable(func) and type(func) is not str:
+            raise TypeError(
+                "`func` must be either a callable function "
+                f"or the name of a registered UDF as a str, not {type(func)}"
+            )
+        user_func = func
 
-    pickledUDF = None
-    source_lines = None
-    if func is not None:
-        source_lines = utils.getsourcelines(func) if include_source_lines else None
-        pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
-        pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
+    udf_model = models.GenericUDF(
+        language=models.UDFLanguage.PYTHON,
+        result_format=result_format,
+        result_format_version=result_format_version,
+        version="{}.{}.{}".format(
+            sys.version_info.major,
+            sys.version_info.minor,
+            sys.version_info.micro,
+        ),
+        image_name=image_name,
+        task_name=task_name,
+    )
 
-    arguments = None
-    if (args is not None and len(args) > 0) or (kwargs is not None and len(kwargs) > 0):
-        arguments = []
-        if len(args) > 0:
-            arguments.append(args)
-        if len(kwargs) > 0:
-            arguments.append(kwargs)
-        arguments = tuple(arguments)
-        arguments = cloudpickle.dumps(arguments, protocol=tiledb_cloud_protocol)
-        arguments = base64.b64encode(arguments).decode("ascii")
+    if callable(user_func):
+        udf_model._exec = utils.b64_pickle(user_func)
+        if include_source_lines:
+            udf_model.exec_raw = utils.getsourcelines(user_func)
+    else:
+        udf_model.udf_info_name = user_func
 
-    if image_name is None:
-        image_name = "default"
+    arguments = tuple(filter(None, [args, kwargs]))
+    if arguments:
+        udf_model.argument = utils.b64_pickle(arguments)
+
+    submit_kwargs = {}
+    if http_compressor:
+        submit_kwargs["accept_encoding"] = http_compressor
+
     try:
-
-        kwargs = {"_preload_content": False, "async_req": True}
-        if http_compressor is not None:
-            kwargs["accept_encoding"] = http_compressor
-
-        udf_model = rest_api.models.GenericUDF(
-            language=rest_api.models.UDFLanguage.PYTHON,
-            argument=arguments,
-            result_format=result_format,
-            result_format_version=result_format_version,
-            version="{}.{}.{}".format(
-                sys.version_info.major,
-                sys.version_info.minor,
-                sys.version_info.micro,
-            ),
-            image_name=image_name,
-            task_name=task_name,
-        )
-
-        if pickledUDF is not None:
-            udf_model._exec = pickledUDF
-        elif name is not None:
-            udf_model.udf_info_name = name
-
-        if source_lines is not None:
-            udf_model.exec_raw = source_lines
-
-        # _preload_content must be set to false to avoid trying to decode binary data
         response = api_instance.submit_generic_udf(
-            namespace=namespace, udf=udf_model, **kwargs
+            namespace=namespace,
+            udf=udf_model,
+            async_req=True,
+            _preload_content=False,  # needed to avoid decoding binary data
+            **submit_kwargs,
         )
-
         return array.UDFResult(response, result_format=result_format)
 
     except GenApiException as exc:
@@ -127,7 +127,7 @@ def exec_async(
 
 
 @utils.signature_of(exec_async)
-def exec(*args, **kwargs):
+def exec(*args, **kwargs) -> Any:
     """Run a user defined function, synchronously.
 
     Arguments are exactly as in :func:`exec_async`. Returns an immediate value
@@ -171,14 +171,14 @@ def register_udf(
         if not callable(func):
             raise TypeError("First argument to `exec` must be callable!")
 
-        pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
+        pickledUDF = cloudpickle.dumps(func, protocol=utils.TILEDB_CLOUD_PROTOCOL)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
         source_lines = utils.getsourcelines(func) if include_source_lines else None
 
-        udf_model = rest_api.models.UDFInfoUpdate(
+        udf_model = models.UDFInfoUpdate(
             name=name,
-            language=rest_api.models.UDFLanguage.PYTHON,
+            language=models.UDFLanguage.PYTHON,
             version="{}.{}.{}".format(
                 sys.version_info.major,
                 sys.version_info.minor,
@@ -224,7 +224,7 @@ def register_generic_udf(
         name=name,
         namespace=namespace,
         image_name=image_name,
-        type=rest_api.models.UDFType.GENERIC,
+        type=models.UDFType.GENERIC,
         include_source_lines=include_source_lines,
         async_req=async_req,
     )
@@ -253,7 +253,7 @@ def register_single_array_udf(
         name=name,
         namespace=namespace,
         image_name=image_name,
-        type=rest_api.models.UDFType.SINGLE_ARRAY,
+        type=models.UDFType.SINGLE_ARRAY,
         include_source_lines=include_source_lines,
         async_req=async_req,
     )
@@ -302,7 +302,7 @@ def update_udf(
         if not callable(func):
             raise TypeError("First argument to `exec` must be callable!")
 
-        pickledUDF = cloudpickle.dumps(func, protocol=tiledb_cloud_protocol)
+        pickledUDF = cloudpickle.dumps(func, protocol=utils.TILEDB_CLOUD_PROTOCOL)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
         source_lines = utils.getsourcelines(func) if include_source_lines else None
@@ -311,9 +311,9 @@ def update_udf(
         if update_name is not None and update_name != "":
             update_udf_name = update_name
 
-        udf_model = rest_api.models.UDFInfoUpdate(
+        udf_model = models.UDFInfoUpdate(
             name=update_udf_name,
-            language=rest_api.models.UDFLanguage.PYTHON,
+            language=models.UDFLanguage.PYTHON,
             version="{}.{}.{}".format(
                 sys.version_info.major,
                 sys.version_info.minor,
@@ -362,7 +362,7 @@ def update_generic_udf(
         name=name,
         namespace=namespace,
         image_name=image_name,
-        type=rest_api.models.UDFType.GENERIC,
+        type=models.UDFType.GENERIC,
         include_source_lines=include_source_lines,
         async_req=async_req,
     )
@@ -391,7 +391,7 @@ def update_single_array_udf(
         name=name,
         namespace=namespace,
         image_name=image_name,
-        type=rest_api.models.UDFType.SINGLE_ARRAY,
+        type=models.UDFType.SINGLE_ARRAY,
         include_source_lines=include_source_lines,
         async_req=async_req,
     )
@@ -462,8 +462,8 @@ def share(name=None, namespace=None, async_req=False):
         return api_instance.share_udf_info(
             udf_namespace,
             udf_name,
-            udf_sharing=rest_api.models.UDFSharing(
-                namespace=namespace, actions=[rest_api.models.UDFActions.FETCH_UDF]
+            udf_sharing=models.UDFSharing(
+                namespace=namespace, actions=[models.UDFActions.FETCH_UDF]
             ),
             async_req=async_req,
         )
@@ -500,7 +500,7 @@ def unshare(name=None, namespace=None, async_req=False):
         return api_instance.share_udf_info(
             udf_namespace,
             udf_name,
-            udf_sharing=rest_api.models.UDFSharing(namespace=namespace),
+            udf_sharing=models.UDFSharing(namespace=namespace),
             async_req=async_req,
         )
     except GenApiException as exc:

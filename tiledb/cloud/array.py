@@ -1,8 +1,8 @@
-import base64
 import json
 import multiprocessing
 import sys
 import urllib
+import warnings
 import zlib
 from typing import Any, Callable, Optional, Sequence, Union
 
@@ -12,7 +12,6 @@ import numpy
 from . import client
 from . import config
 from . import tiledb_cloud_error
-from . import udf
 from . import utils
 from .rest_api import ApiException as GenApiException
 from .rest_api import models
@@ -486,6 +485,13 @@ def apply_async(
     (namespace, array_name) = split_uri(uri)
     api_instance = client.client.udf_api
 
+    if name:
+        warnings.warn(
+            DeprecationWarning(
+                "Use of `name` to set a function name is deprecated. "
+                "Pass the function name in `func` instead."
+            )
+        )
     user_func = _pick_func(func=func, name=name)
 
     parsed_ranges = parse_ranges(ranges)
@@ -521,14 +527,14 @@ def apply_async(
     )
 
     if callable(user_func):
-        udf_model._exec = _b64_pickle(user_func)
+        udf_model._exec = utils.b64_pickle(user_func)
         if include_source_lines:
             udf_model.exec_raw = utils.getsourcelines(user_func)
     else:
         udf_model.udf_info_name = user_func
 
     if kwargs:
-        udf_model.argument = _b64_pickle((kwargs,))
+        udf_model.argument = utils.b64_pickle((kwargs,))
 
     submit_kwargs = {}
     if http_compressor:
@@ -655,14 +661,14 @@ def exec_multi_array_udf_async(
     )
 
     if callable(user_func):
-        udf_model._exec = _b64_pickle(user_func)
+        udf_model._exec = utils.b64_pickle(user_func)
         if include_source_lines:
             udf_model.exec_raw = utils.getsourcelines(user_func)
     else:
         udf_model.udf_info_name = user_func
 
     if kwargs:
-        udf_model.argument = _b64_pickle((kwargs,))
+        udf_model.argument = utils.b64_pickle((kwargs,))
 
     submit_kwargs = {}
     if http_compressor:
@@ -716,9 +722,3 @@ def _pick_func(**kwargs: Union[str, Callable, None]) -> Union[str, Callable]:
             f"not {type(result)}"
         )
     return result
-
-
-def _b64_pickle(obj: Any) -> str:
-    """Pickles the given object, then base64 encodes the pickle."""
-    pickle = cloudpickle.dumps(obj, protocol=udf.tiledb_cloud_protocol)
-    return base64.b64encode(pickle).decode("ascii")

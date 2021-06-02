@@ -35,3 +35,12 @@ class SourceLinesTest(unittest.TestCase):
 
             os.remove(testfile)
             self.assertIsNone(utils.getsourcelines(bogus.unimportant_function))
+
+
+class PickleTest(unittest.TestCase):
+    def test_b64_pickle(self):
+        self.assertEqual(utils.b64_pickle(None), "gAROLg==")
+        self.assertEqual(
+            utils.b64_pickle(("a", 1)),
+            "gASVCQAAAAAAAACMAWGUSwGGlC4=",
+        )
