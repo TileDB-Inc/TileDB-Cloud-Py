@@ -41,7 +41,7 @@ REQUIRES = [
 # 3) https://stackoverflow.com/a/50301070
 
 PACKAGES = ("tiledb.cloud",) + tuple(
-    "tiledb.cloud." + x for x in find_packages("./tiledb/cloud", exclude=("testonly"))
+    "tiledb.cloud." + x for x in find_packages("./tiledb/cloud", exclude=("testonly",))
 )
 
 setup(
