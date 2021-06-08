@@ -40,9 +40,9 @@ REQUIRES = [
 #       '[].nspkg.pth' pointer file, which breaks imports of tiledb.cloud.
 # 3) https://stackoverflow.com/a/50301070
 
-packages = ["tiledb.cloud"] + [
-    "tiledb.cloud." + x for x in find_packages("./tiledb/cloud")
-]
+PACKAGES = ("tiledb.cloud",) + tuple(
+    "tiledb.cloud." + x for x in find_packages("./tiledb/cloud", exclude=("testonly",))
+)
 
 setup(
     name=NAME,
@@ -51,7 +51,7 @@ setup(
     url="https://tiledb.io",
     keywords=["TileDB", "cloud"],
     install_requires=REQUIRES,
-    packages=packages,
+    packages=PACKAGES,
     include_package_data=True,
     zip_safe=False,  # Force folder install; egg doesn't work for namespace
     use_scm_version={

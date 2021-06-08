@@ -1,7 +1,13 @@
+import base64
 import inspect
 import logging
-from typing import Callable, Optional, TypeVar
+from typing import Any, Callable, Optional, TypeVar
 
+import cloudpickle
+
+TILEDB_CLOUD_PROTOCOL = 4
+
+# General-use logger for TileDB Cloud.
 logger = logging.getLogger("tiledb.cloud")
 
 
@@ -45,3 +51,9 @@ def signature_of(src: Callable) -> Callable[[_T], _T]:
         return dst
 
     return copy_to
+
+
+def b64_pickle(obj: Any) -> str:
+    """Pickles the given object, then base64 encodes the pickle."""
+    pickle = cloudpickle.dumps(obj, protocol=TILEDB_CLOUD_PROTOCOL)
+    return base64.b64encode(pickle).decode("ascii")

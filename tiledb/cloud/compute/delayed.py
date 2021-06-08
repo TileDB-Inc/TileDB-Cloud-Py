@@ -1,10 +1,10 @@
-from ..dag.dag import Node, DAG, Status
+import numbers
 
 from ..array import apply as array_apply
+from ..dag.dag import DAG
+from ..dag.dag import Node
 from ..sql import exec as sql_exec
 from ..udf import exec as udf_exec
-
-import numbers
 
 
 class DelayedBase(Node):
@@ -93,14 +93,18 @@ class DelayedBase(Node):
 
 class Delayed(DelayedBase):
     def __init__(self, func_exec, *args, local=False, **kwargs):
+        _check_funcable(func_exec=func_exec)
         self.func_exec = func_exec
-        if func_exec is not None and not callable(func_exec):
-            raise TypeError("func_exec argument to `Node` must be callable!")
 
         if not local:
             super().__init__(udf_exec, func_exec, *args, local_mode=local, **kwargs)
-        else:
+        elif callable(func_exec):
             super().__init__(func_exec, *args, local_mode=local, **kwargs)
+        else:
+            raise TypeError(
+                "When running a function locally, it must be a callable "
+                "and not the registered name of a UDF."
+            )
 
         # Set name of task if it won't interfere with user args
         if not self.local_mode:
@@ -165,8 +169,7 @@ class DelayedArrayUDF(DelayedBase):
         self.func_exec = func_exec
         self.uri = uri
 
-        if func_exec is not None and not callable(func_exec):
-            raise TypeError("func_exec argument to `Node` must be callable!")
+        _check_funcable(func_exec=func_exec)
 
         super().__init__(array_apply, self.uri, self.func_exec, *args, **kwargs)
 
@@ -192,3 +195,17 @@ class DelayedArrayUDF(DelayedBase):
             self.kwargs["task_name"] = self.name
 
         return self
+
+
+def _check_funcable(**kwargs) -> None:
+    """Checks whether the given parameter can be treated as a function."""
+    name, func = kwargs.popitem()
+    assert not kwargs, "Too many args passed to _check_funcable"
+    if not func:
+        raise TypeError(f"must pass a callable or UDF to {name}")
+    if callable(func) or type(func) == str:
+        return
+    raise TypeError(
+        f"{name} argument must be a callable or the registered name of a UDF, "
+        f"not {type(func)}"
+    )

@@ -1,20 +1,21 @@
-from . import rest_api
-from . import config
-from . import client
-from . import tiledb_cloud_error
-from .rest_api import ApiException as GenApiException
-from .rest_api import rest
-from . import udf
-from . import utils
-
-import zlib
-import multiprocessing
-import cloudpickle
-import urllib
-import base64
-import sys
-import numpy
 import json
+import multiprocessing
+import sys
+import urllib
+import warnings
+import zlib
+from typing import Any, Callable, Optional, Sequence, Union
+
+import cloudpickle
+import numpy
+
+from . import client
+from . import config
+from . import tiledb_cloud_error
+from . import utils
+from .rest_api import ApiException as GenApiException
+from .rest_api import models
+from .rest_api import rest
 
 last_udf_task_id = None
 
@@ -48,11 +49,11 @@ class UDFResult(multiprocessing.pool.ApplyResult):
                 )
 
         try:
-            if self.result_format == rest_api.models.UDFResultType.NATIVE:
+            if self.result_format == models.UDFResultType.NATIVE:
                 res = cloudpickle.loads(res)
-            elif self.result_format == rest_api.models.UDFResultType.JSON:
+            elif self.result_format == models.UDFResultType.JSON:
                 res = json.loads(res)
-            elif self.result_format == rest_api.models.UDFResultType.ARROW:
+            elif self.result_format == models.UDFResultType.ARROW:
                 import pyarrow
 
                 # Arrow optimized empty results by not serializing anything
@@ -92,10 +93,10 @@ class ArrayList:
         elif layout.upper() == "U":
             converted_layout = "unordered"
 
-        array_ranges = parse_ranges(ranges)
-        udf_array_details = rest_api.models.UDFArrayDetails(
+        parse_ranges(ranges)  # check that the ranges are parseable.
+        udf_array_details = models.UDFArrayDetails(
             uri=uri,
-            ranges=rest_api.models.QueryRanges(layout=converted_layout, ranges=ranges),
+            ranges=models.QueryRanges(layout=converted_layout, ranges=ranges),
             buffers=buffers,
         )
         self.arrayList.append(udf_array_details)
@@ -154,8 +155,8 @@ def share_array(uri, namespace, permissions, async_req=False):
 
     for perm in permissions:
         if (
-            not perm.lower() == rest_api.models.ArrayActions.READ
-            and not perm.lower() == rest_api.models.ArrayActions.WRITE
+            not perm.lower() == models.ArrayActions.READ
+            and not perm.lower() == models.ArrayActions.WRITE
         ):
             raise Exception("Only read or write permissions are accepted")
 
@@ -166,9 +167,7 @@ def share_array(uri, namespace, permissions, async_req=False):
         return api_instance.share_array(
             namespace=array_namespace,
             array=array_name,
-            array_sharing=rest_api.models.ArraySharing(
-                namespace=namespace, actions=permissions
-            ),
+            array_sharing=models.ArraySharing(namespace=namespace, actions=permissions),
             async_req=async_req,
         )
     except GenApiException as exc:
@@ -213,7 +212,7 @@ def update_info(
         return api_instance.update_array_metadata(
             namespace=namespace,
             array=current_array_name,
-            array_metadata=rest_api.models.ArrayInfoUpdate(
+            array_metadata=models.ArrayInfoUpdate(
                 description=description,
                 name=array_name,
                 uri=uri,
@@ -242,7 +241,7 @@ def update_file_properties(uri, file_type=None, file_properties=None, async_req=
         return api_instance.update_array_metadata(
             namespace=namespace,
             array=current_array_name,
-            array_metadata=rest_api.models.ArrayInfoUpdate(
+            array_metadata=models.ArrayInfoUpdate(
                 file_type=file_type, file_properties=file_properties
             ),
             async_req=async_req,
@@ -279,7 +278,7 @@ def register_array(
         return api_instance.register_array(
             namespace=namespace,
             array=uri,
-            array_metadata=rest_api.models.ArrayInfoUpdate(
+            array_metadata=models.ArrayInfoUpdate(
                 description=description,
                 name=array_name,
                 uri=uri,
@@ -433,38 +432,46 @@ def parse_ranges(ranges):
 
 
 def apply_async(
-    uri,
-    func=None,
-    ranges=None,
-    name=None,
-    attrs=None,
-    layout=None,
-    image_name=None,
-    http_compressor="deflate",
-    include_source_lines=True,
-    task_name=None,
-    v2=True,
-    result_format=rest_api.models.UDFResultType.NATIVE,
+    uri: str,
+    func: Union[str, Callable, None] = None,
+    ranges: Sequence = (),
+    name: Optional[str] = None,
+    attrs: Sequence = (),
+    layout: Optional[str] = None,
+    image_name: str = "default",
+    http_compressor: str = "deflate",
+    include_source_lines: bool = True,
+    task_name: Optional[str] = None,
+    v2: bool = True,
+    result_format: str = models.UDFResultType.NATIVE,
     result_format_version=None,
-    **kwargs
-):
+    **kwargs: Any,
+) -> UDFResult:
     """
-    Apply a user defined function to an array asynchronous
+    Apply a user defined function to an array, asynchronously.
 
-    :param uri: array to apply on
-    :param func: user function to run
+    :param uri: The ``tiledb://...`` URI of the array to apply the function to.
+    :param func: The function to run. This can be either a callable function,
+        or the name of a registered user-defined function
     :param ranges: ranges to issue query on
+    :param name: Deprecated. If ``func`` is ``None``, the name of the registered
+        user-defined function to call.
     :param attrs: list of attributes or dimensions to fetch in query
     :param layout: tiledb query layout
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
-    :param include_source_lines: disables sending sources lines of function along with udf
-    :param str task_name: optional name to assign the task for logging and audit purposes
+    :param include_source_lines: True to send the source code of your UDF to
+        the server with your request. (This means it can be shown to you
+        in stack traces if an error occurs.) False to send only compiled Python
+        bytecode.
+    :param str task_name: optional name to assign the task
+        for logging and audit purposes
     :param bool v2: use v2 array udfs
     :param UDFResultType result_format: result serialization format
-    :param str result_format_version: set a format version for cloudpickle or arrow IPC
+    :param str result_format_version: set a format version
+        for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function
-    :return: UDFResult object which is a future containing the results of the UDF
+    :return: UDFResult, a future containing the results of the UDF
 
     **Example**
     >>> import tiledb, tiledb.cloud, numpy
@@ -478,19 +485,16 @@ def apply_async(
     (namespace, array_name) = split_uri(uri)
     api_instance = client.client.udf_api
 
-    if func is not None and not callable(func):
-        raise TypeError("func argument to `apply` must be callable!")
-    elif func is None and name is None or name == "":
-        raise TypeError("name argument to `apply` must be set if no function is passed")
+    if name:
+        warnings.warn(
+            DeprecationWarning(
+                "Use of `name` to set a function name is deprecated. "
+                "Pass the function name in `func` instead."
+            )
+        )
+    user_func = _pick_func(func=func, name=name)
 
-    pickledUDF = None
-    source_lines = None
-    if func is not None:
-        source_lines = utils.getsourcelines(func) if include_source_lines else None
-        pickledUDF = cloudpickle.dumps(func, protocol=udf.tiledb_cloud_protocol)
-        pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
-
-    ranges = parse_ranges(ranges)
+    parsed_ranges = parse_ranges(ranges)
 
     if layout is None:
         converted_layout = None
@@ -502,56 +506,49 @@ def apply_async(
         converted_layout = "global-order"
     elif layout.upper() == "U":
         converted_layout = "unordered"
+    else:
+        raise ValueError("layout must be one of R, C, G, or U, or unset")
 
-    ranges = rest_api.models.QueryRanges(layout=converted_layout, ranges=ranges)
+    model_ranges = models.QueryRanges(layout=converted_layout, ranges=parsed_ranges)
 
-    arguments = None
-    if kwargs is not None and len(kwargs) > 0:
-        arguments = []
-        if len(kwargs) > 0:
-            arguments.append(kwargs)
-        arguments = tuple(arguments)
-        arguments = cloudpickle.dumps(arguments, protocol=udf.tiledb_cloud_protocol)
-        arguments = base64.b64encode(arguments).decode("ascii")
+    udf_model = models.MultiArrayUDF(
+        language=models.UDFLanguage.PYTHON,
+        ranges=model_ranges,
+        buffers=attrs,
+        version="{}.{}.{}".format(
+            sys.version_info.major,
+            sys.version_info.minor,
+            sys.version_info.micro,
+        ),
+        image_name=image_name,
+        task_name=task_name,
+        result_format=result_format,
+        result_format_version=result_format_version,
+    )
 
-    if image_name is None:
-        image_name = "default"
+    if callable(user_func):
+        udf_model._exec = utils.b64_pickle(user_func)
+        if include_source_lines:
+            udf_model.exec_raw = utils.getsourcelines(user_func)
+    else:
+        udf_model.udf_info_name = user_func
+
+    if kwargs:
+        udf_model.argument = utils.b64_pickle((kwargs,))
+
+    submit_kwargs = {}
+    if http_compressor:
+        submit_kwargs["accept_encoding"] = http_compressor
+
     try:
-
-        kwargs = {"_preload_content": False, "async_req": True}
-        if http_compressor is not None:
-            kwargs["accept_encoding"] = http_compressor
-
-        kwargs["v2"] = v2
-
-        udf_model = rest_api.models.MultiArrayUDF(
-            language=rest_api.models.UDFLanguage.PYTHON,
-            _exec=pickledUDF,
-            ranges=ranges,
-            buffers=attrs,
-            version="{}.{}.{}".format(
-                sys.version_info.major,
-                sys.version_info.minor,
-                sys.version_info.micro,
-            ),
-            image_name=image_name,
-            task_name=task_name,
-            argument=arguments,
-            result_format=result_format,
-            result_format_version=result_format_version,
-        )
-
-        if pickledUDF is not None:
-            udf_model._exec = pickledUDF
-        elif name is not None:
-            udf_model.udf_info_name = name
-
-        if source_lines is not None:
-            udf_model.exec_raw = source_lines
-
-        # _preload_content must be set to false to avoid trying to decode binary data
         response = api_instance.submit_udf(
-            namespace=namespace, array=array_name, udf=udf_model, **kwargs
+            namespace=namespace,
+            array=array_name,
+            udf=udf_model,
+            async_req=True,
+            v2=v2,
+            _preload_content=False,  # needed to avoid decoding binary data
+            **submit_kwargs,
         )
 
         return UDFResult(response, result_format=result_format)
@@ -561,7 +558,7 @@ def apply_async(
 
 
 @utils.signature_of(apply_async)
-def apply(*args, **kwargs):
+def apply(*args, **kwargs) -> Any:
     """
     Apply a user defined function to an array, synchronously.
 
@@ -580,32 +577,37 @@ def apply(*args, **kwargs):
 
 
 def exec_multi_array_udf_async(
-    func=None,
-    array_list=None,
-    namespace=None,
-    name=None,
+    func: Union[str, Callable, None] = None,
+    array_list: ArrayList = None,
+    namespace: Optional[str] = None,
+    name: Optional[str] = None,
     layout=None,
-    image_name=None,
-    http_compressor="deflate",
-    include_source_lines=True,
-    task_name=None,
-    result_format=rest_api.models.UDFResultType.NATIVE,
+    image_name: str = "default",
+    http_compressor: Optional[str] = "deflate",
+    include_source_lines: bool = True,
+    task_name: Optional[str] = None,
+    result_format: str = models.UDFResultType.NATIVE,
     result_format_version=None,
-    **kwargs
-):
+    **kwargs,
+) -> UDFResult:
     """
-    Apply a user defined function to multiple arrays
-    :param func: user function to run
+    Apply a user defined function to multiple arrays, asynchronously.
+
+    :param func: The function to run. This can be either a callable function,
+        or the name of a registered user-defined function
+    :param array_list: The list of arrays to run the function on,
+        as an already-built ArrayList object.
     :param namespace: namespace to run udf under
-    :param array_list: ArrayList object build incrementally to contain list of UDFArrayDetails for use in multi array UDFs
-    :param layout: tiledb query layout
+    :param layout: (unused)
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
-    :param str task_name: optional name to assign the task for logging and audit purposes
+    :param str task_name: optional name to assign the task
+        for logging and audit purposes
     :param UDFResultType result_format: result serialization format
-    :param str result_format_version: set a format version for cloudpickle or arrow IPC
+    :param str result_format_version: set a format version
+        for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function
-    :return: UDFResult object which is a future containing the results of the UDF
+    :return: A future containing the results of the UDF.
     >>> import numpy as np
     >>> from tiledb.cloud import array
     >>> import tiledb.cloud
@@ -632,73 +634,53 @@ def exec_multi_array_udf_async(
 
         namespace = client.find_organization_or_user_for_default_charges(config.user)
 
-    if func is not None and not callable(func):
-        raise TypeError("func argument to `exec_multi_array_udf` must be callable!")
-    elif func is None and name is None or name == "":
-        raise TypeError("name argument to `apply` must be set if no function is passed")
-
-    pickledUDF = None
-    source_lines = None
-    if func is not None:
-        source_lines = utils.getsourcelines(func) if include_source_lines else None
-        pickledUDF = cloudpickle.dumps(func, protocol=udf.tiledb_cloud_protocol)
-        pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
-
-    if array_list is None:
-        raise TypeError("arrays need to have passed in order to call multi array udfs")
-
     if type(array_list) is not ArrayList:
-        raise TypeError("array details passed not of correct type (ArrayList)")
-
-    # Get the list of arrays
-    arrays = array_list.get()
-
-    if len(arrays) == 0:
-        raise TypeError("arrays need to have passed in order to call multi array udfs")
-
-    arguments = None
-    if kwargs is not None and len(kwargs) > 0:
-        arguments = []
-        if len(kwargs) > 0:
-            arguments.append(kwargs)
-        arguments = tuple(arguments)
-        arguments = cloudpickle.dumps(arguments, protocol=udf.tiledb_cloud_protocol)
-        arguments = base64.b64encode(arguments).decode("ascii")
-
-    if image_name is None:
-        image_name = "default"
-    try:
-
-        kwargs = {"_preload_content": False, "async_req": True}
-        if http_compressor is not None:
-            kwargs["accept_encoding"] = http_compressor
-
-        udf_model = rest_api.models.MultiArrayUDF(
-            language=rest_api.models.UDFLanguage.PYTHON,
-            _exec=pickledUDF,
-            arrays=arrays,
-            version="{}.{}.{}".format(
-                sys.version_info.major,
-                sys.version_info.minor,
-                sys.version_info.micro,
-            ),
-            image_name=image_name,
-            task_name=task_name,
-            argument=arguments,
-            result_format=result_format,
-            result_format_version=result_format_version,
+        raise TypeError(
+            f"array_list must be passed as an ArrayList, not {type(array_list)}"
         )
+    assert array_list
+    arrays = array_list.get()
+    if not arrays:
+        raise ValueError("must pass at least 1 array to a multi-array UDF")
 
-        if pickledUDF is not None:
-            udf_model._exec = pickledUDF
-        elif name is not None:
-            udf_model.udf_info_name = name
+    user_func = _pick_func(func=func, name=name)
+    del name, func
 
-        if source_lines is not None:
-            udf_model.exec_raw = source_lines
+    udf_model = models.MultiArrayUDF(
+        language=models.UDFLanguage.PYTHON,
+        arrays=arrays,
+        version="{}.{}.{}".format(
+            sys.version_info.major,
+            sys.version_info.minor,
+            sys.version_info.micro,
+        ),
+        image_name=image_name,
+        task_name=task_name,
+        result_format=result_format,
+        result_format_version=result_format_version,
+    )
 
+    if callable(user_func):
+        udf_model._exec = utils.b64_pickle(user_func)
+        if include_source_lines:
+            udf_model.exec_raw = utils.getsourcelines(user_func)
+    else:
+        udf_model.udf_info_name = user_func
+
+    if kwargs:
+        udf_model.argument = utils.b64_pickle((kwargs,))
+
+    submit_kwargs = {}
+    if http_compressor:
+        submit_kwargs["accept_encoding"] = http_compressor
+
+    try:
         response = api_instance.submit_multi_array_udf(
-            namespace=namespace, udf=udf_model, **kwargs
+            namespace=namespace,
+            udf=udf_model,
+            async_req=True,
+            _preload_content=False,  # needed to avoid decoding binary data
+            **submit_kwargs,
         )
 
         return UDFResult(response, result_format=result_format)
@@ -708,9 +690,35 @@ def exec_multi_array_udf_async(
 
 
 @utils.signature_of(exec_multi_array_udf_async)
-def exec_multi_array_udf(*args, **kwargs):
+def exec_multi_array_udf(*args, **kwargs) -> Any:
     """Apply a user-defined function to multiple arrays, synchronously.
 
     All arguments are exactly as in :func:`exec_multi_array_udf_async`.
     """
     return exec_multi_array_udf_async(*args, **kwargs).get()
+
+
+def _pick_func(**kwargs: Union[str, Callable, None]) -> Union[str, Callable]:
+    """Extracts the exactly *one* function from the provided arguments.
+
+    Raises an error if either zero or more than one functions is passed.
+    Uses the names of the arguments as part of the error message.
+    """
+
+    result: Union[str, Callable, None] = None
+    count = 0
+
+    for val in kwargs.values():
+        if val:
+            result = val
+            count += 1
+
+    if count != 1:
+        names = ", ".join(kwargs)
+        raise TypeError(f"exactly 1 of [{names}] must be provided")
+    if not callable(result) and type(result) != str or not result:
+        raise TypeError(
+            "provided function must be a callable or the str name of a UDF, "
+            f"not {type(result)}"
+        )
+    return result

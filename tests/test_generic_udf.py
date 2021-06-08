@@ -2,8 +2,10 @@ import os
 import unittest
 
 import numpy as np
-from tiledb.cloud import udf
 import tiledb.cloud
+from tiledb.cloud import udf
+
+from tiledb.cloud import testonly
 
 tiledb.cloud.login(
     token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
@@ -45,3 +47,12 @@ class GenericUDFTest(unittest.TestCase):
         )
         self.assertEqual(res, [1, [2, 2], {"test": 1}, [1, 2, 3]])
         self.assertEqual(tiledb.cloud.last_udf_task().name, task_name)
+
+    def test_pass_by_name(self):
+        def show(*args, **kwargs):
+            """Function created to call by name in unit tests."""
+            return f"called with {args!r} {kwargs!r}"
+
+        with testonly.register_udf(show) as udf_name:
+            got = udf.exec(udf_name, 1, 2, 3, easy_as="abc")
+        self.assertEqual(got, "called with (1, 2, 3) {'easy_as': 'abc'}")
