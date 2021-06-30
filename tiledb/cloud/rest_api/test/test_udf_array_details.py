@@ -16,12 +16,12 @@ import unittest
 import datetime
 
 import rest_api
-from tiledb.cloud.rest_api.models.udf_result_type import UDFResultType  # noqa: E501
+from tiledb.cloud.rest_api.models.udf_array_details import UDFArrayDetails  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestUDFResultType(unittest.TestCase):
-    """UDFResultType unit test stubs"""
+class TestUDFArrayDetails(unittest.TestCase):
+    """UDFArrayDetails unit test stubs"""
 
     def setUp(self):
         pass
@@ -30,18 +30,25 @@ class TestUDFResultType(unittest.TestCase):
         pass
 
     def make_instance(self, include_optional):
-        """Test UDFResultType
+        """Test UDFArrayDetails
         include_option is a boolean, when False only required
         params are included, when True both required and
         optional params are included"""
-        # model = tiledb.cloud.rest_api.models.udf_result_type.UDFResultType()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.udf_array_details.UDFArrayDetails()  # noqa: E501
         if include_optional:
-            return UDFResultType()
+            return UDFArrayDetails(
+                uri="0",
+                ranges=tiledb.cloud.rest_api.models.query_ranges.QueryRanges(
+                    layout="row-major",
+                    ranges=[[1.337]],
+                ),
+                buffers=["0"],
+            )
         else:
-            return UDFResultType()
+            return UDFArrayDetails()
 
-    def testUDFResultType(self):
-        """Test UDFResultType"""
+    def testUDFArrayDetails(self):
+        """Test UDFArrayDetails"""
         inst_req_only = self.make_instance(include_optional=False)
         inst_req_and_optional = self.make_instance(include_optional=True)
 

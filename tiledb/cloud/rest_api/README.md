@@ -105,7 +105,9 @@ Class | Method | HTTP request | Description
 *ArrayApi* | [**get_array_max_buffer_sizes**](rest_api/docs/ArrayApi.md#get_array_max_buffer_sizes) | **GET** /arrays/{namespace}/{array}/max_buffer_sizes | 
 *ArrayApi* | [**get_array_meta_data_json**](rest_api/docs/ArrayApi.md#get_array_meta_data_json) | **GET** /arrays/{namespace}/{array}/metadata_json | 
 *ArrayApi* | [**get_array_metadata**](rest_api/docs/ArrayApi.md#get_array_metadata) | **GET** /arrays/{namespace}/{array}/metadata | 
+*ArrayApi* | [**get_array_metadata_capnp**](rest_api/docs/ArrayApi.md#get_array_metadata_capnp) | **GET** /arrays/{namespace}/{array}/array_metadata | 
 *ArrayApi* | [**get_array_non_empty_domain**](rest_api/docs/ArrayApi.md#get_array_non_empty_domain) | **GET** /arrays/{namespace}/{array}/non_empty_domain | 
+*ArrayApi* | [**get_array_non_empty_domain_json**](rest_api/docs/ArrayApi.md#get_array_non_empty_domain_json) | **GET** /arrays/{namespace}/{array}/non_empty_domain_json | 
 *ArrayApi* | [**get_array_sample_data**](rest_api/docs/ArrayApi.md#get_array_sample_data) | **GET** /arrays/{namespace}/{array}/sample | 
 *ArrayApi* | [**get_array_sharing_policies**](rest_api/docs/ArrayApi.md#get_array_sharing_policies) | **GET** /arrays/{namespace}/{array}/share | 
 *ArrayApi* | [**get_arrays_in_namespace**](rest_api/docs/ArrayApi.md#get_arrays_in_namespace) | **GET** /arrays/{namespace} | 
@@ -113,6 +115,7 @@ Class | Method | HTTP request | Description
 *ArrayApi* | [**register_array**](rest_api/docs/ArrayApi.md#register_array) | **POST** /arrays/{namespace}/{array}/register | 
 *ArrayApi* | [**share_array**](rest_api/docs/ArrayApi.md#share_array) | **PATCH** /arrays/{namespace}/{array}/share | 
 *ArrayApi* | [**update_array_metadata**](rest_api/docs/ArrayApi.md#update_array_metadata) | **PATCH** /arrays/{namespace}/{array}/metadata | 
+*ArrayApi* | [**update_array_metadata_capnp**](rest_api/docs/ArrayApi.md#update_array_metadata_capnp) | **POST** /arrays/{namespace}/{array}/array_metadata | 
 *ArrayApi* | [**vacuum_array**](rest_api/docs/ArrayApi.md#vacuum_array) | **POST** /arrays/{namespace}/{array}/vacuum | 
 *ArrayTasksApi* | [**get_array_tasks_sidebar**](rest_api/docs/ArrayTasksApi.md#get_array_tasks_sidebar) | **GET** /tasks/sidebar | 
 *FavoritesApi* | [**delete_favorite_id**](rest_api/docs/FavoritesApi.md#delete_favorite_id) | **DELETE** /favorites/{id} | 
@@ -128,6 +131,7 @@ Class | Method | HTTP request | Description
 *NotebookApi* | [**get_notebook_server_status**](rest_api/docs/NotebookApi.md#get_notebook_server_status) | **GET** /notebooks/server/{namespace}/status | 
 *NotebookApi* | [**shutdown_notebook_server**](rest_api/docs/NotebookApi.md#shutdown_notebook_server) | **DELETE** /notebooks/server/{namespace} | 
 *NotebookApi* | [**update_notebook_name**](rest_api/docs/NotebookApi.md#update_notebook_name) | **PATCH** /notebooks/{namespace}/{array}/rename | 
+*NotebooksApi* | [**notebooks_namespace_array_versions_get**](rest_api/docs/NotebooksApi.md#notebooks_namespace_array_versions_get) | **GET** /notebooks/{namespace}/{array}/versions | 
 *OrganizationApi* | [**add_aws_access_credentials**](rest_api/docs/OrganizationApi.md#add_aws_access_credentials) | **POST** /credentials/{namespace}/aws | 
 *OrganizationApi* | [**add_user_to_organization**](rest_api/docs/OrganizationApi.md#add_user_to_organization) | **POST** /organizations/{organization}/user | 
 *OrganizationApi* | [**check_aws_access_credentials**](rest_api/docs/OrganizationApi.md#check_aws_access_credentials) | **GET** /credentials/{namespace}/aws | 
@@ -152,7 +156,6 @@ Class | Method | HTTP request | Description
 *TasksApi* | [**run_sql**](rest_api/docs/TasksApi.md#run_sql) | **POST** /sql/{namespace} | 
 *TasksApi* | [**task_id_get**](rest_api/docs/TasksApi.md#task_id_get) | **GET** /task/{id} | 
 *TasksApi* | [**task_id_result_get**](rest_api/docs/TasksApi.md#task_id_result_get) | **GET** /task/{id}/result | 
-*TasksApi* | [**task_id_retry_post**](rest_api/docs/TasksApi.md#task_id_retry_post) | **POST** /task/{id}/retry | 
 *TasksApi* | [**tasks_get**](rest_api/docs/TasksApi.md#tasks_get) | **GET** /tasks | 
 *UdfApi* | [**delete_udf_info**](rest_api/docs/UdfApi.md#delete_udf_info) | **DELETE** /udf/{namespace}/{name} | 
 *UdfApi* | [**get_udf_info**](rest_api/docs/UdfApi.md#get_udf_info) | **GET** /udf/{namespace}/{name} | 
@@ -160,7 +163,9 @@ Class | Method | HTTP request | Description
 *UdfApi* | [**register_udf_info**](rest_api/docs/UdfApi.md#register_udf_info) | **POST** /udf/{namespace}/{name} | 
 *UdfApi* | [**share_udf_info**](rest_api/docs/UdfApi.md#share_udf_info) | **PATCH** /udf/{namespace}/{name}/share | 
 *UdfApi* | [**submit_generic_udf**](rest_api/docs/UdfApi.md#submit_generic_udf) | **POST** /udfs/generic/{namespace} | 
+*UdfApi* | [**submit_multi_array_udf**](rest_api/docs/UdfApi.md#submit_multi_array_udf) | **POST** /udfs/arrays/{namespace} | 
 *UdfApi* | [**submit_udf**](rest_api/docs/UdfApi.md#submit_udf) | **POST** /arrays/{namespace}/{array}/udf/submit | 
+*UdfApi* | [**udf_namespace_array_versions_get**](rest_api/docs/UdfApi.md#udf_namespace_array_versions_get) | **GET** /udf/{namespace}/{array}/versions | 
 *UdfApi* | [**update_udf_info**](rest_api/docs/UdfApi.md#update_udf_info) | **PATCH** /udf/{namespace}/{name} | 
 *UserApi* | [**add_aws_access_credentials**](rest_api/docs/UserApi.md#add_aws_access_credentials) | **POST** /credentials/{namespace}/aws | 
 *UserApi* | [**add_user_to_organization**](rest_api/docs/UserApi.md#add_user_to_organization) | **POST** /organizations/{organization}/user | 
@@ -179,6 +184,7 @@ Class | Method | HTTP request | Description
 *UserApi* | [**reset_user_password**](rest_api/docs/UserApi.md#reset_user_password) | **POST** /user/password_reset | 
 *UserApi* | [**revoke_token**](rest_api/docs/UserApi.md#revoke_token) | **DELETE** /tokens/{token} | 
 *UserApi* | [**tokens_get**](rest_api/docs/UserApi.md#tokens_get) | **GET** /tokens | 
+*UserApi* | [**tokens_session_get**](rest_api/docs/UserApi.md#tokens_session_get) | **GET** /tokens/session | 
 *UserApi* | [**update_aws_access_credentials**](rest_api/docs/UserApi.md#update_aws_access_credentials) | **PATCH** /credentials/{namespace}/aws/{name} | 
 *UserApi* | [**update_user**](rest_api/docs/UserApi.md#update_user) | **PATCH** /users/{username} | 
 *UserApi* | [**update_user_in_organization**](rest_api/docs/UserApi.md#update_user_in_organization) | **PATCH** /organizations/{organization}/{username} | 
@@ -239,6 +245,7 @@ Class | Method | HTTP request | Description
  - [LastAccessedArray](rest_api/docs/LastAccessedArray.md)
  - [Layout](rest_api/docs/Layout.md)
  - [MaxBufferSizes](rest_api/docs/MaxBufferSizes.md)
+ - [MultiArrayUDF](rest_api/docs/MultiArrayUDF.md)
  - [NamespaceActions](rest_api/docs/NamespaceActions.md)
  - [NonEmptyDomain](rest_api/docs/NonEmptyDomain.md)
  - [NotebookStatus](rest_api/docs/NotebookStatus.md)
@@ -260,6 +267,7 @@ Class | Method | HTTP request | Description
  - [Querystatus](rest_api/docs/Querystatus.md)
  - [Querytype](rest_api/docs/Querytype.md)
  - [ReadState](rest_api/docs/ReadState.md)
+ - [ResultFormat](rest_api/docs/ResultFormat.md)
  - [SQLParameters](rest_api/docs/SQLParameters.md)
  - [SSOProvider](rest_api/docs/SSOProvider.md)
  - [Subarray](rest_api/docs/Subarray.md)
@@ -271,14 +279,13 @@ Class | Method | HTTP request | Description
  - [TileDBConfig](rest_api/docs/TileDBConfig.md)
  - [Token](rest_api/docs/Token.md)
  - [TokenRequest](rest_api/docs/TokenRequest.md)
- - [UDF](rest_api/docs/UDF.md)
  - [UDFActions](rest_api/docs/UDFActions.md)
+ - [UDFArrayDetails](rest_api/docs/UDFArrayDetails.md)
  - [UDFImage](rest_api/docs/UDFImage.md)
  - [UDFImageVersion](rest_api/docs/UDFImageVersion.md)
  - [UDFInfo](rest_api/docs/UDFInfo.md)
  - [UDFInfoUpdate](rest_api/docs/UDFInfoUpdate.md)
  - [UDFLanguage](rest_api/docs/UDFLanguage.md)
- - [UDFResultType](rest_api/docs/UDFResultType.md)
  - [UDFSharing](rest_api/docs/UDFSharing.md)
  - [UDFSubarray](rest_api/docs/UDFSubarray.md)
  - [UDFSubarrayRange](rest_api/docs/UDFSubarrayRange.md)

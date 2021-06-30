@@ -26,7 +26,7 @@ def exec_async(
     http_compressor: Optional[str] = "deflate",
     include_source_lines: bool = True,
     task_name: Optional[str] = None,
-    result_format: str = models.UDFResultType.NATIVE,
+    result_format: str = models.ResultFormat.NATIVE,
     result_format_version=None,
     **kwargs,
 ) -> array.UDFResult:
@@ -47,7 +47,7 @@ def exec_async(
         bytecode.
     :param str task_name: optional name to assign the task
         for logging and audit purposes
-    :param UDFResultType result_format: result serialization format
+    :param ResultFormat result_format: result serialization format
     :param str result_format_version: set a format version
         for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function

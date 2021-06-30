@@ -424,132 +424,6 @@ class TasksApi(object):
             collection_formats=collection_formats,
         )
 
-    def task_id_retry_post(self, id, **kwargs):  # noqa: E501
-        """task_id_retry_post  # noqa: E501
-
-        Retry an array task  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.task_id_retry_post(id, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str id: task id to retry (required)
-        :param str accept_encoding: Encoding to use
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: ArrayTask
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs["_return_http_data_only"] = True
-        return self.task_id_retry_post_with_http_info(id, **kwargs)  # noqa: E501
-
-    def task_id_retry_post_with_http_info(self, id, **kwargs):  # noqa: E501
-        """task_id_retry_post  # noqa: E501
-
-        Retry an array task  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.task_id_retry_post_with_http_info(id, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str id: task id to retry (required)
-        :param str accept_encoding: Encoding to use
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(ArrayTask, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["id", "accept_encoding"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method task_id_retry_post" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'id' is set
-        if self.api_client.client_side_validation and (
-            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `id` when calling `task_id_retry_post`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "id" in local_var_params:
-            path_params["id"] = local_var_params["id"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-        if "accept_encoding" in local_var_params:
-            header_params["Accept-Encoding"] = local_var_params[
-                "accept_encoding"
-            ]  # noqa: E501
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/task/{id}/retry",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="ArrayTask",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
     def tasks_get(self, **kwargs):  # noqa: E501
         """tasks_get  # noqa: E501
 
@@ -569,6 +443,8 @@ class TasksApi(object):
         :param int per_page: pagination limit
         :param str type: task type, \"QUERY\", \"SQL\", \"UDF\", \"GENERIC_UDF\"
         :param list[str] exclude_type: task_type to exclude matching array in results, more than one can be included
+        :param list[str] file_type: match file_type of task array, more than one can be included
+        :param list[str] exclude_file_type: exclude file_type of task arrays, more than one can be included
         :param str status: Filter to only return these statuses
         :param str search: search string that will look at name, namespace or description fields
         :param str orderby: sort by which field valid values include start_time, name
@@ -605,6 +481,8 @@ class TasksApi(object):
         :param int per_page: pagination limit
         :param str type: task type, \"QUERY\", \"SQL\", \"UDF\", \"GENERIC_UDF\"
         :param list[str] exclude_type: task_type to exclude matching array in results, more than one can be included
+        :param list[str] file_type: match file_type of task array, more than one can be included
+        :param list[str] exclude_file_type: exclude file_type of task arrays, more than one can be included
         :param str status: Filter to only return these statuses
         :param str search: search string that will look at name, namespace or description fields
         :param str orderby: sort by which field valid values include start_time, name
@@ -634,6 +512,8 @@ class TasksApi(object):
             "per_page",
             "type",
             "exclude_type",
+            "file_type",
+            "exclude_file_type",
             "status",
             "search",
             "orderby",
@@ -709,6 +589,22 @@ class TasksApi(object):
                 ("exclude_type", local_var_params["exclude_type"])
             )  # noqa: E501
             collection_formats["exclude_type"] = "csv"  # noqa: E501
+        if (
+            "file_type" in local_var_params
+            and local_var_params["file_type"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("file_type", local_var_params["file_type"])
+            )  # noqa: E501
+            collection_formats["file_type"] = "multi"  # noqa: E501
+        if (
+            "exclude_file_type" in local_var_params
+            and local_var_params["exclude_file_type"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("exclude_file_type", local_var_params["exclude_file_type"])
+            )  # noqa: E501
+            collection_formats["exclude_file_type"] = "multi"  # noqa: E501
         if (
             "status" in local_var_params and local_var_params["status"] is not None
         ):  # noqa: E501

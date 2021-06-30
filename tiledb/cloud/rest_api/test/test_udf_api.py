@@ -52,8 +52,16 @@ class TestUdfApi(unittest.TestCase):
         """Test case for submit_generic_udf"""
         pass
 
+    def test_submit_multi_array_udf(self):
+        """Test case for submit_multi_array_udf"""
+        pass
+
     def test_submit_udf(self):
         """Test case for submit_udf"""
+        pass
+
+    def test_udf_namespace_array_versions_get(self):
+        """Test case for udf_namespace_array_versions_get"""
         pass
 
     def test_update_udf_info(self):

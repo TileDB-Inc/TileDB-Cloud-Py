@@ -40,10 +40,6 @@ class TestTasksApi(unittest.TestCase):
         """Test case for task_id_result_get"""
         pass
 
-    def test_task_id_retry_post(self):
-        """Test case for task_id_retry_post"""
-        pass
-
     def test_tasks_get(self):
         """Test case for tasks_get"""
         pass

@@ -22,6 +22,7 @@ from tiledb.cloud.rest_api.api.array_tasks_api import ArrayTasksApi
 from tiledb.cloud.rest_api.api.favorites_api import FavoritesApi
 from tiledb.cloud.rest_api.api.invitation_api import InvitationApi
 from tiledb.cloud.rest_api.api.notebook_api import NotebookApi
+from tiledb.cloud.rest_api.api.notebooks_api import NotebooksApi
 from tiledb.cloud.rest_api.api.organization_api import OrganizationApi
 from tiledb.cloud.rest_api.api.query_api import QueryApi
 from tiledb.cloud.rest_api.api.sql_api import SqlApi
@@ -99,6 +100,7 @@ from tiledb.cloud.rest_api.models.invitation_type import InvitationType
 from tiledb.cloud.rest_api.models.last_accessed_array import LastAccessedArray
 from tiledb.cloud.rest_api.models.layout import Layout
 from tiledb.cloud.rest_api.models.max_buffer_sizes import MaxBufferSizes
+from tiledb.cloud.rest_api.models.multi_array_udf import MultiArrayUDF
 from tiledb.cloud.rest_api.models.namespace_actions import NamespaceActions
 from tiledb.cloud.rest_api.models.non_empty_domain import NonEmptyDomain
 from tiledb.cloud.rest_api.models.notebook_status import NotebookStatus
@@ -120,6 +122,7 @@ from tiledb.cloud.rest_api.models.query_reader import QueryReader
 from tiledb.cloud.rest_api.models.querystatus import Querystatus
 from tiledb.cloud.rest_api.models.querytype import Querytype
 from tiledb.cloud.rest_api.models.read_state import ReadState
+from tiledb.cloud.rest_api.models.result_format import ResultFormat
 from tiledb.cloud.rest_api.models.sql_parameters import SQLParameters
 from tiledb.cloud.rest_api.models.sso_provider import SSOProvider
 from tiledb.cloud.rest_api.models.subarray import Subarray
@@ -135,7 +138,6 @@ from tiledb.cloud.rest_api.models.subscription import Subscription
 from tiledb.cloud.rest_api.models.tile_db_config import TileDBConfig
 from tiledb.cloud.rest_api.models.token import Token
 from tiledb.cloud.rest_api.models.token_request import TokenRequest
-from tiledb.cloud.rest_api.models.multi_array_udf import MultiArrayUDF
 from tiledb.cloud.rest_api.models.udf_actions import UDFActions
 from tiledb.cloud.rest_api.models.udf_array_details import UDFArrayDetails
 from tiledb.cloud.rest_api.models.udf_image import UDFImage
@@ -143,7 +145,6 @@ from tiledb.cloud.rest_api.models.udf_image_version import UDFImageVersion
 from tiledb.cloud.rest_api.models.udf_info import UDFInfo
 from tiledb.cloud.rest_api.models.udf_info_update import UDFInfoUpdate
 from tiledb.cloud.rest_api.models.udf_language import UDFLanguage
-from tiledb.cloud.rest_api.models.udf_result_type import UDFResultType
 from tiledb.cloud.rest_api.models.udf_sharing import UDFSharing
 from tiledb.cloud.rest_api.models.udf_subarray import UDFSubarray
 from tiledb.cloud.rest_api.models.udf_subarray_range import UDFSubarrayRange

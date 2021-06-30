@@ -37,9 +37,14 @@ class TestArrayMetadata(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.array_metadata.ArrayMetadata()  # noqa: E501
         if include_optional:
             return ArrayMetadata(
-                ranges=[
+                entries=[
                     tiledb.cloud.rest_api.models.array_metadata_entry.ArrayMetadataEntry(
-                        key="0", type="0", value_num=56, value=[56]
+                        key="0",
+                        type="0",
+                        value_num=56,
+                        value=[56],
+                        # MANUAL EDIT: The generator generates `del = True,`, which is invalid.
+                        _del=True,
                     )
                 ]
             )

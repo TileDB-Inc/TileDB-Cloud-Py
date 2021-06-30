@@ -100,6 +100,7 @@ class TestArrayInfo(unittest.TestCase):
                 tags=["0"],
                 license_id="0",
                 license_text="0",
+                read_only=False,
             )
         else:
             return ArrayInfo()

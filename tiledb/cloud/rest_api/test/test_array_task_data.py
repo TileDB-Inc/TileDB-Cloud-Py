@@ -89,6 +89,7 @@ class TestArrayTaskData(unittest.TestCase):
                             tags=["0"],
                             license_id="0",
                             license_text="0",
+                            read_only=False,
                         ),
                         subarray=tiledb.cloud.rest_api.models.domain_array.DomainArray(
                             int8=[56],
@@ -137,6 +138,8 @@ class TestArrayTaskData(unittest.TestCase):
                         duration=3.41e11,
                         sql_init_commands=["0"],
                         sql_parameters=[None],
+                        result_format="native",
+                        result_format_version="0",
                     )
                 ],
                 pagination_metadata=tiledb.cloud.rest_api.models.pagination_metadata.PaginationMetadata(
