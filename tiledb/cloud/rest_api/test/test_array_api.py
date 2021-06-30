@@ -92,8 +92,16 @@ class TestArrayApi(unittest.TestCase):
         """Test case for get_array_metadata"""
         pass
 
+    def test_get_array_metadata_capnp(self):
+        """Test case for get_array_metadata_capnp"""
+        pass
+
     def test_get_array_non_empty_domain(self):
         """Test case for get_array_non_empty_domain"""
+        pass
+
+    def test_get_array_non_empty_domain_json(self):
+        """Test case for get_array_non_empty_domain_json"""
         pass
 
     def test_get_array_sample_data(self):
@@ -122,6 +130,10 @@ class TestArrayApi(unittest.TestCase):
 
     def test_update_array_metadata(self):
         """Test case for update_array_metadata"""
+        pass
+
+    def test_update_array_metadata_capnp(self):
+        """Test case for update_array_metadata_capnp"""
         pass
 
     def test_vacuum_array(self):

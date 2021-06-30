@@ -1,13 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 read -r -d '' USAGE <<'EOF'
 Usage:
 
-    gen.sh /path/to/TileDB-REST /path/to/output/[api]
+    gen.sh /path/to/TileDB-REST /path/to/TileDB-Cloud-Py/tiledb/cloud
 
-Note: api is expected to exist under target path. For accurate file removal,
-      the directory should be removed and re-created empty, before running this
-      script.
+Note: The second parameter is the parent directory of the rest_api folder.
+      The rest_api folder needs to be removed befor running this.
 EOF
 
 if [[ -z "$1" || -z "$2" ]]; then
@@ -22,7 +21,11 @@ OUTPUT_PATH=$(mktemp -d /tmp/api_gen.XXXXXX)
 
 PACKAGE_NAME="rest_api"
 
-mkdir -p ${OUTPUT_PATH}/
+if [ -e "${TARGET_PATH}/${PACKAGE_NAME}" ]; then
+  # Don't do this automatically to avoid accidental destruction.
+  echo "ERROR: Remove ${TARGET_PATH}/${PACKAGE_NAME} before running this program."
+  exit 1
+fi
 
 ################################################################################
 # minimize output to what we want

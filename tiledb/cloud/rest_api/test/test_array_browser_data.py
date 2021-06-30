@@ -87,6 +87,7 @@ class TestArrayBrowserData(unittest.TestCase):
                         tags=["0"],
                         license_id="0",
                         license_text="0",
+                        read_only=False,
                     )
                 ],
                 pagination_metadata=tiledb.cloud.rest_api.models.pagination_metadata.PaginationMetadata(

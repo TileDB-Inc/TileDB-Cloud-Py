@@ -8,6 +8,7 @@ from tiledb.cloud.rest_api.api.array_tasks_api import ArrayTasksApi
 from tiledb.cloud.rest_api.api.favorites_api import FavoritesApi
 from tiledb.cloud.rest_api.api.invitation_api import InvitationApi
 from tiledb.cloud.rest_api.api.notebook_api import NotebookApi
+from tiledb.cloud.rest_api.api.notebooks_api import NotebooksApi
 from tiledb.cloud.rest_api.api.organization_api import OrganizationApi
 from tiledb.cloud.rest_api.api.query_api import QueryApi
 from tiledb.cloud.rest_api.api.sql_api import SqlApi

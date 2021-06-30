@@ -96,6 +96,10 @@ class TestUserApi(unittest.TestCase):
         """Test case for tokens_get"""
         pass
 
+    def test_tokens_session_get(self):
+        """Test case for tokens_session_get"""
+        pass
+
     def test_update_aws_access_credentials(self):
         """Test case for update_aws_access_credentials"""
         pass

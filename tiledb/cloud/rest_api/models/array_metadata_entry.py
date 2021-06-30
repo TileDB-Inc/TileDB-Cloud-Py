@@ -43,7 +43,7 @@ class ArrayMetadataEntry(object):
     attribute_map = {
         "key": "key",
         "type": "type",
-        "value_num": "value_num",
+        "value_num": "valueNum",
         "value": "value",
         "_del": "del",
     }

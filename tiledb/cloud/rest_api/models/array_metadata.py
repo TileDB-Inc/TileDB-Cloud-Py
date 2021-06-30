@@ -32,44 +32,44 @@ class ArrayMetadata(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"ranges": "list[ArrayMetadataEntry]"}
+    openapi_types = {"entries": "list[ArrayMetadataEntry]"}
 
-    attribute_map = {"ranges": "ranges"}
+    attribute_map = {"entries": "entries"}
 
-    def __init__(self, ranges=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, entries=None, local_vars_configuration=None):  # noqa: E501
         """ArrayMetadata - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._ranges = None
+        self._entries = None
         self.discriminator = None
 
-        if ranges is not None:
-            self.ranges = ranges
+        if entries is not None:
+            self.entries = entries
 
     @property
-    def ranges(self):
-        """Gets the ranges of this ArrayMetadata.  # noqa: E501
+    def entries(self):
+        """Gets the entries of this ArrayMetadata.  # noqa: E501
 
         List of metadata entries  # noqa: E501
 
-        :return: The ranges of this ArrayMetadata.  # noqa: E501
+        :return: The entries of this ArrayMetadata.  # noqa: E501
         :rtype: list[ArrayMetadataEntry]
         """
-        return self._ranges
+        return self._entries
 
-    @ranges.setter
-    def ranges(self, ranges):
-        """Sets the ranges of this ArrayMetadata.
+    @entries.setter
+    def entries(self, entries):
+        """Sets the entries of this ArrayMetadata.
 
         List of metadata entries  # noqa: E501
 
-        :param ranges: The ranges of this ArrayMetadata.  # noqa: E501
+        :param entries: The entries of this ArrayMetadata.  # noqa: E501
         :type: list[ArrayMetadataEntry]
         """
 
-        self._ranges = ranges
+        self._entries = entries
 
     def to_dict(self):
         """Returns the model properties as a dict"""

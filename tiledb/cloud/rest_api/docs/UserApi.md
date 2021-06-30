@@ -21,6 +21,7 @@ Method | HTTP request | Description
 [**reset_user_password**](UserApi.md#reset_user_password) | **POST** /user/password_reset | 
 [**revoke_token**](UserApi.md#revoke_token) | **DELETE** /tokens/{token} | 
 [**tokens_get**](UserApi.md#tokens_get) | **GET** /tokens | 
+[**tokens_session_get**](UserApi.md#tokens_session_get) | **GET** /tokens/session | 
 [**update_aws_access_credentials**](UserApi.md#update_aws_access_credentials) | **PATCH** /credentials/{namespace}/aws/{name} | 
 [**update_user**](UserApi.md#update_user) | **PATCH** /users/{username} | 
 [**update_user_in_organization**](UserApi.md#update_user_in_organization) | **PATCH** /organizations/{organization}/{username} | 
@@ -2219,7 +2220,132 @@ This endpoint does not need any parameter.
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Array of all user created tokens |  -  |
+**200** | Array of user created non-session tokens |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **tokens_session_get**
+> list[Token] tokens_session_get()
+
+
+
+Fetch a list of user session tokens
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UserApi(api_client)
+    
+    try:
+        api_response = api_instance.tokens_session_get()
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling UserApi->tokens_session_get: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import rest_api
+from rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = rest_api.UserApi(api_client)
+    
+    try:
+        api_response = api_instance.tokens_session_get()
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling UserApi->tokens_session_get: %s\n" % e)
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**list[Token]**](Token.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Array of user created session tokens |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

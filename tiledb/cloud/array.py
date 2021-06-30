@@ -49,11 +49,11 @@ class UDFResult(multiprocessing.pool.ApplyResult):
                 )
 
         try:
-            if self.result_format == models.UDFResultType.NATIVE:
+            if self.result_format == models.ResultFormat.NATIVE:
                 res = cloudpickle.loads(res)
-            elif self.result_format == models.UDFResultType.JSON:
+            elif self.result_format == models.ResultFormat.JSON:
                 res = json.loads(res)
-            elif self.result_format == models.UDFResultType.ARROW:
+            elif self.result_format == models.ResultFormat.ARROW:
                 import pyarrow
 
                 # Arrow optimized empty results by not serializing anything
@@ -443,7 +443,7 @@ def apply_async(
     include_source_lines: bool = True,
     task_name: Optional[str] = None,
     v2: bool = True,
-    result_format: str = models.UDFResultType.NATIVE,
+    result_format: str = models.ResultFormat.NATIVE,
     result_format_version=None,
     **kwargs: Any,
 ) -> UDFResult:
@@ -467,7 +467,7 @@ def apply_async(
     :param str task_name: optional name to assign the task
         for logging and audit purposes
     :param bool v2: use v2 array udfs
-    :param UDFResultType result_format: result serialization format
+    :param ResultFormat result_format: result serialization format
     :param str result_format_version: set a format version
         for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function
@@ -586,7 +586,7 @@ def exec_multi_array_udf_async(
     http_compressor: Optional[str] = "deflate",
     include_source_lines: bool = True,
     task_name: Optional[str] = None,
-    result_format: str = models.UDFResultType.NATIVE,
+    result_format: str = models.ResultFormat.NATIVE,
     result_format_version=None,
     **kwargs,
 ) -> UDFResult:
@@ -603,7 +603,7 @@ def exec_multi_array_udf_async(
     :param http_compressor: set http compressor for results
     :param str task_name: optional name to assign the task
         for logging and audit purposes
-    :param UDFResultType result_format: result serialization format
+    :param ResultFormat result_format: result serialization format
     :param str result_format_version: set a format version
         for cloudpickle or arrow IPC
     :param kwargs: named arguments to pass to function
