@@ -36,7 +36,7 @@ jobs:
       versionSpec: '$(python.version)'
       architecture: 'x64'
 
-  - script: python -m pip install --upgrade 'numpy==1.17.*' pytest pylint
+  - script: python -m pip install --upgrade wheel setuptools setuptools-scm 'numpy==1.17.*' pytest pylint
     # pip installs release candidates by default:
     #   https://github.com/pypa/pip/issues/4969
     displayName: 'Install dependencies'
@@ -94,7 +94,7 @@ jobs:
       versionSpec: '3.7'
       architecture: 'x64'
 
-  - script: 'pip install twine wheel setuptools setuptools_scm'
+  - script: 'pip install wheel twine setuptools setuptools_scm'
     displayName: 'Install twine/wheel'
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
 
