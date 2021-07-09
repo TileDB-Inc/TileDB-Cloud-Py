@@ -17,7 +17,7 @@ plotly = ">= 4.0.0"
 networkx = ">= 2.0.0"
 pydot = "*"
 tiledb-plot-widget = ">= 0.1.7"
-arrow = "3.0.0"
+pyarrow = "3.0.0"
 
 [dev-packages]
 
