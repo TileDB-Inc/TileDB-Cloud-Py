@@ -129,6 +129,8 @@ def setup_configuration(
         raise_on_status=False,
         # Don't remove any headers on redirect
         remove_headers_on_redirect=[],
+        redirect=0,
+        raise_on_redirect=False,
     )
     # Set logged in at this point
     global logged_in

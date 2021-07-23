@@ -77,6 +77,8 @@ class RESTClientObject(object):
         if configuration.retries is not None:
             addition_pool_args["retries"] = configuration.retries
 
+        self.retries = configuration.retries
+
         if maxsize is None:
             if configuration.connection_pool_maxsize is not None:
                 maxsize = configuration.connection_pool_maxsize
@@ -161,6 +163,33 @@ class RESTClientObject(object):
         if "Content-Type" not in headers:
             headers["Content-Type"] = "application/json"
 
+        is_redirect = True
+        redirect_url = url
+        while is_redirect is True:
+            is_redirect, obj = self.request_with_redirect(method, redirect_url, timeout,
+                query_params, headers, body, post_params, _preload_content,
+                _request_timeout)
+            if is_redirect is True:
+                redirect_url = obj.get('Location')
+
+        return obj
+
+    # Uses timeout from request method above and wraps request method
+    # Returns True or False based on status of response is 302, as well as an
+    # object that is the dictionary of headers in case of redirect=True
+    # or the actual response if the real destination is reached
+    def request_with_redirect(
+        self,
+        method,
+        url,
+        timeout,
+        query_params=None,
+        headers=None,
+        body=None,
+        post_params=None,
+        _preload_content=True,
+        _request_timeout=None,
+    ):
         try:
             # For `POST`, `PUT`, `PATCH`, `OPTIONS`, `DELETE`
             if method in ["POST", "PUT", "PATCH", "OPTIONS", "DELETE"]:
@@ -177,6 +206,7 @@ class RESTClientObject(object):
                         preload_content=_preload_content,
                         timeout=timeout,
                         headers=headers,
+                        retries=self.retries,
                     )
                 elif (
                     headers["Content-Type"] == "application/x-www-form-urlencoded"
@@ -243,10 +273,13 @@ class RESTClientObject(object):
             # log response body
             logger.debug("response body: %s", r.data)
 
+        if r.status == 302:
+            return True, r.getheaders()
+
         if not 200 <= r.status <= 299:
             raise ApiException(http_resp=r)
 
-        return r
+        return False, r
 
     def GET(
         self,
