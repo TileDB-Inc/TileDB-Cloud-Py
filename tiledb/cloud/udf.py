@@ -123,7 +123,8 @@ def exec_async(
         return array.UDFResult(response, result_format=result_format)
 
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_sql_exc(exc) from None
+        array._maybe_set_last_udf_id(exc)
+        raise tiledb_cloud_error.check_exc(exc) from None
 
 
 @utils.signature_of(exec_async)

@@ -8,6 +8,7 @@ from typing import Any, Callable, Optional, Sequence, Union
 
 import cloudpickle
 import numpy
+import pyarrow
 
 from . import client
 from . import config
@@ -31,12 +32,9 @@ class TaskResult(multiprocessing.pool.ApplyResult):
         try:
             response = rest.RESTResponse(self.response.get(timeout=timeout))
             res = response.data
-        except GenApiException as exc:
-            if exc.headers:
-                self.task_id = exc.headers.get(client.TASK_ID_HEADER)
-            raise tiledb_cloud_error.check_udf_exc(exc) from None
-        except multiprocessing.TimeoutError as exc:
-            raise tiledb_cloud_error.check_udf_exc(exc) from None
+        except (GenApiException, multiprocessing.TimeoutError) as exc:
+            _maybe_set_last_udf_id(exc)
+            raise tiledb_cloud_error.check_exc(exc) from None
 
         self.task_id = response.getheader(client.TASK_ID_HEADER)
 
@@ -54,8 +52,6 @@ class TaskResult(multiprocessing.pool.ApplyResult):
             elif self.result_format == models.ResultFormat.JSON:
                 res = json.loads(res)
             elif self.result_format == models.ResultFormat.ARROW:
-                import pyarrow
-
                 # Arrow optimized empty results by not serializing anything
                 # We need to account for this and return None to the user instead of trying to read it (which will produce an error)
                 if len(res) == 0:
@@ -63,16 +59,16 @@ class TaskResult(multiprocessing.pool.ApplyResult):
 
                 reader = pyarrow.RecordBatchStreamReader(res)
                 res = reader.read_all()
-        except:
-            raise tiledb_cloud_error.TileDBCloudError("Failed to load result object")
+        except Exception as e:
+            inner_msg = f": {e.args[0]}" if e.args else ""
+            raise tiledb_cloud_error.TileDBCloudError(
+                f"Failed to load result object{inner_msg}"
+            ) from e
 
         return res
 
 
 class UDFResult(TaskResult):
-    def __init__(self, response, result_format, result_format_version=None):
-        super().__init__(response, result_format, result_format_version)
-
     def get(self, timeout=None):
         res = super().get(timeout=timeout)
 
@@ -568,7 +564,8 @@ def apply_async(
         return UDFResult(response, result_format=result_format)
 
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_udf_exc(exc) from None
+        _maybe_set_last_udf_id(exc)
+        raise tiledb_cloud_error.check_exc(exc) from None
 
 
 @utils.signature_of(apply_async)
@@ -700,7 +697,8 @@ def exec_multi_array_udf_async(
         return UDFResult(response, result_format=result_format)
 
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_udf_exc(exc) from None
+        _maybe_set_last_udf_id(exc)
+        raise tiledb_cloud_error.check_exc(exc) from None
 
 
 @utils.signature_of(exec_multi_array_udf_async)
@@ -736,3 +734,16 @@ def _pick_func(**kwargs: Union[str, Callable, None]) -> Union[str, Callable]:
             f"not {type(result)}"
         )
     return result
+
+
+def _maybe_set_last_udf_id(exc: Exception) -> None:
+    """Tries to set the last_udf_id from the exception, if present."""
+    global last_udf_task_id
+    try:
+        hdrs = getattr(exc, "headers")
+        if hdrs:
+            task_id = hdrs.get(client.TASK_ID_HEADER)
+            if task_id:
+                last_udf_task_id = task_id
+    except KeyError:
+        pass
