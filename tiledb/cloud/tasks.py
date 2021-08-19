@@ -1,6 +1,6 @@
 from . import client
 from . import tiledb_cloud_error
-from .array import split_uri
+from . import config
 from . import sql
 from . import array
 from .rest_api import ApiException as GenApiException
@@ -52,6 +52,12 @@ def tasks(
     """
     api_instance = client.client.tasks_api
 
+    if namespace is None:
+        if config.user is None:
+            config.user = client.user_profile()
+
+        namespace = config.user.usernam
+
     if end is not None:
         if not isinstance(end, datetime.datetime):
             raise Exception("end must be datetime object")
@@ -69,9 +75,6 @@ def tasks(
         and status != "COMPLETED"
     ):
         raise Exception("status must be one of ['FAILED', 'RUNNING', 'COMPLETED']")
-
-    if array is not None:
-        (namespace, array) = split_uri(array)
 
     try:
         args = {"async_req": async_req}
