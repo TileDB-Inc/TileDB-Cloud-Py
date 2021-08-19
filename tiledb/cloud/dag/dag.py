@@ -16,7 +16,7 @@ from ..array import apply as array_apply
 from ..sql import exec as sql_exec
 from ..udf import exec as udf_exec
 
-from tiledb.cloud import TileDBCloudError
+from ..tiledb_cloud_error import TileDBCloudError
 
 
 class Status(Enum):
