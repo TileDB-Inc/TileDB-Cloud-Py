@@ -80,3 +80,53 @@ class BasicTests(unittest.TestCase):
 
         # Validate task name was set
         self.assertEqual(tiledb.cloud.last_sql_task().name, task_name)
+
+    def test_quickstart_sql_arrow(self):
+        with tiledb.open(
+            "tiledb://TileDB-Inc/quickstart_sparse", ctx=tiledb.cloud.Ctx()
+        ) as A:
+            print("quickstart_sparse:")
+            print(A[:])
+
+            with self.assertRaises(TypeError):
+                A.apply(None, [(0, 1)]).get()
+
+            import numpy
+
+            orig = A[:]
+            task_name = "test_quickstart_sql_arrow"
+            self.assertEqual(
+                int(
+                    tiledb.cloud.sql.exec_async(
+                        "select sum(a) as sum from `tiledb://TileDB-Inc/quickstart_sparse`",
+                        task_name=task_name,
+                        result_format=tiledb.cloud.ResultFormat.ARROW,
+                    ).get()["sum"]
+                ),
+                numpy.sum(orig["a"]),
+            )
+
+    def test_quickstart_sql_json(self):
+        with tiledb.open(
+            "tiledb://TileDB-Inc/quickstart_sparse", ctx=tiledb.cloud.Ctx()
+        ) as A:
+            print("quickstart_sparse:")
+            print(A[:])
+
+            with self.assertRaises(TypeError):
+                A.apply(None, [(0, 1)]).get()
+
+            import numpy
+
+            orig = A[:]
+            task_name = "test_quickstart_sql_arrow"
+            self.assertEqual(
+                int(
+                    tiledb.cloud.sql.exec_async(
+                        "select sum(a) as sum from `tiledb://TileDB-Inc/quickstart_sparse`",
+                        task_name=task_name,
+                        result_format=tiledb.cloud.ResultFormat.JSON,
+                    ).get()["sum"]
+                ),
+                numpy.sum(orig["a"]),
+            )
