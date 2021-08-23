@@ -1,4 +1,7 @@
+import collections
+import collections.abc as cabc
 import os
+import pickle
 import time
 import unittest
 
@@ -6,6 +9,7 @@ import numpy as np
 
 import tiledb.cloud
 from tiledb.cloud import dag
+from tiledb.cloud.dag import dag as internal
 
 tiledb.cloud.login(
     token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
@@ -418,3 +422,104 @@ class DAGCallbackTest(unittest.TestCase):
         global done_updates
         self.assertEqual(status_updates, 5)
         self.assertEqual(done_updates, 1)
+
+
+def _node(val):
+    """Creates a completed node with the given value."""
+    n = dag.Node(lambda: None)
+    n.status = dag.Status.COMPLETED
+    n._results = val
+    return n
+
+
+class CustomSeq(cabc.MutableSequence):
+    """Custom sequence implementation to test value replacement."""
+
+    lst: list
+
+    def __init__(self, items=()):
+        self.lst = list(items)
+
+    def __len__(self):
+        return len(self.lst)
+
+    def __getitem__(self, idx):
+        return self.lst[idx]
+
+    def __setitem__(self, idx, val):
+        self.lst[idx] = val
+
+    def __delitem__(self, idx):
+        del self.lst[idx]
+
+    def insert(self, idx, val):
+        self.lst.insert(idx, val)
+
+    def __eq__(self, other):
+        return type(self) == type(other) and self.lst == other.lst
+
+
+class TestDAGInternals(unittest.TestCase):
+    def test_basic(self):
+        self.assertEqual(5, internal._replace_nodes_with_results(5))
+        self.assertEqual("hi", internal._replace_nodes_with_results(_node("hi")))
+
+    def test_sequences(self):
+        self.assertEqual(
+            ["a", "b", "c"],
+            internal._replace_nodes_with_results([_node("a"), "b", _node("c")]),
+        )
+        self.assertEqual(
+            (1, 2, ["i", "ii"]),
+            internal._replace_nodes_with_results((1, 2, [_node("i"), "ii"])),
+        )
+
+    def test_special_sequences(self):
+        self.assertEqual(
+            "some_string", internal._replace_nodes_with_results("some_string")
+        )
+        self.assertEqual(b"bytes", internal._replace_nodes_with_results(b"bytes"))
+
+    def test_self_recursion(self):
+        dct = {
+            "nod": _node(("a", "b", "c")),
+        }
+        lst = [dct, _node("nod")]
+        dct["lst"] = lst
+        tup = (_node("lst"), lst, _node("dct"), dct)
+        lst.append(tup)
+        got_lst = internal._replace_nodes_with_results(lst)
+
+        want_dct = {
+            "nod": ("a", "b", "c"),
+        }
+        want_lst = [want_dct, "nod"]
+        want_dct["lst"] = want_lst
+        want_tup = ("lst", want_lst, "dct", want_dct)
+        want_lst.append(want_tup)
+
+        # assertEqual will blow up if you try to compare a recursive structure.
+        # However, pickle handles recursion, so we just see if the results
+        # have the same pickling.
+        self.assertEqual(pickle.dumps(want_lst), pickle.dumps(got_lst))
+
+    def test_custom_types(self):
+        my_seq = CustomSeq("abcde")
+        my_seq.append(CustomSeq(("F", _node("G"))))
+        my_seq.append(_node("h"))
+
+        self.assertEqual(
+            CustomSeq(("a", "b", "c", "d", "e", CustomSeq("FG"), "h")),
+            internal._replace_nodes_with_results(my_seq),
+        )
+
+        self.assertEqual(
+            collections.OrderedDict(zero=0, one=1, two=2),
+            internal._replace_nodes_with_results(
+                collections.OrderedDict(
+                    zero=_node(0),
+                    one=_node(1),
+                    two=2,
+                )
+            ),
+        )

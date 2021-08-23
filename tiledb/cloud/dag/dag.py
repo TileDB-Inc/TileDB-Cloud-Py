@@ -1,8 +1,10 @@
+import collections.abc as cabc
 import json
 import numbers
 import time
 import uuid
 from concurrent import futures
+from typing import Any, Dict
 
 import networkx as nx
 
@@ -117,38 +119,6 @@ class Node:
 
     done = finished
 
-    def _replace_nodes_with_results(self, arg):
-        """
-        Recursively find arguments of Node instance and replace with the node results
-        :param arg:
-        :return: converted argument
-        """
-        tuple_conversion = False
-        if isinstance(arg, tuple):
-            arg = list(arg)
-            tuple_conversion = True
-
-        if isinstance(arg, tuple) or isinstance(arg, list):
-            for index in range(len(arg)):
-                a = arg[index]
-                if isinstance(a, Node):
-                    arg[index] = a.result()
-                elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    arg[index] = self._replace_nodes_with_results(a)
-        elif isinstance(arg, dict):
-            for k, a in arg.items():
-                if isinstance(a, Node):
-                    arg[k] = a.result()
-                elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    arg[k] = self._replace_nodes_with_results(a)
-        elif isinstance(arg, Node):
-            arg = arg.result()
-
-        if tuple_conversion:
-            arg = tuple(arg)
-
-        return arg
-
     def exec(self, namespace=None):
         """
         Execute function for node
@@ -164,13 +134,13 @@ class Node:
         # If there is a node as an argument, the user really just wants the results, so let's fetch them
         # and swap out the parameter
         if self.args is not None:
-            self.args = self._replace_nodes_with_results(self.args)
+            self.args = _replace_nodes_with_results(self.args)
 
         # First loop though any default named parameter arguments to find any nodes
         # If there is a node as an argument, the user really just wants the results, so let's fetch them
         # and swap out the parameter
         if self.kwargs is not None:
-            self.kwargs = self._replace_nodes_with_results(self.kwargs)
+            self.kwargs = _replace_nodes_with_results(self.kwargs)
 
         # Execute user function with the parameters that the user requested
         # The function is executed on the dag's worker pool
@@ -792,3 +762,53 @@ class DAG:
             results[node.name] = node.result()
 
         return results
+
+
+def _replace_nodes_with_results(arg):
+    """Descends into data structures and replaces nodes with their values.
+
+    This is guaranteed to produce new data structures and not mutate the inputs.
+    Supports cyclic data structures.
+    """
+    return _ResultReplacer()._replace_internal(arg)
+
+
+class _ResultReplacer:
+    """Class to keep track of visited items when materializing nodes."""
+
+    seen: Dict[int, Any]
+
+    def __init__(self):
+        self.seen = {}
+
+    def _replace_internal(self, arg):
+        if isinstance(arg, Node):
+            return arg.result()
+        if isinstance(arg, (str, bytes)):
+            # Special-case these since they're weird sequences.
+            return arg
+        original_id = id(arg)
+        try:
+            return self.seen[original_id]
+        except KeyError:
+            pass
+        if isinstance(arg, cabc.MutableSequence):
+            replaced = type(arg)()
+            self.seen[original_id] = replaced
+            replaced.extend(map(self._replace_internal, arg))
+            return replaced
+        if isinstance(arg, cabc.Sequence):
+            replaced = type(arg)(map(self._replace_internal, arg))
+            self.seen[original_id] = replaced
+            return replaced
+        if isinstance(arg, cabc.MutableMapping):
+            replaced = type(arg)()
+            self.seen[original_id] = replaced
+            replaced.update((k, self._replace_internal(v)) for k, v in arg.items())
+            return replaced
+        if isinstance(arg, cabc.Mapping):
+            replaced = type(arg)((k, self._replace_internal(v)) for k, v in arg.items())
+            self.seen[original_id] = replaced
+            return replaced
+        self.seen[original_id] = arg
+        return arg
