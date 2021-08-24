@@ -234,6 +234,7 @@ class ArrayApi(object):
         :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
         :param list[str] file_type: file_type to search for, more than one can be included
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
+        :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -268,6 +269,7 @@ class ArrayApi(object):
         :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
         :param list[str] file_type: file_type to search for, more than one can be included
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
+        :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -295,6 +297,7 @@ class ArrayApi(object):
             "exclude_tag",
             "file_type",
             "exclude_file_type",
+            "file_property",
         ]
         all_params.extend(
             [
@@ -380,6 +383,14 @@ class ArrayApi(object):
                 ("exclude_file_type", local_var_params["exclude_file_type"])
             )  # noqa: E501
             collection_formats["exclude_file_type"] = "multi"  # noqa: E501
+        if (
+            "file_property" in local_var_params
+            and local_var_params["file_property"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("file_property", local_var_params["file_property"])
+            )  # noqa: E501
+            collection_formats["file_property"] = "multi"  # noqa: E501
 
         header_params = {}
 
@@ -546,6 +557,7 @@ class ArrayApi(object):
         :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
         :param list[str] file_type: file_type to search for, more than one can be included
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
+        :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -580,6 +592,7 @@ class ArrayApi(object):
         :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
         :param list[str] file_type: file_type to search for, more than one can be included
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
+        :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -607,6 +620,7 @@ class ArrayApi(object):
             "exclude_tag",
             "file_type",
             "exclude_file_type",
+            "file_property",
         ]
         all_params.extend(
             [
@@ -692,6 +706,14 @@ class ArrayApi(object):
                 ("exclude_file_type", local_var_params["exclude_file_type"])
             )  # noqa: E501
             collection_formats["exclude_file_type"] = "multi"  # noqa: E501
+        if (
+            "file_property" in local_var_params
+            and local_var_params["file_property"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("file_property", local_var_params["file_property"])
+            )  # noqa: E501
+            collection_formats["file_property"] = "multi"  # noqa: E501
 
         header_params = {}
 
@@ -858,6 +880,7 @@ class ArrayApi(object):
         :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
         :param list[str] file_type: file_type to search for, more than one can be included
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
+        :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -892,6 +915,7 @@ class ArrayApi(object):
         :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
         :param list[str] file_type: file_type to search for, more than one can be included
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
+        :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -919,6 +943,7 @@ class ArrayApi(object):
             "exclude_tag",
             "file_type",
             "exclude_file_type",
+            "file_property",
         ]
         all_params.extend(
             [
@@ -1004,6 +1029,14 @@ class ArrayApi(object):
                 ("exclude_file_type", local_var_params["exclude_file_type"])
             )  # noqa: E501
             collection_formats["exclude_file_type"] = "multi"  # noqa: E501
+        if (
+            "file_property" in local_var_params
+            and local_var_params["file_property"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("file_property", local_var_params["file_property"])
+            )  # noqa: E501
+            collection_formats["file_property"] = "multi"  # noqa: E501
 
         header_params = {}
 

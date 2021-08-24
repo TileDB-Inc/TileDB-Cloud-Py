@@ -1,4 +1,4 @@
-# rest_api.ArrayApi
+# tiledb.cloud.rest_api.ArrayApi
 
 All URIs are relative to *http://localhost/v1*
 
@@ -47,12 +47,12 @@ get array activity logs
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -62,7 +62,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -72,15 +72,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 start = 56 # int | Start time of window of fetch logs, unix epoch in seconds (default: seven days ago) (optional)
@@ -100,12 +100,12 @@ has_task_id = True # bool | Excludes activity log results that does not contain 
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -115,7 +115,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -125,15 +125,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 start = 56 # int | Start time of window of fetch logs, unix epoch in seconds (default: seven days ago) (optional)
@@ -183,7 +183,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **arrays_browser_owned_get**
-> ArrayBrowserData arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type)
+> ArrayBrowserData arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
 
 
 
@@ -195,12 +195,12 @@ Fetch a list of all arrays that are owned directly by user or user's organizatio
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -210,7 +210,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -220,15 +220,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
@@ -239,9 +239,10 @@ tag = ['tag_example'] # list[str] | tag to search for, more than one can be incl
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
 exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
+file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
 
     try:
-        api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type)
+        api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_owned_get: %s\n" % e)
@@ -251,12 +252,12 @@ exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exc
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -266,7 +267,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -276,15 +277,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
@@ -295,9 +296,10 @@ tag = ['tag_example'] # list[str] | tag to search for, more than one can be incl
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
 exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
+file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
 
     try:
-        api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type)
+        api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_owned_get: %s\n" % e)
@@ -317,6 +319,7 @@ Name | Type | Description  | Notes
  **exclude_tag** | [**list[str]**](str.md)| tags to exclude matching array in results, more than one can be included | [optional] 
  **file_type** | [**list[str]**](str.md)| file_type to search for, more than one can be included | [optional] 
  **exclude_file_type** | [**list[str]**](str.md)| file_type to exclude matching array in results, more than one can be included | [optional] 
+ **file_property** | [**list[str]**](str.md)| file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included | [optional] 
 
 ### Return type
 
@@ -352,12 +355,12 @@ Fetch a sidebar for arrays that are owned directly by user or user's organizatio
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -367,7 +370,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -377,15 +380,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     
     try:
         api_response = api_instance.arrays_browser_owned_sidebar_get()
@@ -398,12 +401,12 @@ with rest_api.ApiClient(configuration) as api_client:
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -413,7 +416,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -423,15 +426,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     
     try:
         api_response = api_instance.arrays_browser_owned_sidebar_get()
@@ -465,7 +468,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **arrays_browser_public_get**
-> ArrayBrowserData arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type)
+> ArrayBrowserData arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
 
 
 
@@ -477,12 +480,12 @@ Fetch a list of all arrays that have been shared publically
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -492,7 +495,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -502,15 +505,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
@@ -521,9 +524,10 @@ tag = ['tag_example'] # list[str] | tag to search for, more than one can be incl
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
 exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
+file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
 
     try:
-        api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type)
+        api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_public_get: %s\n" % e)
@@ -533,12 +537,12 @@ exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exc
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -548,7 +552,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -558,15 +562,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
@@ -577,9 +581,10 @@ tag = ['tag_example'] # list[str] | tag to search for, more than one can be incl
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
 exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
+file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
 
     try:
-        api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type)
+        api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_public_get: %s\n" % e)
@@ -599,6 +604,7 @@ Name | Type | Description  | Notes
  **exclude_tag** | [**list[str]**](str.md)| tags to exclude matching array in results, more than one can be included | [optional] 
  **file_type** | [**list[str]**](str.md)| file_type to search for, more than one can be included | [optional] 
  **exclude_file_type** | [**list[str]**](str.md)| file_type to exclude matching array in results, more than one can be included | [optional] 
+ **file_property** | [**list[str]**](str.md)| file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included | [optional] 
 
 ### Return type
 
@@ -634,12 +640,12 @@ Fetch a sidebar of all arrays that have been shared publically
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -649,7 +655,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -659,15 +665,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     
     try:
         api_response = api_instance.arrays_browser_public_sidebar_get()
@@ -680,12 +686,12 @@ with rest_api.ApiClient(configuration) as api_client:
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -695,7 +701,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -705,15 +711,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     
     try:
         api_response = api_instance.arrays_browser_public_sidebar_get()
@@ -747,7 +753,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **arrays_browser_shared_get**
-> ArrayBrowserData arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type)
+> ArrayBrowserData arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
 
 
 
@@ -759,12 +765,12 @@ Fetch a list of all arrays that have been shared with the user
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -774,7 +780,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -784,15 +790,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
@@ -803,9 +809,10 @@ tag = ['tag_example'] # list[str] | tag to search for, more than one can be incl
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
 exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
+file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
 
     try:
-        api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type)
+        api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_shared_get: %s\n" % e)
@@ -815,12 +822,12 @@ exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exc
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -830,7 +837,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -840,15 +847,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
@@ -859,9 +866,10 @@ tag = ['tag_example'] # list[str] | tag to search for, more than one can be incl
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
 exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
+file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
 
     try:
-        api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type)
+        api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_shared_get: %s\n" % e)
@@ -881,6 +889,7 @@ Name | Type | Description  | Notes
  **exclude_tag** | [**list[str]**](str.md)| tags to exclude matching array in results, more than one can be included | [optional] 
  **file_type** | [**list[str]**](str.md)| file_type to search for, more than one can be included | [optional] 
  **exclude_file_type** | [**list[str]**](str.md)| file_type to exclude matching array in results, more than one can be included | [optional] 
+ **file_property** | [**list[str]**](str.md)| file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included | [optional] 
 
 ### Return type
 
@@ -916,12 +925,12 @@ Fetch a list of all arrays that have been shared with the user
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -931,7 +940,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -941,15 +950,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     
     try:
         api_response = api_instance.arrays_browser_shared_sidebar_get()
@@ -962,12 +971,12 @@ with rest_api.ApiClient(configuration) as api_client:
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -977,7 +986,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -987,15 +996,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     
     try:
         api_response = api_instance.arrays_browser_shared_sidebar_get()
@@ -1041,12 +1050,12 @@ consolidate an array at a specified URI
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1056,7 +1065,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1066,18 +1075,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-tiledb_config = rest_api.TileDBConfig() # TileDBConfig | tiledb configuration
+tiledb_config = tiledb.cloud.rest_api.TileDBConfig() # TileDBConfig | tiledb configuration
 
     try:
         api_instance.consolidate_array(namespace, array, tiledb_config)
@@ -1089,12 +1098,12 @@ tiledb_config = rest_api.TileDBConfig() # TileDBConfig | tiledb configuration
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1104,7 +1113,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1114,18 +1123,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-tiledb_config = rest_api.TileDBConfig() # TileDBConfig | tiledb configuration
+tiledb_config = tiledb.cloud.rest_api.TileDBConfig() # TileDBConfig | tiledb configuration
 
     try:
         api_instance.consolidate_array(namespace, array, tiledb_config)
@@ -1175,12 +1184,12 @@ create a array schema at a specified URI registered to a group/project
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1190,7 +1199,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1200,19 +1209,19 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 content_type = 'application/json' # str | Content Type of input and return mime (default to 'application/json')
-array_schema = rest_api.ArraySchema() # ArraySchema | ArraySchema being created
+array_schema = tiledb.cloud.rest_api.ArraySchema() # ArraySchema | ArraySchema being created
 x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name_example' # str | Optional registered access credentials to use for creation (optional)
 
     try:
@@ -1225,12 +1234,12 @@ x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1240,7 +1249,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1250,19 +1259,19 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 content_type = 'application/json' # str | Content Type of input and return mime (default to 'application/json')
-array_schema = rest_api.ArraySchema() # ArraySchema | ArraySchema being created
+array_schema = tiledb.cloud.rest_api.ArraySchema() # ArraySchema | ArraySchema being created
 x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name_example' # str | Optional registered access credentials to use for creation (optional)
 
     try:
@@ -1315,12 +1324,12 @@ delete a array
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1330,7 +1339,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1340,15 +1349,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 content_type = 'application/json' # str | Content Type of input and return mime (default to 'application/json')
@@ -1363,12 +1372,12 @@ content_type = 'application/json' # str | Content Type of input and return mime 
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1378,7 +1387,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1388,15 +1397,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 content_type = 'application/json' # str | Content Type of input and return mime (default to 'application/json')
@@ -1449,12 +1458,12 @@ deregister a array
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1464,7 +1473,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1474,15 +1483,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 
@@ -1496,12 +1505,12 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1511,7 +1520,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1521,15 +1530,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 
@@ -1580,12 +1589,12 @@ get all array metadata user has access to
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1595,7 +1604,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1605,15 +1614,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     public_share = 'public_share_example' # str | Public share values can be one of exclude, only (optional)
 
     try:
@@ -1627,12 +1636,12 @@ with rest_api.ApiClient(configuration) as api_client:
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1642,7 +1651,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1652,15 +1661,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     public_share = 'public_share_example' # str | Public share values can be one of exclude, only (optional)
 
     try:
@@ -1710,12 +1719,12 @@ get an ArraySchema using a url encoded uri
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1725,7 +1734,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1735,15 +1744,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 content_type = 'application/json' # str | Content Type of input and return mime (default to 'application/json')
@@ -1759,12 +1768,12 @@ content_type = 'application/json' # str | Content Type of input and return mime 
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1774,7 +1783,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1784,15 +1793,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 content_type = 'application/json' # str | Content Type of input and return mime (default to 'application/json')
@@ -1846,12 +1855,12 @@ get the max buffer sizes of an array for a subarray
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1861,7 +1870,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1871,15 +1880,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 subarray = 'subarray_example' # str | CSV string of subarray to get max buffer sizes for
@@ -1897,12 +1906,12 @@ x_payer = 'x_payer_example' # str | Name of organization or user who should be c
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1912,7 +1921,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1922,15 +1931,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 subarray = 'subarray_example' # str | CSV string of subarray to get max buffer sizes for
@@ -1988,12 +1997,12 @@ get metadata from the array in json format
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2003,7 +2012,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2013,15 +2022,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 length = 56 # int | (optional) limit character length of returned values (optional)
@@ -2037,12 +2046,12 @@ length = 56 # int | (optional) limit character length of returned values (option
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2052,7 +2061,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2062,15 +2071,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 length = 56 # int | (optional) limit character length of returned values (optional)
@@ -2124,12 +2133,12 @@ get metadata on an array
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2139,7 +2148,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2149,15 +2158,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 
@@ -2172,12 +2181,12 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2187,7 +2196,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2197,15 +2206,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 
@@ -2257,12 +2266,12 @@ get metadata on an array
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2272,7 +2281,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2282,15 +2291,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 
@@ -2305,12 +2314,12 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2320,7 +2329,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2330,15 +2339,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 
@@ -2390,12 +2399,12 @@ get the non empty domain of an array
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2405,7 +2414,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2415,15 +2424,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 content_type = 'application/json' # str | Content Type of input and return mime (default to 'application/json')
@@ -2440,12 +2449,12 @@ x_payer = 'x_payer_example' # str | Name of organization or user who should be c
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2455,7 +2464,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2465,15 +2474,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 content_type = 'application/json' # str | Content Type of input and return mime (default to 'application/json')
@@ -2529,12 +2538,12 @@ get non-empty domain from the array in json format
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2544,7 +2553,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2554,15 +2563,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 
@@ -2577,12 +2586,12 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2592,7 +2601,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2602,15 +2611,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 
@@ -2662,12 +2671,12 @@ get an sample set of data from the array
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2677,7 +2686,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2687,15 +2696,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 samples = 5.0 # float | Number of sample results to return (optional) (default to 5.0)
@@ -2711,12 +2720,12 @@ samples = 5.0 # float | Number of sample results to return (optional) (default t
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2726,7 +2735,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2736,15 +2745,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 samples = 5.0 # float | Number of sample results to return (optional) (default to 5.0)
@@ -2798,12 +2807,12 @@ Get all sharing details of the array
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2813,7 +2822,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2823,15 +2832,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 
@@ -2846,12 +2855,12 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2861,7 +2870,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2871,15 +2880,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 
@@ -2932,12 +2941,12 @@ get metadata on all arrays in a namespace
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2947,7 +2956,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -2957,15 +2966,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 
     try:
@@ -2979,12 +2988,12 @@ with rest_api.ApiClient(configuration) as api_client:
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -2994,7 +3003,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -3004,15 +3013,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 
     try:
@@ -3060,12 +3069,12 @@ Name | Type | Description  | Notes
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -3075,7 +3084,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -3085,15 +3094,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     
     try:
         api_response = api_instance.get_last_accessed_arrays()
@@ -3106,12 +3115,12 @@ with rest_api.ApiClient(configuration) as api_client:
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -3121,7 +3130,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -3131,15 +3140,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     
     try:
         api_response = api_instance.get_last_accessed_arrays()
@@ -3185,12 +3194,12 @@ register an array at a specified URI registered to the given namespace
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -3200,7 +3209,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -3210,18 +3219,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-array_metadata = rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | metadata associated with array
+array_metadata = tiledb.cloud.rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | metadata associated with array
 
     try:
         api_instance.register_array(namespace, array, array_metadata)
@@ -3233,12 +3242,12 @@ array_metadata = rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | metadata associa
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -3248,7 +3257,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -3258,18 +3267,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-array_metadata = rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | metadata associated with array
+array_metadata = tiledb.cloud.rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | metadata associated with array
 
     try:
         api_instance.register_array(namespace, array, array_metadata)
@@ -3319,12 +3328,12 @@ Share an array with a user
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -3334,7 +3343,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -3344,18 +3353,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-array_sharing = rest_api.ArraySharing() # ArraySharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the array will not be shared with the namespace at all
+array_sharing = tiledb.cloud.rest_api.ArraySharing() # ArraySharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the array will not be shared with the namespace at all
 
     try:
         api_instance.share_array(namespace, array, array_sharing)
@@ -3367,12 +3376,12 @@ array_sharing = rest_api.ArraySharing() # ArraySharing | Namespace and list of p
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -3382,7 +3391,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -3392,18 +3401,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-array_sharing = rest_api.ArraySharing() # ArraySharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the array will not be shared with the namespace at all
+array_sharing = tiledb.cloud.rest_api.ArraySharing() # ArraySharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the array will not be shared with the namespace at all
 
     try:
         api_instance.share_array(namespace, array, array_sharing)
@@ -3454,12 +3463,12 @@ update metadata on an array
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -3469,7 +3478,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -3479,18 +3488,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-array_metadata = rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | array metadata to update
+array_metadata = tiledb.cloud.rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | array metadata to update
 
     try:
         api_instance.update_array_metadata(namespace, array, array_metadata)
@@ -3502,12 +3511,12 @@ array_metadata = rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | array metadata t
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -3517,7 +3526,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -3527,18 +3536,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-array_metadata = rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | array metadata to update
+array_metadata = tiledb.cloud.rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | array metadata to update
 
     try:
         api_instance.update_array_metadata(namespace, array, array_metadata)
@@ -3588,12 +3597,12 @@ update metadata on an array
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -3603,7 +3612,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -3613,18 +3622,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-array_metadata_entries = rest_api.ArrayMetadata() # ArrayMetadata | List of metadata entries
+array_metadata_entries = tiledb.cloud.rest_api.ArrayMetadata() # ArrayMetadata | List of metadata entries
 
     try:
         api_instance.update_array_metadata_capnp(namespace, array, array_metadata_entries)
@@ -3636,12 +3645,12 @@ array_metadata_entries = rest_api.ArrayMetadata() # ArrayMetadata | List of meta
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -3651,7 +3660,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -3661,18 +3670,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-array_metadata_entries = rest_api.ArrayMetadata() # ArrayMetadata | List of metadata entries
+array_metadata_entries = tiledb.cloud.rest_api.ArrayMetadata() # ArrayMetadata | List of metadata entries
 
     try:
         api_instance.update_array_metadata_capnp(namespace, array, array_metadata_entries)
@@ -3722,12 +3731,12 @@ vacuum an array at a specified URI
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -3737,7 +3746,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -3747,18 +3756,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-tiledb_config = rest_api.TileDBConfig() # TileDBConfig | tiledb configuration
+tiledb_config = tiledb.cloud.rest_api.TileDBConfig() # TileDBConfig | tiledb configuration
 
     try:
         api_instance.vacuum_array(namespace, array, tiledb_config)
@@ -3770,12 +3779,12 @@ tiledb_config = rest_api.TileDBConfig() # TileDBConfig | tiledb configuration
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -3785,7 +3794,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -3795,18 +3804,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-tiledb_config = rest_api.TileDBConfig() # TileDBConfig | tiledb configuration
+tiledb_config = tiledb.cloud.rest_api.TileDBConfig() # TileDBConfig | tiledb configuration
 
     try:
         api_instance.vacuum_array(namespace, array, tiledb_config)

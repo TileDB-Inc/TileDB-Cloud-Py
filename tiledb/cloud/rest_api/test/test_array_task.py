@@ -15,7 +15,7 @@ from __future__ import absolute_import
 import unittest
 import datetime
 
-import rest_api
+import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.models.array_task import ArrayTask  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
@@ -88,6 +88,7 @@ class TestArrayTask(unittest.TestCase):
                     license_id="0",
                     license_text="0",
                     read_only=False,
+                    is_favorite=True,
                 ),
                 subarray=tiledb.cloud.rest_api.models.domain_array.DomainArray(
                     int8=[56],

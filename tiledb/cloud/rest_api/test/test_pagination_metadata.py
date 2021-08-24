@@ -15,7 +15,7 @@ from __future__ import absolute_import
 import unittest
 import datetime
 
-import rest_api
+import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.models.pagination_metadata import (
     PaginationMetadata,
 )  # noqa: E501

@@ -14,7 +14,7 @@ from __future__ import absolute_import
 
 import unittest
 
-import rest_api
+import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.api.udf_api import UdfApi  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 

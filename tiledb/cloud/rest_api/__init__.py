@@ -75,8 +75,9 @@ from tiledb.cloud.rest_api.models.domain import Domain
 from tiledb.cloud.rest_api.models.domain_array import DomainArray
 from tiledb.cloud.rest_api.models.error import Error
 from tiledb.cloud.rest_api.models.favorite import Favorite
+from tiledb.cloud.rest_api.models.favorite_create import FavoriteCreate
 from tiledb.cloud.rest_api.models.favorite_type import FavoriteType
-from tiledb.cloud.rest_api.models.favorite_update import FavoriteUpdate
+from tiledb.cloud.rest_api.models.favorites_data import FavoritesData
 from tiledb.cloud.rest_api.models.file_property_name import FilePropertyName
 from tiledb.cloud.rest_api.models.file_type import FileType
 from tiledb.cloud.rest_api.models.filter import Filter
@@ -138,6 +139,7 @@ from tiledb.cloud.rest_api.models.subscription import Subscription
 from tiledb.cloud.rest_api.models.tile_db_config import TileDBConfig
 from tiledb.cloud.rest_api.models.token import Token
 from tiledb.cloud.rest_api.models.token_request import TokenRequest
+from tiledb.cloud.rest_api.models.token_scope import TokenScope
 from tiledb.cloud.rest_api.models.udf_actions import UDFActions
 from tiledb.cloud.rest_api.models.udf_array_details import UDFArrayDetails
 from tiledb.cloud.rest_api.models.udf_image import UDFImage

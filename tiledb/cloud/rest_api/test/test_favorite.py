@@ -15,7 +15,7 @@ from __future__ import absolute_import
 import unittest
 import datetime
 
-import rest_api
+import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.models.favorite import Favorite  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
@@ -36,7 +36,15 @@ class TestFavorite(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.favorite.Favorite()  # noqa: E501
         if include_optional:
-            return Favorite(id="0", object_type="ARRAY", namespace="0", name="0")
+            return Favorite(
+                id="0",
+                object_type="ARRAY",
+                namespace="0",
+                name="0",
+                created_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+            )
         else:
             return Favorite()
 

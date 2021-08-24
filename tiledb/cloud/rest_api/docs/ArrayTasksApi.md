@@ -1,4 +1,4 @@
-# rest_api.ArrayTasksApi
+# tiledb.cloud.rest_api.ArrayTasksApi
 
 All URIs are relative to *http://localhost/v1*
 
@@ -18,12 +18,12 @@ Method | HTTP request | Description
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -33,7 +33,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -43,15 +43,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayTasksApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayTasksApi(api_client)
     start = 56 # int | Fetch tasks created after this time, unix epoch in seconds, default 7 days ago (optional)
 end = 56 # int | Fetch tasks created before this time, unix epoch in seconds, default now (optional)
 
@@ -66,12 +66,12 @@ end = 56 # int | Fetch tasks created before this time, unix epoch in seconds, de
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -81,7 +81,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -91,15 +91,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.ArrayTasksApi(api_client)
+    api_instance = tiledb.cloud.rest_api.ArrayTasksApi(api_client)
     start = 56 # int | Fetch tasks created after this time, unix epoch in seconds, default 7 days ago (optional)
 end = 56 # int | Fetch tasks created before this time, unix epoch in seconds, default now (optional)
 
