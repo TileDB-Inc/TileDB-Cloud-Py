@@ -1,35 +1,40 @@
 #!/bin/bash
 
-read -r -d '' USAGE <<'EOF'
+set -euo pipefail
+
+USAGE='
 Usage:
 
-    gen.sh /path/to/TileDB-REST /path/to/TileDB-Cloud-Py/tiledb/cloud
+    update_generated.sh /path/to/TileDB-Cloud-API-Spec/openapi-v1.yaml
 
-Note: The second parameter is the parent directory of the rest_api folder.
-      The rest_api folder needs to be removed befor running this.
-EOF
+This will create generated API documents in [repo root]/tiledb/cloud/rest_api.
+'
 
-if [[ -z "$1" || -z "$2" ]]; then
+if [[ "$#" -ne 1 ]]; then
   echo "$USAGE"
   exit 1
 fi
 
-REST_SRC=$(realpath $1)
-TARGET_PATH=$(realpath $2)
+ROOT="$(git rev-parse --show-toplevel)"
 
-OUTPUT_PATH=$(mktemp -d /tmp/api_gen.XXXXXX)
+GENERATOR="$ROOT/.cache/openapi-generator-cli-4.3.1.jar"
 
+if [[ ! -f "$GENERATOR" ]]; then
+  mkdir -p "$ROOT/.cache"
+  wget -O "$GENERATOR" "https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/4.3.1/openapi-generator-cli-4.3.1.jar"
+fi
+
+SPEC="$1"
+TEMP_PACKAGE_NAME="zzz_replace_me_zzz"
 PACKAGE_NAME="rest_api"
 
-if [ -e "${TARGET_PATH}/${PACKAGE_NAME}" ]; then
-  # Don't do this automatically to avoid accidental destruction.
-  echo "ERROR: Remove ${TARGET_PATH}/${PACKAGE_NAME} before running this program."
-  exit 1
-fi
+TARGET_PATH="$ROOT/tiledb/cloud"
+
+TEMP_PATH="$(mktemp -d /tmp/api_gen.XXXXXX)"
 
 ################################################################################
 # minimize output to what we want
-cat <<EOF > ${OUTPUT_PATH}/.openapi-generator-ignore
+cat <<EOF > ${TEMP_PATH}/.openapi-generator-ignore
 docs/*
 test/
 test/*
@@ -43,43 +48,54 @@ EOF
 
 ################################################################################
 # openapi-generator config
-cat <<EOF > ${OUTPUT_PATH}/openapi_config-api
+cat <<EOF > ${TEMP_PATH}/openapi_config-api
   {
   "projectName": "tiledb-cloud",
-  "packageName": "${PACKAGE_NAME}",
+  "packageName": "${TEMP_PACKAGE_NAME}",
   "documentationPage": false,
   "generateSourceCodeOnly": true
   }
 EOF
 
 ################################################################################
-docker run --rm  \
-  -v ${REST_SRC}/:/dc_src \
-  -v ${OUTPUT_PATH}:/gen \
-  openapitools/openapi-generator-cli:v4.3.1 generate \
-    -c /gen/openapi_config-api -o /gen \
-    -i /dc_src/openapi-v1.yaml -g python
+java -jar "$GENERATOR" \
+  generate \
+  -c "$TEMP_PATH/openapi_config-api" \
+  -o "$TEMP_PATH" \
+  -i "$SPEC" \
+  -g python
 
-# Needed because openapi generates everything as root user
-sudo chown -R `whoami` ${OUTPUT_PATH}
+# Rewrite imports and links in docs,
+# and work around https://github.com/OpenAPITools/openapi-generator/issues/10236
+find "${TEMP_PATH}" \
+  -type f \
+  -execdir \
+    sed --in-place \
+      -e "s/${TEMP_PACKAGE_NAME}\./tiledb.cloud.${PACKAGE_NAME}./g" \
+      -e "s/\\(from\\|import\\) ${TEMP_PACKAGE_NAME}/\\1 tiledb.cloud.${PACKAGE_NAME}/g" \
+      -e "s/${TEMP_PACKAGE_NAME}/${PACKAGE_NAME}/g" \
+      -e "s/ del =/ _del =/g" \
+      '{}' \
+  '+'
 
-# fix imports
-find "${OUTPUT_PATH}" -iname "*.py" -exec sed -i '' -e "s/${PACKAGE_NAME}\./tiledb.cloud.${PACKAGE_NAME}./g" {} \;
-# fix extra import in api_client
-find "${OUTPUT_PATH}" -iname "api_client.py" -exec sed -i '' -e "s/from ${PACKAGE_NAME} import rest/from tiledb.cloud.${PACKAGE_NAME} import rest/g" {} \;
+# Fix up links in README.
+sed --in-place -e "s/](rest_api\\//](/g" "${TEMP_PATH}/${TEMP_PACKAGE_NAME}_README.md"
+
+# Get TARGET_PATH out of the way (if present).
+if [ -e "$TARGET_PATH/$PACKAGE_NAME" ]; then
+  rm -r -- "$TARGET_PATH/$PACKAGE_NAME"
+fi
 
 # move generated files to TARGET_PATH
-cp -r ${OUTPUT_PATH}/${PACKAGE_NAME} ${TARGET_PATH}/
+cp -r "${TEMP_PATH}/${TEMP_PACKAGE_NAME}" "${TARGET_PATH}/${PACKAGE_NAME}"
 
-cp ${OUTPUT_PATH}/${PACKAGE_NAME}_README.md ${TARGET_PATH}/${PACKAGE_NAME}/README.md
-# The newer openapi-generator-cli doesn't produce a requirements.txt
-#cp ${OUTPUT_PATH}/requirements.txt ${TARGET_PATH}/${PACKAGE_NAME}
-cp ${OUTPUT_PATH}/.openapi-generator-ignore ${TARGET_PATH}/${PACKAGE_NAME}/
-cp ${OUTPUT_PATH}/openapi_config-api ${TARGET_PATH}/${PACKAGE_NAME}/
-cp -r ${OUTPUT_PATH}/.openapi-generator/ ${TARGET_PATH}/${PACKAGE_NAME}/
+cp ${TEMP_PATH}/${TEMP_PACKAGE_NAME}_README.md ${TARGET_PATH}/${PACKAGE_NAME}/README.md
+cp ${TEMP_PATH}/.openapi-generator-ignore ${TARGET_PATH}/${PACKAGE_NAME}/
+cp ${TEMP_PATH}/openapi_config-api ${TARGET_PATH}/${PACKAGE_NAME}/
+cp -r ${TEMP_PATH}/.openapi-generator/ ${TARGET_PATH}/${PACKAGE_NAME}/
 
 echo
-echo "Output copied from '${OUTPUT_PATH}' to '${TARGET_PATH}/${PACKAGE_NAME}'"
+echo "Output copied from '${TEMP_PATH}' to '${TARGET_PATH}/${PACKAGE_NAME}'"
 
 if ! [ -x "$(command -v black)" ]; then
   echo 'Warning: black python linter/formater is not installed. You must install black and run black to format generated files' >&2
