@@ -4,7 +4,7 @@ import numbers
 import time
 import uuid
 from concurrent import futures
-from typing import Any, Dict
+from typing import Any, Callable, Dict
 
 import networkx as nx
 from tiledb.cloud.dag import status as st
@@ -13,6 +13,7 @@ from tiledb.cloud import array
 from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud import udf
+from tiledb.cloud.dag import stored_params
 
 # Compatibility re-export.
 Status = st.Status
@@ -758,34 +759,75 @@ class DAG:
         return results
 
 
-def _replace_nodes_with_results(arg):
-    """Descends into data structures and replaces nodes with their values.
+class _ReplaceWith(Exception):
+    """Indicates that the object should be replaced rather than descending."""
 
-    This is guaranteed to produce new data structures and not mutate the inputs.
+    def __init__(self, value: Any):
+        self.value = value
+
+
+def replace_stored_params(tree, loader: stored_params.ParamLoader) -> Any:
+    """Descends into data structures and replaces Stored Params with results.
+
+    This is only useful in the UDF execution environment.
+
+    Guaranteed to produce new output structures and not mutate the input.
     Supports cyclic data structures.
     """
-    return _ResultReplacer()._replace_internal(arg)
+
+    def visit(arg):
+        if isinstance(arg, stored_params.StoredParam):
+            raise _ReplaceWith(loader.load(arg))
+
+    return _ResultReplacer(visit)._replace_internal(tree)
+
+
+def _replace_nodes_with_results(tree):
+    """Descends into data structures and replaces Node IDs with their values.
+
+    Offers the same guarantees as :func:`replace_stored_params`.
+    """
+
+    def visit(arg):
+        if isinstance(arg, Node):
+            raise _ReplaceWith(arg.result())
+
+    return _ResultReplacer(visit)._replace_internal(tree)
 
 
 class _ResultReplacer:
-    """Class to keep track of visited items when materializing nodes."""
+    """Class to visit nodes and replace specific visited nodes.
 
-    seen: Dict[int, Any]
+    This class takes as a parameter a "visit" function.  When the visit function
+    is called, if it raises a :class:`_ReplaceWith`, instead of descending
+    further into the argument, the :class:`_ResultReplacer` will replace the
+    given argument with the value the :class:`_ReplaceWith` contains.
+    """
 
-    def __init__(self):
-        self.seen = {}
+    def __init__(self, visit: Callable[[Any], Any]):
+        self.seen: Dict[int, Any] = {}
+        self.visit = visit
 
     def _replace_internal(self, arg):
-        if isinstance(arg, Node):
-            return arg.result()
         if isinstance(arg, (str, bytes)):
             # Special-case these since they're weird sequences.
             return arg
+
         original_id = id(arg)
         try:
             return self.seen[original_id]
         except KeyError:
-            pass
+            pass  # We haven't seen this object yet; continue.
+
+        # First, handle if this is something to replace directly.
+        try:
+            result = self.visit(arg)
+        except _ReplaceWith as rw:
+            result = rw.value
+            self.seen[original_id] = result
+            return result
+
+        # Descend into sequences and mappings.
         if isinstance(arg, cabc.MutableSequence):
             replaced = type(arg)()
             self.seen[original_id] = replaced
@@ -804,5 +846,7 @@ class _ResultReplacer:
             replaced = type(arg)((k, self._replace_internal(v)) for k, v in arg.items())
             self.seen[original_id] = replaced
             return replaced
+
+        # Otherwise, we just return the original thing.
         self.seen[original_id] = arg
         return arg
