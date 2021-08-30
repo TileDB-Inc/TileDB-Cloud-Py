@@ -1,44 +1,19 @@
+import json
 import numbers
 import time
 import uuid
+from concurrent import futures
+
 import networkx as nx
+from tiledb.cloud.dag import status as st
+from tiledb.cloud.dag import visualization as viz
+from tiledb.cloud import array
+from tiledb.cloud import sql
+from tiledb.cloud import tiledb_cloud_error as tce
+from tiledb.cloud import udf
 
-from concurrent.futures import CancelledError, ProcessPoolExecutor, ThreadPoolExecutor
-from enum import Enum
-
-from .visualization import (
-    build_graph_node_details,
-    update_plotly_graph,
-    update_tiledb_graph,
-    build_visualization_positions,
-)
-from ..array import apply as array_apply
-from ..sql import exec as sql_exec
-from ..udf import exec as udf_exec
-
-from ..tiledb_cloud_error import TileDBCloudError
-
-
-class Status(Enum):
-    NOT_STARTED = 1
-    RUNNING = 2
-    COMPLETED = 3
-    FAILED = 4
-    CANCELLED = 5
-
-    def __str__(self):
-        if self == self.NOT_STARTED:
-            return "Not Started"
-        elif self == self.RUNNING:
-            return "Running"
-        elif self == self.COMPLETED:
-            return "Completed"
-        elif self == self.FAILED:
-            return "Failed"
-        elif self == self.CANCELLED:
-            return "Cancelled"
-
-        return "Unknown Status"
+# Compatibility re-export.
+Status = st.Status
 
 
 class Node:
@@ -54,7 +29,7 @@ class Node:
         self.id = uuid.uuid4()
         self.error = None
         self.future = None
-        self.status = Status.NOT_STARTED
+        self.status = st.Status.NOT_STARTED
         self.dag = dag
         self.local_mode = local_mode
 
@@ -64,7 +39,7 @@ class Node:
 
         self.args = args
         self.kwargs = kwargs
-        self.__results = None
+        self._results = None
         self.parents = {}
         self.children = {}
         if name is None:
@@ -125,7 +100,7 @@ class Node:
             self.dag = node.dag
 
     def cancel(self):
-        self.status = Status.CANCELLED
+        self.status = st.Status.CANCELLED
         if self.future is not None:
             self.future.cancel()
 
@@ -134,11 +109,15 @@ class Node:
         Is the node finished
         :return: True if the node's function is finished
         """
-        return self.status in (Status.COMPLETED, Status.FAILED, Status.CANCELLED)
+        return self.status in (
+            st.Status.COMPLETED,
+            st.Status.FAILED,
+            st.Status.CANCELLED,
+        )
 
     done = finished
 
-    def __replace_nodes_with_results(self, arg):
+    def _replace_nodes_with_results(self, arg):
         """
         Recursively find arguments of Node instance and replace with the node results
         :param arg:
@@ -155,13 +134,13 @@ class Node:
                 if isinstance(a, Node):
                     arg[index] = a.result()
                 elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    arg[index] = self.__replace_nodes_with_results(a)
+                    arg[index] = self._replace_nodes_with_results(a)
         elif isinstance(arg, dict):
             for k, a in arg.items():
                 if isinstance(a, Node):
                     arg[k] = a.result()
                 elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    arg[k] = self.__replace_nodes_with_results(a)
+                    arg[k] = self._replace_nodes_with_results(a)
         elif isinstance(arg, Node):
             arg = arg.result()
 
@@ -175,7 +154,7 @@ class Node:
         Execute function for node
         :return: None
         """
-        self.status = Status.RUNNING
+        self.status = st.Status.RUNNING
 
         # Override namespace if passed
         if namespace is not None and not self.local_mode:
@@ -185,31 +164,31 @@ class Node:
         # If there is a node as an argument, the user really just wants the results, so let's fetch them
         # and swap out the parameter
         if self.args is not None:
-            self.args = self.__replace_nodes_with_results(self.args)
+            self.args = self._replace_nodes_with_results(self.args)
 
         # First loop though any default named parameter arguments to find any nodes
         # If there is a node as an argument, the user really just wants the results, so let's fetch them
         # and swap out the parameter
         if self.kwargs is not None:
-            self.kwargs = self.__replace_nodes_with_results(self.kwargs)
+            self.kwargs = self._replace_nodes_with_results(self.kwargs)
 
         # Execute user function with the parameters that the user requested
         # The function is executed on the dag's worker pool
         self.future = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
-        self.future.add_done_callback(self.__handle_completed_future)
+        self.future.add_done_callback(self._handle_completed_future)
 
     compute = exec
 
-    def __handle_completed_future(self, future):
+    def _handle_completed_future(self, future):
         try:
-            self.__results = future.result()
-            if self.status == Status.RUNNING:
-                self.status = Status.COMPLETED
-        except CancelledError:
-            self.status = Status.CANCELLED
+            self._results = future.result()
+            if self.status == st.Status.RUNNING:
+                self.status = st.Status.COMPLETED
+        except futures.CancelledError:
+            self.status = st.Status.CANCELLED
         except Exception as exc:
             self.error = exc
-            self.status = Status.FAILED
+            self.status = st.Status.FAILED
         self.dag.report_node_complete(self)
 
     def ready_to_compute(self):
@@ -217,11 +196,11 @@ class Node:
         Is the node ready to execute? Are all dependencies completed?
         :return: True if node is able to be run
         """
-        if self.status != Status.NOT_STARTED:
+        if self.status != st.Status.NOT_STARTED:
             return False
 
         for node in self.parents.values():
-            if not node.finished() or node.status != Status.COMPLETED:
+            if not node.finished() or node.status != st.Status.COMPLETED:
                 return False
         return True
 
@@ -233,12 +212,12 @@ class Node:
         if self.future is not None:
             # If future, catch exception to store error on node, then raise
             try:
-                self.__results = self.future.result()
+                self._results = self.future.result()
             except Exception as exc:
                 self.error = exc
                 raise exc
 
-        return self.__results
+        return self._results
 
     def result_or_future(self):
         """
@@ -248,7 +227,7 @@ class Node:
         if not self.finished() and self.future is not None:
             return self.future
 
-        return self.__results
+        return self._results
 
     def wait(self, timeout=None):
         """
@@ -304,11 +283,11 @@ class DAG:
         self.visualization = None
 
         if use_processes:
-            self.executor = ProcessPoolExecutor(max_workers=max_workers)
+            self.executor = futures.ProcessPoolExecutor(max_workers=max_workers)
         else:
-            self.executor = ThreadPoolExecutor(max_workers=max_workers)
+            self.executor = futures.ThreadPoolExecutor(max_workers=max_workers)
 
-        self.status = Status.NOT_STARTED
+        self.status = st.Status.NOT_STARTED
 
         self.done_callbacks = []
         self.called_done_callbacks = False
@@ -374,8 +353,8 @@ class DAG:
         Checks if DAG is complete
         :return: True if complete, False otherwise
         """
-        if self.status == Status.NOT_STARTED:
-            raise TileDBCloudError(
+        if self.status == st.Status.NOT_STARTED:
+            raise tce.TileDBCloudError(
                 "Can't call done for DAG before starting DAG with `exec()`"
             )
 
@@ -384,13 +363,13 @@ class DAG:
 
         # If there is no running nodes we can assume it is complete and check if we should mark as failed or successful
         if len(self.failed_nodes) > 0:
-            self.status = Status.FAILED
+            self.status = st.Status.FAILED
         elif len(self.cancelled_nodes) > 0:
-            self.status = Status.CANCELLED
+            self.status = st.Status.CANCELLED
         elif len(self.not_started_nodes) > 0:
             return False
         else:
-            self.status = Status.COMPLETED
+            self.status = st.Status.COMPLETED
 
         return True
 
@@ -424,7 +403,7 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        return self.add_node(array_apply, *args, **kwargs)
+        return self.add_node(array.apply, *args, **kwargs)
 
     def submit_udf(self, *args, **kwargs):
         """
@@ -434,7 +413,7 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        return self.add_node(udf_exec, *args, **kwargs)
+        return self.add_node(udf.exec, *args, **kwargs)
 
     def submit(self, *args, **kwargs):
         """
@@ -445,7 +424,7 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        return self.add_node(udf_exec, *args, **kwargs)
+        return self.add_node(udf.exec, *args, **kwargs)
 
     def submit_sql(self, *args, **kwargs):
         """
@@ -455,7 +434,7 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        return self.add_node(sql_exec, *args, **kwargs)
+        return self.add_node(sql.exec, *args, **kwargs)
 
     def submit_local(self, *args, **kwargs):
         """
@@ -475,11 +454,11 @@ class DAG:
         """
         del self.running_nodes[node.id]
 
-        if node.status == Status.COMPLETED:
+        if node.status == st.Status.COMPLETED:
             self.completed_nodes[node.id] = node
             for child in node.children.values():
                 self._exec_node(child)
-        elif node.status == Status.CANCELLED:
+        elif node.status == st.Status.CANCELLED:
             self.cancelled_nodes[node.id] = node
         else:
             self.failed_nodes[node.id] = node
@@ -491,7 +470,7 @@ class DAG:
         if self.done():
             self.execute_done_callbacks()
 
-    def __find_root_nodes(self):
+    def _find_root_nodes(self):
         """
         Find all root nodes
         :return: list of root nodes
@@ -509,11 +488,11 @@ class DAG:
         :return:
         """
         self.called_done_callbacks = False
-        roots = self.__find_root_nodes()
+        roots = self._find_root_nodes()
         if len(roots) == 0:
-            raise TileDBCloudError("DAG is circular, there are no root nodes")
+            raise tce.TileDBCloudError("DAG is circular, there are no root nodes")
 
-        self.status = Status.RUNNING
+        self.status = st.Status.RUNNING
         for node in roots:
             self._exec_node(node)
             # Make sure to execute any callbacks to signal this node has started
@@ -558,11 +537,11 @@ class DAG:
                 )
 
         # in case of failure reraise the first failed node exception
-        if self.status == Status.FAILED:
+        if self.status == st.Status.FAILED:
             raise next(iter(self.failed_nodes.values())).error
 
     def cancel(self):
-        self.status = Status.CANCELLED
+        self.status = st.Status.CANCELLED
         for node in self.running_nodes.values():
             node.cancel()
         for node in self.not_started_nodes.values():
@@ -594,15 +573,15 @@ class DAG:
 
     def networkx_graph(self):
         # Build networkx graph
-        G = nx.DiGraph()
+        graph = nx.DiGraph()
 
         for n in self.nodes.values():
-            G.add_node(n.name)
+            graph.add_node(n.name)
             for child in n.children.values():
-                G.add_node(child.name)
-                G.add_edge(n.name, child.name)
+                graph.add_node(child.name)
+                graph.add_edge(n.name, child.name)
 
-        return G
+        return graph
 
     def get_tiledb_plot_node_details(self):
         """
@@ -617,9 +596,9 @@ class DAG:
         return node_details
 
     @staticmethod
-    def __update_dag_tiledb_graph(graph):
+    def _update_dag_tiledb_graph(graph):
         graph.visualization["node_details"] = graph.get_tiledb_plot_node_details()
-        update_tiledb_graph(
+        viz.update_tiledb_graph(
             graph.visualization["nodes"],
             graph.visualization["edges"],
             graph.visualization["node_details"],
@@ -628,8 +607,10 @@ class DAG:
         )
 
     @staticmethod
-    def __update_dag_plotly_graph(graph):
-        update_plotly_graph(graph.visualization["nodes"], graph.visualization["fig"])
+    def _update_dag_plotly_graph(graph):
+        viz.update_plotly_graph(
+            graph.visualization["nodes"], graph.visualization["fig"]
+        )
 
     def visualize(self, notebook=True, auto_update=True, force_plotly=False):
         """
@@ -643,29 +624,24 @@ class DAG:
             return self._visualize_plotly(notebook=notebook, auto_update=auto_update)
 
         try:
-            import tiledb.plot.widget
-
-            return self.__visualize_tiledb(auto_update=auto_update)
+            return self._visualize_tiledb(auto_update=auto_update)
 
         except ImportError:
-            import plotly.graph_objects as go
-
             return self._visualize_plotly(notebook=notebook, auto_update=auto_update)
 
-    def __visualize_tiledb(self, auto_update=True):
+    def _visualize_tiledb(self, auto_update=True):
         """
         Create graph visualization with tiledb.plot.widget
         :param auto_update: Should the diagram be auto updated with each status change
         :return: figure
         """
-        import tiledb.plot.widget
-        import json
+        from tiledb.plot import widget
 
-        G = self.networkx_graph()
-        nodes = list(G.nodes())
-        edges = list(G.edges())
+        graph = self.networkx_graph()
+        nodes = list(graph.nodes())
+        edges = list(graph.edges())
         node_details = self.get_tiledb_plot_node_details()
-        positions = build_visualization_positions(G)
+        positions = viz.build_visualization_positions(graph)
 
         self.visualization = {
             "nodes": nodes,
@@ -673,11 +649,11 @@ class DAG:
             "node_details": node_details,
             "positions": positions,
         }
-        fig = tiledb.plot.widget.Visualize(data=json.dumps(self.visualization))
+        fig = widget.Visualize(data=json.dumps(self.visualization))
         self.visualization["fig"] = fig
 
         if auto_update:
-            self.add_update_callback(self.__update_dag_tiledb_graph)
+            self.add_update_callback(self._update_dag_tiledb_graph)
 
         return fig
 
@@ -690,13 +666,13 @@ class DAG:
         """
         import plotly.graph_objects as go
 
-        G = self.networkx_graph()
-        pos = build_visualization_positions(G)
+        graph = self.networkx_graph()
+        pos = viz.build_visualization_positions(graph)
 
         # Convert to plotly scatter plot
         edge_x = []
         edge_y = []
-        for edge in G.edges():
+        for edge in graph.edges():
             x0, y0 = pos[edge[0]]
             x1, y1 = pos[edge[1]]
             edge_x.append(x0)
@@ -719,7 +695,7 @@ class DAG:
         node_x = []
         node_y = []
         nodes = []
-        for node in G.nodes():
+        for node in graph.nodes():
             x, y = pos[node]
             node_x.append(x)
             node_y.append(y)
@@ -734,7 +710,7 @@ class DAG:
             marker=dict(size=15, line_width=2),
         )
 
-        (node_trace.marker.color, node_trace.text) = build_graph_node_details(nodes)
+        (node_trace.marker.color, node_trace.text) = viz.build_graph_node_details(nodes)
 
         fig_obj = go.Figure
         if notebook:
@@ -743,7 +719,7 @@ class DAG:
         fig = fig_obj(
             data=[edge_trace, node_trace],
             layout=go.Layout(
-                # title="Status",
+                # title="st.Status",
                 # titlefont_size=16,
                 showlegend=False,
                 hovermode="closest",
@@ -756,10 +732,10 @@ class DAG:
             ),
         )
 
-        self.visualization = dict(fig=fig, network=G, nodes=nodes)
+        self.visualization = dict(fig=fig, network=graph, nodes=nodes)
 
         if auto_update:
-            self.add_update_callback(self.__update_dag_plotly_graph)
+            self.add_update_callback(self._update_dag_plotly_graph)
 
         return fig
 
