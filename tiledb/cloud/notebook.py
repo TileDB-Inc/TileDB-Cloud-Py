@@ -103,6 +103,33 @@ def download_ipnyb_file_contents_from_cloud(
         return json
 
 
+# TODO: auto-increment/overwrite logic
+# If the destination array name already exists -- e.g. uploading 'foo.ipynb' to
+# 'testing-upload' -- there are three options:
+# 1. Fail the upload with 'already exists' and require the user to supply a
+#    different path. No clobbering 
+# 2. Auto-increment the array name, e.g. from 'testing-upload' to 'testing-upload-1'
+#    and then 'testing-upload-2' the next time, and so on.
+# 3. Overwrite
+#
+# Thoughts:
+# * Option 3 isn't a safe default -- for those who want it it's fine but for
+#   those who don't it can be seen as unwelcome data loss.
+# * Option 2 is a not-bad default -- there is no data loss, but some users
+#   might be left feeling 'Why are you creating all these versions? I just
+#   want to update one notebook, not have twenty copies."
+# * Option 1 is a safe default -- there is no data loss and no profusion of
+#   copies. However, it is more frictional for the user, requiring them to
+#   make the decision.
+#
+# Implementation:
+#
+# * We could have a force-overwrite argument, optional, default False.
+# * We could have a behavior-on-exist argument, of enum type, 3 cases, one
+#   for each of the options above.
+#
+# Status: As of this writing: we have implemented option 1, and we don't have
+# an overwrite/update-in-place flag.
 def upload_ipnyb_file_name_to_cloud(
     ipynb_file_name: str,
     namespace: str,
@@ -280,25 +307,6 @@ def _create_notebook_array_retry_helper(
             raise Exception.web.HTTPError(
                 400, f"Error creating file: {e}. Are your credentials valid?"
             ) from e
-
-        # TODO: if-exists handling
-
-        #        if "already exists" in str(e):
-        #            # OK, let's try incrementing the filename.
-        #            parts = paths.split(path)
-        #            array_name = parts[-1]
-        #
-        #            array_name = paths.increment_filename(array_name)
-        #
-        #            parts[-1] = array_name
-        #            path = posixpath.join(*parts)
-        #            # This doesn't count as a retry.
-
-        #        elif retry:
-        #            retry -= 1
-        #        else:
-        #            # We're out of retries.
-        #            raise
 
     except Exception as e:
         raise e
