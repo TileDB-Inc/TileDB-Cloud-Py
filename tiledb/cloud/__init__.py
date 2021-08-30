@@ -21,6 +21,10 @@ from .client import organization
 from .client import organizations
 from .client import user_profile
 from .notebook import rename_notebook
+from .notebook import upload_ipnyb_file_name_to_cloud
+from .notebook import upload_ipnyb_file_contents_to_cloud
+from .notebook import download_ipnyb_file_name_from_cloud
+from .notebook import download_ipnyb_file_contents_from_cloud
 from .rest_api import models
 from .tasks import last_sql_task
 from .tasks import last_udf_task
