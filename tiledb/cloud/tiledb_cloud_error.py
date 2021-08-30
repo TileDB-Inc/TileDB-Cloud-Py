@@ -12,7 +12,8 @@ def check_exc(exc):
         "[InternalError: failed to parse or message missing from ApiException]"
     )
 
-    if not isinstance(exc, BaseException):
+    # Make sure exc.status and exc.body exist before dereferncing them.
+    if not isinstance(exc, ApiException):
         raise Exception(internal_err_msg)
 
     if exc.status == 404 and len(exc.body) == 0:
