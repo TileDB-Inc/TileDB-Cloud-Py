@@ -102,3 +102,9 @@ if ! [ -x "$(command -v black)" ]; then
 else
   black .
 fi
+
+if ! [ -x "$(command -v isort)" ]; then
+  echo 'isort must be installed to sort imports.'
+else
+  isort --force-single-line --single-line-exclusions=typing --line-length 999 .
+fi
