@@ -1,4 +1,3 @@
-import json
 import multiprocessing
 import sys
 import urllib
@@ -6,9 +5,9 @@ import warnings
 import zlib
 from typing import Any, Callable, Optional, Sequence, Union
 
-import cloudpickle
 import numpy
-import pyarrow
+import urllib3
+from tiledb.cloud import results
 
 from . import client
 from . import config
@@ -16,21 +15,19 @@ from . import tiledb_cloud_error
 from . import utils
 from .rest_api import ApiException as GenApiException
 from .rest_api import models
-from .rest_api import rest
 
 last_udf_task_id = None
 
 
 class TaskResult:
-    def __init__(self, response, result_format, result_format_version=None):
+    def __init__(self, response, result_format):
         self.response = response
         self.task_id = None
-        self.result_format = result_format
-        self.result_format_version = result_format_version
+        self.decoder = results.Decoder(result_format)
 
     def get(self, timeout=None):
         try:
-            response = rest.RESTResponse(self.response.get(timeout=timeout))
+            response: urllib3.HTTPResponse = self.response.get(timeout=timeout)
             res = response.data
         except (GenApiException, multiprocessing.TimeoutError) as exc:
             _maybe_set_last_udf_id(exc)
@@ -47,25 +44,12 @@ class TaskResult:
                 )
 
         try:
-            if self.result_format == models.ResultFormat.NATIVE:
-                res = cloudpickle.loads(res)
-            elif self.result_format == models.ResultFormat.JSON:
-                res = json.loads(res)
-            elif self.result_format == models.ResultFormat.ARROW:
-                # Arrow optimized empty results by not serializing anything
-                # We need to account for this and return None to the user instead of trying to read it (which will produce an error)
-                if len(res) == 0:
-                    return None
-
-                reader = pyarrow.RecordBatchStreamReader(res)
-                res = reader.read_all()
+            return self.decoder.decode(res)
         except Exception as e:
             inner_msg = f": {e.args[0]}" if e.args else ""
             raise tiledb_cloud_error.TileDBCloudError(
                 f"Failed to load result object{inner_msg}"
             ) from e
-
-        return res
 
 
 class UDFResult(TaskResult):

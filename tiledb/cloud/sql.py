@@ -1,7 +1,7 @@
 import inspect
+from tiledb.cloud.results import PandasDecoder
 import time
 
-import pandas
 import tiledb
 
 from . import array
@@ -16,27 +16,19 @@ last_sql_task_id = None
 
 
 class SQLResult(array.TaskResult):
-    def __init__(
-        self, response, result_format, result_format_version=None, result_type="pandas"
-    ):
-        super().__init__(response, result_format, result_format_version)
+    def __init__(self, response, result_format, result_type="pandas"):
+        super().__init__(response, result_format)
 
-        self.result_type = result_type
+        if result_type == "pandas":
+            self.decoder = PandasDecoder(result_format)
 
     def get(self, timeout=None):
-        res = super().get()
+        res = super().get(timeout)
 
         # Set last udf task id
         global last_sql_task_id
         last_sql_task_id = self.task_id
 
-        if self.result_type == "pandas":
-            if self.result_format == models.ResultFormat.JSON:
-                return pandas.DataFrame(res)
-            elif self.result_format == models.ResultFormat.ARROW:
-                return res.to_pandas()
-
-        # Fall back to just returning base results
         return res
 
 
@@ -141,8 +133,7 @@ def exec_async(
         return SQLResult(
             response,
             result_format,
-            result_format_version,
-            None if raw_results else "pandas",
+            result_type=None if raw_results else "pandas",
         )
 
     except rest_api.ApiException as exc:
