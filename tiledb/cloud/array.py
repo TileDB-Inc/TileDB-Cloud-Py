@@ -21,7 +21,7 @@ from .rest_api import rest
 last_udf_task_id = None
 
 
-class TaskResult(multiprocessing.pool.ApplyResult):
+class TaskResult:
     def __init__(self, response, result_format, result_format_version=None):
         self.response = response
         self.task_id = None
