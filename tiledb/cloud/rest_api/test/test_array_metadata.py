@@ -15,7 +15,7 @@ from __future__ import absolute_import
 import unittest
 import datetime
 
-import rest_api
+import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.models.array_metadata import ArrayMetadata  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
@@ -43,7 +43,6 @@ class TestArrayMetadata(unittest.TestCase):
                         type="0",
                         value_num=56,
                         value=[56],
-                        # MANUAL EDIT: The generator generates `del = True,`, which is invalid.
                         _del=True,
                     )
                 ]

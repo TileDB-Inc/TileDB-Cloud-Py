@@ -14,7 +14,7 @@ from __future__ import absolute_import
 
 import unittest
 
-import rest_api
+import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.api.favorites_api import FavoritesApi  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
@@ -28,20 +28,20 @@ class TestFavoritesApi(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_delete_favorite_id(self):
-        """Test case for delete_favorite_id"""
+    def test_add_favorite(self):
+        """Test case for add_favorite"""
+        pass
+
+    def test_delete_favorite(self):
+        """Test case for delete_favorite"""
         pass
 
     def test_get_favorite(self):
         """Test case for get_favorite"""
         pass
 
-    def test_get_favorites(self):
-        """Test case for get_favorites"""
-        pass
-
-    def test_post_favorite(self):
-        """Test case for post_favorite"""
+    def test_list_favorites(self):
+        """Test case for list_favorites"""
         pass
 
 

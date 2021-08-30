@@ -15,7 +15,7 @@ from __future__ import absolute_import
 import unittest
 import datetime
 
-import rest_api
+import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.models.inline_response200 import (
     InlineResponse200,
 )  # noqa: E501

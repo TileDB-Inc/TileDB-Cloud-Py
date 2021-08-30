@@ -1,4 +1,4 @@
-# rest_api.InvitationApi
+# tiledb.cloud.rest_api.InvitationApi
 
 All URIs are relative to *http://localhost/v1*
 
@@ -25,12 +25,12 @@ Accepts invitation
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -40,7 +40,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -50,15 +50,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.InvitationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     invitation = 'invitation_example' # str | the id of invitation about to be accepted
 
     try:
@@ -71,12 +71,12 @@ with rest_api.ApiClient(configuration) as api_client:
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -86,7 +86,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -96,15 +96,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.InvitationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     invitation = 'invitation_example' # str | the id of invitation about to be accepted
 
     try:
@@ -154,12 +154,12 @@ Cancels join organization invitation
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -169,7 +169,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -179,15 +179,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.InvitationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     invitation = 'invitation_example' # str | the id of invitation about to be cancelled
 organization = 'organization_example' # str | name or uuid of organization
 
@@ -201,12 +201,12 @@ organization = 'organization_example' # str | name or uuid of organization
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -216,7 +216,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -226,15 +226,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.InvitationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     invitation = 'invitation_example' # str | the id of invitation about to be cancelled
 organization = 'organization_example' # str | name or uuid of organization
 
@@ -286,12 +286,12 @@ Cancels array sharing invitation
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -301,7 +301,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -311,15 +311,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.InvitationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 invitation = 'invitation_example' # str | the id of invitation about to be cancelled
 array = 'array_example' # str | name/uri of array that is url-encoded
@@ -334,12 +334,12 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -349,7 +349,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -359,15 +359,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.InvitationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 invitation = 'invitation_example' # str | the id of invitation about to be cancelled
 array = 'array_example' # str | name/uri of array that is url-encoded
@@ -421,12 +421,12 @@ Fetch a list of invitations
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -436,7 +436,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -446,15 +446,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.InvitationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     organization = 'organization_example' # str | name or id of organization to filter (optional)
 array = 'array_example' # str | name/uri of array that is url-encoded to filter (optional)
 start = 56 # int | start time for tasks to filter by (optional)
@@ -476,12 +476,12 @@ orderby = 'orderby_example' # str | sort by which field valid values include tim
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -491,7 +491,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -501,15 +501,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.InvitationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     organization = 'organization_example' # str | name or id of organization to filter (optional)
 array = 'array_example' # str | name/uri of array that is url-encoded to filter (optional)
 start = 56 # int | start time for tasks to filter by (optional)
@@ -575,12 +575,12 @@ Sends email to multiple recipients with joining information regarding an organiz
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -590,7 +590,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -600,17 +600,17 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.InvitationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     organization = 'organization_example' # str | name or uuid of organization
-email_invite = rest_api.InvitationOrganizationJoinEmail() # InvitationOrganizationJoinEmail | list of email recipients
+email_invite = tiledb.cloud.rest_api.InvitationOrganizationJoinEmail() # InvitationOrganizationJoinEmail | list of email recipients
 
     try:
         api_instance.join_organization(organization, email_invite)
@@ -622,12 +622,12 @@ email_invite = rest_api.InvitationOrganizationJoinEmail() # InvitationOrganizati
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -637,7 +637,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -647,17 +647,17 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.InvitationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     organization = 'organization_example' # str | name or uuid of organization
-email_invite = rest_api.InvitationOrganizationJoinEmail() # InvitationOrganizationJoinEmail | list of email recipients
+email_invite = tiledb.cloud.rest_api.InvitationOrganizationJoinEmail() # InvitationOrganizationJoinEmail | list of email recipients
 
     try:
         api_instance.join_organization(organization, email_invite)
@@ -707,12 +707,12 @@ Sends email to multiple recipients with sharing information regarding an array
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -722,7 +722,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -732,18 +732,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.InvitationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-email_invite = rest_api.InvitationArrayShareEmail() # InvitationArrayShareEmail | list of email recipients
+email_invite = tiledb.cloud.rest_api.InvitationArrayShareEmail() # InvitationArrayShareEmail | list of email recipients
 
     try:
         api_instance.share_array_by_invite(namespace, array, email_invite)
@@ -755,12 +755,12 @@ email_invite = rest_api.InvitationArrayShareEmail() # InvitationArrayShareEmail 
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -770,7 +770,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -780,18 +780,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.InvitationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-email_invite = rest_api.InvitationArrayShareEmail() # InvitationArrayShareEmail | list of email recipients
+email_invite = tiledb.cloud.rest_api.InvitationArrayShareEmail() # InvitationArrayShareEmail | list of email recipients
 
     try:
         api_instance.share_array_by_invite(namespace, array, email_invite)

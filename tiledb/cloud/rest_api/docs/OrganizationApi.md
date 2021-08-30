@@ -1,4 +1,4 @@
-# rest_api.OrganizationApi
+# tiledb.cloud.rest_api.OrganizationApi
 
 All URIs are relative to *http://localhost/v1*
 
@@ -33,12 +33,12 @@ Add aws keys
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -48,7 +48,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -58,17 +58,17 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     namespace = 'namespace_example' # str | namespace
-aws_access_credentials = rest_api.AWSAccessCredentials() # AWSAccessCredentials | aws access credentials to store for a namespace
+aws_access_credentials = tiledb.cloud.rest_api.AWSAccessCredentials() # AWSAccessCredentials | aws access credentials to store for a namespace
 
     try:
         api_instance.add_aws_access_credentials(namespace, aws_access_credentials)
@@ -80,12 +80,12 @@ aws_access_credentials = rest_api.AWSAccessCredentials() # AWSAccessCredentials 
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -95,7 +95,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -105,17 +105,17 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     namespace = 'namespace_example' # str | namespace
-aws_access_credentials = rest_api.AWSAccessCredentials() # AWSAccessCredentials | aws access credentials to store for a namespace
+aws_access_credentials = tiledb.cloud.rest_api.AWSAccessCredentials() # AWSAccessCredentials | aws access credentials to store for a namespace
 
     try:
         api_instance.add_aws_access_credentials(namespace, aws_access_credentials)
@@ -164,12 +164,12 @@ add a user to an organization
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -179,7 +179,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -189,17 +189,17 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name
-user = rest_api.OrganizationUser() # OrganizationUser | user to add
+user = tiledb.cloud.rest_api.OrganizationUser() # OrganizationUser | user to add
 
     try:
         api_instance.add_user_to_organization(organization, user)
@@ -211,12 +211,12 @@ user = rest_api.OrganizationUser() # OrganizationUser | user to add
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -226,7 +226,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -236,17 +236,17 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name
-user = rest_api.OrganizationUser() # OrganizationUser | user to add
+user = tiledb.cloud.rest_api.OrganizationUser() # OrganizationUser | user to add
 
     try:
         api_instance.add_user_to_organization(organization, user)
@@ -295,12 +295,12 @@ Check if aws keys are set
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -310,7 +310,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -320,15 +320,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     namespace = 'namespace_example' # str | namespace
 
     try:
@@ -342,12 +342,12 @@ with rest_api.ApiClient(configuration) as api_client:
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -357,7 +357,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -367,15 +367,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     namespace = 'namespace_example' # str | namespace
 
     try:
@@ -425,12 +425,12 @@ Check if aws keys are set by name
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -440,7 +440,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -450,15 +450,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     namespace = 'namespace_example' # str | namespace
 name = 'name_example' # str | name
 
@@ -473,12 +473,12 @@ name = 'name_example' # str | name
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -488,7 +488,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -498,15 +498,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     namespace = 'namespace_example' # str | namespace
 name = 'name_example' # str | name
 
@@ -558,12 +558,12 @@ create a organization, the user creating will be listed as owner
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -573,7 +573,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -583,16 +583,16 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
-    organization = rest_api.Organization() # Organization | organization to create
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
+    organization = tiledb.cloud.rest_api.Organization() # Organization | organization to create
 
     try:
         api_instance.create_organization(organization)
@@ -604,12 +604,12 @@ with rest_api.ApiClient(configuration) as api_client:
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -619,7 +619,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -629,16 +629,16 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
-    organization = rest_api.Organization() # Organization | organization to create
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
+    organization = tiledb.cloud.rest_api.Organization() # Organization | organization to create
 
     try:
         api_instance.create_organization(organization)
@@ -686,12 +686,12 @@ delete a AWS Access credentials in a namespace. This will likely cause arrays to
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -701,7 +701,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -711,15 +711,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     namespace = 'namespace_example' # str | namespace
 name = 'name_example' # str | name
 
@@ -733,12 +733,12 @@ name = 'name_example' # str | name
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -748,7 +748,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -758,15 +758,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     namespace = 'namespace_example' # str | namespace
 name = 'name_example' # str | name
 
@@ -817,12 +817,12 @@ delete a organization
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -832,7 +832,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -842,15 +842,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name or id
 
     try:
@@ -863,12 +863,12 @@ with rest_api.ApiClient(configuration) as api_client:
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -878,7 +878,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -888,15 +888,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name or id
 
     try:
@@ -945,12 +945,12 @@ delete a user from an organization
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -960,7 +960,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -970,15 +970,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name
 username = 'username_example' # str | username to manipulate
 
@@ -992,12 +992,12 @@ username = 'username_example' # str | username to manipulate
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1007,7 +1007,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1017,15 +1017,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name
 username = 'username_example' # str | username to manipulate
 
@@ -1076,12 +1076,12 @@ get all organizations that the user is member of
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1091,7 +1091,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1101,15 +1101,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     
     try:
         api_response = api_instance.get_all_organizations()
@@ -1122,12 +1122,12 @@ with rest_api.ApiClient(configuration) as api_client:
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1137,7 +1137,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1147,15 +1147,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     
     try:
         api_response = api_instance.get_all_organizations()
@@ -1203,12 +1203,12 @@ get a organization
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1218,7 +1218,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1228,15 +1228,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name or id
 
     try:
@@ -1250,12 +1250,12 @@ with rest_api.ApiClient(configuration) as api_client:
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1265,7 +1265,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1275,15 +1275,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name or id
 
     try:
@@ -1334,12 +1334,12 @@ get a user from an organization
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1349,7 +1349,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1359,15 +1359,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name
 username = 'username_example' # str | username to manipulate
 
@@ -1382,12 +1382,12 @@ username = 'username_example' # str | username to manipulate
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1397,7 +1397,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1407,15 +1407,15 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name
 username = 'username_example' # str | username to manipulate
 
@@ -1468,12 +1468,12 @@ Update aws keys or associated buckets. This will update the key associations for
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1483,7 +1483,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1493,18 +1493,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     namespace = 'namespace_example' # str | namespace
 name = 'name_example' # str | name
-aws_access_credentials = rest_api.AWSAccessCredentials() # AWSAccessCredentials | aws credentials to update
+aws_access_credentials = tiledb.cloud.rest_api.AWSAccessCredentials() # AWSAccessCredentials | aws credentials to update
 
     try:
         api_instance.update_aws_access_credentials(namespace, name, aws_access_credentials)
@@ -1516,12 +1516,12 @@ aws_access_credentials = rest_api.AWSAccessCredentials() # AWSAccessCredentials 
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1531,7 +1531,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1541,18 +1541,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     namespace = 'namespace_example' # str | namespace
 name = 'name_example' # str | name
-aws_access_credentials = rest_api.AWSAccessCredentials() # AWSAccessCredentials | aws credentials to update
+aws_access_credentials = tiledb.cloud.rest_api.AWSAccessCredentials() # AWSAccessCredentials | aws credentials to update
 
     try:
         api_instance.update_aws_access_credentials(namespace, name, aws_access_credentials)
@@ -1602,12 +1602,12 @@ update a organization
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1617,7 +1617,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1627,17 +1627,17 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name or id
-organization_details = rest_api.Organization() # Organization | organization details to update
+organization_details = tiledb.cloud.rest_api.Organization() # Organization | organization details to update
 
     try:
         api_instance.update_organization(organization, organization_details)
@@ -1649,12 +1649,12 @@ organization_details = rest_api.Organization() # Organization | organization det
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1664,7 +1664,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1674,17 +1674,17 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name or id
-organization_details = rest_api.Organization() # Organization | organization details to update
+organization_details = tiledb.cloud.rest_api.Organization() # Organization | organization details to update
 
     try:
         api_instance.update_organization(organization, organization_details)
@@ -1733,12 +1733,12 @@ update a user in an organization
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1748,7 +1748,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1758,18 +1758,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name
 username = 'username_example' # str | username to manipulate
-user = rest_api.OrganizationUser() # OrganizationUser | user details to update
+user = tiledb.cloud.rest_api.OrganizationUser() # OrganizationUser | user details to update
 
     try:
         api_instance.update_user_in_organization(organization, username, user)
@@ -1781,12 +1781,12 @@ user = rest_api.OrganizationUser() # OrganizationUser | user details to update
 ```python
 from __future__ import print_function
 import time
-import rest_api
-from rest_api.rest import ApiException
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1796,7 +1796,7 @@ configuration = rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1806,18 +1806,18 @@ configuration = rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = rest_api.Configuration(
+configuration = tiledb.cloud.rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with rest_api.ApiClient(configuration) as api_client:
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rest_api.OrganizationApi(api_client)
+    api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name
 username = 'username_example' # str | username to manipulate
-user = rest_api.OrganizationUser() # OrganizationUser | user details to update
+user = tiledb.cloud.rest_api.OrganizationUser() # OrganizationUser | user details to update
 
     try:
         api_instance.update_user_in_organization(organization, username, user)
