@@ -16,7 +16,9 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.invitation_organization_join_email import InvitationOrganizationJoinEmail  # noqa: E501
+from tiledb.cloud.rest_api.models.invitation_organization_join_email import (  # noqa: E501
+    InvitationOrganizationJoinEmail,
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 

@@ -16,7 +16,9 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.udf_subarray_range import UDFSubarrayRange  # noqa: E501
+from tiledb.cloud.rest_api.models.udf_subarray_range import (  # noqa: E501
+    UDFSubarrayRange,
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 

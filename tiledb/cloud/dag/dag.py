@@ -5,12 +5,38 @@ import uuid
 from concurrent import futures
 
 import networkx as nx
-from tiledb.cloud.dag import status as st
-from tiledb.cloud.dag import visualization as viz
-from tiledb.cloud import array
-from tiledb.cloud import sql
-from tiledb.cloud import tiledb_cloud_error as tce
-from tiledb.cloud import udf
+
+from tiledb.cloud.array import apply as array_apply
+from tiledb.cloud.dag.visualization import build_graph_node_details
+from tiledb.cloud.dag.visualization import build_visualization_positions
+from tiledb.cloud.dag.visualization import update_plotly_graph
+from tiledb.cloud.dag.visualization import update_tiledb_graph
+from tiledb.cloud.sql import exec as sql_exec
+from tiledb.cloud.tiledb_cloud_error import TileDBCloudError
+from tiledb.cloud.udf import exec as udf_exec
+
+
+class Status(Enum):
+    NOT_STARTED = 1
+    RUNNING = 2
+    COMPLETED = 3
+    FAILED = 4
+    CANCELLED = 5
+
+    def __str__(self):
+        if self == self.NOT_STARTED:
+            return "Not Started"
+        elif self == self.RUNNING:
+            return "Running"
+        elif self == self.COMPLETED:
+            return "Completed"
+        elif self == self.FAILED:
+            return "Failed"
+        elif self == self.CANCELLED:
+            return "Cancelled"
+
+        return "Unknown Status"
+
 
 # Compatibility re-export.
 Status = st.Status

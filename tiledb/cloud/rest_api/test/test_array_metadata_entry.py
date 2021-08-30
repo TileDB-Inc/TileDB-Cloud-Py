@@ -16,7 +16,9 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.array_metadata_entry import ArrayMetadataEntry  # noqa: E501
+from tiledb.cloud.rest_api.models.array_metadata_entry import (  # noqa: E501
+    ArrayMetadataEntry,
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 

@@ -16,7 +16,9 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.array_task_browser_sidebar import ArrayTaskBrowserSidebar  # noqa: E501
+from tiledb.cloud.rest_api.models.array_task_browser_sidebar import (  # noqa: E501
+    ArrayTaskBrowserSidebar,
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 

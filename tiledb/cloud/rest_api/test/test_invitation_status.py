@@ -16,7 +16,9 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.invitation_status import InvitationStatus  # noqa: E501
+from tiledb.cloud.rest_api.models.invitation_status import (  # noqa: E501
+    InvitationStatus,
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 

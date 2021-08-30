@@ -16,7 +16,9 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.organization_roles import OrganizationRoles  # noqa: E501
+from tiledb.cloud.rest_api.models.organization_roles import (  # noqa: E501
+    OrganizationRoles,
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 

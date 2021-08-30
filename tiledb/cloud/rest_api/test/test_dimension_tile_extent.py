@@ -16,7 +16,9 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.dimension_tile_extent import DimensionTileExtent  # noqa: E501
+from tiledb.cloud.rest_api.models.dimension_tile_extent import (  # noqa: E501
+    DimensionTileExtent,
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 

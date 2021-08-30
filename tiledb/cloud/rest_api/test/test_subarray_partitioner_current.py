@@ -16,7 +16,9 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.subarray_partitioner_current import SubarrayPartitionerCurrent  # noqa: E501
+from tiledb.cloud.rest_api.models.subarray_partitioner_current import (  # noqa: E501
+    SubarrayPartitionerCurrent,
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 

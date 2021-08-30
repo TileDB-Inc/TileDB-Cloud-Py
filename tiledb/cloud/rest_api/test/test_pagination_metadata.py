@@ -16,7 +16,9 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.pagination_metadata import PaginationMetadata  # noqa: E501
+from tiledb.cloud.rest_api.models.pagination_metadata import (  # noqa: E501
+    PaginationMetadata,
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 

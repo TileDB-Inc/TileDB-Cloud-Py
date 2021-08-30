@@ -16,7 +16,9 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.pricing_unit_label import PricingUnitLabel  # noqa: E501
+from tiledb.cloud.rest_api.models.pricing_unit_label import (  # noqa: E501
+    PricingUnitLabel,
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 

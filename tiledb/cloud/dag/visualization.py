@@ -3,7 +3,7 @@ import random
 
 import networkx as nx
 
-from . import status as st
+from tiledb.cloud.dag import status as st
 
 
 def build_graph_node_details(nodes):
