@@ -1,10 +1,11 @@
+import os
 import time
 import unittest
-import os
 
 import numpy as np
-from tiledb.cloud import dag
+
 import tiledb.cloud
+from tiledb.cloud import dag
 
 tiledb.cloud.login(
     token=os.environ["TILEDB_CLOUD_HELPER_VAR"],

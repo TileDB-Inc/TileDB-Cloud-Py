@@ -7,6 +7,7 @@ from typing import Any, Callable, Optional, Sequence, Union
 
 import numpy
 import urllib3
+
 from tiledb.cloud import results
 
 from . import client

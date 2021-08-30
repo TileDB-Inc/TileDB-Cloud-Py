@@ -1,8 +1,8 @@
 import inspect
-from tiledb.cloud.results import PandasDecoder
 import time
 
 import tiledb
+from tiledb.cloud.results import PandasDecoder
 
 from . import array
 from . import client

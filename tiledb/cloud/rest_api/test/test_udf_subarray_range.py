@@ -12,13 +12,11 @@
 
 from __future__ import absolute_import
 
-import unittest
 import datetime
+import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.udf_subarray_range import (
-    UDFSubarrayRange,
-)  # noqa: E501
+from tiledb.cloud.rest_api.models.udf_subarray_range import UDFSubarrayRange  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
