@@ -4,18 +4,16 @@ is assumed to be encoded as UTF-8.
 
 """
 
-from . import rest_api
-from . import client
-from . import tiledb_cloud_error
-from . import array
-from .rest_api import ApiException as GenApiException
-from .rest_api import rest
-import tiledb
-
-from typing import Optional, Tuple
-import numpy
 import posixpath
 import time
+from typing import Optional, Tuple
+
+import numpy
+import tiledb
+
+from . import array, client, rest_api, tiledb_cloud_error
+from .rest_api import ApiException as GenApiException
+from .rest_api import rest
 
 
 RESERVED_NAMESPACES = frozenset(["cloud", "owned", "public", "shared"])
