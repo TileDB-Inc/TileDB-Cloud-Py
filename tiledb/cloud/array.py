@@ -8,14 +8,13 @@ from typing import Any, Callable, Optional, Sequence, Union
 import numpy
 import urllib3
 
+from tiledb.cloud import client
+from tiledb.cloud import config
 from tiledb.cloud import results
-
-from . import client
-from . import config
-from . import tiledb_cloud_error
-from . import utils
-from .rest_api import ApiException as GenApiException
-from .rest_api import models
+from tiledb.cloud import tiledb_cloud_error
+from tiledb.cloud import utils
+from tiledb.cloud.rest_api import ApiException as GenApiException
+from tiledb.cloud.rest_api import models
 
 last_udf_task_id = None
 

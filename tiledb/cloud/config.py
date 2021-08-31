@@ -5,7 +5,7 @@ from pathlib import Path
 
 from urllib3 import Retry
 
-from . import rest_api
+from tiledb.cloud import rest_api
 
 default_host = "https://api.tiledb.com"
 

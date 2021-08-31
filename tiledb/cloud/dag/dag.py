@@ -7,16 +7,15 @@ from concurrent.futures import ThreadPoolExecutor
 
 import networkx as nx
 
+from tiledb.cloud.array import apply as array_apply
 from tiledb.cloud.dag import status as st
-
-from ..array import apply as array_apply
-from ..sql import exec as sql_exec
-from ..tiledb_cloud_error import TileDBCloudError
-from ..udf import exec as udf_exec
-from .visualization import build_graph_node_details
-from .visualization import build_visualization_positions
-from .visualization import update_plotly_graph
-from .visualization import update_tiledb_graph
+from tiledb.cloud.dag.visualization import build_graph_node_details
+from tiledb.cloud.dag.visualization import build_visualization_positions
+from tiledb.cloud.dag.visualization import update_plotly_graph
+from tiledb.cloud.dag.visualization import update_tiledb_graph
+from tiledb.cloud.sql import exec as sql_exec
+from tiledb.cloud.tiledb_cloud_error import TileDBCloudError
+from tiledb.cloud.udf import exec as udf_exec
 
 Status = st.Status  # Re-export for compabitility.
 

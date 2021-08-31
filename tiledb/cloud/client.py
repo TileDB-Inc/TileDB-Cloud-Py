@@ -8,11 +8,10 @@ from typing import Optional, Sequence, Union
 from urllib3 import Retry
 
 import tiledb
-
-from . import config
-from . import rest_api
-from . import tiledb_cloud_error
-from .rest_api import ApiException as GenApiException
+from tiledb.cloud import config
+from tiledb.cloud import rest_api
+from tiledb.cloud import tiledb_cloud_error
+from tiledb.cloud.rest_api import ApiException as GenApiException
 
 TASK_ID_HEADER = "X-TILEDB-CLOUD-TASK-ID"
 
