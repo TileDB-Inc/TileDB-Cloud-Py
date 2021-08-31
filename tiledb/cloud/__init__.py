@@ -21,10 +21,10 @@ from .client import organization
 from .client import organizations
 from .client import user_profile
 from .notebook import rename_notebook
-from .notebook import upload_ipnyb_file_name_to_cloud
-from .notebook import upload_ipnyb_file_contents_to_cloud
-from .notebook import download_ipnyb_file_name_from_cloud
-from .notebook import download_ipnyb_file_contents_from_cloud
+from .notebook import upload_notebook_from_file
+from .notebook import upload_notebook_contents
+from .notebook import download_notebook_to_file
+from .notebook import download_notebook_contents
 from .rest_api import models
 from .tasks import last_sql_task
 from .tasks import last_udf_task
@@ -58,10 +58,10 @@ __all__ = (
     "organizations",
     "user_profile",
     "rename_notebook",
-    "upload_ipnyb_file_name_to_cloud",
-    "upload_ipnyb_file_contents_to_cloud",
-    "download_ipnyb_file_name_from_cloud",
-    "download_ipnyb_file_contents_from_cloud",
+    "upload_notebook_from_file",
+    "upload_notebook_contents",
+    "download_notebook_to_file",
+    "download_notebook_contents",
     "last_sql_task",
     "last_udf_task",
     "task",
