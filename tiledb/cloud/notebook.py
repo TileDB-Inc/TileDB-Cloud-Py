@@ -94,7 +94,7 @@ def download_ipnyb_file_contents_from_cloud(
     with tiledb.open(tiledb_uri, "r", ctx=ctx) as arr:
         size = arr.meta["file_size"]
         data = arr.query(attrs=["contents"])[slice(0, size)]
-        json = data["contents"].tobytes().decode("utf-8", "backslashreplace")
+        json = data["contents"].tobytes().decode("utf-8")
         return json
 
 
