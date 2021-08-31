@@ -53,7 +53,7 @@ def rename_notebook(
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def download_ipnyb_file_name_from_cloud(
+def download_notebook_to_file(
     tiledb_uri: str,
     storage_credential_name: str,
     ipynb_file_name: str,
@@ -66,7 +66,7 @@ def download_ipnyb_file_name_from_cloud(
     :param ipnyb_file_name: path to save to, such as "./mycopy.ipynb". Must be
       local; no S3 URI support at present.
     """
-    ipynb_file_contents = download_ipnyb_file_contents_from_cloud(
+    ipynb_file_contents = download_notebook_contents(
         tiledb_uri,
         storage_credential_name,
     )
@@ -74,7 +74,7 @@ def download_ipnyb_file_name_from_cloud(
         handle.write(ipynb_file_contents)
 
 
-def download_ipnyb_file_contents_from_cloud(
+def download_notebook_contents(
     tiledb_uri: str,
     storage_credential_name: str,
 ) -> str:
@@ -125,7 +125,7 @@ def download_ipnyb_file_contents_from_cloud(
 #
 # Status: As of this writing: we have implemented option 1, and we don't have
 # an overwrite/update-in-place flag.
-def upload_ipnyb_file_name_to_cloud(
+def upload_notebook_from_file(
     ipynb_file_name: str,
     namespace: str,
     array_name: str,
@@ -148,7 +148,7 @@ def upload_ipnyb_file_name_to_cloud(
     with open(ipynb_file_name, "r") as handle:
         ipynb_file_contents = handle.read()
 
-    return upload_ipnyb_file_contents_to_cloud(
+    return upload_notebook_contents(
         ipynb_file_contents,
         storage_path,
         array_name,
@@ -157,7 +157,7 @@ def upload_ipnyb_file_name_to_cloud(
     )
 
 
-def upload_ipnyb_file_contents_to_cloud(
+def upload_notebook_contents(
     ipynb_file_contents: str,
     storage_path: str,
     array_name: str,
