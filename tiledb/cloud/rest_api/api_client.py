@@ -87,6 +87,9 @@ class ApiClient(object):
         # Set default User-Agent.
         self.user_agent = "OpenAPI-Generator/1.0.0/python"
         self.client_side_validation = configuration.client_side_validation
+        print("config", repr(configuration))
+        print("hn", header_name)
+        print("hv", header_value)
 
     def __enter__(self):
         return self
