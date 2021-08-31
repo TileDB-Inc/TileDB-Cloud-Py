@@ -2,7 +2,7 @@ import networkx as nx
 import random
 import json
 
-from . import dag
+from . import status as st
 
 
 def build_graph_node_details(nodes):
@@ -16,19 +16,19 @@ def build_graph_node_details(nodes):
     node_text = []
     for node in nodes:
         status = node.status
-        if status == dag.Status.NOT_STARTED:
+        if status == st.Status.NOT_STARTED:
             node_text.append("{} - Not Started".format(node.name))
             node_colors.append("black")
-        elif status == dag.Status.RUNNING:
+        elif status == st.Status.RUNNING:
             node_text.append("{} - Running".format(node.name))
             node_colors.append("blue")
-        elif status == dag.Status.COMPLETED:
+        elif status == st.Status.COMPLETED:
             node_text.append("{} - Completed".format(node.name))
             node_colors.append("green")
-        elif status == dag.Status.FAILED:
+        elif status == st.Status.FAILED:
             node_text.append("{} - Failed".format(node.name))
             node_colors.append("red")
-        elif status == dag.Status.CANCELLED:
+        elif status == st.Status.CANCELLED:
             node_text.append("{} - Cancelled".format(node.name))
             node_colors.append("yellow")
 

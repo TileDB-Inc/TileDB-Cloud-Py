@@ -4,8 +4,8 @@ import uuid
 import networkx as nx
 
 from concurrent.futures import CancelledError, ProcessPoolExecutor, ThreadPoolExecutor
-from enum import Enum
 
+from tiledb.cloud.dag import status as st
 from .visualization import (
     build_graph_node_details,
     update_plotly_graph,
@@ -18,27 +18,7 @@ from ..udf import exec as udf_exec
 
 from ..tiledb_cloud_error import TileDBCloudError
 
-
-class Status(Enum):
-    NOT_STARTED = 1
-    RUNNING = 2
-    COMPLETED = 3
-    FAILED = 4
-    CANCELLED = 5
-
-    def __str__(self):
-        if self == self.NOT_STARTED:
-            return "Not Started"
-        elif self == self.RUNNING:
-            return "Running"
-        elif self == self.COMPLETED:
-            return "Completed"
-        elif self == self.FAILED:
-            return "Failed"
-        elif self == self.CANCELLED:
-            return "Cancelled"
-
-        return "Unknown Status"
+Status = st.Status  # Re-export for compabitility.
 
 
 class Node:
@@ -54,7 +34,7 @@ class Node:
         self.id = uuid.uuid4()
         self.error = None
         self.future = None
-        self.status = Status.NOT_STARTED
+        self.status = st.Status.NOT_STARTED
         self.dag = dag
         self.local_mode = local_mode
 
@@ -125,7 +105,7 @@ class Node:
             self.dag = node.dag
 
     def cancel(self):
-        self.status = Status.CANCELLED
+        self.status = st.Status.CANCELLED
         if self.future is not None:
             self.future.cancel()
 
@@ -134,7 +114,11 @@ class Node:
         Is the node finished
         :return: True if the node's function is finished
         """
-        return self.status in (Status.COMPLETED, Status.FAILED, Status.CANCELLED)
+        return self.status in (
+            st.Status.COMPLETED,
+            st.Status.FAILED,
+            st.Status.CANCELLED,
+        )
 
     done = finished
 
@@ -175,7 +159,7 @@ class Node:
         Execute function for node
         :return: None
         """
-        self.status = Status.RUNNING
+        self.status = st.Status.RUNNING
 
         # Override namespace if passed
         if namespace is not None and not self.local_mode:
@@ -203,13 +187,13 @@ class Node:
     def __handle_completed_future(self, future):
         try:
             self.__results = future.result()
-            if self.status == Status.RUNNING:
-                self.status = Status.COMPLETED
+            if self.status == st.Status.RUNNING:
+                self.status = st.Status.COMPLETED
         except CancelledError:
-            self.status = Status.CANCELLED
+            self.status = st.Status.CANCELLED
         except Exception as exc:
             self.error = exc
-            self.status = Status.FAILED
+            self.status = st.Status.FAILED
         self.dag.report_node_complete(self)
 
     def ready_to_compute(self):
@@ -217,11 +201,11 @@ class Node:
         Is the node ready to execute? Are all dependencies completed?
         :return: True if node is able to be run
         """
-        if self.status != Status.NOT_STARTED:
+        if self.status != st.Status.NOT_STARTED:
             return False
 
         for node in self.parents.values():
-            if not node.finished() or node.status != Status.COMPLETED:
+            if not node.finished() or node.status != st.Status.COMPLETED:
                 return False
         return True
 
@@ -308,7 +292,7 @@ class DAG:
         else:
             self.executor = ThreadPoolExecutor(max_workers=max_workers)
 
-        self.status = Status.NOT_STARTED
+        self.status = st.Status.NOT_STARTED
 
         self.done_callbacks = []
         self.called_done_callbacks = False
@@ -374,7 +358,7 @@ class DAG:
         Checks if DAG is complete
         :return: True if complete, False otherwise
         """
-        if self.status == Status.NOT_STARTED:
+        if self.status == st.Status.NOT_STARTED:
             raise TileDBCloudError(
                 "Can't call done for DAG before starting DAG with `exec()`"
             )
@@ -384,13 +368,13 @@ class DAG:
 
         # If there is no running nodes we can assume it is complete and check if we should mark as failed or successful
         if len(self.failed_nodes) > 0:
-            self.status = Status.FAILED
+            self.status = st.Status.FAILED
         elif len(self.cancelled_nodes) > 0:
-            self.status = Status.CANCELLED
+            self.status = st.Status.CANCELLED
         elif len(self.not_started_nodes) > 0:
             return False
         else:
-            self.status = Status.COMPLETED
+            self.status = st.Status.COMPLETED
 
         return True
 
@@ -475,11 +459,11 @@ class DAG:
         """
         del self.running_nodes[node.id]
 
-        if node.status == Status.COMPLETED:
+        if node.status == st.Status.COMPLETED:
             self.completed_nodes[node.id] = node
             for child in node.children.values():
                 self._exec_node(child)
-        elif node.status == Status.CANCELLED:
+        elif node.status == st.Status.CANCELLED:
             self.cancelled_nodes[node.id] = node
         else:
             self.failed_nodes[node.id] = node
@@ -513,7 +497,7 @@ class DAG:
         if len(roots) == 0:
             raise TileDBCloudError("DAG is circular, there are no root nodes")
 
-        self.status = Status.RUNNING
+        self.status = st.Status.RUNNING
         for node in roots:
             self._exec_node(node)
             # Make sure to execute any callbacks to signal this node has started
@@ -558,11 +542,11 @@ class DAG:
                 )
 
         # in case of failure reraise the first failed node exception
-        if self.status == Status.FAILED:
+        if self.status == st.Status.FAILED:
             raise next(iter(self.failed_nodes.values())).error
 
     def cancel(self):
-        self.status = Status.CANCELLED
+        self.status = st.Status.CANCELLED
         for node in self.running_nodes.values():
             node.cancel()
         for node in self.not_started_nodes.values():
