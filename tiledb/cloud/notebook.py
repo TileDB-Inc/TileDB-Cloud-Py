@@ -307,6 +307,8 @@ def _create_notebook_array_retry_helper(
             raise Exception.web.HTTPError(
                 400, f"Error creating file: {e}. Are your credentials valid?"
             ) from e
+        else: # already-exists raises here
+            raise
 
     # Let anything else bubble up
 
