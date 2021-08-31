@@ -219,12 +219,26 @@ def _create_notebook_array(
             "Please select a proper namespace (username or organization name).",
         )
 
+    # The array will be be 1-dimensional with domain of 0 to max uint64. We
+    # use a tile extent of 1024 bytes.
+    dom = tiledb.Domain(
+        tiledb.Dim(
+            name="position",
+            domain=(0, numpy.iinfo(numpy.uint64).max - 1025),
+            tile=1024,
+            dtype=numpy.uint64,
+            ctx=ctx,
+        ),
+        ctx=ctx,
+    )
+
     tries = 1 + retries  # 1st + rest
     while tries > 0:
         succeeded, tiledb_uri, array_name = _create_notebook_array_retry_helper(
             storage_path,
             array_name,
             namespace,
+            dom,
             ctx,
         )
         if succeeded:
@@ -239,6 +253,7 @@ def _create_notebook_array_retry_helper(
     storage_path: str,
     array_name: str,
     namespace: str,
+    dom: tiledb.Domain,
     ctx: tiledb.Ctx,
 ) -> Tuple[bool, str, str]:
     """
@@ -247,19 +262,6 @@ def _create_notebook_array_retry_helper(
     """
 
     try:
-        # The array will be be 1-dimensional with domain of 0 to max uint64. We
-        # use a tile extent of 1024 bytes.
-        dom = tiledb.Domain(
-            tiledb.Dim(
-                name="position",
-                domain=(0, numpy.iinfo(numpy.uint64).max - 1025),
-                tile=1024,
-                dtype=numpy.uint64,
-                ctx=ctx,
-            ),
-            ctx=ctx,
-        )
-
         schema = tiledb.ArraySchema(
             domain=dom,
             sparse=False,
