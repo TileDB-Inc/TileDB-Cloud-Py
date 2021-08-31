@@ -60,9 +60,9 @@ def download_ipnyb_file_name_from_cloud(
 ) -> None:
     """
     Downloads a notebook file from TileDB Cloud to local disk.
-    :param str tiledb_uri: such as "TileDB-Inc/quickstart_dense".
-    :param str storage_credential_name: such as "janedoe-creds", typically from the user's account settings.
-    :param str ipnyb_file_name: path to save to, such as "./mycopy.ipynb". Must be local; no S3 URI support at present.
+    :param tiledb_uri: such as "TileDB-Inc/quickstart_dense".
+    :param storage_credential_name: such as "janedoe-creds", typically from the user's account settings.
+    :param ipnyb_file_name: path to save to, such as "./mycopy.ipynb". Must be local; no S3 URI support at present.
     """
     ipynb_file_contents = download_ipnyb_file_contents_from_cloud(
         tiledb_uri,
@@ -80,8 +80,8 @@ def download_ipnyb_file_contents_from_cloud(
 ) -> str:
     """
     Downloads a notebook file from TileDB Cloud to contents as a string, nominally in JSON format.
-    :param str tiledb_uri: such as "TileDB-Inc/quickstart_dense".
-    :param str storage_credential_name: such as "janedoe-creds", typically from the user's account settings.
+    :param tiledb_uri: such as "TileDB-Inc/quickstart_dense".
+    :param storage_credential_name: such as "janedoe-creds", typically from the user's account settings.
     :return: contents of the notebook file as a string, nominally in JSON format.
     """
     ctx = tiledb.cloud.Ctx(
@@ -132,11 +132,11 @@ def upload_ipnyb_file_name_to_cloud(
 ) -> str:
     """
     Uploads a local-disk notebook file to TileDB Cloud.
-    :param str ipnyb_file_name: such as "./mycopy.ipynb". Must be local; no S3 URI support at present.
-    :param str namespace: such as "janedoe"
-    :param str array_name : name to be seen in the UI, such as "testing-upload"
-    :param str storage_path: such as "s3://acmecorp-janedoe", typically from the user's account settings.
-    :param str storage_credential_name: such as "janedoe-creds", typically from the user's account settings.
+    :param ipnyb_file_name: such as "./mycopy.ipynb". Must be local; no S3 URI support at present.
+    :param namespace: such as "janedoe"
+    :param array_name : name to be seen in the UI, such as "testing-upload"
+    :param storage_path: such as "s3://acmecorp-janedoe", typically from the user's account settings.
+    :param storage_credential_name: such as "janedoe-creds", typically from the user's account settings.
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
 
@@ -163,11 +163,11 @@ def upload_ipnyb_file_contents_to_cloud(
 ) -> str:
     """
     Uploads a notebook file to TileDB Cloud.
-    :param str ipnyb_file_contents: The contents of the notebook file as a string, nominally in JSON format.
-    :param str storage_path: such as "s3://acmecorp-janedoe", typically from the user's account settings.
-    :param str array_name : name to be seen in the UI, such as "testing-upload"
-    :param str namespace: such as "janedoe".
-    :param str storage_credential_name: such as "janedoe-creds", typically from the user's account settings.
+    :param ipnyb_file_contents: The contents of the notebook file as a string, nominally in JSON format.
+    :param storage_path: such as "s3://acmecorp-janedoe", typically from the user's account settings.
+    :param array_name : name to be seen in the UI, such as "testing-upload"
+    :param namespace: such as "janedoe".
+    :param storage_credential_name: such as "janedoe-creds", typically from the user's account settings.
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
 
@@ -199,10 +199,10 @@ def _create_notebook_array(
 ) -> Tuple[str, str]:
     """
     Creates a new array for storing a notebook file.
-    :param str storage_path: such as "s3://acmecorp-janedoe", typically from the user's account settings.
-    :param str array_name : name to be seen in the UI, such as "testing-upload"
-    :param str namespace: such as "janedoe".
-    :param tiledb.Ctx ctx: cloud context for the operation.
+    :param storage_path: such as "s3://acmecorp-janedoe", typically from the user's account settings.
+    :param array_name : name to be seen in the UI, such as "testing-upload"
+    :param namespace: such as "janedoe".
+    :param ctx: cloud context for the operation.
     :return: tuple of tiledb_uri and array_name
     """
 
@@ -308,9 +308,9 @@ def _write_notebook_to_array(
     ctx: tiledb.Ctx,
 ) -> None:
     """Writes the given bytes to the array.
-    :param str tiledb_uri: such as "TileDB-Inc/quickstart_dense".
-    :param str ipnyb_file_contents: The contents of the notebook file as a string, nominally in JSON format.
-    :param tiledb.Ctx ctx: cloud context for the operation.
+    :param tiledb_uri: such as "TileDB-Inc/quickstart_dense".
+    :param ipnyb_file_contents: The contents of the notebook file as a string, nominally in JSON format.
+    :param ctx: cloud context for the operation.
     """
 
     # Note: every array is opened at a particular timestamp.  Data and metadata
