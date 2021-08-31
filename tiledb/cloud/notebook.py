@@ -99,9 +99,9 @@ def download_ipnyb_file_contents_from_cloud(
             "rest.creation_access_credentials_name": storage_credential_name,
         }
     )
-    with tiledb.open(tiledb_uri, "r", ctx=ctx) as A:
-        size = A.meta["file_size"]
-        data = A.query(attrs=["contents"])[slice(0, size)]
+    with tiledb.open(tiledb_uri, "r", ctx=ctx) as arr:
+        size = arr.meta["file_size"]
+        data = arr.query(attrs=["contents"])[slice(0, size)]
         json = data["contents"].tostring().decode("utf-8", "backslashreplace")
         return json
 
