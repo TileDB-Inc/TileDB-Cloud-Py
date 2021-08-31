@@ -310,8 +310,7 @@ def _create_notebook_array_retry_helper(
                 400, f"Error creating file: {e}. Are your credentials valid?"
             ) from e
 
-    except Exception as e:
-        raise e
+    # Let anything else bubble up
 
 
 def _write_notebook_to_array(
