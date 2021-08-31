@@ -303,7 +303,6 @@ def _create_notebook_array_retry_helper(
 
         return True, tiledb_uri, array_name
     except tiledb.TileDBError as e:
-        raise e
         if "Error while listing with prefix" in str(e):
             # It is possible to land here if user sets wrong default S3
             # credentials with respect to default S3 path.
