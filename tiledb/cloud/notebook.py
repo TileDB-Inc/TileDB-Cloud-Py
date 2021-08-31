@@ -60,7 +60,7 @@ def download_ipnyb_file_name_from_cloud(
 ) -> None:
     """
     Downloads a notebook file from TileDB Cloud to local disk.
-    :param tiledb_uri: such as "TileDB-Inc/quickstart_dense".
+    :param tiledb_uri: such as "tiledb://TileDB-Inc/quickstart_dense".
     :param storage_credential_name: such as "janedoe-creds", typically from the
       user's account settings.
     :param ipnyb_file_name: path to save to, such as "./mycopy.ipynb". Must be
@@ -81,7 +81,7 @@ def download_ipnyb_file_contents_from_cloud(
     """
     Downloads a notebook file from TileDB Cloud to contents as a string,
       nominally in JSON format.
-    :param tiledb_uri: such as "TileDB-Inc/quickstart_dense".
+    :param tiledb_uri: such as "tiledb://TileDB-Inc/quickstart_dense".
     :param storage_credential_name: such as "janedoe-creds", typically from the
       user's account settings.
     :return: contents of the notebook file as a string, nominally in JSON format.
@@ -315,7 +315,7 @@ def _write_notebook_to_array(
     ctx: tiledb.Ctx,
 ) -> None:
     """Writes the given bytes to the array.
-    :param tiledb_uri: such as "TileDB-Inc/quickstart_dense".
+    :param tiledb_uri: such as "tiledb://TileDB-Inc/quickstart_dense".
     :param ipnyb_file_contents: The contents of the notebook file as a string,
       nominally in JSON format.
     :param ctx: cloud context for the operation.
