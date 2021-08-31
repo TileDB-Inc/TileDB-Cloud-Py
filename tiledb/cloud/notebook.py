@@ -1,12 +1,12 @@
-# ================================================================
-# Python support for notebook I/O in Tiledb Cloud.
-#
-# Notes:
-# * Why character-encoding is needed: in Python, len("Doppelgänger") is 12 but
-#   len(bytes("Doppelgänger", "utf-8")) is 13.  We store the file contents as
-#   an array of bytes, so we need the encoding to get the right byte-count for
-#   the file-contents string.
-# ================================================================
+"""
+Python support for notebook I/O on Tiledb Cloud.
+
+Notes:
+* Why character-encoding is needed: in Python, len("Doppelgänger") is 12 but
+  len(bytes("Doppelgänger", "utf-8")) is 13.  We store the file contents as
+  an array of bytes, so we need the encoding to get the right byte-count for
+  the file-contents string.
+"""
 
 from . import rest_api
 from . import client
