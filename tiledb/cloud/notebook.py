@@ -234,15 +234,31 @@ def _create_notebook_array(
 
     tries = 1 + retries  # 1st + rest
     while tries > 0:
-        succeeded, tiledb_uri, array_name = _create_notebook_array_retry_helper(
-            storage_path,
-            array_name,
-            namespace,
-            dom,
-            ctx,
-        )
-        if succeeded:
+        try:
+            tiledb_uri, array_name = _create_notebook_array_retry_helper(
+                storage_path,
+                array_name,
+                namespace,
+                dom,
+                ctx,
+            )
             return (tiledb_uri, array_name)
+        except tiledb.TileDBError as e:
+            if "Error while listing with prefix" in str(e):
+                # It is possible to land here if user sets wrong default S3
+                # credentials with respect to default S3 path.
+                raise ValueError(
+                    f"Error creating file: {e}. Are your credentials valid?"
+                ) from e
+
+            #xxx if already-exists:
+                #xxx
+
+            raise # Note: the important already-exists case raises here
+            # Let anything else bubble up
+
+            xxx to do: other errors ...
+
         tries -= 1
     raise ValueError(
         f"Out of retries uploading to namespace {namespace} array name {array_name}"
@@ -261,53 +277,42 @@ def _create_notebook_array_retry_helper(
     :return: tuple of succeeded, tiledb_uri, and array_name
     """
 
-    try:
-        schema = tiledb.ArraySchema(
-            domain=dom,
-            sparse=False,
-            attrs=[
-                tiledb.Attr(
-                    name="contents",
-                    dtype=numpy.uint8,
-                    filters=tiledb.FilterList([tiledb.ZstdFilter()]),
-                )
-            ],
-            ctx=ctx,
-        )
+    schema = tiledb.ArraySchema(
+        domain=dom,
+        sparse=False,
+        attrs=[
+            tiledb.Attr(
+                name="contents",
+                dtype=numpy.uint8,
+                filters=tiledb.FilterList([tiledb.ZstdFilter()]),
+            )
+        ],
+        ctx=ctx,
+    )
 
-        # Goal: tiledb://my_username/s3://my_bucket/my_array
-        # https://docs.tiledb.com/cloud/how-to/arrays/create-arrays
-        tiledb_uri_s3 = "tiledb://" + posixpath.join(
-            namespace, storage_path, array_name
-        )
+    # Goal: tiledb://my_username/s3://my_bucket/my_array
+    # https://docs.tiledb.com/cloud/how-to/arrays/create-arrays
+    tiledb_uri_s3 = "tiledb://" + posixpath.join(
+        namespace, storage_path, array_name
+    )
 
-        # Create the (empty) array on disk.
-        tiledb.DenseArray.create(tiledb_uri_s3, schema)
-        tiledb_uri = "tiledb://" + posixpath.join(namespace, array_name)
-        time.sleep(0.25)
+    # Create the (empty) array on disk.
+    tiledb.DenseArray.create(tiledb_uri_s3, schema)
+    tiledb_uri = "tiledb://" + posixpath.join(namespace, array_name)
+    time.sleep(0.25)
 
-        file_properties = {}
+    file_properties = {}
 
-        tiledb.cloud.array.update_info(uri=tiledb_uri, array_name=array_name)
+    tiledb.cloud.array.update_info(uri=tiledb_uri, array_name=array_name)
 
-        tiledb.cloud.array.update_file_properties(
-            uri=tiledb_uri,
-            file_type=tiledb.cloud.rest_api.models.FileType.NOTEBOOK,
-            # If file_properties is empty, don't send anything at all.
-            file_properties=file_properties or None,
-        )
+    tiledb.cloud.array.update_file_properties(
+        uri=tiledb_uri,
+        file_type=tiledb.cloud.rest_api.models.FileType.NOTEBOOK,
+        # If file_properties is empty, don't send anything at all.
+        file_properties=file_properties or None,
+    )
 
-        return True, tiledb_uri, array_name
-    except tiledb.TileDBError as e:
-        if "Error while listing with prefix" in str(e):
-            # It is possible to land here if user sets wrong default S3
-            # credentials with respect to default S3 path.
-            raise ValueError(
-                f"Error creating file: {e}. Are your credentials valid?"
-            ) from e
-        raise # Note: the important already-exists case raises here
-
-    # Let anything else bubble up
+    return tiledb_uri, array_name
 
 
 def _write_notebook_to_array(
