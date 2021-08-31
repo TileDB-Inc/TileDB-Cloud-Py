@@ -70,8 +70,6 @@ def download_ipnyb_file_name_from_cloud(
         tiledb_uri,
         storage_credential_name,
     )
-    # This can throw FileNotFoundError, PermissionError, etc.
-    # No need for try-except-raise only to re-throw the same exception.
     with open(ipynb_file_name, "w") as handle:
         handle.write(ipynb_file_contents)
 
@@ -147,8 +145,6 @@ def upload_ipnyb_file_name_to_cloud(
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
 
-    # This can throw FileNotFoundError, PermissionError, etc.
-    # No need for try-except-raise only to re-throw the same exception.
     with open(ipynb_file_name, "r") as handle:
         ipynb_file_contents = handle.read()
 
