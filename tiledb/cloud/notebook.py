@@ -214,7 +214,7 @@ def _create_notebook_array(
     """
 
     if namespace in RESERVED_NAMESPACES:
-        raise Exception(
+        raise ValueError(
             f"{namespace!r} is not a valid folder to create notebooks. "
             "Please select a proper namespace (username or organization name).",
         )
@@ -230,7 +230,7 @@ def _create_notebook_array(
         if succeeded:
             return (tiledb_uri, array_name)
         tries -= 1
-    raise Exception(
+    raise ValueError(
         f"Out of retries uploading to namespace {namespace} array name {array_name}"
     )
 
@@ -300,11 +300,10 @@ def _create_notebook_array_retry_helper(
         if "Error while listing with prefix" in str(e):
             # It is possible to land here if user sets wrong default S3
             # credentials with respect to default S3 path.
-            raise Exception.web.HTTPError(
-                400, f"Error creating file: {e}. Are your credentials valid?"
+            raise ValueError(
+                f"Error creating file: {e}. Are your credentials valid?"
             ) from e
-        else:  # already-exists raises here
-            raise
+        raise # Note: the important already-exists case raises here
 
     # Let anything else bubble up
 
