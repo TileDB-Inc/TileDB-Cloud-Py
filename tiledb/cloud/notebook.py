@@ -1,11 +1,7 @@
 """
-Python support for notebook I/O on Tiledb Cloud.
+Python support for notebook I/O on Tiledb Cloud. All notebook JSON content
+is assumed to be encoded as UTF-8.
 
-Notes:
-* Why character-encoding is needed: in Python, len("Doppelgänger") is 12 but
-  len(bytes("Doppelgänger", "utf-8")) is 13.  We store the file contents as
-  an array of bytes, so we need the encoding to get the right byte-count for
-  the file-contents string.
 """
 
 from . import rest_api
@@ -23,6 +19,7 @@ import time
 
 
 RESERVED_NAMESPACES = frozenset(["cloud", "owned", "public", "shared"])
+CHARACTER_ENCODING = 'utf-8'
 
 
 def rename_notebook(
@@ -60,20 +57,16 @@ def download_ipnyb_file_name_from_cloud(
     tiledb_uri: str,
     storage_credential_name: str,
     ipynb_file_name: str,
-    *,
-    character_encoding: Optional[str] = "utf-8",
 ) -> None:
     """
     Downloads a notebook file from TileDB Cloud to local disk.
     :param str tiledb_uri: such as "TileDB-Inc/quickstart_dense".
     :param str storage_credential_name: such as "janedoe-creds", typically from the user's account settings.
     :param str ipnyb_file_name: path to save to, such as "./mycopy.ipynb". Must be local; no S3 URI support at present.
-    :param str character_encoding: Optional character encoding of the file; defaults to utf-8 which is ASCII-compatible.
     """
     ipynb_file_contents = download_ipnyb_file_contents_from_cloud(
         tiledb_uri,
         storage_credential_name,
-        character_encoding=character_encoding,
     )
     # This can throw FileNotFoundError, PermissionError, etc.
     # No need for try-except-raise only to re-throw the same exception.
@@ -84,14 +77,11 @@ def download_ipnyb_file_name_from_cloud(
 def download_ipnyb_file_contents_from_cloud(
     tiledb_uri: str,
     storage_credential_name: str,
-    *,
-    character_encoding: Optional[str] = "utf-8",
 ) -> str:
     """
     Downloads a notebook file from TileDB Cloud to contents as a string, nominally in JSON format.
     :param str tiledb_uri: such as "TileDB-Inc/quickstart_dense".
     :param str storage_credential_name: such as "janedoe-creds", typically from the user's account settings.
-    :param str character_encoding: Optional character encoding of the file; defaults to utf-8 which is ASCII-compatible.
     :return: contents of the notebook file as a string, nominally in JSON format.
     """
     ctx = tiledb.cloud.Ctx(
@@ -139,8 +129,6 @@ def upload_ipnyb_file_name_to_cloud(
     array_name: str,
     storage_path: str,
     storage_credential_name: str,
-    *,
-    character_encoding: Optional[str] = "utf-8",
 ) -> str:
     """
     Uploads a local-disk notebook file to TileDB Cloud.
@@ -149,7 +137,6 @@ def upload_ipnyb_file_name_to_cloud(
     :param str array_name : name to be seen in the UI, such as "testing-upload"
     :param str storage_path: such as "s3://acmecorp-janedoe", typically from the user's account settings.
     :param str storage_credential_name: such as "janedoe-creds", typically from the user's account settings.
-    :param str character_encoding: Optional character encoding of the file; defaults to utf-8 which is ASCII-compatible.
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
 
@@ -164,7 +151,6 @@ def upload_ipnyb_file_name_to_cloud(
         array_name,
         namespace,
         storage_credential_name,
-        character_encoding=character_encoding,
     )
 
 
@@ -174,8 +160,6 @@ def upload_ipnyb_file_contents_to_cloud(
     array_name: str,
     namespace: str,
     storage_credential_name: str,
-    *,
-    character_encoding: Optional[str] = "utf-8",
 ) -> str:
     """
     Uploads a notebook file to TileDB Cloud.
@@ -184,7 +168,6 @@ def upload_ipnyb_file_contents_to_cloud(
     :param str array_name : name to be seen in the UI, such as "testing-upload"
     :param str namespace: such as "janedoe".
     :param str storage_credential_name: such as "janedoe-creds", typically from the user's account settings.
-    :param str character_encoding: Optional character encoding of the file; defaults to utf-8 which is ASCII-compatible.
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
 
@@ -199,10 +182,9 @@ def upload_ipnyb_file_contents_to_cloud(
         array_name,
         namespace,
         ctx,
-        character_encoding=character_encoding,
     )
 
-    _write_notebook_to_array(tiledb_uri, ipynb_file_contents, ctx, character_encoding)
+    _write_notebook_to_array(tiledb_uri, ipynb_file_contents, ctx)
 
     return tiledb_uri
 
@@ -214,7 +196,6 @@ def _create_notebook_array(
     ctx: tiledb.Ctx,
     *,
     retries: Optional[int] = 0,
-    character_encoding: Optional[str] = "utf-8",
 ) -> Tuple[str, str]:
     """
     Creates a new array for storing a notebook file.
@@ -325,21 +306,24 @@ def _write_notebook_to_array(
     tiledb_uri: str,
     ipynb_file_contents: str,
     ctx: tiledb.Ctx,
-    character_encoding: str = "utf-8",
 ) -> None:
     """Writes the given bytes to the array.
     :param str tiledb_uri: such as "TileDB-Inc/quickstart_dense".
     :param str ipnyb_file_contents: The contents of the notebook file as a string, nominally in JSON format.
     :param tiledb.Ctx ctx: cloud context for the operation.
-    :param str character_encoding: Optional character encoding of the file; defaults to utf-8 which is ASCII-compatible.
     """
 
     # Note: every array is opened at a particular timestamp.  Data and metadata
     # writes are separate: write of metadata doesn't happen until the array is
-    # closed.  But in Python, it's in a "with" context so data and metadata writes
-    # get the same timestamp.
+    # closed.  But in Python, it's in a "with" context so data and metadata
+    # writes get the same timestamp.
 
-    contents_as_array = numpy.array(bytearray(ipynb_file_contents, character_encoding))
+    # Why character-encoding is needed: in Python, len("Doppelgänger") is 12
+    # but len(bytes("Doppelgänger", "utf-8")) is 13.  We store the file
+    # contents as an array of bytes, so we need the encoding to get the right
+    # byte-count for the file-contents string.
+
+    contents_as_array = numpy.array(bytearray(ipynb_file_contents, CHARACTER_ENCODING))
 
     with tiledb.open(tiledb_uri, mode="w", ctx=ctx) as arr:
         arr[0 : len(contents_as_array)] = {"contents": contents_as_array}
