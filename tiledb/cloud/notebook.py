@@ -201,7 +201,7 @@ def _create_notebook_array(
     namespace: str,
     ctx: tiledb.Ctx,
     *,
-    retries: Optional[int] = 0,
+    retries: int = 0,
 ) -> Tuple[str, str]:
     """
     Creates a new array for storing a notebook file.
