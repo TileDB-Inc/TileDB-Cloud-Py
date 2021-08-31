@@ -1,22 +1,22 @@
 import numbers
 import time
 import uuid
+from concurrent.futures import CancelledError
+from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
+
 import networkx as nx
 
-from concurrent.futures import CancelledError, ProcessPoolExecutor, ThreadPoolExecutor
-
 from tiledb.cloud.dag import status as st
-from .visualization import (
-    build_graph_node_details,
-    update_plotly_graph,
-    update_tiledb_graph,
-    build_visualization_positions,
-)
+
 from ..array import apply as array_apply
 from ..sql import exec as sql_exec
-from ..udf import exec as udf_exec
-
 from ..tiledb_cloud_error import TileDBCloudError
+from ..udf import exec as udf_exec
+from .visualization import build_graph_node_details
+from .visualization import build_visualization_positions
+from .visualization import update_plotly_graph
+from .visualization import update_tiledb_graph
 
 Status = st.Status  # Re-export for compabitility.
 
@@ -642,8 +642,9 @@ class DAG:
         :param auto_update: Should the diagram be auto updated with each status change
         :return: figure
         """
-        import tiledb.plot.widget
         import json
+
+        import tiledb.plot.widget
 
         G = self.networkx_graph()
         nodes = list(G.nodes())

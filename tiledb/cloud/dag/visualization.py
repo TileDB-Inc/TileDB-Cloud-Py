@@ -1,6 +1,7 @@
-import networkx as nx
-import random
 import json
+import random
+
+import networkx as nx
 
 from . import status as st
 

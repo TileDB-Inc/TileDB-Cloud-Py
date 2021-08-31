@@ -1,16 +1,18 @@
 from __future__ import absolute_import
 from __future__ import print_function
 
-from . import rest_api
-from . import config
-from . import tiledb_cloud_error
-from .rest_api import ApiException as GenApiException
 import os
-from typing import Optional, Sequence, Union
 import urllib.parse
+from typing import Optional, Sequence, Union
+
 from urllib3 import Retry
 
 import tiledb
+
+from . import config
+from . import rest_api
+from . import tiledb_cloud_error
+from .rest_api import ApiException as GenApiException
 
 TASK_ID_HEADER = "X-TILEDB-CLOUD-TASK-ID"
 

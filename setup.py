@@ -4,7 +4,8 @@
     TileDB Cloud Platform Python Client
 """
 
-from setuptools import setup, find_packages  # noqa: H301
+from setuptools import find_packages  # noqa: H301
+from setuptools import setup
 
 NAME = "tiledb-cloud"
 

@@ -1,7 +1,7 @@
-from . import rest_api
-from . import client
-from . import tiledb_cloud_error
 from . import array
+from . import client
+from . import rest_api
+from . import tiledb_cloud_error
 from .rest_api import ApiException as GenApiException
 from .rest_api import rest
 

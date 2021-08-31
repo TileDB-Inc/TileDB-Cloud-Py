@@ -1,11 +1,11 @@
+import datetime
+
+from . import array
 from . import client
+from . import sql
 from . import tiledb_cloud_error
 from .array import split_uri
-from . import sql
-from . import array
 from .rest_api import ApiException as GenApiException
-
-import datetime
 
 
 def task(id, async_req=False):

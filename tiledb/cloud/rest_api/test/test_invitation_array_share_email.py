@@ -12,13 +12,13 @@
 
 from __future__ import absolute_import
 
-import unittest
 import datetime
+import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.invitation_array_share_email import (
+from tiledb.cloud.rest_api.models.invitation_array_share_email import (  # noqa: E501
     InvitationArrayShareEmail,
-)  # noqa: E501
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 
