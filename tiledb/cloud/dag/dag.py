@@ -1,21 +1,17 @@
+import json
 import numbers
 import time
 import uuid
-from concurrent.futures import CancelledError
-from concurrent.futures import ProcessPoolExecutor
-from concurrent.futures import ThreadPoolExecutor
+from concurrent import futures
 
 import networkx as nx
 
-from tiledb.cloud.array import apply as array_apply
+from tiledb.cloud import array
+from tiledb.cloud import sql
+from tiledb.cloud import tiledb_cloud_error as tce
+from tiledb.cloud import udf
 from tiledb.cloud.dag import status as st
-from tiledb.cloud.dag.visualization import build_graph_node_details
-from tiledb.cloud.dag.visualization import build_visualization_positions
-from tiledb.cloud.dag.visualization import update_plotly_graph
-from tiledb.cloud.dag.visualization import update_tiledb_graph
-from tiledb.cloud.sql import exec as sql_exec
-from tiledb.cloud.tiledb_cloud_error import TileDBCloudError
-from tiledb.cloud.udf import exec as udf_exec
+from tiledb.cloud.dag import visualization as viz
 
 Status = st.Status  # Re-export for compabitility.
 
@@ -43,7 +39,7 @@ class Node:
 
         self.args = args
         self.kwargs = kwargs
-        self.__results = None
+        self._results = None
         self.parents = {}
         self.children = {}
         if name is None:
@@ -121,7 +117,7 @@ class Node:
 
     done = finished
 
-    def __replace_nodes_with_results(self, arg):
+    def _replace_nodes_with_results(self, arg):
         """
         Recursively find arguments of Node instance and replace with the node results
         :param arg:
@@ -138,13 +134,13 @@ class Node:
                 if isinstance(a, Node):
                     arg[index] = a.result()
                 elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    arg[index] = self.__replace_nodes_with_results(a)
+                    arg[index] = self._replace_nodes_with_results(a)
         elif isinstance(arg, dict):
             for k, a in arg.items():
                 if isinstance(a, Node):
                     arg[k] = a.result()
                 elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    arg[k] = self.__replace_nodes_with_results(a)
+                    arg[k] = self._replace_nodes_with_results(a)
         elif isinstance(arg, Node):
             arg = arg.result()
 
@@ -168,27 +164,27 @@ class Node:
         # If there is a node as an argument, the user really just wants the results, so let's fetch them
         # and swap out the parameter
         if self.args is not None:
-            self.args = self.__replace_nodes_with_results(self.args)
+            self.args = self._replace_nodes_with_results(self.args)
 
         # First loop though any default named parameter arguments to find any nodes
         # If there is a node as an argument, the user really just wants the results, so let's fetch them
         # and swap out the parameter
         if self.kwargs is not None:
-            self.kwargs = self.__replace_nodes_with_results(self.kwargs)
+            self.kwargs = self._replace_nodes_with_results(self.kwargs)
 
         # Execute user function with the parameters that the user requested
         # The function is executed on the dag's worker pool
         self.future = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
-        self.future.add_done_callback(self.__handle_completed_future)
+        self.future.add_done_callback(self._handle_completed_future)
 
     compute = exec
 
-    def __handle_completed_future(self, future):
+    def _handle_completed_future(self, future):
         try:
-            self.__results = future.result()
+            self._results = future.result()
             if self.status == st.Status.RUNNING:
                 self.status = st.Status.COMPLETED
-        except CancelledError:
+        except futures.CancelledError:
             self.status = st.Status.CANCELLED
         except Exception as exc:
             self.error = exc
@@ -216,12 +212,12 @@ class Node:
         if self.future is not None:
             # If future, catch exception to store error on node, then raise
             try:
-                self.__results = self.future.result()
+                self._results = self.future.result()
             except Exception as exc:
                 self.error = exc
                 raise exc
 
-        return self.__results
+        return self._results
 
     def result_or_future(self):
         """
@@ -231,7 +227,7 @@ class Node:
         if not self.finished() and self.future is not None:
             return self.future
 
-        return self.__results
+        return self._results
 
     def wait(self, timeout=None):
         """
@@ -287,9 +283,9 @@ class DAG:
         self.visualization = None
 
         if use_processes:
-            self.executor = ProcessPoolExecutor(max_workers=max_workers)
+            self.executor = futures.ProcessPoolExecutor(max_workers=max_workers)
         else:
-            self.executor = ThreadPoolExecutor(max_workers=max_workers)
+            self.executor = futures.ThreadPoolExecutor(max_workers=max_workers)
 
         self.status = st.Status.NOT_STARTED
 
@@ -358,7 +354,7 @@ class DAG:
         :return: True if complete, False otherwise
         """
         if self.status == st.Status.NOT_STARTED:
-            raise TileDBCloudError(
+            raise tce.TileDBCloudError(
                 "Can't call done for DAG before starting DAG with `exec()`"
             )
 
@@ -407,7 +403,7 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        return self.add_node(array_apply, *args, **kwargs)
+        return self.add_node(array.apply, *args, **kwargs)
 
     def submit_udf(self, *args, **kwargs):
         """
@@ -417,7 +413,7 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        return self.add_node(udf_exec, *args, **kwargs)
+        return self.add_node(udf.exec, *args, **kwargs)
 
     def submit(self, *args, **kwargs):
         """
@@ -428,7 +424,7 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        return self.add_node(udf_exec, *args, **kwargs)
+        return self.add_node(udf.exec, *args, **kwargs)
 
     def submit_sql(self, *args, **kwargs):
         """
@@ -438,7 +434,7 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        return self.add_node(sql_exec, *args, **kwargs)
+        return self.add_node(sql.exec, *args, **kwargs)
 
     def submit_local(self, *args, **kwargs):
         """
@@ -474,7 +470,7 @@ class DAG:
         if self.done():
             self.execute_done_callbacks()
 
-    def __find_root_nodes(self):
+    def _find_root_nodes(self):
         """
         Find all root nodes
         :return: list of root nodes
@@ -492,9 +488,9 @@ class DAG:
         :return:
         """
         self.called_done_callbacks = False
-        roots = self.__find_root_nodes()
+        roots = self._find_root_nodes()
         if len(roots) == 0:
-            raise TileDBCloudError("DAG is circular, there are no root nodes")
+            raise tce.TileDBCloudError("DAG is circular, there are no root nodes")
 
         self.status = st.Status.RUNNING
         for node in roots:
@@ -577,15 +573,15 @@ class DAG:
 
     def networkx_graph(self):
         # Build networkx graph
-        G = nx.DiGraph()
+        graph = nx.DiGraph()
 
         for n in self.nodes.values():
-            G.add_node(n.name)
+            graph.add_node(n.name)
             for child in n.children.values():
-                G.add_node(child.name)
-                G.add_edge(n.name, child.name)
+                graph.add_node(child.name)
+                graph.add_edge(n.name, child.name)
 
-        return G
+        return graph
 
     def get_tiledb_plot_node_details(self):
         """
@@ -600,9 +596,9 @@ class DAG:
         return node_details
 
     @staticmethod
-    def __update_dag_tiledb_graph(graph):
+    def _update_dag_tiledb_graph(graph):
         graph.visualization["node_details"] = graph.get_tiledb_plot_node_details()
-        update_tiledb_graph(
+        viz.update_tiledb_graph(
             graph.visualization["nodes"],
             graph.visualization["edges"],
             graph.visualization["node_details"],
@@ -611,8 +607,10 @@ class DAG:
         )
 
     @staticmethod
-    def __update_dag_plotly_graph(graph):
-        update_plotly_graph(graph.visualization["nodes"], graph.visualization["fig"])
+    def _update_dag_plotly_graph(graph):
+        viz.update_plotly_graph(
+            graph.visualization["nodes"], graph.visualization["fig"]
+        )
 
     def visualize(self, notebook=True, auto_update=True, force_plotly=False):
         """
@@ -626,30 +624,24 @@ class DAG:
             return self._visualize_plotly(notebook=notebook, auto_update=auto_update)
 
         try:
-            import tiledb.plot.widget
-
-            return self.__visualize_tiledb(auto_update=auto_update)
-
+            return self._visualize_tiledb(auto_update=auto_update)
         except ImportError:
-            import plotly.graph_objects as go
-
             return self._visualize_plotly(notebook=notebook, auto_update=auto_update)
 
-    def __visualize_tiledb(self, auto_update=True):
+    def _visualize_tiledb(self, auto_update=True):
         """
         Create graph visualization with tiledb.plot.widget
         :param auto_update: Should the diagram be auto updated with each status change
         :return: figure
         """
-        import json
 
         import tiledb.plot.widget
 
-        G = self.networkx_graph()
-        nodes = list(G.nodes())
-        edges = list(G.edges())
+        graph = self.networkx_graph()
+        nodes = list(graph.nodes())
+        edges = list(graph.edges())
         node_details = self.get_tiledb_plot_node_details()
-        positions = build_visualization_positions(G)
+        positions = viz.build_visualization_positions(graph)
 
         self.visualization = {
             "nodes": nodes,
@@ -661,7 +653,7 @@ class DAG:
         self.visualization["fig"] = fig
 
         if auto_update:
-            self.add_update_callback(self.__update_dag_tiledb_graph)
+            self.add_update_callback(self._update_dag_tiledb_graph)
 
         return fig
 
@@ -674,13 +666,13 @@ class DAG:
         """
         import plotly.graph_objects as go
 
-        G = self.networkx_graph()
-        pos = build_visualization_positions(G)
+        graph = self.networkx_graph()
+        pos = viz.build_visualization_positions(graph)
 
         # Convert to plotly scatter plot
         edge_x = []
         edge_y = []
-        for edge in G.edges():
+        for edge in graph.edges():
             x0, y0 = pos[edge[0]]
             x1, y1 = pos[edge[1]]
             edge_x.append(x0)
@@ -703,7 +695,7 @@ class DAG:
         node_x = []
         node_y = []
         nodes = []
-        for node in G.nodes():
+        for node in graph.nodes():
             x, y = pos[node]
             node_x.append(x)
             node_y.append(y)
@@ -718,7 +710,7 @@ class DAG:
             marker=dict(size=15, line_width=2),
         )
 
-        (node_trace.marker.color, node_trace.text) = build_graph_node_details(nodes)
+        (node_trace.marker.color, node_trace.text) = viz.build_graph_node_details(nodes)
 
         fig_obj = go.Figure
         if notebook:
@@ -740,10 +732,10 @@ class DAG:
             ),
         )
 
-        self.visualization = dict(fig=fig, network=G, nodes=nodes)
+        self.visualization = dict(fig=fig, network=graph, nodes=nodes)
 
         if auto_update:
-            self.add_update_callback(self.__update_dag_plotly_graph)
+            self.add_update_callback(self._update_dag_plotly_graph)
 
         return fig
 
