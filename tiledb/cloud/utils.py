@@ -7,7 +7,7 @@ import cloudpickle
 
 TILEDB_CLOUD_PROTOCOL = 4
 
-# General-use logger for TileDB Cloud.
+# General-use logger for TileDB Cloud!
 logger = logging.getLogger("tiledb.cloud")
 
 
