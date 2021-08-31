@@ -17,7 +17,7 @@ from .rest_api import rest
 
 
 RESERVED_NAMESPACES = frozenset(["cloud", "owned", "public", "shared"])
-CHARACTER_ENCODING = 'utf-8'
+CHARACTER_ENCODING = "utf-8"
 
 
 def rename_notebook(
