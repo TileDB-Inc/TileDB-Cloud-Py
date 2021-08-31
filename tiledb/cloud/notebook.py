@@ -61,7 +61,7 @@ def download_ipnyb_file_name_from_cloud(
     storage_credential_name: str,
     ipynb_file_name: str,
     *,
-    character_encoding: Optional[str] = 'utf-8',
+    character_encoding: Optional[str] = "utf-8",
 ) -> None:
     """
     Downloads a notebook file from TileDB Cloud to local disk.
@@ -77,14 +77,15 @@ def download_ipnyb_file_name_from_cloud(
     )
     # This can throw FileNotFoundError, PermissionError, etc.
     # No need for try-except-raise only to re-throw the same exception.
-    with open (ipynb_file_name, "w") as handle:
+    with open(ipynb_file_name, "w") as handle:
         handle.write(ipynb_file_contents)
+
 
 def download_ipnyb_file_contents_from_cloud(
     tiledb_uri: str,
     storage_credential_name: str,
     *,
-    character_encoding: Optional[str] = 'utf-8',
+    character_encoding: Optional[str] = "utf-8",
 ) -> str:
     """
     Downloads a notebook file from TileDB Cloud to contents as a string, nominally in JSON format.
@@ -93,10 +94,12 @@ def download_ipnyb_file_contents_from_cloud(
     :param str character_encoding: Optional character encoding of the file; defaults to utf-8 which is ASCII-compatible.
     :return: contents of the notebook file as a string, nominally in JSON format.
     """
-    ctx = tiledb.cloud.Ctx({
-        "rest.creation_access_credentials_name": storage_credential_name,
-    })
-    with tiledb.open(tiledb_uri, 'r', ctx=ctx) as A:
+    ctx = tiledb.cloud.Ctx(
+        {
+            "rest.creation_access_credentials_name": storage_credential_name,
+        }
+    )
+    with tiledb.open(tiledb_uri, "r", ctx=ctx) as A:
         size = A.meta["file_size"]
         data = A.query(attrs=["contents"])[slice(0, size)]
         json = data["contents"].tostring().decode("utf-8", "backslashreplace")
@@ -107,7 +110,7 @@ def download_ipnyb_file_contents_from_cloud(
 # If the destination array name already exists -- e.g. uploading 'foo.ipynb' to
 # 'testing-upload' -- there are three options:
 # 1. Fail the upload with 'already exists' and require the user to supply a
-#    different path. No clobbering 
+#    different path. No clobbering
 # 2. Auto-increment the array name, e.g. from 'testing-upload' to 'testing-upload-1'
 #    and then 'testing-upload-2' the next time, and so on.
 # 3. Overwrite
@@ -137,7 +140,7 @@ def upload_ipnyb_file_name_to_cloud(
     storage_path: str,
     storage_credential_name: str,
     *,
-    character_encoding: Optional[str] = 'utf-8',
+    character_encoding: Optional[str] = "utf-8",
 ) -> str:
     """
     Uploads a local-disk notebook file to TileDB Cloud.
@@ -152,7 +155,7 @@ def upload_ipnyb_file_name_to_cloud(
 
     # This can throw FileNotFoundError, PermissionError, etc.
     # No need for try-except-raise only to re-throw the same exception.
-    with open (ipynb_file_name, "r") as handle:
+    with open(ipynb_file_name, "r") as handle:
         ipynb_file_contents = handle.read()
 
     return upload_ipnyb_file_contents_to_cloud(
@@ -172,7 +175,7 @@ def upload_ipnyb_file_contents_to_cloud(
     namespace: str,
     storage_credential_name: str,
     *,
-    character_encoding: Optional[str] = 'utf-8',
+    character_encoding: Optional[str] = "utf-8",
 ) -> str:
     """
     Uploads a notebook file to TileDB Cloud.
@@ -185,9 +188,11 @@ def upload_ipnyb_file_contents_to_cloud(
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
 
-    ctx = tiledb.cloud.Ctx({
-        "rest.creation_access_credentials_name": storage_credential_name,
-    })
+    ctx = tiledb.cloud.Ctx(
+        {
+            "rest.creation_access_credentials_name": storage_credential_name,
+        }
+    )
 
     tiledb_uri, array_name = _create_notebook_array(
         storage_path,
@@ -209,7 +214,7 @@ def _create_notebook_array(
     ctx: tiledb.Ctx,
     *,
     retries: Optional[int] = 0,
-    character_encoding: Optional[str] = 'utf-8',
+    character_encoding: Optional[str] = "utf-8",
 ) -> Tuple[str, str]:
     """
     Creates a new array for storing a notebook file.
@@ -226,7 +231,7 @@ def _create_notebook_array(
             "Please select a proper namespace (username or organization name).",
         )
 
-    tries = 1 + retries # 1st + rest
+    tries = 1 + retries  # 1st + rest
     while tries > 0:
         succeeded, tiledb_uri, array_name = _create_notebook_array_retry_helper(
             storage_path,
@@ -237,7 +242,9 @@ def _create_notebook_array(
         if succeeded:
             return (tiledb_uri, array_name)
         tries -= 1
-    raise Exception(f"Out of retries uploading to namespace {namespace} array name {array_name}")
+    raise Exception(
+        f"Out of retries uploading to namespace {namespace} array name {array_name}"
+    )
 
 
 def _create_notebook_array_retry_helper(
@@ -280,7 +287,9 @@ def _create_notebook_array_retry_helper(
 
         # Goal: tiledb://my_username/s3://my_bucket/my_array
         # https://docs.tiledb.com/cloud/how-to/arrays/create-arrays
-        tiledb_uri_s3 = "tiledb://" + posixpath.join(namespace, storage_path, array_name)
+        tiledb_uri_s3 = "tiledb://" + posixpath.join(
+            namespace, storage_path, array_name
+        )
 
         # Create the (empty) array on disk.
         tiledb.DenseArray.create(tiledb_uri_s3, schema)
@@ -316,7 +325,7 @@ def _write_notebook_to_array(
     tiledb_uri: str,
     ipynb_file_contents: str,
     ctx: tiledb.Ctx,
-    character_encoding: str = 'utf-8',
+    character_encoding: str = "utf-8",
 ) -> None:
     """Writes the given bytes to the array.
     :param str tiledb_uri: such as "TileDB-Inc/quickstart_dense".
@@ -333,9 +342,9 @@ def _write_notebook_to_array(
     contents_as_array = numpy.array(bytearray(ipynb_file_contents, character_encoding))
 
     with tiledb.open(tiledb_uri, mode="w", ctx=ctx) as arr:
-        arr[0:len(contents_as_array)] = {"contents": contents_as_array}
+        arr[0 : len(contents_as_array)] = {"contents": contents_as_array}
         arr.meta["file_size"] = len(contents_as_array)
-        arr.meta["type"] = file_type=tiledb.cloud.rest_api.models.FileType.NOTEBOOK
-        arr.meta["format"] = 'json'
+        arr.meta["type"] = file_type = tiledb.cloud.rest_api.models.FileType.NOTEBOOK
+        arr.meta["format"] = "json"
 
     return
