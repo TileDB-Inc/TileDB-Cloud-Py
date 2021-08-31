@@ -250,19 +250,13 @@ def _create_notebook_array(
                 raise ValueError(
                     f"Error creating file: {e}. Are your credentials valid?"
                 ) from e
-
-            #xxx if already-exists:
-                #xxx
-
-            raise # Note: the important already-exists case raises here
-            # Let anything else bubble up
-
-            xxx to do: other errors ...
-
+            if "Cannot create array" in str(e) and "already exists" in str(e):
+                raise ValueError(
+                    f"Error creating file: {array_name} already exists in namespace {namespace}."
+                )
+        # Retry other exceptions
         tries -= 1
-    raise ValueError(
-        f"Out of retries uploading to namespace {namespace} array name {array_name}"
-    )
+    raise ValueError(f"Out of retries uploading {array_name} to namespace {namespace}.")
 
 
 def _create_notebook_array_retry_helper(
@@ -292,9 +286,7 @@ def _create_notebook_array_retry_helper(
 
     # Goal: tiledb://my_username/s3://my_bucket/my_array
     # https://docs.tiledb.com/cloud/how-to/arrays/create-arrays
-    tiledb_uri_s3 = "tiledb://" + posixpath.join(
-        namespace, storage_path, array_name
-    )
+    tiledb_uri_s3 = "tiledb://" + posixpath.join(namespace, storage_path, array_name)
 
     # Create the (empty) array on disk.
     tiledb.DenseArray.create(tiledb_uri_s3, schema)
