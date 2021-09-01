@@ -45,11 +45,21 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Cache dependencies
+      - name: Cache pinned dependencies
+        if: ${{ matrix.dependencies == 'pinned' }}
         uses: actions/cache@v2
         with:
           path: ${{ matrix.path }}
           key: ${{ runner.os }}-py${{ matrix.python-version }}-pip-${{ hashFiles(format('./requirements-py{0}.txt', matrix.python-version)) }}
+          restore-keys: |
+            ${{ runner.os }}-py${{ matrix.python-version }}-pip-
+
+      - name: Cache fresh install dependencies
+        if: ${{ matrix.dependencies == 'fresh' }}
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.path }}
+          key: ${{ runner.os }}-py${{ matrix.python-version }}-pip-fresh
           restore-keys: |
             ${{ runner.os }}-py${{ matrix.python-version }}-pip-
 
