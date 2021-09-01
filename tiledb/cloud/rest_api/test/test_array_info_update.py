@@ -15,7 +15,7 @@ from __future__ import absolute_import
 import unittest
 import datetime
 
-import tiledb.cloud.rest_api
+import rest_api
 from tiledb.cloud.rest_api.models.array_info_update import ArrayInfoUpdate  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
@@ -47,7 +47,6 @@ class TestArrayInfoUpdate(unittest.TestCase):
                 tags=["0"],
                 license_id="0",
                 license_text="0",
-                read_only=True,
             )
         else:
             return ArrayInfoUpdate()

@@ -56,7 +56,6 @@ class ArrayInfo(object):
         "license_id": "str",
         "license_text": "str",
         "read_only": "bool",
-        "is_favorite": "bool",
     }
 
     attribute_map = {
@@ -83,7 +82,6 @@ class ArrayInfo(object):
         "license_id": "license_id",
         "license_text": "license_text",
         "read_only": "read_only",
-        "is_favorite": "is_favorite",
     }
 
     def __init__(
@@ -111,7 +109,6 @@ class ArrayInfo(object):
         license_id=None,
         license_text=None,
         read_only=None,
-        is_favorite=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """ArrayInfo - a model defined in OpenAPI"""  # noqa: E501
@@ -142,7 +139,6 @@ class ArrayInfo(object):
         self._license_id = None
         self._license_text = None
         self._read_only = None
-        self._is_favorite = None
         self.discriminator = None
 
         if id is not None:
@@ -159,7 +155,8 @@ class ArrayInfo(object):
             self.size = size
         if last_accessed is not None:
             self.last_accessed = last_accessed
-        self.description = description
+        if description is not None:
+            self.description = description
         if name is not None:
             self.name = name
         if allowed_actions is not None:
@@ -188,9 +185,8 @@ class ArrayInfo(object):
             self.license_id = license_id
         if license_text is not None:
             self.license_text = license_text
-        self.read_only = read_only
-        if is_favorite is not None:
-            self.is_favorite = is_favorite
+        if read_only is not None:
+            self.read_only = read_only
 
     @property
     def id(self):
@@ -718,29 +714,6 @@ class ArrayInfo(object):
         """
 
         self._read_only = read_only
-
-    @property
-    def is_favorite(self):
-        """Gets the is_favorite of this ArrayInfo.  # noqa: E501
-
-        Indicates whether the array is in user favorites  # noqa: E501
-
-        :return: The is_favorite of this ArrayInfo.  # noqa: E501
-        :rtype: bool
-        """
-        return self._is_favorite
-
-    @is_favorite.setter
-    def is_favorite(self, is_favorite):
-        """Sets the is_favorite of this ArrayInfo.
-
-        Indicates whether the array is in user favorites  # noqa: E501
-
-        :param is_favorite: The is_favorite of this ArrayInfo.  # noqa: E501
-        :type: bool
-        """
-
-        self._is_favorite = is_favorite
 
     def to_dict(self):
         """Returns the model properties as a dict"""

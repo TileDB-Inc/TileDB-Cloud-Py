@@ -1,4 +1,4 @@
-# tiledb.cloud.rest_api.UdfApi
+# rest_api.UdfApi
 
 All URIs are relative to *http://localhost/v1*
 
@@ -29,12 +29,12 @@ delete a registerd UDF, this will remove all sharing and can not be undone
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -44,7 +44,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -54,15 +54,15 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
 
@@ -76,12 +76,12 @@ name = 'name_example' # str | name to register udf under
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -91,7 +91,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -101,15 +101,15 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
 
@@ -160,12 +160,12 @@ get a specific UDF in the given namespace
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -175,7 +175,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -185,15 +185,15 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
 
@@ -208,12 +208,12 @@ name = 'name_example' # str | name to register udf under
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -223,7 +223,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -233,15 +233,15 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
 
@@ -294,12 +294,12 @@ Get all sharing details of the udf
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -309,7 +309,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -319,15 +319,15 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name of UDFInfo
 
@@ -342,12 +342,12 @@ name = 'name_example' # str | name of UDFInfo
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -357,7 +357,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -367,15 +367,15 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name of UDFInfo
 
@@ -428,12 +428,12 @@ register a UDF in the given namespace
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -443,7 +443,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -453,18 +453,18 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
-udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to register
+udf = rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to register
 
     try:
         api_instance.register_udf_info(namespace, name, udf)
@@ -476,12 +476,12 @@ udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to register
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -491,7 +491,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -501,18 +501,18 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
-udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to register
+udf = rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to register
 
     try:
         api_instance.register_udf_info(namespace, name, udf)
@@ -562,12 +562,12 @@ Share a UDF with a user
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -577,7 +577,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -587,18 +587,18 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name of UDFInfo
-udf_sharing = tiledb.cloud.rest_api.UDFSharing() # UDFSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all
+udf_sharing = rest_api.UDFSharing() # UDFSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all
 
     try:
         api_instance.share_udf_info(namespace, name, udf_sharing)
@@ -610,12 +610,12 @@ udf_sharing = tiledb.cloud.rest_api.UDFSharing() # UDFSharing | Namespace and li
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -625,7 +625,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -635,18 +635,18 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name of UDFInfo
-udf_sharing = tiledb.cloud.rest_api.UDFSharing() # UDFSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all
+udf_sharing = rest_api.UDFSharing() # UDFSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all
 
     try:
         api_instance.share_udf_info(namespace, name, udf_sharing)
@@ -697,12 +697,12 @@ submit a generic UDF in the given namespace
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -712,7 +712,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -722,17 +722,17 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-udf = tiledb.cloud.rest_api.GenericUDF() # GenericUDF | udf to run
+udf = rest_api.GenericUDF() # GenericUDF | udf to run
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
     try:
@@ -746,12 +746,12 @@ accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -761,7 +761,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -771,17 +771,17 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-udf = tiledb.cloud.rest_api.GenericUDF() # GenericUDF | udf to run
+udf = rest_api.GenericUDF() # GenericUDF | udf to run
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
     try:
@@ -833,12 +833,12 @@ submit a multi-array UDF in the given namespace
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -848,7 +848,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -858,17 +858,17 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-udf = tiledb.cloud.rest_api.MultiArrayUDF() # MultiArrayUDF | udf to run
+udf = rest_api.MultiArrayUDF() # MultiArrayUDF | udf to run
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
     try:
@@ -882,12 +882,12 @@ accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -897,7 +897,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -907,17 +907,17 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-udf = tiledb.cloud.rest_api.MultiArrayUDF() # MultiArrayUDF | udf to run
+udf = rest_api.MultiArrayUDF() # MultiArrayUDF | udf to run
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
     try:
@@ -969,12 +969,12 @@ send a UDF to run against a specified array/URI registered to a group/project
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -984,7 +984,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -994,18 +994,18 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-udf = tiledb.cloud.rest_api.MultiArrayUDF() # MultiArrayUDF | udf to run
+udf = rest_api.MultiArrayUDF() # MultiArrayUDF | udf to run
 x_payer = 'x_payer_example' # str | Name of organization or user who should be charged for this request (optional)
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 v2 = 'v2_example' # str | flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs (optional)
@@ -1021,12 +1021,12 @@ v2 = 'v2_example' # str | flag to indicate if v2 array udfs should be used, curr
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1036,7 +1036,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1046,18 +1046,18 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-udf = tiledb.cloud.rest_api.MultiArrayUDF() # MultiArrayUDF | udf to run
+udf = rest_api.MultiArrayUDF() # MultiArrayUDF | udf to run
 x_payer = 'x_payer_example' # str | Name of organization or user who should be charged for this request (optional)
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 v2 = 'v2_example' # str | flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs (optional)
@@ -1114,12 +1114,12 @@ retrieve a list of timestamps from the array fragment info listing in millisecon
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1129,7 +1129,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1139,15 +1139,15 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 
@@ -1162,12 +1162,12 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1177,7 +1177,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1187,15 +1187,15 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 
@@ -1247,12 +1247,12 @@ updated an existing registerd UDF in the given namespace
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1262,7 +1262,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1272,18 +1272,18 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
-udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to update
+udf = rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to update
 
     try:
         api_instance.update_udf_info(namespace, name, udf)
@@ -1295,12 +1295,12 @@ udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to update
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -1310,7 +1310,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -1320,18 +1320,18 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    api_instance = rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name to register udf under
-udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to update
+udf = rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to update
 
     try:
         api_instance.update_udf_info(namespace, name, udf)

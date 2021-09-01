@@ -33,128 +33,13 @@ class FavoritesApi(object):
             api_client = ApiClient()
         self.api_client = api_client
 
-    def add_favorite(self, **kwargs):  # noqa: E501
-        """add_favorite  # noqa: E501
-
-        Add a new favorite  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.add_favorite(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param FavoriteCreate body:
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs["_return_http_data_only"] = True
-        return self.add_favorite_with_http_info(**kwargs)  # noqa: E501
-
-    def add_favorite_with_http_info(self, **kwargs):  # noqa: E501
-        """add_favorite  # noqa: E501
-
-        Add a new favorite  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.add_favorite_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param FavoriteCreate body:
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["body"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method add_favorite" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "body" in local_var_params:
-            body_params = local_var_params["body"]
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/favorites",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type=None,  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def delete_favorite(self, id, **kwargs):  # noqa: E501
-        """delete_favorite  # noqa: E501
+    def delete_favorite_id(self, id, **kwargs):  # noqa: E501
+        """delete_favorite_id  # noqa: E501
 
         Delete specific favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.delete_favorite(id, async_req=True)
+        >>> thread = api.delete_favorite_id(id, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -171,15 +56,15 @@ class FavoritesApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.delete_favorite_with_http_info(id, **kwargs)  # noqa: E501
+        return self.delete_favorite_id_with_http_info(id, **kwargs)  # noqa: E501
 
-    def delete_favorite_with_http_info(self, id, **kwargs):  # noqa: E501
-        """delete_favorite  # noqa: E501
+    def delete_favorite_id_with_http_info(self, id, **kwargs):  # noqa: E501
+        """delete_favorite_id  # noqa: E501
 
         Delete specific favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.delete_favorite_with_http_info(id, async_req=True)
+        >>> thread = api.delete_favorite_id_with_http_info(id, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -214,7 +99,7 @@ class FavoritesApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method delete_favorite" % key
+                    " to method delete_favorite_id" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
@@ -223,7 +108,7 @@ class FavoritesApi(object):
             "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `id` when calling `delete_favorite`"
+                "Missing the required parameter `id` when calling `delete_favorite_id`"
             )  # noqa: E501
 
         collection_formats = {}
@@ -383,13 +268,13 @@ class FavoritesApi(object):
             collection_formats=collection_formats,
         )
 
-    def list_favorites(self, **kwargs):  # noqa: E501
-        """list_favorites  # noqa: E501
+    def get_favorites(self, **kwargs):  # noqa: E501
+        """get_favorites  # noqa: E501
 
         Fetch all favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_favorites(async_req=True)
+        >>> thread = api.get_favorites(async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -401,20 +286,20 @@ class FavoritesApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: FavoritesData
+        :return: list[Favorite]
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.list_favorites_with_http_info(**kwargs)  # noqa: E501
+        return self.get_favorites_with_http_info(**kwargs)  # noqa: E501
 
-    def list_favorites_with_http_info(self, **kwargs):  # noqa: E501
-        """list_favorites  # noqa: E501
+    def get_favorites_with_http_info(self, **kwargs):  # noqa: E501
+        """get_favorites  # noqa: E501
 
         Fetch all favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_favorites_with_http_info(async_req=True)
+        >>> thread = api.get_favorites_with_http_info(async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -428,7 +313,7 @@ class FavoritesApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(FavoritesData, status_code(int), headers(HTTPHeaderDict))
+        :return: tuple(list[Favorite], status_code(int), headers(HTTPHeaderDict))
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -449,7 +334,7 @@ class FavoritesApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method list_favorites" % key
+                    " to method get_favorites" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
@@ -487,7 +372,122 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="FavoritesData",  # noqa: E501
+            response_type="list[Favorite]",  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
+
+    def post_favorite(self, **kwargs):  # noqa: E501
+        """post_favorite  # noqa: E501
+
+        Add a new favorite  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.post_favorite(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param FavoriteUpdate body:
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: None
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs["_return_http_data_only"] = True
+        return self.post_favorite_with_http_info(**kwargs)  # noqa: E501
+
+    def post_favorite_with_http_info(self, **kwargs):  # noqa: E501
+        """post_favorite  # noqa: E501
+
+        Add a new favorite  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.post_favorite_with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param FavoriteUpdate body:
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: None
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = ["body"]
+        all_params.extend(
+            [
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params["kwargs"]):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method post_favorite" % key
+                )
+            local_var_params[key] = val
+        del local_var_params["kwargs"]
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        if "body" in local_var_params:
+            body_params = local_var_params["body"]
+        # HTTP header `Content-Type`
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+
+        return self.api_client.call_api(
+            "/favorites",
+            "POST",
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type=None,  # noqa: E501
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(

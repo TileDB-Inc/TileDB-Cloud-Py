@@ -15,7 +15,7 @@ from __future__ import absolute_import
 import unittest
 import datetime
 
-import tiledb.cloud.rest_api
+import rest_api
 from tiledb.cloud.rest_api.models.dimension_tile_extent import (
     DimensionTileExtent,
 )  # noqa: E501

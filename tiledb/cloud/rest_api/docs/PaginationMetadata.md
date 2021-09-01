@@ -3,8 +3,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**page** | **float** | pagination offset. Use it to skip the first ((page - 1) * per_page) items | [optional] 
-**per_page** | **float** | pagination limit (page size) | [optional] 
+**page** | **float** | pagination offset | [optional] 
+**per_page** | **float** | pagination limit | [optional] 
 **total_pages** | **float** | number of total pages with current limit | [optional] 
 **total_items** | **float** | number of total available items | [optional] 
 

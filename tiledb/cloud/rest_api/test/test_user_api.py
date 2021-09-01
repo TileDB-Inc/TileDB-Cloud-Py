@@ -14,7 +14,7 @@ from __future__ import absolute_import
 
 import unittest
 
-import tiledb.cloud.rest_api
+import rest_api
 from tiledb.cloud.rest_api.api.user_api import UserApi  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
@@ -70,10 +70,6 @@ class TestUserApi(unittest.TestCase):
 
     def test_get_session(self):
         """Test case for get_session"""
-        pass
-
-    def test_get_token_scopes(self):
-        """Test case for get_token_scopes"""
         pass
 
     def test_get_user(self):

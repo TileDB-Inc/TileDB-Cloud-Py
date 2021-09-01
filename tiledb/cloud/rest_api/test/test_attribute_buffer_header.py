@@ -15,7 +15,7 @@ from __future__ import absolute_import
 import unittest
 import datetime
 
-import tiledb.cloud.rest_api
+import rest_api
 from tiledb.cloud.rest_api.models.attribute_buffer_header import (
     AttributeBufferHeader,
 )  # noqa: E501

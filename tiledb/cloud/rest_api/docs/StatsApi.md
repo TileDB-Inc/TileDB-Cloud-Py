@@ -1,4 +1,4 @@
-# tiledb.cloud.rest_api.StatsApi
+# rest_api.StatsApi
 
 All URIs are relative to *http://localhost/v1*
 
@@ -20,12 +20,12 @@ Fetch libtiledb stat
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -35,7 +35,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -45,15 +45,15 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.StatsApi(api_client)
+    api_instance = rest_api.StatsApi(api_client)
     
     try:
         api_response = api_instance.get_tiledb_stats()
@@ -66,12 +66,12 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 ```python
 from __future__ import print_function
 import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+import rest_api
+from rest_api.rest import ApiException
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1"
 )
 
@@ -81,7 +81,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     host = "http://localhost/v1",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
@@ -91,15 +91,15 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
+configuration = rest_api.Configuration(
     username = 'YOUR_USERNAME',
     password = 'YOUR_PASSWORD'
 )
 
 # Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+with rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.StatsApi(api_client)
+    api_instance = rest_api.StatsApi(api_client)
     
     try:
         api_response = api_instance.get_tiledb_stats()

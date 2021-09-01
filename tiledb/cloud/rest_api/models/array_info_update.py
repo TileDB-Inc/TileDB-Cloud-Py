@@ -43,7 +43,6 @@ class ArrayInfoUpdate(object):
         "tags": "list[str]",
         "license_id": "str",
         "license_text": "str",
-        "read_only": "bool",
     }
 
     attribute_map = {
@@ -57,7 +56,6 @@ class ArrayInfoUpdate(object):
         "tags": "tags",
         "license_id": "license_id",
         "license_text": "license_text",
-        "read_only": "read_only",
     }
 
     def __init__(
@@ -72,7 +70,6 @@ class ArrayInfoUpdate(object):
         tags=None,
         license_id=None,
         license_text=None,
-        read_only=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """ArrayInfoUpdate - a model defined in OpenAPI"""  # noqa: E501
@@ -90,10 +87,10 @@ class ArrayInfoUpdate(object):
         self._tags = None
         self._license_id = None
         self._license_text = None
-        self._read_only = None
         self.discriminator = None
 
-        self.description = description
+        if description is not None:
+            self.description = description
         if name is not None:
             self.name = name
         if uri is not None:
@@ -112,8 +109,6 @@ class ArrayInfoUpdate(object):
             self.license_id = license_id
         if license_text is not None:
             self.license_text = license_text
-        if read_only is not None:
-            self.read_only = read_only
 
     @property
     def description(self):
@@ -342,29 +337,6 @@ class ArrayInfoUpdate(object):
         """
 
         self._license_text = license_text
-
-    @property
-    def read_only(self):
-        """Gets the read_only of this ArrayInfoUpdate.  # noqa: E501
-
-        Suggests if the array is in read_only mode  # noqa: E501
-
-        :return: The read_only of this ArrayInfoUpdate.  # noqa: E501
-        :rtype: bool
-        """
-        return self._read_only
-
-    @read_only.setter
-    def read_only(self, read_only):
-        """Sets the read_only of this ArrayInfoUpdate.
-
-        Suggests if the array is in read_only mode  # noqa: E501
-
-        :param read_only: The read_only of this ArrayInfoUpdate.  # noqa: E501
-        :type: bool
-        """
-
-        self._read_only = read_only
 
     def to_dict(self):
         """Returns the model properties as a dict"""

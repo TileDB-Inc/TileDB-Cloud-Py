@@ -37,7 +37,6 @@ class Favorite(object):
         "object_type": "FavoriteType",
         "namespace": "str",
         "name": "str",
-        "created_at": "datetime",
     }
 
     attribute_map = {
@@ -45,7 +44,6 @@ class Favorite(object):
         "object_type": "object_type",
         "namespace": "namespace",
         "name": "name",
-        "created_at": "created_at",
     }
 
     def __init__(
@@ -54,7 +52,6 @@ class Favorite(object):
         object_type=None,
         namespace=None,
         name=None,
-        created_at=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """Favorite - a model defined in OpenAPI"""  # noqa: E501
@@ -66,7 +63,6 @@ class Favorite(object):
         self._object_type = None
         self._namespace = None
         self._name = None
-        self._created_at = None
         self.discriminator = None
 
         if id is not None:
@@ -77,14 +73,12 @@ class Favorite(object):
             self.namespace = namespace
         if name is not None:
             self.name = name
-        if created_at is not None:
-            self.created_at = created_at
 
     @property
     def id(self):
         """Gets the id of this Favorite.  # noqa: E501
 
-        unique uuid of the favorite  # noqa: E501
+        unique uuid of the favorite   # noqa: E501
 
         :return: The id of this Favorite.  # noqa: E501
         :rtype: str
@@ -95,7 +89,7 @@ class Favorite(object):
     def id(self, id):
         """Sets the id of this Favorite.
 
-        unique uuid of the favorite  # noqa: E501
+        unique uuid of the favorite   # noqa: E501
 
         :param id: The id of this Favorite.  # noqa: E501
         :type: str
@@ -169,29 +163,6 @@ class Favorite(object):
         """
 
         self._name = name
-
-    @property
-    def created_at(self):
-        """Gets the created_at of this Favorite.  # noqa: E501
-
-        Datetime the favorite was created in UTC  # noqa: E501
-
-        :return: The created_at of this Favorite.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._created_at
-
-    @created_at.setter
-    def created_at(self, created_at):
-        """Sets the created_at of this Favorite.
-
-        Datetime the favorite was created in UTC  # noqa: E501
-
-        :param created_at: The created_at of this Favorite.  # noqa: E501
-        :type: datetime
-        """
-
-        self._created_at = created_at
 
     def to_dict(self):
         """Returns the model properties as a dict"""

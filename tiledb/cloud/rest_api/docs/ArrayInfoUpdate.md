@@ -14,7 +14,6 @@ Name | Type | Description | Notes
 **tags** | **list[str]** | optional tags for array | [optional] 
 **license_id** | **str** | License identifier from SPDX License List or Custom | [optional] 
 **license_text** | **str** | License text | [optional] 
-**read_only** | **bool** | Suggests if the array is in read_only mode | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -30,9 +30,8 @@ class FileType(object):
     """
     NOTEBOOK = "notebook"
     USER_DEFINED_FUNCTION = "user_defined_function"
-    ML_MODEL = "ml_model"
 
-    allowable_values = [NOTEBOOK, USER_DEFINED_FUNCTION, ML_MODEL]  # noqa: E501
+    allowable_values = [NOTEBOOK, USER_DEFINED_FUNCTION]  # noqa: E501
 
     """
     Attributes:

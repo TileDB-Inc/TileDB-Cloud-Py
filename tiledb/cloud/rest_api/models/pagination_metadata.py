@@ -78,7 +78,7 @@ class PaginationMetadata(object):
     def page(self):
         """Gets the page of this PaginationMetadata.  # noqa: E501
 
-        pagination offset. Use it to skip the first ((page - 1) * per_page) items  # noqa: E501
+        pagination offset  # noqa: E501
 
         :return: The page of this PaginationMetadata.  # noqa: E501
         :rtype: float
@@ -89,7 +89,7 @@ class PaginationMetadata(object):
     def page(self, page):
         """Sets the page of this PaginationMetadata.
 
-        pagination offset. Use it to skip the first ((page - 1) * per_page) items  # noqa: E501
+        pagination offset  # noqa: E501
 
         :param page: The page of this PaginationMetadata.  # noqa: E501
         :type: float
@@ -101,7 +101,7 @@ class PaginationMetadata(object):
     def per_page(self):
         """Gets the per_page of this PaginationMetadata.  # noqa: E501
 
-        pagination limit (page size)  # noqa: E501
+        pagination limit  # noqa: E501
 
         :return: The per_page of this PaginationMetadata.  # noqa: E501
         :rtype: float
@@ -112,7 +112,7 @@ class PaginationMetadata(object):
     def per_page(self, per_page):
         """Sets the per_page of this PaginationMetadata.
 
-        pagination limit (page size)  # noqa: E501
+        pagination limit  # noqa: E501
 
         :param per_page: The per_page of this PaginationMetadata.  # noqa: E501
         :type: float

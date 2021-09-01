@@ -31,16 +31,8 @@ class FilePropertyName(object):
     IMAGE = "image"
     SIZE = "size"
     CODE_BLOCK = "code_block"
-    UDF_LANGUAGE = "udf_language"
-    IS_DASHBOARD = "is_dashboard"
 
-    allowable_values = [
-        IMAGE,
-        SIZE,
-        CODE_BLOCK,
-        UDF_LANGUAGE,
-        IS_DASHBOARD,
-    ]  # noqa: E501
+    allowable_values = [IMAGE, SIZE, CODE_BLOCK]  # noqa: E501
 
     """
     Attributes:
