@@ -47,7 +47,7 @@ jobs:
           pip install .
       - name: Run tests
         run: |
-          pip install pytest pytest-cov
+          pip install pytest==6.2.4 pytest-cov
           pytest -s -v --junitxml=junit/test-results.xml --cov=tiledb/cloud/ --cov-report=xml --cov-report=html
         env:
           TILEDB_CLOUD_HELPER_VAR: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
