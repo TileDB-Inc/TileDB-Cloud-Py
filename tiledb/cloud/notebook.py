@@ -136,8 +136,8 @@ def upload_notebook_from_file(
     Uploads a local-disk notebook file to TileDB Cloud.
     :param ipnyb_file_name: such as "./mycopy.ipynb". Must be local; no S3 URI
       support at present.
-    :param namespace: such as "janedoe"
-    :param array_name : name to be seen in the UI, such as "testing-upload"
+    :param namespace: such as "janedoe".
+    :param array_name : name to be seen in the UI, such as "testing-upload".
     :param storage_path: such as "s3://acmecorp-janedoe", typically from the
       user's account settings.
     :param storage_credential_name: such as "janedoe-creds", typically from the
