@@ -23,22 +23,21 @@ CHARACTER_ENCODING = "utf-8"
 
 
 def rename_notebook(
-    uri,
+    tiledb_uri,
     notebook_name=None,
     access_credentials_name=None,
     async_req=False,
 ):
     """
     Update an array's info
-    :param str namespace: optional username or organization array should be
-      registered under. If unset will default to the user
-    :param str array_name: name of notebook to rename to
+    :param str tiledb_uri: such as "tiledb://TileDB-Inc/quickstart_dense".
+    :param str notebook_name: such as "quickstart_dense_new_name".
     :param str access_credentials_name: optional name of access credentials to
-      use, if left blank default for namespace will be used
-    :param async_req: return future instead of results for async support
+      use. If left blank. default for namespace will be used.
+    :param bool async_req: return future instead of results for async support.
     """
     api_instance = client.client.notebook_api
-    (namespace, current_notebook_name) = array.split_uri(uri)
+    (namespace, current_notebook_name) = array.split_uri(tiledb_uri)
 
     try:
         return api_instance.update_notebook_name(
@@ -46,7 +45,7 @@ def rename_notebook(
             array=current_notebook_name,
             notebook_metadata=rest_api.models.ArrayInfoUpdate(
                 name=notebook_name,
-                uri=uri,
+                uri=tiledb_uri,
                 access_credentials_name=access_credentials_name,
             ),
             async_req=async_req,
@@ -180,9 +179,7 @@ def upload_notebook_contents(
     """
 
     ctx = tiledb.cloud.Ctx(
-        {
-            "rest.creation_access_credentials_name": storage_credential_name,
-        }
+        {"rest.creation_access_credentials_name": storage_credential_name}
     )
 
     tiledb_uri, array_name = _create_notebook_array(
@@ -235,7 +232,7 @@ def _create_notebook_array(
     )
 
     tries = 1 + retries  # 1st + rest
-    while tries > 0:
+    while True:
         try:
             tiledb_uri, array_name = _create_notebook_array_retry_helper(
                 storage_path,
@@ -254,11 +251,12 @@ def _create_notebook_array(
                 ) from e
             if "Cannot create array" in str(e) and "already exists" in str(e):
                 raise ValueError(
-                    f"Error creating file: {array_name} already exists in namespace {namespace}."
+                    f"Error creating file: {array_name!r} already exists in namespace {namespace!r}."
                 )
-        # Retry other exceptions
-        tries -= 1
-    raise ValueError(f"Out of retries uploading {array_name} to namespace {namespace}.")
+            # Retry other TileDB erors
+            tries -= 1
+            if tries <= 0:
+                raise
 
 
 def _create_notebook_array_retry_helper(
@@ -291,15 +289,15 @@ def _create_notebook_array_retry_helper(
     tiledb_uri_s3 = "tiledb://" + posixpath.join(namespace, storage_path, array_name)
 
     # Create the (empty) array on disk.
-    tiledb.DenseArray.create(tiledb_uri_s3, schema)
+    tiledb.Array.create(tiledb_uri_s3, schema)
     tiledb_uri = "tiledb://" + posixpath.join(namespace, array_name)
     time.sleep(0.25)
 
     file_properties = {}
 
-    tiledb.cloud.array.update_info(uri=tiledb_uri, array_name=array_name)
+    array.update_info(uri=tiledb_uri, array_name=array_name)
 
-    tiledb.cloud.array.update_file_properties(
+    array.update_file_properties(
         uri=tiledb_uri,
         file_type=tiledb.cloud.rest_api.models.FileType.NOTEBOOK,
         # If file_properties is empty, don't send anything at all.
@@ -338,5 +336,3 @@ def _write_notebook_to_array(
         arr.meta["file_size"] = len(contents_as_array)
         arr.meta["type"] = file_type = tiledb.cloud.rest_api.models.FileType.NOTEBOOK
         arr.meta["format"] = "json"
-
-    return
