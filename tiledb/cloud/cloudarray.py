@@ -1,5 +1,5 @@
-from . import array
-from . import utils
+from tiledb.cloud import array
+from tiledb.cloud import utils
 
 
 class CloudArray(object):

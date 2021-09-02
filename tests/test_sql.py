@@ -1,8 +1,14 @@
-import tiledb, tiledb.cloud
-import sys, os, platform, unittest
+import os
+import platform
+import sys
+import unittest
+
 import numpy as np
-from tiledb.cloud import client
+
+import tiledb
+import tiledb.cloud
 from tiledb.cloud import array
+from tiledb.cloud import client
 from tiledb.cloud import tasks
 from tiledb.cloud import tiledb_cloud_error
 

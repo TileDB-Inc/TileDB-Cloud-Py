@@ -1,9 +1,9 @@
-from . import rest_api
-from . import client
-from . import tiledb_cloud_error
-from . import array
-from .rest_api import ApiException as GenApiException
-from .rest_api import rest
+from tiledb.cloud import array
+from tiledb.cloud import client
+from tiledb.cloud import rest_api
+from tiledb.cloud import tiledb_cloud_error
+from tiledb.cloud.rest_api import ApiException as GenApiException
+from tiledb.cloud.rest_api import rest
 
 
 def rename_notebook(

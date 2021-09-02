@@ -1,16 +1,15 @@
 import inspect
-from tiledb.cloud.results import PandasDecoder
 import time
 
 import tiledb
-
-from . import array
-from . import client
-from . import config
-from . import rest_api
-from . import tiledb_cloud_error
-from . import utils
-from .rest_api import models
+from tiledb.cloud import array
+from tiledb.cloud import client
+from tiledb.cloud import config
+from tiledb.cloud import rest_api
+from tiledb.cloud import tiledb_cloud_error
+from tiledb.cloud import utils
+from tiledb.cloud.rest_api import models
+from tiledb.cloud.results import PandasDecoder
 
 last_sql_task_id = None
 

@@ -12,13 +12,13 @@
 
 from __future__ import absolute_import
 
-import unittest
 import datetime
+import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.activity_event_type import (
+from tiledb.cloud.rest_api.models.activity_event_type import (  # noqa: E501
     ActivityEventType,
-)  # noqa: E501
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 
