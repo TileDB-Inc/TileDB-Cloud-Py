@@ -1,4 +1,4 @@
-name: TileDB-Cloud-Py autobuild
+name: commit-check
 
 on:
   push:
@@ -54,6 +54,9 @@ jobs:
           pip install .
 
       - name: Run tests
+        # For now, we're only running tests on Linux, because if we try to do
+        # too many tests at the same time, Bad Things Happen. See bug #10099.
+        if: ${{ matrix.os == 'ubuntu-20.04' }}
         run: |
           pip install pytest pytest-cov
           pytest -s -v --junitxml=junit/test-results.xml --cov=tiledb/cloud/ --cov-report=xml --cov-report=html
