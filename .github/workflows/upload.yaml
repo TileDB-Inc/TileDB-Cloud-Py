@@ -1,0 +1,116 @@
+name: upload-to-pypi
+
+on:
+  push:
+    tags: [ "v*" ]
+
+jobs:
+  run-tests:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      # Avoid excessive concurrency for deploys; it's OK if they take a while.
+      max-parallel: 1
+      matrix:
+        os:
+          - ubuntu-20.04
+          - macos-10.15
+        python-version: ["3.7", "3.6"]
+        dependencies:
+          - pinned
+          - fresh
+        include:
+          - os: ubuntu-20.04
+            path: ~/.cache/pip
+          - os: macos-10.15
+            path: ~/Library/Caches/pip
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pinned dependencies
+        if: ${{ matrix.dependencies == 'pinned' }}
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.path }}
+          key: ${{ runner.os }}-py${{ matrix.python-version }}-pip-${{ hashFiles(format('./requirements-py{0}.txt', matrix.python-version)) }}
+          restore-keys: |
+            ${{ runner.os }}-py${{ matrix.python-version }}-pip-
+
+      # This step ensures that every month we have a new Pip cache, so that
+      # we don't have one cache sitting for months growing ever-staler.
+      - name: Get month for cache key
+        id: month
+        if: ${{ matrix.dependencies == 'fresh' }}
+        run: |
+          echo "::set-output name=month::$(date +'%Y-%m')"
+
+      - name: Cache fresh install dependencies
+        if: ${{ matrix.dependencies == 'fresh' }}
+        uses: actions/cache@v2
+        with:
+          path: ${{ matrix.path }}
+          key: ${{ runner.os }}-py${{ matrix.python-version }}-pip-fresh-${{ steps.month.outputs.month }}
+          restore-keys: |
+            ${{ runner.os }}-py${{ matrix.python-version }}-pip-fresh-
+            ${{ runner.os }}-py${{ matrix.python-version }}-pip-
+
+      - name: Install prerequisites
+        run: |
+          pip install --upgrade pip wheel pytest pytest-cov setuptools setuptools-scm
+
+      - name: Install pinned dependencies
+        if: ${{ matrix.dependencies == 'pinned' }}
+        run: |
+          pip install -r requirements-py${{ matrix.python-version }}.txt
+
+      - name: Install TileDB-Cloud-Py
+        run: |
+          pip install .
+
+      - name: Run tests
+        run: |
+          pytest -s -v --junitxml=junit/test-results.xml --cov=tiledb/cloud/ --cov-report=xml --cov-report=html
+        env:
+          TILEDB_CLOUD_HELPER_VAR: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
+
+  upload-to-pypi:
+    # Upload a wheel only if the entire matrix succeeds.
+    needs: run-tests
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.7"
+
+      - name: Cache pinned dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: upload-ubuntu-20.04-py3.7-pip-${{ hashFiles('requirements-py3.7.txt') }}
+          restore-keys: |
+            upload-ubuntu-20.04-py3.7-pip-
+
+      - name: Build wheel
+        run: |
+          pip install --upgrade pip wheel setuptools setuptools-scm
+          pip install -r requirements-py3.7.txt
+          python setup.py bdist_wheel -d dist
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
