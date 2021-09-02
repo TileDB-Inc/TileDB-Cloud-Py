@@ -1,6 +1,8 @@
-import tiledb
-from tiledb.tests.common import DiskTestCase, assert_subarrays_equal
 import numpy as np
+
+import tiledb
+from tiledb.tests.common import DiskTestCase
+from tiledb.tests.common import assert_subarrays_equal
 
 
 def threadtest_create_array(

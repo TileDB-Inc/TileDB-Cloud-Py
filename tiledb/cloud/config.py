@@ -1,8 +1,11 @@
-import os.path, sys
-from pathlib import Path
 import json
-from . import rest_api
+import os.path
+import sys
+from pathlib import Path
+
 from urllib3 import Retry
+
+from tiledb.cloud import rest_api
 
 default_host = "https://api.tiledb.com"
 

@@ -1,3 +1,4 @@
-from .delayed import Delayed, DelayedSQL, DelayedArrayUDF
-
-from ..dag import Status
+from tiledb.cloud.compute.delayed import Delayed
+from tiledb.cloud.compute.delayed import DelayedArrayUDF
+from tiledb.cloud.compute.delayed import DelayedSQL
+from tiledb.cloud.dag import Status

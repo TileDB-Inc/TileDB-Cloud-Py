@@ -6,15 +6,14 @@ is assumed to be encoded as UTF-8.
 
 import posixpath
 import time
-from typing import Optional, Tuple
+from typing import Tuple
 
 import numpy
+
 import tiledb
-
-from . import array, client, rest_api, tiledb_cloud_error
-from .rest_api import ApiException as GenApiException
-from .rest_api import rest
-
+from tiledb.cloud import array, client, rest_api, tiledb_cloud_error
+from tiledb.cloud.rest_api import ApiException as GenApiException
+from tiledb.cloud.rest_api import rest
 
 RESERVED_NAMESPACES = frozenset(["cloud", "owned", "public", "shared"])
 CHARACTER_ENCODING = "utf-8"

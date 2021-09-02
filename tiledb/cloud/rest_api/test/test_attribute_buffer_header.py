@@ -12,13 +12,13 @@
 
 from __future__ import absolute_import
 
-import unittest
 import datetime
+import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.attribute_buffer_header import (
+from tiledb.cloud.rest_api.models.attribute_buffer_header import (  # noqa: E501
     AttributeBufferHeader,
-)  # noqa: E501
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 

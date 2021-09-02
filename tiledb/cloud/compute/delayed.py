@@ -1,10 +1,10 @@
 import numbers
 
-from ..array import apply as array_apply
-from ..dag.dag import DAG
-from ..dag.dag import Node
-from ..sql import exec as sql_exec
-from ..udf import exec as udf_exec
+from tiledb.cloud.array import apply as array_apply
+from tiledb.cloud.dag.dag import DAG
+from tiledb.cloud.dag.dag import Node
+from tiledb.cloud.sql import exec as sql_exec
+from tiledb.cloud.udf import exec as udf_exec
 
 
 class DelayedBase(Node):
