@@ -20,11 +20,11 @@ from tiledb.cloud.client import login
 from tiledb.cloud.client import organization
 from tiledb.cloud.client import organizations
 from tiledb.cloud.client import user_profile
-from tiledb.cloud.notebook import rename_notebook
-from tiledb.cloud.notebook import upload_notebook_from_file
-from tiledb.cloud.notebook import upload_notebook_contents
-from tiledb.cloud.notebook import download_notebook_to_file
 from tiledb.cloud.notebook import download_notebook_contents
+from tiledb.cloud.notebook import download_notebook_to_file
+from tiledb.cloud.notebook import rename_notebook
+from tiledb.cloud.notebook import upload_notebook_contents
+from tiledb.cloud.notebook import upload_notebook_from_file
 from tiledb.cloud.rest_api import models
 from tiledb.cloud.tasks import last_sql_task
 from tiledb.cloud.tasks import last_udf_task

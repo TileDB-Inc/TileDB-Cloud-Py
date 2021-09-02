@@ -11,7 +11,10 @@ from typing import Tuple
 import numpy
 
 import tiledb
-from tiledb.cloud import array, client, rest_api, tiledb_cloud_error
+from tiledb.cloud import array
+from tiledb.cloud import client
+from tiledb.cloud import rest_api
+from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import rest
 
