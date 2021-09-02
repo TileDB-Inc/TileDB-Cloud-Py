@@ -246,7 +246,7 @@ def _create_notebook_array(
             if "Error while listing with prefix" in str(e):
                 # It is possible to land here if user sets wrong default S3
                 # credentials with respect to default S3 path.
-                raise ValueError(
+                raise tiledb_cloud_error.TileDBCloudError(
                     f"Error creating file: {e}. Are your credentials valid?"
                 ) from e
             if "Cannot create array" in str(e) and "already exists" in str(e):
