@@ -2,10 +2,10 @@ import os
 import unittest
 
 import numpy as np
-import tiledb.cloud
-from tiledb.cloud import udf
 
+import tiledb.cloud
 from tiledb.cloud import testonly
+from tiledb.cloud import udf
 
 tiledb.cloud.login(
     token=os.environ["TILEDB_CLOUD_HELPER_VAR"],

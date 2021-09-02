@@ -1,37 +1,37 @@
 # This file imports specifically to re-export.
 
-from . import compute
-from . import dag
-from . import sql
-from . import udf
-from .array import array_activity
-from .array import deregister_array
-from .array import info
-from .array import list_shared_with
-from .array import register_array
-from .array import share_array
-from .array import unshare_array
-from .client import Config
-from .client import Ctx
-from .client import list_arrays
-from .client import list_public_arrays
-from .client import list_shared_arrays
-from .client import login
-from .client import organization
-from .client import organizations
-from .client import user_profile
-from .notebook import rename_notebook
-from .notebook import upload_notebook_from_file
-from .notebook import upload_notebook_contents
-from .notebook import download_notebook_to_file
-from .notebook import download_notebook_contents
-from .rest_api import models
-from .tasks import last_sql_task
-from .tasks import last_udf_task
-from .tasks import task
-from .tasks import tasks
-from .tiledb_cloud_error import TileDBCloudError
-from .version import version as __version__
+from tiledb.cloud import compute
+from tiledb.cloud import dag
+from tiledb.cloud import sql
+from tiledb.cloud import udf
+from tiledb.cloud.array import array_activity
+from tiledb.cloud.array import deregister_array
+from tiledb.cloud.array import info
+from tiledb.cloud.array import list_shared_with
+from tiledb.cloud.array import register_array
+from tiledb.cloud.array import share_array
+from tiledb.cloud.array import unshare_array
+from tiledb.cloud.client import Config
+from tiledb.cloud.client import Ctx
+from tiledb.cloud.client import list_arrays
+from tiledb.cloud.client import list_public_arrays
+from tiledb.cloud.client import list_shared_arrays
+from tiledb.cloud.client import login
+from tiledb.cloud.client import organization
+from tiledb.cloud.client import organizations
+from tiledb.cloud.client import user_profile
+from tiledb.cloud.notebook import rename_notebook
+from tiledb.cloud.notebook import upload_notebook_from_file
+from tiledb.cloud.notebook import upload_notebook_contents
+from tiledb.cloud.notebook import download_notebook_to_file
+from tiledb.cloud.notebook import download_notebook_contents
+from tiledb.cloud.rest_api import models
+from tiledb.cloud.tasks import last_sql_task
+from tiledb.cloud.tasks import last_udf_task
+from tiledb.cloud.tasks import task
+from tiledb.cloud.tasks import tasks
+from tiledb.cloud.tiledb_cloud_error import TileDBCloudError
+from tiledb.cloud.version import version as __version__
 
 ResultFormat = models.ResultFormat
 UDFResultType = ResultFormat

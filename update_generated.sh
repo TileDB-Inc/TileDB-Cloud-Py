@@ -97,8 +97,14 @@ cp -r ${TEMP_PATH}/.openapi-generator/ ${TARGET_PATH}/${PACKAGE_NAME}/
 echo
 echo "Output copied from '${TEMP_PATH}' to '${TARGET_PATH}/${PACKAGE_NAME}'"
 
-if ! [ -x "$(command -v black)" ]; then
-  echo 'Warning: black python linter/formater is not installed. You must install black and run black to format generated files' >&2
-else
-  black .
-fi
+for command in isort black; do
+  if ! [ -x "$(command -v "${command}")"]; then
+    echo "${command} is not installed." >&2
+    echo 'Before sending a review request, run:' >&2
+    echo "  $ pip install ${command}" >&2
+    echo "  $ ${command} ${ROOT}" >&2
+    echo 'to ensure your files are correctly formatted.' >&2
+  else
+    "${command}" .
+  fi
+done
