@@ -15,7 +15,7 @@ from tiledb.cloud.rest_api import models
 
 class AbstractDecoder(metaclass=abc.ABCMeta):
     @abc.abstractmethod
-    def decode(data: bytes) -> Any:
+    def decode(self, data: bytes) -> Any:
         raise NotImplementedError()
 
 
