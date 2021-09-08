@@ -256,7 +256,7 @@ def _create_notebook_array(
             # Retry other TileDB erors
             tries -= 1
             if tries <= 0:
-                raise
+                raise tiledb_cloud_error.check_exc(e) from None
 
 
 def _create_notebook_array_retry_helper(
