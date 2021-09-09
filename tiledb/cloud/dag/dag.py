@@ -835,6 +835,9 @@ class _ResultReplacer:
 
         # Descend into sequences and mappings.
         if isinstance(arg, cabc.MutableSequence):
+            # Mutable types may contain self references, so we create one and
+            # store it as the canonical substitution for this instance in case
+            # we see this original again.
             replaced = type(arg)()
             self.seen[original_id] = replaced
             replaced.extend(map(self._replace_internal, arg))
@@ -844,6 +847,7 @@ class _ResultReplacer:
             self.seen[original_id] = replaced
             return replaced
         if isinstance(arg, cabc.MutableMapping):
+            # Create the mapping in advance to allow self references.
             replaced = type(arg)()
             self.seen[original_id] = replaced
             replaced.update((k, self._replace_internal(v)) for k, v in arg.items())
