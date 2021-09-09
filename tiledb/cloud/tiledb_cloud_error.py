@@ -1,6 +1,7 @@
 import json
 
 from tiledb import TileDBError
+from tiledb.cloud import rest_api
 
 
 class TileDBCloudError(TileDBError):
@@ -12,7 +13,8 @@ def check_exc(exc):
         "[InternalError: failed to parse or message missing from ApiException]"
     )
 
-    if not isinstance(exc, BaseException):
+    # Make sure exc.status and exc.body exist before dereferncing them.
+    if not isinstance(exc, rest_api.ApiException):
         raise Exception(internal_err_msg)
 
     if exc.status == 404 and len(exc.body) == 0:
