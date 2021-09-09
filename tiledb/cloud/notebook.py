@@ -250,7 +250,7 @@ def _create_notebook_array(
                     f"Error creating file: {e}. Are your credentials valid?"
                 ) from e
             if "Cannot create array" in str(e) and "already exists" in str(e):
-                raise ValueError(
+                raise tiledb_cloud_error.TileDBCloudError(
                     f"Error creating file: {array_name!r} already exists in namespace {namespace!r}."
                 )
             # Retry other TileDB erors
