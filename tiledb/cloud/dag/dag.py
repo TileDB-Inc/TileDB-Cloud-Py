@@ -1,8 +1,12 @@
+import abc
+import collections.abc as cabc
+import dataclasses
 import json
 import numbers
 import time
 import uuid
 from concurrent import futures
+from typing import Any, Dict, Optional
 
 import networkx as nx
 
@@ -11,6 +15,7 @@ from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud import udf
 from tiledb.cloud.dag import status as st
+from tiledb.cloud.dag import stored_params
 from tiledb.cloud.dag import visualization as viz
 
 Status = st.Status  # Re-export for compabitility.
@@ -117,38 +122,6 @@ class Node:
 
     done = finished
 
-    def _replace_nodes_with_results(self, arg):
-        """
-        Recursively find arguments of Node instance and replace with the node results
-        :param arg:
-        :return: converted argument
-        """
-        tuple_conversion = False
-        if isinstance(arg, tuple):
-            arg = list(arg)
-            tuple_conversion = True
-
-        if isinstance(arg, tuple) or isinstance(arg, list):
-            for index in range(len(arg)):
-                a = arg[index]
-                if isinstance(a, Node):
-                    arg[index] = a.result()
-                elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    arg[index] = self._replace_nodes_with_results(a)
-        elif isinstance(arg, dict):
-            for k, a in arg.items():
-                if isinstance(a, Node):
-                    arg[k] = a.result()
-                elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    arg[k] = self._replace_nodes_with_results(a)
-        elif isinstance(arg, Node):
-            arg = arg.result()
-
-        if tuple_conversion:
-            arg = tuple(arg)
-
-        return arg
-
     def exec(self, namespace=None):
         """
         Execute function for node
@@ -164,13 +137,13 @@ class Node:
         # If there is a node as an argument, the user really just wants the results, so let's fetch them
         # and swap out the parameter
         if self.args is not None:
-            self.args = self._replace_nodes_with_results(self.args)
+            self.args = _replace_nodes_with_results(self.args)
 
         # First loop though any default named parameter arguments to find any nodes
         # If there is a node as an argument, the user really just wants the results, so let's fetch them
         # and swap out the parameter
         if self.kwargs is not None:
-            self.kwargs = self._replace_nodes_with_results(self.kwargs)
+            self.kwargs = _replace_nodes_with_results(self.kwargs)
 
         # Execute user function with the parameters that the user requested
         # The function is executed on the dag's worker pool
@@ -792,3 +765,136 @@ class DAG:
             results[node.name] = node.result()
 
         return results
+
+
+def replace_stored_params(tree, loader: stored_params.ParamLoader) -> Any:
+    """Descends into data structures and replaces Stored Params with results."""
+
+    return _StoredParamReplacer(loader).visit(tree)
+
+
+def _replace_nodes_with_results(tree):
+    """Descends into data structures and replaces Node IDs with their values."""
+
+    return _NodeResultReplacer().visit(tree)
+
+
+@dataclasses.dataclass(frozen=True)
+class _Replacement:
+    """A sentinel return value to indicate that the value should be replaced.
+
+    This wrapper ensures that we are able to replace nodes with `None`
+    or other falsey values if needed.
+    """
+
+    value: Any
+
+
+class _ReplacingVisitor(metaclass=abc.ABCMeta):
+    """An abstract class to descend through data structure, replacing values.
+
+    An instance of this class should be used in a one-shot manner to descend
+    into a data structure and return a new, equivalent structure, but with
+    nodes (specified by :meth:`maybe_replace`) replaced in the output.
+
+    See implementations immediately below, or Doubler in the tests.
+    """
+
+    def __init__(self):
+        # A dictionary mapping the ID of every object we have seen in our
+        # traversal to the object it is replaced with, to avoid duplicating
+        # work or getting caught in self-referential structures.
+        self.seen: Dict[int, Any] = {}
+
+    def visit(self, arg):
+        """Visits a single node of the data structure and returns its new value.
+
+        This function recursively descends through a data structure to transform
+        it into a new value. It is both the entry point (i.e., the caller
+        passes in the value it wants to transform) and the internal recursive
+        step (i.e., each sub-node of that value is passed here to be transformed
+        as well).
+
+        It returns the value that the input is transformed into, which may be
+        the same value as was passed in.
+        """
+        if isinstance(arg, (str, bytes)):
+            # Special-case these since they're weird sequences.
+            return arg
+
+        original_id = id(arg)
+        try:
+            # If we have already seen this exact instance,
+            # return the one we calculated before.
+            return self.seen[original_id]
+        except KeyError:
+            pass  # We haven't seen this object yet; continue.
+
+        # First, handle if this is something to replace directly.
+        replacement = self.maybe_replace(arg)
+        if replacement:
+            self.seen[original_id] = replacement.value
+            return replacement.value
+
+        # Descend into sequences and mappings.
+        # Potential improvement: Do a first pass to see if anything *needs*
+        # replacing, and only create new instances if one is found.
+        if isinstance(arg, cabc.MutableSequence):
+            # Mutable types may contain self references, so we create one and
+            # store it as the canonical substitution for this instance in case
+            # we see this original again.
+            replaced = type(arg)()
+            self.seen[original_id] = replaced
+            replaced.extend(map(self.visit, arg))
+            return replaced
+        if isinstance(arg, cabc.Sequence):
+            replaced = type(arg)(map(self.visit, arg))
+            self.seen[original_id] = replaced
+            return replaced
+        if isinstance(arg, cabc.MutableMapping):
+            # As before, create the mapping in advance to allow self references.
+            replaced = type(arg)()
+            self.seen[original_id] = replaced
+            replaced.update((k, self.visit(v)) for k, v in arg.items())
+            return replaced
+        if isinstance(arg, cabc.Mapping):
+            replaced = type(arg)((k, self.visit(v)) for k, v in arg.items())
+            self.seen[original_id] = replaced
+            return replaced
+
+        # Otherwise, we just return the original thing.
+        self.seen[original_id] = arg
+        return arg
+
+    @abc.abstractmethod
+    def maybe_replace(self, arg) -> Optional[_Replacement]:
+        """Abstract function returning a value if it should be replaced.
+
+        This will be called as the visitor visits every node of the data
+        structure. If the node should be replaced with some value, it should
+        return that value wrapped in a :class:`_Replacement`. If it returns
+        None, the replacer will visit the node as normal.
+        """
+        raise NotImplementedError()
+
+
+class _NodeResultReplacer(_ReplacingVisitor):
+    """Replaces :class:`Node`s with their results."""
+
+    def maybe_replace(self, arg) -> Optional[_Replacement]:
+        if isinstance(arg, Node):
+            return _Replacement(arg.result())
+        return None
+
+
+class _StoredParamReplacer(_ReplacingVisitor):
+    """Replaces stored parameters with their values."""
+
+    def __init__(self, loader: stored_params.ParamLoader):
+        super().__init__()
+        self._loader = loader
+
+    def maybe_replace(self, arg) -> Optional[_Replacement]:
+        if isinstance(arg, stored_params.StoredParam):
+            return _Replacement(self._loader.load(arg))
+        return None

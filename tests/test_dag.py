@@ -1,11 +1,21 @@
+import base64
+import collections
+import collections.abc as cabc
 import os
+import pickle
 import time
 import unittest
+import uuid
 
+import cloudpickle
 import numpy as np
+import pandas as pd
 
 import tiledb.cloud
 from tiledb.cloud import dag
+from tiledb.cloud import results
+from tiledb.cloud.dag import dag as internal
+from tiledb.cloud.dag import stored_params as sp
 
 tiledb.cloud.login(
     token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
@@ -418,3 +428,201 @@ class DAGCallbackTest(unittest.TestCase):
         global done_updates
         self.assertEqual(status_updates, 5)
         self.assertEqual(done_updates, 1)
+
+
+class CustomSeq(cabc.MutableSequence):
+    """Custom sequence implementation to test value replacement."""
+
+    def __init__(self, items=()):
+        self.lst = list(items)
+
+    def __len__(self):
+        return len(self.lst)
+
+    def __getitem__(self, idx):
+        return self.lst[idx]
+
+    def __setitem__(self, idx, val):
+        self.lst[idx] = val
+
+    def __delitem__(self, idx):
+        del self.lst[idx]
+
+    def insert(self, idx, val):
+        self.lst.insert(idx, val)
+
+    def __eq__(self, other):
+        return type(self) == type(other) and self.lst == other.lst
+
+
+class Doubler(internal._ReplacingVisitor):
+    """Example implementation that doubles every int (but not float) it sees."""
+
+    def maybe_replace(self, arg):
+        if isinstance(arg, int):
+            return internal._Replacement(arg * 2)
+        return None
+
+
+class ReplaceNodesTest(unittest.TestCase):
+    def test_basic(self):
+        self.assertEqual(5, internal._replace_nodes_with_results(5))
+        self.assertEqual("hi", internal._replace_nodes_with_results(_node("hi")))
+
+    def test_sequences(self):
+        self.assertEqual(
+            ["a", "b", "c"],
+            internal._replace_nodes_with_results([_node("a"), "b", _node("c")]),
+        )
+        self.assertEqual(
+            (1, 2, ["i", "ii"]),
+            internal._replace_nodes_with_results((1, 2, [_node("i"), "ii"])),
+        )
+
+    def test_special_sequences(self):
+        self.assertEqual(
+            "some_string", internal._replace_nodes_with_results("some_string")
+        )
+        self.assertEqual(b"bytes", internal._replace_nodes_with_results(b"bytes"))
+
+    def test_self_recursion(self):
+        dct = {
+            "nod": _node(("a", "b", "c")),
+        }
+        lst = [dct, _node("nod")]
+        dct["lst"] = lst
+        tup = (_node("a lst:"), lst, _node("a dct:"), dct)
+        lst.append(tup)
+        got_lst = internal._replace_nodes_with_results(lst)
+
+        want_dct = {
+            "nod": ("a", "b", "c"),
+        }
+        want_lst = [want_dct, "nod"]
+        want_dct["lst"] = want_lst
+        want_tup = ("a lst:", want_lst, "a dct:", want_dct)
+        want_lst.append(want_tup)
+
+        # assertEqual will blow up if you try to compare a recursive structure.
+        # However, pickle handles recursion, so we just see if the results
+        # have the same pickling.
+        self.assertEqual(pickle.dumps(want_lst), pickle.dumps(got_lst))
+
+    def test_custom_types(self):
+        my_seq = CustomSeq(["a", "b", 0xC, "d", 0xE, CustomSeq(("F", 0x10)), "h"])
+
+        self.assertEqual(
+            CustomSeq(("a", "b", 0x18, "d", 0x1C, CustomSeq(("F", 0x20)), "h")),
+            Doubler().visit(my_seq),
+        )
+
+        self.assertEqual(
+            collections.OrderedDict(zero=0, one=1.0, two=2),
+            Doubler().visit(
+                collections.OrderedDict(
+                    zero=0,
+                    one=1.0,
+                    two=1,
+                )
+            ),
+        )
+
+    def test_dont_enter_special_types(self):
+        df = pd.DataFrame([{"a": 1, "b": 2}, {"a": 2, "b": 3}])
+        self.assertIs(df, internal._replace_nodes_with_results(df))
+        arr = np.array([["a", 1], ["b", 2]])
+        self.assertIs(arr, internal._replace_nodes_with_results(arr))
+
+    def test_ref_equality(self):
+        lst = ["a", _node("B"), "c"]
+        got_val = internal._replace_nodes_with_results([lst, lst])
+        self.assertIs(got_val[0], got_val[1])
+        self.assertIsNot(lst, got_val[0])
+
+    def test_replace_stored_params(self):
+        # Since the corner cases of tree traversal are tested in the other
+        # ReplaceNodesTests, this just tests the basics of stored params.
+        got = internal.replace_stored_params(
+            [
+                sp.StoredParam(_uid(0x1), decoder=results.Decoder("json")),
+                {
+                    "sub-dict": sp.StoredParam(
+                        _uid(0x2), decoder=results.Decoder("native")
+                    )
+                },
+                (sp.StoredParam(_uid(0x1), decoder=results.Decoder("json")),),
+            ],
+            sp.ParamLoader(
+                {
+                    "00000000-0000-0000-0000-000000000001": _b64(b'[true, "two", 3]'),
+                    "00000000-0000-0000-0000-000000000002": _b64(cloudpickle.dumps(())),
+                }
+            ),
+        )
+
+        want = [
+            [True, "two", 3],
+            {"sub-dict": ()},
+            ([True, "two", 3],),
+        ]
+        self.assertEqual(want, got)
+        self.assertIs(got[0], got[2][0], "restored values must be same object")
+
+    def test_replace_stored_params_pandas(self):
+        arrow_pd, json_pd, json_raw = internal.replace_stored_params(
+            [
+                sp.StoredParam(_uid(0x3), decoder=results.PandasDecoder("arrow")),
+                # Ensure that we can restore the same source object
+                # using multiple encodings.
+                sp.StoredParam(_uid(0x4), decoder=results.PandasDecoder("json")),
+                sp.StoredParam(_uid(0x4), decoder=results.Decoder("json")),
+            ],
+            sp.ParamLoader(
+                {
+                    "00000000-0000-0000-0000-000000000003": _ARROW_DATA,
+                    "00000000-0000-0000-0000-000000000004": _b64(
+                        b'[{"a": 1, "b": "x"}, {"a": 2, "b": "Y"}]'
+                    ),
+                }
+            ),
+        )
+
+        want_arrow_pd = pd.DataFrame([[1, 1.1]], columns=("a", "param1"))
+        self.assertTrue(want_arrow_pd.equals(arrow_pd))
+        want_json_pd = pd.DataFrame([[1, "x"], [2, "Y"]], columns=("a", "b"))
+        self.assertTrue(want_json_pd.equals(json_pd))
+        self.assertEqual(
+            [{"a": 1, "b": "x"}, {"a": 2, "b": "Y"}],
+            json_raw,
+        )
+
+
+def _node(val):
+    """Creates a completed node with the given value."""
+    n = dag.Node(lambda: None)
+    n.status = dag.Status.COMPLETED
+    n._results = val
+    return n
+
+
+def _uid(num: int) -> uuid.UUID:
+    return uuid.UUID(int=num)
+
+
+def _b64(x: bytes) -> str:
+    return str(base64.b64encode(x), encoding="ascii")
+
+
+# This is the base64 of the Arrow data returned by this query:
+#   set @a = 1;
+#   select @a a, ? param1;  -- params: [1.1]
+_ARROW_DATA = """
+/////8AAAAAQAAAAAAAKAAwACgAJAAQACgAAABAAAAAAAQQACAAIAAAABAAIAAAABAAAAAIAAABcAAAA
+FAAAABAAFAAQAAAADwAIAAAABAAQAAAAEAAAABgAAAAAAAADGAAAAAAAAAAAAAYACAAGAAYAAAAAAAIA
+BgAAAHBhcmFtMQAAEAAUABAADwAOAAgAAAAEABAAAAAQAAAAGAAAAAAAAgEcAAAAAAAAAAgADAAIAAcA
+CAAAAAAAAAFAAAAAAQAAAGEAAAD/////yAAAABQAAAAAAAAADAAYABYAFQAQAAQADAAAAEAAAAAAAAAA
+AAAAABQAAAAAAwQADAAcABAADAAIAAQADAAAABwAAAAcAAAAYAAAAAEAAAAAAAAAAAAAAAQABAAEAAAA
+BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB8AAAAAAAAAIAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA
+HwAAAAAAAAAAAAAAAgAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAEIk0Y
+YECCCAAAgAEAAAAAAAAAAAAAAAAIAAAAAAAAAAQiTRhgQIIIAACAmpmZmZmZ8T8AAAAAAP////8AAAAA
+"""
