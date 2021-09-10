@@ -87,6 +87,8 @@ jobs:
           pip install .
 
       - name: Run tests
+        # Test pinned dependencies on commit / tag and fresh installs on nightlies
+        if: (matrix.dependencies == 'fresh') == (github.event_name == 'schedule')
         run: |
           pytest -s -v --junitxml=junit/test-results.xml --cov=tiledb/cloud/ --cov-report=xml --cov-report=html
         env:
