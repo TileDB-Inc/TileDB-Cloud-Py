@@ -455,6 +455,15 @@ class CustomSeq(cabc.MutableSequence):
         return type(self) == type(other) and self.lst == other.lst
 
 
+class Doubler(internal._ReplacingVisitor):
+    """Example implementation that doubles every int (but not float) it sees."""
+
+    def maybe_replace(self, arg):
+        if isinstance(arg, int):
+            return internal._Replacement(arg * 2)
+        return None
+
+
 class ReplaceNodesTest(unittest.TestCase):
     def test_basic(self):
         self.assertEqual(5, internal._replace_nodes_with_results(5))
@@ -500,22 +509,20 @@ class ReplaceNodesTest(unittest.TestCase):
         self.assertEqual(pickle.dumps(want_lst), pickle.dumps(got_lst))
 
     def test_custom_types(self):
-        my_seq = CustomSeq("abcde")
-        my_seq.append(CustomSeq(("F", _node("G"))))
-        my_seq.append(_node("h"))
+        my_seq = CustomSeq(["a", "b", 0xC, "d", 0xE, CustomSeq(("F", 0x10)), "h"])
 
         self.assertEqual(
-            CustomSeq(("a", "b", "c", "d", "e", CustomSeq("FG"), "h")),
-            internal._replace_nodes_with_results(my_seq),
+            CustomSeq(("a", "b", 0x18, "d", 0x1C, CustomSeq(("F", 0x20)), "h")),
+            Doubler().visit(my_seq),
         )
 
         self.assertEqual(
-            collections.OrderedDict(zero=0, one=1, two=2),
-            internal._replace_nodes_with_results(
+            collections.OrderedDict(zero=0, one=1.0, two=2),
+            Doubler().visit(
                 collections.OrderedDict(
-                    zero=_node(0),
-                    one=_node(1),
-                    two=2,
+                    zero=0,
+                    one=1.0,
+                    two=1,
                 )
             ),
         )
@@ -547,7 +554,7 @@ class ReplaceNodesTest(unittest.TestCase):
             ],
             sp.ParamLoader(
                 {
-                    "00000000-0000-0000-0000-000000000001": "W3RydWUsICJ0d28iLCAzXQ==",
+                    "00000000-0000-0000-0000-000000000001": _b64(b'[true, "two", 3]'),
                     "00000000-0000-0000-0000-000000000002": _b64(cloudpickle.dumps(())),
                 }
             ),
@@ -606,8 +613,9 @@ def _b64(x: bytes) -> str:
     return str(base64.b64encode(x), encoding="ascii")
 
 
-# set @a = 1;
-# select @a a, ? param1;  -- params: [1.1]
+# This is the base64 of the Arrow data returned by this query:
+#   set @a = 1;
+#   select @a a, ? param1;  -- params: [1.1]
 _ARROW_DATA = """
 /////8AAAAAQAAAAAAAKAAwACgAJAAQACgAAABAAAAAAAQQACAAIAAAABAAIAAAABAAAAAIAAABcAAAA
 FAAAABAAFAAQAAAADwAIAAAABAAQAAAAEAAAABgAAAAAAAADGAAAAAAAAAAAAAYACAAGAAYAAAAAAAIA
