@@ -95,9 +95,16 @@ jobs:
           TILEDB_CLOUD_HELPER_VAR: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
 
   upload-to-pypi:
-    # Upload a wheel only if the entire matrix succeeds and we're making a tag.
-    needs: run-tests
-    if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
+    # Upload a wheel only if the entire matrix succeeds.
+    needs:
+      - format-check
+      - run-tests
+    # Run on release, or on commits to the primary branch.
+    # Artifacts are uploaded to the real PyPI only when a release is published;
+    # otherwise, they are sent just to the test instance.
+    if: >
+      (github.event_name == 'release' && github.event.action == 'published') ||
+      (github.event_name == 'push')
 
     runs-on: ubuntu-20.04
 
@@ -125,7 +132,15 @@ jobs:
           python setup.py bdist_wheel -d dist
 
       - name: Publish to PyPI
+        if: ${{ github.event_name == 'release' }}
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Publish to Test PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository_url: https://test.pypi.org/legacy/
+          user: __token__
+          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
