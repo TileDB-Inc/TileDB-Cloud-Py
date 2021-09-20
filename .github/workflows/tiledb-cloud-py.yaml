@@ -144,3 +144,6 @@ jobs:
           repository_url: https://test.pypi.org/legacy/
           user: __token__
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          # It's OK if this fails due to an already-existing file,
+          # if the test publish was run more than once for a revision.
+          skip_existing: true
