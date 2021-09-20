@@ -14,6 +14,7 @@ import pandas as pd
 import tiledb.cloud
 from tiledb.cloud import dag
 from tiledb.cloud import results
+from tiledb.cloud.dag import _visitor
 from tiledb.cloud.dag import dag as internal
 from tiledb.cloud.dag import stored_params as sp
 
@@ -455,12 +456,12 @@ class CustomSeq(cabc.MutableSequence):
         return type(self) == type(other) and self.lst == other.lst
 
 
-class Doubler(internal._ReplacingVisitor):
+class Doubler(_visitor.ReplacingVisitor):
     """Example implementation that doubles every int (but not float) it sees."""
 
     def maybe_replace(self, arg):
         if isinstance(arg, int):
-            return internal._Replacement(arg * 2)
+            return _visitor.Replacement(arg * 2)
         return None
 
 
@@ -484,6 +485,7 @@ class ReplaceNodesTest(unittest.TestCase):
             "some_string", internal._replace_nodes_with_results("some_string")
         )
         self.assertEqual(b"bytes", internal._replace_nodes_with_results(b"bytes"))
+        self.assertEqual(range(100), internal._replace_nodes_with_results(range(100)))
 
     def test_self_recursion(self):
         dct = {
@@ -538,6 +540,31 @@ class ReplaceNodesTest(unittest.TestCase):
         got_val = internal._replace_nodes_with_results([lst, lst])
         self.assertIs(got_val[0], got_val[1])
         self.assertIsNot(lst, got_val[0])
+
+    def test_dont_replace_unnecessarily(self):
+        structure = {
+            "a": 1,
+            "b": ["2", "3", "4", ("five",)],
+            "c": 6.66,
+        }
+        structure["d"] = structure
+
+        # Save a reference to the original "b" and its exact members.
+        orig_b = structure["b"]
+        b_ids = tuple(map(id, orig_b))
+
+        got = Doubler().visit(structure)
+
+        # check the primary result, first ensuring that the recursion
+        # was handled correctly.
+        self.assertIs(got, got["d"])
+        del got["d"]
+        # Ensure that the non-recursive part worked right.
+        self.assertEqual({"a": 2, "b": ["2", "3", "4", ("five",)], "c": 6.66}, got)
+
+        # Verify that the original "b" is used in the output and not modified.
+        self.assertIs(orig_b, got["b"])
+        self.assertEqual(b_ids, tuple(map(id, got["b"])))
 
     def test_replace_stored_params(self):
         # Since the corner cases of tree traversal are tested in the other
