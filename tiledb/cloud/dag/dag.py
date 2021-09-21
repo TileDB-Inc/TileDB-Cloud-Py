@@ -1,12 +1,9 @@
-import abc
-import collections.abc as cabc
-import dataclasses
 import json
 import numbers
 import time
 import uuid
 from concurrent import futures
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import networkx as nx
 
@@ -14,6 +11,7 @@ from tiledb.cloud import array
 from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud import udf
+from tiledb.cloud.dag import _visitor
 from tiledb.cloud.dag import status as st
 from tiledb.cloud.dag import stored_params
 from tiledb.cloud.dag import visualization as viz
@@ -779,122 +777,23 @@ def _replace_nodes_with_results(tree):
     return _NodeResultReplacer().visit(tree)
 
 
-@dataclasses.dataclass(frozen=True)
-class _Replacement:
-    """A sentinel return value to indicate that the value should be replaced.
-
-    This wrapper ensures that we are able to replace nodes with `None`
-    or other falsey values if needed.
-    """
-
-    value: Any
-
-
-class _ReplacingVisitor(metaclass=abc.ABCMeta):
-    """An abstract class to descend through data structure, replacing values.
-
-    An instance of this class should be used in a one-shot manner to descend
-    into a data structure and return a new, equivalent structure, but with
-    nodes (specified by :meth:`maybe_replace`) replaced in the output.
-
-    See implementations immediately below, or Doubler in the tests.
-    """
-
-    def __init__(self):
-        # A dictionary mapping the ID of every object we have seen in our
-        # traversal to the object it is replaced with, to avoid duplicating
-        # work or getting caught in self-referential structures.
-        self.seen: Dict[int, Any] = {}
-
-    def visit(self, arg):
-        """Visits a single node of the data structure and returns its new value.
-
-        This function recursively descends through a data structure to transform
-        it into a new value. It is both the entry point (i.e., the caller
-        passes in the value it wants to transform) and the internal recursive
-        step (i.e., each sub-node of that value is passed here to be transformed
-        as well).
-
-        It returns the value that the input is transformed into, which may be
-        the same value as was passed in.
-        """
-        if isinstance(arg, (str, bytes)):
-            # Special-case these since they're weird sequences.
-            return arg
-
-        original_id = id(arg)
-        try:
-            # If we have already seen this exact instance,
-            # return the one we calculated before.
-            return self.seen[original_id]
-        except KeyError:
-            pass  # We haven't seen this object yet; continue.
-
-        # First, handle if this is something to replace directly.
-        replacement = self.maybe_replace(arg)
-        if replacement:
-            self.seen[original_id] = replacement.value
-            return replacement.value
-
-        # Descend into sequences and mappings.
-        # Potential improvement: Do a first pass to see if anything *needs*
-        # replacing, and only create new instances if one is found.
-        if isinstance(arg, cabc.MutableSequence):
-            # Mutable types may contain self references, so we create one and
-            # store it as the canonical substitution for this instance in case
-            # we see this original again.
-            replaced = type(arg)()
-            self.seen[original_id] = replaced
-            replaced.extend(map(self.visit, arg))
-            return replaced
-        if isinstance(arg, cabc.Sequence):
-            replaced = type(arg)(map(self.visit, arg))
-            self.seen[original_id] = replaced
-            return replaced
-        if isinstance(arg, cabc.MutableMapping):
-            # As before, create the mapping in advance to allow self references.
-            replaced = type(arg)()
-            self.seen[original_id] = replaced
-            replaced.update((k, self.visit(v)) for k, v in arg.items())
-            return replaced
-        if isinstance(arg, cabc.Mapping):
-            replaced = type(arg)((k, self.visit(v)) for k, v in arg.items())
-            self.seen[original_id] = replaced
-            return replaced
-
-        # Otherwise, we just return the original thing.
-        self.seen[original_id] = arg
-        return arg
-
-    @abc.abstractmethod
-    def maybe_replace(self, arg) -> Optional[_Replacement]:
-        """Abstract function returning a value if it should be replaced.
-
-        This will be called as the visitor visits every node of the data
-        structure. If the node should be replaced with some value, it should
-        return that value wrapped in a :class:`_Replacement`. If it returns
-        None, the replacer will visit the node as normal.
-        """
-        raise NotImplementedError()
-
-
-class _NodeResultReplacer(_ReplacingVisitor):
+class _NodeResultReplacer(_visitor.ReplacingVisitor):
     """Replaces :class:`Node`s with their results."""
 
-    def maybe_replace(self, arg) -> Optional[_Replacement]:
+    def maybe_replace(self, arg) -> Optional[_visitor.Replacement]:
         if isinstance(arg, Node):
-            return _Replacement(arg.result())
+            return _visitor.Replacement(arg.result())
         return None
 
 
-class _StoredParamReplacer(_ReplacingVisitor):
+class _StoredParamReplacer(_visitor.ReplacingVisitor):
     """Replaces stored parameters with their values."""
 
     def __init__(self, loader: stored_params.ParamLoader):
         super().__init__()
         self._loader = loader
 
-    def maybe_replace(self, arg) -> Optional[_Replacement]:
+    def maybe_replace(self, arg) -> Optional[_visitor.Replacement]:
         if isinstance(arg, stored_params.StoredParam):
-            return _Replacement(self._loader.load(arg))
+            return _visitor.Replacement(self._loader.load(arg))
         return None
