@@ -1,6 +1,4 @@
 import os
-import platform
-import sys
 import unittest
 
 import numpy

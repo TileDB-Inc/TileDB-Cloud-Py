@@ -1,19 +1,18 @@
-from __future__ import absolute_import
-from __future__ import print_function
-
-import os
+import enum
+import threading
 import urllib.parse
-from typing import Optional, Sequence, Union
+import uuid
+from concurrent import futures
+from typing import Any, Callable, Dict, Optional, Sequence, Union
 
-from urllib3 import Retry
+import urllib3
 
 import tiledb
 from tiledb.cloud import config
 from tiledb.cloud import rest_api
+from tiledb.cloud import results
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud.rest_api import ApiException as GenApiException
-
-TASK_ID_HEADER = "X-TILEDB-CLOUD-TASK-ID"
 
 
 def Config(cfg_dict=None):
@@ -65,7 +64,7 @@ def login(
     host=None,
     verify_ssl=True,
     no_session=False,
-    threads=os.cpu_count() * 2,
+    threads=None,
 ):
     """
     Login to cloud service
@@ -105,8 +104,7 @@ def login(
     # Is user logs in with username/password we need to create a session
     if (token is None or token == "") and not no_session:
         config.setup_configuration(**kwargs)
-        client.pool_threads = threads
-        client.update_clients()
+        client.set_threads(threads)
         user_api = client.user_api
         session = user_api.get_session(remember_me=True)
         token = session.token
@@ -119,8 +117,7 @@ def login(
     config.setup_configuration(**kwargs)
     config.save_configuration(config.default_config_file)
     config.logged_in = True
-    client.pool_threads = threads
-    client.update_clients()
+    client.set_threads(threads)
 
 
 def list_public_arrays(
@@ -375,148 +372,154 @@ def find_organization_or_user_for_default_charges(user):
     return namespace_to_charge
 
 
-class Client:
-    def update_clients(self):
-        self.array_api = self.__get_array_api()
-        self.organization_api = self.__get_organization_api()
-        self.sql_api = self.__get_sql_api()
-        self.tasks_api = self.__get_tasks_api()
-        self.udf_api = self.__get_udf_api()
-        self.user_api = self.__get_user_api()
-        self.notebook_api = self.__get_notebook_api()
+class RetryMode(enum.Enum):
+    DEFAULT = "default"
+    FORCEFUL = "forceful"
+    DISABLED = "disabled"
 
-    def __init__(self, pool_threads=os.cpu_count() * 2, retry_mode="default"):
+    def maybe_from(v: "RetryOrStr") -> "RetryMode":
+        if isinstance(v, RetryMode):
+            return v
+        return RetryMode(v)
+
+
+RetryOrStr = Union[RetryMode, str]
+
+
+_RETRY_CONFIGS = {
+    RetryMode.DEFAULT: urllib3.Retry(
+        total=10,
+        backoff_factor=0.25,
+        status_forcelist=[503],
+        allowed_methods=[
+            "HEAD",
+            "GET",
+            "PUT",
+            "DELETE",
+            "OPTIONS",
+            "TRACE",
+            "POST",
+            "PATCH",
+        ],
+        raise_on_status=False,
+        # Don't remove any headers on redirect
+        remove_headers_on_redirect=[],
+    ),
+    RetryMode.FORCEFUL: urllib3.Retry(
+        total=10,
+        backoff_factor=0.25,
+        status_forcelist=[400, 500, 501, 502, 503],
+        allowed_methods=[
+            "HEAD",
+            "GET",
+            "PUT",
+            "DELETE",
+            "OPTIONS",
+            "TRACE",
+            "POST",
+            "PATCH",
+        ],
+        raise_on_status=False,
+        # Don't remove any headers on redirect
+        remove_headers_on_redirect=[],
+    ),
+    RetryMode.DISABLED: False,
+}
+
+
+# Type of the callback function we pass the response UUID.
+IDCallback = Callable[[Optional[uuid.UUID]], Any]
+
+
+def send_udf_call(
+    api_func: Callable[..., urllib3.HTTPResponse],
+    api_kwargs: Dict[str, Any],
+    decoder: results.AbstractDecoder,
+    *,
+    id_callback: IDCallback,
+    store_results: bool,
+) -> results.Response:
+    """Sends an API request and returns the results in the form of a Response."""
+    try:
+        http_response = api_func(_preload_content=False, **api_kwargs)
+    except rest_api.ApiException as exc:
+        id_callback(results.extract_task_id(exc))
+        raise tiledb_cloud_error.check_exc(exc) from exc
+
+    task_id = results.extract_task_id(http_response)
+    id_callback(task_id)
+
+    try:
+        result = decoder.decode(http_response.data)
+    except ValueError as ve:
+        inner_msg = f": {ve.args[0]}" if ve.args else ""
+        raise tiledb_cloud_error.TileDBCloudError(
+            f"Error decoding response from TileDB Cloud{inner_msg}"
+        ) from ve
+
+    return results.Response(
+        result=result,
+        task_id=task_id,
+        store_results=store_results,
+    )
+
+
+class Client:
+    def __init__(
+        self,
+        pool_threads: Optional[int] = None,
+        retry_mode: RetryOrStr = RetryMode.DEFAULT,
+    ):
         """
 
         :param pool_threads: Number of threads to use for http requests
         :param retry_mode: Retry mode ["default", "forceful", "disabled"]
         """
-        self.pool_threads = pool_threads
+        self._pool_lock = threading.Lock()
+        self.set_threads(pool_threads)
         self.retry_mode(retry_mode)
-        self.update_clients()
 
     def set_disable_retries(self):
-        config.config.retries = False
-        self.update_clients()
+        self.retry_mode(RetryMode.DISABLED)
 
     def set_default_retries(self):
-        config.config.retries = Retry(
-            total=10,
-            backoff_factor=0.25,
-            status_forcelist=[503],
-            allowed_methods=[
-                "HEAD",
-                "GET",
-                "PUT",
-                "DELETE",
-                "OPTIONS",
-                "TRACE",
-                "POST",
-                "PATCH",
-            ],
-            raise_on_status=False,
-            # Don't remove any headers on redirect
-            remove_headers_on_redirect=[],
-        )
-        self.update_clients()
+        self.retry_mode(RetryMode.DEFAULT)
 
     def set_forceful_retries(self):
-        config.config.retries = Retry(
-            total=10,
-            backoff_factor=0.25,
-            status_forcelist=[400, 500, 501, 502, 503],
-            allowed_methods=[
-                "HEAD",
-                "GET",
-                "PUT",
-                "DELETE",
-                "OPTIONS",
-                "TRACE",
-                "POST",
-                "PATCH",
-            ],
-            raise_on_status=False,
-            # Don't remove any headers on redirect
-            remove_headers_on_redirect=[],
-        )
-        self.update_clients()
+        self.retry_mode(RetryMode.FORCEFUL)
 
-    def retry_mode(self, mode="default"):
-        """
+    def retry_mode(self, mode: RetryOrStr = RetryMode.DEFAULT):
+        """Sets how we should retry requests and updates API instances."""
+        mode = RetryMode.maybe_from(mode)
+        config.config.retries = _RETRY_CONFIGS[mode]
+        client = rest_api.ApiClient(config.config)
 
-        :param mode: Retry mode ["default", "forceful", "disabled"]
-        :return:
-        """
-        if mode == "default":
-            self.set_default_retries()
-        elif mode == "forceful":
-            self.set_forceful_retries()
-        elif mode == "disabled":
-            self.set_disable_retries()
-        else:
-            raise Exception(
-                f"unsupported retry mode {mode!r}. Valid options are default, forceful or disabled"
-            )
+        self.array_api = rest_api.ArrayApi(client)
+        self.notebook_api = rest_api.NotebookApi(client)
+        self.organization_api = rest_api.OrganizationApi(client)
+        self.sql_api = rest_api.SqlApi(client)
+        self.tasks_api = rest_api.TasksApi(client)
+        self.udf_api = rest_api.UdfApi(client)
+        self.user_api = rest_api.UserApi(client)
 
-        self.update_clients()
+    def set_threads(self, threads: Optional[int] = None):
+        """Updates the number of threads in the async thread pool."""
+        with self._pool_lock:
+            old_pool = getattr(self, "_thread_pool", None)
+            self._thread_pool = futures.ThreadPoolExecutor(threads)
+            if old_pool:
+                old_pool.shutdown()
 
-    def set_threads(self, threads=os.cpu_count() * 2):
-        """
-        Update thread pool sizes for async functionality
-        :param threads:
-        :return:
-        """
-        self.pool_threads = threads
-        self.update_clients()
-
-    def __get_array_api(self):
-        return rest_api.ArrayApi(
-            rest_api.ApiClient(
-                configuration=config.config, pool_threads=self.pool_threads
-            )
-        )
-
-    def __get_user_api(self):
-        return rest_api.UserApi(
-            rest_api.ApiClient(
-                configuration=config.config, pool_threads=self.pool_threads
-            )
-        )
-
-    def __get_organization_api(self):
-        return rest_api.OrganizationApi(
-            rest_api.ApiClient(
-                configuration=config.config, pool_threads=self.pool_threads
-            )
-        )
-
-    def __get_udf_api(self):
-        return rest_api.UdfApi(
-            rest_api.ApiClient(
-                configuration=config.config, pool_threads=self.pool_threads
-            )
-        )
-
-    def __get_tasks_api(self):
-        return rest_api.TasksApi(
-            rest_api.ApiClient(
-                configuration=config.config, pool_threads=self.pool_threads
-            )
-        )
-
-    def __get_sql_api(self):
-        return rest_api.SqlApi(
-            rest_api.ApiClient(
-                configuration=config.config, pool_threads=self.pool_threads
-            )
-        )
-
-    def __get_notebook_api(self):
-        return rest_api.NotebookApi(
-            rest_api.ApiClient(
-                configuration=config.config, pool_threads=self.pool_threads
-            )
-        )
+    def wrap_async_base_call(
+        self,
+        func: Callable[..., results.Response],
+        *args: Any,
+        **kwargs: Any,
+    ) -> results.AsyncResponse:
+        """Makes a call to some `whatever_base` UDF call asynchronous."""
+        with self._pool_lock:
+            ft = self._thread_pool.submit(func, *args, **kwargs)
+        return results.AsyncResponse(ft)
 
 
 client = Client()
