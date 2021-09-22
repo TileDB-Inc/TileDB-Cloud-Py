@@ -1,7 +1,8 @@
 import base64
 import sys
+import uuid
 import warnings
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Iterable, Optional, Union
 
 import cloudpickle
 
@@ -30,8 +31,9 @@ def exec_base(
     result_format: str = models.ResultFormat.NATIVE,
     result_format_version=None,
     store_results: bool = False,
+    stored_param_uuids: Iterable[uuid.UUID] = (),
     **kwargs,
-) -> results.Response:
+) -> "results.RemoteResult":
     """Run a user defined function, returning the result and metadata.
 
     :param func: The function to call, either as a callable function, or as
@@ -100,6 +102,7 @@ def exec_base(
         ),
         image_name=image_name,
         task_name=task_name,
+        stored_param_uuids=list(str(uuid) for uuid in stored_param_uuids),
     )
 
     if callable(user_func):
@@ -132,7 +135,7 @@ def exec(*args, **kwargs) -> Any:
 
     Arguments are exactly as in :func:`exec_base`.
     """
-    return exec_base(*args, **kwargs).decode()
+    return exec_base(*args, **kwargs).get()
 
 
 @utils.signature_of(exec_base)

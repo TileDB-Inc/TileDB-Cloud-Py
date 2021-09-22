@@ -3,13 +3,15 @@
 import base64
 import dataclasses
 import uuid
-from typing import Any, Dict
+from typing import Any, Dict, Generic, TypeVar
 
-from tiledb.cloud import results
+from tiledb.cloud import decoders
+
+_T = TypeVar("_T")
 
 
 @dataclasses.dataclass(frozen=True)
-class StoredParam:
+class StoredParam(Generic[_T]):
     """The information needed to identify and decode a stored parameter.
 
     This type is used as a sentinel for stored params in Python UDF parameters.
@@ -23,9 +25,9 @@ class StoredParam:
     task_id: uuid.UUID
 
     # The Decoder that will be used to turn the bytes into a useful value.
-    decoder: results.AbstractDecoder
+    decoder: decoders.AbstractDecoder[_T]
 
-    def decode(self, binary_data: bytes) -> Any:
+    def decode(self, binary_data: bytes) -> _T:
         return self.decoder.decode(binary_data)
 
 

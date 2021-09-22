@@ -5,7 +5,7 @@ from tiledb.cloud import utils
 
 class CloudArray(object):
     @utils.signature_of(array.apply_async)
-    def apply_async(self, *args, **kwargs) -> results.AsyncResponse:
+    def apply_async(self, *args, **kwargs) -> results.AsyncResult:
         """
         Apply a user-defined function to this array, asynchronously.
 
