@@ -523,7 +523,7 @@ def apply(*args, **kwargs) -> Any:
     >>> tiledb.cloud.array.apply("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"])
     2.0
     """
-    return apply_base(*args, **kwargs).result
+    return apply_base(*args, **kwargs).decode()
 
 
 def apply_async(*args, **kwargs) -> results.AsyncResponse:
@@ -656,7 +656,7 @@ def exec_multi_array_udf(*args, **kwargs) -> Any:
 
     All arguments are exactly as in :func:`exec_multi_array_udf_base`.
     """
-    return exec_multi_array_udf_base(*args, **kwargs).result
+    return exec_multi_array_udf_base(*args, **kwargs).decode()
 
 
 @utils.signature_of(exec_multi_array_udf_base)
