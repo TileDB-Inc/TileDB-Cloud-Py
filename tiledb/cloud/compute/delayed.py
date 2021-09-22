@@ -117,16 +117,7 @@ class Delayed(DelayedBase):
         else:
             self.args = args
         self.kwargs.update(kwargs)
-
-        # Loop through non-default parameters and find any Node objects
-        # Node objects will be used to automatically add dependencies
-        if self.args is not None:
-            super()._build_dependencies_list(self.args)
-
-        # Loop through defaulted named parameters and find any Node objects
-        # Node objects will be used to automatically add dependencies
-        if self.kwargs is not None:
-            super()._build_dependencies_list(self.kwargs)
+        self._find_deps()
 
         # Set name of task if it won't interfere with user args
         if not self.local_mode:
@@ -180,15 +171,7 @@ class DelayedArrayUDF(DelayedBase):
     def __call__(self, *args, **kwargs):
         self.args = [self.uri, self.func_exec, *args]
         self.kwargs.update(kwargs)
-        # Loop through non-default parameters and find any Node objects
-        # Node objects will be used to automatically add dependencies
-        if self.args is not None:
-            super()._build_dependencies_list(self.args)
-
-        # Loop through defaulted named parameters and find any Node objects
-        # Node objects will be used to automatically add dependencies
-        if self.kwargs is not None:
-            super()._build_dependencies_list(self.kwargs)
+        self._find_deps()
 
         # Set name of task if it won't interfere with user args
         if "task_name" not in self.kwargs:
