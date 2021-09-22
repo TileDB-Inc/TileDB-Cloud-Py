@@ -98,13 +98,13 @@ echo
 echo "Output copied from '${TEMP_PATH}' to '${TARGET_PATH}/${PACKAGE_NAME}'"
 
 for command in isort black; do
-  if ! [ -x "$(command -v "${command}")"]; then
+  if ! [[ -x "$(command -v "${command}")" ]]; then
     echo "${command} is not installed." >&2
     echo 'Before sending a review request, run:' >&2
     echo "  $ pip install ${command}" >&2
     echo "  $ ${command} ${ROOT}" >&2
     echo 'to ensure your files are correctly formatted.' >&2
   else
-    "${command}" .
+    "${command}" "${ROOT}"
   fi
 done
