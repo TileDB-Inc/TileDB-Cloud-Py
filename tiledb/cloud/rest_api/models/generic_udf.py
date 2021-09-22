@@ -40,8 +40,8 @@ class GenericUDF(object):
         "_exec": "str",
         "exec_raw": "str",
         "argument": "str",
+        "stored_param_uuids": "list[str]",
         "result_format": "ResultFormat",
-        "result_format_version": "str",
         "task_name": "str",
         "store_results": "bool",
     }
@@ -54,8 +54,8 @@ class GenericUDF(object):
         "_exec": "exec",
         "exec_raw": "exec_raw",
         "argument": "argument",
+        "stored_param_uuids": "stored_param_uuids",
         "result_format": "result_format",
-        "result_format_version": "result_format_version",
         "task_name": "task_name",
         "store_results": "store_results",
     }
@@ -69,8 +69,8 @@ class GenericUDF(object):
         _exec=None,
         exec_raw=None,
         argument=None,
+        stored_param_uuids=None,
         result_format=None,
-        result_format_version=None,
         task_name=None,
         store_results=None,
         local_vars_configuration=None,
@@ -87,8 +87,8 @@ class GenericUDF(object):
         self.__exec = None
         self._exec_raw = None
         self._argument = None
+        self._stored_param_uuids = None
         self._result_format = None
-        self._result_format_version = None
         self._task_name = None
         self._store_results = None
         self.discriminator = None
@@ -107,10 +107,10 @@ class GenericUDF(object):
             self.exec_raw = exec_raw
         if argument is not None:
             self.argument = argument
+        if stored_param_uuids is not None:
+            self.stored_param_uuids = stored_param_uuids
         if result_format is not None:
             self.result_format = result_format
-        if result_format_version is not None:
-            self.result_format_version = result_format_version
         if task_name is not None:
             self.task_name = task_name
         if store_results is not None:
@@ -276,6 +276,29 @@ class GenericUDF(object):
         self._argument = argument
 
     @property
+    def stored_param_uuids(self):
+        """Gets the stored_param_uuids of this GenericUDF.  # noqa: E501
+
+        The UUIDs of stored input parameters (passed in a language-specific format within \"argument\") to be retrieved from the server-side cache. Serialized in standard hex format with no {}.  # noqa: E501
+
+        :return: The stored_param_uuids of this GenericUDF.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._stored_param_uuids
+
+    @stored_param_uuids.setter
+    def stored_param_uuids(self, stored_param_uuids):
+        """Sets the stored_param_uuids of this GenericUDF.
+
+        The UUIDs of stored input parameters (passed in a language-specific format within \"argument\") to be retrieved from the server-side cache. Serialized in standard hex format with no {}.  # noqa: E501
+
+        :param stored_param_uuids: The stored_param_uuids of this GenericUDF.  # noqa: E501
+        :type: list[str]
+        """
+
+        self._stored_param_uuids = stored_param_uuids
+
+    @property
     def result_format(self):
         """Gets the result_format of this GenericUDF.  # noqa: E501
 
@@ -295,29 +318,6 @@ class GenericUDF(object):
         """
 
         self._result_format = result_format
-
-    @property
-    def result_format_version(self):
-        """Gets the result_format_version of this GenericUDF.  # noqa: E501
-
-        string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison  # noqa: E501
-
-        :return: The result_format_version of this GenericUDF.  # noqa: E501
-        :rtype: str
-        """
-        return self._result_format_version
-
-    @result_format_version.setter
-    def result_format_version(self, result_format_version):
-        """Sets the result_format_version of this GenericUDF.
-
-        string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison  # noqa: E501
-
-        :param result_format_version: The result_format_version of this GenericUDF.  # noqa: E501
-        :type: str
-        """
-
-        self._result_format_version = result_format_version
 
     @property
     def task_name(self):

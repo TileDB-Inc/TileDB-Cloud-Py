@@ -1,5 +1,6 @@
 import inspect
 import time
+import warnings
 
 import tiledb
 from tiledb.cloud import array
@@ -58,10 +59,13 @@ def exec_async(
     :param list init_commands: optional list of sql queries or commands to run before main query
     :param list parameters: optional list of sql parameters for use in query
     :param UDFResultType result_format: result serialization format
-    :param str result_format_version: set a format version for cloudpickle or arrow IPC
+    :param str result_format_version: Deprecated and ignored.
 
     :return: A SQLResult object which is a future for a pandas dataframe if no output array is given and query returns results
     """
+
+    if result_format_version:
+        warnings.warn(DeprecationWarning("result_format_version is unused."))
 
     # Make sure the output_uri is remote array
     if not output_uri is None:
@@ -124,7 +128,6 @@ def exec_async(
                 init_commands=init_commands,
                 parameters=parameters,
                 result_format=result_format,
-                result_format_version=result_format_version,
             ),
             **kwargs
         )

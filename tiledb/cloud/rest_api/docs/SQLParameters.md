@@ -9,7 +9,6 @@ Name | Type | Description | Notes
 **output_uri** | **str** | Output array uri | [optional] 
 **store_results** | **bool** | store results for later retrieval | [optional] 
 **result_format** | [**ResultFormat**](ResultFormat.md) |  | [optional] 
-**result_format_version** | **str** | string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verisonn | [optional] 
 **init_commands** | **list[str]** | Queries or commands to run before main query | [optional] 
 **parameters** | **list[object]** | SQL query parameters | [optional] 
 
