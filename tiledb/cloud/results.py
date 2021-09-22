@@ -20,16 +20,34 @@ from tiledb.cloud.rest_api import models
 TASK_ID_HEADER = "X-TILEDB-CLOUD-TASK-ID"
 
 
+class AbstractDecoder(metaclass=abc.ABCMeta):
+    @abc.abstractmethod
+    def decode(self, data: bytes) -> Any:
+        raise NotImplementedError()
+
+
 # Not frozen to avoid generating unsafe methods like `__hash__`,
 # but you should still *treat* it like it's frozen.
 @dataclasses.dataclass()
 class Response:
     """A response from running a UDF."""
 
-    # The result that was returned.
-    result: Any
+    def decode(self) -> Any:
+        try:
+            return self.decoder.decode(self.body)
+        except ValueError as ve:
+            inner_msg = f": {ve.args[0]}" if ve.args else ""
+            raise tce.TileDBCloudError(
+                f"Error decoding response from TileDB Cloud{inner_msg}"
+            ) from ve
+
+
+    # The HTTP content of the body that was returned.
+    body: bytes
     # The server-generated UUID of the task.
     task_id: Optional[uuid.UUID]
+    # The decoder that was used to decode the results.
+    decoder: AbstractDecoder
     # True if the results were stored, false otherwise.
     results_stored: bool
 
@@ -46,7 +64,7 @@ class AsyncResponse:
 
     def get(self, timeout: Optional[float] = None) -> Any:
         """Gets the result from this response, with Future's timeout rules."""
-        return self._future.result(timeout).result
+        return self._future.result(timeout).decode()
 
     @property
     def task_id(self):
@@ -66,12 +84,6 @@ class AsyncResponse:
         else:
             with self._id_lock:
                 self._task_id = res.task_id
-
-
-class AbstractDecoder(metaclass=abc.ABCMeta):
-    @abc.abstractmethod
-    def decode(self, data: bytes) -> Any:
-        raise NotImplementedError()
 
 
 def _load_arrow(data: bytes):

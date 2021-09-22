@@ -132,7 +132,7 @@ def exec(*args, **kwargs) -> Any:
 
     Arguments are exactly as in :func:`exec_base`.
     """
-    return exec_base(*args, **kwargs).result
+    return exec_base(*args, **kwargs).decode()
 
 
 @utils.signature_of(exec_base)

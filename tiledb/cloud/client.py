@@ -477,16 +477,9 @@ def send_udf_call(
     if id_callback:
         id_callback(task_id)
 
-    try:
-        result = decoder.decode(http_response.data)
-    except ValueError as ve:
-        inner_msg = f": {ve.args[0]}" if ve.args else ""
-        raise tiledb_cloud_error.TileDBCloudError(
-            f"Error decoding response from TileDB Cloud{inner_msg}"
-        ) from ve
-
     return results.Response(
-        result=result,
+        body=http_response.data,
+        decoder=decoder,
         task_id=task_id,
         results_stored=results_stored,
     )
