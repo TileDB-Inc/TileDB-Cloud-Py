@@ -11,8 +11,8 @@ Name | Type | Description | Notes
 **_exec** | **str** | Type-specific executable text | [optional] 
 **exec_raw** | **str** | optional raw text to store of serialized function, used for showing in UI | [optional] 
 **argument** | **str** | Argument(s) to pass to udf function, tuple or list of args/kwargs which can be in native or json format | [optional] 
+**stored_param_uuids** | **list[str]** | The UUIDs of stored input parameters (passed in a language-specific format within \&quot;argument\&quot;) to be retrieved from the server-side cache. Serialized in standard hex format with no {}. | [optional] 
 **result_format** | [**ResultFormat**](ResultFormat.md) |  | [optional] 
-**result_format_version** | **str** | string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verison | [optional] 
 **task_name** | **str** | name of task, optional | [optional] 
 **store_results** | **bool** | store results for later retrieval | [optional] 
 

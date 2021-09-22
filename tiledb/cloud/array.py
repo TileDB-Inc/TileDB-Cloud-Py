@@ -462,8 +462,7 @@ def apply_async(
         for logging and audit purposes
     :param bool v2: use v2 array udfs
     :param ResultFormat result_format: result serialization format
-    :param str result_format_version: set a format version
-        for cloudpickle or arrow IPC
+    :param result_format_version: Deprecated and ignored.
     :param kwargs: named arguments to pass to function
     :return: UDFResult, a future containing the results of the UDF
 
@@ -475,6 +474,9 @@ def apply_async(
     >>> tiledb.cloud.array.apply_async("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"]).get()
     2.0
     """
+
+    if result_format_version:
+        warnings.warn(DeprecationWarning("result_format_version is unused."))
 
     (namespace, array_name) = split_uri(uri)
     api_instance = client.client.udf_api
@@ -517,7 +519,6 @@ def apply_async(
         image_name=image_name,
         task_name=task_name,
         result_format=result_format,
-        result_format_version=result_format_version,
     )
 
     if callable(user_func):
@@ -593,14 +594,13 @@ def exec_multi_array_udf_async(
     :param array_list: The list of arrays to run the function on,
         as an already-built ArrayList object.
     :param namespace: namespace to run udf under
-    :param layout: (unused)
+    :param layout: Ignored.
     :param image_name: udf image name to use, useful for testing beta features
     :param http_compressor: set http compressor for results
     :param str task_name: optional name to assign the task
         for logging and audit purposes
     :param ResultFormat result_format: result serialization format
-    :param str result_format_version: set a format version
-        for cloudpickle or arrow IPC
+    :param str result_format_version: Deprecated and ignored.
     :param kwargs: named arguments to pass to function
     :return: A future containing the results of the UDF.
     >>> import numpy as np
@@ -617,7 +617,10 @@ def exec_multi_array_udf_async(
     >>> res = array.exec_multi_array_udf(median, array_list, namespace)
     >>> print("Median Multi UDF:\n{}\n".format(res))
     """
-    del layout  # unused
+    if layout:
+        warnings.warn(DeprecationWarning("layout is unused."))
+    if result_format_version:
+        warnings.warn(DeprecationWarning("result_format_version is unused."))
 
     api_instance = client.client.udf_api
 
@@ -652,7 +655,6 @@ def exec_multi_array_udf_async(
         image_name=image_name,
         task_name=task_name,
         result_format=result_format,
-        result_format_version=result_format_version,
     )
 
     if callable(user_func):

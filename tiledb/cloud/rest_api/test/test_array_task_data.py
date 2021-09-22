@@ -140,7 +140,6 @@ class TestArrayTaskData(unittest.TestCase):
                         sql_init_commands=["0"],
                         sql_parameters=[None],
                         result_format="native",
-                        result_format_version="0",
                     )
                 ],
                 pagination_metadata=tiledb.cloud.rest_api.models.pagination_metadata.PaginationMetadata(

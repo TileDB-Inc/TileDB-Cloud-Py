@@ -42,7 +42,6 @@ class TestSQLParameters(unittest.TestCase):
                 output_uri="s3://my_bucket/my_output_array",
                 store_results=True,
                 result_format="native",
-                result_format_version="0",
                 init_commands=["0"],
                 parameters=[None],
             )

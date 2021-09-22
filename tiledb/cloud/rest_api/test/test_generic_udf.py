@@ -44,8 +44,8 @@ class TestGenericUDF(unittest.TestCase):
                 _exec="0",
                 exec_raw="0",
                 argument="0",
+                stored_param_uuids=["229f38c4-ba89-43d6-ab88-bae3bcca7969"],
                 result_format="native",
-                result_format_version="0",
                 task_name="0",
                 store_results=True,
             )

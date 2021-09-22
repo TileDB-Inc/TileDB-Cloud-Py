@@ -38,7 +38,6 @@ class SQLParameters(object):
         "output_uri": "str",
         "store_results": "bool",
         "result_format": "ResultFormat",
-        "result_format_version": "str",
         "init_commands": "list[str]",
         "parameters": "list[object]",
     }
@@ -49,7 +48,6 @@ class SQLParameters(object):
         "output_uri": "output_uri",
         "store_results": "store_results",
         "result_format": "result_format",
-        "result_format_version": "result_format_version",
         "init_commands": "init_commands",
         "parameters": "parameters",
     }
@@ -61,7 +59,6 @@ class SQLParameters(object):
         output_uri=None,
         store_results=None,
         result_format=None,
-        result_format_version=None,
         init_commands=None,
         parameters=None,
         local_vars_configuration=None,
@@ -76,7 +73,6 @@ class SQLParameters(object):
         self._output_uri = None
         self._store_results = None
         self._result_format = None
-        self._result_format_version = None
         self._init_commands = None
         self._parameters = None
         self.discriminator = None
@@ -91,8 +87,6 @@ class SQLParameters(object):
             self.store_results = store_results
         if result_format is not None:
             self.result_format = result_format
-        if result_format_version is not None:
-            self.result_format_version = result_format_version
         if init_commands is not None:
             self.init_commands = init_commands
         if parameters is not None:
@@ -210,29 +204,6 @@ class SQLParameters(object):
         """
 
         self._result_format = result_format
-
-    @property
-    def result_format_version(self):
-        """Gets the result_format_version of this SQLParameters.  # noqa: E501
-
-        string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verisonn  # noqa: E501
-
-        :return: The result_format_version of this SQLParameters.  # noqa: E501
-        :rtype: str
-        """
-        return self._result_format_version
-
-    @result_format_version.setter
-    def result_format_version(self, result_format_version):
-        """Sets the result_format_version of this SQLParameters.
-
-        string representing the serialization format to use, i.e. cloudpickle version or arrow IPC verisonn  # noqa: E501
-
-        :param result_format_version: The result_format_version of this SQLParameters.  # noqa: E501
-        :type: str
-        """
-
-        self._result_format_version = result_format_version
 
     @property
     def init_commands(self):

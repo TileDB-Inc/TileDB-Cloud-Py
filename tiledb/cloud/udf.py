@@ -48,11 +48,13 @@ def exec_async(
     :param str task_name: optional name to assign the task
         for logging and audit purposes
     :param ResultFormat result_format: result serialization format
-    :param str result_format_version: set a format version
-        for cloudpickle or arrow IPC
+    :param str result_format_version: Deprecated and ignored.
     :param kwargs: named arguments to pass to function
     :return: UDFResult, a future containing the results of the UDF
     """
+
+    if result_format_version:
+        warnings.warn(DeprecationWarning("result_format_version is unused."))
 
     api_instance = client.client.udf_api
 
@@ -87,7 +89,6 @@ def exec_async(
     udf_model = models.GenericUDF(
         language=models.UDFLanguage.PYTHON,
         result_format=result_format,
-        result_format_version=result_format_version,
         version="{}.{}.{}".format(
             sys.version_info.major,
             sys.version_info.minor,
