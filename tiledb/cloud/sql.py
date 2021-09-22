@@ -123,7 +123,7 @@ def exec_base(
         kwargs,
         decoder,
         id_callback=_maybe_set_last_task_id,
-        store_results=store_results,
+        results_stored=store_results,
     )
 
 

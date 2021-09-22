@@ -31,7 +31,7 @@ class Response:
     # The server-generated UUID of the task.
     task_id: Optional[uuid.UUID]
     # True if the results were stored, false otherwise.
-    store_results: bool
+    results_stored: bool
 
 
 class AsyncResponse:

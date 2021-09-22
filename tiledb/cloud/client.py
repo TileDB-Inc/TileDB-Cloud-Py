@@ -435,19 +435,47 @@ def send_udf_call(
     api_func: Callable[..., urllib3.HTTPResponse],
     api_kwargs: Dict[str, Any],
     decoder: results.AbstractDecoder,
+    id_callback: Optional[IDCallback] = None,
     *,
-    id_callback: IDCallback,
-    store_results: bool,
+    results_stored: bool,
 ) -> results.Response:
-    """Sends an API request and returns the results in the form of a Response."""
+    """Synchronously sends a request to the given API.
+
+    This handles the boilerplate parts (exception handling, parsing, response
+    construction) of calling one of the generated API functions for UDFs.
+    It runs synchronously and will return a :class:`results.Response`.
+    To run the same function asychronously, use
+    :meth:`Client.wrap_async_base_call` around the function that calls this
+    (by convention, the ``whatever_api_base`` functions).
+
+    This should only be used by callers *inside* this package.
+
+    :param api_func: The UDF API function that we want to call from here.
+        For instance, this might be :meth:`rest_api.SqlApi.run_sql`.
+    :param api_kwargs: The arguments to pass to the API function as a dict.
+        This should only include the parameters you want to send to the server,
+        *not* any of the “meta” parameters that are mixed in with them (e.g.
+        ``_preload_content``; this function will correctly set up the request).
+    :param decoder: The Decoder to use to decode the response.
+    :param id_callback: When the request completes (either by success or
+        failure), this will be called with the UUID from the HTTP response,
+        or None if the UUID could not be parsed.
+    :param results_stored: A boolean indicating whether the results were stored.
+        This does *not affect* the request; the ``store_results`` parameter of
+        whatever API message the call uses must be set, and this must match
+        that value.
+    :return: A response containing the parsed result and metadata about it.
+    """
     try:
         http_response = api_func(_preload_content=False, **api_kwargs)
     except rest_api.ApiException as exc:
-        id_callback(results.extract_task_id(exc))
-        raise tiledb_cloud_error.check_exc(exc) from exc
+        if id_callback:
+            id_callback(results.extract_task_id(exc))
+        raise tiledb_cloud_error.check_exc(exc) from None
 
     task_id = results.extract_task_id(http_response)
-    id_callback(task_id)
+    if id_callback:
+        id_callback(task_id)
 
     try:
         result = decoder.decode(http_response.data)
@@ -460,7 +488,7 @@ def send_udf_call(
     return results.Response(
         result=result,
         task_id=task_id,
-        store_results=store_results,
+        results_stored=results_stored,
     )
 
 
@@ -506,9 +534,11 @@ class Client:
         """Updates the number of threads in the async thread pool."""
         with self._pool_lock:
             old_pool = getattr(self, "_thread_pool", None)
-            self._thread_pool = futures.ThreadPoolExecutor(threads)
+            self._thread_pool = futures.ThreadPoolExecutor(
+                threads, thread_name_prefix="tiledb-async-"
+            )
             if old_pool:
-                old_pool.shutdown()
+                old_pool.shutdown(wait=False)
 
     def wrap_async_base_call(
         self,

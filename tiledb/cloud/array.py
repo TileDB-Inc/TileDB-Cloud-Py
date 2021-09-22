@@ -502,7 +502,7 @@ def apply_base(
         submit_kwargs,
         results.Decoder(result_format),
         id_callback=_maybe_set_last_udf_id,
-        store_results=store_results,
+        results_stored=store_results,
     )
 
 
@@ -646,7 +646,7 @@ def exec_multi_array_udf_base(
         submit_kwargs,
         results.Decoder(result_format),
         id_callback=_maybe_set_last_udf_id,
-        store_results=store_results,
+        results_stored=store_results,
     )
 
 
