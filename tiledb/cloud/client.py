@@ -3,16 +3,19 @@ import threading
 import urllib.parse
 import uuid
 from concurrent import futures
-from typing import Any, Callable, Dict, Optional, Sequence, Union
+from typing import Any, Callable, Dict, Optional, Sequence, TypeVar, Union
 
 import urllib3
 
 import tiledb
 from tiledb.cloud import config
+from tiledb.cloud import decoders
 from tiledb.cloud import rest_api
 from tiledb.cloud import results
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud.rest_api import ApiException as GenApiException
+
+_T = TypeVar("_T")
 
 
 def Config(cfg_dict=None):
@@ -434,16 +437,16 @@ IDCallback = Callable[[Optional[uuid.UUID]], Any]
 def send_udf_call(
     api_func: Callable[..., urllib3.HTTPResponse],
     api_kwargs: Dict[str, Any],
-    decoder: results.AbstractDecoder,
+    decoder: decoders.AbstractDecoder,
     id_callback: Optional[IDCallback] = None,
     *,
     results_stored: bool,
-) -> results.Response:
+) -> "results.RemoteResult[_T]":
     """Synchronously sends a request to the given API.
 
     This handles the boilerplate parts (exception handling, parsing, response
     construction) of calling one of the generated API functions for UDFs.
-    It runs synchronously and will return a :class:`results.Response`.
+    It runs synchronously and will return a :class:`results.RemoteResult`.
     To run the same function asychronously, use
     :meth:`Client.wrap_async_base_call` around the function that calls this
     (by convention, the ``whatever_api_base`` functions).
@@ -477,7 +480,7 @@ def send_udf_call(
     if id_callback:
         id_callback(task_id)
 
-    return results.Response(
+    return results.RemoteResult(
         body=http_response.data,
         decoder=decoder,
         task_id=task_id,
@@ -535,14 +538,15 @@ class Client:
 
     def wrap_async_base_call(
         self,
-        func: Callable[..., results.Response],
+        func: Callable[..., results.RemoteResult[_T]],
         *args: Any,
         **kwargs: Any,
-    ) -> results.AsyncResponse:
+    ) -> results.AsyncResult:
         """Makes a call to some `whatever_base` UDF call asynchronous."""
         with self._pool_lock:
             ft = self._thread_pool.submit(func, *args, **kwargs)
-        return results.AsyncResponse(ft)
+        # Futures are not yet listed as covariant types.
+        return results.AsyncResult(ft)  # type: ignore[arg-type]
 
 
 client = Client()

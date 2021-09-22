@@ -2,7 +2,7 @@ import sys
 import urllib
 import uuid
 import warnings
-from typing import Any, Callable, Optional, Sequence, Union
+from typing import Any, Callable, Iterable, Optional, Sequence, Union
 
 import numpy
 
@@ -394,8 +394,9 @@ def apply_base(
     result_format: str = models.ResultFormat.NATIVE,
     result_format_version=None,
     store_results: bool = False,
+    stored_param_uuids: Iterable[uuid.UUID] = (),
     **kwargs: Any,
-) -> results.Response:
+) -> results.RemoteResult:
     """Apply a user-defined function to an array, and return data and metadata.
 
     :param uri: The ``tiledb://...`` URI of the array to apply the function to.
@@ -475,6 +476,7 @@ def apply_base(
         task_name=task_name,
         result_format=result_format,
         store_results=store_results,
+        stored_param_uuids=list(str(uuid) for uuid in stored_param_uuids),
     )
 
     if callable(user_func):
@@ -523,10 +525,10 @@ def apply(*args, **kwargs) -> Any:
     >>> tiledb.cloud.array.apply("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"])
     2.0
     """
-    return apply_base(*args, **kwargs).decode()
+    return apply_base(*args, **kwargs).get()
 
 
-def apply_async(*args, **kwargs) -> results.AsyncResponse:
+def apply_async(*args, **kwargs) -> results.AsyncResult:
     """Apply a user-defined function to an array, asynchronously.
 
     All arguments are exactly as in :func:`apply_base`, but this returns
@@ -548,8 +550,9 @@ def exec_multi_array_udf_base(
     result_format: str = models.ResultFormat.NATIVE,
     result_format_version=None,
     store_results: bool = False,
+    stored_param_uuids: Iterable[uuid.UUID] = (),
     **kwargs,
-) -> results.Response:
+) -> results.RemoteResult:
     """
     Apply a user defined function to multiple arrays.
 
@@ -622,6 +625,7 @@ def exec_multi_array_udf_base(
         task_name=task_name,
         result_format=result_format,
         store_results=store_results,
+        stored_param_uuids=list(str(uuid) for uuid in stored_param_uuids),
     )
 
     if callable(user_func):
@@ -656,11 +660,11 @@ def exec_multi_array_udf(*args, **kwargs) -> Any:
 
     All arguments are exactly as in :func:`exec_multi_array_udf_base`.
     """
-    return exec_multi_array_udf_base(*args, **kwargs).decode()
+    return exec_multi_array_udf_base(*args, **kwargs).get()
 
 
 @utils.signature_of(exec_multi_array_udf_base)
-def exec_multi_array_udf_async(*args, **kwargs) -> results.AsyncResponse:
+def exec_multi_array_udf_async(*args, **kwargs) -> results.AsyncResult:
     """Apply a user-defined function to multiple arrays, asynchronously.
 
     All arguments are exactly as in :func:`exec_multi_array_udf_base`.

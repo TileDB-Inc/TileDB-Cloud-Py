@@ -1,12 +1,14 @@
 import base64
 import collections
 import collections.abc as cabc
+import operator
 import os
 import pickle
 import threading
 import time
 import unittest
 import uuid
+from typing import Any
 
 import cloudpickle
 import numpy as np
@@ -155,6 +157,26 @@ class DAGClassTest(unittest.TestCase):
         end_results = d.end_results_by_name()
         self.assertEqual(1, len(end_results))
         self.assertEqual(node_6.result(), end_results[node_6.name])
+
+    def test_sql_node_input(self):
+        import numpy
+
+        d = dag.DAG()
+        arr_node = d.submit_array_udf(
+            "tiledb://TileDB-Inc/quickstart_dense",
+            lambda x: int(numpy.sum(x["a"])),
+            ranges=[[1, slice(2, 4)], None],
+        )
+        sql_node = d.submit_sql("select 2 * ? as doubleit", parameters=(arr_node,))
+
+        def both(a: int, b: Any):
+            return f"{a} and {int(b['doubleit'])}"
+
+        join_node = d.submit_udf(both, arr_node, sql_node)
+
+        d.compute()
+        d.wait(30)
+        self.assertEqual("136 and 272", join_node.result())
 
     def test_concurrency(self):
         task_count = 5

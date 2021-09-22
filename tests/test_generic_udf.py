@@ -1,11 +1,17 @@
 import os
+import sys
 import unittest
 
 import numpy as np
+import urllib3
 
 import tiledb.cloud
+from tiledb.cloud import client
+from tiledb.cloud import config
 from tiledb.cloud import testonly
 from tiledb.cloud import udf
+from tiledb.cloud import utils
+from tiledb.cloud.rest_api import models
 
 tiledb.cloud.login(
     token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
@@ -56,3 +62,58 @@ class GenericUDFTest(unittest.TestCase):
         with testonly.register_udf(show) as udf_name:
             got = udf.exec(udf_name, 1, 2, 3, easy_as="abc")
         self.assertEqual(got, "called with (1, 2, 3) {'easy_as': 'abc'}")
+
+    def test_stored_results_manually(self):
+        def show(*args, **kwargs):
+            """Function created to call by name in unit tests."""
+            return f"called with {args!r} {kwargs!r}"
+
+        with testonly.register_udf(show) as udf_name:
+            first = udf.exec_base(
+                udf_name,
+                1,
+                store_results=True,
+            )
+            second = udf.exec_base(
+                udf_name,
+                param="two",
+                result_format=models.ResultFormat.JSON,
+                store_results=True,
+            )
+
+            params = (
+                # args.
+                (first.to_stored_param(),),
+                # kwargs.
+                dict(named=second.to_stored_param(), basic="three"),
+            )
+            pickled = utils.b64_pickle(params)
+
+            udf_req = models.GenericUDF(
+                language=models.UDFLanguage.PYTHON,
+                result_format=models.ResultFormat.JSON,
+                version="{}.{}.{}".format(
+                    sys.version_info.major,
+                    sys.version_info.minor,
+                    sys.version_info.micro,
+                ),
+                image_name="default",
+                udf_info_name=udf_name,
+                argument=pickled,
+                stored_param_uuids=[str(x.task_id) for x in (first, second)],
+            )
+
+            namespace = client.find_organization_or_user_for_default_charges(
+                config.user
+            )
+
+            response: urllib3.HTTPResponse = client.client.udf_api.submit_generic_udf(
+                udf=udf_req,
+                namespace=namespace,
+                _preload_content=False,
+            )
+            self.assertEqual(200, response.status)
+            self.assertEqual(
+                rb'''"called with ('called with (1,) {}',) {'named': \"called with () {'param': 'two'}\", 'basic': 'three'}"''',  # noqa: E501
+                response.data,
+            )

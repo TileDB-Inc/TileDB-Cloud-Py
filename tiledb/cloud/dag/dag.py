@@ -3,11 +3,23 @@ import numbers
 import time
 import uuid
 from concurrent import futures
-from typing import Any, Dict, Optional, Tuple
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    FrozenSet,
+    Generic,
+    Optional,
+    Set,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 import networkx as nx
 
 from tiledb.cloud import array
+from tiledb.cloud import results
 from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud import udf
@@ -17,37 +29,74 @@ from tiledb.cloud.dag import stored_params
 from tiledb.cloud.dag import visualization as viz
 
 Status = st.Status  # Re-export for compabitility.
+_T = TypeVar("_T")
+# Special string included in server errors when there is a problem loading
+# stored parameters.
+_RETRY_MSG = "RETRY_WITH_PARAMS"
 
 
-class Node:
-    def __init__(self, func, *args, name=None, dag=None, local_mode=False, **kwargs):
+class Node(Generic[_T]):
+    def __init__(
+        self,
+        func: Callable[..., _T],
+        *args: Any,
+        _prewrapped_func: Callable[..., "results.Result[_T]"] = None,
+        _accepts_stored_params: bool = True,
+        name: Optional[str] = None,
+        dag: Optional["DAG"] = None,
+        local_mode: bool = False,
+        **kwargs,
+    ):
         """
         Node is a class that represents a function to run in a DAG
         :param func: function to run
         :param args: tuple of arguments to run
+        :param _prewrapped_func: For internal use only. A function that returns
+            something that is already a Result, which does not require wrapping.
+        :param _accepts_stored_params: For internal use only.
+            Applies only when ``_prewrapped_func`` is used.
+            ``True`` if ``_prewrapped_func`` can accept stored parameters.
+            ``False`` if it cannot, and all parameters must be serialized.
         :param name: optional name of dag
         :param dag: dag this node is associated with
         :param kwargs: dictionary for keyword arguments
         """
         self.id = uuid.uuid4()
-        self.error = None
-        self.future = None
+
+        self.error: Optional[BaseException] = None
         self.status = st.Status.NOT_STARTED
         self.dag = dag
-        self.local_mode = local_mode
+        self.local_mode: bool = local_mode
 
-        if func is not None and not callable(func):
-            raise TypeError("func argument to `Node` must be callable!")
-        self.func = func
+        self._wrapped_func: Callable[..., "results.Result[_T]"]
 
-        self.args = args
-        self.kwargs = kwargs
-        self._results = None
-        self.parents = {}
-        self.children = {}
-        if name is None:
-            name = self.id
-        self.name = str(name)
+        if _prewrapped_func:
+            self._wrapped_func = _prewrapped_func
+            args = (func,) + args
+        else:
+            if func is not None and not callable(func):
+                raise TypeError("func argument to `Node` must be callable!")
+            self._wrapped_func = results.LocalResult.wrap(func)
+
+        # True if this function is one of the XXX_base functions.
+        # This means we can pass arguments as StoredParams.
+        self._uses_stored_params = all(
+            (
+                _accepts_stored_params,
+                bool(_prewrapped_func),
+                not self.local_mode,
+            )
+        )
+
+        self.future: Optional["futures.Future[_T]"] = None
+
+        self.args: Tuple[Any, ...] = args
+        self.kwargs: Dict[str, Any] = kwargs
+        self._results: Optional[_T] = None
+        self._real_result: Optional[results.Result[_T]] = None
+        self.parents: Dict[uuid.UUID, Node] = {}
+        self.children: Dict[uuid.UUID, Node] = {}
+        self.name = name or str(self.id)
         self._find_deps()
 
     def __hash__(self):
@@ -64,7 +113,7 @@ class Node:
         for dep in _find_parent_nodes([self.args, self.kwargs]):
             self.depends_on(dep)
 
-    def depends_on(self, node):
+    def depends_on(self, node: "Node"):
         """
         Create dependency chain for node, useful when there is a dependency that does not rely directly on passing
         results from one to another
@@ -95,37 +144,57 @@ class Node:
 
     done = finished
 
-    def exec(self, namespace=None):
+    def exec(self, namespace: Optional[str] = None):
         """
         Execute function for node
         :return: None
         """
-        self.status = st.Status.RUNNING
-
+        assert self.dag
         # Override namespace if passed
         if namespace is not None and not self.local_mode:
             self.kwargs["namespace"] = namespace
-
-        # First loop though any non-default parameter arguments to find any nodes
-        # If there is a node as an argument, the user really just wants the results, so let's fetch them
-        # and swap out the parameter
-        if self.args is not None:
-            self.args = _replace_nodes_with_results(self.args)
-
-        # First loop though any default named parameter arguments to find any nodes
-        # If there is a node as an argument, the user really just wants the results, so let's fetch them
-        # and swap out the parameter
-        if self.kwargs is not None:
-            self.kwargs = _replace_nodes_with_results(self.kwargs)
-
-        # Execute user function with the parameters that the user requested
-        # The function is executed on the dag's worker pool
-        self.future = self.dag.executor.submit(self.func, *self.args, **self.kwargs)
+        self.status = st.Status.RUNNING
+        self.future = self.dag.executor.submit(self._do_exec)
+        assert self.future  # Needed to silence mypy.
         self.future.add_done_callback(self._handle_completed_future)
+
+    def _do_exec(self) -> _T:
+        if self._uses_stored_params:
+            # Stored parameters work only on remote functions.
+            (args, kwargs), seen = _replace_nodes_with_stored_params(
+                (self.args, dict(self.kwargs))
+            )
+            if seen:
+                # We have to make a shallow copy of kwargs here.
+                # If a storeable parameter was seen in the args but not the
+                # kwargs, the Replacer will return the original kwargs dict.
+                # We can't modify that because that would permanently stick
+                # stored_param_uuids into self.kwargs, which would then be used
+                # in the retry logic.
+
+                kwargs = dict(kwargs)
+                kwargs["stored_param_uuids"] = seen
+
+        else:
+            # For functions that run locally, give them the results as normal.
+            args, kwargs = _replace_nodes_with_results((self.args, self.kwargs))
+
+        try:
+            self._real_result = self._wrapped_func(*args, **kwargs)
+            return self._real_result.get()
+        except tce.TileDBCloudError as exc:
+            exc_msg = exc.args and exc.args[0]
+            if not isinstance(exc_msg, str) or _RETRY_MSG not in exc_msg:
+                # This is not a missing-stored-param error. Don't retry.
+                raise
+
+        args, kwargs = _replace_nodes_with_results((self.args, self.kwargs))
+        self._real_result = self._wrapped_func(*args, **kwargs)
+        return self._real_result.get()
 
     compute = exec
 
-    def _handle_completed_future(self, future):
+    def _handle_completed_future(self, future: "futures.Future[_T]"):
         try:
             self._results = future.result()
             if self.status == st.Status.RUNNING:
@@ -135,6 +204,7 @@ class Node:
         except Exception as exc:
             self.error = exc
             self.status = st.Status.FAILED
+        assert self.dag
         self.dag.report_node_complete(self)
 
     def ready_to_compute(self):
@@ -150,7 +220,7 @@ class Node:
                 return False
         return True
 
-    def result(self):
+    def result(self) -> Optional[_T]:
         """
         Fetch results of function, block if not complete
         :return:
@@ -165,7 +235,7 @@ class Node:
 
         return self._results
 
-    def result_or_future(self):
+    def result_or_future(self) -> Union[None, _T, "futures.Future[_T]"]:
         """
         Fetch results of functions or return future if incomplete
         :return:
@@ -341,6 +411,19 @@ class DAG:
         node = Node(func_exec, *args, dag=self, name=name, **kwargs)
         return self.add_node_obj(node)
 
+    def _add_prewrapped_node(
+        self, func_exec, *args, name=None, store_results=True, **kwargs
+    ):
+        node = Node(
+            *args,
+            _prewrapped_func=func_exec,
+            dag=self,
+            name=name,
+            store_results=store_results,
+            **kwargs,
+        )
+        return self.add_node_obj(node)
+
     def submit_array_udf(self, *args, **kwargs):
         """
         Submit a function that will be executed in the cloud serverlessly
@@ -349,7 +432,7 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        return self.add_node(array.apply, *args, **kwargs)
+        return self._add_prewrapped_node(array.apply_base, *args, **kwargs)
 
     def submit_udf(self, *args, **kwargs):
         """
@@ -359,18 +442,9 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        return self.add_node(udf.exec, *args, **kwargs)
+        return self._add_prewrapped_node(udf.exec_base, *args, **kwargs)
 
-    def submit(self, *args, **kwargs):
-        """
-        Submit a function that will be executed in the cloud serverlessly
-        This function is analogous to submit_udf
-        :param func_exec: function to execute
-        :param args: arguments for function execution
-        :param name: name
-        :return: Node that is created
-        """
-        return self.add_node(udf.exec, *args, **kwargs)
+    submit = submit_udf
 
     def submit_sql(self, *args, **kwargs):
         """
@@ -380,7 +454,9 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        return self.add_node(sql.exec, *args, **kwargs)
+        return self._add_prewrapped_node(
+            sql.exec_base, *args, _accepts_stored_params=False, **kwargs
+        )
 
     def submit_local(self, *args, **kwargs):
         """
@@ -758,6 +834,17 @@ def _find_parent_nodes(tree) -> Tuple[Node, ...]:
     return tuple(df.nodes.values())
 
 
+def _replace_nodes_with_stored_params(tree: _T) -> Tuple[_T, FrozenSet[uuid.UUID]]:
+    """Descends into data structures and replaces Nodes with StoredParams.
+
+    If a Node cannot be used as a StoredParam, replaces it with the value.
+    Returns the replaced tree and the IDs that we saw.
+    """
+    nspr = _NodeToStoredParamReplacer()
+    result = nspr.visit(tree)
+    return result, frozenset(nspr.ids)
+
+
 class _DepFinder(_visitor.ReplacingVisitor):
     """Locates :class:`Node`s in the input. Never replaces anything."""
 
@@ -769,6 +856,35 @@ class _DepFinder(_visitor.ReplacingVisitor):
         if isinstance(arg, Node):
             self.nodes[arg.id] = arg
         return None
+
+
+class _NodeToStoredParamReplacer(_visitor.ReplacingVisitor):
+    """Replaces Nodes with :class:`stored_param.StoredParam`s (if possible).
+
+    If it cannot replace a Node with a StoredParam, it replaces it
+    with the Node's value.
+    """
+
+    def __init__(self):
+        super().__init__()
+        # A collection of the UUIDs we saw.
+        self.ids: Set[uuid.UUID] = set()
+
+    def maybe_replace(self, arg) -> Optional[_visitor.Replacement]:
+        if not isinstance(arg, Node):
+            # Not a node, just use it as-is.
+            return None
+        try:
+            assert arg._real_result
+            sp = arg._real_result.to_stored_param()
+        except (TypeError, ValueError):
+            # Can't make a StoredParam out of it.
+            # Treat it like any other Node.
+            pass
+        else:
+            self.ids.add(sp.task_id)
+            return _visitor.Replacement(sp)
+        return _visitor.Replacement(arg._results)
 
 
 class _NodeResultReplacer(_visitor.ReplacingVisitor):

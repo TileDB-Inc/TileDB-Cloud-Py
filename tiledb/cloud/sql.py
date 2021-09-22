@@ -31,7 +31,7 @@ def exec_base(
     result_format: str = models.ResultFormat.ARROW,
     result_format_version=None,
     store_results: bool = False,
-) -> results.Response:
+) -> "results.RemoteResult":
     """Run a Serverless SQL query, returning both the result and metadata.
 
     :param str query: query to run
@@ -161,11 +161,11 @@ def exec(*args, **kwargs) -> Any:
 
     All arguments are exactly as in :func:`exec_base`.
     """
-    return exec_base(*args, **kwargs).decode()
+    return exec_base(*args, **kwargs).get()
 
 
 @utils.signature_of(exec_base)
-def exec_async(*args, **kwargs) -> results.AsyncResponse:
+def exec_async(*args, **kwargs) -> "results.AsyncResult":
     """Run a SQL query, asynchronously.
 
     All arguments are exactly as in :func:`exec_base`. Returns an AsyncResponse,
