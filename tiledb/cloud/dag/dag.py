@@ -3,7 +3,7 @@ import numbers
 import time
 import uuid
 from concurrent import futures
-from typing import Any, Optional
+from typing import Any, Dict, Optional, Tuple
 
 import networkx as nx
 
@@ -48,37 +48,7 @@ class Node:
         if name is None:
             name = self.id
         self.name = str(name)
-
-        # Loop through non-default parameters and find any Node objects
-        # Node objects will be used to automatically add dependencies
-        if self.args is not None:
-            self._build_dependencies_list(self.args)
-
-        # Loop through defaulted named parameters and find any Node objects
-        # Node objects will be used to automatically add dependencies
-        if self.kwargs is not None:
-            self._build_dependencies_list(self.kwargs)
-
-    def _build_dependencies_list(self, arg):
-        """
-        Recursively check arg for any Node instances and create graph edges (dependency links)
-        :param arg:
-        :return:
-        """
-        if isinstance(arg, tuple) or isinstance(arg, list):
-            for a in arg:
-                if isinstance(a, Node):
-                    self.depends_on(a)
-                elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    self._build_dependencies_list(a)
-        elif isinstance(arg, dict):
-            for a in arg.values():
-                if isinstance(a, Node):
-                    self.depends_on(a)
-                elif isinstance(a, tuple) or isinstance(a, list) or isinstance(a, dict):
-                    self._build_dependencies_list(a)
-        elif isinstance(arg, Node):
-            self.depends_on(arg)
+        self._find_deps()
 
     def __hash__(self):
         return hash(self.id)
@@ -88,6 +58,11 @@ class Node:
 
     def __ne__(self, other):
         return not (self == other)
+
+    def _find_deps(self):
+        """Finds Nodes this depends on and adds them to our dependency list."""
+        for dep in _find_parent_nodes([self.args, self.kwargs]):
+            self.depends_on(dep)
 
     def depends_on(self, node):
         """
@@ -775,6 +750,25 @@ def _replace_nodes_with_results(tree):
     """Descends into data structures and replaces Node IDs with their values."""
 
     return _NodeResultReplacer().visit(tree)
+
+
+def _find_parent_nodes(tree) -> Tuple[Node, ...]:
+    df = _DepFinder()
+    df.visit(tree)
+    return tuple(df.nodes.values())
+
+
+class _DepFinder(_visitor.ReplacingVisitor):
+    """Locates :class:`Node`s in the input. Never replaces anything."""
+
+    def __init__(self):
+        super().__init__()
+        self.nodes: Dict[uuid.UUID, Node] = {}
+
+    def maybe_replace(self, arg) -> Optional[_visitor.Replacement]:
+        if isinstance(arg, Node):
+            self.nodes[arg.id] = arg
+        return None
 
 
 class _NodeResultReplacer(_visitor.ReplacingVisitor):
