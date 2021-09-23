@@ -87,11 +87,7 @@ def download_notebook_contents(
       user's account settings.
     :return: contents of the notebook file as a string, nominally in JSON format.
     """
-    ctx = tiledb.cloud.Ctx(
-        {
-            "rest.creation_access_credentials_name": storage_credential_name,
-        }
-    )
+    ctx = tiledb.cloud.Ctx({})
     with tiledb.open(tiledb_uri, "r", ctx=ctx) as arr:
         size = arr.meta["file_size"]
         data = arr.query(attrs=["contents"])[slice(0, size)]
