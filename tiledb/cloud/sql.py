@@ -1,53 +1,39 @@
 import inspect
 import time
+import uuid
 import warnings
+from typing import Any, Optional, Sequence
 
 import tiledb
 from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import config
 from tiledb.cloud import rest_api
+from tiledb.cloud import results
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
 from tiledb.cloud.rest_api import models
-from tiledb.cloud.results import PandasDecoder
 
-last_sql_task_id = None
-
-
-class SQLResult(array.TaskResult):
-    def __init__(self, response, result_format, result_type="pandas"):
-        super().__init__(response, result_format)
-
-        if result_type == "pandas":
-            self.decoder = PandasDecoder(result_format)
-
-    def get(self, timeout=None):
-        res = super().get(timeout)
-
-        # Set last udf task id
-        global last_sql_task_id
-        last_sql_task_id = self.task_id
-
-        return res
+last_sql_task_id: Optional[str] = None
 
 
-def exec_async(
-    query,
-    output_uri=None,
-    output_schema=None,
-    namespace=None,
-    task_name=None,
-    output_array_name=None,
-    raw_results=False,
-    http_compressor="deflate",
-    init_commands=None,
-    parameters=None,
-    result_format=models.ResultFormat.ARROW,
+def exec_base(
+    query: str,
+    output_uri: Optional[str] = None,
+    output_schema: Optional[tiledb.ArraySchema] = None,
+    namespace: Optional[str] = None,
+    task_name: Optional[str] = None,
+    output_array_name: Optional[str] = None,
+    raw_results: bool = False,
+    http_compressor: Optional[str] = "deflate",
+    init_commands: Optional[Sequence[str]] = None,
+    parameters: Optional[Sequence[str]] = None,
+    result_format: str = models.ResultFormat.ARROW,
     result_format_version=None,
-):
-    """
-    Run a sql query asynchronous
+    store_results: bool = False,
+) -> results.Response:
+    """Run a Serverless SQL query, returning both the result and metadata.
+
     :param str query: query to run
     :param str output_uri: optional array to store results to, must be a tiledb:// registered array
     :param tiledb.ArraySchema output_schema: optional schema for creating output array if it does not exist
@@ -60,15 +46,15 @@ def exec_async(
     :param list parameters: optional list of sql parameters for use in query
     :param UDFResultType result_format: result serialization format
     :param str result_format_version: Deprecated and ignored.
-
-    :return: A SQLResult object which is a future for a pandas dataframe if no output array is given and query returns results
+    :param store_results: True to temporarily store results on the server side
+        for later retrieval (in addition to downloading them).
     """
 
     if result_format_version:
         warnings.warn(DeprecationWarning("result_format_version is unused."))
 
     # Make sure the output_uri is remote array
-    if not output_uri is None:
+    if output_uri:
         array.split_uri(output_uri)
 
     # If the namespace is not set, we will default to the user's namespace
@@ -114,40 +100,34 @@ def exec_async(
                 array_metadata=rest_api.models.ArrayInfoUpdate(name=output_array_name),
             )
 
-    try:
-        kwargs = {"_preload_content": False, "async_req": True}
-        if http_compressor is not None:
-            kwargs["accept_encoding"] = http_compressor
+    kwargs = dict(
+        namespace=namespace,
+        sql=rest_api.models.SQLParameters(
+            name=task_name,
+            query=query,
+            output_uri=output_uri,
+            init_commands=init_commands,
+            parameters=parameters,
+            result_format=result_format,
+            store_results=store_results,
+        ),
+    )
+    if http_compressor is not None:
+        kwargs["accept_encoding"] = http_compressor
 
-        response = api_instance.run_sql(
-            namespace=namespace,
-            sql=rest_api.models.SQLParameters(
-                name=task_name,
-                query=query,
-                output_uri=output_uri,
-                init_commands=init_commands,
-                parameters=parameters,
-                result_format=result_format,
-            ),
-            **kwargs
-        )
+    decoder_cls = results.Decoder if raw_results else results.PandasDecoder
+    decoder = decoder_cls(result_format)
 
-        return SQLResult(
-            response,
-            result_format,
-            result_type=None if raw_results else "pandas",
-        )
-
-    except rest_api.ApiException as exc:
-        if exc.headers:
-            task_id = exc.headers.get(client.TASK_ID_HEADER)
-            if task_id:
-                global last_sql_task_id
-                last_sql_task_id = task_id
-        raise tiledb_cloud_error.check_sql_exc(exc) from None
+    return client.send_udf_call(
+        api_instance.run_sql,
+        kwargs,
+        decoder,
+        id_callback=_maybe_set_last_task_id,
+        results_stored=store_results,
+    )
 
 
-@utils.signature_of(exec_async)
+@utils.signature_of(exec_base)
 def exec_and_fetch(*args, **kwargs):
     """
     Run a sql query, results are not stored
@@ -175,11 +155,26 @@ def exec_and_fetch(*args, **kwargs):
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-@utils.signature_of(exec_async)
-def exec(*args, **kwargs):
-    """
-    Run a SQL query, synchronously.
+@utils.signature_of(exec_base)
+def exec(*args, **kwargs) -> Any:
+    """Run a SQL query, synchronously.
 
-    All arguments are exactly as in :func:`exec_async`.
+    All arguments are exactly as in :func:`exec_base`.
     """
-    return exec_async(*args, **kwargs).get()
+    return exec_base(*args, **kwargs).result
+
+
+@utils.signature_of(exec_base)
+def exec_async(*args, **kwargs) -> results.AsyncResponse:
+    """Run a SQL query, asynchronously.
+
+    All arguments are exactly as in :func:`exec_base`. Returns an AsyncResponse,
+    a Future-like object.
+    """
+    return client.client.wrap_async_base_call(exec_base, *args, **kwargs)
+
+
+def _maybe_set_last_task_id(task_id: Optional[uuid.UUID]):
+    global last_sql_task_id
+    if task_id:
+        last_sql_task_id = str(task_id)

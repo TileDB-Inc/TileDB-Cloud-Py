@@ -8,6 +8,7 @@ import cloudpickle
 from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import config
+from tiledb.cloud import results
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
 from tiledb.cloud.rest_api import ApiException as GenApiException
@@ -17,7 +18,7 @@ from tiledb.cloud.rest_api import models
 tiledb_cloud_protocol = utils.TILEDB_CLOUD_PROTOCOL
 
 
-def exec_async(
+def exec_base(
     func: Union[str, Callable, Any],
     *args: Any,
     name: Optional[str] = None,
@@ -28,9 +29,10 @@ def exec_async(
     task_name: Optional[str] = None,
     result_format: str = models.ResultFormat.NATIVE,
     result_format_version=None,
+    store_results: bool = False,
     **kwargs,
-) -> array.UDFResult:
-    """Run a user defined function, asynchronously.
+) -> results.Response:
+    """Run a user defined function, returning the result and metadata.
 
     :param func: The function to call, either as a callable function, or as
         the name of a registered user-defined function. (If ``name`` is set,
@@ -49,8 +51,9 @@ def exec_async(
         for logging and audit purposes
     :param ResultFormat result_format: result serialization format
     :param str result_format_version: Deprecated and ignored.
+    :param store_results: True to temporarily store results on the server side
+        for later retrieval (in addition to downloading them).
     :param kwargs: named arguments to pass to function
-    :return: UDFResult, a future containing the results of the UDF
     """
 
     if result_format_version:
@@ -89,6 +92,7 @@ def exec_async(
     udf_model = models.GenericUDF(
         language=models.UDFLanguage.PYTHON,
         result_format=result_format,
+        store_results=store_results,
         version="{}.{}.{}".format(
             sys.version_info.major,
             sys.version_info.minor,
@@ -109,33 +113,35 @@ def exec_async(
     if arguments:
         udf_model.argument = utils.b64_pickle(arguments)
 
-    submit_kwargs = {}
+    submit_kwargs = dict(namespace=namespace, udf=udf_model)
     if http_compressor:
         submit_kwargs["accept_encoding"] = http_compressor
 
-    try:
-        response = api_instance.submit_generic_udf(
-            namespace=namespace,
-            udf=udf_model,
-            async_req=True,
-            _preload_content=False,  # needed to avoid decoding binary data
-            **submit_kwargs,
-        )
-        return array.UDFResult(response, result_format=result_format)
-
-    except GenApiException as exc:
-        array._maybe_set_last_udf_id(exc)
-        raise tiledb_cloud_error.check_exc(exc) from None
+    return client.send_udf_call(
+        api_instance.submit_generic_udf,
+        submit_kwargs,
+        results.Decoder(result_format),
+        id_callback=array._maybe_set_last_udf_id,
+        results_stored=store_results,
+    )
 
 
-@utils.signature_of(exec_async)
+@utils.signature_of(exec_base)
 def exec(*args, **kwargs) -> Any:
-    """Run a user defined function, synchronously.
+    """Run a user defined function, synchronously, returning only the result.
 
-    Arguments are exactly as in :func:`exec_async`. Returns an immediate value
-    rather than a future.
+    Arguments are exactly as in :func:`exec_base`.
     """
-    return exec_async(*args, **kwargs).get()
+    return exec_base(*args, **kwargs).result
+
+
+@utils.signature_of(exec_base)
+def exec_async(*args, **kwargs) -> Any:
+    """Run a user defined function, asynchronously.
+
+    Arguments are exactly as in :func:`exec_base`.
+    """
+    return client.client.wrap_async_base_call(exec_base, *args, **kwargs)
 
 
 def register_udf(

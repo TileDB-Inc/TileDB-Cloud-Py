@@ -1,18 +1,15 @@
 import json
 import os.path
-import sys
 from pathlib import Path
 
 from urllib3 import Retry
 
-from tiledb.cloud import rest_api
+from tiledb.cloud.rest_api import configuration
 
 default_host = "https://api.tiledb.com"
 
-config = rest_api.configuration.Configuration()
+config = configuration.Configuration()
 default_config_file = Path.joinpath(Path.home(), ".tiledb", "cloud.json")
-if sys.version_info < (3, 6):
-    default_config_file = str(default_config_file)
 
 
 def save_configuration(config_file):

@@ -1,12 +1,10 @@
-import multiprocessing
 import sys
 import urllib
+import uuid
 import warnings
-import zlib
 from typing import Any, Callable, Optional, Sequence, Union
 
 import numpy
-import urllib3
 
 from tiledb.cloud import client
 from tiledb.cloud import config
@@ -16,51 +14,7 @@ from tiledb.cloud import utils
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
 
-last_udf_task_id = None
-
-
-class TaskResult:
-    def __init__(self, response, result_format):
-        self.response = response
-        self.task_id = None
-        self.decoder = results.Decoder(result_format)
-
-    def get(self, timeout=None):
-        try:
-            response: urllib3.HTTPResponse = self.response.get(timeout=timeout)
-            res = response.data
-        except (GenApiException, multiprocessing.TimeoutError) as exc:
-            _maybe_set_last_udf_id(exc)
-            raise tiledb_cloud_error.check_exc(exc) from None
-
-        self.task_id = response.getheader(client.TASK_ID_HEADER)
-
-        if res[:2].hex() in ["7801", "785e", "789c", "78da"]:
-            try:
-                res = zlib.decompress(res)
-            except zlib.error:
-                raise tiledb_cloud_error.TileDBCloudError(
-                    "Failed to decompress (zlib) result object"
-                )
-
-        try:
-            return self.decoder.decode(res)
-        except Exception as e:
-            inner_msg = f": {e.args[0]}" if e.args else ""
-            raise tiledb_cloud_error.TileDBCloudError(
-                f"Failed to load result object{inner_msg}"
-            ) from e
-
-
-class UDFResult(TaskResult):
-    def get(self, timeout=None):
-        res = super().get(timeout=timeout)
-
-        # Set last udf task id
-        global last_udf_task_id
-        last_udf_task_id = self.task_id
-
-        return res
+last_udf_task_id: Optional[str] = None
 
 
 class ArrayList:
@@ -425,7 +379,7 @@ def parse_ranges(ranges):
     return result
 
 
-def apply_async(
+def apply_base(
     uri: str,
     func: Union[str, Callable, None] = None,
     ranges: Sequence = (),
@@ -439,10 +393,10 @@ def apply_async(
     v2: bool = True,
     result_format: str = models.ResultFormat.NATIVE,
     result_format_version=None,
+    store_results: bool = False,
     **kwargs: Any,
-) -> UDFResult:
-    """
-    Apply a user defined function to an array, asynchronously.
+) -> results.Response:
+    """Apply a user-defined function to an array, and return data and metadata.
 
     :param uri: The ``tiledb://...`` URI of the array to apply the function to.
     :param func: The function to run. This can be either a callable function,
@@ -463,15 +417,16 @@ def apply_async(
     :param bool v2: use v2 array udfs
     :param ResultFormat result_format: result serialization format
     :param result_format_version: Deprecated and ignored.
+    :param store_results: True to temporarily store results on the server side
+        for later retrieval (in addition to downloading them).
     :param kwargs: named arguments to pass to function
-    :return: UDFResult, a future containing the results of the UDF
 
     **Example**
     >>> import tiledb, tiledb.cloud, numpy
     >>> def median(df):
     ...   return numpy.median(df["a"])
     >>> # Open the array then run the UDF
-    >>> tiledb.cloud.array.apply_async("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"]).get()
+    >>> tiledb.cloud.array.apply_base("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"]).result
     2.0
     """
 
@@ -519,6 +474,7 @@ def apply_async(
         image_name=image_name,
         task_name=task_name,
         result_format=result_format,
+        store_results=store_results,
     )
 
     if callable(user_func):
@@ -531,34 +487,32 @@ def apply_async(
     if kwargs:
         udf_model.argument = utils.b64_pickle((kwargs,))
 
-    submit_kwargs = {}
+    submit_kwargs = dict(
+        namespace=namespace,
+        array=array_name,
+        udf=udf_model,
+        v2=v2,
+    )
+
     if http_compressor:
         submit_kwargs["accept_encoding"] = http_compressor
 
-    try:
-        response = api_instance.submit_udf(
-            namespace=namespace,
-            array=array_name,
-            udf=udf_model,
-            async_req=True,
-            v2=v2,
-            _preload_content=False,  # needed to avoid decoding binary data
-            **submit_kwargs,
-        )
-
-        return UDFResult(response, result_format=result_format)
-
-    except GenApiException as exc:
-        _maybe_set_last_udf_id(exc)
-        raise tiledb_cloud_error.check_exc(exc) from None
+    return client.send_udf_call(
+        api_instance.submit_udf,
+        submit_kwargs,
+        results.Decoder(result_format),
+        id_callback=_maybe_set_last_udf_id,
+        results_stored=store_results,
+    )
 
 
-@utils.signature_of(apply_async)
+@utils.signature_of(apply_base)
 def apply(*args, **kwargs) -> Any:
     """
     Apply a user defined function to an array, synchronously.
 
-    All arguments are exactly as in :func:`apply_async`.
+    All arguments are exactly as in :func:`apply_base`, but this returns
+    the data only.
 
     **Example:**
 
@@ -569,10 +523,19 @@ def apply(*args, **kwargs) -> Any:
     >>> tiledb.cloud.array.apply("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"])
     2.0
     """
-    return apply_async(*args, **kwargs).get()
+    return apply_base(*args, **kwargs).result
 
 
-def exec_multi_array_udf_async(
+def apply_async(*args, **kwargs) -> results.AsyncResponse:
+    """Apply a user-defined function to an array, asynchronously.
+
+    All arguments are exactly as in :func:`apply_base`, but this returns
+    the data as a future-like AsyncResponse.
+    """
+    return client.client.wrap_async_base_call(apply_base, *args, **kwargs)
+
+
+def exec_multi_array_udf_base(
     func: Union[str, Callable, None] = None,
     array_list: ArrayList = None,
     namespace: Optional[str] = None,
@@ -584,10 +547,11 @@ def exec_multi_array_udf_async(
     task_name: Optional[str] = None,
     result_format: str = models.ResultFormat.NATIVE,
     result_format_version=None,
+    store_results: bool = False,
     **kwargs,
-) -> UDFResult:
+) -> results.Response:
     """
-    Apply a user defined function to multiple arrays, asynchronously.
+    Apply a user defined function to multiple arrays.
 
     :param func: The function to run. This can be either a callable function,
         or the name of a registered user-defined function
@@ -601,6 +565,8 @@ def exec_multi_array_udf_async(
         for logging and audit purposes
     :param ResultFormat result_format: result serialization format
     :param str result_format_version: Deprecated and ignored.
+    :param store_results: True to temporarily store results on the server side
+        for later retrieval (in addition to downloading them).
     :param kwargs: named arguments to pass to function
     :return: A future containing the results of the UDF.
     >>> import numpy as np
@@ -655,6 +621,7 @@ def exec_multi_array_udf_async(
         image_name=image_name,
         task_name=task_name,
         result_format=result_format,
+        store_results=store_results,
     )
 
     if callable(user_func):
@@ -667,33 +634,40 @@ def exec_multi_array_udf_async(
     if kwargs:
         udf_model.argument = utils.b64_pickle((kwargs,))
 
-    submit_kwargs = {}
+    submit_kwargs = dict(
+        namespace=namespace,
+        udf=udf_model,
+    )
     if http_compressor:
         submit_kwargs["accept_encoding"] = http_compressor
 
-    try:
-        response = api_instance.submit_multi_array_udf(
-            namespace=namespace,
-            udf=udf_model,
-            async_req=True,
-            _preload_content=False,  # needed to avoid decoding binary data
-            **submit_kwargs,
-        )
-
-        return UDFResult(response, result_format=result_format)
-
-    except GenApiException as exc:
-        _maybe_set_last_udf_id(exc)
-        raise tiledb_cloud_error.check_exc(exc) from None
+    return client.send_udf_call(
+        api_instance.submit_multi_array_udf,
+        submit_kwargs,
+        results.Decoder(result_format),
+        id_callback=_maybe_set_last_udf_id,
+        results_stored=store_results,
+    )
 
 
-@utils.signature_of(exec_multi_array_udf_async)
+@utils.signature_of(exec_multi_array_udf_base)
 def exec_multi_array_udf(*args, **kwargs) -> Any:
     """Apply a user-defined function to multiple arrays, synchronously.
 
-    All arguments are exactly as in :func:`exec_multi_array_udf_async`.
+    All arguments are exactly as in :func:`exec_multi_array_udf_base`.
     """
-    return exec_multi_array_udf_async(*args, **kwargs).get()
+    return exec_multi_array_udf_base(*args, **kwargs).result
+
+
+@utils.signature_of(exec_multi_array_udf_base)
+def exec_multi_array_udf_async(*args, **kwargs) -> results.AsyncResponse:
+    """Apply a user-defined function to multiple arrays, asynchronously.
+
+    All arguments are exactly as in :func:`exec_multi_array_udf_base`.
+    """
+    return client.client.wrap_async_base_call(
+        exec_multi_array_udf_base, *args, **kwargs
+    )
 
 
 def _pick_func(**kwargs: Union[str, Callable, None]) -> Union[str, Callable]:
@@ -722,14 +696,8 @@ def _pick_func(**kwargs: Union[str, Callable, None]) -> Union[str, Callable]:
     return result
 
 
-def _maybe_set_last_udf_id(exc: Exception) -> None:
+def _maybe_set_last_udf_id(task_id: Optional[uuid.UUID]) -> None:
     """Tries to set the last_udf_id from the exception, if present."""
     global last_udf_task_id
-    try:
-        hdrs = getattr(exc, "headers")
-        if hdrs:
-            task_id = hdrs.get(client.TASK_ID_HEADER)
-            if task_id:
-                last_udf_task_id = task_id
-    except KeyError:
-        pass
+    if task_id:
+        last_udf_task_id = str(task_id)

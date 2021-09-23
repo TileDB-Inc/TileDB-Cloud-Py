@@ -3,6 +3,7 @@ import collections
 import collections.abc as cabc
 import os
 import pickle
+import threading
 import time
 import unittest
 import uuid
@@ -154,6 +155,23 @@ class DAGClassTest(unittest.TestCase):
         end_results = d.end_results_by_name()
         self.assertEqual(1, len(end_results))
         self.assertEqual(node_6.result(), end_results[node_6.name])
+
+    def test_concurrency(self):
+        task_count = 5
+        barrier = threading.Barrier(task_count)
+
+        def rendezvous(val):
+            barrier.wait()
+            return val
+
+        d = dag.DAG()
+        tasks = [
+            d.add_node(rendezvous, f"#{i}", local_mode=True) for i in range(task_count)
+        ]
+        terminal = d.add_node(", ".join, tasks, local_mode=True)
+        d.compute()
+        d.wait(1)  # Avoid locking up forever if we deadlock.
+        self.assertEqual("#0, #1, #2, #3, #4", terminal.result())
 
 
 class DAGFailureTest(unittest.TestCase):
@@ -395,19 +413,18 @@ class DAGCloudApplyTest(unittest.TestCase):
         self.assertEqual(d.status, dag.Status.COMPLETED)
 
 
-status_updates = 0
-done_updates = 0
-
-
 class DAGCallbackTest(unittest.TestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        self.status_updates = 0
+        self.done_updates = 0
+
     def test_simple_dag(self):
         def status_callback_test(dag):
-            global status_updates
-            status_updates += 1
+            self.status_updates += 1
 
         def done_callback_test(dag):
-            global done_updates
-            done_updates += 1
+            self.done_updates += 1
 
         d = dag.DAG(
             update_callback=status_callback_test, done_callback=done_callback_test
@@ -425,10 +442,8 @@ class DAGCallbackTest(unittest.TestCase):
         self.assertEqual(node_1.result(), 2)
         self.assertEqual(node_2.result(), 4)
         self.assertEqual(node_3.result(), 8)
-        global status_updates
-        global done_updates
-        self.assertEqual(status_updates, 5)
-        self.assertEqual(done_updates, 1)
+        self.assertEqual(self.status_updates, 5)
+        self.assertEqual(self.done_updates, 1)
 
 
 class CustomSeq(cabc.MutableSequence):
