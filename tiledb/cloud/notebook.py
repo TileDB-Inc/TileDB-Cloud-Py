@@ -6,7 +6,7 @@ is assumed to be encoded as UTF-8.
 
 import posixpath
 import time
-from typing import Tuple
+from typing import Optional, Tuple
 
 import numpy
 
@@ -173,6 +173,15 @@ def upload_notebook_contents(
         )
     if storage_path is None:
         storage_path = tiledb.cloud.user_profile().default_s3_path
+
+    if storage_credential_name is None:
+        raise tiledb_cloud_error.TileDBCloudError(
+            f"No storage credentials found in account. Please add them there, or pass them in explicitly here."
+        ) from e
+    if storage_path is None:
+        raise tiledb_cloud_error.TileDBCloudError(
+            f"No storage path found in account. Please add it there, or pass it in explicitly here."
+        ) from e
 
     ctx = tiledb.cloud.Ctx(
         {"rest.creation_access_credentials_name": storage_credential_name}
