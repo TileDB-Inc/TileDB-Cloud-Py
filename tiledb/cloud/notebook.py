@@ -67,7 +67,8 @@ def download_notebook_to_file(
     ipynb_file_contents = download_notebook_contents(
         tiledb_uri,
     )
-    with open(ipynb_file_name, "w") as handle:
+    vfs = tiledb.VFS()
+    with vfs.open(ipynb_file_name, "w") as handle:
         handle.write(ipynb_file_contents)
 
 
@@ -135,7 +136,8 @@ def upload_notebook_from_file(
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
 
-    with open(ipynb_file_name, "r") as handle:
+    vfs = tiledb.VFS()
+    with vfs.open(ipynb_file_name, "r") as handle:
         ipynb_file_contents = handle.read()
 
     return upload_notebook_contents(
@@ -337,7 +339,9 @@ def _write_notebook_to_array(
 
     contents_as_array = numpy.array(bytearray(ipynb_file_contents, CHARACTER_ENCODING))
 
-    with tiledb.open(tiledb_uri, mode="w", ctx=ctx) as arr:
+    vfs = tiledb.VFS()
+
+    with vfs.open(tiledb_uri, mode="w", ctx=ctx) as arr:
         arr[0 : len(contents_as_array)] = {"contents": contents_as_array}
         arr.meta["file_size"] = len(contents_as_array)
         arr.meta["type"] = file_type = tiledb.cloud.rest_api.models.FileType.NOTEBOOK
