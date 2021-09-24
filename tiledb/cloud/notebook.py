@@ -232,6 +232,7 @@ def _create_notebook_array(
             tile=1024,
             dtype=numpy.uint64,
             ctx=ctx,
+            filters=tiledb.FilterList([tiledb.ZstdFilter()]),
         ),
         ctx=ctx,
     )
