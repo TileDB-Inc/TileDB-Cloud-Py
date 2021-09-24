@@ -6,7 +6,7 @@ is assumed to be encoded as UTF-8.
 
 import posixpath
 import time
-from typing import Tuple
+from typing import Optional, Tuple
 
 import numpy
 
@@ -56,20 +56,16 @@ def rename_notebook(
 
 def download_notebook_to_file(
     tiledb_uri: str,
-    storage_credential_name: str,
     ipynb_file_name: str,
 ) -> None:
     """
     Downloads a notebook file from TileDB Cloud to local disk.
     :param tiledb_uri: such as "tiledb://TileDB-Inc/quickstart_dense".
-    :param storage_credential_name: such as "janedoe-creds", typically from the
-      user's account settings.
     :param ipnyb_file_name: path to save to, such as "./mycopy.ipynb". Must be
       local; no S3 URI support at present.
     """
     ipynb_file_contents = download_notebook_contents(
         tiledb_uri,
-        storage_credential_name,
     )
     with open(ipynb_file_name, "w") as handle:
         handle.write(ipynb_file_contents)
@@ -77,14 +73,11 @@ def download_notebook_to_file(
 
 def download_notebook_contents(
     tiledb_uri: str,
-    storage_credential_name: str,
 ) -> str:
     """
     Downloads a notebook file from TileDB Cloud to contents as a string,
       nominally in JSON format.
     :param tiledb_uri: such as "tiledb://TileDB-Inc/quickstart_dense".
-    :param storage_credential_name: such as "janedoe-creds", typically from the
-      user's account settings.
     :return: contents of the notebook file as a string, nominally in JSON format.
     """
     ctx = tiledb.cloud.Ctx({})
@@ -126,8 +119,8 @@ def upload_notebook_from_file(
     ipynb_file_name: str,
     namespace: str,
     array_name: str,
-    storage_path: str,
-    storage_credential_name: str,
+    storage_path: Optional[str],
+    storage_credential_name: Optional[str],
 ) -> str:
     """
     Uploads a local-disk notebook file to TileDB Cloud.
@@ -156,10 +149,10 @@ def upload_notebook_from_file(
 
 def upload_notebook_contents(
     ipynb_file_contents: str,
-    storage_path: str,
+    storage_path: Optional[str],
     array_name: str,
     namespace: str,
-    storage_credential_name: str,
+    storage_credential_name: Optional[str],
 ) -> str:
     """
     Uploads a notebook file to TileDB Cloud.
@@ -173,6 +166,22 @@ def upload_notebook_contents(
       user's account settings.
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
+
+    if storage_credential_name is None:
+        storage_credential_name = (
+            tiledb.cloud.user_profile().default_s3_path_credentials_name
+        )
+    if storage_path is None:
+        storage_path = tiledb.cloud.user_profile().default_s3_path
+
+    if storage_credential_name is None:
+        raise tiledb_cloud_error.TileDBCloudError(
+            f"No storage credentials found in account. Please add them there, or pass them in explicitly here."
+        ) from e
+    if storage_path is None:
+        raise tiledb_cloud_error.TileDBCloudError(
+            f"No storage path found in account. Please add it there, or pass it in explicitly here."
+        ) from e
 
     ctx = tiledb.cloud.Ctx(
         {"rest.creation_access_credentials_name": storage_credential_name}
