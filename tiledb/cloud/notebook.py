@@ -339,9 +339,7 @@ def _write_notebook_to_array(
 
     contents_as_array = numpy.array(bytearray(ipynb_file_contents, CHARACTER_ENCODING))
 
-    vfs = tiledb.VFS(tiledb.cloud.Ctx().config())
-
-    with vfs.open(tiledb_uri, mode="w", ctx=ctx) as arr:
+    with tiledb.open(tiledb_uri, mode="w", ctx=ctx) as arr:
         arr[0 : len(contents_as_array)] = {"contents": contents_as_array}
         arr.meta["file_size"] = len(contents_as_array)
         arr.meta["type"] = file_type = tiledb.cloud.rest_api.models.FileType.NOTEBOOK
