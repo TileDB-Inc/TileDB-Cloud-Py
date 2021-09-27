@@ -67,7 +67,8 @@ def download_notebook_to_file(
     ipynb_file_contents = download_notebook_contents(
         tiledb_uri,
     )
-    with open(ipynb_file_name, "w") as handle:
+    vfs = tiledb.VFS(tiledb.cloud.Ctx().config())
+    with vfs.open(ipynb_file_name, "w") as handle:
         handle.write(ipynb_file_contents)
 
 
@@ -135,7 +136,8 @@ def upload_notebook_from_file(
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
 
-    with open(ipynb_file_name, "r") as handle:
+    vfs = tiledb.VFS(tiledb.cloud.Ctx().config())
+    with vfs.open(ipynb_file_name, "r") as handle:
         ipynb_file_contents = handle.read()
 
     return upload_notebook_contents(
