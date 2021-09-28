@@ -1,6 +1,6 @@
 from tiledb.cloud import array
-from tiledb.cloud import results
 from tiledb.cloud import utils
+from tiledb.cloud._results import results
 
 
 class CloudArray(object):
