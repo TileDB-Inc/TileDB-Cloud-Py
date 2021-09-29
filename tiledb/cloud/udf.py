@@ -9,9 +9,10 @@ import cloudpickle
 from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import config
-from tiledb.cloud import results
+from tiledb.cloud import results as legacy_results
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
+from tiledb.cloud._results import results
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
 
@@ -123,7 +124,7 @@ def exec_base(
     return client.send_udf_call(
         api_instance.submit_generic_udf,
         submit_kwargs,
-        results.Decoder(result_format),
+        legacy_results.Decoder(result_format),
         id_callback=array._maybe_set_last_udf_id,
         results_stored=store_results,
     )

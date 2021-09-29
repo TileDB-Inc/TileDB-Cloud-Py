@@ -9,10 +9,10 @@ import urllib3
 
 import tiledb
 from tiledb.cloud import config
-from tiledb.cloud import decoders
 from tiledb.cloud import rest_api
-from tiledb.cloud import results
 from tiledb.cloud import tiledb_cloud_error
+from tiledb.cloud._results import decoders
+from tiledb.cloud._results import results
 from tiledb.cloud.rest_api import ApiException as GenApiException
 
 _T = TypeVar("_T")

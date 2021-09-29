@@ -37,6 +37,11 @@ _DECODE_FNS = {
 
 @dataclasses.dataclass(frozen=True)
 class Decoder(AbstractDecoder[_T], Generic[_T]):
+    """General decoder for the formats we support.
+
+    The exact name and location of this class is important, because instances
+    are sent as pickles when making UDF requests.
+    """
 
     format: str
 
@@ -50,6 +55,11 @@ class Decoder(AbstractDecoder[_T], Generic[_T]):
 
 @dataclasses.dataclass(frozen=True)
 class PandasDecoder(AbstractDecoder[pandas.DataFrame]):
+    """Decoder which turns things into DataFrames.
+
+    The exact name and location of this class is important, because instances
+    are sent as pickles when making UDF requests.
+    """
 
     format: str
 

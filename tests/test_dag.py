@@ -1,7 +1,6 @@
 import base64
 import collections
 import collections.abc as cabc
-import operator
 import os
 import pickle
 import threading
@@ -16,10 +15,11 @@ import pandas as pd
 
 import tiledb.cloud
 from tiledb.cloud import dag
-from tiledb.cloud import results
-from tiledb.cloud.dag import _visitor
-from tiledb.cloud.dag import dag as internal
-from tiledb.cloud.dag import stored_params as sp
+from tiledb.cloud import results as legacy_results
+from tiledb.cloud._results import stored_params as sp
+from tiledb.cloud._results import visitor
+from tiledb.cloud.dag import dag as dag_dag
+from tiledb.cloud.dag import stored_params as dag_sp
 
 tiledb.cloud.login(
     token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
@@ -493,36 +493,36 @@ class CustomSeq(cabc.MutableSequence):
         return type(self) == type(other) and self.lst == other.lst
 
 
-class Doubler(_visitor.ReplacingVisitor):
+class Doubler(visitor.ReplacingVisitor):
     """Example implementation that doubles every int (but not float) it sees."""
 
     def maybe_replace(self, arg):
         if isinstance(arg, int):
-            return _visitor.Replacement(arg * 2)
+            return visitor.Replacement(arg * 2)
         return None
 
 
 class ReplaceNodesTest(unittest.TestCase):
     def test_basic(self):
-        self.assertEqual(5, internal._replace_nodes_with_results(5))
-        self.assertEqual("hi", internal._replace_nodes_with_results(_node("hi")))
+        self.assertEqual(5, dag_dag._replace_nodes_with_results(5))
+        self.assertEqual("hi", dag_dag._replace_nodes_with_results(_node("hi")))
 
     def test_sequences(self):
         self.assertEqual(
             ["a", "b", "c"],
-            internal._replace_nodes_with_results([_node("a"), "b", _node("c")]),
+            dag_dag._replace_nodes_with_results([_node("a"), "b", _node("c")]),
         )
         self.assertEqual(
             (1, 2, ["i", "ii"]),
-            internal._replace_nodes_with_results((1, 2, [_node("i"), "ii"])),
+            dag_dag._replace_nodes_with_results((1, 2, [_node("i"), "ii"])),
         )
 
     def test_special_sequences(self):
         self.assertEqual(
-            "some_string", internal._replace_nodes_with_results("some_string")
+            "some_string", dag_dag._replace_nodes_with_results("some_string")
         )
-        self.assertEqual(b"bytes", internal._replace_nodes_with_results(b"bytes"))
-        self.assertEqual(range(100), internal._replace_nodes_with_results(range(100)))
+        self.assertEqual(b"bytes", dag_dag._replace_nodes_with_results(b"bytes"))
+        self.assertEqual(range(100), dag_dag._replace_nodes_with_results(range(100)))
 
     def test_self_recursion(self):
         dct = {
@@ -532,7 +532,7 @@ class ReplaceNodesTest(unittest.TestCase):
         dct["lst"] = lst
         tup = (_node("a lst:"), lst, _node("a dct:"), dct)
         lst.append(tup)
-        got_lst = internal._replace_nodes_with_results(lst)
+        got_lst = dag_dag._replace_nodes_with_results(lst)
 
         want_dct = {
             "nod": ("a", "b", "c"),
@@ -568,13 +568,13 @@ class ReplaceNodesTest(unittest.TestCase):
 
     def test_dont_enter_special_types(self):
         df = pd.DataFrame([{"a": 1, "b": 2}, {"a": 2, "b": 3}])
-        self.assertIs(df, internal._replace_nodes_with_results(df))
+        self.assertIs(df, dag_dag._replace_nodes_with_results(df))
         arr = np.array([["a", 1], ["b", 2]])
-        self.assertIs(arr, internal._replace_nodes_with_results(arr))
+        self.assertIs(arr, dag_dag._replace_nodes_with_results(arr))
 
     def test_ref_equality(self):
         lst = ["a", _node("B"), "c"]
-        got_val = internal._replace_nodes_with_results([lst, lst])
+        got_val = dag_dag._replace_nodes_with_results([lst, lst])
         self.assertIs(got_val[0], got_val[1])
         self.assertIsNot(lst, got_val[0])
 
@@ -606,15 +606,19 @@ class ReplaceNodesTest(unittest.TestCase):
     def test_replace_stored_params(self):
         # Since the corner cases of tree traversal are tested in the other
         # ReplaceNodesTests, this just tests the basics of stored params.
-        got = internal.replace_stored_params(
+        got = dag_dag.replace_stored_params(
             [
-                sp.StoredParam(_uid(0x1), decoder=results.Decoder("json")),
+                dag_sp.StoredParam(_uid(0x1), decoder=legacy_results.Decoder("json")),
                 {
-                    "sub-dict": sp.StoredParam(
-                        _uid(0x2), decoder=results.Decoder("native")
+                    "sub-dict": dag_sp.StoredParam(
+                        _uid(0x2), decoder=legacy_results.Decoder("native")
                     )
                 },
-                (sp.StoredParam(_uid(0x1), decoder=results.Decoder("json")),),
+                (
+                    dag_sp.StoredParam(
+                        _uid(0x1), decoder=legacy_results.Decoder("json")
+                    ),
+                ),
             ],
             sp.ParamLoader(
                 {
@@ -633,13 +637,17 @@ class ReplaceNodesTest(unittest.TestCase):
         self.assertIs(got[0], got[2][0], "restored values must be same object")
 
     def test_replace_stored_params_pandas(self):
-        arrow_pd, json_pd, json_raw = internal.replace_stored_params(
+        arrow_pd, json_pd, json_raw = dag_dag.replace_stored_params(
             [
-                sp.StoredParam(_uid(0x3), decoder=results.PandasDecoder("arrow")),
+                dag_sp.StoredParam(
+                    _uid(0x3), decoder=legacy_results.PandasDecoder("arrow")
+                ),
                 # Ensure that we can restore the same source object
                 # using multiple encodings.
-                sp.StoredParam(_uid(0x4), decoder=results.PandasDecoder("json")),
-                sp.StoredParam(_uid(0x4), decoder=results.Decoder("json")),
+                dag_sp.StoredParam(
+                    _uid(0x4), decoder=legacy_results.PandasDecoder("json")
+                ),
+                dag_sp.StoredParam(_uid(0x4), decoder=legacy_results.Decoder("json")),
             ],
             sp.ParamLoader(
                 {

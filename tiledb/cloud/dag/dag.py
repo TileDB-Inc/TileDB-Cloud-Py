@@ -19,13 +19,13 @@ from typing import (
 import networkx as nx
 
 from tiledb.cloud import array
-from tiledb.cloud import results
 from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud import udf
-from tiledb.cloud.dag import _visitor
+from tiledb.cloud._results import results
+from tiledb.cloud._results import stored_params
+from tiledb.cloud._results import visitor
 from tiledb.cloud.dag import status as st
-from tiledb.cloud.dag import stored_params
 from tiledb.cloud.dag import visualization as viz
 
 Status = st.Status  # Re-export for compabitility.
@@ -845,20 +845,20 @@ def _replace_nodes_with_stored_params(tree: _T) -> Tuple[_T, FrozenSet[uuid.UUID
     return result, frozenset(nspr.ids)
 
 
-class _DepFinder(_visitor.ReplacingVisitor):
+class _DepFinder(visitor.ReplacingVisitor):
     """Locates :class:`Node`s in the input. Never replaces anything."""
 
     def __init__(self):
         super().__init__()
         self.nodes: Dict[uuid.UUID, Node] = {}
 
-    def maybe_replace(self, arg) -> Optional[_visitor.Replacement]:
+    def maybe_replace(self, arg) -> Optional[visitor.Replacement]:
         if isinstance(arg, Node):
             self.nodes[arg.id] = arg
         return None
 
 
-class _NodeToStoredParamReplacer(_visitor.ReplacingVisitor):
+class _NodeToStoredParamReplacer(visitor.ReplacingVisitor):
     """Replaces Nodes with :class:`stored_param.StoredParam`s (if possible).
 
     If it cannot replace a Node with a StoredParam, it replaces it
@@ -870,7 +870,7 @@ class _NodeToStoredParamReplacer(_visitor.ReplacingVisitor):
         # A collection of the UUIDs we saw.
         self.ids: Set[uuid.UUID] = set()
 
-    def maybe_replace(self, arg) -> Optional[_visitor.Replacement]:
+    def maybe_replace(self, arg) -> Optional[visitor.Replacement]:
         if not isinstance(arg, Node):
             # Not a node, just use it as-is.
             return None
@@ -883,27 +883,27 @@ class _NodeToStoredParamReplacer(_visitor.ReplacingVisitor):
             pass
         else:
             self.ids.add(sp.task_id)
-            return _visitor.Replacement(sp)
-        return _visitor.Replacement(arg._results)
+            return visitor.Replacement(sp)
+        return visitor.Replacement(arg._results)
 
 
-class _NodeResultReplacer(_visitor.ReplacingVisitor):
+class _NodeResultReplacer(visitor.ReplacingVisitor):
     """Replaces :class:`Node`s with their results."""
 
-    def maybe_replace(self, arg) -> Optional[_visitor.Replacement]:
+    def maybe_replace(self, arg) -> Optional[visitor.Replacement]:
         if isinstance(arg, Node):
-            return _visitor.Replacement(arg.result())
+            return visitor.Replacement(arg.result())
         return None
 
 
-class _StoredParamReplacer(_visitor.ReplacingVisitor):
+class _StoredParamReplacer(visitor.ReplacingVisitor):
     """Replaces stored parameters with their values."""
 
     def __init__(self, loader: stored_params.ParamLoader):
         super().__init__()
         self._loader = loader
 
-    def maybe_replace(self, arg) -> Optional[_visitor.Replacement]:
+    def maybe_replace(self, arg) -> Optional[visitor.Replacement]:
         if isinstance(arg, stored_params.StoredParam):
-            return _visitor.Replacement(self._loader.load(arg))
+            return visitor.Replacement(self._loader.load(arg))
         return None
