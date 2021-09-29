@@ -9,9 +9,9 @@ from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import config
 from tiledb.cloud import rest_api
-from tiledb.cloud import results as legacy_results
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
+from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 from tiledb.cloud.rest_api import models
 
@@ -116,9 +116,7 @@ def exec_base(
     if http_compressor is not None:
         kwargs["accept_encoding"] = http_compressor
 
-    decoder_cls = (
-        legacy_results.Decoder if raw_results else legacy_results.PandasDecoder
-    )
+    decoder_cls = decoders.Decoder if raw_results else decoders.PandasDecoder
     decoder = decoder_cls(result_format)
 
     return client.send_udf_call(
