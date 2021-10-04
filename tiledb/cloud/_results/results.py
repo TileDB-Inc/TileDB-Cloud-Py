@@ -12,9 +12,7 @@ import urllib3
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud._results import decoders
-
-# TODO: replace this reference with tiledb.cloud._results.stored_params.
-from tiledb.cloud.dag import stored_params
+from tiledb.cloud._results import stored_params
 
 TASK_ID_HEADER = "X-TILEDB-CLOUD-TASK-ID"
 _T = TypeVar("_T")

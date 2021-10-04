@@ -15,11 +15,10 @@ import pandas as pd
 
 import tiledb.cloud
 from tiledb.cloud import dag
-from tiledb.cloud import results as legacy_results
+from tiledb.cloud._results import decoders
 from tiledb.cloud._results import stored_params as sp
 from tiledb.cloud._results import visitor
 from tiledb.cloud.dag import dag as dag_dag
-from tiledb.cloud.dag import stored_params as dag_sp
 
 tiledb.cloud.login(
     token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
@@ -608,17 +607,13 @@ class ReplaceNodesTest(unittest.TestCase):
         # ReplaceNodesTests, this just tests the basics of stored params.
         got = dag_dag.replace_stored_params(
             [
-                dag_sp.StoredParam(_uid(0x1), decoder=legacy_results.Decoder("json")),
+                sp.StoredParam(_uid(0x1), decoder=decoders.Decoder("json")),
                 {
-                    "sub-dict": dag_sp.StoredParam(
-                        _uid(0x2), decoder=legacy_results.Decoder("native")
+                    "sub-dict": sp.StoredParam(
+                        _uid(0x2), decoder=decoders.Decoder("native")
                     )
                 },
-                (
-                    dag_sp.StoredParam(
-                        _uid(0x1), decoder=legacy_results.Decoder("json")
-                    ),
-                ),
+                (sp.StoredParam(_uid(0x1), decoder=decoders.Decoder("json")),),
             ],
             sp.ParamLoader(
                 {
@@ -639,15 +634,11 @@ class ReplaceNodesTest(unittest.TestCase):
     def test_replace_stored_params_pandas(self):
         arrow_pd, json_pd, json_raw = dag_dag.replace_stored_params(
             [
-                dag_sp.StoredParam(
-                    _uid(0x3), decoder=legacy_results.PandasDecoder("arrow")
-                ),
+                sp.StoredParam(_uid(0x3), decoder=decoders.PandasDecoder("arrow")),
                 # Ensure that we can restore the same source object
                 # using multiple encodings.
-                dag_sp.StoredParam(
-                    _uid(0x4), decoder=legacy_results.PandasDecoder("json")
-                ),
-                dag_sp.StoredParam(_uid(0x4), decoder=legacy_results.Decoder("json")),
+                sp.StoredParam(_uid(0x4), decoder=decoders.PandasDecoder("json")),
+                sp.StoredParam(_uid(0x4), decoder=decoders.Decoder("json")),
             ],
             sp.ParamLoader(
                 {
