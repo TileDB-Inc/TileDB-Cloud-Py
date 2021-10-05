@@ -18,7 +18,9 @@ NAME = "tiledb-cloud"
 
 REQUIRES = [
     "tiledb>=0.5.0",
-    "urllib3>=1.26",
+    # One of our upstream dependencies needs urllib<1.26.
+    # This should be relaxed once that is fixed.
+    "urllib3==1.25.11",
     "six>=1.10",
     "certifi",
     "python-dateutil",

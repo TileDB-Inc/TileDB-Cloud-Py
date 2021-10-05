@@ -116,7 +116,7 @@ def setup_configuration(
         total=10,
         backoff_factor=0.25,
         status_forcelist=[503],
-        allowed_methods=[
+        method_whitelist=[
             "HEAD",
             "GET",
             "PUT",
