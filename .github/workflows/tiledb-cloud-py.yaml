@@ -89,7 +89,7 @@ jobs:
       - name: Run tests
         # On commit, only test with pinned dependencies.
         # For other events (merges, nightlies), run the whole matrix.
-        if: (github.event_name != 'pull_request') || (matrix.dependencies == 'pinned')
+        # if: (github.event_name != 'pull_request') || (matrix.dependencies == 'pinned')
         run: |
           pytest -s -v --junitxml=junit/test-results.xml --cov=tiledb/cloud/ --cov-report=xml --cov-report=html
         env:
