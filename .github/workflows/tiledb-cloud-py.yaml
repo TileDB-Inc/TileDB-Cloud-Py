@@ -87,8 +87,9 @@ jobs:
           pip install .
 
       - name: Run tests
-        # Test pinned dependencies on commit / tag and fresh installs on nightlies
-        if: (matrix.dependencies == 'fresh') == (github.event_name == 'schedule')
+        # On commit, only test with pinned dependencies.
+        # For other events (merges, nightlies), run the whole matrix.
+        if: (github.event_name != 'pull_request') || (matrix.dependencies == 'pinned')
         run: |
           pytest -s -v --junitxml=junit/test-results.xml --cov=tiledb/cloud/ --cov-report=xml --cov-report=html
         env:
@@ -131,13 +132,6 @@ jobs:
           pip install -r requirements-py3.7.txt
           python setup.py bdist_wheel -d dist
 
-      - name: Publish to PyPI
-        if: ${{ github.event_name == 'release' }}
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
-
       - name: Publish to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
@@ -147,3 +141,10 @@ jobs:
           # It's OK if this fails due to an already-existing file,
           # if the test publish was run more than once for a revision.
           skip_existing: true
+
+      - name: Publish to PyPI
+        if: ${{ github.event_name == 'release' }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
