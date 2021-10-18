@@ -68,8 +68,8 @@ def download_notebook_to_file(
         tiledb_uri,
     )
     vfs = tiledb.VFS(tiledb.cloud.Ctx().config())
-    with vfs.open(ipynb_file_name, "w") as handle:
-        handle.write(ipynb_file_contents)
+    with tiledb.FileIO(vfs, ipynb_file_name, mode="wb") as fio:
+        fio.write(bytes(ipynb_file_contents, "utf-8"))
 
 
 def download_notebook_contents(
@@ -137,11 +137,11 @@ def upload_notebook_from_file(
     """
 
     vfs = tiledb.VFS(tiledb.cloud.Ctx().config())
-    with vfs.open(ipynb_file_name, "r") as handle:
-        ipynb_file_contents = handle.read()
+    with tiledb.FileIO(vfs, ipynb_file_name, mode="rb") as fio:
+        ipynb_file_contents = fio.read()
 
     return upload_notebook_contents(
-        ipynb_file_contents,
+        str(ipynb_file_contents),
         storage_path,
         array_name,
         namespace,
