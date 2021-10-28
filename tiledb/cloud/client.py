@@ -394,7 +394,7 @@ _RETRY_CONFIGS = {
         total=10,
         backoff_factor=0.25,
         status_forcelist=[503],
-        method_whitelist=[
+        allowed_methods=[
             "HEAD",
             "GET",
             "PUT",
@@ -412,7 +412,7 @@ _RETRY_CONFIGS = {
         total=10,
         backoff_factor=0.25,
         status_forcelist=[400, 500, 501, 502, 503],
-        method_whitelist=[
+        allowed_methods=[
             "HEAD",
             "GET",
             "PUT",
