@@ -138,10 +138,10 @@ def upload_notebook_from_file(
 
     vfs = tiledb.VFS(tiledb.cloud.Ctx().config())
     with tiledb.FileIO(vfs, ipynb_file_name, mode="rb") as fio:
-        ipynb_file_contents = fio.read().decode("utf-8")
+        ipynb_file_contents = fio.read()
 
     return upload_notebook_contents(
-        str(ipynb_file_contents),
+        str(ipynb_file_contents, "utf-8"),
         storage_path,
         array_name,
         namespace,
