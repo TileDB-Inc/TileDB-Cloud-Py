@@ -141,7 +141,7 @@ def upload_notebook_from_file(
         ipynb_file_contents = fio.read()
 
     return upload_notebook_contents(
-        str(ipynb_file_contents),
+        str(ipynb_file_contents, "utf-8"),
         storage_path,
         array_name,
         namespace,
