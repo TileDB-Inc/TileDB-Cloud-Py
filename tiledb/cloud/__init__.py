@@ -29,7 +29,6 @@ from tiledb.cloud.rest_api import models
 from tiledb.cloud.tasks import last_sql_task
 from tiledb.cloud.tasks import last_udf_task
 from tiledb.cloud.tasks import task
-from tiledb.cloud.tasks import tasks
 from tiledb.cloud.tiledb_cloud_error import TileDBCloudError
 from tiledb.cloud.version import version as __version__
 

@@ -1,11 +1,17 @@
 import datetime
+from typing import Any, TypeVar
+import uuid
+
+import pandas as pd
+import urllib3
 
 from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error
+from tiledb.cloud._results import decoders
 from tiledb.cloud.array import split_uri
-from tiledb.cloud.rest_api import ApiException as GenApiException
+from tiledb.cloud.rest_api import ApiException as GenApiException, models
 
 
 def task(id, async_req=False):
@@ -118,3 +124,36 @@ def last_udf_task():
         raise Exception("There is no last run udf task in current python session")
 
     return task(id=array.last_udf_task_id)
+
+
+def fetch_results(
+    task_id: uuid.UUID,
+    *,
+    result_format: str = models.ResultFormat.NATIVE,
+) -> Any:
+    """Fetches the results of a previously-executed UDF or SQL query."""
+    return _fetch(task_id, decoders.Decoder(result_format))
+
+
+def fetch_results_pandas(
+    task_id: uuid.UUID,
+    *,
+    result_format: str = models.ResultFormat.NATIVE,
+) -> pd.DataFrame:
+    """Fetches the results of a previously-executed UDF or SQL query."""
+    return _fetch(task_id, decoders.PandasDecoder(result_format))
+
+
+_T = TypeVar("_T")
+
+
+def _fetch(task_id: uuid.UUID, decoder: decoders.AbstractDecoder[_T]) -> _T:
+    api_instance = client.client.tasks_api
+    try:
+        resp: urllib3.HTTPResponse = api_instance.task_id_result_get(
+            str(task_id),
+            _preload_content=False,
+        )
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
+    return decoder.decode(resp.data)
