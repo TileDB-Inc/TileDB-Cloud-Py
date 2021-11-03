@@ -31,8 +31,9 @@ class SSOProvider(object):
     GITHUB = "github"
     GOOGLE = "google"
     STRIPE = "stripe"
+    OKTA = "okta"
 
-    allowable_values = [GITHUB, GOOGLE, STRIPE]  # noqa: E501
+    allowable_values = [GITHUB, GOOGLE, STRIPE, OKTA]  # noqa: E501
 
     """
     Attributes:

@@ -16,12 +16,14 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.favorite import Favorite  # noqa: E501
+from tiledb.cloud.rest_api.models.array_end_timestamp_data import (  # noqa: E501
+    ArrayEndTimestampData,
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestFavorite(unittest.TestCase):
-    """Favorite unit test stubs"""
+class TestArrayEndTimestampData(unittest.TestCase):
+    """ArrayEndTimestampData unit test stubs"""
 
     def setUp(self):
         pass
@@ -30,26 +32,26 @@ class TestFavorite(unittest.TestCase):
         pass
 
     def make_instance(self, include_optional):
-        """Test Favorite
+        """Test ArrayEndTimestampData
         include_option is a boolean, when False only required
         params are included, when True both required and
         optional params are included"""
-        # model = tiledb.cloud.rest_api.models.favorite.Favorite()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.array_end_timestamp_data.ArrayEndTimestampData()  # noqa: E501
         if include_optional:
-            return Favorite(
-                id="0",
-                object_type="ARRAY",
-                namespace="0",
-                name="0",
-                created_at=datetime.datetime.strptime(
-                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+            return ArrayEndTimestampData(
+                end_timestamps=[56],
+                pagination_metadata=tiledb.cloud.rest_api.models.pagination_metadata.PaginationMetadata(
+                    page=1.0,
+                    per_page=10.0,
+                    total_pages=14.0,
+                    total_items=138.0,
                 ),
             )
         else:
-            return Favorite()
+            return ArrayEndTimestampData()
 
-    def testFavorite(self):
-        """Test Favorite"""
+    def testArrayEndTimestampData(self):
+        """Test ArrayEndTimestampData"""
         inst_req_only = self.make_instance(include_optional=False)
         inst_req_and_optional = self.make_instance(include_optional=True)
 

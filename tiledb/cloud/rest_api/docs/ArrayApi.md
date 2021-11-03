@@ -11,10 +11,12 @@ Method | HTTP request | Description
 [**arrays_browser_public_sidebar_get**](ArrayApi.md#arrays_browser_public_sidebar_get) | **GET** /arrays/browser/public/sidebar | 
 [**arrays_browser_shared_get**](ArrayApi.md#arrays_browser_shared_get) | **GET** /arrays/browser/shared | 
 [**arrays_browser_shared_sidebar_get**](ArrayApi.md#arrays_browser_shared_sidebar_get) | **GET** /arrays/browser/shared/sidebar | 
+[**arrays_namespace_array_end_timestamps_get**](ArrayApi.md#arrays_namespace_array_end_timestamps_get) | **GET** /arrays/{namespace}/{array}/end_timestamps | 
 [**consolidate_array**](ArrayApi.md#consolidate_array) | **POST** /arrays/{namespace}/{array}/consolidate | 
 [**create_array**](ArrayApi.md#create_array) | **POST** /arrays/{namespace}/{array} | 
 [**delete_array**](ArrayApi.md#delete_array) | **DELETE** /arrays/{namespace}/{array} | 
 [**deregister_array**](ArrayApi.md#deregister_array) | **DELETE** /arrays/{namespace}/{array}/deregister | 
+[**get_activity_log_by_id**](ArrayApi.md#get_activity_log_by_id) | **GET** /arrays/{namespace}/{array}/activity/{id} | 
 [**get_all_array_metadata**](ArrayApi.md#get_all_array_metadata) | **GET** /arrays | 
 [**get_array**](ArrayApi.md#get_array) | **GET** /arrays/{namespace}/{array} | 
 [**get_array_max_buffer_sizes**](ArrayApi.md#get_array_max_buffer_sizes) | **GET** /arrays/{namespace}/{array}/max_buffer_sizes | 
@@ -26,6 +28,7 @@ Method | HTTP request | Description
 [**get_array_sample_data**](ArrayApi.md#get_array_sample_data) | **GET** /arrays/{namespace}/{array}/sample | 
 [**get_array_sharing_policies**](ArrayApi.md#get_array_sharing_policies) | **GET** /arrays/{namespace}/{array}/share | 
 [**get_arrays_in_namespace**](ArrayApi.md#get_arrays_in_namespace) | **GET** /arrays/{namespace} | 
+[**get_fragment_end_timestamp**](ArrayApi.md#get_fragment_end_timestamp) | **GET** /arrays/{namespace}/{array}/fragment_end_timestamp | 
 [**get_last_accessed_arrays**](ArrayApi.md#get_last_accessed_arrays) | **GET** /arrays/last_accessed | 
 [**register_array**](ArrayApi.md#register_array) | **POST** /arrays/{namespace}/{array}/register | 
 [**share_array**](ArrayApi.md#share_array) | **PATCH** /arrays/{namespace}/{array}/share | 
@@ -1037,6 +1040,145 @@ This endpoint does not need any parameter.
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **arrays_namespace_array_end_timestamps_get**
+> ArrayEndTimestampData arrays_namespace_array_end_timestamps_get(namespace, array, page=page, per_page=per_page)
+
+
+
+retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
+
+    try:
+        api_response = api_instance.arrays_namespace_array_end_timestamps_get(namespace, array, page=page, per_page=per_page)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ArrayApi->arrays_namespace_array_end_timestamps_get: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
+
+    try:
+        api_response = api_instance.arrays_namespace_array_end_timestamps_get(namespace, array, page=page, per_page=per_page)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ArrayApi->arrays_namespace_array_end_timestamps_get: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
+ **array** | **str**| name/uri of array that is url-encoded | 
+ **page** | **int**| pagination offset | [optional] 
+ **per_page** | **int**| pagination limit | [optional] 
+
+### Return type
+
+[**ArrayEndTimestampData**](ArrayEndTimestampData.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | list of timestamps in milliseconds, paginated |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **consolidate_array**
 > consolidate_array(namespace, array, tiledb_config)
 
@@ -1576,6 +1718,142 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **get_activity_log_by_id**
+> ArrayActivityLog get_activity_log_by_id(namespace, array, id)
+
+
+
+get activity log by id
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+id = 'id_example' # str | id of the activity
+
+    try:
+        api_response = api_instance.get_activity_log_by_id(namespace, array, id)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ArrayApi->get_activity_log_by_id: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+id = 'id_example' # str | id of the activity
+
+    try:
+        api_response = api_instance.get_activity_log_by_id(namespace, array, id)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ArrayApi->get_activity_log_by_id: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
+ **array** | **str**| name/uri of array that is url-encoded | 
+ **id** | **str**| id of the activity | 
+
+### Return type
+
+[**ArrayActivityLog**](ArrayActivityLog.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | array activity |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **get_all_array_metadata**
 > list[ArrayInfo] get_all_array_metadata(public_share=public_share)
 
@@ -1985,7 +2263,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_array_meta_data_json**
-> object get_array_meta_data_json(namespace, array, length=length)
+> object get_array_meta_data_json(namespace, array, length=length, end_timestamp=end_timestamp)
 
 
 
@@ -2034,9 +2312,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 length = 56 # int | (optional) limit character length of returned values (optional)
+end_timestamp = 56 # int | Milliseconds since Unix epoch, metadata will use open_at functionality to open array at the specific timestamp (optional)
 
     try:
-        api_response = api_instance.get_array_meta_data_json(namespace, array, length=length)
+        api_response = api_instance.get_array_meta_data_json(namespace, array, length=length, end_timestamp=end_timestamp)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->get_array_meta_data_json: %s\n" % e)
@@ -2083,9 +2362,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
 length = 56 # int | (optional) limit character length of returned values (optional)
+end_timestamp = 56 # int | Milliseconds since Unix epoch, metadata will use open_at functionality to open array at the specific timestamp (optional)
 
     try:
-        api_response = api_instance.get_array_meta_data_json(namespace, array, length=length)
+        api_response = api_instance.get_array_meta_data_json(namespace, array, length=length, end_timestamp=end_timestamp)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->get_array_meta_data_json: %s\n" % e)
@@ -2098,6 +2378,7 @@ Name | Type | Description  | Notes
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
  **array** | **str**| name/uri of array that is url-encoded | 
  **length** | **int**| (optional) limit character length of returned values | [optional] 
+ **end_timestamp** | **int**| Milliseconds since Unix epoch, metadata will use open_at functionality to open array at the specific timestamp | [optional] 
 
 ### Return type
 
@@ -3054,6 +3335,142 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | array metadata for all arrays in a namespace |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **get_fragment_end_timestamp**
+> int get_fragment_end_timestamp(namespace, array, end_timestamp=end_timestamp)
+
+
+
+Get fragment end_timestamp on an array, will search for the closest end_timestamp to the timestamp asked
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+end_timestamp = 56 # int | Milliseconds since Unix epoch (optional)
+
+    try:
+        api_response = api_instance.get_fragment_end_timestamp(namespace, array, end_timestamp=end_timestamp)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ArrayApi->get_fragment_end_timestamp: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+end_timestamp = 56 # int | Milliseconds since Unix epoch (optional)
+
+    try:
+        api_response = api_instance.get_fragment_end_timestamp(namespace, array, end_timestamp=end_timestamp)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ArrayApi->get_fragment_end_timestamp: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
+ **array** | **str**| name/uri of array that is url-encoded | 
+ **end_timestamp** | **int**| Milliseconds since Unix epoch | [optional] 
+
+### Return type
+
+**int**
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | fragment end_timestamp on an array |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

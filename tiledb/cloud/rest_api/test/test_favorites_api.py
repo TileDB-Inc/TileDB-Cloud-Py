@@ -28,20 +28,100 @@ class TestFavoritesApi(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_add_favorite(self):
-        """Test case for add_favorite"""
+    def test_add_array_favorite(self):
+        """Test case for add_array_favorite"""
         pass
 
-    def test_delete_favorite(self):
-        """Test case for delete_favorite"""
+    def test_add_ml_model_favorite(self):
+        """Test case for add_ml_model_favorite"""
         pass
 
-    def test_get_favorite(self):
-        """Test case for get_favorite"""
+    def test_add_notebook_favorite(self):
+        """Test case for add_notebook_favorite"""
         pass
 
-    def test_list_favorites(self):
-        """Test case for list_favorites"""
+    def test_add_udf_favorite(self):
+        """Test case for add_udf_favorite"""
+        pass
+
+    def test_delete_array_favorite(self):
+        """Test case for delete_array_favorite"""
+        pass
+
+    def test_delete_ml_model_favorite(self):
+        """Test case for delete_ml_model_favorite"""
+        pass
+
+    def test_delete_notebook_favorite(self):
+        """Test case for delete_notebook_favorite"""
+        pass
+
+    def test_delete_udf_favorite(self):
+        """Test case for delete_udf_favorite"""
+        pass
+
+    def test_get_array_favorite(self):
+        """Test case for get_array_favorite"""
+        pass
+
+    def test_get_array_favorite_for_array(self):
+        """Test case for get_array_favorite_for_array"""
+        pass
+
+    def test_get_ml_model_favorite(self):
+        """Test case for get_ml_model_favorite"""
+        pass
+
+    def test_get_ml_model_favorite_for_ml_model(self):
+        """Test case for get_ml_model_favorite_for_ml_model"""
+        pass
+
+    def test_get_notebook_favorite(self):
+        """Test case for get_notebook_favorite"""
+        pass
+
+    def test_get_notebook_favorite_for_notebook(self):
+        """Test case for get_notebook_favorite_for_notebook"""
+        pass
+
+    def test_get_udf_favorite(self):
+        """Test case for get_udf_favorite"""
+        pass
+
+    def test_get_udf_favorite_for_udf(self):
+        """Test case for get_udf_favorite_for_udf"""
+        pass
+
+    def test_list_array_favorites(self):
+        """Test case for list_array_favorites"""
+        pass
+
+    def test_list_array_favorites_uui_ds(self):
+        """Test case for list_array_favorites_uui_ds"""
+        pass
+
+    def test_list_ml_model_favorites(self):
+        """Test case for list_ml_model_favorites"""
+        pass
+
+    def test_list_ml_model_favorites_uui_ds(self):
+        """Test case for list_ml_model_favorites_uui_ds"""
+        pass
+
+    def test_list_notebook_favorites(self):
+        """Test case for list_notebook_favorites"""
+        pass
+
+    def test_list_notebook_favorites_uui_ds(self):
+        """Test case for list_notebook_favorites_uui_ds"""
+        pass
+
+    def test_list_udf_favorites(self):
+        """Test case for list_udf_favorites"""
+        pass
+
+    def test_list_udf_favorites_uui_ds(self):
+        """Test case for list_udf_favorites_uui_ds"""
         pass
 
 

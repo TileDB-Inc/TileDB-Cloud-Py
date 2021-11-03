@@ -56,6 +56,10 @@ class TestArrayApi(unittest.TestCase):
         """Test case for arrays_browser_shared_sidebar_get"""
         pass
 
+    def test_arrays_namespace_array_end_timestamps_get(self):
+        """Test case for arrays_namespace_array_end_timestamps_get"""
+        pass
+
     def test_consolidate_array(self):
         """Test case for consolidate_array"""
         pass
@@ -70,6 +74,10 @@ class TestArrayApi(unittest.TestCase):
 
     def test_deregister_array(self):
         """Test case for deregister_array"""
+        pass
+
+    def test_get_activity_log_by_id(self):
+        """Test case for get_activity_log_by_id"""
         pass
 
     def test_get_all_array_metadata(self):
@@ -114,6 +122,10 @@ class TestArrayApi(unittest.TestCase):
 
     def test_get_arrays_in_namespace(self):
         """Test case for get_arrays_in_namespace"""
+        pass
+
+    def test_get_fragment_end_timestamp(self):
+        """Test case for get_fragment_end_timestamp"""
         pass
 
     def test_get_last_accessed_arrays(self):

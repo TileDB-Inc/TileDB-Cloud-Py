@@ -39,7 +39,9 @@ class ArrayActivityLog(object):
         "bytes_sent": "int",
         "bytes_received": "int",
         "array_task_id": "str",
+        "id": "str",
         "query_ranges": "str",
+        "query_stats": "str",
     }
 
     attribute_map = {
@@ -49,7 +51,9 @@ class ArrayActivityLog(object):
         "bytes_sent": "bytes_sent",
         "bytes_received": "bytes_received",
         "array_task_id": "array_task_id",
+        "id": "id",
         "query_ranges": "query_ranges",
+        "query_stats": "query_stats",
     }
 
     def __init__(
@@ -60,7 +64,9 @@ class ArrayActivityLog(object):
         bytes_sent=None,
         bytes_received=None,
         array_task_id=None,
+        id=None,
         query_ranges=None,
+        query_stats=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """ArrayActivityLog - a model defined in OpenAPI"""  # noqa: E501
@@ -74,7 +80,9 @@ class ArrayActivityLog(object):
         self._bytes_sent = None
         self._bytes_received = None
         self._array_task_id = None
+        self._id = None
         self._query_ranges = None
+        self._query_stats = None
         self.discriminator = None
 
         if event_at is not None:
@@ -89,8 +97,12 @@ class ArrayActivityLog(object):
             self.bytes_received = bytes_received
         if array_task_id is not None:
             self.array_task_id = array_task_id
+        if id is not None:
+            self.id = id
         if query_ranges is not None:
             self.query_ranges = query_ranges
+        if query_stats is not None:
+            self.query_stats = query_stats
 
     @property
     def event_at(self):
@@ -229,6 +241,29 @@ class ArrayActivityLog(object):
         self._array_task_id = array_task_id
 
     @property
+    def id(self):
+        """Gets the id of this ArrayActivityLog.  # noqa: E501
+
+        id of the activity  # noqa: E501
+
+        :return: The id of this ArrayActivityLog.  # noqa: E501
+        :rtype: str
+        """
+        return self._id
+
+    @id.setter
+    def id(self, id):
+        """Sets the id of this ArrayActivityLog.
+
+        id of the activity  # noqa: E501
+
+        :param id: The id of this ArrayActivityLog.  # noqa: E501
+        :type: str
+        """
+
+        self._id = id
+
+    @property
     def query_ranges(self):
         """Gets the query_ranges of this ArrayActivityLog.  # noqa: E501
 
@@ -250,6 +285,29 @@ class ArrayActivityLog(object):
         """
 
         self._query_ranges = query_ranges
+
+    @property
+    def query_stats(self):
+        """Gets the query_stats of this ArrayActivityLog.  # noqa: E501
+
+        stats for query  # noqa: E501
+
+        :return: The query_stats of this ArrayActivityLog.  # noqa: E501
+        :rtype: str
+        """
+        return self._query_stats
+
+    @query_stats.setter
+    def query_stats(self, query_stats):
+        """Sets the query_stats of this ArrayActivityLog.
+
+        stats for query  # noqa: E501
+
+        :param query_stats: The query_stats of this ArrayActivityLog.  # noqa: E501
+        :type: str
+        """
+
+        self._query_stats = query_stats
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -96,10 +96,12 @@ Class | Method | HTTP request | Description
 *ArrayApi* | [**arrays_browser_public_sidebar_get**](docs/ArrayApi.md#arrays_browser_public_sidebar_get) | **GET** /arrays/browser/public/sidebar | 
 *ArrayApi* | [**arrays_browser_shared_get**](docs/ArrayApi.md#arrays_browser_shared_get) | **GET** /arrays/browser/shared | 
 *ArrayApi* | [**arrays_browser_shared_sidebar_get**](docs/ArrayApi.md#arrays_browser_shared_sidebar_get) | **GET** /arrays/browser/shared/sidebar | 
+*ArrayApi* | [**arrays_namespace_array_end_timestamps_get**](docs/ArrayApi.md#arrays_namespace_array_end_timestamps_get) | **GET** /arrays/{namespace}/{array}/end_timestamps | 
 *ArrayApi* | [**consolidate_array**](docs/ArrayApi.md#consolidate_array) | **POST** /arrays/{namespace}/{array}/consolidate | 
 *ArrayApi* | [**create_array**](docs/ArrayApi.md#create_array) | **POST** /arrays/{namespace}/{array} | 
 *ArrayApi* | [**delete_array**](docs/ArrayApi.md#delete_array) | **DELETE** /arrays/{namespace}/{array} | 
 *ArrayApi* | [**deregister_array**](docs/ArrayApi.md#deregister_array) | **DELETE** /arrays/{namespace}/{array}/deregister | 
+*ArrayApi* | [**get_activity_log_by_id**](docs/ArrayApi.md#get_activity_log_by_id) | **GET** /arrays/{namespace}/{array}/activity/{id} | 
 *ArrayApi* | [**get_all_array_metadata**](docs/ArrayApi.md#get_all_array_metadata) | **GET** /arrays | 
 *ArrayApi* | [**get_array**](docs/ArrayApi.md#get_array) | **GET** /arrays/{namespace}/{array} | 
 *ArrayApi* | [**get_array_max_buffer_sizes**](docs/ArrayApi.md#get_array_max_buffer_sizes) | **GET** /arrays/{namespace}/{array}/max_buffer_sizes | 
@@ -111,6 +113,7 @@ Class | Method | HTTP request | Description
 *ArrayApi* | [**get_array_sample_data**](docs/ArrayApi.md#get_array_sample_data) | **GET** /arrays/{namespace}/{array}/sample | 
 *ArrayApi* | [**get_array_sharing_policies**](docs/ArrayApi.md#get_array_sharing_policies) | **GET** /arrays/{namespace}/{array}/share | 
 *ArrayApi* | [**get_arrays_in_namespace**](docs/ArrayApi.md#get_arrays_in_namespace) | **GET** /arrays/{namespace} | 
+*ArrayApi* | [**get_fragment_end_timestamp**](docs/ArrayApi.md#get_fragment_end_timestamp) | **GET** /arrays/{namespace}/{array}/fragment_end_timestamp | 
 *ArrayApi* | [**get_last_accessed_arrays**](docs/ArrayApi.md#get_last_accessed_arrays) | **GET** /arrays/last_accessed | 
 *ArrayApi* | [**register_array**](docs/ArrayApi.md#register_array) | **POST** /arrays/{namespace}/{array}/register | 
 *ArrayApi* | [**share_array**](docs/ArrayApi.md#share_array) | **PATCH** /arrays/{namespace}/{array}/share | 
@@ -118,10 +121,30 @@ Class | Method | HTTP request | Description
 *ArrayApi* | [**update_array_metadata_capnp**](docs/ArrayApi.md#update_array_metadata_capnp) | **POST** /arrays/{namespace}/{array}/array_metadata | 
 *ArrayApi* | [**vacuum_array**](docs/ArrayApi.md#vacuum_array) | **POST** /arrays/{namespace}/{array}/vacuum | 
 *ArrayTasksApi* | [**get_array_tasks_sidebar**](docs/ArrayTasksApi.md#get_array_tasks_sidebar) | **GET** /tasks/sidebar | 
-*FavoritesApi* | [**add_favorite**](docs/FavoritesApi.md#add_favorite) | **POST** /favorites | 
-*FavoritesApi* | [**delete_favorite**](docs/FavoritesApi.md#delete_favorite) | **DELETE** /favorites/{id} | 
-*FavoritesApi* | [**get_favorite**](docs/FavoritesApi.md#get_favorite) | **GET** /favorites/{id} | 
-*FavoritesApi* | [**list_favorites**](docs/FavoritesApi.md#list_favorites) | **GET** /favorites | 
+*FavoritesApi* | [**add_array_favorite**](docs/FavoritesApi.md#add_array_favorite) | **POST** /arrays/favorites | 
+*FavoritesApi* | [**add_ml_model_favorite**](docs/FavoritesApi.md#add_ml_model_favorite) | **POST** /mlmodels/favorites | 
+*FavoritesApi* | [**add_notebook_favorite**](docs/FavoritesApi.md#add_notebook_favorite) | **POST** /notebooks/favorites | 
+*FavoritesApi* | [**add_udf_favorite**](docs/FavoritesApi.md#add_udf_favorite) | **POST** /udfs/favorites | 
+*FavoritesApi* | [**delete_array_favorite**](docs/FavoritesApi.md#delete_array_favorite) | **DELETE** /arrays/favorites/{id} | 
+*FavoritesApi* | [**delete_ml_model_favorite**](docs/FavoritesApi.md#delete_ml_model_favorite) | **DELETE** /mlmodels/favorites/{id} | 
+*FavoritesApi* | [**delete_notebook_favorite**](docs/FavoritesApi.md#delete_notebook_favorite) | **DELETE** /notebooks/favorites/{id} | 
+*FavoritesApi* | [**delete_udf_favorite**](docs/FavoritesApi.md#delete_udf_favorite) | **DELETE** /udfs/favorites/{id} | 
+*FavoritesApi* | [**get_array_favorite**](docs/FavoritesApi.md#get_array_favorite) | **GET** /arrays/favorites/{id} | 
+*FavoritesApi* | [**get_array_favorite_for_array**](docs/FavoritesApi.md#get_array_favorite_for_array) | **GET** /arrays/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**get_ml_model_favorite**](docs/FavoritesApi.md#get_ml_model_favorite) | **GET** /mlmodels/favorites/{id} | 
+*FavoritesApi* | [**get_ml_model_favorite_for_ml_model**](docs/FavoritesApi.md#get_ml_model_favorite_for_ml_model) | **GET** /mlmodels/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**get_notebook_favorite**](docs/FavoritesApi.md#get_notebook_favorite) | **GET** /notebooks/favorites/{id} | 
+*FavoritesApi* | [**get_notebook_favorite_for_notebook**](docs/FavoritesApi.md#get_notebook_favorite_for_notebook) | **GET** /notebooks/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**get_udf_favorite**](docs/FavoritesApi.md#get_udf_favorite) | **GET** /udfs/favorites/{id} | 
+*FavoritesApi* | [**get_udf_favorite_for_udf**](docs/FavoritesApi.md#get_udf_favorite_for_udf) | **GET** /udfs/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**list_array_favorites**](docs/FavoritesApi.md#list_array_favorites) | **GET** /arrays/favorites | 
+*FavoritesApi* | [**list_array_favorites_uui_ds**](docs/FavoritesApi.md#list_array_favorites_uui_ds) | **GET** /arrays/favorites/uuids | 
+*FavoritesApi* | [**list_ml_model_favorites**](docs/FavoritesApi.md#list_ml_model_favorites) | **GET** /mlmodels/favorites | 
+*FavoritesApi* | [**list_ml_model_favorites_uui_ds**](docs/FavoritesApi.md#list_ml_model_favorites_uui_ds) | **GET** /mlmodels/favorites/uuids | 
+*FavoritesApi* | [**list_notebook_favorites**](docs/FavoritesApi.md#list_notebook_favorites) | **GET** /notebooks/favorites | 
+*FavoritesApi* | [**list_notebook_favorites_uui_ds**](docs/FavoritesApi.md#list_notebook_favorites_uui_ds) | **GET** /notebooks/favorites/uuids | 
+*FavoritesApi* | [**list_udf_favorites**](docs/FavoritesApi.md#list_udf_favorites) | **GET** /udfs/favorites | 
+*FavoritesApi* | [**list_udf_favorites_uui_ds**](docs/FavoritesApi.md#list_udf_favorites_uui_ds) | **GET** /udfs/favorites/uuids | 
 *InvitationApi* | [**accept_invitation**](docs/InvitationApi.md#accept_invitation) | **POST** /invitations/{invitation} | 
 *InvitationApi* | [**cancel_join_organization**](docs/InvitationApi.md#cancel_join_organization) | **DELETE** /invitations/{invitation}/{organization}/join | 
 *InvitationApi* | [**cancel_share_array_by_invite**](docs/InvitationApi.md#cancel_share_array_by_invite) | **DELETE** /invitations/{invitation}/{namespace}/{array}/share | 
@@ -131,7 +154,7 @@ Class | Method | HTTP request | Description
 *NotebookApi* | [**get_notebook_server_status**](docs/NotebookApi.md#get_notebook_server_status) | **GET** /notebooks/server/{namespace}/status | 
 *NotebookApi* | [**shutdown_notebook_server**](docs/NotebookApi.md#shutdown_notebook_server) | **DELETE** /notebooks/server/{namespace} | 
 *NotebookApi* | [**update_notebook_name**](docs/NotebookApi.md#update_notebook_name) | **PATCH** /notebooks/{namespace}/{array}/rename | 
-*NotebooksApi* | [**notebooks_namespace_array_versions_get**](docs/NotebooksApi.md#notebooks_namespace_array_versions_get) | **GET** /notebooks/{namespace}/{array}/versions | 
+*NotebooksApi* | [**notebooks_namespace_array_end_timestamps_get**](docs/NotebooksApi.md#notebooks_namespace_array_end_timestamps_get) | **GET** /notebooks/{namespace}/{array}/end_timestamps | 
 *OrganizationApi* | [**add_aws_access_credentials**](docs/OrganizationApi.md#add_aws_access_credentials) | **POST** /credentials/{namespace}/aws | 
 *OrganizationApi* | [**add_user_to_organization**](docs/OrganizationApi.md#add_user_to_organization) | **POST** /organizations/{organization}/user | 
 *OrganizationApi* | [**check_aws_access_credentials**](docs/OrganizationApi.md#check_aws_access_credentials) | **GET** /credentials/{namespace}/aws | 
@@ -165,7 +188,7 @@ Class | Method | HTTP request | Description
 *UdfApi* | [**submit_generic_udf**](docs/UdfApi.md#submit_generic_udf) | **POST** /udfs/generic/{namespace} | 
 *UdfApi* | [**submit_multi_array_udf**](docs/UdfApi.md#submit_multi_array_udf) | **POST** /udfs/arrays/{namespace} | 
 *UdfApi* | [**submit_udf**](docs/UdfApi.md#submit_udf) | **POST** /arrays/{namespace}/{array}/udf/submit | 
-*UdfApi* | [**udf_namespace_array_versions_get**](docs/UdfApi.md#udf_namespace_array_versions_get) | **GET** /udf/{namespace}/{array}/versions | 
+*UdfApi* | [**udf_namespace_array_end_timestamps_get**](docs/UdfApi.md#udf_namespace_array_end_timestamps_get) | **GET** /udf/{namespace}/{array}/end_timestamps | 
 *UdfApi* | [**update_udf_info**](docs/UdfApi.md#update_udf_info) | **PATCH** /udf/{namespace}/{name} | 
 *UserApi* | [**add_aws_access_credentials**](docs/UserApi.md#add_aws_access_credentials) | **POST** /credentials/{namespace}/aws | 
 *UserApi* | [**add_user_to_organization**](docs/UserApi.md#add_user_to_organization) | **POST** /organizations/{organization}/user | 
@@ -200,6 +223,9 @@ Class | Method | HTTP request | Description
  - [ArrayActivityLog](docs/ArrayActivityLog.md)
  - [ArrayBrowserData](docs/ArrayBrowserData.md)
  - [ArrayBrowserSidebar](docs/ArrayBrowserSidebar.md)
+ - [ArrayEndTimestampData](docs/ArrayEndTimestampData.md)
+ - [ArrayFavorite](docs/ArrayFavorite.md)
+ - [ArrayFavoritesData](docs/ArrayFavoritesData.md)
  - [ArrayInfo](docs/ArrayInfo.md)
  - [ArrayInfoUpdate](docs/ArrayInfoUpdate.md)
  - [ArrayMetadata](docs/ArrayMetadata.md)
@@ -224,10 +250,7 @@ Class | Method | HTTP request | Description
  - [Domain](docs/Domain.md)
  - [DomainArray](docs/DomainArray.md)
  - [Error](docs/Error.md)
- - [Favorite](docs/Favorite.md)
  - [FavoriteCreate](docs/FavoriteCreate.md)
- - [FavoriteType](docs/FavoriteType.md)
- - [FavoritesData](docs/FavoritesData.md)
  - [FilePropertyName](docs/FilePropertyName.md)
  - [FileType](docs/FileType.md)
  - [Filter](docs/Filter.md)
@@ -246,10 +269,14 @@ Class | Method | HTTP request | Description
  - [InvitationType](docs/InvitationType.md)
  - [LastAccessedArray](docs/LastAccessedArray.md)
  - [Layout](docs/Layout.md)
+ - [MLModelFavorite](docs/MLModelFavorite.md)
+ - [MLModelFavoritesData](docs/MLModelFavoritesData.md)
  - [MaxBufferSizes](docs/MaxBufferSizes.md)
  - [MultiArrayUDF](docs/MultiArrayUDF.md)
  - [NamespaceActions](docs/NamespaceActions.md)
  - [NonEmptyDomain](docs/NonEmptyDomain.md)
+ - [NotebookFavorite](docs/NotebookFavorite.md)
+ - [NotebookFavoritesData](docs/NotebookFavoritesData.md)
  - [NotebookStatus](docs/NotebookStatus.md)
  - [Organization](docs/Organization.md)
  - [OrganizationRoles](docs/OrganizationRoles.md)
@@ -284,6 +311,8 @@ Class | Method | HTTP request | Description
  - [TokenScope](docs/TokenScope.md)
  - [UDFActions](docs/UDFActions.md)
  - [UDFArrayDetails](docs/UDFArrayDetails.md)
+ - [UDFFavorite](docs/UDFFavorite.md)
+ - [UDFFavoritesData](docs/UDFFavoritesData.md)
  - [UDFImage](docs/UDFImage.md)
  - [UDFImageVersion](docs/UDFImageVersion.md)
  - [UDFInfo](docs/UDFInfo.md)

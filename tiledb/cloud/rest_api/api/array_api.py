@@ -1184,6 +1184,159 @@ class ArrayApi(object):
             collection_formats=collection_formats,
         )
 
+    def arrays_namespace_array_end_timestamps_get(
+        self, namespace, array, **kwargs
+    ):  # noqa: E501
+        """arrays_namespace_array_end_timestamps_get  # noqa: E501
+
+        retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.arrays_namespace_array_end_timestamps_get(namespace, array, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str array: name/uri of array that is url-encoded (required)
+        :param int page: pagination offset
+        :param int per_page: pagination limit
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: ArrayEndTimestampData
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs["_return_http_data_only"] = True
+        return self.arrays_namespace_array_end_timestamps_get_with_http_info(
+            namespace, array, **kwargs
+        )  # noqa: E501
+
+    def arrays_namespace_array_end_timestamps_get_with_http_info(
+        self, namespace, array, **kwargs
+    ):  # noqa: E501
+        """arrays_namespace_array_end_timestamps_get  # noqa: E501
+
+        retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.arrays_namespace_array_end_timestamps_get_with_http_info(namespace, array, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str array: name/uri of array that is url-encoded (required)
+        :param int page: pagination offset
+        :param int per_page: pagination limit
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: tuple(ArrayEndTimestampData, status_code(int), headers(HTTPHeaderDict))
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = ["namespace", "array", "page", "per_page"]
+        all_params.extend(
+            [
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params["kwargs"]):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method arrays_namespace_array_end_timestamps_get" % key
+                )
+            local_var_params[key] = val
+        del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `arrays_namespace_array_end_timestamps_get`"
+            )  # noqa: E501
+        # verify the required parameter 'array' is set
+        if self.api_client.client_side_validation and (
+            "array" not in local_var_params
+            or local_var_params["array"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `arrays_namespace_array_end_timestamps_get`"
+            )  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
+
+        query_params = []
+        if (
+            "page" in local_var_params and local_var_params["page"] is not None
+        ):  # noqa: E501
+            query_params.append(("page", local_var_params["page"]))  # noqa: E501
+        if (
+            "per_page" in local_var_params and local_var_params["per_page"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("per_page", local_var_params["per_page"])
+            )  # noqa: E501
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+
+        return self.api_client.call_api(
+            "/arrays/{namespace}/{array}/end_timestamps",
+            "GET",
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type="ArrayEndTimestampData",  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
+
     def consolidate_array(
         self, namespace, array, tiledb_config, **kwargs
     ):  # noqa: E501
@@ -1812,6 +1965,154 @@ class ArrayApi(object):
             collection_formats=collection_formats,
         )
 
+    def get_activity_log_by_id(self, namespace, array, id, **kwargs):  # noqa: E501
+        """get_activity_log_by_id  # noqa: E501
+
+        get activity log by id  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_activity_log_by_id(namespace, array, id, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str array: name/uri of array that is url-encoded (required)
+        :param str id: id of the activity (required)
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: ArrayActivityLog
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs["_return_http_data_only"] = True
+        return self.get_activity_log_by_id_with_http_info(
+            namespace, array, id, **kwargs
+        )  # noqa: E501
+
+    def get_activity_log_by_id_with_http_info(
+        self, namespace, array, id, **kwargs
+    ):  # noqa: E501
+        """get_activity_log_by_id  # noqa: E501
+
+        get activity log by id  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_activity_log_by_id_with_http_info(namespace, array, id, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str array: name/uri of array that is url-encoded (required)
+        :param str id: id of the activity (required)
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: tuple(ArrayActivityLog, status_code(int), headers(HTTPHeaderDict))
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = ["namespace", "array", "id"]
+        all_params.extend(
+            [
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params["kwargs"]):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method get_activity_log_by_id" % key
+                )
+            local_var_params[key] = val
+        del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `get_activity_log_by_id`"
+            )  # noqa: E501
+        # verify the required parameter 'array' is set
+        if self.api_client.client_side_validation and (
+            "array" not in local_var_params
+            or local_var_params["array"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `get_activity_log_by_id`"
+            )  # noqa: E501
+        # verify the required parameter 'id' is set
+        if self.api_client.client_side_validation and (
+            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `id` when calling `get_activity_log_by_id`"
+            )  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
+        if "id" in local_var_params:
+            path_params["id"] = local_var_params["id"]  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+
+        return self.api_client.call_api(
+            "/arrays/{namespace}/{array}/activity/{id}",
+            "GET",
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type="ArrayActivityLog",  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
+
     def get_all_array_metadata(self, **kwargs):  # noqa: E501
         """get_all_array_metadata  # noqa: E501
 
@@ -2267,6 +2568,7 @@ class ArrayApi(object):
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
         :param int length: (optional) limit character length of returned values
+        :param int end_timestamp: Milliseconds since Unix epoch, metadata will use open_at functionality to open array at the specific timestamp
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -2298,6 +2600,7 @@ class ArrayApi(object):
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
         :param int length: (optional) limit character length of returned values
+        :param int end_timestamp: Milliseconds since Unix epoch, metadata will use open_at functionality to open array at the specific timestamp
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -2314,7 +2617,7 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace", "array", "length"]
+        all_params = ["namespace", "array", "length", "end_timestamp"]
         all_params.extend(
             [
                 "async_req",
@@ -2362,6 +2665,13 @@ class ArrayApi(object):
             "length" in local_var_params and local_var_params["length"] is not None
         ):  # noqa: E501
             query_params.append(("length", local_var_params["length"]))  # noqa: E501
+        if (
+            "end_timestamp" in local_var_params
+            and local_var_params["end_timestamp"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("end_timestamp", local_var_params["end_timestamp"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -3358,6 +3668,152 @@ class ArrayApi(object):
             post_params=form_params,
             files=local_var_files,
             response_type="list[ArrayInfo]",  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
+
+    def get_fragment_end_timestamp(self, namespace, array, **kwargs):  # noqa: E501
+        """get_fragment_end_timestamp  # noqa: E501
+
+        Get fragment end_timestamp on an array, will search for the closest end_timestamp to the timestamp asked  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_fragment_end_timestamp(namespace, array, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str array: name/uri of array that is url-encoded (required)
+        :param int end_timestamp: Milliseconds since Unix epoch
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: int
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs["_return_http_data_only"] = True
+        return self.get_fragment_end_timestamp_with_http_info(
+            namespace, array, **kwargs
+        )  # noqa: E501
+
+    def get_fragment_end_timestamp_with_http_info(
+        self, namespace, array, **kwargs
+    ):  # noqa: E501
+        """get_fragment_end_timestamp  # noqa: E501
+
+        Get fragment end_timestamp on an array, will search for the closest end_timestamp to the timestamp asked  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_fragment_end_timestamp_with_http_info(namespace, array, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str array: name/uri of array that is url-encoded (required)
+        :param int end_timestamp: Milliseconds since Unix epoch
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: tuple(int, status_code(int), headers(HTTPHeaderDict))
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = ["namespace", "array", "end_timestamp"]
+        all_params.extend(
+            [
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params["kwargs"]):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method get_fragment_end_timestamp" % key
+                )
+            local_var_params[key] = val
+        del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `get_fragment_end_timestamp`"
+            )  # noqa: E501
+        # verify the required parameter 'array' is set
+        if self.api_client.client_side_validation and (
+            "array" not in local_var_params
+            or local_var_params["array"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `get_fragment_end_timestamp`"
+            )  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
+
+        query_params = []
+        if (
+            "end_timestamp" in local_var_params
+            and local_var_params["end_timestamp"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("end_timestamp", local_var_params["end_timestamp"])
+            )  # noqa: E501
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+
+        return self.api_client.call_api(
+            "/arrays/{namespace}/{array}/fragment_end_timestamp",
+            "GET",
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type="int",  # noqa: E501
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(

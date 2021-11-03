@@ -1219,20 +1219,22 @@ class UdfApi(object):
             collection_formats=collection_formats,
         )
 
-    def udf_namespace_array_versions_get(
+    def udf_namespace_array_end_timestamps_get(
         self, namespace, array, **kwargs
     ):  # noqa: E501
-        """udf_namespace_array_versions_get  # noqa: E501
+        """udf_namespace_array_end_timestamps_get  # noqa: E501
 
-        retrieve a list of timestamps from the array fragment info listing in milliseconds  # noqa: E501
+        retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.udf_namespace_array_versions_get(namespace, array, async_req=True)
+        >>> thread = api.udf_namespace_array_end_timestamps_get(namespace, array, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
+        :param int page: pagination offset
+        :param int per_page: pagination limit
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1240,29 +1242,31 @@ class UdfApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: list[int]
+        :return: ArrayEndTimestampData
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.udf_namespace_array_versions_get_with_http_info(
+        return self.udf_namespace_array_end_timestamps_get_with_http_info(
             namespace, array, **kwargs
         )  # noqa: E501
 
-    def udf_namespace_array_versions_get_with_http_info(
+    def udf_namespace_array_end_timestamps_get_with_http_info(
         self, namespace, array, **kwargs
     ):  # noqa: E501
-        """udf_namespace_array_versions_get  # noqa: E501
+        """udf_namespace_array_end_timestamps_get  # noqa: E501
 
-        retrieve a list of timestamps from the array fragment info listing in milliseconds  # noqa: E501
+        retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.udf_namespace_array_versions_get_with_http_info(namespace, array, async_req=True)
+        >>> thread = api.udf_namespace_array_end_timestamps_get_with_http_info(namespace, array, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
+        :param int page: pagination offset
+        :param int per_page: pagination limit
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1272,14 +1276,14 @@ class UdfApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(list[int], status_code(int), headers(HTTPHeaderDict))
+        :return: tuple(ArrayEndTimestampData, status_code(int), headers(HTTPHeaderDict))
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
         local_var_params = locals()
 
-        all_params = ["namespace", "array"]
+        all_params = ["namespace", "array", "page", "per_page"]
         all_params.extend(
             [
                 "async_req",
@@ -1293,7 +1297,7 @@ class UdfApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method udf_namespace_array_versions_get" % key
+                    " to method udf_namespace_array_end_timestamps_get" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
@@ -1303,7 +1307,7 @@ class UdfApi(object):
             or local_var_params["namespace"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `udf_namespace_array_versions_get`"
+                "Missing the required parameter `namespace` when calling `udf_namespace_array_end_timestamps_get`"
             )  # noqa: E501
         # verify the required parameter 'array' is set
         if self.api_client.client_side_validation and (
@@ -1311,7 +1315,7 @@ class UdfApi(object):
             or local_var_params["array"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `array` when calling `udf_namespace_array_versions_get`"
+                "Missing the required parameter `array` when calling `udf_namespace_array_end_timestamps_get`"
             )  # noqa: E501
 
         collection_formats = {}
@@ -1323,6 +1327,16 @@ class UdfApi(object):
             path_params["array"] = local_var_params["array"]  # noqa: E501
 
         query_params = []
+        if (
+            "page" in local_var_params and local_var_params["page"] is not None
+        ):  # noqa: E501
+            query_params.append(("page", local_var_params["page"]))  # noqa: E501
+        if (
+            "per_page" in local_var_params and local_var_params["per_page"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("per_page", local_var_params["per_page"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -1339,7 +1353,7 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udf/{namespace}/{array}/versions",
+            "/udf/{namespace}/{array}/end_timestamps",
             "GET",
             path_params,
             query_params,
@@ -1347,7 +1361,7 @@ class UdfApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="list[int]",  # noqa: E501
+            response_type="ArrayEndTimestampData",  # noqa: E501
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(

@@ -19,6 +19,9 @@ from tiledb.cloud.rest_api.models.array_actions import ArrayActions
 from tiledb.cloud.rest_api.models.array_activity_log import ArrayActivityLog
 from tiledb.cloud.rest_api.models.array_browser_data import ArrayBrowserData
 from tiledb.cloud.rest_api.models.array_browser_sidebar import ArrayBrowserSidebar
+from tiledb.cloud.rest_api.models.array_end_timestamp_data import ArrayEndTimestampData
+from tiledb.cloud.rest_api.models.array_favorite import ArrayFavorite
+from tiledb.cloud.rest_api.models.array_favorites_data import ArrayFavoritesData
 from tiledb.cloud.rest_api.models.array_info import ArrayInfo
 from tiledb.cloud.rest_api.models.array_info_update import ArrayInfoUpdate
 from tiledb.cloud.rest_api.models.array_metadata import ArrayMetadata
@@ -48,10 +51,7 @@ from tiledb.cloud.rest_api.models.dimension_tile_extent import DimensionTileExte
 from tiledb.cloud.rest_api.models.domain import Domain
 from tiledb.cloud.rest_api.models.domain_array import DomainArray
 from tiledb.cloud.rest_api.models.error import Error
-from tiledb.cloud.rest_api.models.favorite import Favorite
 from tiledb.cloud.rest_api.models.favorite_create import FavoriteCreate
-from tiledb.cloud.rest_api.models.favorite_type import FavoriteType
-from tiledb.cloud.rest_api.models.favorites_data import FavoritesData
 from tiledb.cloud.rest_api.models.file_property_name import FilePropertyName
 from tiledb.cloud.rest_api.models.file_type import FileType
 from tiledb.cloud.rest_api.models.filter import Filter
@@ -75,9 +75,13 @@ from tiledb.cloud.rest_api.models.invitation_type import InvitationType
 from tiledb.cloud.rest_api.models.last_accessed_array import LastAccessedArray
 from tiledb.cloud.rest_api.models.layout import Layout
 from tiledb.cloud.rest_api.models.max_buffer_sizes import MaxBufferSizes
+from tiledb.cloud.rest_api.models.ml_model_favorite import MLModelFavorite
+from tiledb.cloud.rest_api.models.ml_model_favorites_data import MLModelFavoritesData
 from tiledb.cloud.rest_api.models.multi_array_udf import MultiArrayUDF
 from tiledb.cloud.rest_api.models.namespace_actions import NamespaceActions
 from tiledb.cloud.rest_api.models.non_empty_domain import NonEmptyDomain
+from tiledb.cloud.rest_api.models.notebook_favorite import NotebookFavorite
+from tiledb.cloud.rest_api.models.notebook_favorites_data import NotebookFavoritesData
 from tiledb.cloud.rest_api.models.notebook_status import NotebookStatus
 from tiledb.cloud.rest_api.models.organization import Organization
 from tiledb.cloud.rest_api.models.organization_roles import OrganizationRoles
@@ -116,6 +120,8 @@ from tiledb.cloud.rest_api.models.token_request import TokenRequest
 from tiledb.cloud.rest_api.models.token_scope import TokenScope
 from tiledb.cloud.rest_api.models.udf_actions import UDFActions
 from tiledb.cloud.rest_api.models.udf_array_details import UDFArrayDetails
+from tiledb.cloud.rest_api.models.udf_favorite import UDFFavorite
+from tiledb.cloud.rest_api.models.udf_favorites_data import UDFFavoritesData
 from tiledb.cloud.rest_api.models.udf_image import UDFImage
 from tiledb.cloud.rest_api.models.udf_image_version import UDFImageVersion
 from tiledb.cloud.rest_api.models.udf_info import UDFInfo
