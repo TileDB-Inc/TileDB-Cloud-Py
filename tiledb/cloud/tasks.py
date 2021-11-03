@@ -1,16 +1,16 @@
 import datetime
 import uuid
-from typing import Any, TypeVar
+from typing import Any
 
 import pandas as pd
-import urllib3
 
 from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error
+from tiledb.cloud import utils
 from tiledb.cloud._results import decoders
-from tiledb.cloud.array import split_uri
+from tiledb.cloud._results import results
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
 
@@ -78,7 +78,7 @@ def tasks(
         raise Exception("status must be one of ['FAILED', 'RUNNING', 'COMPLETED']")
 
     if array is not None:
-        (namespace, array) = split_uri(array)
+        (namespace, array) = utils.split_uri(array)
 
     try:
         args = {"async_req": async_req}
@@ -133,7 +133,7 @@ def fetch_results(
     result_format: str = models.ResultFormat.NATIVE,
 ) -> Any:
     """Fetches the results of a previously-executed UDF or SQL query."""
-    return _fetch(task_id, decoders.Decoder(result_format))
+    return results.fetch_remote(task_id, decoders.Decoder(result_format))
 
 
 def fetch_results_pandas(
@@ -142,19 +142,4 @@ def fetch_results_pandas(
     result_format: str = models.ResultFormat.NATIVE,
 ) -> pd.DataFrame:
     """Fetches the results of a previously-executed UDF or SQL query."""
-    return _fetch(task_id, decoders.PandasDecoder(result_format))
-
-
-_T = TypeVar("_T")
-
-
-def _fetch(task_id: uuid.UUID, decoder: decoders.AbstractDecoder[_T]) -> _T:
-    api_instance = client.client.tasks_api
-    try:
-        resp: urllib3.HTTPResponse = api_instance.task_id_result_get(
-            str(task_id),
-            _preload_content=False,
-        )
-    except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
-    return decoder.decode(resp.data)
+    return results.fetch_remote(task_id, decoders.PandasDecoder(result_format))

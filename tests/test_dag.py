@@ -7,6 +7,7 @@ import threading
 import time
 import unittest
 import uuid
+from concurrent import futures
 from typing import Any
 
 import cloudpickle
@@ -17,6 +18,7 @@ import tiledb.cloud
 from tiledb.cloud import dag
 from tiledb.cloud import tasks
 from tiledb.cloud._results import decoders
+from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params as sp
 from tiledb.cloud._results import visitor
 from tiledb.cloud.dag import dag as dag_dag
@@ -681,8 +683,9 @@ class ReplaceNodesTest(unittest.TestCase):
 def _node(val):
     """Creates a completed node with the given value."""
     n = dag.Node(lambda: None)
+    n._future = futures.Future()
+    n._future.set_result(results.LocalResult(val))
     n.status = dag.Status.COMPLETED
-    n._results = val
     return n
 
 
