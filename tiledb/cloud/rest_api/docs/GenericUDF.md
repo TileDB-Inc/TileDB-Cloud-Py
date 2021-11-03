@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **result_format** | [**ResultFormat**](ResultFormat.md) |  | [optional] 
 **task_name** | **str** | name of task, optional | [optional] 
 **store_results** | **bool** | store results for later retrieval | [optional] 
+**dont_download_results** | **bool** | Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\&quot;yes download results\&quot;). | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

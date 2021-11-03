@@ -48,6 +48,7 @@ class TestGenericUDF(unittest.TestCase):
                 result_format="native",
                 task_name="0",
                 store_results=True,
+                dont_download_results=True,
             )
         else:
             return GenericUDF()
