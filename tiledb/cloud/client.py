@@ -516,6 +516,12 @@ class Client:
         """Sets how we should retry requests and updates API instances."""
         mode = RetryMode.maybe_from(mode)
         config.config.retries = _RETRY_CONFIGS[mode]
+        # If users increase the size of the thread pool, increase the size
+        # of the connection pool to match. (The internal members of
+        # ThreadPoolExecutor are not exposed in the .pyi files, so we silence
+        # mypy's warning here.)
+        pool_size = self._thread_pool._max_workers  # type: ignore[attr-defined]
+        config.config.connection_pool_maxsize = pool_size
         client = rest_api.ApiClient(config.config)
 
         self.array_api = rest_api.ArrayApi(client)
