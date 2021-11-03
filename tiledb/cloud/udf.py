@@ -13,6 +13,7 @@ from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
+from tiledb.cloud._results import sender
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
 
@@ -33,6 +34,7 @@ def exec_base(
     result_format_version=None,
     store_results: bool = False,
     stored_param_uuids: Iterable[uuid.UUID] = (),
+    _download_results: bool = True,
     **kwargs,
 ) -> "results.RemoteResult":
     """Run a user defined function, returning the result and metadata.
@@ -104,6 +106,7 @@ def exec_base(
         image_name=image_name,
         task_name=task_name,
         stored_param_uuids=list(str(uuid) for uuid in stored_param_uuids),
+        dont_download_results=not _download_results,
     )
 
     if callable(user_func):
@@ -121,12 +124,13 @@ def exec_base(
     if http_compressor:
         submit_kwargs["accept_encoding"] = http_compressor
 
-    return client.send_udf_call(
+    return sender.send_udf_call(
         api_instance.submit_generic_udf,
         submit_kwargs,
         decoders.Decoder(result_format),
         id_callback=array._maybe_set_last_udf_id,
         results_stored=store_results,
+        results_downloaded=_download_results,
     )
 
 
@@ -145,7 +149,7 @@ def exec_async(*args, **kwargs) -> Any:
 
     Arguments are exactly as in :func:`exec_base`.
     """
-    return client.client.wrap_async_base_call(exec_base, *args, **kwargs)
+    return sender.wrap_async_base_call(exec_base, *args, **kwargs)
 
 
 def register_udf(

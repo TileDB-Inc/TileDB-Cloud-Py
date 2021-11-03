@@ -1,6 +1,7 @@
 import base64
 import inspect
 import logging
+import urllib
 from typing import Any, Callable, Optional, TypeVar
 
 import cloudpickle
@@ -9,6 +10,20 @@ TILEDB_CLOUD_PROTOCOL = 4
 
 # General-use logger for TileDB Cloud.
 logger = logging.getLogger("tiledb.cloud")
+
+
+def split_uri(uri):
+    """
+    Split a URI into namespace and array name
+
+    :param uri: uri to split into namespace and array name
+    :param async_req: return future instead of results for async support
+    :return: tuple (namespace, array_name)
+    """
+    parsed = urllib.parse.urlparse(uri)
+    if not parsed.scheme == "tiledb":
+        raise Exception("Incorrect array uri, must be in tiledb:// scheme")
+    return parsed.netloc, parsed.path[1:]
 
 
 def getsourcelines(func: Callable) -> Optional[str]:

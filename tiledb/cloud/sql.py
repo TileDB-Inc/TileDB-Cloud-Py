@@ -13,6 +13,7 @@ from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
+from tiledb.cloud._results import sender
 from tiledb.cloud.rest_api import models
 
 last_sql_task_id: Optional[str] = None
@@ -32,6 +33,7 @@ def exec_base(
     result_format: str = models.ResultFormat.ARROW,
     result_format_version=None,
     store_results: bool = False,
+    _download_results: bool = True,
 ) -> "results.RemoteResult":
     """Run a Serverless SQL query, returning both the result and metadata.
 
@@ -111,6 +113,7 @@ def exec_base(
             parameters=parameters,
             result_format=result_format,
             store_results=store_results,
+            dont_download_results=not _download_results,
         ),
     )
     if http_compressor is not None:
@@ -119,12 +122,13 @@ def exec_base(
     decoder_cls = decoders.Decoder if raw_results else decoders.PandasDecoder
     decoder = decoder_cls(result_format)
 
-    return client.send_udf_call(
+    return sender.send_udf_call(
         api_instance.run_sql,
         kwargs,
         decoder,
         id_callback=_maybe_set_last_task_id,
         results_stored=store_results,
+        results_downloaded=_download_results,
     )
 
 
@@ -172,7 +176,7 @@ def exec_async(*args, **kwargs) -> "results.AsyncResult":
     All arguments are exactly as in :func:`exec_base`. Returns an AsyncResponse,
     a Future-like object.
     """
-    return client.client.wrap_async_base_call(exec_base, *args, **kwargs)
+    return sender.wrap_async_base_call(exec_base, *args, **kwargs)
 
 
 def _maybe_set_last_task_id(task_id: Optional[uuid.UUID]):
