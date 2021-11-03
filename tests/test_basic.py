@@ -1,5 +1,6 @@
 import os
 import unittest
+import uuid
 
 import numpy
 import numpy as np
@@ -30,7 +31,7 @@ class BasicTests(unittest.TestCase):
             array.array_activity("tiledb://TileDB-Inc/quickstart_sparse")
 
     def test_tasks(self):
-        self.assertIsNotNone(tasks(page=1, per_page=100))
+        self.assertIsNotNone(tasks.tasks(page=1, per_page=100))
 
     def test_list_arrays(self):
         self.assertIsNotNone(client.list_arrays().arrays)
@@ -247,6 +248,10 @@ class BasicTests(unittest.TestCase):
         test_cache_size = str(int(3.14159 * 100000))
         ctx = tiledb.cloud.Ctx({"sm.tile_cache_size": test_cache_size})
         self.assertEqual(ctx.config()["sm.tile_cache_size"], test_cache_size)
+
+    def test_bogus_task_fetch_fails(self):
+        with self.assertRaises(tiledb_cloud_error.TileDBCloudError):
+            tasks.fetch_results(uuid.uuid4())
 
 
 class RangesTest(unittest.TestCase):

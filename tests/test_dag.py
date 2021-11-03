@@ -15,6 +15,7 @@ import pandas as pd
 
 import tiledb.cloud
 from tiledb.cloud import dag
+from tiledb.cloud import tasks
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import stored_params as sp
 from tiledb.cloud._results import visitor
@@ -432,6 +433,23 @@ class DAGCloudApplyTest(unittest.TestCase):
             numpy.mean([numpy.sum(orig["a"]), numpy.sum(orig_dense["a"])]),
         )
         self.assertEqual(d.status, dag.Status.COMPLETED)
+
+        # Also test downloads.
+        self.assertEqual(
+            numpy.sum(orig["a"]),
+            tasks.fetch_results(node_array_apply.task_id()),
+        )
+        # TODO: The server does not currently actually store SQL queries,
+        # even when we ask it to. Re-enable when that fix is deployed.
+        if False:
+            self.assertEqual(
+                numpy.sum(orig_dense["a"]),
+                tasks.fetch_results_pandas(node_sql.task_id()),
+            )
+        self.assertEqual(
+            numpy.mean([numpy.sum(orig["a"]), numpy.sum(orig_dense["a"])]),
+            tasks.fetch_results(node_exec.task_id()),
+        )
 
 
 class DAGCallbackTest(unittest.TestCase):

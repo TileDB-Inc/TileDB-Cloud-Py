@@ -235,6 +235,22 @@ class Node(Generic[_T]):
 
         return self._results
 
+    def task_id(self) -> Optional[uuid.UUID]:
+        """Gets the server-side Task ID of this node.
+
+        Raises a ValueError if the Node has not been completed.
+        Returns None if this has no task ID (as it was run on the client side).
+        """
+
+        if self._real_result is None:
+            raise ValueError("Cannot get Task ID for an incomplete node")
+        try:
+            sp = self._real_result.to_stored_param()
+        except TypeError:
+            # Run client-side; can't be converted to a stored param.
+            return None
+        return sp.task_id
+
     def result_or_future(self) -> Union[None, _T, "futures.Future[_T]"]:
         """
         Fetch results of functions or return future if incomplete
