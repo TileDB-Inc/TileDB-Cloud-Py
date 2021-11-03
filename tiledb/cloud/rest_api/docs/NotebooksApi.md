@@ -4,15 +4,15 @@ All URIs are relative to *http://localhost/v1*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**notebooks_namespace_array_versions_get**](NotebooksApi.md#notebooks_namespace_array_versions_get) | **GET** /notebooks/{namespace}/{array}/versions | 
+[**notebooks_namespace_array_end_timestamps_get**](NotebooksApi.md#notebooks_namespace_array_end_timestamps_get) | **GET** /notebooks/{namespace}/{array}/end_timestamps | 
 
 
-# **notebooks_namespace_array_versions_get**
-> list[int] notebooks_namespace_array_versions_get(namespace, array)
+# **notebooks_namespace_array_end_timestamps_get**
+> ArrayEndTimestampData notebooks_namespace_array_end_timestamps_get(namespace, array, page=page, per_page=per_page)
 
 
 
-retrieve a list of timestamps from the array fragment info listing in milliseconds
+retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
 
 ### Example
 
@@ -56,12 +56,14 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.NotebooksApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
 
     try:
-        api_response = api_instance.notebooks_namespace_array_versions_get(namespace, array)
+        api_response = api_instance.notebooks_namespace_array_end_timestamps_get(namespace, array, page=page, per_page=per_page)
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling NotebooksApi->notebooks_namespace_array_versions_get: %s\n" % e)
+        print("Exception when calling NotebooksApi->notebooks_namespace_array_end_timestamps_get: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -104,12 +106,14 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.NotebooksApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
 
     try:
-        api_response = api_instance.notebooks_namespace_array_versions_get(namespace, array)
+        api_response = api_instance.notebooks_namespace_array_end_timestamps_get(namespace, array, page=page, per_page=per_page)
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling NotebooksApi->notebooks_namespace_array_versions_get: %s\n" % e)
+        print("Exception when calling NotebooksApi->notebooks_namespace_array_end_timestamps_get: %s\n" % e)
 ```
 
 ### Parameters
@@ -118,10 +122,12 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
  **array** | **str**| name/uri of array that is url-encoded | 
+ **page** | **int**| pagination offset | [optional] 
+ **per_page** | **int**| pagination limit | [optional] 
 
 ### Return type
 
-**list[int]**
+[**ArrayEndTimestampData**](ArrayEndTimestampData.md)
 
 ### Authorization
 
@@ -135,7 +141,7 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | list of timestamps in milliseconds |  -  |
+**200** | list of timestamps in milliseconds, paginated |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

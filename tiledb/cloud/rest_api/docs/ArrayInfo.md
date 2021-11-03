@@ -28,6 +28,7 @@ Name | Type | Description | Notes
 **license_text** | **str** | License text | [optional] 
 **read_only** | **bool** | Suggests if the array is in read_only mode | [optional] 
 **is_favorite** | **bool** | Indicates whether the array is in user favorites | [optional] 
+**favorite_uuid** | **str** | The favorite UUID if the array if is_favorite is true | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

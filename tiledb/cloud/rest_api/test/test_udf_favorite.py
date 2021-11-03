@@ -16,12 +16,12 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.favorite_type import FavoriteType  # noqa: E501
+from tiledb.cloud.rest_api.models.udf_favorite import UDFFavorite  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestFavoriteType(unittest.TestCase):
-    """FavoriteType unit test stubs"""
+class TestUDFFavorite(unittest.TestCase):
+    """UDFFavorite unit test stubs"""
 
     def setUp(self):
         pass
@@ -30,18 +30,24 @@ class TestFavoriteType(unittest.TestCase):
         pass
 
     def make_instance(self, include_optional):
-        """Test FavoriteType
+        """Test UDFFavorite
         include_option is a boolean, when False only required
         params are included, when True both required and
         optional params are included"""
-        # model = tiledb.cloud.rest_api.models.favorite_type.FavoriteType()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.udf_favorite.UDFFavorite()  # noqa: E501
         if include_optional:
-            return FavoriteType()
+            return UDFFavorite(
+                id="0",
+                created_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                udf_uuid="0",
+            )
         else:
-            return FavoriteType()
+            return UDFFavorite()
 
-    def testFavoriteType(self):
-        """Test FavoriteType"""
+    def testUDFFavorite(self):
+        """Test UDFFavorite"""
         inst_req_only = self.make_instance(include_optional=False)
         inst_req_and_optional = self.make_instance(include_optional=True)
 

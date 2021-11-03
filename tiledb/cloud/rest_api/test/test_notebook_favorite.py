@@ -16,12 +16,14 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.favorite_create import FavoriteCreate  # noqa: E501
+from tiledb.cloud.rest_api.models.notebook_favorite import (  # noqa: E501
+    NotebookFavorite,
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestFavoriteCreate(unittest.TestCase):
-    """FavoriteCreate unit test stubs"""
+class TestNotebookFavorite(unittest.TestCase):
+    """NotebookFavorite unit test stubs"""
 
     def setUp(self):
         pass
@@ -30,21 +32,24 @@ class TestFavoriteCreate(unittest.TestCase):
         pass
 
     def make_instance(self, include_optional):
-        """Test FavoriteCreate
+        """Test NotebookFavorite
         include_option is a boolean, when False only required
         params are included, when True both required and
         optional params are included"""
-        # model = tiledb.cloud.rest_api.models.favorite_create.FavoriteCreate()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.notebook_favorite.NotebookFavorite()  # noqa: E501
         if include_optional:
-            return FavoriteCreate(name="0", namespace="0")
-        else:
-            return FavoriteCreate(
-                name="0",
-                namespace="0",
+            return NotebookFavorite(
+                id="0",
+                created_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                notebook_uuid="0",
             )
+        else:
+            return NotebookFavorite()
 
-    def testFavoriteCreate(self):
-        """Test FavoriteCreate"""
+    def testNotebookFavorite(self):
+        """Test NotebookFavorite"""
         inst_req_only = self.make_instance(include_optional=False)
         inst_req_and_optional = self.make_instance(include_optional=True)
 

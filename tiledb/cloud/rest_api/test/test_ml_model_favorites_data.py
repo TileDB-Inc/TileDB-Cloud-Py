@@ -16,14 +16,14 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.array_browser_data import (  # noqa: E501
-    ArrayBrowserData,
+from tiledb.cloud.rest_api.models.ml_model_favorites_data import (  # noqa: E501
+    MLModelFavoritesData,
 )
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestArrayBrowserData(unittest.TestCase):
-    """ArrayBrowserData unit test stubs"""
+class TestMLModelFavoritesData(unittest.TestCase):
+    """MLModelFavoritesData unit test stubs"""
 
     def setUp(self):
         pass
@@ -32,14 +32,14 @@ class TestArrayBrowserData(unittest.TestCase):
         pass
 
     def make_instance(self, include_optional):
-        """Test ArrayBrowserData
+        """Test MLModelFavoritesData
         include_option is a boolean, when False only required
         params are included, when True both required and
         optional params are included"""
-        # model = tiledb.cloud.rest_api.models.array_browser_data.ArrayBrowserData()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.ml_model_favorites_data.MLModelFavoritesData()  # noqa: E501
         if include_optional:
-            return ArrayBrowserData(
-                arrays=[
+            return MLModelFavoritesData(
+                mlmodels=[
                     tiledb.cloud.rest_api.models.array_info.ArrayInfo(
                         id="00000000-0000-0000-0000-000000000000",
                         file_type="notebook",
@@ -100,10 +100,10 @@ class TestArrayBrowserData(unittest.TestCase):
                 ),
             )
         else:
-            return ArrayBrowserData()
+            return MLModelFavoritesData()
 
-    def testArrayBrowserData(self):
-        """Test ArrayBrowserData"""
+    def testMLModelFavoritesData(self):
+        """Test MLModelFavoritesData"""
         inst_req_only = self.make_instance(include_optional=False)
         inst_req_and_optional = self.make_instance(include_optional=True)
 

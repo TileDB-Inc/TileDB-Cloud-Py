@@ -12,7 +12,7 @@ Method | HTTP request | Description
 [**submit_generic_udf**](UdfApi.md#submit_generic_udf) | **POST** /udfs/generic/{namespace} | 
 [**submit_multi_array_udf**](UdfApi.md#submit_multi_array_udf) | **POST** /udfs/arrays/{namespace} | 
 [**submit_udf**](UdfApi.md#submit_udf) | **POST** /arrays/{namespace}/{array}/udf/submit | 
-[**udf_namespace_array_versions_get**](UdfApi.md#udf_namespace_array_versions_get) | **GET** /udf/{namespace}/{array}/versions | 
+[**udf_namespace_array_end_timestamps_get**](UdfApi.md#udf_namespace_array_end_timestamps_get) | **GET** /udf/{namespace}/{array}/end_timestamps | 
 [**update_udf_info**](UdfApi.md#update_udf_info) | **PATCH** /udf/{namespace}/{name} | 
 
 
@@ -1101,12 +1101,12 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **udf_namespace_array_versions_get**
-> list[int] udf_namespace_array_versions_get(namespace, array)
+# **udf_namespace_array_end_timestamps_get**
+> ArrayEndTimestampData udf_namespace_array_end_timestamps_get(namespace, array, page=page, per_page=per_page)
 
 
 
-retrieve a list of timestamps from the array fragment info listing in milliseconds
+retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
 
 ### Example
 
@@ -1150,12 +1150,14 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
 
     try:
-        api_response = api_instance.udf_namespace_array_versions_get(namespace, array)
+        api_response = api_instance.udf_namespace_array_end_timestamps_get(namespace, array, page=page, per_page=per_page)
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling UdfApi->udf_namespace_array_versions_get: %s\n" % e)
+        print("Exception when calling UdfApi->udf_namespace_array_end_timestamps_get: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -1198,12 +1200,14 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
 
     try:
-        api_response = api_instance.udf_namespace_array_versions_get(namespace, array)
+        api_response = api_instance.udf_namespace_array_end_timestamps_get(namespace, array, page=page, per_page=per_page)
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling UdfApi->udf_namespace_array_versions_get: %s\n" % e)
+        print("Exception when calling UdfApi->udf_namespace_array_end_timestamps_get: %s\n" % e)
 ```
 
 ### Parameters
@@ -1212,10 +1216,12 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
  **array** | **str**| name/uri of array that is url-encoded | 
+ **page** | **int**| pagination offset | [optional] 
+ **per_page** | **int**| pagination limit | [optional] 
 
 ### Return type
 
-**list[int]**
+[**ArrayEndTimestampData**](ArrayEndTimestampData.md)
 
 ### Authorization
 
@@ -1229,7 +1235,7 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | list of timestamps in milliseconds |  -  |
+**200** | list of timestamps in milliseconds, paginated |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

@@ -60,8 +60,8 @@ class TestUdfApi(unittest.TestCase):
         """Test case for submit_udf"""
         pass
 
-    def test_udf_namespace_array_versions_get(self):
-        """Test case for udf_namespace_array_versions_get"""
+    def test_udf_namespace_array_end_timestamps_get(self):
+        """Test case for udf_namespace_array_end_timestamps_get"""
         pass
 
     def test_update_udf_info(self):

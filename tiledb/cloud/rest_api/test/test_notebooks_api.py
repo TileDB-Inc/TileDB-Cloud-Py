@@ -28,8 +28,8 @@ class TestNotebooksApi(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_notebooks_namespace_array_versions_get(self):
-        """Test case for notebooks_namespace_array_versions_get"""
+    def test_notebooks_namespace_array_end_timestamps_get(self):
+        """Test case for notebooks_namespace_array_end_timestamps_get"""
         pass
 
 

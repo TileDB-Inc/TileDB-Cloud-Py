@@ -47,7 +47,9 @@ class TestArrayActivityLog(unittest.TestCase):
                 bytes_sent=1073741824,
                 bytes_received=1073741824,
                 array_task_id="00000000-0000-0000-0000-000000000000",
+                id="00000000-0000-0000-0000-000000000000",
                 query_ranges='{"rows":[{"start": 1, "end": 1},{"start": 3, "end": 4}],"cols":[{"start": 1, "end": 4}]}',
+                query_stats='{"timers": {"Context.StorageManager.read_load_array_schema_from_uri.sum": 0.0255293, "...": "..."}, "counters": {"Context.StorageManager.read_unfiltered_byte_num": 191, "...": "..."}}',
             )
         else:
             return ArrayActivityLog()
