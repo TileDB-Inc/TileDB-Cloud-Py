@@ -11,6 +11,7 @@ import tiledb
 from tiledb.cloud import config
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
+from tiledb.cloud.redirect_caching import PoolManagerCachingWrapper
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 from tiledb.cloud.rest_api import ApiException as GenApiException
@@ -523,6 +524,9 @@ class Client:
         pool_size = self._thread_pool._max_workers  # type: ignore[attr-defined]
         config.config.connection_pool_maxsize = pool_size
         client = rest_api.ApiClient(config.config)
+        client.rest_client.pool_manager = PoolManagerCachingWrapper(
+            client.rest_client.pool_manager
+        )
 
         self.array_api = rest_api.ArrayApi(client)
         self.notebook_api = rest_api.NotebookApi(client)
