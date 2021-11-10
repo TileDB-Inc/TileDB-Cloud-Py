@@ -38,6 +38,9 @@ class SourceLinesTest(unittest.TestCase):
             os.remove(testfile)
             self.assertIsNone(utils.getsourcelines(bogus.unimportant_function))
 
+    def test_builtin(self):
+        self.assertIsNone(utils.getsourcelines(dir))
+
 
 class PickleTest(unittest.TestCase):
     def test_roundtrip(self):

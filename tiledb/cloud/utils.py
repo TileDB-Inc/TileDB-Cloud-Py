@@ -11,8 +11,15 @@ TILEDB_CLOUD_PROTOCOL = 4
 logger = logging.getLogger("tiledb.cloud")
 
 
+_builtin_function = type(len)
+"""The type of functions implemented in C."""
+
+
 def getsourcelines(func: Callable) -> Optional[str]:
     """Attempt to extract the source code of ``func``, but accept failure."""
+    if isinstance(func, _builtin_function):
+        # Built-in functions have no accessible source code.
+        return None
     try:
         # Attempt to find and serialize the original source...
         return "".join(inspect.getsourcelines(func)[0])
