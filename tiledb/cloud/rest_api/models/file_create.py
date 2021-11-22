@@ -32,20 +32,12 @@ class FileCreate(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"input_uri": "str", "input_mime_type": "str", "output_uri": "str"}
+    openapi_types = {"input_uri": "str", "output_uri": "str"}
 
-    attribute_map = {
-        "input_uri": "input_uri",
-        "input_mime_type": "input_mime_type",
-        "output_uri": "output_uri",
-    }
+    attribute_map = {"input_uri": "input_uri", "output_uri": "output_uri"}
 
     def __init__(
-        self,
-        input_uri=None,
-        input_mime_type=None,
-        output_uri=None,
-        local_vars_configuration=None,
+        self, input_uri=None, output_uri=None, local_vars_configuration=None
     ):  # noqa: E501
         """FileCreate - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
@@ -53,14 +45,11 @@ class FileCreate(object):
         self.local_vars_configuration = local_vars_configuration
 
         self._input_uri = None
-        self._input_mime_type = None
         self._output_uri = None
         self.discriminator = None
 
         if input_uri is not None:
             self.input_uri = input_uri
-        if input_mime_type is not None:
-            self.input_mime_type = input_mime_type
         if output_uri is not None:
             self.output_uri = output_uri
 
@@ -86,29 +75,6 @@ class FileCreate(object):
         """
 
         self._input_uri = input_uri
-
-    @property
-    def input_mime_type(self):
-        """Gets the input_mime_type of this FileCreate.  # noqa: E501
-
-        manually specified mime type of the file  # noqa: E501
-
-        :return: The input_mime_type of this FileCreate.  # noqa: E501
-        :rtype: str
-        """
-        return self._input_mime_type
-
-    @input_mime_type.setter
-    def input_mime_type(self, input_mime_type):
-        """Sets the input_mime_type of this FileCreate.
-
-        manually specified mime type of the file  # noqa: E501
-
-        :param input_mime_type: The input_mime_type of this FileCreate.  # noqa: E501
-        :type: str
-        """
-
-        self._input_mime_type = input_mime_type
 
     @property
     def output_uri(self):

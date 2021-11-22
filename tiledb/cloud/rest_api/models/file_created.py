@@ -32,21 +32,26 @@ class FileCreated(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"output_uri": "str"}
+    openapi_types = {"output_uri": "str", "file_uuid": "str"}
 
-    attribute_map = {"output_uri": "output_uri"}
+    attribute_map = {"output_uri": "output_uri", "file_uuid": "file_uuid"}
 
-    def __init__(self, output_uri=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self, output_uri=None, file_uuid=None, local_vars_configuration=None
+    ):  # noqa: E501
         """FileCreated - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
         self._output_uri = None
+        self._file_uuid = None
         self.discriminator = None
 
         if output_uri is not None:
             self.output_uri = output_uri
+        if file_uuid is not None:
+            self.file_uuid = file_uuid
 
     @property
     def output_uri(self):
@@ -70,6 +75,29 @@ class FileCreated(object):
         """
 
         self._output_uri = output_uri
+
+    @property
+    def file_uuid(self):
+        """Gets the file_uuid of this FileCreated.  # noqa: E501
+
+        uuid of the file created  # noqa: E501
+
+        :return: The file_uuid of this FileCreated.  # noqa: E501
+        :rtype: str
+        """
+        return self._file_uuid
+
+    @file_uuid.setter
+    def file_uuid(self, file_uuid):
+        """Sets the file_uuid of this FileCreated.
+
+        uuid of the file created  # noqa: E501
+
+        :param file_uuid: The file_uuid of this FileCreated.  # noqa: E501
+        :type: str
+        """
+
+        self._file_uuid = file_uuid
 
     def to_dict(self):
         """Returns the model properties as a dict"""

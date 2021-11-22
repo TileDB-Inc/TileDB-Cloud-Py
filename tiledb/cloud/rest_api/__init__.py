@@ -78,6 +78,10 @@ from tiledb.cloud.rest_api.models.domain import Domain
 from tiledb.cloud.rest_api.models.domain_array import DomainArray
 from tiledb.cloud.rest_api.models.error import Error
 from tiledb.cloud.rest_api.models.favorite_create import FavoriteCreate
+from tiledb.cloud.rest_api.models.file_create import FileCreate
+from tiledb.cloud.rest_api.models.file_created import FileCreated
+from tiledb.cloud.rest_api.models.file_export import FileExport
+from tiledb.cloud.rest_api.models.file_exported import FileExported
 from tiledb.cloud.rest_api.models.file_property_name import FilePropertyName
 from tiledb.cloud.rest_api.models.file_type import FileType
 from tiledb.cloud.rest_api.models.filter import Filter
