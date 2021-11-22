@@ -529,6 +529,7 @@ class Client:
         )
 
         self.array_api = rest_api.ArrayApi(client)
+        self.file_api = rest_api.FilesApi(client)
         self.notebook_api = rest_api.NotebookApi(client)
         self.organization_api = rest_api.OrganizationApi(client)
         self.sql_api = rest_api.SqlApi(client)
