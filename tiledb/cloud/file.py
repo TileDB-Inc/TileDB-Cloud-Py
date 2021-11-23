@@ -4,7 +4,12 @@ from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
 
 
-def create_file(namespace, input_uri, output_uri, async_req=False):
+def create_file(
+    namespace: str,
+    input_uri: str,
+    output_uri: str,
+    async_req: bool = False,
+) -> models.FileCreated:
     """
     Creates a TileDB file at the specified location
     :param namespace: namespace the create file operation belongs to
@@ -30,7 +35,12 @@ def create_file(namespace, input_uri, output_uri, async_req=False):
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def export_file(namespace, file_identifier, output_uri, async_req=False):
+def export_file(
+    namespace: str,
+    file_identifier: str,
+    output_uri: str,
+    async_req: bool = False,
+) -> models.FileExported:
     """
     Exports a TileDB File back to its original file format
     :param namespace: namespace the create file operation belongs to
