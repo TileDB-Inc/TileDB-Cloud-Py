@@ -11,6 +11,8 @@ from tiledb.cloud.array import list_shared_with
 from tiledb.cloud.array import register_array
 from tiledb.cloud.array import share_array
 from tiledb.cloud.array import unshare_array
+from tiledb.cloud.file import create_file
+from tiledb.cloud.file import export_file
 from tiledb.cloud.client import Config
 from tiledb.cloud.client import Ctx
 from tiledb.cloud.client import list_arrays

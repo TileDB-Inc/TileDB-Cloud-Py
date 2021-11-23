@@ -20,6 +20,7 @@ __version__ = "1.0.0"
 from tiledb.cloud.rest_api.api.array_api import ArrayApi
 from tiledb.cloud.rest_api.api.array_tasks_api import ArrayTasksApi
 from tiledb.cloud.rest_api.api.favorites_api import FavoritesApi
+from tiledb.cloud.rest_api.api.files_api import FilesApi
 from tiledb.cloud.rest_api.api.invitation_api import InvitationApi
 from tiledb.cloud.rest_api.api.notebook_api import NotebookApi
 from tiledb.cloud.rest_api.api.notebooks_api import NotebooksApi
@@ -78,6 +79,10 @@ from tiledb.cloud.rest_api.models.domain import Domain
 from tiledb.cloud.rest_api.models.domain_array import DomainArray
 from tiledb.cloud.rest_api.models.error import Error
 from tiledb.cloud.rest_api.models.favorite_create import FavoriteCreate
+from tiledb.cloud.rest_api.models.file_create import FileCreate
+from tiledb.cloud.rest_api.models.file_created import FileCreated
+from tiledb.cloud.rest_api.models.file_export import FileExport
+from tiledb.cloud.rest_api.models.file_exported import FileExported
 from tiledb.cloud.rest_api.models.file_property_name import FilePropertyName
 from tiledb.cloud.rest_api.models.file_type import FileType
 from tiledb.cloud.rest_api.models.filter import Filter

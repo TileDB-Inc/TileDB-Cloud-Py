@@ -255,7 +255,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/mlmodels/favorites",
+            "/ml_models/favorites",
             "POST",
             path_params,
             query_params,
@@ -735,7 +735,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/mlmodels/favorites/{id}",
+            "/ml_models/favorites/{id}",
             "DELETE",
             path_params,
             query_params,
@@ -1352,7 +1352,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/mlmodels/favorites/{id}",
+            "/ml_models/favorites/{id}",
             "GET",
             path_params,
             query_params,
@@ -1491,7 +1491,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/mlmodels/favorites/{namespace}/{name}",
+            "/ml_models/favorites/{namespace}/{name}",
             "GET",
             path_params,
             query_params,
@@ -2362,7 +2362,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/mlmodels/favorites",
+            "/ml_models/favorites",
             "GET",
             path_params,
             query_params,
@@ -2473,7 +2473,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/mlmodels/favorites/uuids",
+            "/ml_models/favorites/uuids",
             "GET",
             path_params,
             query_params,
@@ -2502,6 +2502,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param bool is_dashboard: return only dashboards
         :param int page: pagination offset
         :param int per_page: pagination limit
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -2528,6 +2529,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param bool is_dashboard: return only dashboards
         :param int page: pagination offset
         :param int per_page: pagination limit
         :param _return_http_data_only: response data without head status code
@@ -2546,7 +2548,7 @@ class FavoritesApi(object):
 
         local_var_params = locals()
 
-        all_params = ["page", "per_page"]
+        all_params = ["is_dashboard", "page", "per_page"]
         all_params.extend(
             [
                 "async_req",
@@ -2570,6 +2572,13 @@ class FavoritesApi(object):
         path_params = {}
 
         query_params = []
+        if (
+            "is_dashboard" in local_var_params
+            and local_var_params["is_dashboard"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("is_dashboard", local_var_params["is_dashboard"])
+            )  # noqa: E501
         if (
             "page" in local_var_params and local_var_params["page"] is not None
         ):  # noqa: E501
