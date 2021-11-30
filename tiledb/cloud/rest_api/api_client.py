@@ -12,23 +12,22 @@ from __future__ import absolute_import
 
 import atexit
 import datetime
+from dateutil.parser import parse
 import json
 import mimetypes
+from multiprocessing.pool import ThreadPool
 import os
 import re
 import tempfile
-from multiprocessing.pool import ThreadPool
 
 # python 2 and python 3 compatibility library
 import six
-from dateutil.parser import parse
 from six.moves.urllib.parse import quote
 
+from tiledb.cloud.rest_api.configuration import Configuration
 import tiledb.cloud.rest_api.models
 from tiledb.cloud.rest_api import rest
-from tiledb.cloud.rest_api.configuration import Configuration
-from tiledb.cloud.rest_api.exceptions import ApiException
-from tiledb.cloud.rest_api.exceptions import ApiValueError
+from tiledb.cloud.rest_api.exceptions import ApiValueError, ApiException
 
 
 class ApiClient(object):

@@ -12,13 +12,13 @@
 
 from __future__ import absolute_import
 
-import datetime
 import unittest
+import datetime
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.subarray_partitioner import (  # noqa: E501
+from tiledb.cloud.rest_api.models.subarray_partitioner import (
     SubarrayPartitioner,
-)
+)  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 

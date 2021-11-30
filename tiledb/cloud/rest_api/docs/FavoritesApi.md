@@ -5,25 +5,25 @@ All URIs are relative to *http://localhost/v1*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**add_array_favorite**](FavoritesApi.md#add_array_favorite) | **POST** /arrays/favorites | 
-[**add_ml_model_favorite**](FavoritesApi.md#add_ml_model_favorite) | **POST** /mlmodels/favorites | 
+[**add_ml_model_favorite**](FavoritesApi.md#add_ml_model_favorite) | **POST** /ml_models/favorites | 
 [**add_notebook_favorite**](FavoritesApi.md#add_notebook_favorite) | **POST** /notebooks/favorites | 
 [**add_udf_favorite**](FavoritesApi.md#add_udf_favorite) | **POST** /udfs/favorites | 
 [**delete_array_favorite**](FavoritesApi.md#delete_array_favorite) | **DELETE** /arrays/favorites/{id} | 
-[**delete_ml_model_favorite**](FavoritesApi.md#delete_ml_model_favorite) | **DELETE** /mlmodels/favorites/{id} | 
+[**delete_ml_model_favorite**](FavoritesApi.md#delete_ml_model_favorite) | **DELETE** /ml_models/favorites/{id} | 
 [**delete_notebook_favorite**](FavoritesApi.md#delete_notebook_favorite) | **DELETE** /notebooks/favorites/{id} | 
 [**delete_udf_favorite**](FavoritesApi.md#delete_udf_favorite) | **DELETE** /udfs/favorites/{id} | 
 [**get_array_favorite**](FavoritesApi.md#get_array_favorite) | **GET** /arrays/favorites/{id} | 
 [**get_array_favorite_for_array**](FavoritesApi.md#get_array_favorite_for_array) | **GET** /arrays/favorites/{namespace}/{name} | 
-[**get_ml_model_favorite**](FavoritesApi.md#get_ml_model_favorite) | **GET** /mlmodels/favorites/{id} | 
-[**get_ml_model_favorite_for_ml_model**](FavoritesApi.md#get_ml_model_favorite_for_ml_model) | **GET** /mlmodels/favorites/{namespace}/{name} | 
+[**get_ml_model_favorite**](FavoritesApi.md#get_ml_model_favorite) | **GET** /ml_models/favorites/{id} | 
+[**get_ml_model_favorite_for_ml_model**](FavoritesApi.md#get_ml_model_favorite_for_ml_model) | **GET** /ml_models/favorites/{namespace}/{name} | 
 [**get_notebook_favorite**](FavoritesApi.md#get_notebook_favorite) | **GET** /notebooks/favorites/{id} | 
 [**get_notebook_favorite_for_notebook**](FavoritesApi.md#get_notebook_favorite_for_notebook) | **GET** /notebooks/favorites/{namespace}/{name} | 
 [**get_udf_favorite**](FavoritesApi.md#get_udf_favorite) | **GET** /udfs/favorites/{id} | 
 [**get_udf_favorite_for_udf**](FavoritesApi.md#get_udf_favorite_for_udf) | **GET** /udfs/favorites/{namespace}/{name} | 
 [**list_array_favorites**](FavoritesApi.md#list_array_favorites) | **GET** /arrays/favorites | 
 [**list_array_favorites_uui_ds**](FavoritesApi.md#list_array_favorites_uui_ds) | **GET** /arrays/favorites/uuids | 
-[**list_ml_model_favorites**](FavoritesApi.md#list_ml_model_favorites) | **GET** /mlmodels/favorites | 
-[**list_ml_model_favorites_uui_ds**](FavoritesApi.md#list_ml_model_favorites_uui_ds) | **GET** /mlmodels/favorites/uuids | 
+[**list_ml_model_favorites**](FavoritesApi.md#list_ml_model_favorites) | **GET** /ml_models/favorites | 
+[**list_ml_model_favorites_uui_ds**](FavoritesApi.md#list_ml_model_favorites_uui_ds) | **GET** /ml_models/favorites/uuids | 
 [**list_notebook_favorites**](FavoritesApi.md#list_notebook_favorites) | **GET** /notebooks/favorites | 
 [**list_notebook_favorites_uui_ds**](FavoritesApi.md#list_notebook_favorites_uui_ds) | **GET** /notebooks/favorites/uuids | 
 [**list_udf_favorites**](FavoritesApi.md#list_udf_favorites) | **GET** /udfs/favorites | 
@@ -2623,7 +2623,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_notebook_favorites**
-> NotebookFavoritesData list_notebook_favorites(page=page, per_page=per_page)
+> NotebookFavoritesData list_notebook_favorites(is_dashboard=is_dashboard, page=page, per_page=per_page)
 
 
 
@@ -2669,11 +2669,12 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    page = 56 # int | pagination offset (optional)
+    is_dashboard = True # bool | return only dashboards (optional)
+page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
 
     try:
-        api_response = api_instance.list_notebook_favorites(page=page, per_page=per_page)
+        api_response = api_instance.list_notebook_favorites(is_dashboard=is_dashboard, page=page, per_page=per_page)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling FavoritesApi->list_notebook_favorites: %s\n" % e)
@@ -2717,11 +2718,12 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    page = 56 # int | pagination offset (optional)
+    is_dashboard = True # bool | return only dashboards (optional)
+page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
 
     try:
-        api_response = api_instance.list_notebook_favorites(page=page, per_page=per_page)
+        api_response = api_instance.list_notebook_favorites(is_dashboard=is_dashboard, page=page, per_page=per_page)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling FavoritesApi->list_notebook_favorites: %s\n" % e)
@@ -2731,6 +2733,7 @@ per_page = 56 # int | pagination limit (optional)
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **is_dashboard** | **bool**| return only dashboards | [optional] 
  **page** | **int**| pagination offset | [optional] 
  **per_page** | **int**| pagination limit | [optional] 
 

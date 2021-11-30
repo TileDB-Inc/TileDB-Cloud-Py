@@ -12,13 +12,13 @@
 
 from __future__ import absolute_import
 
-import datetime
 import unittest
+import datetime
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.namespace_actions import (  # noqa: E501
+from tiledb.cloud.rest_api.models.namespace_actions import (
     NamespaceActions,
-)
+)  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 

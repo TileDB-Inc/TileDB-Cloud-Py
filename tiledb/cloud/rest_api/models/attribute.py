@@ -37,6 +37,7 @@ class Attribute(object):
         "type": "Datatype",
         "filter_pipeline": "FilterPipeline",
         "cell_val_num": "int",
+        "nullable": "bool",
         "fill_value": "list[int]",
     }
 
@@ -45,6 +46,7 @@ class Attribute(object):
         "type": "type",
         "filter_pipeline": "filterPipeline",
         "cell_val_num": "cellValNum",
+        "nullable": "nullable",
         "fill_value": "fillValue",
     }
 
@@ -54,6 +56,7 @@ class Attribute(object):
         type=None,
         filter_pipeline=None,
         cell_val_num=None,
+        nullable=None,
         fill_value=None,
         local_vars_configuration=None,
     ):  # noqa: E501
@@ -66,6 +69,7 @@ class Attribute(object):
         self._type = None
         self._filter_pipeline = None
         self._cell_val_num = None
+        self._nullable = None
         self._fill_value = None
         self.discriminator = None
 
@@ -73,6 +77,8 @@ class Attribute(object):
         self.type = type
         self.filter_pipeline = filter_pipeline
         self.cell_val_num = cell_val_num
+        if nullable is not None:
+            self.nullable = nullable
         if fill_value is not None:
             self.fill_value = fill_value
 
@@ -189,6 +195,29 @@ class Attribute(object):
             )  # noqa: E501
 
         self._cell_val_num = cell_val_num
+
+    @property
+    def nullable(self):
+        """Gets the nullable of this Attribute.  # noqa: E501
+
+        Is attribute nullable  # noqa: E501
+
+        :return: The nullable of this Attribute.  # noqa: E501
+        :rtype: bool
+        """
+        return self._nullable
+
+    @nullable.setter
+    def nullable(self, nullable):
+        """Sets the nullable of this Attribute.
+
+        Is attribute nullable  # noqa: E501
+
+        :param nullable: The nullable of this Attribute.  # noqa: E501
+        :type: bool
+        """
+
+        self._nullable = nullable
 
     @property
     def fill_value(self):
