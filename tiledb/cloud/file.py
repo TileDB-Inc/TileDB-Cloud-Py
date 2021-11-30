@@ -2,6 +2,7 @@ from tiledb.cloud import client
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
+from tiledb.cloud import array
 
 
 def create_file(
@@ -36,20 +37,20 @@ def create_file(
 
 
 def export_file(
-    namespace: str,
-    file_identifier: str,
+    uri: str,
     output_uri: str,
     async_req: bool = False,
 ) -> models.FileExported:
     """
     Exports a TileDB File back to its original file format
-    :param namespace: namespace the create file operation belongs to
-    :param file_identifier: the file identifier
+    :param uri: The ``tiledb://...`` URI of the file to export
     :param output_uri: output file uri
     :param async_req: return future instead of results for async support
     :return: FileExported details, including output_uri
     """
     try:
+        (namespace, name) = array.split_uri(uri)
+
         api_instance = client.client.file_api
 
         file_export = models.FileExport(
@@ -58,7 +59,7 @@ def export_file(
 
         return api_instance.handle_export_file(
             namespace,
-            file_identifier,
+            name,
             file_export,
             async_req=async_req,
         )
