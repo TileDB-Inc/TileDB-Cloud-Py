@@ -12,8 +12,8 @@
 
 from __future__ import absolute_import
 
-import datetime
 import unittest
+import datetime
 
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.models.array_schema import ArraySchema  # noqa: E501
@@ -138,6 +138,7 @@ class TestArraySchema(unittest.TestCase):
                             ],
                         ),
                         cell_val_num=1,
+                        nullable=True,
                         fill_value=[56],
                     )
                 ],
@@ -245,6 +246,7 @@ class TestArraySchema(unittest.TestCase):
                             ],
                         ),
                         cell_val_num=1,
+                        nullable=True,
                         fill_value=[56],
                     )
                 ],

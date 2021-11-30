@@ -12,8 +12,8 @@
 
 from __future__ import absolute_import
 
-import datetime
 import unittest
+import datetime
 
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.models.array_task_data import ArrayTaskData  # noqa: E501

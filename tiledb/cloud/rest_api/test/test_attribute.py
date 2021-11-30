@@ -12,8 +12,8 @@
 
 from __future__ import absolute_import
 
-import datetime
 import unittest
+import datetime
 
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.models.attribute import Attribute  # noqa: E501
@@ -59,6 +59,7 @@ class TestAttribute(unittest.TestCase):
                     ],
                 ),
                 cell_val_num=1,
+                nullable=True,
                 fill_value=[56],
             )
         else:

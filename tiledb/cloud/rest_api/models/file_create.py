@@ -32,12 +32,16 @@ class FileCreate(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"input_uri": "str", "output_uri": "str"}
+    openapi_types = {"input_uri": "str", "output_uri": "str", "name": "str"}
 
-    attribute_map = {"input_uri": "input_uri", "output_uri": "output_uri"}
+    attribute_map = {
+        "input_uri": "input_uri",
+        "output_uri": "output_uri",
+        "name": "name",
+    }
 
     def __init__(
-        self, input_uri=None, output_uri=None, local_vars_configuration=None
+        self, input_uri=None, output_uri=None, name=None, local_vars_configuration=None
     ):  # noqa: E501
         """FileCreate - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
@@ -46,12 +50,15 @@ class FileCreate(object):
 
         self._input_uri = None
         self._output_uri = None
+        self._name = None
         self.discriminator = None
 
         if input_uri is not None:
             self.input_uri = input_uri
         if output_uri is not None:
             self.output_uri = output_uri
+        if name is not None:
+            self.name = name
 
     @property
     def input_uri(self):
@@ -98,6 +105,29 @@ class FileCreate(object):
         """
 
         self._output_uri = output_uri
+
+    @property
+    def name(self):
+        """Gets the name of this FileCreate.  # noqa: E501
+
+        name to set for registered file  # noqa: E501
+
+        :return: The name of this FileCreate.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this FileCreate.
+
+        name to set for registered file  # noqa: E501
+
+        :param name: The name of this FileCreate.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
 
     def to_dict(self):
         """Returns the model properties as a dict"""

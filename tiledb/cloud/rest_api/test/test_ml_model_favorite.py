@@ -12,8 +12,8 @@
 
 from __future__ import absolute_import
 
-import datetime
 import unittest
+import datetime
 
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.models.ml_model_favorite import MLModelFavorite  # noqa: E501
