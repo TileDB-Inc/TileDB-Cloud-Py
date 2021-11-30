@@ -58,7 +58,7 @@ six==1.16.0
 tenacity==8.0.1
 terminado==0.12.1
 testpath==0.5.0
-tiledb==0.10.4
+tiledb==0.11.2
 tiledb-plot-widget==0.1.12
 tomli==1.2.2
 tornado==6.1
