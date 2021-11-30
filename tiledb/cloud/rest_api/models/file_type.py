@@ -31,6 +31,7 @@ class FileType(object):
     NOTEBOOK = "notebook"
     USER_DEFINED_FUNCTION = "user_defined_function"
     ML_MODEL = "ml_model"
+    FILE = "file"
 
     allowable_values = [NOTEBOOK, USER_DEFINED_FUNCTION, ML_MODEL]  # noqa: E501
 
