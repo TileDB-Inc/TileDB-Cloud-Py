@@ -1,10 +1,11 @@
-from typing import Optional
+from typing import Tuple, Union, Optional
 
+import tiledb
+from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
-from tiledb.cloud import array
 
 
 def create_file(
@@ -41,6 +42,41 @@ def create_file(
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
+def export_file_local(
+    uri: str,
+    output_uri: str,
+    timestamp: Union[Tuple[int, int], int, None] = None,
+    async_req: bool = False,
+) -> models.FileExported:
+    """
+    Exports a TileDB File back to its original file format
+    :param uri: The ``tiledb://...`` URI of the file to export
+    :param output_uri: output file uri
+    :param tuple timestamp: (default None) If int, open the array at a given TileDB
+        timestamp. If tuple, open at the given start and end TileDB timestamps.
+    :param async_req: return future instead of results for async support
+    :return: FileExported details, including output_uri
+    """
+    try:
+        ctx = client.Ctx()
+        vfs = tiledb.VFS(ctx=ctx)
+        with tiledb.open(uri, ctx=ctx, timestamp=timestamp) as A:
+            file_size = A.meta["file_size"]
+            # Row major partial export of single attribute
+            iterable = A.query(
+                attrs=["contents"], return_incomplete=True, order="C"
+            ).multi_index[0:file_size]
+
+            fh = vfs.open(output_uri, "wb")
+            for part in iterable:
+                vfs.write(fh, part["contents"])
+
+            vfs.close(fh)
+
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
+
+
 def export_file(
     uri: str,
     output_uri: str,
@@ -57,6 +93,9 @@ def export_file(
         (namespace, name) = array.split_uri(uri)
 
         api_instance = client.client.file_api
+
+        if uri.startswith("file://") or "://" not in uri:
+            return export_file_local(uri, output_uri, async_req)
 
         file_export = models.FileExport(
             output_uri=output_uri,
