@@ -1,11 +1,11 @@
-from typing import Optional
+from typing import Tuple, Union, Optional
 
+import tiledb
+from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
-from tiledb.cloud import array
-import tiledb
 
 
 def create_file(
@@ -94,17 +94,7 @@ def export_file(
 
         api_instance = client.client.file_api
 
-        local = True
-        if (
-            uri.startswith("tiledb://")
-            or uri.startswith("s3://")
-            or uri.startswith("azure://")
-            or uri.startswith("gcs://")
-            or uri.startswith("obs://")
-        ):
-            local = False
-
-        if local:
+        if uri.startswith("file://") or "://" not in uri:
             return export_file_local(uri, output_uri, async_req)
 
         file_export = models.FileExport(
