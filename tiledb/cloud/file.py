@@ -45,7 +45,7 @@ def create_file(
 def export_file_local(
     uri: str,
     output_uri: str,
-    timestamp: Optional[tuple] = None,
+    timestamp: Union[Tuple[int, int], int, None] = None,
     async_req: bool = False,
 ) -> models.FileExported:
     """
