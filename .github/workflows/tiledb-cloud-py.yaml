@@ -99,7 +99,6 @@ jobs:
     # Upload a wheel only if the entire matrix succeeds.
     needs:
       - format-check
-      - run-tests
     # Run on release, or on commits to the primary branch.
     # Artifacts are uploaded to the real PyPI only when a release is published;
     # otherwise, they are sent just to the test instance.
