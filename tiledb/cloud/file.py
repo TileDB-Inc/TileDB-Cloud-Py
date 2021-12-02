@@ -73,6 +73,8 @@ def export_file_local(
 
             vfs.close(fh)
 
+        return models.FileExported(output_uri=output_uri)
+
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
@@ -94,8 +96,10 @@ def export_file(
 
         api_instance = client.client.file_api
 
-        if uri.startswith("file://") or "://" not in uri:
-            return export_file_local(uri, output_uri, async_req)
+        if output_uri.startswith("file://") or "://" not in output_uri:
+            return export_file_local(
+                uri=uri, output_uri=output_uri, async_req=async_req
+            )
 
         file_export = models.FileExport(
             output_uri=output_uri,
