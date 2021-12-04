@@ -7,31 +7,6 @@
 from setuptools import find_packages  # noqa: H301
 from setuptools import setup
 
-NAME = "tiledb-cloud"
-
-# To install the library, run the following
-#
-# python setup.py install
-#
-# prerequisite: setuptools
-# http://pypi.python.org/pypi/setuptools
-
-REQUIRES = [
-    "attrs>=21.4.0",
-    "tiledb>=0.5.0",
-    "urllib3>=1.26",
-    "six>=1.10",
-    "certifi",
-    "python-dateutil",
-    "cloudpickle==1.4.1",
-    "pandas<1.3",  # As of 2021-07-06, the runtime (pinned to 1.1) is incompatible with 1.3.
-    "plotly>= 4.0.0",
-    "networkx>= 2.0.0",
-    "pydot",
-    "tiledb-plot-widget>=0.1.7",
-    "pyarrow==3.0.0",
-]
-
 # NOTE: we cannot use an __init__.py file in the tiledb/ directory, because it is supplied
 #       by core tiledb-py. Therefore, `find_packages` at the root directory does not find
 #       any sub-packages. We must explicitly iterate the `tiledb/cloud` subdirectory
@@ -41,17 +16,34 @@ REQUIRES = [
 #       '[].nspkg.pth' pointer file, which breaks imports of tiledb.cloud.
 # 3) https://stackoverflow.com/a/50301070
 
-PACKAGES = ("tiledb.cloud",) + tuple(
+PACKAGES = ["tiledb.cloud"]
+PACKAGES.extend(
     "tiledb.cloud." + x for x in find_packages("./tiledb/cloud", exclude=("testonly",))
 )
+VIZ_REQUIRES = ["networkx>=2", "pydot"]
 
 setup(
-    name=NAME,
+    name="tiledb-cloud",
     description="TileDB Cloud Platform Python Client",
     author_email="",
     url="https://tiledb.io",
     keywords=["TileDB", "cloud"],
-    install_requires=REQUIRES,
+    install_requires=[
+        "attrs>=21.4.0",
+        "tiledb>=0.5.0",
+        "urllib3>=1.26",
+        "six>=1.10",
+        "certifi",
+        "python-dateutil",
+        "cloudpickle==1.4.1",
+        # as of 2021-07-06, the runtime (pinned to 1.1) is incompatible with 1.3
+        "pandas<1.3",
+        "pyarrow==3.0.0",
+    ],
+    extras_require={
+        "viz-tiledb": ["tiledb-plot-widget>=0.1.7", *VIZ_REQUIRES],
+        "viz-plotly": ["plotly>=4", *VIZ_REQUIRES],
+    },
     packages=PACKAGES,
     include_package_data=True,
     zip_safe=False,  # Force folder install; egg doesn't work for namespace
