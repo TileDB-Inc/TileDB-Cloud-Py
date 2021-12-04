@@ -24,8 +24,6 @@ REQUIRES = [
     "certifi",
     "python-dateutil",
     "cloudpickle==1.4.1",
-    "setuptools>=18.0",
-    "setuptools_scm>=1.5.4",
     "pandas<1.3",  # As of 2021-07-06, the runtime (pinned to 1.1) is incompatible with 1.3.
     "plotly>= 4.0.0",
     "networkx>= 2.0.0",
@@ -57,11 +55,6 @@ setup(
     packages=PACKAGES,
     include_package_data=True,
     zip_safe=False,  # Force folder install; egg doesn't work for namespace
-    use_scm_version={
-        "version_scheme": "guess-next-dev",
-        "local_scheme": "dirty-tag",
-        "write_to": "tiledb/cloud/version.py",
-    },
     long_description="""\
     TileDB Cloud Platform Python API # noqa: E501
     """,
