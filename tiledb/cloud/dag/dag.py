@@ -22,8 +22,6 @@ from typing import (
     TypeVar,
 )
 
-import networkx as nx
-
 from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
@@ -705,7 +703,8 @@ class DAG:
         }
 
     def networkx_graph(self):
-        # Build networkx graph
+        import networkx as nx
+
         graph = nx.DiGraph()
 
         for n in self.nodes.values():

@@ -1,8 +1,6 @@
 import json
 import random
 
-import networkx as nx
-
 from tiledb.cloud.dag import status as st
 
 
@@ -130,6 +128,8 @@ def hierarchy_pos(
 
     xcenter: horizontal location of root
     """
+    import networkx as nx
+
     if not nx.is_tree(G):
         raise TypeError("cannot use hierarchy_pos on a graph that is not a tree")
 
