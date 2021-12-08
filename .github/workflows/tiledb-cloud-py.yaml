@@ -17,7 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
       - uses: psf/black@stable
+      - uses: isort/isort-action@master
 
   run-tests:
     runs-on: ${{ matrix.os }}
