@@ -12,13 +12,13 @@
 
 from __future__ import absolute_import
 
-import unittest
 import datetime
+import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.notebook_favorite import (
+from tiledb.cloud.rest_api.models.notebook_favorite import (  # noqa: E501
     NotebookFavorite,
-)  # noqa: E501
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 

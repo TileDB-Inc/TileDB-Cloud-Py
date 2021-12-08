@@ -13,8 +13,6 @@
 
 from __future__ import absolute_import
 
-# import models into model package
-from tiledb.cloud.rest_api.models.aws_access_credentials import AWSAccessCredentials
 from tiledb.cloud.rest_api.models.activity_event_type import ActivityEventType
 from tiledb.cloud.rest_api.models.array import Array
 from tiledb.cloud.rest_api.models.array_actions import ArrayActions
@@ -43,6 +41,9 @@ from tiledb.cloud.rest_api.models.array_type import ArrayType
 from tiledb.cloud.rest_api.models.attribute import Attribute
 from tiledb.cloud.rest_api.models.attribute_buffer_header import AttributeBufferHeader
 from tiledb.cloud.rest_api.models.attribute_buffer_size import AttributeBufferSize
+
+# import models into model package
+from tiledb.cloud.rest_api.models.aws_access_credentials import AWSAccessCredentials
 from tiledb.cloud.rest_api.models.datatype import Datatype
 from tiledb.cloud.rest_api.models.dimension import Dimension
 from tiledb.cloud.rest_api.models.dimension_coordinate import DimensionCoordinate
@@ -77,9 +78,9 @@ from tiledb.cloud.rest_api.models.invitation_status import InvitationStatus
 from tiledb.cloud.rest_api.models.invitation_type import InvitationType
 from tiledb.cloud.rest_api.models.last_accessed_array import LastAccessedArray
 from tiledb.cloud.rest_api.models.layout import Layout
+from tiledb.cloud.rest_api.models.max_buffer_sizes import MaxBufferSizes
 from tiledb.cloud.rest_api.models.ml_model_favorite import MLModelFavorite
 from tiledb.cloud.rest_api.models.ml_model_favorites_data import MLModelFavoritesData
-from tiledb.cloud.rest_api.models.max_buffer_sizes import MaxBufferSizes
 from tiledb.cloud.rest_api.models.multi_array_udf import MultiArrayUDF
 from tiledb.cloud.rest_api.models.namespace_actions import NamespaceActions
 from tiledb.cloud.rest_api.models.non_empty_domain import NonEmptyDomain

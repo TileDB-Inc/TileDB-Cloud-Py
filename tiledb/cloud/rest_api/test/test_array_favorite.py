@@ -12,8 +12,8 @@
 
 from __future__ import absolute_import
 
-import unittest
 import datetime
+import unittest
 
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.models.array_favorite import ArrayFavorite  # noqa: E501
