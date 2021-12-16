@@ -33,10 +33,14 @@ def Config(cfg_dict=None):
         if r in cfg_dict:
             raise ValueError(f"Unexpected config parameter '{r}' to cloud.Config")
 
-    host_parsed = urllib.parse.urlparse(config.config.host)
-    cfg_dict["rest.server_address"] = urllib.parse.urlunparse(
-        (host_parsed.scheme, host_parsed.netloc, "", "", "", "")
-    )
+    # Remove any ending `/v1` paths
+    host = config.config.host
+    if host.endswith("/v1"):
+        host = host[: -len("/v1")]
+    elif host.endswith("/v1/"):
+        host = host[: -len("/v1/")]
+
+    cfg_dict["rest.server_address"] = host
     cfg = tiledb.Config(cfg_dict)
 
     if (

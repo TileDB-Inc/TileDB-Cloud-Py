@@ -16,10 +16,19 @@ def save_configuration(config_file):
     config_path = os.path.dirname(config_file)
     if not os.path.exists(config_path):
         os.makedirs(config_path)
+
     with open(config_file, "w") as f:
         global config
+
+        # Remove any ending `/v1` paths to store the base url only in the on disk config
+        host = config.host
+        if host.endswith("/v1"):
+            host = host[: -len("/v1")]
+        elif host.endswith("/v1/"):
+            host = host[: -len("/v1/")]
+
         config_to_save = {
-            "host": config.host,
+            "host": host,
             "verify_ssl": config.verify_ssl,
         }
 
