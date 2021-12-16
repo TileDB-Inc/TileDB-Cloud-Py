@@ -1,6 +1,6 @@
 import datetime
-from typing import Any, TypeVar
 import uuid
+from typing import Any, TypeVar
 
 import pandas as pd
 import urllib3
@@ -11,7 +11,8 @@ from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud._results import decoders
 from tiledb.cloud.array import split_uri
-from tiledb.cloud.rest_api import ApiException as GenApiException, models
+from tiledb.cloud.rest_api import ApiException as GenApiException
+from tiledb.cloud.rest_api import models
 
 
 def task(id, async_req=False):

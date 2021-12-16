@@ -12,13 +12,13 @@
 
 from __future__ import absolute_import
 
-import unittest
 import datetime
+import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.array_task_browser_sidebar import (
+from tiledb.cloud.rest_api.models.array_task_browser_sidebar import (  # noqa: E501
     ArrayTaskBrowserSidebar,
-)  # noqa: E501
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 

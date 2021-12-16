@@ -12,13 +12,13 @@
 
 from __future__ import absolute_import
 
-import unittest
 import datetime
+import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.pagination_metadata import (
+from tiledb.cloud.rest_api.models.pagination_metadata import (  # noqa: E501
     PaginationMetadata,
-)  # noqa: E501
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 
