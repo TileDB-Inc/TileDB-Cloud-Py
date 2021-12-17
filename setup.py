@@ -21,6 +21,9 @@ PACKAGES.extend(
     "tiledb.cloud." + x for x in find_packages("./tiledb/cloud", exclude=("testonly",))
 )
 VIZ_REQUIRES = ["networkx>=2", "pydot"]
+TILEDB_VIZ_REQUIRES = ["tiledb-plot-widget>=0.1.7", *VIZ_REQUIRES]
+PLOTLY_VIZ_REQUIRES = ["plotly>=4", *VIZ_REQUIRES]
+ALL_REQUIRES = list(set(TILEDB_VIZ_REQUIRES + PLOTLY_VIZ_REQUIRES))
 
 setup(
     name="tiledb-cloud",
@@ -41,8 +44,9 @@ setup(
         "pyarrow==3.0.0",
     ],
     extras_require={
-        "viz-tiledb": ["tiledb-plot-widget>=0.1.7", *VIZ_REQUIRES],
-        "viz-plotly": ["plotly>=4", *VIZ_REQUIRES],
+        "viz-tiledb": TILEDB_VIZ_REQUIRES,
+        "viz-plotly": PLOTLY_VIZ_REQUIRES,
+        "all": ALL_REQUIRES,
     },
     packages=PACKAGES,
     include_package_data=True,
