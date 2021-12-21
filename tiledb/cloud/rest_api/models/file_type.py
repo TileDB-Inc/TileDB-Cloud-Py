@@ -33,7 +33,7 @@ class FileType(object):
     ML_MODEL = "ml_model"
     FILE = "file"
 
-    allowable_values = [NOTEBOOK, USER_DEFINED_FUNCTION, ML_MODEL]  # noqa: E501
+    allowable_values = [NOTEBOOK, USER_DEFINED_FUNCTION, ML_MODEL, FILE]  # noqa: E501
 
     """
     Attributes:

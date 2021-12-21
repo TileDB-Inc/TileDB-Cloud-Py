@@ -28,10 +28,11 @@ class UDFType(object):
     """
     allowed enum values
     """
+    MULTI_ARRAY = "multi_array"
     SINGLE_ARRAY = "single_array"
     GENERIC = "generic"
 
-    allowable_values = [SINGLE_ARRAY, GENERIC]  # noqa: E501
+    allowable_values = [MULTI_ARRAY, SINGLE_ARRAY, GENERIC]  # noqa: E501
 
     """
     Attributes:

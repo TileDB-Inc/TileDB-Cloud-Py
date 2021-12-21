@@ -240,7 +240,7 @@ class AWSAccessCredentials(object):
     def created_at(self):
         """Gets the created_at of this AWSAccessCredentials.  # noqa: E501
 
-        Time when udf dependencies was created (rfc3339)  # noqa: E501
+        Time when UDF dependencies were created (rfc3339)  # noqa: E501
 
         :return: The created_at of this AWSAccessCredentials.  # noqa: E501
         :rtype: datetime
@@ -251,7 +251,7 @@ class AWSAccessCredentials(object):
     def created_at(self, created_at):
         """Sets the created_at of this AWSAccessCredentials.
 
-        Time when udf dependencies was created (rfc3339)  # noqa: E501
+        Time when UDF dependencies were created (rfc3339)  # noqa: E501
 
         :param created_at: The created_at of this AWSAccessCredentials.  # noqa: E501
         :type: datetime
@@ -263,7 +263,7 @@ class AWSAccessCredentials(object):
     def updated_at(self):
         """Gets the updated_at of this AWSAccessCredentials.  # noqa: E501
 
-        Time when udf dependencies was last updated (rfc3339)  # noqa: E501
+        Time when UDF dependencies was last updated (rfc3339)  # noqa: E501
 
         :return: The updated_at of this AWSAccessCredentials.  # noqa: E501
         :rtype: datetime
@@ -274,7 +274,7 @@ class AWSAccessCredentials(object):
     def updated_at(self, updated_at):
         """Sets the updated_at of this AWSAccessCredentials.
 
-        Time when udf dependencies was last updated (rfc3339)  # noqa: E501
+        Time when UDF dependencies was last updated (rfc3339)  # noqa: E501
 
         :param updated_at: The updated_at of this AWSAccessCredentials.  # noqa: E501
         :type: datetime

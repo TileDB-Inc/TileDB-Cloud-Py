@@ -102,7 +102,7 @@ class UDFInfo(object):
     def id(self):
         """Gets the id of this UDFInfo.  # noqa: E501
 
-        Unique id of udf  # noqa: E501
+        Unique ID of UDF  # noqa: E501
 
         :return: The id of this UDFInfo.  # noqa: E501
         :rtype: str
@@ -113,7 +113,7 @@ class UDFInfo(object):
     def id(self, id):
         """Sets the id of this UDFInfo.
 
-        Unique id of udf  # noqa: E501
+        Unique ID of UDF  # noqa: E501
 
         :param id: The id of this UDFInfo.  # noqa: E501
         :type: str
@@ -125,7 +125,7 @@ class UDFInfo(object):
     def name(self):
         """Gets the name of this UDFInfo.  # noqa: E501
 
-        name of udf  # noqa: E501
+        name of UDF  # noqa: E501
 
         :return: The name of this UDFInfo.  # noqa: E501
         :rtype: str
@@ -136,7 +136,7 @@ class UDFInfo(object):
     def name(self, name):
         """Sets the name of this UDFInfo.
 
-        name of udf  # noqa: E501
+        name of UDF  # noqa: E501
 
         :param name: The name of this UDFInfo.  # noqa: E501
         :type: str
@@ -190,7 +190,7 @@ class UDFInfo(object):
     def readme(self):
         """Gets the readme of this UDFInfo.  # noqa: E501
 
-        Markdown readme of udfs  # noqa: E501
+        Markdown readme of UDFs  # noqa: E501
 
         :return: The readme of this UDFInfo.  # noqa: E501
         :rtype: str
@@ -201,7 +201,7 @@ class UDFInfo(object):
     def readme(self, readme):
         """Sets the readme of this UDFInfo.
 
-        Markdown readme of udfs  # noqa: E501
+        Markdown readme of UDFs  # noqa: E501
 
         :param readme: The readme of this UDFInfo.  # noqa: E501
         :type: str
@@ -259,7 +259,7 @@ class UDFInfo(object):
     def tags(self):
         """Gets the tags of this UDFInfo.  # noqa: E501
 
-        optional tags for udf  # noqa: E501
+        optional tags for UDF  # noqa: E501
 
         :return: The tags of this UDFInfo.  # noqa: E501
         :rtype: list[str]
@@ -270,7 +270,7 @@ class UDFInfo(object):
     def tags(self, tags):
         """Sets the tags of this UDFInfo.
 
-        optional tags for udf  # noqa: E501
+        optional tags for UDF  # noqa: E501
 
         :param tags: The tags of this UDFInfo.  # noqa: E501
         :type: list[str]

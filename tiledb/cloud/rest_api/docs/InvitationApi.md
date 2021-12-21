@@ -59,7 +59,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
-    invitation = 'invitation_example' # str | the id of invitation about to be accepted
+    invitation = 'invitation_example' # str | the ID of invitation about to be accepted
 
     try:
         api_instance.accept_invitation(invitation)
@@ -105,7 +105,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
-    invitation = 'invitation_example' # str | the id of invitation about to be accepted
+    invitation = 'invitation_example' # str | the ID of invitation about to be accepted
 
     try:
         api_instance.accept_invitation(invitation)
@@ -117,7 +117,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **invitation** | **str**| the id of invitation about to be accepted | 
+ **invitation** | **str**| the ID of invitation about to be accepted | 
 
 ### Return type
 
@@ -188,8 +188,8 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
-    invitation = 'invitation_example' # str | the id of invitation about to be cancelled
-organization = 'organization_example' # str | name or uuid of organization
+    invitation = 'invitation_example' # str | the ID of invitation about to be cancelled
+organization = 'organization_example' # str | name or UUID of organization
 
     try:
         api_instance.cancel_join_organization(invitation, organization)
@@ -235,8 +235,8 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
-    invitation = 'invitation_example' # str | the id of invitation about to be cancelled
-organization = 'organization_example' # str | name or uuid of organization
+    invitation = 'invitation_example' # str | the ID of invitation about to be cancelled
+organization = 'organization_example' # str | name or UUID of organization
 
     try:
         api_instance.cancel_join_organization(invitation, organization)
@@ -248,8 +248,8 @@ organization = 'organization_example' # str | name or uuid of organization
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **invitation** | **str**| the id of invitation about to be cancelled | 
- **organization** | **str**| name or uuid of organization | 
+ **invitation** | **str**| the ID of invitation about to be cancelled | 
+ **organization** | **str**| name or UUID of organization | 
 
 ### Return type
 
@@ -321,7 +321,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-invitation = 'invitation_example' # str | the id of invitation about to be cancelled
+invitation = 'invitation_example' # str | the ID of invitation about to be cancelled
 array = 'array_example' # str | name/uri of array that is url-encoded
 
     try:
@@ -369,7 +369,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-invitation = 'invitation_example' # str | the id of invitation about to be cancelled
+invitation = 'invitation_example' # str | the ID of invitation about to be cancelled
 array = 'array_example' # str | name/uri of array that is url-encoded
 
     try:
@@ -383,7 +383,7 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **invitation** | **str**| the id of invitation about to be cancelled | 
+ **invitation** | **str**| the ID of invitation about to be cancelled | 
  **array** | **str**| name/uri of array that is url-encoded | 
 
 ### Return type
@@ -455,7 +455,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
-    organization = 'organization_example' # str | name or id of organization to filter (optional)
+    organization = 'organization_example' # str | name or ID of organization to filter (optional)
 array = 'array_example' # str | name/uri of array that is url-encoded to filter (optional)
 start = 56 # int | start time for tasks to filter by (optional)
 end = 56 # int | end time for tasks to filter by (optional)
@@ -510,7 +510,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
-    organization = 'organization_example' # str | name or id of organization to filter (optional)
+    organization = 'organization_example' # str | name or ID of organization to filter (optional)
 array = 'array_example' # str | name/uri of array that is url-encoded to filter (optional)
 start = 56 # int | start time for tasks to filter by (optional)
 end = 56 # int | end time for tasks to filter by (optional)
@@ -531,7 +531,7 @@ orderby = 'orderby_example' # str | sort by which field valid values include tim
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **organization** | **str**| name or id of organization to filter | [optional] 
+ **organization** | **str**| name or ID of organization to filter | [optional] 
  **array** | **str**| name/uri of array that is url-encoded to filter | [optional] 
  **start** | **int**| start time for tasks to filter by | [optional] 
  **end** | **int**| end time for tasks to filter by | [optional] 
@@ -609,7 +609,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
-    organization = 'organization_example' # str | name or uuid of organization
+    organization = 'organization_example' # str | name or UUID of organization
 email_invite = tiledb.cloud.rest_api.InvitationOrganizationJoinEmail() # InvitationOrganizationJoinEmail | list of email recipients
 
     try:
@@ -656,7 +656,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
-    organization = 'organization_example' # str | name or uuid of organization
+    organization = 'organization_example' # str | name or UUID of organization
 email_invite = tiledb.cloud.rest_api.InvitationOrganizationJoinEmail() # InvitationOrganizationJoinEmail | list of email recipients
 
     try:
@@ -669,7 +669,7 @@ email_invite = tiledb.cloud.rest_api.InvitationOrganizationJoinEmail() # Invitat
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **organization** | **str**| name or uuid of organization | 
+ **organization** | **str**| name or UUID of organization | 
  **email_invite** | [**InvitationOrganizationJoinEmail**](InvitationOrganizationJoinEmail.md)| list of email recipients | 
 
 ### Return type

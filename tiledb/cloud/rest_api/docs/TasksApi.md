@@ -194,7 +194,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.TasksApi(api_client)
-    id = 'id_example' # str | task id to fetch
+    id = 'id_example' # str | task ID to fetch
 
     try:
         api_response = api_instance.task_id_get(id)
@@ -241,7 +241,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.TasksApi(api_client)
-    id = 'id_example' # str | task id to fetch
+    id = 'id_example' # str | task ID to fetch
 
     try:
         api_response = api_instance.task_id_get(id)
@@ -254,7 +254,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **str**| task id to fetch | 
+ **id** | **str**| task ID to fetch | 
 
 ### Return type
 
@@ -324,7 +324,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.TasksApi(api_client)
-    id = 'id_example' # str | task id to retrieve stored results
+    id = 'id_example' # str | task ID to retrieve stored results
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
     try:
@@ -372,7 +372,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.TasksApi(api_client)
-    id = 'id_example' # str | task id to retrieve stored results
+    id = 'id_example' # str | task ID to retrieve stored results
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
     try:
@@ -386,7 +386,7 @@ accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **str**| task id to retrieve stored results | 
+ **id** | **str**| task ID to retrieve stored results | 
  **accept_encoding** | **str**| Encoding to use | [optional] 
 
 ### Return type

@@ -1,6 +1,6 @@
 # UDFActions
 
-actions a user can take on an udf
+actions a user can take on a UDF
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

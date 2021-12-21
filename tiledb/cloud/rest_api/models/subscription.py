@@ -78,7 +78,7 @@ class Subscription(object):
     def id(self):
         """Gets the id of this Subscription.  # noqa: E501
 
-        Unique id of subscription as defined by Stripe  # noqa: E501
+        Unique ID of subscription as defined by Stripe  # noqa: E501
 
         :return: The id of this Subscription.  # noqa: E501
         :rtype: str
@@ -89,7 +89,7 @@ class Subscription(object):
     def id(self, id):
         """Sets the id of this Subscription.
 
-        Unique id of subscription as defined by Stripe  # noqa: E501
+        Unique ID of subscription as defined by Stripe  # noqa: E501
 
         :param id: The id of this Subscription.  # noqa: E501
         :type: str
@@ -101,7 +101,7 @@ class Subscription(object):
     def owner_namespace_uuid(self):
         """Gets the owner_namespace_uuid of this Subscription.  # noqa: E501
 
-        Unique id of the array (product) owner  # noqa: E501
+        Unique ID of the array (product) owner  # noqa: E501
 
         :return: The owner_namespace_uuid of this Subscription.  # noqa: E501
         :rtype: str
@@ -112,7 +112,7 @@ class Subscription(object):
     def owner_namespace_uuid(self, owner_namespace_uuid):
         """Sets the owner_namespace_uuid of this Subscription.
 
-        Unique id of the array (product) owner  # noqa: E501
+        Unique ID of the array (product) owner  # noqa: E501
 
         :param owner_namespace_uuid: The owner_namespace_uuid of this Subscription.  # noqa: E501
         :type: str
@@ -124,7 +124,7 @@ class Subscription(object):
     def customer_namespace_uuid(self):
         """Gets the customer_namespace_uuid of this Subscription.  # noqa: E501
 
-        Unique id of the array (product) user (customer)  # noqa: E501
+        Unique ID of the array (product) user (customer)  # noqa: E501
 
         :return: The customer_namespace_uuid of this Subscription.  # noqa: E501
         :rtype: str
@@ -135,7 +135,7 @@ class Subscription(object):
     def customer_namespace_uuid(self, customer_namespace_uuid):
         """Sets the customer_namespace_uuid of this Subscription.
 
-        Unique id of the array (product) user (customer)  # noqa: E501
+        Unique ID of the array (product) user (customer)  # noqa: E501
 
         :param customer_namespace_uuid: The customer_namespace_uuid of this Subscription.  # noqa: E501
         :type: str

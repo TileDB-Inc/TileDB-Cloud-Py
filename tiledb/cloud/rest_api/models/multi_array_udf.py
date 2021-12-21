@@ -48,6 +48,7 @@ class MultiArrayUDF(object):
         "subarray": "UDFSubarray",
         "buffers": "list[str]",
         "arrays": "list[UDFArrayDetails]",
+        "timeout": "int",
     }
 
     attribute_map = {
@@ -66,6 +67,7 @@ class MultiArrayUDF(object):
         "subarray": "subarray",
         "buffers": "buffers",
         "arrays": "arrays",
+        "timeout": "timeout",
     }
 
     def __init__(
@@ -85,6 +87,7 @@ class MultiArrayUDF(object):
         subarray=None,
         buffers=None,
         arrays=None,
+        timeout=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """MultiArrayUDF - a model defined in OpenAPI"""  # noqa: E501
@@ -107,6 +110,7 @@ class MultiArrayUDF(object):
         self._subarray = None
         self._buffers = None
         self._arrays = None
+        self._timeout = None
         self.discriminator = None
 
         if udf_info_name is not None:
@@ -139,6 +143,8 @@ class MultiArrayUDF(object):
             self.buffers = buffers
         if arrays is not None:
             self.arrays = arrays
+        if timeout is not None:
+            self.timeout = timeout
 
     @property
     def udf_info_name(self):
@@ -211,7 +217,7 @@ class MultiArrayUDF(object):
     def image_name(self):
         """Gets the image_name of this MultiArrayUDF.  # noqa: E501
 
-        Docker image name to use for udf  # noqa: E501
+        Docker image name to use for UDF  # noqa: E501
 
         :return: The image_name of this MultiArrayUDF.  # noqa: E501
         :rtype: str
@@ -222,7 +228,7 @@ class MultiArrayUDF(object):
     def image_name(self, image_name):
         """Sets the image_name of this MultiArrayUDF.
 
-        Docker image name to use for udf  # noqa: E501
+        Docker image name to use for UDF  # noqa: E501
 
         :param image_name: The image_name of this MultiArrayUDF.  # noqa: E501
         :type: str
@@ -324,7 +330,7 @@ class MultiArrayUDF(object):
     def argument(self):
         """Gets the argument of this MultiArrayUDF.  # noqa: E501
 
-        Argument(s) to pass to udf function, tuple or list of args/kwargs which can be in native or json format  # noqa: E501
+        Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format  # noqa: E501
 
         :return: The argument of this MultiArrayUDF.  # noqa: E501
         :rtype: str
@@ -335,7 +341,7 @@ class MultiArrayUDF(object):
     def argument(self, argument):
         """Sets the argument of this MultiArrayUDF.
 
-        Argument(s) to pass to udf function, tuple or list of args/kwargs which can be in native or json format  # noqa: E501
+        Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format  # noqa: E501
 
         :param argument: The argument of this MultiArrayUDF.  # noqa: E501
         :type: str
@@ -435,7 +441,7 @@ class MultiArrayUDF(object):
     def buffers(self):
         """Gets the buffers of this MultiArrayUDF.  # noqa: E501
 
-        List of buffers to fetch (attributes + dimensions). Deprecated please set arrays with UDFArrayDetails  # noqa: E501
+        List of buffers to fetch (attributes + dimensions). Deprecated; please set arrays with `UDFArrayDetails`.  # noqa: E501
 
         :return: The buffers of this MultiArrayUDF.  # noqa: E501
         :rtype: list[str]
@@ -446,7 +452,7 @@ class MultiArrayUDF(object):
     def buffers(self, buffers):
         """Sets the buffers of this MultiArrayUDF.
 
-        List of buffers to fetch (attributes + dimensions). Deprecated please set arrays with UDFArrayDetails  # noqa: E501
+        List of buffers to fetch (attributes + dimensions). Deprecated; please set arrays with `UDFArrayDetails`.  # noqa: E501
 
         :param buffers: The buffers of this MultiArrayUDF.  # noqa: E501
         :type: list[str]
@@ -476,6 +482,29 @@ class MultiArrayUDF(object):
         """
 
         self._arrays = arrays
+
+    @property
+    def timeout(self):
+        """Gets the timeout of this MultiArrayUDF.  # noqa: E501
+
+        UDF-type timeout in seconds (default: 900)  # noqa: E501
+
+        :return: The timeout of this MultiArrayUDF.  # noqa: E501
+        :rtype: int
+        """
+        return self._timeout
+
+    @timeout.setter
+    def timeout(self, timeout):
+        """Sets the timeout of this MultiArrayUDF.
+
+        UDF-type timeout in seconds (default: 900)  # noqa: E501
+
+        :param timeout: The timeout of this MultiArrayUDF.  # noqa: E501
+        :type: int
+        """
+
+        self._timeout = timeout
 
     def to_dict(self):
         """Returns the model properties as a dict"""

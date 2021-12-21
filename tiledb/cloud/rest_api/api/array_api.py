@@ -49,8 +49,8 @@ class ArrayApi(object):
         :param int start: Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
         :param int end: End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
         :param str event_types: Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
-        :param str task_id: Array task id To filter activity to
-        :param bool has_task_id: Excludes activity log results that does not contain an array task uuid
+        :param str task_id: Array task ID To filter activity to
+        :param bool has_task_id: Excludes activity log results that do not contain an array task UUID
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -84,8 +84,8 @@ class ArrayApi(object):
         :param int start: Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
         :param int end: End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
         :param str event_types: Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
-        :param str task_id: Array task id To filter activity to
-        :param bool has_task_id: Excludes activity log results that does not contain an array task uuid
+        :param str task_id: Array task ID To filter activity to
+        :param bool has_task_id: Excludes activity log results that do not contain an array task UUID
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1968,7 +1968,7 @@ class ArrayApi(object):
     def get_activity_log_by_id(self, namespace, array, id, **kwargs):  # noqa: E501
         """get_activity_log_by_id  # noqa: E501
 
-        get activity log by id  # noqa: E501
+        get activity log by ID  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_activity_log_by_id(namespace, array, id, async_req=True)
@@ -1977,7 +1977,7 @@ class ArrayApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
-        :param str id: id of the activity (required)
+        :param str id: ID of the activity (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1999,7 +1999,7 @@ class ArrayApi(object):
     ):  # noqa: E501
         """get_activity_log_by_id  # noqa: E501
 
-        get activity log by id  # noqa: E501
+        get activity log by ID  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_activity_log_by_id_with_http_info(namespace, array, id, async_req=True)
@@ -2008,7 +2008,7 @@ class ArrayApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
-        :param str id: id of the activity (required)
+        :param str id: ID of the activity (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -2558,7 +2558,7 @@ class ArrayApi(object):
     def get_array_meta_data_json(self, namespace, array, **kwargs):  # noqa: E501
         """get_array_meta_data_json  # noqa: E501
 
-        get metadata from the array in json format  # noqa: E501
+        get metadata from the array in JSON format  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_array_meta_data_json(namespace, array, async_req=True)
@@ -2590,7 +2590,7 @@ class ArrayApi(object):
     ):  # noqa: E501
         """get_array_meta_data_json  # noqa: E501
 
-        get metadata from the array in json format  # noqa: E501
+        get metadata from the array in JSON format  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_array_meta_data_json_with_http_info(namespace, array, async_req=True)
@@ -4099,7 +4099,7 @@ class ArrayApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
-        :param ArraySharing array_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the array will not be shared with the namespace at all (required)
+        :param ArraySharing array_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the array will not be shared with the namespace at all. (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -4130,7 +4130,7 @@ class ArrayApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
-        :param ArraySharing array_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the array will not be shared with the namespace at all (required)
+        :param ArraySharing array_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the array will not be shared with the namespace at all. (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will

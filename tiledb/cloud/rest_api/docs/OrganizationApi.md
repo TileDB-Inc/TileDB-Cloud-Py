@@ -851,7 +851,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
-    organization = 'organization_example' # str | organization name or id
+    organization = 'organization_example' # str | organization name or ID
 
     try:
         api_instance.delete_organization(organization)
@@ -897,7 +897,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
-    organization = 'organization_example' # str | organization name or id
+    organization = 'organization_example' # str | organization name or ID
 
     try:
         api_instance.delete_organization(organization)
@@ -909,7 +909,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name or id | 
+ **organization** | **str**| organization name or ID | 
 
 ### Return type
 
@@ -1237,7 +1237,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
-    organization = 'organization_example' # str | organization name or id
+    organization = 'organization_example' # str | organization name or ID
 
     try:
         api_response = api_instance.get_organization(organization)
@@ -1284,7 +1284,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
-    organization = 'organization_example' # str | organization name or id
+    organization = 'organization_example' # str | organization name or ID
 
     try:
         api_response = api_instance.get_organization(organization)
@@ -1297,7 +1297,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name or id | 
+ **organization** | **str**| organization name or ID | 
 
 ### Return type
 
@@ -1636,7 +1636,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
-    organization = 'organization_example' # str | organization name or id
+    organization = 'organization_example' # str | organization name or ID
 organization_details = tiledb.cloud.rest_api.Organization() # Organization | organization details to update
 
     try:
@@ -1683,7 +1683,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
-    organization = 'organization_example' # str | organization name or id
+    organization = 'organization_example' # str | organization name or ID
 organization_details = tiledb.cloud.rest_api.Organization() # Organization | organization details to update
 
     try:
@@ -1696,7 +1696,7 @@ organization_details = tiledb.cloud.rest_api.Organization() # Organization | org
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name or id | 
+ **organization** | **str**| organization name or ID | 
  **organization_details** | [**Organization**](Organization.md)| organization details to update | 
 
 ### Return type

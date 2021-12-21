@@ -602,7 +602,7 @@ Name | Type | Description  | Notes
 
 
 
-send a query to run against a specified array/URI registered to a group/project, returns json results
+send a query to run against a specified array/URI registered to a group/project, returns JSON results
 
 ### Example
 
@@ -734,7 +734,7 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | query completed and results are returned in json format |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br>  |
+**200** | query completed and results are returned in JSON format |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br>  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

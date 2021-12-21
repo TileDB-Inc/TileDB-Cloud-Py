@@ -982,7 +982,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    username = 'username_example' # str | username or id
+    username = 'username_example' # str | username or ID
 
     try:
         api_instance.delete_user(username)
@@ -1028,7 +1028,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    username = 'username_example' # str | username or id
+    username = 'username_example' # str | username or ID
 
     try:
         api_instance.delete_user(username)
@@ -1040,7 +1040,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **username** | **str**| username or id | 
+ **username** | **str**| username or ID | 
 
 ### Return type
 
@@ -1755,7 +1755,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    username = 'username_example' # str | username or id
+    username = 'username_example' # str | username or ID
 
     try:
         api_response = api_instance.get_user_with_username(username)
@@ -1802,7 +1802,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    username = 'username_example' # str | username or id
+    username = 'username_example' # str | username or ID
 
     try:
         api_response = api_instance.get_user_with_username(username)
@@ -1815,7 +1815,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **username** | **str**| username or id | 
+ **username** | **str**| username or ID | 
 
 ### Return type
 
@@ -2657,7 +2657,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    username = 'username_example' # str | username or id
+    username = 'username_example' # str | username or ID
 user = tiledb.cloud.rest_api.User() # User | user details to update
 
     try:
@@ -2704,7 +2704,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    username = 'username_example' # str | username or id
+    username = 'username_example' # str | username or ID
 user = tiledb.cloud.rest_api.User() # User | user details to update
 
     try:
@@ -2717,7 +2717,7 @@ user = tiledb.cloud.rest_api.User() # User | user details to update
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **username** | **str**| username or id | 
+ **username** | **str**| username or ID | 
  **user** | [**User**](User.md)| user details to update | 
 
 ### Return type

@@ -41,7 +41,7 @@ class TestUDFInfoUpdate(unittest.TestCase):
                 language="python",
                 version="0",
                 image_name="0",
-                type="single_array",
+                type="multi_array",
                 _exec="0",
                 exec_raw="0",
                 readme="0",

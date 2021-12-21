@@ -589,7 +589,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the array favorite
+    id = 'id_example' # str | The UUID of the array favorite
 
     try:
         api_instance.delete_array_favorite(id)
@@ -635,7 +635,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the array favorite
+    id = 'id_example' # str | The UUID of the array favorite
 
     try:
         api_instance.delete_array_favorite(id)
@@ -647,7 +647,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **str**| The uuid of the array favorite | 
+ **id** | **str**| The UUID of the array favorite | 
 
 ### Return type
 
@@ -717,7 +717,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the ML model favorite
+    id = 'id_example' # str | The UUID of the ML model favorite
 
     try:
         api_instance.delete_ml_model_favorite(id)
@@ -763,7 +763,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the ML model favorite
+    id = 'id_example' # str | The UUID of the ML model favorite
 
     try:
         api_instance.delete_ml_model_favorite(id)
@@ -775,7 +775,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **str**| The uuid of the ML model favorite | 
+ **id** | **str**| The UUID of the ML model favorite | 
 
 ### Return type
 
@@ -845,7 +845,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the notebook favorite
+    id = 'id_example' # str | The UUID of the notebook favorite
 
     try:
         api_instance.delete_notebook_favorite(id)
@@ -891,7 +891,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the notebook favorite
+    id = 'id_example' # str | The UUID of the notebook favorite
 
     try:
         api_instance.delete_notebook_favorite(id)
@@ -903,7 +903,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **str**| The uuid of the notebook favorite | 
+ **id** | **str**| The UUID of the notebook favorite | 
 
 ### Return type
 
@@ -973,7 +973,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the UDF favorite
+    id = 'id_example' # str | The UUID of the UDF favorite
 
     try:
         api_instance.delete_udf_favorite(id)
@@ -1019,7 +1019,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the UDF favorite
+    id = 'id_example' # str | The UUID of the UDF favorite
 
     try:
         api_instance.delete_udf_favorite(id)
@@ -1031,7 +1031,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **str**| The uuid of the UDF favorite | 
+ **id** | **str**| The UUID of the UDF favorite | 
 
 ### Return type
 
@@ -1101,7 +1101,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the array favorite
+    id = 'id_example' # str | The UUID of the array favorite
 
     try:
         api_response = api_instance.get_array_favorite(id)
@@ -1148,7 +1148,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the array favorite
+    id = 'id_example' # str | The UUID of the array favorite
 
     try:
         api_response = api_instance.get_array_favorite(id)
@@ -1161,7 +1161,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **str**| The uuid of the array favorite | 
+ **id** | **str**| The UUID of the array favorite | 
 
 ### Return type
 
@@ -1364,7 +1364,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the ML model favorite
+    id = 'id_example' # str | The UUID of the ML model favorite
 
     try:
         api_response = api_instance.get_ml_model_favorite(id)
@@ -1411,7 +1411,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the ML model favorite
+    id = 'id_example' # str | The UUID of the ML model favorite
 
     try:
         api_response = api_instance.get_ml_model_favorite(id)
@@ -1424,7 +1424,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **str**| The uuid of the ML model favorite | 
+ **id** | **str**| The UUID of the ML model favorite | 
 
 ### Return type
 
@@ -1627,7 +1627,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the notebook favorite
+    id = 'id_example' # str | The UUID of the notebook favorite
 
     try:
         api_response = api_instance.get_notebook_favorite(id)
@@ -1674,7 +1674,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the notebook favorite
+    id = 'id_example' # str | The UUID of the notebook favorite
 
     try:
         api_response = api_instance.get_notebook_favorite(id)
@@ -1687,7 +1687,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **str**| The uuid of the notebook favorite | 
+ **id** | **str**| The UUID of the notebook favorite | 
 
 ### Return type
 
@@ -1890,7 +1890,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the UDF favorite
+    id = 'id_example' # str | The UUID of the UDF favorite
 
     try:
         api_response = api_instance.get_udf_favorite(id)
@@ -1937,7 +1937,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
-    id = 'id_example' # str | The uuid of the UDF favorite
+    id = 'id_example' # str | The UUID of the UDF favorite
 
     try:
         api_response = api_instance.get_udf_favorite(id)
@@ -1950,7 +1950,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **str**| The uuid of the UDF favorite | 
+ **id** | **str**| The UUID of the UDF favorite | 
 
 ### Return type
 

@@ -132,7 +132,7 @@ class Pricing(object):
     def id(self):
         """Gets the id of this Pricing.  # noqa: E501
 
-        Unique id of plan as defined by Stripe  # noqa: E501
+        Unique ID of plan as defined by Stripe  # noqa: E501
 
         :return: The id of this Pricing.  # noqa: E501
         :rtype: str
@@ -143,7 +143,7 @@ class Pricing(object):
     def id(self, id):
         """Sets the id of this Pricing.
 
-        Unique id of plan as defined by Stripe  # noqa: E501
+        Unique ID of plan as defined by Stripe  # noqa: E501
 
         :param id: The id of this Pricing.  # noqa: E501
         :type: str
@@ -155,7 +155,7 @@ class Pricing(object):
     def array_uuid(self):
         """Gets the array_uuid of this Pricing.  # noqa: E501
 
-        Unique id of registered array  # noqa: E501
+        Unique ID of registered array  # noqa: E501
 
         :return: The array_uuid of this Pricing.  # noqa: E501
         :rtype: str
@@ -166,7 +166,7 @@ class Pricing(object):
     def array_uuid(self, array_uuid):
         """Sets the array_uuid of this Pricing.
 
-        Unique id of registered array  # noqa: E501
+        Unique ID of registered array  # noqa: E501
 
         :param array_uuid: The array_uuid of this Pricing.  # noqa: E501
         :type: str

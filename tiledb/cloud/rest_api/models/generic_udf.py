@@ -44,6 +44,7 @@ class GenericUDF(object):
         "result_format": "ResultFormat",
         "task_name": "str",
         "store_results": "bool",
+        "timeout": "int",
     }
 
     attribute_map = {
@@ -58,6 +59,7 @@ class GenericUDF(object):
         "result_format": "result_format",
         "task_name": "task_name",
         "store_results": "store_results",
+        "timeout": "timeout",
     }
 
     def __init__(
@@ -73,6 +75,7 @@ class GenericUDF(object):
         result_format=None,
         task_name=None,
         store_results=None,
+        timeout=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """GenericUDF - a model defined in OpenAPI"""  # noqa: E501
@@ -91,6 +94,7 @@ class GenericUDF(object):
         self._result_format = None
         self._task_name = None
         self._store_results = None
+        self._timeout = None
         self.discriminator = None
 
         if udf_info_name is not None:
@@ -115,6 +119,8 @@ class GenericUDF(object):
             self.task_name = task_name
         if store_results is not None:
             self.store_results = store_results
+        if timeout is not None:
+            self.timeout = timeout
 
     @property
     def udf_info_name(self):
@@ -187,7 +193,7 @@ class GenericUDF(object):
     def image_name(self):
         """Gets the image_name of this GenericUDF.  # noqa: E501
 
-        Docker image name to use for udf  # noqa: E501
+        Docker image name to use for UDF  # noqa: E501
 
         :return: The image_name of this GenericUDF.  # noqa: E501
         :rtype: str
@@ -198,7 +204,7 @@ class GenericUDF(object):
     def image_name(self, image_name):
         """Sets the image_name of this GenericUDF.
 
-        Docker image name to use for udf  # noqa: E501
+        Docker image name to use for UDF  # noqa: E501
 
         :param image_name: The image_name of this GenericUDF.  # noqa: E501
         :type: str
@@ -256,7 +262,7 @@ class GenericUDF(object):
     def argument(self):
         """Gets the argument of this GenericUDF.  # noqa: E501
 
-        Argument(s) to pass to udf function, tuple or list of args/kwargs which can be in native or json format  # noqa: E501
+        Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format  # noqa: E501
 
         :return: The argument of this GenericUDF.  # noqa: E501
         :rtype: str
@@ -267,7 +273,7 @@ class GenericUDF(object):
     def argument(self, argument):
         """Sets the argument of this GenericUDF.
 
-        Argument(s) to pass to udf function, tuple or list of args/kwargs which can be in native or json format  # noqa: E501
+        Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format  # noqa: E501
 
         :param argument: The argument of this GenericUDF.  # noqa: E501
         :type: str
@@ -364,6 +370,29 @@ class GenericUDF(object):
         """
 
         self._store_results = store_results
+
+    @property
+    def timeout(self):
+        """Gets the timeout of this GenericUDF.  # noqa: E501
+
+        UDF-type timeout in seconds (default: 900)  # noqa: E501
+
+        :return: The timeout of this GenericUDF.  # noqa: E501
+        :rtype: int
+        """
+        return self._timeout
+
+    @timeout.setter
+    def timeout(self, timeout):
+        """Sets the timeout of this GenericUDF.
+
+        UDF-type timeout in seconds (default: 900)  # noqa: E501
+
+        :param timeout: The timeout of this GenericUDF.  # noqa: E501
+        :type: int
+        """
+
+        self._timeout = timeout
 
     def to_dict(self):
         """Returns the model properties as a dict"""

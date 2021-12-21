@@ -84,7 +84,7 @@ class LastAccessedArray(object):
     def array_id(self):
         """Gets the array_id of this LastAccessedArray.  # noqa: E501
 
-        unique id of array  # noqa: E501
+        unique ID of array  # noqa: E501
 
         :return: The array_id of this LastAccessedArray.  # noqa: E501
         :rtype: str
@@ -95,7 +95,7 @@ class LastAccessedArray(object):
     def array_id(self, array_id):
         """Sets the array_id of this LastAccessedArray.
 
-        unique id of array  # noqa: E501
+        unique ID of array  # noqa: E501
 
         :param array_id: The array_id of this LastAccessedArray.  # noqa: E501
         :type: str

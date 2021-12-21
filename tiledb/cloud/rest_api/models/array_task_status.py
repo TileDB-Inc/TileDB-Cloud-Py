@@ -28,11 +28,21 @@ class ArrayTaskStatus(object):
     """
     allowed enum values
     """
+    QUEUED = "QUEUED"
     FAILED = "FAILED"
     COMPLETED = "COMPLETED"
     RUNNING = "RUNNING"
+    DENIED = "DENIED"
+    UNKNOWN = "UNKNOWN"
 
-    allowable_values = [FAILED, COMPLETED, RUNNING]  # noqa: E501
+    allowable_values = [
+        QUEUED,
+        FAILED,
+        COMPLETED,
+        RUNNING,
+        DENIED,
+        UNKNOWN,
+    ]  # noqa: E501
 
     """
     Attributes:

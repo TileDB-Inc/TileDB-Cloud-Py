@@ -40,7 +40,7 @@ class TestUDFInfo(unittest.TestCase):
                 id="00000000-0000-0000-0000-000000000000",
                 name="0",
                 language="python",
-                type="single_array",
+                type="multi_array",
                 readme="0",
                 license_id="0",
                 license_text="0",

@@ -21,7 +21,7 @@ Method | HTTP request | Description
 
 
 
-delete a registerd UDF, this will remove all sharing and can not be undone
+delete a registered UDF -- this will remove all sharing and can not be undone
 
 ### Example
 
@@ -64,7 +64,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-name = 'name_example' # str | name to register udf under
+name = 'name_example' # str | name to register UDF under
 
     try:
         api_instance.delete_udf_info(namespace, name)
@@ -111,7 +111,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-name = 'name_example' # str | name to register udf under
+name = 'name_example' # str | name to register UDF under
 
     try:
         api_instance.delete_udf_info(namespace, name)
@@ -124,7 +124,7 @@ name = 'name_example' # str | name to register udf under
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **name** | **str**| name to register udf under | 
+ **name** | **str**| name to register UDF under | 
 
 ### Return type
 
@@ -195,7 +195,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-name = 'name_example' # str | name to register udf under
+name = 'name_example' # str | name to register UDF under
 
     try:
         api_response = api_instance.get_udf_info(namespace, name)
@@ -243,7 +243,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-name = 'name_example' # str | name to register udf under
+name = 'name_example' # str | name to register UDF under
 
     try:
         api_response = api_instance.get_udf_info(namespace, name)
@@ -257,7 +257,7 @@ name = 'name_example' # str | name to register udf under
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **name** | **str**| name to register udf under | 
+ **name** | **str**| name to register UDF under | 
 
 ### Return type
 
@@ -276,7 +276,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | UDFInfo was retrieved successfully |  -  |
-**404** | udf not found |  -  |
+**404** | UDF not found |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -286,7 +286,7 @@ Name | Type | Description  | Notes
 
 
 
-Get all sharing details of the udf
+Get all sharing details of the UDF
 
 ### Example
 
@@ -410,7 +410,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | List of all specific sharing policies |  -  |
-**404** | UDF does not exist or user does not have permissions to view array sharing policies |  -  |
+**404** | UDF does not exist or user does not have permissions to view array-sharing policies |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -463,8 +463,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-name = 'name_example' # str | name to register udf under
-udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to register
+name = 'name_example' # str | name to register UDF under
+udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | UDF to register
 
     try:
         api_instance.register_udf_info(namespace, name, udf)
@@ -511,8 +511,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-name = 'name_example' # str | name to register udf under
-udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to register
+name = 'name_example' # str | name to register UDF under
+udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | UDF to register
 
     try:
         api_instance.register_udf_info(namespace, name, udf)
@@ -525,8 +525,8 @@ udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to register
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **name** | **str**| name to register udf under | 
- **udf** | [**UDFInfoUpdate**](UDFInfoUpdate.md)| udf to register | 
+ **name** | **str**| name to register UDF under | 
+ **udf** | [**UDFInfoUpdate**](UDFInfoUpdate.md)| UDF to register | 
 
 ### Return type
 
@@ -544,7 +544,7 @@ void (empty response body)
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**204** | udf registered successfully |  -  |
+**204** | UDF registered successfully |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -598,7 +598,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name of UDFInfo
-udf_sharing = tiledb.cloud.rest_api.UDFSharing() # UDFSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all
+udf_sharing = tiledb.cloud.rest_api.UDFSharing() # UDFSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all.
 
     try:
         api_instance.share_udf_info(namespace, name, udf_sharing)
@@ -646,7 +646,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 name = 'name_example' # str | name of UDFInfo
-udf_sharing = tiledb.cloud.rest_api.UDFSharing() # UDFSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all
+udf_sharing = tiledb.cloud.rest_api.UDFSharing() # UDFSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all.
 
     try:
         api_instance.share_udf_info(namespace, name, udf_sharing)
@@ -660,7 +660,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
  **name** | **str**| name of UDFInfo | 
- **udf_sharing** | [**UDFSharing**](UDFSharing.md)| Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all | 
+ **udf_sharing** | [**UDFSharing**](UDFSharing.md)| Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it&#39;s likely the UDF will not be shared with the namespace at all. | 
 
 ### Return type
 
@@ -679,7 +679,7 @@ void (empty response body)
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **204** | UDF shared successfully |  -  |
-**404** | UDF does not exist or user does not have permissions to share udf |  -  |
+**404** | UDF does not exist or user does not have permissions to share UDF |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -732,7 +732,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-udf = tiledb.cloud.rest_api.GenericUDF() # GenericUDF | udf to run
+udf = tiledb.cloud.rest_api.GenericUDF() # GenericUDF | UDF to run
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
     try:
@@ -781,7 +781,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-udf = tiledb.cloud.rest_api.GenericUDF() # GenericUDF | udf to run
+udf = tiledb.cloud.rest_api.GenericUDF() # GenericUDF | UDF to run
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
     try:
@@ -796,7 +796,7 @@ accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **udf** | [**GenericUDF**](GenericUDF.md)| udf to run | 
+ **udf** | [**GenericUDF**](GenericUDF.md)| UDF to run | 
  **accept_encoding** | **str**| Encoding to use | [optional] 
 
 ### Return type
@@ -815,7 +815,7 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | udf completed and the udf-type specific result is returned |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed request <br>  |
+**200** | UDF completed and the UDF-type specific result is returned |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed request <br>  |
 **0** | error response |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just request if task was started <br>  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -868,7 +868,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-udf = tiledb.cloud.rest_api.MultiArrayUDF() # MultiArrayUDF | udf to run
+udf = tiledb.cloud.rest_api.MultiArrayUDF() # MultiArrayUDF | UDF to run
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
     try:
@@ -917,7 +917,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-udf = tiledb.cloud.rest_api.MultiArrayUDF() # MultiArrayUDF | udf to run
+udf = tiledb.cloud.rest_api.MultiArrayUDF() # MultiArrayUDF | UDF to run
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
     try:
@@ -932,7 +932,7 @@ accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **udf** | [**MultiArrayUDF**](MultiArrayUDF.md)| udf to run | 
+ **udf** | [**MultiArrayUDF**](MultiArrayUDF.md)| UDF to run | 
  **accept_encoding** | **str**| Encoding to use | [optional] 
 
 ### Return type
@@ -951,7 +951,7 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | udf completed and the udf-type specific result is returned |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed request <br>  |
+**200** | UDF completed and the UDF-type specific result is returned |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed request <br>  |
 **0** | error response |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just request if task was started <br>  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -1005,10 +1005,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-udf = tiledb.cloud.rest_api.MultiArrayUDF() # MultiArrayUDF | udf to run
+udf = tiledb.cloud.rest_api.MultiArrayUDF() # MultiArrayUDF | UDF to run
 x_payer = 'x_payer_example' # str | Name of organization or user who should be charged for this request (optional)
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
-v2 = 'v2_example' # str | flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs (optional)
+v2 = 'v2_example' # str | flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs. (optional)
 
     try:
         api_response = api_instance.submit_udf(namespace, array, udf, x_payer=x_payer, accept_encoding=accept_encoding, v2=v2)
@@ -1057,10 +1057,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-udf = tiledb.cloud.rest_api.MultiArrayUDF() # MultiArrayUDF | udf to run
+udf = tiledb.cloud.rest_api.MultiArrayUDF() # MultiArrayUDF | UDF to run
 x_payer = 'x_payer_example' # str | Name of organization or user who should be charged for this request (optional)
 accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
-v2 = 'v2_example' # str | flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs (optional)
+v2 = 'v2_example' # str | flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs. (optional)
 
     try:
         api_response = api_instance.submit_udf(namespace, array, udf, x_payer=x_payer, accept_encoding=accept_encoding, v2=v2)
@@ -1075,10 +1075,10 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
  **array** | **str**| name/uri of array that is url-encoded | 
- **udf** | [**MultiArrayUDF**](MultiArrayUDF.md)| udf to run | 
+ **udf** | [**MultiArrayUDF**](MultiArrayUDF.md)| UDF to run | 
  **x_payer** | **str**| Name of organization or user who should be charged for this request | [optional] 
  **accept_encoding** | **str**| Encoding to use | [optional] 
- **v2** | **str**| flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs | [optional] 
+ **v2** | **str**| flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs. | [optional] 
 
 ### Return type
 
@@ -1096,7 +1096,7 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | udf completed and the udf-type specific result is returned |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed request <br>  |
+**200** | UDF completed and the UDF-type specific result is returned |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed request <br>  |
 **0** | error response |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just request if task was started <br>  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -1245,7 +1245,7 @@ Name | Type | Description  | Notes
 
 
 
-updated an existing registerd UDF in the given namespace
+update an existing registered UDF in the given namespace
 
 ### Example
 
@@ -1288,8 +1288,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-name = 'name_example' # str | name to register udf under
-udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to update
+name = 'name_example' # str | name to register UDF under
+udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | UDF to update
 
     try:
         api_instance.update_udf_info(namespace, name, udf)
@@ -1336,8 +1336,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
-name = 'name_example' # str | name to register udf under
-udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to update
+name = 'name_example' # str | name to register UDF under
+udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | UDF to update
 
     try:
         api_instance.update_udf_info(namespace, name, udf)
@@ -1350,8 +1350,8 @@ udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | udf to update
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **name** | **str**| name to register udf under | 
- **udf** | [**UDFInfoUpdate**](UDFInfoUpdate.md)| udf to update | 
+ **name** | **str**| name to register UDF under | 
+ **udf** | [**UDFInfoUpdate**](UDFInfoUpdate.md)| UDF to update | 
 
 ### Return type
 
@@ -1369,7 +1369,7 @@ void (empty response body)
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**204** | udf updated successfully |  -  |
+**204** | UDF updated successfully |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

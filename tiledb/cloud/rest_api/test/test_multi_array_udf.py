@@ -94,6 +94,7 @@ class TestMultiArrayUDF(unittest.TestCase):
                         buffers=["0"],
                     )
                 ],
+                timeout=56,
             )
         else:
             return MultiArrayUDF()

@@ -89,8 +89,8 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 start = 56 # int | Start time of window of fetch logs, unix epoch in seconds (default: seven days ago) (optional)
 end = 56 # int | End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) (optional)
 event_types = 'event_types_example' # str | Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated (optional)
-task_id = 'task_id_example' # str | Array task id To filter activity to (optional)
-has_task_id = True # bool | Excludes activity log results that does not contain an array task uuid (optional)
+task_id = 'task_id_example' # str | Array task ID To filter activity to (optional)
+has_task_id = True # bool | Excludes activity log results that do not contain an array task UUID (optional)
 
     try:
         api_response = api_instance.array_activity_log(namespace, array, start=start, end=end, event_types=event_types, task_id=task_id, has_task_id=has_task_id)
@@ -142,8 +142,8 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 start = 56 # int | Start time of window of fetch logs, unix epoch in seconds (default: seven days ago) (optional)
 end = 56 # int | End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) (optional)
 event_types = 'event_types_example' # str | Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated (optional)
-task_id = 'task_id_example' # str | Array task id To filter activity to (optional)
-has_task_id = True # bool | Excludes activity log results that does not contain an array task uuid (optional)
+task_id = 'task_id_example' # str | Array task ID To filter activity to (optional)
+has_task_id = True # bool | Excludes activity log results that do not contain an array task UUID (optional)
 
     try:
         api_response = api_instance.array_activity_log(namespace, array, start=start, end=end, event_types=event_types, task_id=task_id, has_task_id=has_task_id)
@@ -161,8 +161,8 @@ Name | Type | Description  | Notes
  **start** | **int**| Start time of window of fetch logs, unix epoch in seconds (default: seven days ago) | [optional] 
  **end** | **int**| End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) | [optional] 
  **event_types** | **str**| Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated | [optional] 
- **task_id** | **str**| Array task id To filter activity to | [optional] 
- **has_task_id** | **bool**| Excludes activity log results that does not contain an array task uuid | [optional] 
+ **task_id** | **str**| Array task ID To filter activity to | [optional] 
+ **has_task_id** | **bool**| Excludes activity log results that do not contain an array task UUID | [optional] 
 
 ### Return type
 
@@ -1723,7 +1723,7 @@ void (empty response body)
 
 
 
-get activity log by id
+get activity log by ID
 
 ### Example
 
@@ -1767,7 +1767,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-id = 'id_example' # str | id of the activity
+id = 'id_example' # str | ID of the activity
 
     try:
         api_response = api_instance.get_activity_log_by_id(namespace, array, id)
@@ -1816,7 +1816,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-id = 'id_example' # str | id of the activity
+id = 'id_example' # str | ID of the activity
 
     try:
         api_response = api_instance.get_activity_log_by_id(namespace, array, id)
@@ -1831,7 +1831,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
  **array** | **str**| name/uri of array that is url-encoded | 
- **id** | **str**| id of the activity | 
+ **id** | **str**| ID of the activity | 
 
 ### Return type
 
@@ -2267,7 +2267,7 @@ Name | Type | Description  | Notes
 
 
 
-get metadata from the array in json format
+get metadata from the array in JSON format
 
 ### Example
 
@@ -3204,7 +3204,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | List of all specific sharing policies |  -  |
-**404** | Array does not exist or user does not have permissions to view array sharing policies |  -  |
+**404** | Array does not exist or user does not have permissions to view array-sharing policies |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -3781,7 +3781,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-array_sharing = tiledb.cloud.rest_api.ArraySharing() # ArraySharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the array will not be shared with the namespace at all
+array_sharing = tiledb.cloud.rest_api.ArraySharing() # ArraySharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the array will not be shared with the namespace at all.
 
     try:
         api_instance.share_array(namespace, array, array_sharing)
@@ -3829,7 +3829,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-array_sharing = tiledb.cloud.rest_api.ArraySharing() # ArraySharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the array will not be shared with the namespace at all
+array_sharing = tiledb.cloud.rest_api.ArraySharing() # ArraySharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the array will not be shared with the namespace at all.
 
     try:
         api_instance.share_array(namespace, array, array_sharing)
@@ -3843,7 +3843,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
  **array** | **str**| name/uri of array that is url-encoded | 
- **array_sharing** | [**ArraySharing**](ArraySharing.md)| Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the array will not be shared with the namespace at all | 
+ **array_sharing** | [**ArraySharing**](ArraySharing.md)| Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it&#39;s likely the array will not be shared with the namespace at all. | 
 
 ### Return type
 

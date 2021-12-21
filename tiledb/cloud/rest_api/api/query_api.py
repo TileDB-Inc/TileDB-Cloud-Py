@@ -806,7 +806,7 @@ class QueryApi(object):
     ):  # noqa: E501
         """submit_query_json  # noqa: E501
 
-        send a query to run against a specified array/URI registered to a group/project, returns json results  # noqa: E501
+        send a query to run against a specified array/URI registered to a group/project, returns JSON results  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.submit_query_json(namespace, array, content_type, query_json, async_req=True)
@@ -839,7 +839,7 @@ class QueryApi(object):
     ):  # noqa: E501
         """submit_query_json  # noqa: E501
 
-        send a query to run against a specified array/URI registered to a group/project, returns json results  # noqa: E501
+        send a query to run against a specified array/URI registered to a group/project, returns JSON results  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.submit_query_json_with_http_info(namespace, array, content_type, query_json, async_req=True)

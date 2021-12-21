@@ -72,8 +72,8 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 start = 56 # int | Start time of window of fetch logs, unix epoch in seconds (default: seven days ago) (optional)
 end = 56 # int | End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) (optional)
 event_types = 'event_types_example' # str | Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated (optional)
-task_id = 'task_id_example' # str | Array task id To filter activity to (optional)
-has_task_id = True # bool | Excludes activity log results that does not contain an array task uuid (optional)
+task_id = 'task_id_example' # str | Array task ID To filter activity to (optional)
+has_task_id = True # bool | Excludes activity log results that do not contain an array task UUID (optional)
 
     try:
         api_response = api_instance.array_activity_log(namespace, array, start=start, end=end, event_types=event_types, task_id=task_id, has_task_id=has_task_id)
