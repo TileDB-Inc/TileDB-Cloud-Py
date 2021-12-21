@@ -221,7 +221,7 @@ class ArrayActivityLog(object):
     def array_task_id(self):
         """Gets the array_task_id of this ArrayActivityLog.  # noqa: E501
 
-        uuid of associated array task  # noqa: E501
+        UUID of associated array task  # noqa: E501
 
         :return: The array_task_id of this ArrayActivityLog.  # noqa: E501
         :rtype: str
@@ -232,7 +232,7 @@ class ArrayActivityLog(object):
     def array_task_id(self, array_task_id):
         """Sets the array_task_id of this ArrayActivityLog.
 
-        uuid of associated array task  # noqa: E501
+        UUID of associated array task  # noqa: E501
 
         :param array_task_id: The array_task_id of this ArrayActivityLog.  # noqa: E501
         :type: str
@@ -244,7 +244,7 @@ class ArrayActivityLog(object):
     def id(self):
         """Gets the id of this ArrayActivityLog.  # noqa: E501
 
-        id of the activity  # noqa: E501
+        ID of the activity  # noqa: E501
 
         :return: The id of this ArrayActivityLog.  # noqa: E501
         :rtype: str
@@ -255,7 +255,7 @@ class ArrayActivityLog(object):
     def id(self, id):
         """Sets the id of this ArrayActivityLog.
 
-        id of the activity  # noqa: E501
+        ID of the activity  # noqa: E501
 
         :param id: The id of this ArrayActivityLog.  # noqa: E501
         :type: str

@@ -1,6 +1,6 @@
 # QueryJson
 
-Query returning results as json
+Query returning results as JSON
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

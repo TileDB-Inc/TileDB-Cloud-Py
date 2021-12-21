@@ -96,7 +96,7 @@ class UDFImageVersion(object):
     def id(self):
         """Gets the id of this UDFImageVersion.  # noqa: E501
 
-        Unique id of a versioned image  # noqa: E501
+        Unique ID of a versioned image  # noqa: E501
 
         :return: The id of this UDFImageVersion.  # noqa: E501
         :rtype: str
@@ -107,7 +107,7 @@ class UDFImageVersion(object):
     def id(self, id):
         """Sets the id of this UDFImageVersion.
 
-        Unique id of a versioned image  # noqa: E501
+        Unique ID of a versioned image  # noqa: E501
 
         :param id: The id of this UDFImageVersion.  # noqa: E501
         :type: str
@@ -142,7 +142,7 @@ class UDFImageVersion(object):
     def udf_image_uuid(self):
         """Gets the udf_image_uuid of this UDFImageVersion.  # noqa: E501
 
-        Unique id of the udf image set  # noqa: E501
+        Unique ID of the UDF image set  # noqa: E501
 
         :return: The udf_image_uuid of this UDFImageVersion.  # noqa: E501
         :rtype: str
@@ -153,7 +153,7 @@ class UDFImageVersion(object):
     def udf_image_uuid(self, udf_image_uuid):
         """Sets the udf_image_uuid of this UDFImageVersion.
 
-        Unique id of the udf image set  # noqa: E501
+        Unique ID of the UDF image set  # noqa: E501
 
         :param udf_image_uuid: The udf_image_uuid of this UDFImageVersion.  # noqa: E501
         :type: str

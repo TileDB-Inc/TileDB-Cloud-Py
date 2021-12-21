@@ -44,7 +44,7 @@ class InvitationApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str invitation: the id of invitation about to be accepted (required)
+        :param str invitation: the ID of invitation about to be accepted (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -69,7 +69,7 @@ class InvitationApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str invitation: the id of invitation about to be accepted (required)
+        :param str invitation: the ID of invitation about to be accepted (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -167,8 +167,8 @@ class InvitationApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str invitation: the id of invitation about to be cancelled (required)
-        :param str organization: name or uuid of organization (required)
+        :param str invitation: the ID of invitation about to be cancelled (required)
+        :param str organization: name or UUID of organization (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -197,8 +197,8 @@ class InvitationApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str invitation: the id of invitation about to be cancelled (required)
-        :param str organization: name or uuid of organization (required)
+        :param str invitation: the ID of invitation about to be cancelled (required)
+        :param str organization: name or UUID of organization (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -307,7 +307,7 @@ class InvitationApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str invitation: the id of invitation about to be cancelled (required)
+        :param str invitation: the ID of invitation about to be cancelled (required)
         :param str array: name/uri of array that is url-encoded (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
@@ -338,7 +338,7 @@ class InvitationApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str invitation: the id of invitation about to be cancelled (required)
+        :param str invitation: the ID of invitation about to be cancelled (required)
         :param str array: name/uri of array that is url-encoded (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
@@ -455,7 +455,7 @@ class InvitationApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str organization: name or id of organization to filter
+        :param str organization: name or ID of organization to filter
         :param str array: name/uri of array that is url-encoded to filter
         :param int start: start time for tasks to filter by
         :param int end: end time for tasks to filter by
@@ -488,7 +488,7 @@ class InvitationApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str organization: name or id of organization to filter
+        :param str organization: name or ID of organization to filter
         :param str array: name/uri of array that is url-encoded to filter
         :param int start: start time for tasks to filter by
         :param int end: end time for tasks to filter by
@@ -633,7 +633,7 @@ class InvitationApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str organization: name or uuid of organization (required)
+        :param str organization: name or UUID of organization (required)
         :param InvitationOrganizationJoinEmail email_invite: list of email recipients (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
@@ -663,7 +663,7 @@ class InvitationApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str organization: name or uuid of organization (required)
+        :param str organization: name or UUID of organization (required)
         :param InvitationOrganizationJoinEmail email_invite: list of email recipients (required)
         :param _return_http_data_only: response data without head status code
                                        and headers

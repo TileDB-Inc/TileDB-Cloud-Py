@@ -60,7 +60,7 @@ class UDFFavorite(object):
     def id(self):
         """Gets the id of this UDFFavorite.  # noqa: E501
 
-        unique uuid of the favorite  # noqa: E501
+        unique UUID of the favorite  # noqa: E501
 
         :return: The id of this UDFFavorite.  # noqa: E501
         :rtype: str
@@ -71,7 +71,7 @@ class UDFFavorite(object):
     def id(self, id):
         """Sets the id of this UDFFavorite.
 
-        unique uuid of the favorite  # noqa: E501
+        unique UUID of the favorite  # noqa: E501
 
         :param id: The id of this UDFFavorite.  # noqa: E501
         :type: str
@@ -106,7 +106,7 @@ class UDFFavorite(object):
     def udf_uuid(self):
         """Gets the udf_uuid of this UDFFavorite.  # noqa: E501
 
-        unique uuid of the UDF  # noqa: E501
+        unique UUID of the UDF  # noqa: E501
 
         :return: The udf_uuid of this UDFFavorite.  # noqa: E501
         :rtype: str
@@ -117,7 +117,7 @@ class UDFFavorite(object):
     def udf_uuid(self, udf_uuid):
         """Sets the udf_uuid of this UDFFavorite.
 
-        unique uuid of the UDF  # noqa: E501
+        unique UUID of the UDF  # noqa: E501
 
         :param udf_uuid: The udf_uuid of this UDFFavorite.  # noqa: E501
         :type: str

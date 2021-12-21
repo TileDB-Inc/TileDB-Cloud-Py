@@ -9,7 +9,7 @@ Method | HTTP request | Description
 
 
 # **handle_create_file**
-> FileCreated handle_create_file(namespace, file_create)
+> FileCreated handle_create_file(namespace, file_create, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name)
 
 
 
@@ -57,9 +57,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.FilesApi(api_client)
     namespace = 'namespace_example' # str | The namespace of the file
 file_create = tiledb.cloud.rest_api.FileCreate() # FileCreate | Input/Output information to create a new TileDB file
+x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name_example' # str | Optional registered access credentials to use for creation (optional)
 
     try:
-        api_response = api_instance.handle_create_file(namespace, file_create)
+        api_response = api_instance.handle_create_file(namespace, file_create, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling FilesApi->handle_create_file: %s\n" % e)
@@ -105,9 +106,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.FilesApi(api_client)
     namespace = 'namespace_example' # str | The namespace of the file
 file_create = tiledb.cloud.rest_api.FileCreate() # FileCreate | Input/Output information to create a new TileDB file
+x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name_example' # str | Optional registered access credentials to use for creation (optional)
 
     try:
-        api_response = api_instance.handle_create_file(namespace, file_create)
+        api_response = api_instance.handle_create_file(namespace, file_create, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling FilesApi->handle_create_file: %s\n" % e)
@@ -119,6 +121,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| The namespace of the file | 
  **file_create** | [**FileCreate**](FileCreate.md)| Input/Output information to create a new TileDB file | 
+ **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
 
 ### Return type
 

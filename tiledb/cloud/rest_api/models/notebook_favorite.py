@@ -68,7 +68,7 @@ class NotebookFavorite(object):
     def id(self):
         """Gets the id of this NotebookFavorite.  # noqa: E501
 
-        unique uuid of the favorite  # noqa: E501
+        unique UUID of the favorite  # noqa: E501
 
         :return: The id of this NotebookFavorite.  # noqa: E501
         :rtype: str
@@ -79,7 +79,7 @@ class NotebookFavorite(object):
     def id(self, id):
         """Sets the id of this NotebookFavorite.
 
-        unique uuid of the favorite  # noqa: E501
+        unique UUID of the favorite  # noqa: E501
 
         :param id: The id of this NotebookFavorite.  # noqa: E501
         :type: str
@@ -114,7 +114,7 @@ class NotebookFavorite(object):
     def notebook_uuid(self):
         """Gets the notebook_uuid of this NotebookFavorite.  # noqa: E501
 
-        unique uuid of the notebook  # noqa: E501
+        unique UUID of the notebook  # noqa: E501
 
         :return: The notebook_uuid of this NotebookFavorite.  # noqa: E501
         :rtype: str
@@ -125,7 +125,7 @@ class NotebookFavorite(object):
     def notebook_uuid(self, notebook_uuid):
         """Sets the notebook_uuid of this NotebookFavorite.
 
-        unique uuid of the notebook  # noqa: E501
+        unique UUID of the notebook  # noqa: E501
 
         :param notebook_uuid: The notebook_uuid of this NotebookFavorite.  # noqa: E501
         :type: str

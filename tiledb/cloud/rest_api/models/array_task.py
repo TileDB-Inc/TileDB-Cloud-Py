@@ -169,8 +169,7 @@ class ArrayTask(object):
             self.status = status
         if start_time is not None:
             self.start_time = start_time
-        if finish_time is not None:
-            self.finish_time = finish_time
+        self.finish_time = finish_time
         if cost is not None:
             self.cost = cost
         if egress_cost is not None:
@@ -204,7 +203,7 @@ class ArrayTask(object):
     def id(self):
         """Gets the id of this ArrayTask.  # noqa: E501
 
-        task id  # noqa: E501
+        task ID  # noqa: E501
 
         :return: The id of this ArrayTask.  # noqa: E501
         :rtype: str
@@ -215,7 +214,7 @@ class ArrayTask(object):
     def id(self, id):
         """Sets the id of this ArrayTask.
 
-        task id  # noqa: E501
+        task ID  # noqa: E501
 
         :param id: The id of this ArrayTask.  # noqa: E501
         :type: str

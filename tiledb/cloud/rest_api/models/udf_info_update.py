@@ -120,7 +120,7 @@ class UDFInfoUpdate(object):
     def name(self):
         """Gets the name of this UDFInfoUpdate.  # noqa: E501
 
-        name of udf  # noqa: E501
+        name of UDF  # noqa: E501
 
         :return: The name of this UDFInfoUpdate.  # noqa: E501
         :rtype: str
@@ -131,7 +131,7 @@ class UDFInfoUpdate(object):
     def name(self, name):
         """Sets the name of this UDFInfoUpdate.
 
-        name of udf  # noqa: E501
+        name of UDF  # noqa: E501
 
         :param name: The name of this UDFInfoUpdate.  # noqa: E501
         :type: str
@@ -187,7 +187,7 @@ class UDFInfoUpdate(object):
     def image_name(self):
         """Gets the image_name of this UDFInfoUpdate.  # noqa: E501
 
-        Docker image name to use for udf  # noqa: E501
+        Docker image name to use for UDF  # noqa: E501
 
         :return: The image_name of this UDFInfoUpdate.  # noqa: E501
         :rtype: str
@@ -198,7 +198,7 @@ class UDFInfoUpdate(object):
     def image_name(self, image_name):
         """Sets the image_name of this UDFInfoUpdate.
 
-        Docker image name to use for udf  # noqa: E501
+        Docker image name to use for UDF  # noqa: E501
 
         :param image_name: The image_name of this UDFInfoUpdate.  # noqa: E501
         :type: str
@@ -277,7 +277,7 @@ class UDFInfoUpdate(object):
     def readme(self):
         """Gets the readme of this UDFInfoUpdate.  # noqa: E501
 
-        Markdown readme of udfs  # noqa: E501
+        Markdown readme of UDFs  # noqa: E501
 
         :return: The readme of this UDFInfoUpdate.  # noqa: E501
         :rtype: str
@@ -288,7 +288,7 @@ class UDFInfoUpdate(object):
     def readme(self, readme):
         """Sets the readme of this UDFInfoUpdate.
 
-        Markdown readme of udfs  # noqa: E501
+        Markdown readme of UDFs  # noqa: E501
 
         :param readme: The readme of this UDFInfoUpdate.  # noqa: E501
         :type: str
@@ -346,7 +346,7 @@ class UDFInfoUpdate(object):
     def tags(self):
         """Gets the tags of this UDFInfoUpdate.  # noqa: E501
 
-        optional tags for udf  # noqa: E501
+        optional tags for UDF  # noqa: E501
 
         :return: The tags of this UDFInfoUpdate.  # noqa: E501
         :rtype: list[str]
@@ -357,7 +357,7 @@ class UDFInfoUpdate(object):
     def tags(self, tags):
         """Sets the tags of this UDFInfoUpdate.
 
-        optional tags for udf  # noqa: E501
+        optional tags for UDF  # noqa: E501
 
         :param tags: The tags of this UDFInfoUpdate.  # noqa: E501
         :type: list[str]

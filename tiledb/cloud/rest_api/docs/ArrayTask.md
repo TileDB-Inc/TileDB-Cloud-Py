@@ -4,7 +4,7 @@ Synchronous Task to Run
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **str** | task id | [optional] 
+**id** | **str** | task ID | [optional] 
 **name** | **str** | Optional task name | [optional] 
 **description** | **str** | Optional task description (Tasks purpose) | [optional] 
 **array_metadata** | [**ArrayInfo**](ArrayInfo.md) |  | [optional] 

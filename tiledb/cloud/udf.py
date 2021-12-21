@@ -33,6 +33,7 @@ def exec_base(
     result_format_version=None,
     store_results: bool = False,
     stored_param_uuids: Iterable[uuid.UUID] = (),
+    timeout: int = None,
     **kwargs,
 ) -> "results.RemoteResult":
     """Run a user defined function, returning the result and metadata.
@@ -56,6 +57,7 @@ def exec_base(
     :param str result_format_version: Deprecated and ignored.
     :param store_results: True to temporarily store results on the server side
         for later retrieval (in addition to downloading them).
+    :param timeout: Timeout for UDF in seconds
     :param kwargs: named arguments to pass to function
     """
 
@@ -105,6 +107,9 @@ def exec_base(
         task_name=task_name,
         stored_param_uuids=list(str(uuid) for uuid in stored_param_uuids),
     )
+
+    if timeout is not None:
+        udf_model.timeout = timeout
 
     if callable(user_func):
         udf_model._exec = utils.b64_pickle(user_func)

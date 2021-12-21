@@ -289,7 +289,7 @@ class NotebookApi(object):
     ):  # noqa: E501
         """update_notebook_name  # noqa: E501
 
-        update name on a notebok, moving related s3 object to new location  # noqa: E501
+        update name on a notebok, moving related S3 object to new location  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.update_notebook_name(namespace, array, notebook_metadata, async_req=True)
@@ -320,7 +320,7 @@ class NotebookApi(object):
     ):  # noqa: E501
         """update_notebook_name  # noqa: E501
 
-        update name on a notebok, moving related s3 object to new location  # noqa: E501
+        update name on a notebok, moving related S3 object to new location  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.update_notebook_name_with_http_info(namespace, array, notebook_metadata, async_req=True)

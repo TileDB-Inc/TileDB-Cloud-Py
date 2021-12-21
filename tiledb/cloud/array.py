@@ -395,6 +395,7 @@ def apply_base(
     result_format_version=None,
     store_results: bool = False,
     stored_param_uuids: Iterable[uuid.UUID] = (),
+    timeout: int = None,
     **kwargs: Any,
 ) -> results.RemoteResult:
     """Apply a user-defined function to an array, and return data and metadata.
@@ -420,6 +421,7 @@ def apply_base(
     :param result_format_version: Deprecated and ignored.
     :param store_results: True to temporarily store results on the server side
         for later retrieval (in addition to downloading them).
+    :param timeout: Timeout for UDF in seconds
     :param kwargs: named arguments to pass to function
 
     **Example**
@@ -478,6 +480,9 @@ def apply_base(
         store_results=store_results,
         stored_param_uuids=list(str(uuid) for uuid in stored_param_uuids),
     )
+
+    if timeout is not None:
+        udf_model.timeout = timeout
 
     if callable(user_func):
         udf_model._exec = utils.b64_pickle(user_func)

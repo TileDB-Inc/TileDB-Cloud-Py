@@ -90,7 +90,7 @@ class OrganizationUser(object):
     def user_id(self):
         """Gets the user_id of this OrganizationUser.  # noqa: E501
 
-        unique id of user  # noqa: E501
+        unique ID of user  # noqa: E501
 
         :return: The user_id of this OrganizationUser.  # noqa: E501
         :rtype: str
@@ -101,7 +101,7 @@ class OrganizationUser(object):
     def user_id(self, user_id):
         """Sets the user_id of this OrganizationUser.
 
-        unique id of user  # noqa: E501
+        unique ID of user  # noqa: E501
 
         :param user_id: The user_id of this OrganizationUser.  # noqa: E501
         :type: str
@@ -113,7 +113,7 @@ class OrganizationUser(object):
     def organization_id(self):
         """Gets the organization_id of this OrganizationUser.  # noqa: E501
 
-        unique id of organization  # noqa: E501
+        unique ID of organization  # noqa: E501
 
         :return: The organization_id of this OrganizationUser.  # noqa: E501
         :rtype: str
@@ -124,7 +124,7 @@ class OrganizationUser(object):
     def organization_id(self, organization_id):
         """Sets the organization_id of this OrganizationUser.
 
-        unique id of organization  # noqa: E501
+        unique ID of organization  # noqa: E501
 
         :param organization_id: The organization_id of this OrganizationUser.  # noqa: E501
         :type: str

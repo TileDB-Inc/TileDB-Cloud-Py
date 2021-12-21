@@ -60,7 +60,7 @@ class ArrayFavorite(object):
     def id(self):
         """Gets the id of this ArrayFavorite.  # noqa: E501
 
-        unique uuid of the favorite  # noqa: E501
+        unique UUID of the favorite  # noqa: E501
 
         :return: The id of this ArrayFavorite.  # noqa: E501
         :rtype: str
@@ -71,7 +71,7 @@ class ArrayFavorite(object):
     def id(self, id):
         """Sets the id of this ArrayFavorite.
 
-        unique uuid of the favorite  # noqa: E501
+        unique UUID of the favorite  # noqa: E501
 
         :param id: The id of this ArrayFavorite.  # noqa: E501
         :type: str
@@ -106,7 +106,7 @@ class ArrayFavorite(object):
     def array_uuid(self):
         """Gets the array_uuid of this ArrayFavorite.  # noqa: E501
 
-        unique uuid of the array  # noqa: E501
+        unique UUID of the array  # noqa: E501
 
         :return: The array_uuid of this ArrayFavorite.  # noqa: E501
         :rtype: str
@@ -117,7 +117,7 @@ class ArrayFavorite(object):
     def array_uuid(self, array_uuid):
         """Sets the array_uuid of this ArrayFavorite.
 
-        unique uuid of the array  # noqa: E501
+        unique UUID of the array  # noqa: E501
 
         :param array_uuid: The array_uuid of this ArrayFavorite.  # noqa: E501
         :type: str

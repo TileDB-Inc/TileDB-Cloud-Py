@@ -189,7 +189,7 @@ class TasksApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: task id to fetch (required)
+        :param str id: task ID to fetch (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -214,7 +214,7 @@ class TasksApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: task id to fetch (required)
+        :param str id: task ID to fetch (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -309,7 +309,7 @@ class TasksApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: task id to retrieve stored results (required)
+        :param str id: task ID to retrieve stored results (required)
         :param str accept_encoding: Encoding to use
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
@@ -335,7 +335,7 @@ class TasksApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: task id to retrieve stored results (required)
+        :param str id: task ID to retrieve stored results (required)
         :param str accept_encoding: Encoding to use
         :param _return_http_data_only: response data without head status code
                                        and headers

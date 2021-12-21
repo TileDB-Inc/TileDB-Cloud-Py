@@ -60,7 +60,7 @@ class UDFImage(object):
     def id(self):
         """Gets the id of this UDFImage.  # noqa: E501
 
-        Unique id of set of images  # noqa: E501
+        Unique ID of set of images  # noqa: E501
 
         :return: The id of this UDFImage.  # noqa: E501
         :rtype: str
@@ -71,7 +71,7 @@ class UDFImage(object):
     def id(self, id):
         """Sets the id of this UDFImage.
 
-        Unique id of set of images  # noqa: E501
+        Unique ID of set of images  # noqa: E501
 
         :param id: The id of this UDFImage.  # noqa: E501
         :type: str
@@ -83,7 +83,7 @@ class UDFImage(object):
     def name(self):
         """Gets the name of this UDFImage.  # noqa: E501
 
-        name of udf  # noqa: E501
+        name of UDF  # noqa: E501
 
         :return: The name of this UDFImage.  # noqa: E501
         :rtype: str
@@ -94,7 +94,7 @@ class UDFImage(object):
     def name(self, name):
         """Sets the name of this UDFImage.
 
-        name of udf  # noqa: E501
+        name of UDF  # noqa: E501
 
         :param name: The name of this UDFImage.  # noqa: E501
         :type: str

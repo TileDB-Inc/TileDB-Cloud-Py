@@ -4,8 +4,8 @@ Pricing created by converting an array to product
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **str** | Unique id of plan as defined by Stripe | [optional] 
-**array_uuid** | **str** | Unique id of registered array | [optional] 
+**id** | **str** | Unique ID of plan as defined by Stripe | [optional] 
+**array_uuid** | **str** | Unique ID of registered array | [optional] 
 **pricing_name** | **str** | Name of pricing | [optional] 
 **pricing_type** | [**PricingType**](PricingType.md) |  | [optional] 
 **product_name** | **str** | Name of product | [optional] 

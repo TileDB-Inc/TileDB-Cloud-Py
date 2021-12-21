@@ -46,6 +46,7 @@ class FilesApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: The namespace of the file (required)
         :param FileCreate file_create: Input/Output information to create a new TileDB file (required)
+        :param str x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -76,6 +77,7 @@ class FilesApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: The namespace of the file (required)
         :param FileCreate file_create: Input/Output information to create a new TileDB file (required)
+        :param str x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -92,7 +94,11 @@ class FilesApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace", "file_create"]
+        all_params = [
+            "namespace",
+            "file_create",
+            "x_tiledb_cloud_access_credentials_name",
+        ]
         all_params.extend(
             [
                 "async_req",
@@ -136,6 +142,10 @@ class FilesApi(object):
         query_params = []
 
         header_params = {}
+        if "x_tiledb_cloud_access_credentials_name" in local_var_params:
+            header_params["X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME"] = local_var_params[
+                "x_tiledb_cloud_access_credentials_name"
+            ]  # noqa: E501
 
         form_params = []
         local_var_files = {}

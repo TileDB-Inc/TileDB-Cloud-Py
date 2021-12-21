@@ -64,7 +64,7 @@ class MLModelFavorite(object):
     def id(self):
         """Gets the id of this MLModelFavorite.  # noqa: E501
 
-        unique uuid of the favorite  # noqa: E501
+        unique UUID of the favorite  # noqa: E501
 
         :return: The id of this MLModelFavorite.  # noqa: E501
         :rtype: str
@@ -75,7 +75,7 @@ class MLModelFavorite(object):
     def id(self, id):
         """Sets the id of this MLModelFavorite.
 
-        unique uuid of the favorite  # noqa: E501
+        unique UUID of the favorite  # noqa: E501
 
         :param id: The id of this MLModelFavorite.  # noqa: E501
         :type: str
@@ -110,7 +110,7 @@ class MLModelFavorite(object):
     def mlmodel_uuid(self):
         """Gets the mlmodel_uuid of this MLModelFavorite.  # noqa: E501
 
-        unique uuid of the MLModel  # noqa: E501
+        unique UUID of the MLModel  # noqa: E501
 
         :return: The mlmodel_uuid of this MLModelFavorite.  # noqa: E501
         :rtype: str
@@ -121,7 +121,7 @@ class MLModelFavorite(object):
     def mlmodel_uuid(self, mlmodel_uuid):
         """Sets the mlmodel_uuid of this MLModelFavorite.
 
-        unique uuid of the MLModel  # noqa: E501
+        unique UUID of the MLModel  # noqa: E501
 
         :param mlmodel_uuid: The mlmodel_uuid of this MLModelFavorite.  # noqa: E501
         :type: str

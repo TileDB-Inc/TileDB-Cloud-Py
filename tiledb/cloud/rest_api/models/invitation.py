@@ -144,7 +144,7 @@ class Invitation(object):
     def id(self):
         """Gets the id of this Invitation.  # noqa: E501
 
-        Unique id of invitation added to magic link  # noqa: E501
+        Unique ID of invitation added to magic link  # noqa: E501
 
         :return: The id of this Invitation.  # noqa: E501
         :rtype: str
@@ -155,7 +155,7 @@ class Invitation(object):
     def id(self, id):
         """Sets the id of this Invitation.
 
-        Unique id of invitation added to magic link  # noqa: E501
+        Unique ID of invitation added to magic link  # noqa: E501
 
         :param id: The id of this Invitation.  # noqa: E501
         :type: str
@@ -211,7 +211,7 @@ class Invitation(object):
     def user_namespace_uuid(self):
         """Gets the user_namespace_uuid of this Invitation.  # noqa: E501
 
-        Unique id of the user accepted the invitation  # noqa: E501
+        Unique ID of the user accepted the invitation  # noqa: E501
 
         :return: The user_namespace_uuid of this Invitation.  # noqa: E501
         :rtype: str
@@ -222,7 +222,7 @@ class Invitation(object):
     def user_namespace_uuid(self, user_namespace_uuid):
         """Sets the user_namespace_uuid of this Invitation.
 
-        Unique id of the user accepted the invitation  # noqa: E501
+        Unique ID of the user accepted the invitation  # noqa: E501
 
         :param user_namespace_uuid: The user_namespace_uuid of this Invitation.  # noqa: E501
         :type: str
@@ -234,7 +234,7 @@ class Invitation(object):
     def organization_user_uuid(self):
         """Gets the organization_user_uuid of this Invitation.  # noqa: E501
 
-        Unique id of the organization user accepted the invitation  # noqa: E501
+        Unique ID of the organization user accepted the invitation  # noqa: E501
 
         :return: The organization_user_uuid of this Invitation.  # noqa: E501
         :rtype: str
@@ -245,7 +245,7 @@ class Invitation(object):
     def organization_user_uuid(self, organization_user_uuid):
         """Sets the organization_user_uuid of this Invitation.
 
-        Unique id of the organization user accepted the invitation  # noqa: E501
+        Unique ID of the organization user accepted the invitation  # noqa: E501
 
         :param organization_user_uuid: The organization_user_uuid of this Invitation.  # noqa: E501
         :type: str
@@ -301,7 +301,7 @@ class Invitation(object):
     def array_uuid(self):
         """Gets the array_uuid of this Invitation.  # noqa: E501
 
-        Unique id of the array  # noqa: E501
+        Unique ID of the array  # noqa: E501
 
         :return: The array_uuid of this Invitation.  # noqa: E501
         :rtype: str
@@ -312,7 +312,7 @@ class Invitation(object):
     def array_uuid(self, array_uuid):
         """Sets the array_uuid of this Invitation.
 
-        Unique id of the array  # noqa: E501
+        Unique ID of the array  # noqa: E501
 
         :param array_uuid: The array_uuid of this Invitation.  # noqa: E501
         :type: str

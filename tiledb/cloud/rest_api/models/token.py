@@ -130,7 +130,7 @@ class Token(object):
     def issued_at(self):
         """Gets the issued_at of this Token.  # noqa: E501
 
-        datetime the token was created at  # noqa: E501
+        datetime the token was created  # noqa: E501
 
         :return: The issued_at of this Token.  # noqa: E501
         :rtype: datetime
@@ -141,7 +141,7 @@ class Token(object):
     def issued_at(self, issued_at):
         """Sets the issued_at of this Token.
 
-        datetime the token was created at  # noqa: E501
+        datetime the token was created  # noqa: E501
 
         :param issued_at: The issued_at of this Token.  # noqa: E501
         :type: datetime

@@ -4,8 +4,8 @@ user in an organization
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**user_id** | **str** | unique id of user | [optional] 
-**organization_id** | **str** | unique id of organization | [optional] 
+**user_id** | **str** | unique ID of user | [optional] 
+**organization_id** | **str** | unique ID of organization | [optional] 
 **username** | **str** | username for user | [optional] 
 **organization_name** | **str** | name of organization | [optional] 
 **role** | [**OrganizationRoles**](OrganizationRoles.md) |  | [optional] 

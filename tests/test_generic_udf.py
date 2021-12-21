@@ -9,6 +9,7 @@ import tiledb.cloud
 from tiledb.cloud import client
 from tiledb.cloud import config
 from tiledb.cloud import testonly
+from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import udf
 from tiledb.cloud import utils
 from tiledb.cloud.rest_api import models
@@ -117,3 +118,12 @@ class GenericUDFTest(unittest.TestCase):
                 rb'''"called with ('called with (1,) {}',) {'named': \"called with () {'param': 'two'}\", 'basic': 'three'}"''',  # noqa: E501
                 response.data,
             )
+
+    def test_timeout(self):
+        def test():
+            import time
+
+            time.sleep(10)
+
+        with self.assertRaises(tiledb_cloud_error.TileDBCloudError):
+            udf.exec(test, timeout=1)

@@ -37,7 +37,7 @@ class UdfApi(object):
     def delete_udf_info(self, namespace, name, **kwargs):  # noqa: E501
         """delete_udf_info  # noqa: E501
 
-        delete a registerd UDF, this will remove all sharing and can not be undone  # noqa: E501
+        delete a registered UDF -- this will remove all sharing and can not be undone  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.delete_udf_info(namespace, name, async_req=True)
@@ -45,7 +45,7 @@ class UdfApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register udf under (required)
+        :param str name: name to register UDF under (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -65,7 +65,7 @@ class UdfApi(object):
     def delete_udf_info_with_http_info(self, namespace, name, **kwargs):  # noqa: E501
         """delete_udf_info  # noqa: E501
 
-        delete a registerd UDF, this will remove all sharing and can not be undone  # noqa: E501
+        delete a registered UDF -- this will remove all sharing and can not be undone  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.delete_udf_info_with_http_info(namespace, name, async_req=True)
@@ -73,7 +73,7 @@ class UdfApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register udf under (required)
+        :param str name: name to register UDF under (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -180,7 +180,7 @@ class UdfApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register udf under (required)
+        :param str name: name to register UDF under (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -206,7 +206,7 @@ class UdfApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register udf under (required)
+        :param str name: name to register UDF under (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -305,7 +305,7 @@ class UdfApi(object):
     def get_udf_info_sharing_policies(self, namespace, name, **kwargs):  # noqa: E501
         """get_udf_info_sharing_policies  # noqa: E501
 
-        Get all sharing details of the udf  # noqa: E501
+        Get all sharing details of the UDF  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_udf_info_sharing_policies(namespace, name, async_req=True)
@@ -335,7 +335,7 @@ class UdfApi(object):
     ):  # noqa: E501
         """get_udf_info_sharing_policies  # noqa: E501
 
-        Get all sharing details of the udf  # noqa: E501
+        Get all sharing details of the UDF  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.get_udf_info_sharing_policies_with_http_info(namespace, name, async_req=True)
@@ -450,8 +450,8 @@ class UdfApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register udf under (required)
-        :param UDFInfoUpdate udf: udf to register (required)
+        :param str name: name to register UDF under (required)
+        :param UDFInfoUpdate udf: UDF to register (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -481,8 +481,8 @@ class UdfApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register udf under (required)
-        :param UDFInfoUpdate udf: udf to register (required)
+        :param str name: name to register UDF under (required)
+        :param UDFInfoUpdate udf: UDF to register (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -607,7 +607,7 @@ class UdfApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str name: name of UDFInfo (required)
-        :param UDFSharing udf_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all (required)
+        :param UDFSharing udf_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all. (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -638,7 +638,7 @@ class UdfApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str name: name of UDFInfo (required)
-        :param UDFSharing udf_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace, if permissions already exist they will be deleted then new ones added. In the event of a failure, the new polcies will be rolled back to prevent partial policies, and its likely the udf will not be shared with the namespace at all (required)
+        :param UDFSharing udf_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all. (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -762,7 +762,7 @@ class UdfApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param GenericUDF udf: udf to run (required)
+        :param GenericUDF udf: UDF to run (required)
         :param str accept_encoding: Encoding to use
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
@@ -791,7 +791,7 @@ class UdfApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param GenericUDF udf: udf to run (required)
+        :param GenericUDF udf: UDF to run (required)
         :param str accept_encoding: Encoding to use
         :param _return_http_data_only: response data without head status code
                                        and headers
@@ -910,7 +910,7 @@ class UdfApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param MultiArrayUDF udf: udf to run (required)
+        :param MultiArrayUDF udf: UDF to run (required)
         :param str accept_encoding: Encoding to use
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
@@ -941,7 +941,7 @@ class UdfApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param MultiArrayUDF udf: udf to run (required)
+        :param MultiArrayUDF udf: UDF to run (required)
         :param str accept_encoding: Encoding to use
         :param _return_http_data_only: response data without head status code
                                        and headers
@@ -1061,10 +1061,10 @@ class UdfApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
-        :param MultiArrayUDF udf: udf to run (required)
+        :param MultiArrayUDF udf: UDF to run (required)
         :param str x_payer: Name of organization or user who should be charged for this request
         :param str accept_encoding: Encoding to use
-        :param str v2: flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs
+        :param str v2: flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1093,10 +1093,10 @@ class UdfApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
-        :param MultiArrayUDF udf: udf to run (required)
+        :param MultiArrayUDF udf: UDF to run (required)
         :param str x_payer: Name of organization or user who should be charged for this request
         :param str accept_encoding: Encoding to use
-        :param str v2: flag to indicate if v2 array udfs should be used, currently in beta testing. Setting any value will enable v2 array udfs
+        :param str v2: flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1375,7 +1375,7 @@ class UdfApi(object):
     def update_udf_info(self, namespace, name, udf, **kwargs):  # noqa: E501
         """update_udf_info  # noqa: E501
 
-        updated an existing registerd UDF in the given namespace  # noqa: E501
+        update an existing registered UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.update_udf_info(namespace, name, udf, async_req=True)
@@ -1383,8 +1383,8 @@ class UdfApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register udf under (required)
-        :param UDFInfoUpdate udf: udf to update (required)
+        :param str name: name to register UDF under (required)
+        :param UDFInfoUpdate udf: UDF to update (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1406,7 +1406,7 @@ class UdfApi(object):
     ):  # noqa: E501
         """update_udf_info  # noqa: E501
 
-        updated an existing registerd UDF in the given namespace  # noqa: E501
+        update an existing registered UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.update_udf_info_with_http_info(namespace, name, udf, async_req=True)
@@ -1414,8 +1414,8 @@ class UdfApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register udf under (required)
-        :param UDFInfoUpdate udf: udf to update (required)
+        :param str name: name to register UDF under (required)
+        :param UDFInfoUpdate udf: UDF to update (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will

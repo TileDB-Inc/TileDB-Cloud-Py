@@ -524,7 +524,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the array favorite (required)
+        :param str id: The UUID of the array favorite (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -549,7 +549,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the array favorite (required)
+        :param str id: The UUID of the array favorite (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -644,7 +644,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the ML model favorite (required)
+        :param str id: The UUID of the ML model favorite (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -669,7 +669,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the ML model favorite (required)
+        :param str id: The UUID of the ML model favorite (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -764,7 +764,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the notebook favorite (required)
+        :param str id: The UUID of the notebook favorite (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -789,7 +789,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the notebook favorite (required)
+        :param str id: The UUID of the notebook favorite (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -884,7 +884,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the UDF favorite (required)
+        :param str id: The UUID of the UDF favorite (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -909,7 +909,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the UDF favorite (required)
+        :param str id: The UUID of the UDF favorite (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1004,7 +1004,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the array favorite (required)
+        :param str id: The UUID of the array favorite (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1029,7 +1029,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the array favorite (required)
+        :param str id: The UUID of the array favorite (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1261,7 +1261,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the ML model favorite (required)
+        :param str id: The UUID of the ML model favorite (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1286,7 +1286,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the ML model favorite (required)
+        :param str id: The UUID of the ML model favorite (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1520,7 +1520,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the notebook favorite (required)
+        :param str id: The UUID of the notebook favorite (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1545,7 +1545,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the notebook favorite (required)
+        :param str id: The UUID of the notebook favorite (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1779,7 +1779,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the UDF favorite (required)
+        :param str id: The UUID of the UDF favorite (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1804,7 +1804,7 @@ class FavoritesApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The uuid of the UDF favorite (required)
+        :param str id: The UUID of the UDF favorite (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will

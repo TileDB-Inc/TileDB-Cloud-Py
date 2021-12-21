@@ -202,7 +202,7 @@ class ArrayInfo(object):
     def id(self):
         """Gets the id of this ArrayInfo.  # noqa: E501
 
-        unique id of registered array  # noqa: E501
+        unique ID of registered array  # noqa: E501
 
         :return: The id of this ArrayInfo.  # noqa: E501
         :rtype: str
@@ -213,7 +213,7 @@ class ArrayInfo(object):
     def id(self, id):
         """Sets the id of this ArrayInfo.
 
-        unique id of registered array  # noqa: E501
+        unique ID of registered array  # noqa: E501
 
         :param id: The id of this ArrayInfo.  # noqa: E501
         :type: str

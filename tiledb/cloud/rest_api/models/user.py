@@ -161,7 +161,7 @@ class User(object):
     def id(self):
         """Gets the id of this User.  # noqa: E501
 
-        unique id of user  # noqa: E501
+        unique ID of user  # noqa: E501
 
         :return: The id of this User.  # noqa: E501
         :rtype: str
@@ -172,7 +172,7 @@ class User(object):
     def id(self, id):
         """Sets the id of this User.
 
-        unique id of user  # noqa: E501
+        unique ID of user  # noqa: E501
 
         :param id: The id of this User.  # noqa: E501
         :type: str
@@ -550,7 +550,7 @@ class User(object):
     def default_s3_path(self):
         """Gets the default_s3_path of this User.  # noqa: E501
 
-        default s3 path to store newly created notebooks  # noqa: E501
+        default S3 path to store newly created notebooks  # noqa: E501
 
         :return: The default_s3_path of this User.  # noqa: E501
         :rtype: str
@@ -561,7 +561,7 @@ class User(object):
     def default_s3_path(self, default_s3_path):
         """Sets the default_s3_path of this User.
 
-        default s3 path to store newly created notebooks  # noqa: E501
+        default S3 path to store newly created notebooks  # noqa: E501
 
         :param default_s3_path: The default_s3_path of this User.  # noqa: E501
         :type: str
@@ -573,7 +573,7 @@ class User(object):
     def default_s3_path_credentials_name(self):
         """Gets the default_s3_path_credentials_name of this User.  # noqa: E501
 
-        Default s3 path credentials name is the credentials name to use along with default_s3_path  # noqa: E501
+        Default S3 path credentials name is the credentials name to use along with default_s3_path  # noqa: E501
 
         :return: The default_s3_path_credentials_name of this User.  # noqa: E501
         :rtype: str
@@ -584,7 +584,7 @@ class User(object):
     def default_s3_path_credentials_name(self, default_s3_path_credentials_name):
         """Sets the default_s3_path_credentials_name of this User.
 
-        Default s3 path credentials name is the credentials name to use along with default_s3_path  # noqa: E501
+        Default S3 path credentials name is the credentials name to use along with default_s3_path  # noqa: E501
 
         :param default_s3_path_credentials_name: The default_s3_path_credentials_name of this User.  # noqa: E501
         :type: str

@@ -253,6 +253,26 @@ class BasicTests(unittest.TestCase):
         with self.assertRaises(tiledb_cloud_error.TileDBCloudError):
             tasks.fetch_results(uuid.uuid4())
 
+    def test_timeout(self):
+        def test():
+            import time
+
+            time.sleep(10)
+
+        with self.assertRaises(tiledb_cloud_error.TileDBCloudError):
+
+            def test():
+                import time
+
+                time.sleep(10)
+
+            with tiledb.open(
+                "tiledb://TileDB-Inc/quickstart_sparse", ctx=tiledb.cloud.Ctx()
+            ) as A:
+                A.apply_async(
+                    lambda x: numpy.sum(x["a"]), [(1, 4), (1, 4)], timeout=1
+                ).get(),
+
 
 class RangesTest(unittest.TestCase):
     def test_parse_ranges(self):
