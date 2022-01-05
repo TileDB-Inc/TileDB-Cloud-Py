@@ -513,6 +513,27 @@ class Client:
         self._pool_lock = threading.Lock()
         self.set_threads(pool_threads)
         self.retry_mode(retry_mode)
+        self.__init_clients()
+
+    def __init_clients(self):
+        """
+        Initialize api clients
+        """
+        pool_size = self._thread_pool._max_workers  # type: ignore[attr-defined]
+        config.config.connection_pool_maxsize = pool_size
+        client = rest_api.ApiClient(config.config)
+        client.rest_client.pool_manager = _PoolManagerWrapper(
+            client.rest_client.pool_manager
+        )
+
+        self.array_api = rest_api.ArrayApi(client)
+        self.file_api = rest_api.FilesApi(client)
+        self.notebook_api = rest_api.NotebookApi(client)
+        self.organization_api = rest_api.OrganizationApi(client)
+        self.sql_api = rest_api.SqlApi(client)
+        self.tasks_api = rest_api.TasksApi(client)
+        self.udf_api = rest_api.UdfApi(client)
+        self.user_api = rest_api.UserApi(client)
 
     def set_disable_retries(self):
         self.retry_mode(RetryMode.DISABLED)
@@ -531,21 +552,7 @@ class Client:
         # of the connection pool to match. (The internal members of
         # ThreadPoolExecutor are not exposed in the .pyi files, so we silence
         # mypy's warning here.)
-        pool_size = self._thread_pool._max_workers  # type: ignore[attr-defined]
-        config.config.connection_pool_maxsize = pool_size
-        client = rest_api.ApiClient(config.config)
-        client.rest_client.pool_manager = _PoolManagerWrapper(
-            client.rest_client.pool_manager
-        )
-
-        self.array_api = rest_api.ArrayApi(client)
-        self.file_api = rest_api.FilesApi(client)
-        self.notebook_api = rest_api.NotebookApi(client)
-        self.organization_api = rest_api.OrganizationApi(client)
-        self.sql_api = rest_api.SqlApi(client)
-        self.tasks_api = rest_api.TasksApi(client)
-        self.udf_api = rest_api.UdfApi(client)
-        self.user_api = rest_api.UserApi(client)
+        self.__init_clients()
 
     def set_threads(self, threads: Optional[int] = None):
         """Updates the number of threads in the async thread pool."""
@@ -556,6 +563,7 @@ class Client:
             )
             if old_pool:
                 old_pool.shutdown(wait=False)
+            self.__init_clients()
 
     def wrap_async_base_call(
         self,
