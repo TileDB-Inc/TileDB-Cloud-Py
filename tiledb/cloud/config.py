@@ -12,7 +12,7 @@ config = configuration.Configuration()
 default_config_file = Path.joinpath(Path.home(), ".tiledb", "cloud.json")
 
 
-def _parse_bool(s: str) -> bool:
+def parse_bool(s: str) -> bool:
     return s.lower() in ["true", "1", "on"]
 
 
@@ -57,9 +57,7 @@ def load_configuration(config_path):
     # default username/password to empty strings
     username = os.getenv("TILEDB_REST_USERNAME", None)
     password = os.getenv("TILEDB_REST_PASSWORD", None)
-    verify_ssl = not _parse_bool(
-        os.getenv("TILEDB_REST_IGNORE_SSL_VALIDATION", "False")
-    )
+    verify_ssl = not parse_bool(os.getenv("TILEDB_REST_IGNORE_SSL_VALIDATION", "False"))
 
     if os.path.isfile(config_path):
         with open(config_path, "r") as f:
@@ -96,7 +94,9 @@ def load_configuration(config_path):
                 and config_obj["api_key"] != ""
             ):
                 token = config_obj["api_key"]
-            verify_ssl = config_obj["verify_ssl"]
+
+            if "verify_ssl" in config_obj:
+                verify_ssl = config_obj["verify_ssl"]
 
     if (token is None or token == "") and (username is None or username == ""):
         return "You must first login before you can run commands"

@@ -1,4 +1,5 @@
 import enum
+import os
 import threading
 import urllib.parse
 import uuid
@@ -70,7 +71,7 @@ def login(
     username=None,
     password=None,
     host=None,
-    verify_ssl=True,
+    verify_ssl=None,
     no_session=False,
     threads=None,
 ):
@@ -102,13 +103,18 @@ def login(
     ):
         raise Exception("Username and Password are both required")
 
-    kwargs = {
-        "username": username,
-        "password": password,
-        "host": host,
-        "verify_ssl": verify_ssl,
-        "api_key": {},
-    }
+    if verify_ssl is None:
+        verify_ssl = not config.parse_bool(
+            os.getenv("TILEDB_REST_IGNORE_SSL_VALIDATION", "False")
+        )
+
+        kwargs = {
+            "username": username,
+            "password": password,
+            "host": host,
+            "verify_ssl": verify_ssl,
+            "api_key": {},
+        }
     # Is user logs in with username/password we need to create a session
     if (token is None or token == "") and not no_session:
         config.setup_configuration(**kwargs)
