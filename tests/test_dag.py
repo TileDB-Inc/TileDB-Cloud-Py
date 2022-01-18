@@ -1,6 +1,7 @@
 import base64
 import collections
 import collections.abc as cabc
+import itertools
 import os
 import pickle
 import threading
@@ -22,6 +23,7 @@ from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params as sp
 from tiledb.cloud._results import visitor
 from tiledb.cloud.dag import dag as dag_dag
+from tiledb.cloud.rest_api import models
 
 tiledb.cloud.login(
     token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
@@ -30,6 +32,8 @@ tiledb.cloud.login(
 
 
 class DAGClassTest(unittest.TestCase):
+    maxDiff = None
+
     def test_simple_dag(self):
         d = dag.DAG()
 
@@ -64,6 +68,29 @@ class DAGClassTest(unittest.TestCase):
                 "not_started": 0,
                 "total_count": 3,
             },
+        )
+
+        self.assertEqual(
+            d._build_log_structure(),
+            models.TaskGraphLog(
+                nodes=[
+                    models.TaskGraphNodeMetadata(
+                        client_node_uuid=str(node_1.id),
+                        name="node_1",
+                        depends_on=[],
+                    ),
+                    models.TaskGraphNodeMetadata(
+                        client_node_uuid=str(node_2.id),
+                        name="node_2",
+                        depends_on=[str(node_1.id)],
+                    ),
+                    models.TaskGraphNodeMetadata(
+                        client_node_uuid=str(node_3.id),
+                        name="node_3",
+                        depends_on=[str(node_2.id)],
+                    ),
+                ],
+            ),
         )
 
     def test_simple_cloud_dag(self):
@@ -166,6 +193,51 @@ class DAGClassTest(unittest.TestCase):
         self.assertEqual(node_4.result(), 8)
         self.assertEqual(node_5.result(), 8)
         self.assertEqual(node_6.result(), 24)
+
+        # The order of this assertion is somewhat fragile. It is deterministic
+        # based on our implementation of toposort, but if the toposort
+        # implementation changes, it may spuriously fail (but can be updated).
+        self.assertEqual(
+            d._build_log_structure(),
+            models.TaskGraphLog(
+                nodes=[
+                    models.TaskGraphNodeMetadata(
+                        client_node_uuid=str(node_1.id),
+                        name="multi_node_1",
+                        depends_on=[],
+                    ),
+                    models.TaskGraphNodeMetadata(
+                        client_node_uuid=str(node_2.id),
+                        name="multi_node_2",
+                        depends_on=[str(node_1.id)],
+                    ),
+                    models.TaskGraphNodeMetadata(
+                        client_node_uuid=str(node_5.id),
+                        name="multi_node_5",
+                        depends_on=[str(node_2.id)],
+                    ),
+                    models.TaskGraphNodeMetadata(
+                        client_node_uuid=str(node_4.id),
+                        name="multi_node_4",
+                        depends_on=[str(node_2.id)],
+                    ),
+                    models.TaskGraphNodeMetadata(
+                        client_node_uuid=str(node_3.id),
+                        name="multi_node_3",
+                        depends_on=[str(node_2.id)],
+                    ),
+                    models.TaskGraphNodeMetadata(
+                        client_node_uuid=str(node_6.id),
+                        name="multi_node_6",
+                        depends_on=[
+                            str(node_3.id),
+                            str(node_4.id),
+                            str(node_5.id),
+                        ],
+                    ),
+                ],
+            ),
+        )
 
     def test_end_nodes_dag(self):
         d = dag.DAG()
@@ -534,6 +606,81 @@ class DAGCallbackTest(unittest.TestCase):
         self.assertEqual(node_3.result(), 8)
         self.assertEqual(self.status_updates, 5)
         self.assertEqual(self.done_updates, 1)
+
+
+class TopoSortTest(unittest.TestCase):
+    def test_empty(self):
+        self.assertEqual(dag_dag._topo_sort([]), [])
+
+    def test_graphs(self):
+        cases = [
+            [self._node("root")],
+            [self._node("two"), self._node("roots")],
+            [self._node("parent"), self._node("child", ["parent"])],
+            [self._node("p1"), self._node("p2"), self._node("c", ["p1", "p2"])],
+            [
+                self._node("p"),
+                self._node("c1", depends_on=["p"]),
+                self._node("c2", depends_on=["p"]),
+            ],
+            [
+                self._node("r"),
+                self._node("mid1", ["r"]),
+                self._node("mid2", ["r"]),
+                self._node("leaf", ["mid1", "mid2"]),
+            ],
+            [
+                self._node("root1"),
+                self._node("root2"),
+                self._node("mid", ["root1", "root2"]),
+                self._node("second", ["root1", "mid"]),
+                self._node("only1", ["root1"]),
+                self._node("leaf", ["root2", "second"]),
+            ],
+        ]
+        for i, lst in enumerate(cases):
+            with self.subTest(f"case {i}"):
+                for j, perm in enumerate(itertools.permutations(lst)):
+                    ids = [n.client_node_uuid for n in perm]
+                    with self.subTest(f"permutation {j}: {ids}"):
+                        result = dag_dag._topo_sort(perm)
+                        self.assertEqual(len(perm), len(result))
+                        self.assertEqual(self._ids(perm), self._ids(result))
+                        self.assert_topo_sorted(result)
+
+    def test_cycle(self):
+        with self.assertRaises(ValueError):
+            dag_dag._topo_sort(
+                [
+                    self._node("a", ["b"]),
+                    self._node("b", ["c"]),
+                    self._node("c", ["a"]),
+                ]
+            )
+
+    def test_self(self):
+        with self.assertRaises(ValueError):
+            dag_dag._topo_sort([self._node("me", ["me"])])
+
+    def test_missing(self):
+        with self.assertRaises(ValueError):
+            dag_dag._topo_sort([self._node("anything", ["missing"])])
+
+    def assert_topo_sorted(self, nodes):
+        seen = set()
+        for node in nodes:
+            for parent in node.depends_on:
+                self.assertIn(parent, seen)
+            seen.add(node.client_node_uuid)
+
+    def _node(self, id, depends_on=()):
+        return models.TaskGraphNodeMetadata(
+            client_node_uuid=id,
+            depends_on=depends_on,
+        )
+
+    def _ids(self, stuff):
+        return frozenset(id(thing) for thing in stuff)
 
 
 class CustomSeq(cabc.MutableSequence):
