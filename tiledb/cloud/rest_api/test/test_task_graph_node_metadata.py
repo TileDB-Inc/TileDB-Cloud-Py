@@ -16,12 +16,14 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.array_task_data import ArrayTaskData  # noqa: E501
+from tiledb.cloud.rest_api.models.task_graph_node_metadata import (  # noqa: E501
+    TaskGraphNodeMetadata,
+)
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestArrayTaskData(unittest.TestCase):
-    """ArrayTaskData unit test stubs"""
+class TestTaskGraphNodeMetadata(unittest.TestCase):
+    """TaskGraphNodeMetadata unit test stubs"""
 
     def setUp(self):
         pass
@@ -30,14 +32,17 @@ class TestArrayTaskData(unittest.TestCase):
         pass
 
     def make_instance(self, include_optional):
-        """Test ArrayTaskData
+        """Test TaskGraphNodeMetadata
         include_option is a boolean, when False only required
         params are included, when True both required and
         optional params are included"""
-        # model = tiledb.cloud.rest_api.models.array_task_data.ArrayTaskData()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.task_graph_node_metadata.TaskGraphNodeMetadata()  # noqa: E501
         if include_optional:
-            return ArrayTaskData(
-                array_tasks=[
+            return TaskGraphNodeMetadata(
+                client_node_uuid="0",
+                name="0",
+                depends_on=["0"],
+                executions=[
                     tiledb.cloud.rest_api.models.array_task.ArrayTask(
                         id="0",
                         name="subarray-multiplier",
@@ -147,18 +152,12 @@ class TestArrayTaskData(unittest.TestCase):
                         client_node_uuid="0",
                     )
                 ],
-                pagination_metadata=tiledb.cloud.rest_api.models.pagination_metadata.PaginationMetadata(
-                    page=1.0,
-                    per_page=10.0,
-                    total_pages=14.0,
-                    total_items=138.0,
-                ),
             )
         else:
-            return ArrayTaskData()
+            return TaskGraphNodeMetadata()
 
-    def testArrayTaskData(self):
-        """Test ArrayTaskData"""
+    def testTaskGraphNodeMetadata(self):
+        """Test TaskGraphNodeMetadata"""
         inst_req_only = self.make_instance(include_optional=False)
         inst_req_and_optional = self.make_instance(include_optional=True)
 

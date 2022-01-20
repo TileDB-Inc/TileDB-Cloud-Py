@@ -16,12 +16,12 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.sql_parameters import SQLParameters  # noqa: E501
+from tiledb.cloud.rest_api.models.group_update import GroupUpdate  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestSQLParameters(unittest.TestCase):
-    """SQLParameters unit test stubs"""
+class TestGroupUpdate(unittest.TestCase):
+    """GroupUpdate unit test stubs"""
 
     def setUp(self):
         pass
@@ -30,27 +30,18 @@ class TestSQLParameters(unittest.TestCase):
         pass
 
     def make_instance(self, include_optional):
-        """Test SQLParameters
+        """Test GroupUpdate
         include_option is a boolean, when False only required
         params are included, when True both required and
         optional params are included"""
-        # model = tiledb.cloud.rest_api.models.sql_parameters.SQLParameters()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.group_update.GroupUpdate()  # noqa: E501
         if include_optional:
-            return SQLParameters(
-                name="0",
-                query="0",
-                output_uri="s3://my_bucket/my_output_array",
-                store_results=True,
-                dont_download_results=True,
-                result_format="native",
-                init_commands=["0"],
-                parameters=[None],
-            )
+            return GroupUpdate(name="0", description="0")
         else:
-            return SQLParameters()
+            return GroupUpdate()
 
-    def testSQLParameters(self):
-        """Test SQLParameters"""
+    def testGroupUpdate(self):
+        """Test GroupUpdate"""
         inst_req_only = self.make_instance(include_optional=False)
         inst_req_and_optional = self.make_instance(include_optional=True)
 

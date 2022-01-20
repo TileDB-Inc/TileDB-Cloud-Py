@@ -37,6 +37,7 @@ class SQLParameters(object):
         "query": "str",
         "output_uri": "str",
         "store_results": "bool",
+        "dont_download_results": "bool",
         "result_format": "ResultFormat",
         "init_commands": "list[str]",
         "parameters": "list[object]",
@@ -47,6 +48,7 @@ class SQLParameters(object):
         "query": "query",
         "output_uri": "output_uri",
         "store_results": "store_results",
+        "dont_download_results": "dont_download_results",
         "result_format": "result_format",
         "init_commands": "init_commands",
         "parameters": "parameters",
@@ -58,6 +60,7 @@ class SQLParameters(object):
         query=None,
         output_uri=None,
         store_results=None,
+        dont_download_results=None,
         result_format=None,
         init_commands=None,
         parameters=None,
@@ -72,6 +75,7 @@ class SQLParameters(object):
         self._query = None
         self._output_uri = None
         self._store_results = None
+        self._dont_download_results = None
         self._result_format = None
         self._init_commands = None
         self._parameters = None
@@ -85,6 +89,8 @@ class SQLParameters(object):
             self.output_uri = output_uri
         if store_results is not None:
             self.store_results = store_results
+        if dont_download_results is not None:
+            self.dont_download_results = dont_download_results
         if result_format is not None:
             self.result_format = result_format
         if init_commands is not None:
@@ -183,6 +189,29 @@ class SQLParameters(object):
         """
 
         self._store_results = store_results
+
+    @property
+    def dont_download_results(self):
+        """Gets the dont_download_results of this SQLParameters.  # noqa: E501
+
+        Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\"yes download results\").  # noqa: E501
+
+        :return: The dont_download_results of this SQLParameters.  # noqa: E501
+        :rtype: bool
+        """
+        return self._dont_download_results
+
+    @dont_download_results.setter
+    def dont_download_results(self, dont_download_results):
+        """Sets the dont_download_results of this SQLParameters.
+
+        Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\"yes download results\").  # noqa: E501
+
+        :param dont_download_results: The dont_download_results of this SQLParameters.  # noqa: E501
+        :type: bool
+        """
+
+        self._dont_download_results = dont_download_results
 
     @property
     def result_format(self):

@@ -21,6 +21,7 @@ from tiledb.cloud.rest_api.api.array_api import ArrayApi
 from tiledb.cloud.rest_api.api.array_tasks_api import ArrayTasksApi
 from tiledb.cloud.rest_api.api.favorites_api import FavoritesApi
 from tiledb.cloud.rest_api.api.files_api import FilesApi
+from tiledb.cloud.rest_api.api.groups_api import GroupsApi
 from tiledb.cloud.rest_api.api.invitation_api import InvitationApi
 from tiledb.cloud.rest_api.api.notebook_api import NotebookApi
 from tiledb.cloud.rest_api.api.notebooks_api import NotebooksApi
@@ -28,6 +29,7 @@ from tiledb.cloud.rest_api.api.organization_api import OrganizationApi
 from tiledb.cloud.rest_api.api.query_api import QueryApi
 from tiledb.cloud.rest_api.api.sql_api import SqlApi
 from tiledb.cloud.rest_api.api.stats_api import StatsApi
+from tiledb.cloud.rest_api.api.task_graph_logs_api import TaskGraphLogsApi
 from tiledb.cloud.rest_api.api.tasks_api import TasksApi
 from tiledb.cloud.rest_api.api.udf_api import UdfApi
 from tiledb.cloud.rest_api.api.user_api import UserApi
@@ -91,6 +93,11 @@ from tiledb.cloud.rest_api.models.filter_option import FilterOption
 from tiledb.cloud.rest_api.models.filter_pipeline import FilterPipeline
 from tiledb.cloud.rest_api.models.filter_type import FilterType
 from tiledb.cloud.rest_api.models.generic_udf import GenericUDF
+from tiledb.cloud.rest_api.models.group import Group
+from tiledb.cloud.rest_api.models.group_create import GroupCreate
+from tiledb.cloud.rest_api.models.group_listing import GroupListing
+from tiledb.cloud.rest_api.models.group_listing_all_of import GroupListingAllOf
+from tiledb.cloud.rest_api.models.group_update import GroupUpdate
 from tiledb.cloud.rest_api.models.inline_object import InlineObject
 from tiledb.cloud.rest_api.models.inline_response200 import InlineResponse200
 from tiledb.cloud.rest_api.models.invitation import Invitation
@@ -145,6 +152,10 @@ from tiledb.cloud.rest_api.models.subarray_partitioner_state import (
 )
 from tiledb.cloud.rest_api.models.subarray_ranges import SubarrayRanges
 from tiledb.cloud.rest_api.models.subscription import Subscription
+from tiledb.cloud.rest_api.models.task_graph_log import TaskGraphLog
+from tiledb.cloud.rest_api.models.task_graph_log_status import TaskGraphLogStatus
+from tiledb.cloud.rest_api.models.task_graph_logs_data import TaskGraphLogsData
+from tiledb.cloud.rest_api.models.task_graph_node_metadata import TaskGraphNodeMetadata
 from tiledb.cloud.rest_api.models.tile_db_config import TileDBConfig
 from tiledb.cloud.rest_api.models.token import Token
 from tiledb.cloud.rest_api.models.token_request import TokenRequest

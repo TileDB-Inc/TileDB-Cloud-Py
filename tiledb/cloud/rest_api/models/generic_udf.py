@@ -45,6 +45,7 @@ class GenericUDF(object):
         "task_name": "str",
         "store_results": "bool",
         "timeout": "int",
+        "dont_download_results": "bool",
     }
 
     attribute_map = {
@@ -60,6 +61,7 @@ class GenericUDF(object):
         "task_name": "task_name",
         "store_results": "store_results",
         "timeout": "timeout",
+        "dont_download_results": "dont_download_results",
     }
 
     def __init__(
@@ -76,6 +78,7 @@ class GenericUDF(object):
         task_name=None,
         store_results=None,
         timeout=None,
+        dont_download_results=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """GenericUDF - a model defined in OpenAPI"""  # noqa: E501
@@ -95,6 +98,7 @@ class GenericUDF(object):
         self._task_name = None
         self._store_results = None
         self._timeout = None
+        self._dont_download_results = None
         self.discriminator = None
 
         if udf_info_name is not None:
@@ -121,6 +125,8 @@ class GenericUDF(object):
             self.store_results = store_results
         if timeout is not None:
             self.timeout = timeout
+        if dont_download_results is not None:
+            self.dont_download_results = dont_download_results
 
     @property
     def udf_info_name(self):
@@ -393,6 +399,29 @@ class GenericUDF(object):
         """
 
         self._timeout = timeout
+
+    @property
+    def dont_download_results(self):
+        """Gets the dont_download_results of this GenericUDF.  # noqa: E501
+
+        Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\"yes download results\").  # noqa: E501
+
+        :return: The dont_download_results of this GenericUDF.  # noqa: E501
+        :rtype: bool
+        """
+        return self._dont_download_results
+
+    @dont_download_results.setter
+    def dont_download_results(self, dont_download_results):
+        """Sets the dont_download_results of this GenericUDF.
+
+        Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\"yes download results\").  # noqa: E501
+
+        :param dont_download_results: The dont_download_results of this GenericUDF.  # noqa: E501
+        :type: bool
+        """
+
+        self._dont_download_results = dont_download_results
 
     def to_dict(self):
         """Returns the model properties as a dict"""

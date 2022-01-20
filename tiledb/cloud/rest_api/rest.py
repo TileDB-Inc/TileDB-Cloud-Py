@@ -94,7 +94,7 @@ class RESTClientObject(object):
                 key_file=configuration.key_file,
                 proxy_url=configuration.proxy,
                 proxy_headers=configuration.proxy_headers,
-                **addition_pool_args,
+                **addition_pool_args
             )
         else:
             self.pool_manager = urllib3.PoolManager(
@@ -104,7 +104,7 @@ class RESTClientObject(object):
                 ca_certs=ca_certs,
                 cert_file=configuration.cert_file,
                 key_file=configuration.key_file,
-                **addition_pool_args,
+                **addition_pool_args
             )
 
     def request(
