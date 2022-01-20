@@ -49,6 +49,7 @@ class TestGenericUDF(unittest.TestCase):
                 task_name="0",
                 store_results=True,
                 timeout=56,
+                dont_download_results=True,
             )
         else:
             return GenericUDF()

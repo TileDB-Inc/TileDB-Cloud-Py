@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **task_name** | **str** | name of task, optional | [optional] 
 **store_results** | **bool** | store results for later retrieval | [optional] 
 **timeout** | **int** | UDF-type timeout in seconds (default: 900) | [optional] 
+**dont_download_results** | **bool** | Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\&quot;yes download results\&quot;). | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

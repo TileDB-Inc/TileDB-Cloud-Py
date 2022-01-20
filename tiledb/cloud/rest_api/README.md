@@ -147,6 +147,13 @@ Class | Method | HTTP request | Description
 *FavoritesApi* | [**list_udf_favorites_uui_ds**](docs/FavoritesApi.md#list_udf_favorites_uui_ds) | **GET** /udfs/favorites/uuids | 
 *FilesApi* | [**handle_create_file**](docs/FilesApi.md#handle_create_file) | **POST** /files/{namespace} | 
 *FilesApi* | [**handle_export_file**](docs/FilesApi.md#handle_export_file) | **POST** /files/{namespace}/{file}/export | 
+*GroupsApi* | [**add_asset**](docs/GroupsApi.md#add_asset) | **POST** /groups/{namespace}/{name}/{asset_namespace}/{asset_name} | 
+*GroupsApi* | [**create_group**](docs/GroupsApi.md#create_group) | **POST** /groups/{namespace}/{name} | 
+*GroupsApi* | [**delete_group**](docs/GroupsApi.md#delete_group) | **DELETE** /groups/{namespace}/{name} | 
+*GroupsApi* | [**list_group**](docs/GroupsApi.md#list_group) | **GET** /groups/{namespace}/{name} | 
+*GroupsApi* | [**list_top_level_groups**](docs/GroupsApi.md#list_top_level_groups) | **GET** /groups/{namespace} | 
+*GroupsApi* | [**remove_asset**](docs/GroupsApi.md#remove_asset) | **DELETE** /groups/{namespace}/{name}/{asset_namespace}/{asset_name} | 
+*GroupsApi* | [**update_group**](docs/GroupsApi.md#update_group) | **PATCH** /groups/{namespace}/{name} | 
 *InvitationApi* | [**accept_invitation**](docs/InvitationApi.md#accept_invitation) | **POST** /invitations/{invitation} | 
 *InvitationApi* | [**cancel_join_organization**](docs/InvitationApi.md#cancel_join_organization) | **DELETE** /invitations/{invitation}/{organization}/join | 
 *InvitationApi* | [**cancel_share_array_by_invite**](docs/InvitationApi.md#cancel_share_array_by_invite) | **DELETE** /invitations/{invitation}/{namespace}/{array}/share | 
@@ -178,6 +185,10 @@ Class | Method | HTTP request | Description
 *QueryApi* | [**submit_query_json**](docs/QueryApi.md#submit_query_json) | **POST** /arrays/{namespace}/{array}/query/submit_query_json | 
 *SqlApi* | [**run_sql**](docs/SqlApi.md#run_sql) | **POST** /sql/{namespace} | 
 *StatsApi* | [**get_tiledb_stats**](docs/StatsApi.md#get_tiledb_stats) | **GET** /.stats | 
+*TaskGraphLogsApi* | [**create_task_graph_log**](docs/TaskGraphLogsApi.md#create_task_graph_log) | **POST** /taskgraphs/{namespace}/log | 
+*TaskGraphLogsApi* | [**get_task_graph_log**](docs/TaskGraphLogsApi.md#get_task_graph_log) | **GET** /taskgraphs/{namespace}/logs/{id} | 
+*TaskGraphLogsApi* | [**list_task_graph_logs**](docs/TaskGraphLogsApi.md#list_task_graph_logs) | **GET** /taskgraphs/logs | 
+*TaskGraphLogsApi* | [**update_task_graph_log**](docs/TaskGraphLogsApi.md#update_task_graph_log) | **PATCH** /taskgraphs/{namespace}/logs/{id} | 
 *TasksApi* | [**run_sql**](docs/TasksApi.md#run_sql) | **POST** /sql/{namespace} | 
 *TasksApi* | [**task_id_get**](docs/TasksApi.md#task_id_get) | **GET** /task/{id} | 
 *TasksApi* | [**task_id_result_get**](docs/TasksApi.md#task_id_result_get) | **GET** /task/{id}/result | 
@@ -265,6 +276,11 @@ Class | Method | HTTP request | Description
  - [FilterPipeline](docs/FilterPipeline.md)
  - [FilterType](docs/FilterType.md)
  - [GenericUDF](docs/GenericUDF.md)
+ - [Group](docs/Group.md)
+ - [GroupCreate](docs/GroupCreate.md)
+ - [GroupListing](docs/GroupListing.md)
+ - [GroupListingAllOf](docs/GroupListingAllOf.md)
+ - [GroupUpdate](docs/GroupUpdate.md)
  - [InlineObject](docs/InlineObject.md)
  - [InlineResponse200](docs/InlineResponse200.md)
  - [Invitation](docs/Invitation.md)
@@ -311,6 +327,10 @@ Class | Method | HTTP request | Description
  - [SubarrayPartitionerState](docs/SubarrayPartitionerState.md)
  - [SubarrayRanges](docs/SubarrayRanges.md)
  - [Subscription](docs/Subscription.md)
+ - [TaskGraphLog](docs/TaskGraphLog.md)
+ - [TaskGraphLogStatus](docs/TaskGraphLogStatus.md)
+ - [TaskGraphLogsData](docs/TaskGraphLogsData.md)
+ - [TaskGraphNodeMetadata](docs/TaskGraphNodeMetadata.md)
  - [TileDBConfig](docs/TileDBConfig.md)
  - [Token](docs/Token.md)
  - [TokenRequest](docs/TokenRequest.md)

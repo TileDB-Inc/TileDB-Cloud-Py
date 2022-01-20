@@ -44,6 +44,7 @@ class MultiArrayUDF(object):
         "argument": "str",
         "stored_param_uuids": "list[str]",
         "store_results": "bool",
+        "dont_download_results": "bool",
         "ranges": "QueryRanges",
         "subarray": "UDFSubarray",
         "buffers": "list[str]",
@@ -63,6 +64,7 @@ class MultiArrayUDF(object):
         "argument": "argument",
         "stored_param_uuids": "stored_param_uuids",
         "store_results": "store_results",
+        "dont_download_results": "dont_download_results",
         "ranges": "ranges",
         "subarray": "subarray",
         "buffers": "buffers",
@@ -83,6 +85,7 @@ class MultiArrayUDF(object):
         argument=None,
         stored_param_uuids=None,
         store_results=None,
+        dont_download_results=None,
         ranges=None,
         subarray=None,
         buffers=None,
@@ -106,6 +109,7 @@ class MultiArrayUDF(object):
         self._argument = None
         self._stored_param_uuids = None
         self._store_results = None
+        self._dont_download_results = None
         self._ranges = None
         self._subarray = None
         self._buffers = None
@@ -135,6 +139,8 @@ class MultiArrayUDF(object):
             self.stored_param_uuids = stored_param_uuids
         if store_results is not None:
             self.store_results = store_results
+        if dont_download_results is not None:
+            self.dont_download_results = dont_download_results
         if ranges is not None:
             self.ranges = ranges
         if subarray is not None:
@@ -394,6 +400,29 @@ class MultiArrayUDF(object):
         """
 
         self._store_results = store_results
+
+    @property
+    def dont_download_results(self):
+        """Gets the dont_download_results of this MultiArrayUDF.  # noqa: E501
+
+        Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\"yes download results\").  # noqa: E501
+
+        :return: The dont_download_results of this MultiArrayUDF.  # noqa: E501
+        :rtype: bool
+        """
+        return self._dont_download_results
+
+    @dont_download_results.setter
+    def dont_download_results(self, dont_download_results):
+        """Sets the dont_download_results of this MultiArrayUDF.
+
+        Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\"yes download results\").  # noqa: E501
+
+        :param dont_download_results: The dont_download_results of this MultiArrayUDF.  # noqa: E501
+        :type: bool
+        """
+
+        self._dont_download_results = dont_download_results
 
     @property
     def ranges(self):

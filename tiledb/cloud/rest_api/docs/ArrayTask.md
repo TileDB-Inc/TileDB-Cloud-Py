@@ -29,6 +29,8 @@ Name | Type | Description | Notes
 **sql_init_commands** | **list[str]** | SQL queries or commands to run before main sql query | [optional] 
 **sql_parameters** | **list[object]** | SQL query parameters | [optional] 
 **result_format** | [**ResultFormat**](ResultFormat.md) |  | [optional] 
+**task_graph_uuid** | **str** | If set, the ID of the log for the task graph that this was part of.  | [optional] 
+**client_node_uuid** | **str** | If set, the client-defined ID of the node within this task&#39;s graph.  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

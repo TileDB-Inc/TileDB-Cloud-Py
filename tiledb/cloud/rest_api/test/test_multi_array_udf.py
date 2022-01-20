@@ -48,6 +48,7 @@ class TestMultiArrayUDF(unittest.TestCase):
                 argument="0",
                 stored_param_uuids=["0"],
                 store_results=True,
+                dont_download_results=True,
                 ranges=tiledb.cloud.rest_api.models.query_ranges.QueryRanges(
                     layout="row-major",
                     ranges=[[1.337]],
