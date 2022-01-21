@@ -50,6 +50,8 @@ class MultiArrayUDF(object):
         "buffers": "list[str]",
         "arrays": "list[UDFArrayDetails]",
         "timeout": "int",
+        "task_graph_uuid": "str",
+        "client_node_uuid": "str",
     }
 
     attribute_map = {
@@ -70,6 +72,8 @@ class MultiArrayUDF(object):
         "buffers": "buffers",
         "arrays": "arrays",
         "timeout": "timeout",
+        "task_graph_uuid": "task_graph_uuid",
+        "client_node_uuid": "client_node_uuid",
     }
 
     def __init__(
@@ -91,6 +95,8 @@ class MultiArrayUDF(object):
         buffers=None,
         arrays=None,
         timeout=None,
+        task_graph_uuid=None,
+        client_node_uuid=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """MultiArrayUDF - a model defined in OpenAPI"""  # noqa: E501
@@ -115,6 +121,8 @@ class MultiArrayUDF(object):
         self._buffers = None
         self._arrays = None
         self._timeout = None
+        self._task_graph_uuid = None
+        self._client_node_uuid = None
         self.discriminator = None
 
         if udf_info_name is not None:
@@ -151,6 +159,10 @@ class MultiArrayUDF(object):
             self.arrays = arrays
         if timeout is not None:
             self.timeout = timeout
+        if task_graph_uuid is not None:
+            self.task_graph_uuid = task_graph_uuid
+        if client_node_uuid is not None:
+            self.client_node_uuid = client_node_uuid
 
     @property
     def udf_info_name(self):
@@ -534,6 +546,52 @@ class MultiArrayUDF(object):
         """
 
         self._timeout = timeout
+
+    @property
+    def task_graph_uuid(self):
+        """Gets the task_graph_uuid of this MultiArrayUDF.  # noqa: E501
+
+        If set, the ID of the log for the task graph that this was part of.   # noqa: E501
+
+        :return: The task_graph_uuid of this MultiArrayUDF.  # noqa: E501
+        :rtype: str
+        """
+        return self._task_graph_uuid
+
+    @task_graph_uuid.setter
+    def task_graph_uuid(self, task_graph_uuid):
+        """Sets the task_graph_uuid of this MultiArrayUDF.
+
+        If set, the ID of the log for the task graph that this was part of.   # noqa: E501
+
+        :param task_graph_uuid: The task_graph_uuid of this MultiArrayUDF.  # noqa: E501
+        :type: str
+        """
+
+        self._task_graph_uuid = task_graph_uuid
+
+    @property
+    def client_node_uuid(self):
+        """Gets the client_node_uuid of this MultiArrayUDF.  # noqa: E501
+
+        If set, the client-defined ID of the node within this task's graph.   # noqa: E501
+
+        :return: The client_node_uuid of this MultiArrayUDF.  # noqa: E501
+        :rtype: str
+        """
+        return self._client_node_uuid
+
+    @client_node_uuid.setter
+    def client_node_uuid(self, client_node_uuid):
+        """Sets the client_node_uuid of this MultiArrayUDF.
+
+        If set, the client-defined ID of the node within this task's graph.   # noqa: E501
+
+        :param client_node_uuid: The client_node_uuid of this MultiArrayUDF.  # noqa: E501
+        :type: str
+        """
+
+        self._client_node_uuid = client_node_uuid
 
     def to_dict(self):
         """Returns the model properties as a dict"""

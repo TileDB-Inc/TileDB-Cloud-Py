@@ -17,6 +17,8 @@ Name | Type | Description | Notes
 **store_results** | **bool** | store results for later retrieval | [optional] 
 **timeout** | **int** | UDF-type timeout in seconds (default: 900) | [optional] 
 **dont_download_results** | **bool** | Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\&quot;yes download results\&quot;). | [optional] 
+**task_graph_uuid** | **str** | If set, the ID of the log for the task graph that this was part of.  | [optional] 
+**client_node_uuid** | **str** | If set, the client-defined ID of the node within this task&#39;s graph.  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

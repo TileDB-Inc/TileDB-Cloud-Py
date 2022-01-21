@@ -96,6 +96,8 @@ class TestMultiArrayUDF(unittest.TestCase):
                     )
                 ],
                 timeout=56,
+                task_graph_uuid="0",
+                client_node_uuid="0",
             )
         else:
             return MultiArrayUDF()
