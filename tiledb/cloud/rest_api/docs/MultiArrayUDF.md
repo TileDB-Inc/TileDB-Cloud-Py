@@ -21,6 +21,8 @@ Name | Type | Description | Notes
 **buffers** | **list[str]** | List of buffers to fetch (attributes + dimensions). Deprecated; please set arrays with &#x60;UDFArrayDetails&#x60;. | [optional] 
 **arrays** | [**list[UDFArrayDetails]**](UDFArrayDetails.md) | Array ranges/buffer into to run UDF on | [optional] 
 **timeout** | **int** | UDF-type timeout in seconds (default: 900) | [optional] 
+**task_graph_uuid** | **str** | If set, the ID of the log for the task graph that this was part of.  | [optional] 
+**client_node_uuid** | **str** | If set, the client-defined ID of the node within this task&#39;s graph.  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
