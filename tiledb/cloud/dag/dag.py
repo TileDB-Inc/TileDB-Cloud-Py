@@ -170,8 +170,8 @@ class Node(Generic[_T]):
     def _do_exec(self) -> results.Result[_T]:
         # We have to make a shallow copy of kwargs here.
         # Since we modify the kwargs dictionary here before passing it
-        # to the wrapped function, we need to ensure that we don't mutate
-        # our stored kwargs.
+        # to the wrapped function, we need to ensure that the arguments
+        # that we add are not reused across retries.
         raw_kwargs = dict(self.kwargs)
 
         if self._uses_stored_params:

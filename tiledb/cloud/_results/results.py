@@ -6,7 +6,7 @@ import uuid
 from concurrent import futures
 from typing import Any, Callable, Generic, Optional, TypeVar, Union
 
-import attr
+import attrs
 import urllib3
 
 from tiledb.cloud import client
@@ -29,7 +29,7 @@ class Result(Generic[_T], metaclass=abc.ABCMeta):
         raise TypeError("This result cannot be converted to a StoredParam.")
 
 
-@attr.s(frozen=True, auto_attribs=True)
+@attrs.define(frozen=True)
 class LocalResult(Result[_T], Generic[_T]):
     """A result from running a function in a Node locally."""
 
@@ -48,7 +48,7 @@ _SENTINEL = object()
 
 # Not frozen, but externally immutable, and callers should *treat* it like it's
 # frozen.
-@attr.s()
+@attrs.define()
 class RemoteResult(Result[_T], Generic[_T]):
     """A response from running a UDF remotely."""
 
@@ -59,6 +59,8 @@ class RemoteResult(Result[_T], Generic[_T]):
                 if self._decoded is _SENTINEL:
                     if self._body is not None:
                         self._decoded = self.decoder.decode(self._body)
+                        # Now that we've decoded, we don't need the body text.
+                        self._body = None
                     else:
                         assert self.task_id
                         self._decoded = fetch_remote(self.task_id, self.decoder)
@@ -78,34 +80,36 @@ class RemoteResult(Result[_T], Generic[_T]):
             task_id=self.task_id,
         )
 
-    task_id = attr.ib(type=Optional[uuid.UUID])
+    task_id: Optional[uuid.UUID] = attrs.field()
     """The server-generated UUID of the task."""
 
-    decoder = attr.ib(type=decoders.AbstractDecoder[_T])
+    decoder: decoders.AbstractDecoder[_T] = attrs.field()
     """The Decoder that was used to decode the results."""
 
-    results_stored = attr.ib(type=bool)
+    results_stored: bool = attrs.field()
     """True if the results were stored, false otherwise."""
 
-    _body = attr.ib(type=Optional[bytes])
+    _body: Optional[bytes] = attrs.field()
     """The HTTP content of the body that was returned.
 
-    If None, the result was not downloaded (yet).
+    If None, the result body was either not yet downloaded or was already
+    decoded.
     """
 
-    @_body.validator
+    @_body.validator  # mypy: disable=union-attr (this is an attr at this point)
     def _validate(self, attribute, value):
         del attribute, value  # unused
         if self.results_stored and not self.task_id:
             raise ValueError("task_id must be set for stored results")
         if not self.results_stored and not self._body:
             raise ValueError(
-                "no way to access Node results; neither stored nor downloaded"
+                "no way to access Node results;"
+                " they must be either stored or downloaded"
             )
 
-    # Lock to avoid duplicating work downloading the body or decoding results.
-    _result_lock = attr.ib(factory=threading.Lock)
-    _decoded = attr.ib(type=Any, default=_SENTINEL)
+    _result_lock: threading.Lock = attrs.field(factory=threading.Lock)
+    """Lock to avoid duplicating work downloading the body or decoding."""
+    _decoded: Any = attrs.field(default=_SENTINEL)
 
 
 def unwrapper_proxy(ft: "futures.Future[Result[_T]]") -> "futures.Future[_T]":
