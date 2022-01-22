@@ -7,6 +7,7 @@ import threading
 import time
 import unittest
 import uuid
+from concurrent import futures
 from typing import Any
 
 import cloudpickle
@@ -17,6 +18,7 @@ import tiledb.cloud
 from tiledb.cloud import dag
 from tiledb.cloud import tasks
 from tiledb.cloud._results import decoders
+from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params as sp
 from tiledb.cloud._results import visitor
 from tiledb.cloud.dag import dag as dag_dag
@@ -63,6 +65,55 @@ class DAGClassTest(unittest.TestCase):
                 "total_count": 3,
             },
         )
+
+    def test_simple_cloud_dag(self):
+        d = dag.DAG()
+
+        node_1 = d.submit(np.median, [1, 2, 3])
+        node_2 = d.submit(lambda x: x * 2, node_1)
+        node_3 = d.submit(lambda x: x * 2, node_2)
+
+        d.compute()
+
+        # Wait for dag to complete
+        d.wait(30)
+
+        # The first two calls should not have downloaded results.
+        res_1 = self._remote_result(node_1)
+        self.assertIs(res_1._decoded, results._SENTINEL)
+        self.assertIsNone(res_1._body)
+        res_2 = self._remote_result(node_2)
+        self.assertIs(res_2._decoded, results._SENTINEL)
+        self.assertIsNone(res_2._body)
+        # The last one should have.
+        self.assertIsNotNone(self._remote_result(node_3)._body)
+
+        self.assertEqual(node_1.result(), 2)
+        self.assertEqual(node_2.result(), 4)
+        self.assertEqual(node_3.result(), 8)
+
+        ends = d.find_end_nodes()
+
+        self.assertEqual(len(ends), 1)
+        self.assertEqual(ends[0].name, node_3.name)
+        self.assertDictEqual(
+            d.stats(),
+            {
+                "percent_complete": 100,
+                "running": 0,
+                "failed": 0,
+                "completed": 3,
+                "cancelled": 0,
+                "not_started": 0,
+                "total_count": 3,
+            },
+        )
+
+    def _remote_result(self, node: dag_dag.Node) -> results.RemoteResult:
+        """Extracts the RemoteResult out of the Node's future."""
+        result = node._future.result()  # type: ignore
+        self.assertIsInstance(result, results.RemoteResult)
+        return result  # type: ignore
 
     def test_kwargs(self):
         d = dag.DAG()
@@ -681,8 +732,9 @@ class ReplaceNodesTest(unittest.TestCase):
 def _node(val):
     """Creates a completed node with the given value."""
     n = dag.Node(lambda: None)
+    n._future = futures.Future()
+    n._future.set_result(results.LocalResult(val))
     n.status = dag.Status.COMPLETED
-    n._results = val
     return n
 
 

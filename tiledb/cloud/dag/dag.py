@@ -1,5 +1,6 @@
 import json
 import numbers
+import threading
 import time
 import uuid
 from concurrent import futures
@@ -13,7 +14,6 @@ from typing import (
     Set,
     Tuple,
     TypeVar,
-    Union,
 )
 
 import networkx as nx
@@ -40,25 +40,32 @@ class Node(Generic[_T]):
         self,
         func: Callable[..., _T],
         *args: Any,
-        _prewrapped_func: Callable[..., "results.Result[_T]"] = None,
-        _accepts_stored_params: bool = True,
         name: Optional[str] = None,
         dag: Optional["DAG"] = None,
         local_mode: bool = False,
+        _download_results: Optional[bool] = None,
+        _internal_prewrapped_func: Callable[..., "results.Result[_T]"] = None,
+        _internal_accepts_stored_params: bool = True,
         **kwargs,
     ):
         """
         Node is a class that represents a function to run in a DAG
         :param func: function to run
         :param args: tuple of arguments to run
+        :param name: optional name of dag
+        :param dag: dag this node is associated with
+        :param _download_results: An optional boolean to override default
+            result-downloading behavior. If True, will always download the
+            results of the function immediately upon completion.
+            If False, will not download the results of the function immediately,
+            but will be downloaded when ``.result()`` is called.
         :param _prewrapped_func: For internal use only. A function that returns
             something that is already a Result, which does not require wrapping.
+            We assume that all prewrapped functions make server calls.
         :param _accepts_stored_params: For internal use only.
             Applies only when ``_prewrapped_func`` is used.
             ``True`` if ``_prewrapped_func`` can accept stored parameters.
             ``False`` if it cannot, and all parameters must be serialized.
-        :param name: optional name of dag
-        :param dag: dag this node is associated with
         :param kwargs: dictionary for keyword arguments
         """
         self.id = uuid.uuid4()
@@ -70,30 +77,32 @@ class Node(Generic[_T]):
 
         self._wrapped_func: Callable[..., "results.Result[_T]"]
 
-        if _prewrapped_func:
-            self._wrapped_func = _prewrapped_func
+        if _internal_prewrapped_func:
+            self._wrapped_func = _internal_prewrapped_func
+            self._was_prewrapped = True
             args = (func,) + args
         else:
             if func is not None and not callable(func):
                 raise TypeError("func argument to `Node` must be callable!")
             self._wrapped_func = results.LocalResult.wrap(func)
+            self._was_prewrapped = False
 
         # True if this function is one of the XXX_base functions.
         # This means we can pass arguments as StoredParams.
         self._uses_stored_params = all(
             (
-                _accepts_stored_params,
-                bool(_prewrapped_func),
+                _internal_accepts_stored_params,
+                self._was_prewrapped,
                 not self.local_mode,
             )
         )
+        self._download_results = _download_results
 
-        self.future: Optional["futures.Future[_T]"] = None
+        self._future: Optional["futures.Future[results.Result[_T]]"] = None
+        self._done = threading.Event()
 
         self.args: Tuple[Any, ...] = args
         self.kwargs: Dict[str, Any] = kwargs
-        self._results: Optional[_T] = None
-        self._real_result: Optional[results.Result[_T]] = None
         self.parents: Dict[uuid.UUID, Node] = {}
         self.children: Dict[uuid.UUID, Node] = {}
         self.name = name or str(self.id)
@@ -128,19 +137,15 @@ class Node(Generic[_T]):
 
     def cancel(self):
         self.status = st.Status.CANCELLED
-        if self.future is not None:
-            self.future.cancel()
+        if self._future is not None:
+            self._future.cancel()
 
-    def finished(self):
+    def finished(self) -> bool:
         """
         Is the node finished
         :return: True if the node's function is finished
         """
-        return self.status in (
-            st.Status.COMPLETED,
-            st.Status.FAILED,
-            st.Status.CANCELLED,
-        )
+        return self._done.is_set()
 
     done = finished
 
@@ -153,35 +158,46 @@ class Node(Generic[_T]):
         # Override namespace if passed
         if namespace is not None and not self.local_mode:
             self.kwargs["namespace"] = namespace
-        self.status = st.Status.RUNNING
-        self.future = self.dag.executor.submit(self._do_exec)
-        assert self.future  # Needed to silence mypy.
-        self.future.add_done_callback(self._handle_completed_future)
+        if not self.status == st.Status.CANCELLED:
+            self.status = st.Status.RUNNING
+            ft = self.dag.executor.submit(self._do_exec)
+        else:
+            ft = futures.Future()
+            ft.cancel()
+        self._future = ft
+        ft.add_done_callback(self._handle_completed_future)
 
-    def _do_exec(self) -> _T:
+    def _do_exec(self) -> results.Result[_T]:
+        # We have to make a shallow copy of kwargs here.
+        # Since we modify the kwargs dictionary here before passing it
+        # to the wrapped function, we need to ensure that the arguments
+        # that we add are not reused across retries.
+        raw_kwargs = dict(self.kwargs)
+
         if self._uses_stored_params:
             # Stored parameters work only on remote functions.
-            (args, kwargs), seen = _replace_nodes_with_stored_params(
-                (self.args, dict(self.kwargs))
+            (args, kwargs), param_ids = _replace_nodes_with_stored_params(
+                (self.args, raw_kwargs)
             )
-            if seen:
-                # We have to make a shallow copy of kwargs here.
-                # If a storeable parameter was seen in the args but not the
-                # kwargs, the Replacer will return the original kwargs dict.
-                # We can't modify that because that would permanently stick
-                # stored_param_uuids into self.kwargs, which would then be used
-                # in the retry logic.
 
-                kwargs = dict(kwargs)
-                kwargs["stored_param_uuids"] = seen
+            if param_ids:
+                kwargs["stored_param_uuids"] = param_ids
 
         else:
             # For functions that run locally, give them the results as normal.
-            args, kwargs = _replace_nodes_with_results((self.args, self.kwargs))
+            args, kwargs = _replace_nodes_with_results((self.args, raw_kwargs))
+
+        if self._was_prewrapped:
+            if self._download_results is None:
+                # If the user didn't explicitly choose, set a download behavior:
+                # If this is a terminal node, download the results.
+                # If this is an intermediate node, do not download the results.
+                kwargs["_download_results"] = not self.children
+            else:
+                kwargs["_download_results"] = self._download_results
 
         try:
-            self._real_result = self._wrapped_func(*args, **kwargs)
-            return self._real_result.get()
+            return self._wrapped_func(*args, **kwargs)
         except tce.TileDBCloudError as exc:
             exc_msg = exc.args and exc.args[0]
             if not isinstance(exc_msg, str) or _RETRY_MSG not in exc_msg:
@@ -189,21 +205,21 @@ class Node(Generic[_T]):
                 raise
 
         args, kwargs = _replace_nodes_with_results((self.args, self.kwargs))
-        self._real_result = self._wrapped_func(*args, **kwargs)
-        return self._real_result.get()
+        return self._wrapped_func(*args, **kwargs)
 
     compute = exec
 
-    def _handle_completed_future(self, future: "futures.Future[_T]"):
-        try:
-            self._results = future.result()
-            if self.status == st.Status.RUNNING:
-                self.status = st.Status.COMPLETED
-        except futures.CancelledError:
+    def _handle_completed_future(self, future: futures.Future) -> None:
+        if future.cancelled():
             self.status = st.Status.CANCELLED
-        except Exception as exc:
-            self.error = exc
-            self.status = st.Status.FAILED
+        else:
+            exc = future.exception()
+            if exc:
+                self.error = exc
+                self.status = st.Status.FAILED
+            elif self.status == st.Status.RUNNING:
+                self.status = st.Status.COMPLETED
+        self._done.set()
         assert self.dag
         self.dag.report_node_complete(self)
 
@@ -225,15 +241,17 @@ class Node(Generic[_T]):
         Fetch results of function, block if not complete
         :return:
         """
-        if self.future is not None:
-            # If future, catch exception to store error on node, then raise
-            try:
-                self._results = self.future.result()
-            except Exception as exc:
-                self.error = exc
-                raise exc
+        ft = self._future
+        if not ft:
+            if self.status is st.Status.CANCELLED:
+                return None
+            raise ValueError("Cannot access result of an unstarted Node")
+        return ft.result().get()
 
-        return self._results
+    @property
+    def future(self) -> "Optional[futures.Future[_T]]":
+        ft = self._future
+        return results.unwrapper_proxy(ft) if ft else None
 
     def task_id(self) -> Optional[uuid.UUID]:
         """Gets the server-side Task ID of this node.
@@ -241,48 +259,23 @@ class Node(Generic[_T]):
         Raises a ValueError if the Node has not been completed.
         Returns None if this has no task ID (as it was run on the client side).
         """
-
-        if self._real_result is None:
-            raise ValueError("Cannot get Task ID for an incomplete node")
+        ft = self._future
+        if not ft:
+            raise ValueError("Cannot access task ID of an unstared Node")
         try:
-            sp = self._real_result.to_stored_param()
+            sp = ft.result().to_stored_param()
         except TypeError:
             # Run client-side; can't be converted to a stored param.
             return None
         return sp.task_id
 
-    def result_or_future(self) -> Union[None, _T, "futures.Future[_T]"]:
-        """
-        Fetch results of functions or return future if incomplete
-        :return:
-        """
-        if not self.finished() and self.future is not None:
-            return self.future
-
-        return self._results
-
-    def wait(self, timeout=None):
+    def wait(self, timeout: Optional[float] = None):
         """
         Wait for node to be completed
         :param timeout: optional timeout in seconds to wait for DAG to be completed
         :return: None or raises TimeoutError if timeout occurs
         """
-
-        if timeout is not None and not isinstance(timeout, numbers.Number):
-            raise TypeError(
-                "timeout must be numeric value representing seconds to wait"
-            )
-
-        start_time = time.time()
-        end_time = None
-        if timeout is not None:
-            end_time = start_time + timeout
-        while not self.done():
-            time.sleep(0.5)
-            if end_time is not None and time.time() >= end_time:
-                raise TimeoutError(
-                    "timeout of {} reached and dag is not complete".format(timeout)
-                )
+        self._done.wait(timeout)
 
 
 class DAG:
@@ -432,7 +425,7 @@ class DAG:
     ):
         node = Node(
             *args,
-            _prewrapped_func=func_exec,
+            _internal_prewrapped_func=func_exec,
             dag=self,
             name=name,
             store_results=store_results,
@@ -471,7 +464,13 @@ class DAG:
         :return: Node that is created
         """
         return self._add_prewrapped_node(
-            sql.exec_base, *args, _accepts_stored_params=False, **kwargs
+            sql.exec_base,
+            *args,
+            _internal_accepts_stored_params=False,
+            # TODO: Remove _download_results once the server starts honoring
+            # store_results for SQL queries.
+            _download_results=True,
+            **kwargs,
         )
 
     def submit_local(self, *args, **kwargs):
@@ -891,8 +890,8 @@ class _NodeToStoredParamReplacer(visitor.ReplacingVisitor):
             # Not a node, just use it as-is.
             return None
         try:
-            assert arg._real_result
-            sp = arg._real_result.to_stored_param()
+            assert arg._future
+            sp = arg._future.result().to_stored_param()
         except (TypeError, ValueError):
             # Can't make a StoredParam out of it.
             # Treat it like any other Node.
@@ -900,7 +899,7 @@ class _NodeToStoredParamReplacer(visitor.ReplacingVisitor):
         else:
             self.ids.add(sp.task_id)
             return visitor.Replacement(sp)
-        return visitor.Replacement(arg._results)
+        return visitor.Replacement(arg.result())
 
 
 class _NodeResultReplacer(visitor.ReplacingVisitor):

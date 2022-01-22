@@ -1,14 +1,15 @@
 """Things that help you keep track of task results and how to decode them."""
 
 import abc
-import dataclasses
 import threading
 import uuid
 from concurrent import futures
-from typing import Callable, Generic, Optional, TypeVar, Union
+from typing import Any, Callable, Generic, Optional, TypeVar, Union
 
+import attrs
 import urllib3
 
+from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud._results import decoders
@@ -28,11 +29,7 @@ class Result(Generic[_T], metaclass=abc.ABCMeta):
         raise TypeError("This result cannot be converted to a StoredParam.")
 
 
-# Not frozen to avoid generating unsafe methods like `__hash__`,
-# but you should still *treat* these subclasses like they're frozen.
-
-
-@dataclasses.dataclass()
+@attrs.define(frozen=True)
 class LocalResult(Result[_T], Generic[_T]):
     """A result from running a function in a Node locally."""
 
@@ -46,14 +43,29 @@ class LocalResult(Result[_T], Generic[_T]):
         return lambda *args, **kwargs: cls(func(*args, **kwargs))
 
 
-@dataclasses.dataclass()
+_SENTINEL = object()
+
+
+# Not frozen, but externally immutable, and callers should *treat* it like it's
+# frozen.
+@attrs.define()
 class RemoteResult(Result[_T], Generic[_T]):
     """A response from running a UDF remotely."""
 
     def get(self) -> _T:
         """Decodes the response from the server."""
         try:
-            return self.decoder.decode(self.body)
+            with self._result_lock:
+                if self._decoded is _SENTINEL:
+                    if self._body is not None:
+                        self._decoded = self.decoder.decode(self._body)
+                        # Now that we've decoded, we don't need the body text.
+                        self._body = None
+                    else:
+                        assert self.task_id
+                        self._decoded = fetch_remote(self.task_id, self.decoder)
+                return self._decoded
+
         except ValueError as ve:
             inner_msg = f": {ve.args[0]}" if ve.args else ""
             raise tce.TileDBCloudError(
@@ -68,14 +80,56 @@ class RemoteResult(Result[_T], Generic[_T]):
             task_id=self.task_id,
         )
 
-    # The HTTP content of the body that was returned.
-    body: bytes
-    # The server-generated UUID of the task.
-    task_id: Optional[uuid.UUID]
-    # The decoder that was used to decode the results.
-    decoder: decoders.AbstractDecoder[_T]
-    # True if the results were stored, false otherwise.
-    results_stored: bool
+    task_id: Optional[uuid.UUID] = attrs.field()
+    """The server-generated UUID of the task."""
+
+    decoder: decoders.AbstractDecoder[_T] = attrs.field()
+    """The Decoder that was used to decode the results."""
+
+    results_stored: bool = attrs.field()
+    """True if the results were stored, false otherwise."""
+
+    _body: Optional[bytes] = attrs.field()
+    """The HTTP content of the body that was returned.
+
+    If None, the result body was either not yet downloaded or was already
+    decoded.
+    """
+
+    @_body.validator  # mypy: disable=union-attr (this is an attr at this point)
+    def _validate(self, attribute, value):
+        del attribute, value  # unused
+        if self.results_stored and not self.task_id:
+            raise ValueError("task_id must be set for stored results")
+        if not self.results_stored and not self._body:
+            raise ValueError(
+                "no way to access Node results;"
+                " they must be either stored or downloaded"
+            )
+
+    _result_lock: threading.Lock = attrs.field(factory=threading.Lock)
+    """Lock to avoid duplicating work downloading the body or decoding."""
+    _decoded: Any = attrs.field(default=_SENTINEL)
+
+
+def unwrapper_proxy(ft: "futures.Future[Result[_T]]") -> "futures.Future[_T]":
+    """Creates a Future proxy that unwraps the results of the parent Future."""
+    new_ft: "futures.Future[_T]" = futures.Future()
+    new_ft.cancel = ft.cancel  # type: ignore[assignment]
+
+    def _forward(_):
+        del _  # unused
+        if ft.cancelled():
+            new_ft.cancel()
+            return
+        exc = ft.exception()
+        if exc:
+            new_ft.set_exception(exc)
+            return
+        new_ft.set_result(ft.result().get())
+
+    ft.add_done_callback(_forward)
+    return new_ft
 
 
 class AsyncResult(Generic[_T]):
@@ -128,3 +182,15 @@ def _maybe_uuid(id_str: Optional[str]) -> Optional[uuid.UUID]:
         return uuid.UUID(hex=id_str)
     except ValueError:
         return None
+
+
+def fetch_remote(task_id: uuid.UUID, decoder: decoders.AbstractDecoder[_T]) -> _T:
+    api_instance = client.client.tasks_api
+    try:
+        resp: urllib3.HTTPResponse = api_instance.task_id_result_get(
+            str(task_id),
+            _preload_content=False,
+        )
+    except rest_api.ApiException as exc:
+        raise tce.check_exc(exc) from None
+    return decoder.decode(resp.data)

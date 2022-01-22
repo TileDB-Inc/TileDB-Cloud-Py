@@ -1,5 +1,4 @@
 import sys
-import urllib
 import uuid
 import warnings
 from typing import Any, Callable, Iterable, Optional, Sequence, Union
@@ -12,10 +11,14 @@ from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
+from tiledb.cloud._results import sender
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
 
 last_udf_task_id: Optional[str] = None
+
+# Re-export for compatibility.
+split_uri = utils.split_uri
 
 
 class ArrayList:
@@ -301,20 +304,6 @@ def array_activity(uri, async_req=False):
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def split_uri(uri):
-    """
-    Split a URI into namespace and array name
-
-    :param uri: uri to split into namespace and array name
-    :param async_req: return future instead of results for async support
-    :return: tuple (namespace, array_name)
-    """
-    parsed = urllib.parse.urlparse(uri)
-    if not parsed.scheme == "tiledb":
-        raise Exception("Incorrect array uri, must be in tiledb:// scheme")
-    return parsed.netloc, parsed.path[1:]
-
-
 def parse_ranges(ranges):
     """
     Takes a list of the following objects per dimension:
@@ -396,6 +385,7 @@ def apply_base(
     store_results: bool = False,
     stored_param_uuids: Iterable[uuid.UUID] = (),
     timeout: int = None,
+    _download_results: bool = True,
     **kwargs: Any,
 ) -> results.RemoteResult:
     """Apply a user-defined function to an array, and return data and metadata.
@@ -422,6 +412,9 @@ def apply_base(
     :param store_results: True to temporarily store results on the server side
         for later retrieval (in addition to downloading them).
     :param timeout: Timeout for UDF in seconds
+    :param _download_results: True to download and parse results eagerly.
+        False to not download results by default and only do so lazily
+        (e.g. for an intermediate node in a graph).
     :param kwargs: named arguments to pass to function
 
     **Example**
@@ -479,6 +472,7 @@ def apply_base(
         result_format=result_format,
         store_results=store_results,
         stored_param_uuids=list(str(uuid) for uuid in stored_param_uuids),
+        dont_download_results=not _download_results,
     )
 
     if timeout is not None:
@@ -504,12 +498,13 @@ def apply_base(
     if http_compressor:
         submit_kwargs["accept_encoding"] = http_compressor
 
-    return client.send_udf_call(
+    return sender.send_udf_call(
         api_instance.submit_udf,
         submit_kwargs,
         decoders.Decoder(result_format),
         id_callback=_maybe_set_last_udf_id,
         results_stored=store_results,
+        results_downloaded=_download_results,
     )
 
 
@@ -539,7 +534,7 @@ def apply_async(*args, **kwargs) -> results.AsyncResult:
     All arguments are exactly as in :func:`apply_base`, but this returns
     the data as a future-like AsyncResponse.
     """
-    return client.client.wrap_async_base_call(apply_base, *args, **kwargs)
+    return sender.wrap_async_base_call(apply_base, *args, **kwargs)
 
 
 def exec_multi_array_udf_base(
@@ -556,6 +551,7 @@ def exec_multi_array_udf_base(
     result_format_version=None,
     store_results: bool = False,
     stored_param_uuids: Iterable[uuid.UUID] = (),
+    _download_results: bool = True,
     **kwargs,
 ) -> results.RemoteResult:
     """
@@ -631,6 +627,7 @@ def exec_multi_array_udf_base(
         result_format=result_format,
         store_results=store_results,
         stored_param_uuids=list(str(uuid) for uuid in stored_param_uuids),
+        dont_download_results=not _download_results,
     )
 
     if callable(user_func):
@@ -650,12 +647,13 @@ def exec_multi_array_udf_base(
     if http_compressor:
         submit_kwargs["accept_encoding"] = http_compressor
 
-    return client.send_udf_call(
+    return sender.send_udf_call(
         api_instance.submit_multi_array_udf,
         submit_kwargs,
         decoders.Decoder(result_format),
         id_callback=_maybe_set_last_udf_id,
         results_stored=store_results,
+        results_downloaded=_download_results,
     )
 
 
@@ -674,9 +672,7 @@ def exec_multi_array_udf_async(*args, **kwargs) -> results.AsyncResult:
 
     All arguments are exactly as in :func:`exec_multi_array_udf_base`.
     """
-    return client.client.wrap_async_base_call(
-        exec_multi_array_udf_base, *args, **kwargs
-    )
+    return sender.wrap_async_base_call(exec_multi_array_udf_base, *args, **kwargs)
 
 
 def _pick_func(**kwargs: Union[str, Callable, None]) -> Union[str, Callable]:
