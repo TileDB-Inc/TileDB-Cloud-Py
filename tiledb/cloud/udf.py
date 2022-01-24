@@ -8,7 +8,6 @@ import cloudpickle
 
 from tiledb.cloud import array
 from tiledb.cloud import client
-from tiledb.cloud import config
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
 from tiledb.cloud._results import decoders
@@ -71,13 +70,7 @@ def exec_base(
 
     api_instance = client.client.udf_api
 
-    # If the namespace is not set, we will default to the user's namespace
-    if namespace is None:
-        # Fetch the client profile for username if it is not already cached
-        if config.user is None:
-            config.user = client.user_profile()
-
-        namespace = client.find_organization_or_user_for_default_charges(config.user)
+    namespace = namespace or client.default_charged_namespace()
 
     user_func: Union[str, Callable]
     if name:
@@ -184,13 +177,7 @@ def register_udf(
     try:
         api_instance = client.client.udf_api
 
-        # If the namespace is not set, we will default to the user's namespace
-        if namespace is None:
-            # Fetch the client profile for username if it is not already cached
-            if config.user is None:
-                config.user = client.user_profile()
-
-            namespace = config.user.username
+        namespace = namespace or client.default_user().username
 
         if not callable(func):
             raise TypeError("First argument to `exec` must be callable!")
@@ -315,13 +302,7 @@ def update_udf(
     try:
         api_instance = client.client.udf_api
 
-        # If the namespace is not set, we will default to the user's namespace
-        if namespace is None:
-            # Fetch the client profile for username if it is not already cached
-            if config.user is None:
-                config.user = client.user_profile()
-
-            namespace = config.user.username
+        namespace = namespace or client.default_user().username
 
         if not callable(func):
             raise TypeError("First argument to `exec` must be callable!")
@@ -438,12 +419,7 @@ def info(namespace=None, name=None, async_req=False):
             and namespace != ""
             and name != ""
         ):
-            # If the namespace is not set, we will default to the user's namespace
-            # Fetch the client profile for username if it is not already cached
-            if config.user is None:
-                config.user = client.user_profile()
-
-            namespace = config.user.username
+            namespace = client.default_user().username
 
         return api_instance.get_udf_info(
             namespace=namespace, name=name, async_req=async_req
@@ -473,12 +449,7 @@ def share(name=None, namespace=None, async_req=False):
         and udf_namespace != ""
         and udf_name != ""
     ):
-        # If the namespace is not set, we will default to the user's namespace
-        # Fetch the client profile for username if it is not already cached
-        if config.user is None:
-            config.user = client.user_profile()
-
-        udf_namespace = config.user.username
+        udf_namespace = client.default_user().username
 
     try:
         api_instance = client.client.udf_api
@@ -511,12 +482,7 @@ def unshare(name=None, namespace=None, async_req=False):
         and udf_namespace != ""
         and udf_name != ""
     ):
-        # If the namespace is not set, we will default to the user's namespace
-        # Fetch the client profile for username if it is not already cached
-        if config.user is None:
-            config.user = client.user_profile()
-
-        udf_namespace = config.user.username
+        udf_namespace = client.default_user().username
 
     try:
         api_instance = client.client.udf_api

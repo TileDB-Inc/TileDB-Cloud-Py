@@ -7,7 +7,6 @@ from typing import Any, Optional, Sequence
 import tiledb
 from tiledb.cloud import array
 from tiledb.cloud import client
-from tiledb.cloud import config
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
@@ -63,13 +62,7 @@ def exec_base(
     if output_uri:
         array.split_uri(output_uri)
 
-    # If the namespace is not set, we will default to the user's namespace
-    if namespace is None:
-        # Fetch the client profile for username if it is not already cached
-        if config.user is None:
-            config.user = client.user_profile()
-
-        namespace = client.find_organization_or_user_for_default_charges(config.user)
+    namespace = namespace or client.default_charged_namespace()
 
     api_instance = client.client.sql_api
 

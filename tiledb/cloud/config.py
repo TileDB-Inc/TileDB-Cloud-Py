@@ -1,10 +1,12 @@
 import json
 import os.path
 from pathlib import Path
+from typing import Optional
 
 from urllib3 import Retry
 
 from tiledb.cloud.rest_api import configuration
+from tiledb.cloud.rest_api import models
 
 default_host = "https://api.tiledb.com"
 
@@ -152,4 +154,9 @@ def setup_configuration(
 
 # Load default config file if it exists
 logged_in = load_configuration(default_config_file)
-user = None
+user: Optional[models.User] = None
+"""The default user to use.
+
+You should probably access this through ``client.default_user()`` rather than
+doing so directly.
+"""
