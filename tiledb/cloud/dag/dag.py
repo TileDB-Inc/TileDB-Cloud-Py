@@ -1,3 +1,4 @@
+import collections
 import json
 import numbers
 import threading
@@ -7,10 +8,14 @@ from concurrent import futures
 from typing import (
     Any,
     Callable,
+    Counter,
+    Deque,
     Dict,
     FrozenSet,
     Generic,
+    List,
     Optional,
+    Sequence,
     Set,
     Tuple,
     TypeVar,
@@ -27,6 +32,7 @@ from tiledb.cloud._results import stored_params
 from tiledb.cloud._results import visitor
 from tiledb.cloud.dag import status as st
 from tiledb.cloud.dag import visualization as viz
+from tiledb.cloud.rest_api import models
 
 Status = st.Status  # Re-export for compabitility.
 _T = TypeVar("_T")
@@ -296,8 +302,8 @@ class DAG:
         :param namespace: optional namespace to use for all tasks in DAG
         """
         self.id = uuid.uuid4()
-        self.nodes = {}
-        self.nodes_by_name = {}
+        self.nodes: Dict[uuid.UUID, Node] = {}
+        self.nodes_by_name: Dict[str, Node] = {}
         self.completed_nodes = {}
         self.failed_nodes = {}
         self.running_nodes = {}
@@ -632,6 +638,21 @@ class DAG:
 
         return node_details
 
+    def _build_log_structure(self) -> models.TaskGraphLog:
+        """Builds the structure of this graph for logging."""
+        nodes = [
+            models.TaskGraphNodeMetadata(
+                client_node_uuid=str(node.id),
+                name=node.name,
+                depends_on=[str(dep) for dep in node.parents],
+            )
+            for node in self.nodes.values()
+        ]
+        return models.TaskGraphLog(
+            # TODO: Add support for naming task graphs.
+            nodes=_topo_sort(nodes),
+        )
+
     @staticmethod
     def _update_dag_tiledb_graph(graph):
         graph.visualization["node_details"] = graph.get_tiledb_plot_node_details()
@@ -922,3 +943,42 @@ class _StoredParamReplacer(visitor.ReplacingVisitor):
         if isinstance(arg, stored_params.StoredParam):
             return visitor.Replacement(self._loader.load(arg))
         return None
+
+
+def _topo_sort(
+    lst: Sequence[models.TaskGraphNodeMetadata],
+) -> Sequence[models.TaskGraphNodeMetadata]:
+    """Topographically sorts the list of node metadatas."""
+    by_uuid: Dict[str, models.TaskGraphNodeMetadata] = {
+        node.client_node_uuid: node for node in lst
+    }
+    in_degrees: Counter[str] = collections.Counter()
+    for node in lst:
+        # Ensure that we have an entry in the counter even for root nodes.
+        in_degrees[node.client_node_uuid] += 0
+        for dep_id in node.depends_on:
+            if dep_id not in by_uuid:
+                raise ValueError(
+                    f"Node {node.client_node_uuid!r} depends upon"
+                    f" non-existent node {dep_id!r}"
+                )
+            in_degrees[dep_id] += 1
+    output: List[models.TaskGraphNodeMetadata] = []
+    queue: Deque[str] = collections.deque()
+    for uid, degree in in_degrees.items():
+        if degree == 0:
+            queue.append(uid)
+
+    while queue:
+        nid = queue.popleft()
+        node = by_uuid[nid]
+        for dep_id in node.depends_on:
+            in_degrees[dep_id] -= 1
+            if in_degrees[dep_id] == 0:
+                queue.append(dep_id)
+        output.append(node)
+    if sum(in_degrees.values()):
+        participating = [uid for (uid, deg) in in_degrees.items() if deg]
+        raise ValueError(f"The task graph contains a cycle involving {participating}")
+    output.reverse()
+    return output
