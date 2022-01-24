@@ -644,8 +644,7 @@ class TopoSortTest(unittest.TestCase):
                     ids = [n.client_node_uuid for n in perm]
                     with self.subTest(f"permutation {j}: {ids}"):
                         result = dag_dag._topo_sort(perm)
-                        self.assertEqual(len(perm), len(result))
-                        self.assertEqual(self._ids(perm), self._ids(result))
+                        self.assertCountEqual(perm, result)
                         self.assert_topo_sorted(result)
 
     def test_cycle(self):
@@ -678,9 +677,6 @@ class TopoSortTest(unittest.TestCase):
             client_node_uuid=id,
             depends_on=depends_on,
         )
-
-    def _ids(self, stuff):
-        return frozenset(id(thing) for thing in stuff)
 
 
 class CustomSeq(cabc.MutableSequence):
