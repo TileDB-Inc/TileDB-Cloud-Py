@@ -378,9 +378,13 @@ class DAG:
                 except rest_api.ApiException as apix:
                     # There was a problem submitting the task graph for logging.
                     # This should not abort the task graph.
-                    warnings.warn(
-                        UserWarning(f"Error submitting task graph logging info: {apix}")
-                    )
+
+                    # TODO: Start warning once the server actually accepts
+                    # task graph logging data.
+                    pass
+                    # warnings.warn(
+                    #     UserWarning(f"Error submitting task graph logging info: {apix}")
+                    # )
                 else:
                     try:
                         self.server_graph_uuid = uuid.UUID(hex=result.uuid)
