@@ -220,11 +220,7 @@ def register_array(
     """
     api_instance = client.client.array_api
 
-    if namespace is None:
-        if config.user is None:
-            config.user = client.user_profile()
-
-        namespace = config.user.username
+    namespace = namespace or client.default_user().namespace
 
     try:
         return api_instance.register_array(
@@ -594,13 +590,7 @@ def exec_multi_array_udf_base(
 
     api_instance = client.client.udf_api
 
-    # If the namespace is not set, we will default to the user's namespace
-    if namespace is None:
-        # Fetch the client profile for username if it is not already cached
-        if config.user is None:
-            config.user = client.user_profile()
-
-        namespace = client.find_organization_or_user_for_default_charges(config.user)
+    namespace = namespace or client.default_charged_namespace()
 
     if type(array_list) is not ArrayList:
         raise TypeError(

@@ -12,6 +12,7 @@ from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud.pool_manager_wrapper import _PoolManagerWrapper
 from tiledb.cloud.rest_api import ApiException as GenApiException
+from tiledb.cloud.rest_api import models
 
 _T = TypeVar("_T")
 
@@ -128,6 +129,25 @@ def login(
     config.save_configuration(config.default_config_file)
     config.logged_in = True
     client.set_threads(threads)
+
+
+def default_user() -> models.User:
+    """Returns the default user to be used.
+
+    If :data:`config.user` is set, that is the default user. If unset, we fetch
+    the currently logged-in user with :func:`user_profile` and store that in
+    :data:`config.user`.
+    """
+    if not config.user:
+        # No locks. It's fine if we fetch this twice.
+        config.user = user_profile()
+    assert config.user
+    return config.user
+
+
+def default_charged_namespace() -> str:
+    """Returns the namespace :func:`default_user` charges to by default."""
+    return find_organization_or_user_for_default_charges(default_user())
 
 
 def list_public_arrays(
