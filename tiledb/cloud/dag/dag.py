@@ -4,6 +4,7 @@ import numbers
 import threading
 import time
 import uuid
+import warnings
 from concurrent import futures
 from typing import (
     Any,
@@ -24,6 +25,8 @@ from typing import (
 import networkx as nx
 
 from tiledb.cloud import array
+from tiledb.cloud import client
+from tiledb.cloud import rest_api
 from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud import udf
@@ -32,7 +35,6 @@ from tiledb.cloud._results import stored_params
 from tiledb.cloud._results import visitor
 from tiledb.cloud.dag import status as st
 from tiledb.cloud.dag import visualization as viz
-from tiledb.cloud.rest_api import models
 
 Status = st.Status  # Re-export for compabitility.
 _T = TypeVar("_T")
@@ -198,9 +200,16 @@ class Node(Generic[_T]):
                 # If the user didn't explicitly choose, set a download behavior:
                 # If this is a terminal node, download the results.
                 # If this is an intermediate node, do not download the results.
-                kwargs["_download_results"] = not self.children
+                download_results = not self.children
             else:
-                kwargs["_download_results"] = self._download_results
+                download_results = self._download_results
+            assert self.dag
+            self.dag.initial_setup()
+            kwargs.update(
+                _download_results=download_results,
+                _server_graph_uuid=self.dag.server_graph_uuid,
+                _client_node_uuid=self.id,
+            )
 
         try:
             return self._wrapped_func(*args, **kwargs)
@@ -287,11 +296,12 @@ class Node(Generic[_T]):
 class DAG:
     def __init__(
         self,
-        max_workers=None,
-        use_processes=False,
-        done_callback=None,
-        update_callback=None,
-        namespace=None,
+        max_workers: Optional[int] = None,
+        use_processes: bool = False,
+        done_callback: Optional[Callable[["DAG"], None]] = None,
+        update_callback: Optional[Callable[["DAG"], None]] = None,
+        namespace: Optional[str] = None,
+        name: Optional[str] = None,
     ):
         """
         DAG is a class for creating and managing direct acyclic graphs
@@ -300,16 +310,25 @@ class DAG:
         :param done_callback: optional call back function to register for when dag is completed. Function will be passed reference to this dag
         :param update_callback: optional call back function to register for when dag status is updated. Function will be passed reference to this dag
         :param namespace: optional namespace to use for all tasks in DAG
+        :param name: A human-readable name used to identify this task graph
+            in logs. Does not need to be unique.
         """
         self.id = uuid.uuid4()
         self.nodes: Dict[uuid.UUID, Node] = {}
         self.nodes_by_name: Dict[str, Node] = {}
-        self.completed_nodes = {}
-        self.failed_nodes = {}
-        self.running_nodes = {}
-        self.not_started_nodes = {}
-        self.cancelled_nodes = {}
-        self.namespace = namespace
+        self.completed_nodes: Dict[uuid.UUID, Node] = {}
+        self.failed_nodes: Dict[uuid.UUID, Node] = {}
+        self.running_nodes: Dict[uuid.UUID, Node] = {}
+        self.not_started_nodes: Dict[uuid.UUID, Node] = {}
+        self.cancelled_nodes: Dict[uuid.UUID, Node] = {}
+        self.namespace = namespace or client.default_charged_namespace()
+        self.name = name
+        self.server_graph_uuid: Optional[uuid.UUID] = None
+        """The server-generated UUID of this graph, used for logging.
+
+        Will be ``None`` until :meth:`initial_setup` is called. If submitting
+        the log works, will be the UUID; otherwise, will be None.
+        """
 
         self.visualization = None
 
@@ -329,6 +348,9 @@ class DAG:
         if update_callback is not None and callable(update_callback):
             self.update_callbacks.append(update_callback)
 
+        self._lifecycle_lock = threading.Lock()
+        self._tried_setup: bool = False
+
     def __hash__(self):
         return hash(self.id)
 
@@ -337,6 +359,35 @@ class DAG:
 
     def __ne__(self, other):
         return not (self == other)
+
+    def initial_setup(self):
+        """Performs one-time server-side setup tasks.
+
+        Can safely be called multiple times.
+        """
+        with self._lifecycle_lock:
+            if not self._tried_setup:
+                log_structure = self._build_log_structure()
+                try:
+                    result = client.client.task_graph_logs_api.create_task_graph_log(
+                        namespace=self.namespace,
+                        log=log_structure,
+                    )
+                except rest_api.ApiException as apix:
+                    # There was a problem submitting the task graph for logging.
+                    # This should not abort the task graph.
+                    warnings.warn(
+                        UserWarning(f"Error submitting task graph logging info: {apix}")
+                    )
+                else:
+                    try:
+                        self.server_graph_uuid = uuid.UUID(hex=result.uuid)
+                    except ValueError as ve:
+                        warnings.warn(
+                            UserWarning(f"Server-provided graph ID was invalid: {ve}")
+                        )
+
+        return self.server_graph_uuid
 
     def add_update_callback(self, func):
         """
@@ -368,16 +419,32 @@ class DAG:
         for func in self.update_callbacks:
             func(self)
 
-    def execute_done_callbacks(self):
-        """
-        Run user specified callbacks for DAG completion
-        :return:
-        """
+    def _report_completion(self) -> None:
+        """Reports the completion of the task graph to the server and callbacks."""
         if not self.called_done_callbacks:
+            self._report_server_completion()
             for func in self.done_callbacks:
                 func(self)
 
         self.called_done_callbacks = True
+
+    def _report_server_completion(self) -> None:
+        if not self.server_graph_uuid:
+            return
+        try:
+            api_st = _API_STATUSES[self.status]
+        except KeyError as ke:
+            raise ValueError(
+                f"Task graph ended in invalid state {self.status!r}"
+            ) from ke
+        try:
+            client.client.task_graph_logs_api.update_task_graph_log(
+                id=self.server_graph_uuid,
+                namespace=self.namespace,
+                log=rest_api.TaskGraphLog(status=api_st),
+            )
+        except rest_api.ApiException as apix:
+            warnings.warn(UserWarning(f"Error reporting graph completion: {apix}"))
 
     def done(self):
         """
@@ -511,7 +578,7 @@ class DAG:
 
         # Check if DAG is done to change status
         if self.done():
-            self.execute_done_callbacks()
+            self._report_completion()
 
     def _find_root_nodes(self):
         """
@@ -638,18 +705,19 @@ class DAG:
 
         return node_details
 
-    def _build_log_structure(self) -> models.TaskGraphLog:
+    def _build_log_structure(self) -> rest_api.TaskGraphLog:
         """Builds the structure of this graph for logging."""
         nodes = [
-            models.TaskGraphNodeMetadata(
+            rest_api.TaskGraphNodeMetadata(
                 client_node_uuid=str(node.id),
                 name=node.name,
                 depends_on=[str(dep) for dep in node.parents],
             )
             for node in self.nodes.values()
         ]
-        return models.TaskGraphLog(
-            # TODO: Add support for naming task graphs.
+        return rest_api.TaskGraphLog(
+            name=self.name,
+            namespace=self.namespace,
             nodes=_topo_sort(nodes),
         )
 
@@ -850,6 +918,13 @@ class DAG:
             results[node.name] = node.result()
 
         return results
+
+
+_API_STATUSES: Dict[st.Status, str] = {
+    st.Status.COMPLETED: rest_api.TaskGraphLogStatus.SUCCEEDED,
+    st.Status.FAILED: rest_api.TaskGraphLogStatus.FAILED,
+    st.Status.CANCELLED: rest_api.TaskGraphLogStatus.CANCELLED,
+}
 
 
 def replace_stored_params(tree, loader: stored_params.ParamLoader) -> Any:
