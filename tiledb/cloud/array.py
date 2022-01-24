@@ -220,7 +220,7 @@ def register_array(
     """
     api_instance = client.client.array_api
 
-    namespace = namespace or client.default_user().namespace
+    namespace = namespace or client.default_user().username
 
     try:
         return api_instance.register_array(

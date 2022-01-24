@@ -15,7 +15,7 @@ from tiledb.cloud import udf
 @contextlib.contextmanager
 def register_udf(func: Callable) -> Iterator[str]:
     """Context manager to register a UDF for the duration of its block."""
-    ns = client.default_user().namespace
+    ns = client.default_user().username
     suffix = "".join(random.choices(string.ascii_letters, k=10))
     func_name = f"zzz_unittest_{func.__name__}_{suffix}"
     udf.register_udf(func, func_name, namespace=ns)

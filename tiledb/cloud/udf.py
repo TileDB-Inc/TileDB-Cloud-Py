@@ -177,7 +177,7 @@ def register_udf(
     try:
         api_instance = client.client.udf_api
 
-        namespace = namespace or client.default_user().namespace
+        namespace = namespace or client.default_user().username
 
         if not callable(func):
             raise TypeError("First argument to `exec` must be callable!")
@@ -302,7 +302,7 @@ def update_udf(
     try:
         api_instance = client.client.udf_api
 
-        namespace = namespace or client.default_user().namespace
+        namespace = namespace or client.default_user().username
 
         if not callable(func):
             raise TypeError("First argument to `exec` must be callable!")
@@ -419,7 +419,7 @@ def info(namespace=None, name=None, async_req=False):
             and namespace != ""
             and name != ""
         ):
-            namespace = client.default_user().namespace
+            namespace = client.default_user().username
 
         return api_instance.get_udf_info(
             namespace=namespace, name=name, async_req=async_req
@@ -449,7 +449,7 @@ def share(name=None, namespace=None, async_req=False):
         and udf_namespace != ""
         and udf_name != ""
     ):
-        udf_namespace = client.default_user().namespace
+        udf_namespace = client.default_user().username
 
     try:
         api_instance = client.client.udf_api
@@ -482,7 +482,7 @@ def unshare(name=None, namespace=None, async_req=False):
         and udf_namespace != ""
         and udf_name != ""
     ):
-        udf_namespace = client.default_user().namespace
+        udf_namespace = client.default_user().username
 
     try:
         api_instance = client.client.udf_api
