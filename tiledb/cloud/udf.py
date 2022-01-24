@@ -35,6 +35,8 @@ def exec_base(
     stored_param_uuids: Iterable[uuid.UUID] = (),
     timeout: int = None,
     _download_results: bool = True,
+    _server_graph_uuid: Optional[uuid.UUID] = None,
+    _client_node_uuid: Optional[uuid.UUID] = None,
     **kwargs,
 ) -> "results.RemoteResult":
     """Run a user defined function, returning the result and metadata.
@@ -62,6 +64,10 @@ def exec_base(
     :param _download_results: True to download and parse results eagerly.
         False to not download results by default and only do so lazily
         (e.g. for an intermediate node in a graph).
+    :param _server_graph_uuid: If this function is being executed within a DAG,
+        the server-generated ID of the graph's log. Otherwise, None.
+    :param _client_node_uuid: If this function is being executed within a DAG,
+        the ID of this function's node within the graph. Otherwise, None.
     :param kwargs: named arguments to pass to function
     """
 
@@ -105,6 +111,8 @@ def exec_base(
         task_name=task_name,
         stored_param_uuids=list(str(uuid) for uuid in stored_param_uuids),
         dont_download_results=not _download_results,
+        task_graph_uuid=_server_graph_uuid and str(_server_graph_uuid),
+        client_node_uuid=_client_node_uuid and str(_client_node_uuid),
     )
 
     if timeout is not None:

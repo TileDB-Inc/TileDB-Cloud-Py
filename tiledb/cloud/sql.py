@@ -33,6 +33,8 @@ def exec_base(
     result_format_version=None,
     store_results: bool = False,
     _download_results: bool = True,
+    _server_graph_uuid: Optional[uuid.UUID] = None,
+    _client_node_uuid: Optional[uuid.UUID] = None,
 ) -> "results.RemoteResult":
     """Run a Serverless SQL query, returning both the result and metadata.
 
@@ -50,6 +52,10 @@ def exec_base(
     :param str result_format_version: Deprecated and ignored.
     :param store_results: True to temporarily store results on the server side
         for later retrieval (in addition to downloading them).
+    :param _server_graph_uuid: If this function is being executed within a DAG,
+        the server-generated ID of the graph's log. Otherwise, None.
+    :param _client_node_uuid: If this function is being executed within a DAG,
+        the ID of this function's node within the graph. Otherwise, None.
     :param _download_results: True to download and parse results eagerly.
         False to not download results by default and only do so lazily
         (e.g. for an intermediate node in a graph).
@@ -110,6 +116,7 @@ def exec_base(
             result_format=result_format,
             store_results=store_results,
             dont_download_results=not _download_results,
+            # TODO: Add graph ID parameters here.
         ),
     )
     if http_compressor is not None:
