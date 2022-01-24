@@ -477,6 +477,10 @@ class Client:
         """
         Initialize api clients
         """
+        # If users increase the size of the thread pool, increase the size
+        # of the connection pool to match. (The internal members of
+        # ThreadPoolExecutor are not exposed in the .pyi files, so we silence
+        # mypy's warning here.)
         pool_size = self._thread_pool._max_workers  # type: ignore[attr-defined]
         config.config.connection_pool_maxsize = pool_size
         client = rest_api.ApiClient(config.config)
@@ -489,6 +493,7 @@ class Client:
         self.notebook_api = rest_api.NotebookApi(client)
         self.organization_api = rest_api.OrganizationApi(client)
         self.sql_api = rest_api.SqlApi(client)
+        self.task_graph_logs_api = rest_api.TaskGraphLogsApi(client)
         self.tasks_api = rest_api.TasksApi(client)
         self.udf_api = rest_api.UdfApi(client)
         self.user_api = rest_api.UserApi(client)
@@ -506,10 +511,6 @@ class Client:
         """Sets how we should retry requests and updates API instances."""
         mode = RetryMode.maybe_from(mode)
         config.config.retries = _RETRY_CONFIGS[mode]
-        # If users increase the size of the thread pool, increase the size
-        # of the connection pool to match. (The internal members of
-        # ThreadPoolExecutor are not exposed in the .pyi files, so we silence
-        # mypy's warning here.)
         self.__init_clients()
 
     def set_threads(self, threads: Optional[int] = None):

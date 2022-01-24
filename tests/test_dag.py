@@ -16,6 +16,7 @@ import numpy as np
 import pandas as pd
 
 import tiledb.cloud
+from tiledb.cloud import client
 from tiledb.cloud import dag
 from tiledb.cloud import tasks
 from tiledb.cloud._results import decoders
@@ -35,7 +36,7 @@ class DAGClassTest(unittest.TestCase):
     maxDiff = None
 
     def test_simple_dag(self):
-        d = dag.DAG()
+        d = dag.DAG(name="a cool dag")
 
         node_1 = d.add_node(np.median, [1, 2, 3])
         node_1.name = "node_1"
@@ -73,6 +74,8 @@ class DAGClassTest(unittest.TestCase):
         self.assertEqual(
             d._build_log_structure(),
             models.TaskGraphLog(
+                name="a cool dag",
+                namespace=client.default_charged_namespace(),
                 nodes=[
                     models.TaskGraphNodeMetadata(
                         client_node_uuid=str(node_1.id),
@@ -200,6 +203,7 @@ class DAGClassTest(unittest.TestCase):
         self.assertEqual(
             d._build_log_structure(),
             models.TaskGraphLog(
+                namespace=client.default_charged_namespace(),
                 nodes=[
                     models.TaskGraphNodeMetadata(
                         client_node_uuid=str(node_1.id),
