@@ -6,7 +6,6 @@ from typing import Any, Callable, Iterable, Optional, Sequence, Union
 import numpy
 
 from tiledb.cloud import client
-from tiledb.cloud import config
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
 from tiledb.cloud._results import decoders
@@ -375,13 +374,14 @@ def apply_base(
     http_compressor: str = "deflate",
     include_source_lines: bool = True,
     task_name: Optional[str] = None,
-    v2: bool = True,
+    v2=None,
     result_format: str = models.ResultFormat.NATIVE,
     result_format_version=None,
     store_results: bool = False,
     stored_param_uuids: Iterable[uuid.UUID] = (),
     timeout: int = None,
     _download_results: bool = True,
+    namespace: Optional[str] = None,
     **kwargs: Any,
 ) -> results.RemoteResult:
     """Apply a user-defined function to an array, and return data and metadata.
@@ -402,7 +402,7 @@ def apply_base(
         bytecode.
     :param str task_name: optional name to assign the task
         for logging and audit purposes
-    :param bool v2: use v2 array udfs
+    :param v2: Ignored.
     :param ResultFormat result_format: result serialization format
     :param result_format_version: Deprecated and ignored.
     :param store_results: True to temporarily store results on the server side
@@ -411,6 +411,7 @@ def apply_base(
     :param _download_results: True to download and parse results eagerly.
         False to not download results by default and only do so lazily
         (e.g. for an intermediate node in a graph).
+    :param namespace: The namespace to execute the UDF under.
     :param kwargs: named arguments to pass to function
 
     **Example**
@@ -421,11 +422,11 @@ def apply_base(
     >>> tiledb.cloud.array.apply_base("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"]).result
     2.0
     """
+    del v2  # unused
 
     if result_format_version:
         warnings.warn(DeprecationWarning("result_format_version is unused."))
 
-    (namespace, array_name) = split_uri(uri)
     api_instance = client.client.udf_api
 
     if name:
@@ -456,8 +457,13 @@ def apply_base(
 
     udf_model = models.MultiArrayUDF(
         language=models.UDFLanguage.PYTHON,
-        ranges=model_ranges,
-        buffers=attrs,
+        arrays=[
+            models.UDFArrayDetails(
+                uri=uri,
+                ranges=model_ranges,
+                buffers=attrs,
+            )
+        ],
         version="{}.{}.{}".format(
             sys.version_info.major,
             sys.version_info.minor,
@@ -485,17 +491,15 @@ def apply_base(
         udf_model.argument = utils.b64_pickle((kwargs,))
 
     submit_kwargs = dict(
-        namespace=namespace,
-        array=array_name,
+        namespace=namespace or client.default_charged_namespace(),
         udf=udf_model,
-        v2=v2,
     )
 
     if http_compressor:
         submit_kwargs["accept_encoding"] = http_compressor
 
     return sender.send_udf_call(
-        api_instance.submit_udf,
+        api_instance.submit_multi_array_udf,
         submit_kwargs,
         decoders.Decoder(result_format),
         id_callback=_maybe_set_last_udf_id,
