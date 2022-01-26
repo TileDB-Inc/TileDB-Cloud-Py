@@ -1029,7 +1029,7 @@ class _StoredParamReplacer(visitor.ReplacingVisitor):
 def _topo_sort(
     lst: Sequence[rest_api.TaskGraphNodeMetadata],
 ) -> Sequence[rest_api.TaskGraphNodeMetadata]:
-    """Topographically sorts the list of node metadatas."""
+    """Topologically sorts the list of node metadatas."""
     by_uuid: Dict[str, rest_api.TaskGraphNodeMetadata] = {
         node.client_node_uuid: node for node in lst
     }
