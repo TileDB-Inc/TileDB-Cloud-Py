@@ -619,10 +619,10 @@ class DAG:
         graph = nx.DiGraph()
 
         for n in self.nodes.values():
-            graph.add_node(n.name)
+            graph.add_node(str(n.id), label=n.name)
+        for n in self.nodes.values():
             for child in n.children.values():
-                graph.add_node(child.name)
-                graph.add_edge(n.name, child.name)
+                graph.add_edge(str(n.id), str(child.id))
 
         return graph
 
@@ -633,8 +633,8 @@ class DAG:
         """
         node_details = {}
 
-        for node_name, node in self.nodes_by_name.items():
-            node_details[node_name] = dict(name=node_name, status=str(node.status))
+        for node in self.nodes.values():
+            node_details[str(node.id)] = dict(name=node.name, status=str(node.status))
 
         return node_details
 
@@ -753,11 +753,11 @@ class DAG:
         node_x = []
         node_y = []
         nodes = []
-        for node in graph.nodes():
-            x, y = pos[node]
+        for node_id in graph.nodes():
+            x, y = pos[node_id]
             node_x.append(x)
             node_y.append(y)
-            nodes.append(self.nodes_by_name[node])
+            nodes.append(self.nodes[uuid.UUID(node_id)])
 
         # Build node scatter plot
         node_trace = go.Scatter(
