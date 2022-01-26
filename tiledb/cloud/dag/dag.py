@@ -334,6 +334,7 @@ class DAG:
 
         self.visualization = None
 
+        self.executor: futures.Executor
         if use_processes:
             self.executor = futures.ProcessPoolExecutor(max_workers=max_workers)
         else:
@@ -392,6 +393,7 @@ class DAG:
                         warnings.warn(
                             UserWarning(f"Server-provided graph ID was invalid: {ve}")
                         )
+                self._tried_setup = True
 
         return self.server_graph_uuid
 
