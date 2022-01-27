@@ -274,6 +274,7 @@ def delete_array(uri, *, async_req=False):
         return api_instance.delete_array(
             namespace=namespace,
             array=array_name,
+            content_type="application/json",
             async_req=async_req,
         )
     except GenApiException as exc:
