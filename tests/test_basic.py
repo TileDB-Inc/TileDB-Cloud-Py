@@ -4,6 +4,7 @@ import uuid
 
 import numpy
 import numpy as np
+import pytest
 
 import tiledb
 import tiledb.cloud
@@ -253,6 +254,7 @@ class BasicTests(unittest.TestCase):
         with self.assertRaises(tiledb_cloud_error.TileDBCloudError):
             tasks.fetch_results(uuid.uuid4())
 
+    @pytest.mark.xfail  # TODO: unmark this once server bug is fixed.
     def test_timeout(self):
         def test(_):
             import time
