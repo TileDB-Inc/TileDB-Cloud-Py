@@ -194,6 +194,7 @@ class Node(Generic[_T]):
 
         if self._was_prewrapped:
             assert self.dag
+            self.dag.initial_setup()
             # We know this is a remote-executing function.
             # Set up its extra parameters.
             if self._download_results is None:
@@ -210,8 +211,6 @@ class Node(Generic[_T]):
             )
             if namespace:
                 kwargs["namespace"] = namespace
-
-            self.dag.initial_setup()
 
         try:
             return self._wrapped_func(*args, **kwargs)
