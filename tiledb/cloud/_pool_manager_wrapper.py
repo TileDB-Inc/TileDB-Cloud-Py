@@ -1,7 +1,7 @@
 import socket
 import sys
 import urllib.parse
-from typing import Dict, Sequence, Tuple
+from typing import Callable, Dict, Sequence, Tuple
 
 import urllib3
 from urllib3 import connection
@@ -16,17 +16,22 @@ def wrap(pm: urllib3.PoolManager) -> urllib3.PoolManager:
 # Based on information from Stack Overflow:
 # https://stackoverflow.com/q/12248132/39808
 
+_SockOpt = Tuple[int, int, int]
+
 _KEEPALIVE_SECONDS = 60
 """The delay and interval before sending keepalive packets."""
 _DARWIN_KEEPALIVE = 0x10
 """The socket option for keepalive on Mac OS systems."""
-_KEEPALIVE_SOCKOPTS: Dict[str, Sequence[Tuple[int, int, int]]] = {
-    "linux": (
+_KEEPALIVE_SOCKOPTS: Dict[str, Callable[[], Sequence[_SockOpt]]] = {
+    # Some of these socket.WHATEVER options are not available on all platforms.
+    # We have to wrap them in a lambda so that the internals are not evaluated
+    # until we know what platform we're on.
+    "linux": lambda: (
         (socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1),
         (socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, _KEEPALIVE_SECONDS),
         (socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, _KEEPALIVE_SECONDS),
     ),
-    "darwin": (
+    "darwin": lambda: (
         (socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1),
         (socket.IPPROTO_TCP, _DARWIN_KEEPALIVE, _KEEPALIVE_SECONDS),
     ),
@@ -44,7 +49,7 @@ def _set_keepalive(pm: urllib3.PoolManager) -> None:
     except KeyError:
         # We don't what options to set on this platform. ¯\_(ツ)_/¯
         return
-    sockopts.extend(addl_sockopts)
+    sockopts.extend(addl_sockopts())
     pm.connection_pool_kw["socket_options"] = sockopts
 
 
