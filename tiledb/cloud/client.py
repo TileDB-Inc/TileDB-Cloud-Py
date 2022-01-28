@@ -469,11 +469,11 @@ class Client:
         :param retry_mode: Retry mode ["default", "forceful", "disabled"]
         """
         self._pool_lock = threading.Lock()
-        self.set_threads(pool_threads)
-        self.retry_mode(retry_mode)
-        self.__init_clients()
+        self._set_threads(pool_threads)
+        self._retry_mode(retry_mode)
+        self._init_clients()
 
-    def __init_clients(self):
+    def _init_clients(self):
         """
         Initialize api clients
         """
@@ -507,14 +507,21 @@ class Client:
     def set_forceful_retries(self):
         self.retry_mode(RetryMode.FORCEFUL)
 
-    def retry_mode(self, mode: RetryOrStr = RetryMode.DEFAULT):
+    def retry_mode(self, mode: RetryOrStr = RetryMode.DEFAULT) -> None:
         """Sets how we should retry requests and updates API instances."""
+        self._retry_mode(mode)
+        self._init_clients()
+
+    def _retry_mode(self, mode: RetryOrStr) -> None:
         mode = RetryMode.maybe_from(mode)
         config.config.retries = _RETRY_CONFIGS[mode]
-        self.__init_clients()
 
-    def set_threads(self, threads: Optional[int] = None):
+    def set_threads(self, threads: Optional[int] = None) -> None:
         """Updates the number of threads in the async thread pool."""
+        self._set_threads(threads)
+        self._init_clients()
+
+    def _set_threads(self, threads) -> None:
         with self._pool_lock:
             old_pool = getattr(self, "_thread_pool", None)
             self._thread_pool = futures.ThreadPoolExecutor(
