@@ -7,7 +7,7 @@ import urllib3
 from urllib3 import connection
 
 
-def wrap(pm: urllib3.PoolManager) -> urllib3.PoolManager:
+def wrap(pm: urllib3.PoolManager) -> "_PoolManagerWrapper":
     """Wraps a PoolManager to get TileDB Cloud–specific behavior."""
     _set_keepalive(pm)
     return _PoolManagerWrapper(pm)
@@ -16,25 +16,37 @@ def wrap(pm: urllib3.PoolManager) -> urllib3.PoolManager:
 # Based on information from Stack Overflow:
 # https://stackoverflow.com/q/12248132/39808
 
-_SockOpt = Tuple[int, int, int]
-
 _KEEPALIVE_SECONDS = 60
 """The delay and interval before sending keepalive packets."""
 _DARWIN_KEEPALIVE = 0x10
 """The socket option for keepalive on Mac OS systems."""
-_KEEPALIVE_SOCKOPTS: Dict[str, Callable[[], Sequence[_SockOpt]]] = {
-    # Some of these socket.WHATEVER options are not available on all platforms.
-    # We have to wrap them in a lambda so that the internals are not evaluated
-    # until we know what platform we're on.
-    "linux": lambda: (
+
+_SockOpt = Tuple[int, int, int]
+
+
+def _unixish_sockopts() -> Sequence[_SockOpt]:
+    """The socket options to set for keepalive on most Unixish systems."""
+    return (
         (socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1),
         (socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, _KEEPALIVE_SECONDS),
         (socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, _KEEPALIVE_SECONDS),
-    ),
+    )
+
+
+# Some of these socket.WHATEVER options are not available on all platforms.
+# We have to wrap them in a function so that the internals are not evaluated
+# until we know what platform we're on.
+_KEEPALIVE_SOCKOPTS: Dict[str, Callable[[], Sequence[_SockOpt]]] = {
     "darwin": lambda: (
         (socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1),
         (socket.IPPROTO_TCP, _DARWIN_KEEPALIVE, _KEEPALIVE_SECONDS),
     ),
+    # Most Unixish systems use the same socket options for this. Based on:
+    # https://cs.opensource.google/go/go/+/refs/tags/go1.17.6:src/net/tcpsockopt_unix.go
+    "aix": _unixish_sockopts,
+    "freebsd": _unixish_sockopts,
+    "linux": _unixish_sockopts,
+    "netbsd": _unixish_sockopts,
     # TODO: Windows requires an ioctl:
     #     sock.ioctl(socket.SIO_KEEPALIVE_VALS, (1, idle_msec, intvl_msec))
     # Is there a way to accomplish this in urllib3?
@@ -44,8 +56,11 @@ _KEEPALIVE_SOCKOPTS: Dict[str, Callable[[], Sequence[_SockOpt]]] = {
 def _set_keepalive(pm: urllib3.PoolManager) -> None:
     """Sets per-platform keepalive sockopts."""
     sockopts = list(connection.HTTPConnection.default_socket_options)
+    # Python includes a version number on some platforms, e.g. "freebsd4".
+    # Strip it off.
+    platform_no_version = sys.platform.rstrip("0123456789")
     try:
-        addl_sockopts = _KEEPALIVE_SOCKOPTS[sys.platform]
+        addl_sockopts = _KEEPALIVE_SOCKOPTS[platform_no_version]
     except KeyError:
         # We don't what options to set on this platform. ¯\_(ツ)_/¯
         return
