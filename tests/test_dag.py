@@ -566,13 +566,13 @@ class DAGCloudApplyTest(unittest.TestCase):
             numpy.sum(orig["a"]),
             tasks.fetch_results(node_array_apply.task_id()),
         )
-        # TODO: The server does not currently actually store SQL queries,
-        # even when we ask it to. Re-enable when that fix is deployed.
-        if False:
-            self.assertEqual(
-                numpy.sum(orig_dense["a"]),
-                tasks.fetch_results_pandas(node_sql.task_id()),
-            )
+        self.assertEqual(
+            numpy.sum(orig_dense["a"]),
+            tasks.fetch_results_pandas(
+                node_sql.task_id(),
+                result_format=tiledb.cloud.ResultFormat.ARROW,
+            ).iat[0, 0],
+        )
         self.assertEqual(
             numpy.mean([numpy.sum(orig["a"]), numpy.sum(orig_dense["a"])]),
             tasks.fetch_results(node_exec.task_id()),
