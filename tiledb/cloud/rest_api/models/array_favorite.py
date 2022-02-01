@@ -32,75 +32,33 @@ class ArrayFavorite(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"id": "str", "created_at": "datetime", "array_uuid": "str"}
+    openapi_types = {"array_uuid": "str", "namespace": "str", "name": "str"}
 
-    attribute_map = {"id": "id", "created_at": "created_at", "array_uuid": "array_uuid"}
+    attribute_map = {
+        "array_uuid": "array_uuid",
+        "namespace": "namespace",
+        "name": "name",
+    }
 
     def __init__(
-        self, id=None, created_at=None, array_uuid=None, local_vars_configuration=None
+        self, array_uuid=None, namespace=None, name=None, local_vars_configuration=None
     ):  # noqa: E501
         """ArrayFavorite - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._id = None
-        self._created_at = None
         self._array_uuid = None
+        self._namespace = None
+        self._name = None
         self.discriminator = None
 
-        if id is not None:
-            self.id = id
-        if created_at is not None:
-            self.created_at = created_at
         if array_uuid is not None:
             self.array_uuid = array_uuid
-
-    @property
-    def id(self):
-        """Gets the id of this ArrayFavorite.  # noqa: E501
-
-        unique UUID of the favorite  # noqa: E501
-
-        :return: The id of this ArrayFavorite.  # noqa: E501
-        :rtype: str
-        """
-        return self._id
-
-    @id.setter
-    def id(self, id):
-        """Sets the id of this ArrayFavorite.
-
-        unique UUID of the favorite  # noqa: E501
-
-        :param id: The id of this ArrayFavorite.  # noqa: E501
-        :type: str
-        """
-
-        self._id = id
-
-    @property
-    def created_at(self):
-        """Gets the created_at of this ArrayFavorite.  # noqa: E501
-
-        Datetime the favorite was created in UTC  # noqa: E501
-
-        :return: The created_at of this ArrayFavorite.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._created_at
-
-    @created_at.setter
-    def created_at(self, created_at):
-        """Sets the created_at of this ArrayFavorite.
-
-        Datetime the favorite was created in UTC  # noqa: E501
-
-        :param created_at: The created_at of this ArrayFavorite.  # noqa: E501
-        :type: datetime
-        """
-
-        self._created_at = created_at
+        if namespace is not None:
+            self.namespace = namespace
+        if name is not None:
+            self.name = name
 
     @property
     def array_uuid(self):
@@ -124,6 +82,52 @@ class ArrayFavorite(object):
         """
 
         self._array_uuid = array_uuid
+
+    @property
+    def namespace(self):
+        """Gets the namespace of this ArrayFavorite.  # noqa: E501
+
+        the namespace of the array  # noqa: E501
+
+        :return: The namespace of this ArrayFavorite.  # noqa: E501
+        :rtype: str
+        """
+        return self._namespace
+
+    @namespace.setter
+    def namespace(self, namespace):
+        """Sets the namespace of this ArrayFavorite.
+
+        the namespace of the array  # noqa: E501
+
+        :param namespace: The namespace of this ArrayFavorite.  # noqa: E501
+        :type: str
+        """
+
+        self._namespace = namespace
+
+    @property
+    def name(self):
+        """Gets the name of this ArrayFavorite.  # noqa: E501
+
+        the name of the array  # noqa: E501
+
+        :return: The name of this ArrayFavorite.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this ArrayFavorite.
+
+        the name of the array  # noqa: E501
+
+        :param name: The name of this ArrayFavorite.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
 
     def to_dict(self):
         """Returns the model properties as a dict"""

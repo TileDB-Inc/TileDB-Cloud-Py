@@ -64,32 +64,16 @@ class TestFavoritesApi(unittest.TestCase):
         """Test case for get_array_favorite"""
         pass
 
-    def test_get_array_favorite_for_array(self):
-        """Test case for get_array_favorite_for_array"""
-        pass
-
     def test_get_ml_model_favorite(self):
         """Test case for get_ml_model_favorite"""
-        pass
-
-    def test_get_ml_model_favorite_for_ml_model(self):
-        """Test case for get_ml_model_favorite_for_ml_model"""
         pass
 
     def test_get_notebook_favorite(self):
         """Test case for get_notebook_favorite"""
         pass
 
-    def test_get_notebook_favorite_for_notebook(self):
-        """Test case for get_notebook_favorite_for_notebook"""
-        pass
-
     def test_get_udf_favorite(self):
         """Test case for get_udf_favorite"""
-        pass
-
-    def test_get_udf_favorite_for_udf(self):
-        """Test case for get_udf_favorite_for_udf"""
         pass
 
     def test_list_array_favorites(self):

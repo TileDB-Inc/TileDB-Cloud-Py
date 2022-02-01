@@ -36,13 +36,7 @@ class TestUDFFavorite(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.udf_favorite.UDFFavorite()  # noqa: E501
         if include_optional:
-            return UDFFavorite(
-                id="0",
-                created_at=datetime.datetime.strptime(
-                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
-                ),
-                udf_uuid="0",
-            )
+            return UDFFavorite(udf_uuid="0", namespace="0", name="0")
         else:
             return UDFFavorite()
 

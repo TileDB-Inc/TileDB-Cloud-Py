@@ -57,7 +57,6 @@ class ArrayInfo(object):
         "license_text": "str",
         "read_only": "bool",
         "is_favorite": "bool",
-        "favorite_uuid": "str",
     }
 
     attribute_map = {
@@ -85,7 +84,6 @@ class ArrayInfo(object):
         "license_text": "license_text",
         "read_only": "read_only",
         "is_favorite": "is_favorite",
-        "favorite_uuid": "favorite_uuid",
     }
 
     def __init__(
@@ -114,7 +112,6 @@ class ArrayInfo(object):
         license_text=None,
         read_only=None,
         is_favorite=None,
-        favorite_uuid=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """ArrayInfo - a model defined in OpenAPI"""  # noqa: E501
@@ -146,7 +143,6 @@ class ArrayInfo(object):
         self._license_text = None
         self._read_only = None
         self._is_favorite = None
-        self._favorite_uuid = None
         self.discriminator = None
 
         if id is not None:
@@ -195,8 +191,6 @@ class ArrayInfo(object):
         self.read_only = read_only
         if is_favorite is not None:
             self.is_favorite = is_favorite
-        if favorite_uuid is not None:
-            self.favorite_uuid = favorite_uuid
 
     @property
     def id(self):
@@ -747,29 +741,6 @@ class ArrayInfo(object):
         """
 
         self._is_favorite = is_favorite
-
-    @property
-    def favorite_uuid(self):
-        """Gets the favorite_uuid of this ArrayInfo.  # noqa: E501
-
-        The favorite UUID if the array if is_favorite is true  # noqa: E501
-
-        :return: The favorite_uuid of this ArrayInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._favorite_uuid
-
-    @favorite_uuid.setter
-    def favorite_uuid(self, favorite_uuid):
-        """Sets the favorite_uuid of this ArrayInfo.
-
-        The favorite UUID if the array if is_favorite is true  # noqa: E501
-
-        :param favorite_uuid: The favorite_uuid of this ArrayInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._favorite_uuid = favorite_uuid
 
     def to_dict(self):
         """Returns the model properties as a dict"""

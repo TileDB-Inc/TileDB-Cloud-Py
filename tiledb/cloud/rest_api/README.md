@@ -121,22 +121,18 @@ Class | Method | HTTP request | Description
 *ArrayApi* | [**update_array_metadata_capnp**](docs/ArrayApi.md#update_array_metadata_capnp) | **POST** /arrays/{namespace}/{array}/array_metadata | 
 *ArrayApi* | [**vacuum_array**](docs/ArrayApi.md#vacuum_array) | **POST** /arrays/{namespace}/{array}/vacuum | 
 *ArrayTasksApi* | [**get_array_tasks_sidebar**](docs/ArrayTasksApi.md#get_array_tasks_sidebar) | **GET** /tasks/sidebar | 
-*FavoritesApi* | [**add_array_favorite**](docs/FavoritesApi.md#add_array_favorite) | **POST** /arrays/favorites | 
-*FavoritesApi* | [**add_ml_model_favorite**](docs/FavoritesApi.md#add_ml_model_favorite) | **POST** /ml_models/favorites | 
-*FavoritesApi* | [**add_notebook_favorite**](docs/FavoritesApi.md#add_notebook_favorite) | **POST** /notebooks/favorites | 
-*FavoritesApi* | [**add_udf_favorite**](docs/FavoritesApi.md#add_udf_favorite) | **POST** /udfs/favorites | 
-*FavoritesApi* | [**delete_array_favorite**](docs/FavoritesApi.md#delete_array_favorite) | **DELETE** /arrays/favorites/{id} | 
-*FavoritesApi* | [**delete_ml_model_favorite**](docs/FavoritesApi.md#delete_ml_model_favorite) | **DELETE** /ml_models/favorites/{id} | 
-*FavoritesApi* | [**delete_notebook_favorite**](docs/FavoritesApi.md#delete_notebook_favorite) | **DELETE** /notebooks/favorites/{id} | 
-*FavoritesApi* | [**delete_udf_favorite**](docs/FavoritesApi.md#delete_udf_favorite) | **DELETE** /udfs/favorites/{id} | 
-*FavoritesApi* | [**get_array_favorite**](docs/FavoritesApi.md#get_array_favorite) | **GET** /arrays/favorites/{id} | 
-*FavoritesApi* | [**get_array_favorite_for_array**](docs/FavoritesApi.md#get_array_favorite_for_array) | **GET** /arrays/favorites/{namespace}/{name} | 
-*FavoritesApi* | [**get_ml_model_favorite**](docs/FavoritesApi.md#get_ml_model_favorite) | **GET** /ml_models/favorites/{id} | 
-*FavoritesApi* | [**get_ml_model_favorite_for_ml_model**](docs/FavoritesApi.md#get_ml_model_favorite_for_ml_model) | **GET** /ml_models/favorites/{namespace}/{name} | 
-*FavoritesApi* | [**get_notebook_favorite**](docs/FavoritesApi.md#get_notebook_favorite) | **GET** /notebooks/favorites/{id} | 
-*FavoritesApi* | [**get_notebook_favorite_for_notebook**](docs/FavoritesApi.md#get_notebook_favorite_for_notebook) | **GET** /notebooks/favorites/{namespace}/{name} | 
-*FavoritesApi* | [**get_udf_favorite**](docs/FavoritesApi.md#get_udf_favorite) | **GET** /udfs/favorites/{id} | 
-*FavoritesApi* | [**get_udf_favorite_for_udf**](docs/FavoritesApi.md#get_udf_favorite_for_udf) | **GET** /udfs/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**add_array_favorite**](docs/FavoritesApi.md#add_array_favorite) | **POST** /arrays/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**add_ml_model_favorite**](docs/FavoritesApi.md#add_ml_model_favorite) | **POST** /ml_models/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**add_notebook_favorite**](docs/FavoritesApi.md#add_notebook_favorite) | **POST** /notebooks/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**add_udf_favorite**](docs/FavoritesApi.md#add_udf_favorite) | **POST** /udfs/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**delete_array_favorite**](docs/FavoritesApi.md#delete_array_favorite) | **DELETE** /arrays/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**delete_ml_model_favorite**](docs/FavoritesApi.md#delete_ml_model_favorite) | **DELETE** /ml_models/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**delete_notebook_favorite**](docs/FavoritesApi.md#delete_notebook_favorite) | **DELETE** /notebooks/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**delete_udf_favorite**](docs/FavoritesApi.md#delete_udf_favorite) | **DELETE** /udfs/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**get_array_favorite**](docs/FavoritesApi.md#get_array_favorite) | **GET** /arrays/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**get_ml_model_favorite**](docs/FavoritesApi.md#get_ml_model_favorite) | **GET** /ml_models/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**get_notebook_favorite**](docs/FavoritesApi.md#get_notebook_favorite) | **GET** /notebooks/favorites/{namespace}/{name} | 
+*FavoritesApi* | [**get_udf_favorite**](docs/FavoritesApi.md#get_udf_favorite) | **GET** /udfs/favorites/{namespace}/{name} | 
 *FavoritesApi* | [**list_array_favorites**](docs/FavoritesApi.md#list_array_favorites) | **GET** /arrays/favorites | 
 *FavoritesApi* | [**list_array_favorites_uui_ds**](docs/FavoritesApi.md#list_array_favorites_uui_ds) | **GET** /arrays/favorites/uuids | 
 *FavoritesApi* | [**list_ml_model_favorites**](docs/FavoritesApi.md#list_ml_model_favorites) | **GET** /ml_models/favorites | 
@@ -263,7 +259,6 @@ Class | Method | HTTP request | Description
  - [Domain](docs/Domain.md)
  - [DomainArray](docs/DomainArray.md)
  - [Error](docs/Error.md)
- - [FavoriteCreate](docs/FavoriteCreate.md)
  - [FileCreate](docs/FileCreate.md)
  - [FileCreated](docs/FileCreated.md)
  - [FileExport](docs/FileExport.md)

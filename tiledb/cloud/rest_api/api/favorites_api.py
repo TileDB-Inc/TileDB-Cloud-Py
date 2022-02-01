@@ -34,17 +34,18 @@ class FavoritesApi(object):
             api_client = ApiClient()
         self.api_client = api_client
 
-    def add_array_favorite(self, **kwargs):  # noqa: E501
+    def add_array_favorite(self, namespace, name, **kwargs):  # noqa: E501
         """add_array_favorite  # noqa: E501
 
         Add a new array favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.add_array_favorite(async_req=True)
+        >>> thread = api.add_array_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param FavoriteCreate body:
+        :param str namespace: The namespace of the array (required)
+        :param str name: The name of the array (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -57,19 +58,24 @@ class FavoritesApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.add_array_favorite_with_http_info(**kwargs)  # noqa: E501
+        return self.add_array_favorite_with_http_info(
+            namespace, name, **kwargs
+        )  # noqa: E501
 
-    def add_array_favorite_with_http_info(self, **kwargs):  # noqa: E501
+    def add_array_favorite_with_http_info(
+        self, namespace, name, **kwargs
+    ):  # noqa: E501
         """add_array_favorite  # noqa: E501
 
         Add a new array favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.add_array_favorite_with_http_info(async_req=True)
+        >>> thread = api.add_array_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param FavoriteCreate body:
+        :param str namespace: The namespace of the array (required)
+        :param str name: The name of the array (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -86,7 +92,7 @@ class FavoritesApi(object):
 
         local_var_params = locals()
 
-        all_params = ["body"]
+        all_params = ["namespace", "name"]
         all_params.extend(
             [
                 "async_req",
@@ -104,10 +110,30 @@ class FavoritesApi(object):
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `add_array_favorite`"
+            )  # noqa: E501
+        # verify the required parameter 'name' is set
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `add_array_favorite`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
 
         query_params = []
 
@@ -117,17 +143,8 @@ class FavoritesApi(object):
         local_var_files = {}
 
         body_params = None
-        if "body" in local_var_params:
-            body_params = local_var_params["body"]
         # HTTP header `Accept`
         header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
             ["application/json"]
         )  # noqa: E501
 
@@ -135,7 +152,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/favorites",
+            "/arrays/favorites/{namespace}/{name}",
             "POST",
             path_params,
             query_params,
@@ -154,17 +171,18 @@ class FavoritesApi(object):
             collection_formats=collection_formats,
         )
 
-    def add_ml_model_favorite(self, **kwargs):  # noqa: E501
+    def add_ml_model_favorite(self, namespace, name, **kwargs):  # noqa: E501
         """add_ml_model_favorite  # noqa: E501
 
         Add a new ML model favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.add_ml_model_favorite(async_req=True)
+        >>> thread = api.add_ml_model_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param FavoriteCreate body:
+        :param str namespace: The namespace of the ML model (required)
+        :param str name: The name of the ML model (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -177,19 +195,24 @@ class FavoritesApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.add_ml_model_favorite_with_http_info(**kwargs)  # noqa: E501
+        return self.add_ml_model_favorite_with_http_info(
+            namespace, name, **kwargs
+        )  # noqa: E501
 
-    def add_ml_model_favorite_with_http_info(self, **kwargs):  # noqa: E501
+    def add_ml_model_favorite_with_http_info(
+        self, namespace, name, **kwargs
+    ):  # noqa: E501
         """add_ml_model_favorite  # noqa: E501
 
         Add a new ML model favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.add_ml_model_favorite_with_http_info(async_req=True)
+        >>> thread = api.add_ml_model_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param FavoriteCreate body:
+        :param str namespace: The namespace of the ML model (required)
+        :param str name: The name of the ML model (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -206,7 +229,7 @@ class FavoritesApi(object):
 
         local_var_params = locals()
 
-        all_params = ["body"]
+        all_params = ["namespace", "name"]
         all_params.extend(
             [
                 "async_req",
@@ -224,10 +247,30 @@ class FavoritesApi(object):
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `add_ml_model_favorite`"
+            )  # noqa: E501
+        # verify the required parameter 'name' is set
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `add_ml_model_favorite`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
 
         query_params = []
 
@@ -237,17 +280,8 @@ class FavoritesApi(object):
         local_var_files = {}
 
         body_params = None
-        if "body" in local_var_params:
-            body_params = local_var_params["body"]
         # HTTP header `Accept`
         header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
             ["application/json"]
         )  # noqa: E501
 
@@ -255,7 +289,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/ml_models/favorites",
+            "/ml_models/favorites/{namespace}/{name}",
             "POST",
             path_params,
             query_params,
@@ -274,17 +308,18 @@ class FavoritesApi(object):
             collection_formats=collection_formats,
         )
 
-    def add_notebook_favorite(self, **kwargs):  # noqa: E501
+    def add_notebook_favorite(self, namespace, name, **kwargs):  # noqa: E501
         """add_notebook_favorite  # noqa: E501
 
         Add a new notebook favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.add_notebook_favorite(async_req=True)
+        >>> thread = api.add_notebook_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param FavoriteCreate body:
+        :param str namespace: The namespace of the notebook (required)
+        :param str name: The name of the notebook (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -297,19 +332,24 @@ class FavoritesApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.add_notebook_favorite_with_http_info(**kwargs)  # noqa: E501
+        return self.add_notebook_favorite_with_http_info(
+            namespace, name, **kwargs
+        )  # noqa: E501
 
-    def add_notebook_favorite_with_http_info(self, **kwargs):  # noqa: E501
+    def add_notebook_favorite_with_http_info(
+        self, namespace, name, **kwargs
+    ):  # noqa: E501
         """add_notebook_favorite  # noqa: E501
 
         Add a new notebook favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.add_notebook_favorite_with_http_info(async_req=True)
+        >>> thread = api.add_notebook_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param FavoriteCreate body:
+        :param str namespace: The namespace of the notebook (required)
+        :param str name: The name of the notebook (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -326,7 +366,7 @@ class FavoritesApi(object):
 
         local_var_params = locals()
 
-        all_params = ["body"]
+        all_params = ["namespace", "name"]
         all_params.extend(
             [
                 "async_req",
@@ -344,10 +384,30 @@ class FavoritesApi(object):
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `add_notebook_favorite`"
+            )  # noqa: E501
+        # verify the required parameter 'name' is set
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `add_notebook_favorite`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
 
         query_params = []
 
@@ -357,17 +417,8 @@ class FavoritesApi(object):
         local_var_files = {}
 
         body_params = None
-        if "body" in local_var_params:
-            body_params = local_var_params["body"]
         # HTTP header `Accept`
         header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
             ["application/json"]
         )  # noqa: E501
 
@@ -375,7 +426,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/favorites",
+            "/notebooks/favorites/{namespace}/{name}",
             "POST",
             path_params,
             query_params,
@@ -394,17 +445,18 @@ class FavoritesApi(object):
             collection_formats=collection_formats,
         )
 
-    def add_udf_favorite(self, **kwargs):  # noqa: E501
+    def add_udf_favorite(self, namespace, name, **kwargs):  # noqa: E501
         """add_udf_favorite  # noqa: E501
 
         Add a new UDF favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.add_udf_favorite(async_req=True)
+        >>> thread = api.add_udf_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param FavoriteCreate body:
+        :param str namespace: The namespace of the UDF (required)
+        :param str name: The name of the UDF (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -417,19 +469,22 @@ class FavoritesApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.add_udf_favorite_with_http_info(**kwargs)  # noqa: E501
+        return self.add_udf_favorite_with_http_info(
+            namespace, name, **kwargs
+        )  # noqa: E501
 
-    def add_udf_favorite_with_http_info(self, **kwargs):  # noqa: E501
+    def add_udf_favorite_with_http_info(self, namespace, name, **kwargs):  # noqa: E501
         """add_udf_favorite  # noqa: E501
 
         Add a new UDF favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.add_udf_favorite_with_http_info(async_req=True)
+        >>> thread = api.add_udf_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param FavoriteCreate body:
+        :param str namespace: The namespace of the UDF (required)
+        :param str name: The name of the UDF (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -446,7 +501,7 @@ class FavoritesApi(object):
 
         local_var_params = locals()
 
-        all_params = ["body"]
+        all_params = ["namespace", "name"]
         all_params.extend(
             [
                 "async_req",
@@ -464,10 +519,30 @@ class FavoritesApi(object):
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `add_udf_favorite`"
+            )  # noqa: E501
+        # verify the required parameter 'name' is set
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `add_udf_favorite`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
 
         query_params = []
 
@@ -477,17 +552,8 @@ class FavoritesApi(object):
         local_var_files = {}
 
         body_params = None
-        if "body" in local_var_params:
-            body_params = local_var_params["body"]
         # HTTP header `Accept`
         header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
             ["application/json"]
         )  # noqa: E501
 
@@ -495,7 +561,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udfs/favorites",
+            "/udfs/favorites/{namespace}/{name}",
             "POST",
             path_params,
             query_params,
@@ -514,17 +580,18 @@ class FavoritesApi(object):
             collection_formats=collection_formats,
         )
 
-    def delete_array_favorite(self, id, **kwargs):  # noqa: E501
+    def delete_array_favorite(self, namespace, name, **kwargs):  # noqa: E501
         """delete_array_favorite  # noqa: E501
 
         Delete specific array favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.delete_array_favorite(id, async_req=True)
+        >>> thread = api.delete_array_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the array favorite (required)
+        :param str namespace: The namespace of the array (required)
+        :param str name: The name of the array (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -537,19 +604,24 @@ class FavoritesApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.delete_array_favorite_with_http_info(id, **kwargs)  # noqa: E501
+        return self.delete_array_favorite_with_http_info(
+            namespace, name, **kwargs
+        )  # noqa: E501
 
-    def delete_array_favorite_with_http_info(self, id, **kwargs):  # noqa: E501
+    def delete_array_favorite_with_http_info(
+        self, namespace, name, **kwargs
+    ):  # noqa: E501
         """delete_array_favorite  # noqa: E501
 
         Delete specific array favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.delete_array_favorite_with_http_info(id, async_req=True)
+        >>> thread = api.delete_array_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the array favorite (required)
+        :param str namespace: The namespace of the array (required)
+        :param str name: The name of the array (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -566,7 +638,7 @@ class FavoritesApi(object):
 
         local_var_params = locals()
 
-        all_params = ["id"]
+        all_params = ["namespace", "name"]
         all_params.extend(
             [
                 "async_req",
@@ -584,19 +656,30 @@ class FavoritesApi(object):
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
-        # verify the required parameter 'id' is set
+        # verify the required parameter 'namespace' is set
         if self.api_client.client_side_validation and (
-            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `id` when calling `delete_array_favorite`"
+                "Missing the required parameter `namespace` when calling `delete_array_favorite`"
+            )  # noqa: E501
+        # verify the required parameter 'name' is set
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `delete_array_favorite`"
             )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "id" in local_var_params:
-            path_params["id"] = local_var_params["id"]  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
 
         query_params = []
 
@@ -615,7 +698,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/favorites/{id}",
+            "/arrays/favorites/{namespace}/{name}",
             "DELETE",
             path_params,
             query_params,
@@ -634,17 +717,18 @@ class FavoritesApi(object):
             collection_formats=collection_formats,
         )
 
-    def delete_ml_model_favorite(self, id, **kwargs):  # noqa: E501
+    def delete_ml_model_favorite(self, namespace, name, **kwargs):  # noqa: E501
         """delete_ml_model_favorite  # noqa: E501
 
         Delete specific ML model favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.delete_ml_model_favorite(id, async_req=True)
+        >>> thread = api.delete_ml_model_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the ML model favorite (required)
+        :param str namespace: The namespace of the ML model (required)
+        :param str name: The name of the ML model (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -657,19 +741,24 @@ class FavoritesApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.delete_ml_model_favorite_with_http_info(id, **kwargs)  # noqa: E501
+        return self.delete_ml_model_favorite_with_http_info(
+            namespace, name, **kwargs
+        )  # noqa: E501
 
-    def delete_ml_model_favorite_with_http_info(self, id, **kwargs):  # noqa: E501
+    def delete_ml_model_favorite_with_http_info(
+        self, namespace, name, **kwargs
+    ):  # noqa: E501
         """delete_ml_model_favorite  # noqa: E501
 
         Delete specific ML model favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.delete_ml_model_favorite_with_http_info(id, async_req=True)
+        >>> thread = api.delete_ml_model_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the ML model favorite (required)
+        :param str namespace: The namespace of the ML model (required)
+        :param str name: The name of the ML model (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -686,7 +775,7 @@ class FavoritesApi(object):
 
         local_var_params = locals()
 
-        all_params = ["id"]
+        all_params = ["namespace", "name"]
         all_params.extend(
             [
                 "async_req",
@@ -704,19 +793,30 @@ class FavoritesApi(object):
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
-        # verify the required parameter 'id' is set
+        # verify the required parameter 'namespace' is set
         if self.api_client.client_side_validation and (
-            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `id` when calling `delete_ml_model_favorite`"
+                "Missing the required parameter `namespace` when calling `delete_ml_model_favorite`"
+            )  # noqa: E501
+        # verify the required parameter 'name' is set
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `delete_ml_model_favorite`"
             )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "id" in local_var_params:
-            path_params["id"] = local_var_params["id"]  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
 
         query_params = []
 
@@ -735,7 +835,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/ml_models/favorites/{id}",
+            "/ml_models/favorites/{namespace}/{name}",
             "DELETE",
             path_params,
             query_params,
@@ -754,17 +854,18 @@ class FavoritesApi(object):
             collection_formats=collection_formats,
         )
 
-    def delete_notebook_favorite(self, id, **kwargs):  # noqa: E501
+    def delete_notebook_favorite(self, namespace, name, **kwargs):  # noqa: E501
         """delete_notebook_favorite  # noqa: E501
 
         Delete specific notebook favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.delete_notebook_favorite(id, async_req=True)
+        >>> thread = api.delete_notebook_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the notebook favorite (required)
+        :param str namespace: The namespace of the notebook (required)
+        :param str name: The name of the notebook (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -777,19 +878,24 @@ class FavoritesApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.delete_notebook_favorite_with_http_info(id, **kwargs)  # noqa: E501
+        return self.delete_notebook_favorite_with_http_info(
+            namespace, name, **kwargs
+        )  # noqa: E501
 
-    def delete_notebook_favorite_with_http_info(self, id, **kwargs):  # noqa: E501
+    def delete_notebook_favorite_with_http_info(
+        self, namespace, name, **kwargs
+    ):  # noqa: E501
         """delete_notebook_favorite  # noqa: E501
 
         Delete specific notebook favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.delete_notebook_favorite_with_http_info(id, async_req=True)
+        >>> thread = api.delete_notebook_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the notebook favorite (required)
+        :param str namespace: The namespace of the notebook (required)
+        :param str name: The name of the notebook (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -806,7 +912,7 @@ class FavoritesApi(object):
 
         local_var_params = locals()
 
-        all_params = ["id"]
+        all_params = ["namespace", "name"]
         all_params.extend(
             [
                 "async_req",
@@ -824,19 +930,30 @@ class FavoritesApi(object):
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
-        # verify the required parameter 'id' is set
+        # verify the required parameter 'namespace' is set
         if self.api_client.client_side_validation and (
-            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `id` when calling `delete_notebook_favorite`"
+                "Missing the required parameter `namespace` when calling `delete_notebook_favorite`"
+            )  # noqa: E501
+        # verify the required parameter 'name' is set
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `delete_notebook_favorite`"
             )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "id" in local_var_params:
-            path_params["id"] = local_var_params["id"]  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
 
         query_params = []
 
@@ -855,7 +972,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/favorites/{id}",
+            "/notebooks/favorites/{namespace}/{name}",
             "DELETE",
             path_params,
             query_params,
@@ -874,17 +991,18 @@ class FavoritesApi(object):
             collection_formats=collection_formats,
         )
 
-    def delete_udf_favorite(self, id, **kwargs):  # noqa: E501
+    def delete_udf_favorite(self, namespace, name, **kwargs):  # noqa: E501
         """delete_udf_favorite  # noqa: E501
 
         Delete specific UDF favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.delete_udf_favorite(id, async_req=True)
+        >>> thread = api.delete_udf_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the UDF favorite (required)
+        :param str namespace: The namespace of the UDF (required)
+        :param str name: The name of the UDF (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -897,19 +1015,24 @@ class FavoritesApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.delete_udf_favorite_with_http_info(id, **kwargs)  # noqa: E501
+        return self.delete_udf_favorite_with_http_info(
+            namespace, name, **kwargs
+        )  # noqa: E501
 
-    def delete_udf_favorite_with_http_info(self, id, **kwargs):  # noqa: E501
+    def delete_udf_favorite_with_http_info(
+        self, namespace, name, **kwargs
+    ):  # noqa: E501
         """delete_udf_favorite  # noqa: E501
 
         Delete specific UDF favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.delete_udf_favorite_with_http_info(id, async_req=True)
+        >>> thread = api.delete_udf_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the UDF favorite (required)
+        :param str namespace: The namespace of the UDF (required)
+        :param str name: The name of the UDF (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -926,7 +1049,7 @@ class FavoritesApi(object):
 
         local_var_params = locals()
 
-        all_params = ["id"]
+        all_params = ["namespace", "name"]
         all_params.extend(
             [
                 "async_req",
@@ -944,19 +1067,30 @@ class FavoritesApi(object):
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
-        # verify the required parameter 'id' is set
+        # verify the required parameter 'namespace' is set
         if self.api_client.client_side_validation and (
-            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `id` when calling `delete_udf_favorite`"
+                "Missing the required parameter `namespace` when calling `delete_udf_favorite`"
+            )  # noqa: E501
+        # verify the required parameter 'name' is set
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `delete_udf_favorite`"
             )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
-        if "id" in local_var_params:
-            path_params["id"] = local_var_params["id"]  # noqa: E501
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
 
         query_params = []
 
@@ -975,7 +1109,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udfs/favorites/{id}",
+            "/udfs/favorites/{namespace}/{name}",
             "DELETE",
             path_params,
             query_params,
@@ -994,133 +1128,13 @@ class FavoritesApi(object):
             collection_formats=collection_formats,
         )
 
-    def get_array_favorite(self, id, **kwargs):  # noqa: E501
+    def get_array_favorite(self, namespace, name, **kwargs):  # noqa: E501
         """get_array_favorite  # noqa: E501
-
-        Fetch specific array favorite of a user  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_array_favorite(id, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the array favorite (required)
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: ArrayFavorite
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs["_return_http_data_only"] = True
-        return self.get_array_favorite_with_http_info(id, **kwargs)  # noqa: E501
-
-    def get_array_favorite_with_http_info(self, id, **kwargs):  # noqa: E501
-        """get_array_favorite  # noqa: E501
-
-        Fetch specific array favorite of a user  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_array_favorite_with_http_info(id, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the array favorite (required)
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(ArrayFavorite, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["id"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_array_favorite" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'id' is set
-        if self.api_client.client_side_validation and (
-            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `id` when calling `get_array_favorite`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "id" in local_var_params:
-            path_params["id"] = local_var_params["id"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/arrays/favorites/{id}",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="ArrayFavorite",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def get_array_favorite_for_array(self, namespace, name, **kwargs):  # noqa: E501
-        """get_array_favorite_for_array  # noqa: E501
 
         Fetch array favorite of a specific array  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_array_favorite_for_array(namespace, name, async_req=True)
+        >>> thread = api.get_array_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -1138,19 +1152,19 @@ class FavoritesApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.get_array_favorite_for_array_with_http_info(
+        return self.get_array_favorite_with_http_info(
             namespace, name, **kwargs
         )  # noqa: E501
 
-    def get_array_favorite_for_array_with_http_info(
+    def get_array_favorite_with_http_info(
         self, namespace, name, **kwargs
     ):  # noqa: E501
-        """get_array_favorite_for_array  # noqa: E501
+        """get_array_favorite  # noqa: E501
 
         Fetch array favorite of a specific array  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_array_favorite_for_array_with_http_info(namespace, name, async_req=True)
+        >>> thread = api.get_array_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -1186,7 +1200,7 @@ class FavoritesApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method get_array_favorite_for_array" % key
+                    " to method get_array_favorite" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
@@ -1196,7 +1210,7 @@ class FavoritesApi(object):
             or local_var_params["namespace"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `get_array_favorite_for_array`"
+                "Missing the required parameter `namespace` when calling `get_array_favorite`"
             )  # noqa: E501
         # verify the required parameter 'name' is set
         if self.api_client.client_side_validation and (
@@ -1204,7 +1218,7 @@ class FavoritesApi(object):
             or local_var_params["name"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `name` when calling `get_array_favorite_for_array`"
+                "Missing the required parameter `name` when calling `get_array_favorite`"
             )  # noqa: E501
 
         collection_formats = {}
@@ -1251,135 +1265,13 @@ class FavoritesApi(object):
             collection_formats=collection_formats,
         )
 
-    def get_ml_model_favorite(self, id, **kwargs):  # noqa: E501
+    def get_ml_model_favorite(self, namespace, name, **kwargs):  # noqa: E501
         """get_ml_model_favorite  # noqa: E501
-
-        Fetch specific ML model favorite of a user  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_ml_model_favorite(id, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the ML model favorite (required)
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: MLModelFavorite
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs["_return_http_data_only"] = True
-        return self.get_ml_model_favorite_with_http_info(id, **kwargs)  # noqa: E501
-
-    def get_ml_model_favorite_with_http_info(self, id, **kwargs):  # noqa: E501
-        """get_ml_model_favorite  # noqa: E501
-
-        Fetch specific ML model favorite of a user  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_ml_model_favorite_with_http_info(id, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the ML model favorite (required)
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(MLModelFavorite, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["id"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_ml_model_favorite" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'id' is set
-        if self.api_client.client_side_validation and (
-            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `id` when calling `get_ml_model_favorite`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "id" in local_var_params:
-            path_params["id"] = local_var_params["id"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/ml_models/favorites/{id}",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="MLModelFavorite",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def get_ml_model_favorite_for_ml_model(
-        self, namespace, name, **kwargs
-    ):  # noqa: E501
-        """get_ml_model_favorite_for_ml_model  # noqa: E501
 
         Fetch ML model favorite of a specific ML model  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_ml_model_favorite_for_ml_model(namespace, name, async_req=True)
+        >>> thread = api.get_ml_model_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -1397,19 +1289,19 @@ class FavoritesApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.get_ml_model_favorite_for_ml_model_with_http_info(
+        return self.get_ml_model_favorite_with_http_info(
             namespace, name, **kwargs
         )  # noqa: E501
 
-    def get_ml_model_favorite_for_ml_model_with_http_info(
+    def get_ml_model_favorite_with_http_info(
         self, namespace, name, **kwargs
     ):  # noqa: E501
-        """get_ml_model_favorite_for_ml_model  # noqa: E501
+        """get_ml_model_favorite  # noqa: E501
 
         Fetch ML model favorite of a specific ML model  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_ml_model_favorite_for_ml_model_with_http_info(namespace, name, async_req=True)
+        >>> thread = api.get_ml_model_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -1445,7 +1337,7 @@ class FavoritesApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method get_ml_model_favorite_for_ml_model" % key
+                    " to method get_ml_model_favorite" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
@@ -1455,7 +1347,7 @@ class FavoritesApi(object):
             or local_var_params["namespace"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `get_ml_model_favorite_for_ml_model`"
+                "Missing the required parameter `namespace` when calling `get_ml_model_favorite`"
             )  # noqa: E501
         # verify the required parameter 'name' is set
         if self.api_client.client_side_validation and (
@@ -1463,7 +1355,7 @@ class FavoritesApi(object):
             or local_var_params["name"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `name` when calling `get_ml_model_favorite_for_ml_model`"
+                "Missing the required parameter `name` when calling `get_ml_model_favorite`"
             )  # noqa: E501
 
         collection_formats = {}
@@ -1510,135 +1402,13 @@ class FavoritesApi(object):
             collection_formats=collection_formats,
         )
 
-    def get_notebook_favorite(self, id, **kwargs):  # noqa: E501
+    def get_notebook_favorite(self, namespace, name, **kwargs):  # noqa: E501
         """get_notebook_favorite  # noqa: E501
-
-        Fetch specific notebook favorite of a user  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_notebook_favorite(id, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the notebook favorite (required)
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: NotebookFavorite
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs["_return_http_data_only"] = True
-        return self.get_notebook_favorite_with_http_info(id, **kwargs)  # noqa: E501
-
-    def get_notebook_favorite_with_http_info(self, id, **kwargs):  # noqa: E501
-        """get_notebook_favorite  # noqa: E501
-
-        Fetch specific notebook favorite of a user  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_notebook_favorite_with_http_info(id, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the notebook favorite (required)
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(NotebookFavorite, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["id"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_notebook_favorite" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'id' is set
-        if self.api_client.client_side_validation and (
-            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `id` when calling `get_notebook_favorite`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "id" in local_var_params:
-            path_params["id"] = local_var_params["id"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/notebooks/favorites/{id}",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="NotebookFavorite",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def get_notebook_favorite_for_notebook(
-        self, namespace, name, **kwargs
-    ):  # noqa: E501
-        """get_notebook_favorite_for_notebook  # noqa: E501
 
         Fetch notebook favorite of a specific notebook  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_notebook_favorite_for_notebook(namespace, name, async_req=True)
+        >>> thread = api.get_notebook_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -1656,19 +1426,19 @@ class FavoritesApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.get_notebook_favorite_for_notebook_with_http_info(
+        return self.get_notebook_favorite_with_http_info(
             namespace, name, **kwargs
         )  # noqa: E501
 
-    def get_notebook_favorite_for_notebook_with_http_info(
+    def get_notebook_favorite_with_http_info(
         self, namespace, name, **kwargs
     ):  # noqa: E501
-        """get_notebook_favorite_for_notebook  # noqa: E501
+        """get_notebook_favorite  # noqa: E501
 
         Fetch notebook favorite of a specific notebook  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_notebook_favorite_for_notebook_with_http_info(namespace, name, async_req=True)
+        >>> thread = api.get_notebook_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -1704,7 +1474,7 @@ class FavoritesApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method get_notebook_favorite_for_notebook" % key
+                    " to method get_notebook_favorite" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
@@ -1714,7 +1484,7 @@ class FavoritesApi(object):
             or local_var_params["namespace"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `get_notebook_favorite_for_notebook`"
+                "Missing the required parameter `namespace` when calling `get_notebook_favorite`"
             )  # noqa: E501
         # verify the required parameter 'name' is set
         if self.api_client.client_side_validation and (
@@ -1722,7 +1492,7 @@ class FavoritesApi(object):
             or local_var_params["name"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `name` when calling `get_notebook_favorite_for_notebook`"
+                "Missing the required parameter `name` when calling `get_notebook_favorite`"
             )  # noqa: E501
 
         collection_formats = {}
@@ -1769,133 +1539,13 @@ class FavoritesApi(object):
             collection_formats=collection_formats,
         )
 
-    def get_udf_favorite(self, id, **kwargs):  # noqa: E501
+    def get_udf_favorite(self, namespace, name, **kwargs):  # noqa: E501
         """get_udf_favorite  # noqa: E501
-
-        Fetch specific UDF favorite of a user  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_udf_favorite(id, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the UDF favorite (required)
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: UDFFavorite
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs["_return_http_data_only"] = True
-        return self.get_udf_favorite_with_http_info(id, **kwargs)  # noqa: E501
-
-    def get_udf_favorite_with_http_info(self, id, **kwargs):  # noqa: E501
-        """get_udf_favorite  # noqa: E501
-
-        Fetch specific UDF favorite of a user  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_udf_favorite_with_http_info(id, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str id: The UUID of the UDF favorite (required)
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(UDFFavorite, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["id"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_udf_favorite" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'id' is set
-        if self.api_client.client_side_validation and (
-            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `id` when calling `get_udf_favorite`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "id" in local_var_params:
-            path_params["id"] = local_var_params["id"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/udfs/favorites/{id}",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="UDFFavorite",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def get_udf_favorite_for_udf(self, namespace, name, **kwargs):  # noqa: E501
-        """get_udf_favorite_for_udf  # noqa: E501
 
         Fetch UDF favorite of a specific UDF  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_udf_favorite_for_udf(namespace, name, async_req=True)
+        >>> thread = api.get_udf_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -1913,19 +1563,17 @@ class FavoritesApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.get_udf_favorite_for_udf_with_http_info(
+        return self.get_udf_favorite_with_http_info(
             namespace, name, **kwargs
         )  # noqa: E501
 
-    def get_udf_favorite_for_udf_with_http_info(
-        self, namespace, name, **kwargs
-    ):  # noqa: E501
-        """get_udf_favorite_for_udf  # noqa: E501
+    def get_udf_favorite_with_http_info(self, namespace, name, **kwargs):  # noqa: E501
+        """get_udf_favorite  # noqa: E501
 
         Fetch UDF favorite of a specific UDF  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_udf_favorite_for_udf_with_http_info(namespace, name, async_req=True)
+        >>> thread = api.get_udf_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -1961,7 +1609,7 @@ class FavoritesApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method get_udf_favorite_for_udf" % key
+                    " to method get_udf_favorite" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
@@ -1971,7 +1619,7 @@ class FavoritesApi(object):
             or local_var_params["namespace"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `get_udf_favorite_for_udf`"
+                "Missing the required parameter `namespace` when calling `get_udf_favorite`"
             )  # noqa: E501
         # verify the required parameter 'name' is set
         if self.api_client.client_side_validation and (
@@ -1979,7 +1627,7 @@ class FavoritesApi(object):
             or local_var_params["name"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `name` when calling `get_udf_favorite_for_udf`"
+                "Missing the required parameter `name` when calling `get_udf_favorite`"
             )  # noqa: E501
 
         collection_formats = {}
@@ -2029,7 +1677,7 @@ class FavoritesApi(object):
     def list_array_favorites(self, **kwargs):  # noqa: E501
         """list_array_favorites  # noqa: E501
 
-        Fetch all array favorites of connected user  # noqa: E501
+        Fetch a page of array favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.list_array_favorites(async_req=True)
@@ -2055,7 +1703,7 @@ class FavoritesApi(object):
     def list_array_favorites_with_http_info(self, **kwargs):  # noqa: E501
         """list_array_favorites  # noqa: E501
 
-        Fetch all array favorites of connected user  # noqa: E501
+        Fetch a page of array favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.list_array_favorites_with_http_info(async_req=True)
@@ -2261,7 +1909,7 @@ class FavoritesApi(object):
     def list_ml_model_favorites(self, **kwargs):  # noqa: E501
         """list_ml_model_favorites  # noqa: E501
 
-        Fetch all ML models favorites of connected user  # noqa: E501
+        Fetch a page of ML models favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.list_ml_model_favorites(async_req=True)
@@ -2287,7 +1935,7 @@ class FavoritesApi(object):
     def list_ml_model_favorites_with_http_info(self, **kwargs):  # noqa: E501
         """list_ml_model_favorites  # noqa: E501
 
-        Fetch all ML models favorites of connected user  # noqa: E501
+        Fetch a page of ML models favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.list_ml_model_favorites_with_http_info(async_req=True)
@@ -2495,7 +2143,7 @@ class FavoritesApi(object):
     def list_notebook_favorites(self, **kwargs):  # noqa: E501
         """list_notebook_favorites  # noqa: E501
 
-        Fetch all notebook favorites of connected user  # noqa: E501
+        Fetch a page of notebook favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.list_notebook_favorites(async_req=True)
@@ -2522,7 +2170,7 @@ class FavoritesApi(object):
     def list_notebook_favorites_with_http_info(self, **kwargs):  # noqa: E501
         """list_notebook_favorites  # noqa: E501
 
-        Fetch all notebook favorites of connected user  # noqa: E501
+        Fetch a page of notebook favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.list_notebook_favorites_with_http_info(async_req=True)
@@ -2738,7 +2386,7 @@ class FavoritesApi(object):
     def list_udf_favorites(self, **kwargs):  # noqa: E501
         """list_udf_favorites  # noqa: E501
 
-        Fetch all UDF favorites of connected user  # noqa: E501
+        Fetch a page of UDF favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.list_udf_favorites(async_req=True)
@@ -2764,7 +2412,7 @@ class FavoritesApi(object):
     def list_udf_favorites_with_http_info(self, **kwargs):  # noqa: E501
         """list_udf_favorites  # noqa: E501
 
-        Fetch all UDF favorites of connected user  # noqa: E501
+        Fetch a page of UDF favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.list_udf_favorites_with_http_info(async_req=True)

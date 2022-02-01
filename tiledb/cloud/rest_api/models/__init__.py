@@ -51,7 +51,6 @@ from tiledb.cloud.rest_api.models.dimension_tile_extent import DimensionTileExte
 from tiledb.cloud.rest_api.models.domain import Domain
 from tiledb.cloud.rest_api.models.domain_array import DomainArray
 from tiledb.cloud.rest_api.models.error import Error
-from tiledb.cloud.rest_api.models.favorite_create import FavoriteCreate
 from tiledb.cloud.rest_api.models.file_create import FileCreate
 from tiledb.cloud.rest_api.models.file_created import FileCreated
 from tiledb.cloud.rest_api.models.file_export import FileExport
