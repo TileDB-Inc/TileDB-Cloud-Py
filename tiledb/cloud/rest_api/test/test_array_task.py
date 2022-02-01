@@ -89,7 +89,6 @@ class TestArrayTask(unittest.TestCase):
                     license_text="0",
                     read_only=False,
                     is_favorite=True,
-                    favorite_uuid="00000000-0000-0000-0000-000000000000",
                 ),
                 subarray=tiledb.cloud.rest_api.models.domain_array.DomainArray(
                     int8=[56],

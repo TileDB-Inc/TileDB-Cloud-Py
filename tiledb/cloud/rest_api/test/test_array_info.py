@@ -102,7 +102,6 @@ class TestArrayInfo(unittest.TestCase):
                 license_text="0",
                 read_only=False,
                 is_favorite=True,
-                favorite_uuid="00000000-0000-0000-0000-000000000000",
             )
         else:
             return ArrayInfo()

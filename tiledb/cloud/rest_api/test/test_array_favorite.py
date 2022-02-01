@@ -36,13 +36,7 @@ class TestArrayFavorite(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.array_favorite.ArrayFavorite()  # noqa: E501
         if include_optional:
-            return ArrayFavorite(
-                id="0",
-                created_at=datetime.datetime.strptime(
-                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
-                ),
-                array_uuid="0",
-            )
+            return ArrayFavorite(array_uuid="0", namespace="0", name="0")
         else:
             return ArrayFavorite()
 

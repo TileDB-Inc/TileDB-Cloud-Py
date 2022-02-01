@@ -41,6 +41,8 @@ class SQLParameters(object):
         "result_format": "ResultFormat",
         "init_commands": "list[str]",
         "parameters": "list[object]",
+        "task_graph_uuid": "str",
+        "client_node_uuid": "str",
     }
 
     attribute_map = {
@@ -52,6 +54,8 @@ class SQLParameters(object):
         "result_format": "result_format",
         "init_commands": "init_commands",
         "parameters": "parameters",
+        "task_graph_uuid": "task_graph_uuid",
+        "client_node_uuid": "client_node_uuid",
     }
 
     def __init__(
@@ -64,6 +68,8 @@ class SQLParameters(object):
         result_format=None,
         init_commands=None,
         parameters=None,
+        task_graph_uuid=None,
+        client_node_uuid=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """SQLParameters - a model defined in OpenAPI"""  # noqa: E501
@@ -79,6 +85,8 @@ class SQLParameters(object):
         self._result_format = None
         self._init_commands = None
         self._parameters = None
+        self._task_graph_uuid = None
+        self._client_node_uuid = None
         self.discriminator = None
 
         if name is not None:
@@ -97,6 +105,10 @@ class SQLParameters(object):
             self.init_commands = init_commands
         if parameters is not None:
             self.parameters = parameters
+        if task_graph_uuid is not None:
+            self.task_graph_uuid = task_graph_uuid
+        if client_node_uuid is not None:
+            self.client_node_uuid = client_node_uuid
 
     @property
     def name(self):
@@ -279,6 +291,52 @@ class SQLParameters(object):
         """
 
         self._parameters = parameters
+
+    @property
+    def task_graph_uuid(self):
+        """Gets the task_graph_uuid of this SQLParameters.  # noqa: E501
+
+        If set, the ID of the log for the task graph that this was part of.   # noqa: E501
+
+        :return: The task_graph_uuid of this SQLParameters.  # noqa: E501
+        :rtype: str
+        """
+        return self._task_graph_uuid
+
+    @task_graph_uuid.setter
+    def task_graph_uuid(self, task_graph_uuid):
+        """Sets the task_graph_uuid of this SQLParameters.
+
+        If set, the ID of the log for the task graph that this was part of.   # noqa: E501
+
+        :param task_graph_uuid: The task_graph_uuid of this SQLParameters.  # noqa: E501
+        :type: str
+        """
+
+        self._task_graph_uuid = task_graph_uuid
+
+    @property
+    def client_node_uuid(self):
+        """Gets the client_node_uuid of this SQLParameters.  # noqa: E501
+
+        If set, the client-defined ID of the node within this task's graph.   # noqa: E501
+
+        :return: The client_node_uuid of this SQLParameters.  # noqa: E501
+        :rtype: str
+        """
+        return self._client_node_uuid
+
+    @client_node_uuid.setter
+    def client_node_uuid(self, client_node_uuid):
+        """Sets the client_node_uuid of this SQLParameters.
+
+        If set, the client-defined ID of the node within this task's graph.   # noqa: E501
+
+        :param client_node_uuid: The client_node_uuid of this SQLParameters.  # noqa: E501
+        :type: str
+        """
+
+        self._client_node_uuid = client_node_uuid
 
     def to_dict(self):
         """Returns the model properties as a dict"""

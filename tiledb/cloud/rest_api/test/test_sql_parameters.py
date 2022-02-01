@@ -45,6 +45,8 @@ class TestSQLParameters(unittest.TestCase):
                 result_format="native",
                 init_commands=["0"],
                 parameters=[None],
+                task_graph_uuid="0",
+                client_node_uuid="0",
             )
         else:
             return SQLParameters()
