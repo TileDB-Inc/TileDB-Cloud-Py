@@ -379,12 +379,9 @@ class DAG:
                     # There was a problem submitting the task graph for logging.
                     # This should not abort the task graph.
 
-                    # TODO: Start warning once the server actually accepts
-                    # task graph logging data.
-                    pass
-                    # warnings.warn(
-                    #     UserWarning(f"Error submitting task graph logging info: {apix}")
-                    # )
+                    warnings.warn(
+                        UserWarning(f"Error submitting task graph logging info: {apix}")
+                    )
                 else:
                     try:
                         self.server_graph_uuid = uuid.UUID(hex=result.uuid)
@@ -547,9 +544,6 @@ class DAG:
             sql.exec_base,
             *args,
             _internal_accepts_stored_params=False,
-            # TODO: Remove _download_results once the server starts honoring
-            # store_results for SQL queries.
-            _download_results=True,
             **kwargs,
         )
 
