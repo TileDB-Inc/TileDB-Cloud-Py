@@ -116,7 +116,8 @@ def exec_base(
             result_format=result_format,
             store_results=store_results,
             dont_download_results=not _download_results,
-            # TODO: Add graph ID parameters here.
+            task_graph_uuid=_server_graph_uuid and str(_server_graph_uuid),
+            client_node_uuid=_client_node_uuid and str(_client_node_uuid),
         ),
     )
     if http_compressor is not None:
