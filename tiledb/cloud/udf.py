@@ -278,6 +278,35 @@ def register_single_array_udf(
     )
 
 
+def register_multi_array_udf(
+    func,
+    name,
+    namespace=None,
+    image_name=None,
+    include_source_lines=True,
+    async_req=False,
+):
+    """
+
+    :param func: function to register
+    :param name: name of udf to register
+    :param namespace: namespace to register in
+    :param image_name: optional image name
+    :param include_source_lines: disables sending sources lines of function along with udf
+    :param async_req: return future instead of results for async support
+    :return:
+    """
+    return register_udf(
+        func=func,
+        name=name,
+        namespace=namespace,
+        image_name=image_name,
+        type=models.UDFType.MULTI_ARRAY,
+        include_source_lines=include_source_lines,
+        async_req=async_req,
+    )
+
+
 def update_udf(
     func,
     name,
