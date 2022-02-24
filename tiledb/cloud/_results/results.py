@@ -101,7 +101,7 @@ class RemoteResult(Result[_T], Generic[_T]):
         del attribute, value  # unused
         if self.results_stored and not self.task_id:
             raise ValueError("task_id must be set for stored results")
-        if not self.results_stored and not self._body:
+        if not self.results_stored and self._body is None:
             raise ValueError(
                 "no way to access Node results;"
                 " they must be either stored or downloaded"
