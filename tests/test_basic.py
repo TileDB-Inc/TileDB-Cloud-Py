@@ -4,6 +4,7 @@ import uuid
 
 import numpy
 import numpy as np
+import pyarrow
 
 import tiledb
 import tiledb.cloud
@@ -264,7 +265,16 @@ class BasicTests(unittest.TestCase):
             with tiledb.open(
                 "tiledb://TileDB-Inc/quickstart_sparse", ctx=tiledb.cloud.Ctx()
             ) as A:
-                A.apply_async(test, [(1, 4), (1, 4)], timeout=1).get(),
+                A.apply_async(test, [(1, 4), (1, 4)], timeout=1).get()
+
+    def test_empty_arrow(self):
+        def test():
+            import pyarrow
+
+            return pyarrow.Table.from_pydict({})
+
+        tbl = tiledb.cloud.udf.exec(test, result_format="arrow")
+        self.assertIsInstance(tbl, pyarrow.Table)
 
 
 class RangesTest(unittest.TestCase):

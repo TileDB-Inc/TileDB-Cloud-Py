@@ -24,6 +24,12 @@ class AbstractDecoder(Generic[_T], metaclass=abc.ABCMeta):
 
 
 def _load_arrow(data: bytes) -> pyarrow.Table:
+    # If a UDF didn't return any rows, there will not have been any batches
+    # of data to write to the output, and thus it will not include any content
+    # at all. (SQL queries will include headers.)
+    if not data:
+        # In this case, we need to return an empty table.
+        return pyarrow.Table.from_pydict({})
     reader = pyarrow.RecordBatchStreamReader(data)
     return reader.read_all()
 
