@@ -495,15 +495,28 @@ class DAG:
         self.not_started_nodes[node.id] = node
         return node
 
-    def add_node(self, func_exec, *args, name=None, **kwargs):
+    def add_node(self, func_exec, *args, name=None, local_mode=True, **kwargs):
         """
-        Create and add a node
+        Create and add a node.
+
+        DEPRECATED. Use `submit_local` instead.
+
         :param func_exec: function to execute
         :param args: arguments for function execution
         :param name: name
         :return: Node that is created
         """
-        node = Node(func_exec, *args, dag=self, name=name, **kwargs)
+        return self._add_raw_node(
+            func_exec,
+            *args,
+            name=name,
+            local_mode=local_mode,
+            **kwargs,
+        )
+
+    def _add_raw_node(self, func_exec, *args, **kwargs):
+        """Adds a generic (usually local) node to the graph."""
+        node = Node(func_exec, *args, dag=self, **kwargs)
         return self.add_node_obj(node)
 
     def _add_prewrapped_node(
@@ -564,7 +577,7 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        return self.add_node(*args, **kwargs)
+        return self._add_raw_node(*args, local_mode=True, **kwargs)
 
     def report_node_complete(self, node):
         """
