@@ -173,6 +173,7 @@ class Node(Generic[_T]):
         ft.add_done_callback(self._handle_completed_future)
 
     def _do_exec(self, namespace: Optional[str]) -> results.Result[_T]:
+        assert self.dag
         # We have to make a shallow copy of kwargs here.
         # Since we modify the kwargs dictionary here before passing it
         # to the wrapped function, we need to ensure that the arguments
@@ -192,11 +193,25 @@ class Node(Generic[_T]):
             # For functions that run locally, give them the results as normal.
             args, kwargs = _replace_nodes_with_results((self.args, raw_kwargs))
 
-        if self._was_prewrapped:
-            assert self.dag
+        # Delayed functions bypass all our nice assumptions about how we set up
+        # a task graph and are not themselves "prewrapped nodes", so we have to
+        # separately check whether a node is remote (i.e., it executes on the
+        # server side period) and whether it is prewrapped (i.e., it is a
+        # whatever_base function that supports the download_results calls etc).
+        if not self.local_mode:
+            # If it's not `local_mode`, we assume that the function is either
+            # prewrapped or it was created with `Delayed`, so the function
+            # itself is one of the `submit_xxx` (but not `_base`) functions.
             self.dag.initial_setup()
-            # We know this is a remote-executing function.
-            # Set up its extra parameters.
+            kwargs.update(
+                _server_graph_uuid=self.dag.server_graph_uuid,
+                _client_node_uuid=self.id,
+            )
+            if namespace:
+                kwargs["namespace"] = namespace
+
+        if self._was_prewrapped:
+            # Prewrapped functions support special result handling.
             if self._download_results is None:
                 # If the user didn't explicitly choose, set a download behavior:
                 # If this is a terminal node, download the results.
@@ -204,13 +219,7 @@ class Node(Generic[_T]):
                 download_results = not self.children
             else:
                 download_results = self._download_results
-            kwargs.update(
-                _download_results=download_results,
-                _server_graph_uuid=self.dag.server_graph_uuid,
-                _client_node_uuid=self.id,
-            )
-            if namespace:
-                kwargs["namespace"] = namespace
+            kwargs["_download_results"] = download_results
 
         try:
             return self._wrapped_func(*args, **kwargs)
@@ -486,15 +495,28 @@ class DAG:
         self.not_started_nodes[node.id] = node
         return node
 
-    def add_node(self, func_exec, *args, name=None, **kwargs):
+    def add_node(self, func_exec, *args, name=None, local_mode=True, **kwargs):
         """
-        Create and add a node
+        Create and add a node.
+
+        DEPRECATED. Use `submit_local` instead.
+
         :param func_exec: function to execute
         :param args: arguments for function execution
         :param name: name
         :return: Node that is created
         """
-        node = Node(func_exec, *args, dag=self, name=name, **kwargs)
+        return self._add_raw_node(
+            func_exec,
+            *args,
+            name=name,
+            local_mode=local_mode,
+            **kwargs,
+        )
+
+    def _add_raw_node(self, func_exec, *args, **kwargs):
+        """Adds a generic (usually local) node to the graph."""
+        node = Node(func_exec, *args, dag=self, **kwargs)
         return self.add_node_obj(node)
 
     def _add_prewrapped_node(
@@ -555,7 +577,7 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        return self.add_node(*args, **kwargs)
+        return self._add_raw_node(*args, local_mode=True, **kwargs)
 
     def report_node_complete(self, node):
         """
