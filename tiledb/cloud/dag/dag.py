@@ -995,7 +995,7 @@ def _replace_nodes_with_results(tree, only: Optional[Collection[uuid.UUID]] = No
 
     replacer = _NodeResultReplacer(only)
     out = replacer.visit(tree)
-    print(f"replacements: {replacer.ids}", file=sys.stderr)
+    print(f"not replaced with results: {replacer.ids}", file=sys.stderr)
     return out, replacer.ids
 
 
@@ -1013,6 +1013,7 @@ def _replace_nodes_with_stored_params(tree: _T) -> Tuple[_T, FrozenSet[uuid.UUID
     """
     nspr = _NodeToStoredParamReplacer()
     result = nspr.visit(tree)
+    print(f"stored params replaced: {nspr.ids}")
     return result, frozenset(nspr.ids)
 
 
