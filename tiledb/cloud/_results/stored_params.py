@@ -34,6 +34,10 @@ class StoredParam(Generic[_T]):
         return self.decoder.decode(binary_data)
 
 
+class MissingError(KeyError):
+    """Subclass of KeyError raised when there's a missing stored parameter."""
+
+
 class ParamLoader:
     """A class to load server-side params while reusing loaded instances."""
 
@@ -56,7 +60,16 @@ class ParamLoader:
             return self._loaded[param]
         except KeyError:
             pass  # not cached yet.
-        b64_data = self._raw_params[str(param.task_id)].encode("ascii")
+        try:
+            b64_data = self._raw_params[str(param.task_id)].encode("ascii")
+        except KeyError as ke:
+            actual_key = ke.args[0]
+            present = self._raw_params.keys()
+            raise MissingError(
+                actual_key,
+                f"Stored parameter {actual_key!r} was not found."
+                f" All available parameters: {set(present)}",
+            ) from None
         binary_data = base64.standard_b64decode(b64_data)
         real_data = param.decode(binary_data)
         self._loaded[param] = real_data
