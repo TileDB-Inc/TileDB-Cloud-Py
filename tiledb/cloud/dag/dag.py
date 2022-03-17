@@ -201,7 +201,7 @@ class Node(Generic[_T]):
 
             else:
                 # For functions that run locally, give them the results as normal.
-                args, kwargs = _replace_nodes_with_results((self.args, self.kwargs))
+                (args, kwargs), _ = _replace_nodes_with_results((self.args, self.kwargs))
 
             # Delayed functions bypass all our nice assumptions about how we set up
             # a task graph and are not themselves "prewrapped nodes", so we have to
@@ -987,10 +987,12 @@ def replace_stored_params(tree, loader: stored_params.ParamLoader) -> Any:
     return _StoredParamReplacer(loader).visit(tree)
 
 
-def _replace_nodes_with_results(tree, only: Optional[Collection[uuid.UUID]] = None):
+def _replace_nodes_with_results(tree, only: Optional[Collection[uuid.UUID]] = None) -> Tuple[Any, Set[uuid.UUID]]:
     """Descends into data structures and replaces Node IDs with their values."""
 
-    return _NodeResultReplacer(only).visit(tree)
+    replacer = _NodeResultReplacer(only)
+    out = replacer.visit(tree)
+    return out, replacer.ids
 
 
 def _find_parent_nodes(tree) -> Tuple[Node, ...]:
