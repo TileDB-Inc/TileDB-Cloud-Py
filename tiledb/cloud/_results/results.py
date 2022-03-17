@@ -9,7 +9,7 @@ from typing import Any, Callable, Generic, Optional, TypeVar, Union
 import attrs
 import urllib3
 
-from tiledb.cloud import client
+from tiledb.cloud import client, utils
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud._results import decoders
@@ -187,10 +187,11 @@ def _maybe_uuid(id_str: Optional[str]) -> Optional[uuid.UUID]:
 def fetch_remote(task_id: uuid.UUID, decoder: decoders.AbstractDecoder[_T]) -> _T:
     api_instance = client.client.tasks_api
     try:
-        resp: urllib3.HTTPResponse = api_instance.task_id_result_get(
-            str(task_id),
-            _preload_content=False,
-        )
+        with utils.print_timing(f"fetch {task_id} results"):
+            resp: urllib3.HTTPResponse = api_instance.task_id_result_get(
+                str(task_id),
+                _preload_content=False,
+            )
     except rest_api.ApiException as exc:
         raise tce.check_exc(exc) from None
     return decoder.decode(resp.data)

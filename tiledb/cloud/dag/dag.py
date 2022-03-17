@@ -1,6 +1,7 @@
 import collections
 import json
 import numbers
+import re
 import threading
 import time
 import uuid
@@ -9,6 +10,7 @@ from concurrent import futures
 from typing import (
     Any,
     Callable,
+    Collection,
     Counter,
     Deque,
     Dict,
@@ -43,6 +45,8 @@ _T = TypeVar("_T")
 # Special string included in server errors when there is a problem loading
 # stored parameters.
 _RETRY_MSG = "RETRY_WITH_PARAMS"
+
+_BRACKET_RE = re.compile(r"\[(A-Za-z0-9- )*\]")
 
 
 class Node(Generic[_T]):
@@ -178,26 +182,26 @@ class Node(Generic[_T]):
         ft.add_done_callback(self._handle_completed_future)
 
     def _do_exec(self, namespace: Optional[str]) -> results.Result[_T]:
-        with utils.print_timing(f"running UDF {self.name}"):
+        with utils.print_timing(f"running UDF {self}"):
             assert self.dag
             # We have to make a shallow copy of kwargs here.
             # Since we modify the kwargs dictionary here before passing it
             # to the wrapped function, we need to ensure that the arguments
             # that we add are not reused across retries.
-            raw_kwargs = dict(self.kwargs)
+            kwarg_updates: Dict[str, Any] = {}
 
             if self._uses_stored_params:
                 # Stored parameters work only on remote functions.
                 (args, kwargs), param_ids = _replace_nodes_with_stored_params(
-                    (self.args, raw_kwargs)
+                    (self.args, self.kwargs)
                 )
 
                 if param_ids:
-                    kwargs["stored_param_uuids"] = param_ids
+                    kwarg_updates["stored_param_uuids"] = param_ids
 
             else:
                 # For functions that run locally, give them the results as normal.
-                args, kwargs = _replace_nodes_with_results((self.args, raw_kwargs))
+                args, kwargs = _replace_nodes_with_results((self.args, self.kwargs))
 
             # Delayed functions bypass all our nice assumptions about how we set up
             # a task graph and are not themselves "prewrapped nodes", so we have to
@@ -209,12 +213,12 @@ class Node(Generic[_T]):
                 # prewrapped or it was created with `Delayed`, so the function
                 # itself is one of the `submit_xxx` (but not `_base`) functions.
                 self.dag.initial_setup()
-                kwargs.update(
+                kwarg_updates.update(
                     _server_graph_uuid=self.dag.server_graph_uuid,
                     _client_node_uuid=self.id,
                 )
                 if namespace:
-                    kwargs["namespace"] = namespace
+                    kwarg_updates["namespace"] = namespace
 
             if self._was_prewrapped:
                 # Prewrapped functions support special result handling.
@@ -225,20 +229,39 @@ class Node(Generic[_T]):
                     download_results = not self.children
                 else:
                     download_results = self._download_results
-                kwargs["_download_results"] = download_results
+                kwarg_updates["_download_results"] = download_results
                 print(f"***                   Download results? {download_results}", file=sys.stderr)
 
+                merged_kwargs = dict(kwargs)
+                merged_kwargs.update(kwargs)
             try:
-                return self._wrapped_func(*args, **kwargs)
+                with utils.print_timing(f"{self.name} actual call"):
+                    return self._wrapped_func(*args, **merged_kwargs)
             except tce.TileDBCloudError as exc:
                 exc_msg = exc.args and exc.args[0]
                 if not isinstance(exc_msg, str) or _RETRY_MSG not in exc_msg:
                     # This is not a missing-stored-param error. Don't retry.
                     raise
+                # The UUIDs that are missing are space-separated
+                # and enclosed in brackets.
+                only_replace: Optional[Collection[uuid.UUID]] = None
+                mtch = _BRACKET_RE.search(exc_msg)
+                if mtch:
+                    all = mtch[0]
+                    ids = all.split()
+                    try:
+                        only_replace = frozenset(uuid.UUID(hex=d) for d in ids)
+                    except ValueError:
+                        pass
 
             with utils.print_timing(f"replace nodes for {self}"):
-                args, kwargs = _replace_nodes_with_results((self.args, self.kwargs))
-            return self._wrapped_func(*args, **kwargs)
+                (args, kwargs), sp_ids = _replace_nodes_with_results((self.args, self.kwargs), only=only_replace)
+            kwarg_updates["stored_param_uuids"] = sp_ids
+            merged_kwargs = dict(kwargs)
+            merged_kwargs.update(kwarg_updates)
+
+            with utils.print_timing(f"{self} actual call"):
+                return self._wrapped_func(*args, **merged_kwargs)
 
     compute = exec
 
@@ -964,10 +987,10 @@ def replace_stored_params(tree, loader: stored_params.ParamLoader) -> Any:
     return _StoredParamReplacer(loader).visit(tree)
 
 
-def _replace_nodes_with_results(tree):
+def _replace_nodes_with_results(tree, only: Optional[Collection[uuid.UUID]] = None):
     """Descends into data structures and replaces Node IDs with their values."""
 
-    return _NodeResultReplacer().visit(tree)
+    return _NodeResultReplacer(only).visit(tree)
 
 
 def _find_parent_nodes(tree) -> Tuple[Node, ...]:
@@ -1029,13 +1052,22 @@ class _NodeToStoredParamReplacer(visitor.ReplacingVisitor):
         return visitor.Replacement(arg.result())
 
 
-class _NodeResultReplacer(visitor.ReplacingVisitor):
+class _NodeResultReplacer(_NodeToStoredParamReplacer):
     """Replaces :class:`Node`s with their results."""
 
+    def __init__(self, only: Optional[Collection[uuid.UUID]]):
+        super().__init__()
+        self._only = only
+
     def maybe_replace(self, arg) -> Optional[visitor.Replacement]:
-        if isinstance(arg, Node):
+        if not isinstance(arg, Node):
+            pass
+        if self._only is None:
             return visitor.Replacement(arg.result())
-        return None
+        server_id = arg._future.result().to_stored_param().task_id
+        if server_id in self._only:
+            return visitor.Replacement(arg.result())
+        return super().maybe_replace(arg)
 
 
 class _StoredParamReplacer(visitor.ReplacingVisitor):
