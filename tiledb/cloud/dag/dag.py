@@ -118,6 +118,9 @@ class Node(Generic[_T]):
         self.name = name or str(self.id)
         self._find_deps()
 
+    def __repr__(self) -> str:
+        return f"<Node name={self.name!r}; id={self.id}>"
+
     def __hash__(self):
         return hash(self.id)
 

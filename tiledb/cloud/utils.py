@@ -82,6 +82,7 @@ def b64_pickle(obj: Any) -> str:
     return base64.b64encode(pickle).decode("ascii")
 
 import datetime
+import sys
 
 def now() -> datetime.datetime:
     return datetime.datetime.now(datetime.timezone.utc)
@@ -90,11 +91,11 @@ def now() -> datetime.datetime:
 @contextlib.contextmanager
 def print_timing(caption: Any) -> Iterator[None]:
     start_time = now()
-    print(f"=== {start_time:%H:%M:%S.%f} === starting {caption}")
+    print(f"=== {start_time:%H:%M:%S.%f} === starting {caption}", file=sys.stderr)
     try:
         yield
     finally:
         end_time = now()
-        print(f"=== {end_time:%H:%M:%S.%f} === ending {caption}")
+        print(f"=== {end_time:%H:%M:%S.%f} === ending {caption}", file=sys.stderr)
         dur = end_time - start_time
-        print(f"===                 === {dur.total_seconds():12.6f} ")
+        print(f"===                 === {dur.total_seconds():12.6f} ", file=sys.stderr)
