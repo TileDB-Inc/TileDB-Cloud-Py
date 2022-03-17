@@ -236,7 +236,8 @@ class Node(Generic[_T]):
                     # This is not a missing-stored-param error. Don't retry.
                     raise
 
-            args, kwargs = _replace_nodes_with_results((self.args, self.kwargs))
+            with utils.print_timing(f"replace nodes for {self}"):
+                args, kwargs = _replace_nodes_with_results((self.args, self.kwargs))
             return self._wrapped_func(*args, **kwargs)
 
     compute = exec
