@@ -4,6 +4,7 @@ import abc
 import dataclasses
 import itertools
 import json
+import sys
 from typing import Any, Generic, TypeVar
 
 import cloudpickle
@@ -32,7 +33,13 @@ def _load_arrow(data: bytes) -> pyarrow.Table:
         # In this case, we need to return an empty table.
         return pyarrow.Table.from_pydict({})
     reader = pyarrow.RecordBatchStreamReader(data)
-    return reader.read_all()
+    try:
+        return reader.read_all()
+    except pyarrow.ArrowInvalid as pai:
+        textdata = data[:1024].decode("utf-8")
+        print(f"!!!!! ARROW INVALID: {pai}", file=sys.stderr)
+        print(f"Text downloaded: {textdata!r}", file=sys.stderr)
+        raise
 
 
 _DECODE_FNS = {
