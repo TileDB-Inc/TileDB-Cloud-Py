@@ -90,11 +90,11 @@ def now() -> datetime.datetime:
 @contextlib.contextmanager
 def print_timing(caption: Any) -> Iterator[None]:
     start_time = now()
-    print(f"=== {start_time:%H:%M:%s.%f} === starting {caption}")
+    print(f"=== {start_time:%H:%M:%S.%f} === starting {caption}")
     try:
         yield
     finally:
         end_time = now()
-        print(f"=== {end_time:%H:%M:%s.%f} === ending {caption}")
+        print(f"=== {end_time:%H:%M:%S.%f} === ending {caption}")
         dur = end_time - start_time
         print(f"===                 === {dur.total_seconds():12.6f} ")
