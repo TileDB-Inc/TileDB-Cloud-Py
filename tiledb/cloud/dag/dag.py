@@ -233,6 +233,7 @@ class Node(Generic[_T]):
                 kwarg_updates["_download_results"] = download_results
                 print(f"***                   Download results? {download_results}", file=sys.stderr)
 
+                print(pprint.pformat(kwarg_updates), file=sys.stderr)
                 merged_kwargs = dict(kwargs)
                 merged_kwargs.update(kwargs)
             try:
