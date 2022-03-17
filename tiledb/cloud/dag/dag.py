@@ -1,6 +1,7 @@
 import collections
 import json
 import numbers
+import pprint
 import re
 import threading
 import time
@@ -257,6 +258,7 @@ class Node(Generic[_T]):
             with utils.print_timing(f"replace nodes for {self}"):
                 (args, kwargs), sp_ids = _replace_nodes_with_results((self.args, self.kwargs), only=only_replace)
             kwarg_updates["stored_param_uuids"] = sp_ids
+            print(pprint.pformat(kwarg_updates), file=sys.stderr)
             merged_kwargs = dict(kwargs)
             merged_kwargs.update(kwarg_updates)
 
@@ -992,6 +994,7 @@ def _replace_nodes_with_results(tree, only: Optional[Collection[uuid.UUID]] = No
 
     replacer = _NodeResultReplacer(only)
     out = replacer.visit(tree)
+    print(f"replacements: {replacer.ids}", file=sys.stderr)
     return out, replacer.ids
 
 
@@ -1059,6 +1062,7 @@ class _NodeResultReplacer(_NodeToStoredParamReplacer):
 
     def __init__(self, only: Optional[Collection[uuid.UUID]]):
         super().__init__()
+        print(f"replacing only {only}", file=sys.stderr)
         self._only = only
 
     def maybe_replace(self, arg) -> Optional[visitor.Replacement]:
