@@ -2,6 +2,7 @@
 
 import abc
 import dataclasses
+import itertools
 import json
 from typing import Any, Generic, TypeVar
 
@@ -9,7 +10,7 @@ import cloudpickle
 import pandas
 import pyarrow
 
-from tiledb.cloud import tiledb_cloud_error as tce
+from tiledb.cloud import tiledb_cloud_error as tce, utils
 from tiledb.cloud.rest_api import models
 
 _T = TypeVar("_T")
@@ -41,6 +42,9 @@ _DECODE_FNS = {
 }
 
 
+ctr = itertools.count()
+
+
 @dataclasses.dataclass(frozen=True)
 class Decoder(AbstractDecoder[_T], Generic[_T]):
     """General decoder for the formats we support.
@@ -56,7 +60,8 @@ class Decoder(AbstractDecoder[_T], Generic[_T]):
             decoder = _DECODE_FNS[self.format]
         except KeyError:
             raise tce.TileDBCloudError(f"{self.format!r} is not a valid result format.")
-        return decoder(data)
+        with utils.print_timing(f"decode #{next(ctr)} {self.format}"):
+            return decoder(data)
 
 
 @dataclasses.dataclass(frozen=True)

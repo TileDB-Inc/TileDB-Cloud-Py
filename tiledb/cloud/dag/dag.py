@@ -22,9 +22,12 @@ from typing import (
     TypeVar,
 )
 
+import sys
+import datetime
+
 import networkx as nx
 
-from tiledb.cloud import array
+from tiledb.cloud import array, utils
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import sql
@@ -173,64 +176,65 @@ class Node(Generic[_T]):
         ft.add_done_callback(self._handle_completed_future)
 
     def _do_exec(self, namespace: Optional[str]) -> results.Result[_T]:
-        assert self.dag
-        # We have to make a shallow copy of kwargs here.
-        # Since we modify the kwargs dictionary here before passing it
-        # to the wrapped function, we need to ensure that the arguments
-        # that we add are not reused across retries.
-        raw_kwargs = dict(self.kwargs)
+        with utils.print_timing(f"running UDF {self.name}"):
+            assert self.dag
+            # We have to make a shallow copy of kwargs here.
+            # Since we modify the kwargs dictionary here before passing it
+            # to the wrapped function, we need to ensure that the arguments
+            # that we add are not reused across retries.
+            raw_kwargs = dict(self.kwargs)
 
-        if self._uses_stored_params:
-            # Stored parameters work only on remote functions.
-            (args, kwargs), param_ids = _replace_nodes_with_stored_params(
-                (self.args, raw_kwargs)
-            )
+            if self._uses_stored_params:
+                # Stored parameters work only on remote functions.
+                (args, kwargs), param_ids = _replace_nodes_with_stored_params(
+                    (self.args, raw_kwargs)
+                )
 
-            if param_ids:
-                kwargs["stored_param_uuids"] = param_ids
+                if param_ids:
+                    kwargs["stored_param_uuids"] = param_ids
 
-        else:
-            # For functions that run locally, give them the results as normal.
-            args, kwargs = _replace_nodes_with_results((self.args, raw_kwargs))
-
-        # Delayed functions bypass all our nice assumptions about how we set up
-        # a task graph and are not themselves "prewrapped nodes", so we have to
-        # separately check whether a node is remote (i.e., it executes on the
-        # server side period) and whether it is prewrapped (i.e., it is a
-        # whatever_base function that supports the download_results calls etc).
-        if not self.local_mode:
-            # If it's not `local_mode`, we assume that the function is either
-            # prewrapped or it was created with `Delayed`, so the function
-            # itself is one of the `submit_xxx` (but not `_base`) functions.
-            self.dag.initial_setup()
-            kwargs.update(
-                _server_graph_uuid=self.dag.server_graph_uuid,
-                _client_node_uuid=self.id,
-            )
-            if namespace:
-                kwargs["namespace"] = namespace
-
-        if self._was_prewrapped:
-            # Prewrapped functions support special result handling.
-            if self._download_results is None:
-                # If the user didn't explicitly choose, set a download behavior:
-                # If this is a terminal node, download the results.
-                # If this is an intermediate node, do not download the results.
-                download_results = not self.children
             else:
-                download_results = self._download_results
-            kwargs["_download_results"] = download_results
+                # For functions that run locally, give them the results as normal.
+                args, kwargs = _replace_nodes_with_results((self.args, raw_kwargs))
 
-        try:
+            # Delayed functions bypass all our nice assumptions about how we set up
+            # a task graph and are not themselves "prewrapped nodes", so we have to
+            # separately check whether a node is remote (i.e., it executes on the
+            # server side period) and whether it is prewrapped (i.e., it is a
+            # whatever_base function that supports the download_results calls etc).
+            if not self.local_mode:
+                # If it's not `local_mode`, we assume that the function is either
+                # prewrapped or it was created with `Delayed`, so the function
+                # itself is one of the `submit_xxx` (but not `_base`) functions.
+                self.dag.initial_setup()
+                kwargs.update(
+                    _server_graph_uuid=self.dag.server_graph_uuid,
+                    _client_node_uuid=self.id,
+                )
+                if namespace:
+                    kwargs["namespace"] = namespace
+
+            if self._was_prewrapped:
+                # Prewrapped functions support special result handling.
+                if self._download_results is None:
+                    # If the user didn't explicitly choose, set a download behavior:
+                    # If this is a terminal node, download the results.
+                    # If this is an intermediate node, do not download the results.
+                    download_results = not self.children
+                else:
+                    download_results = self._download_results
+                kwargs["_download_results"] = download_results
+
+            try:
+                return self._wrapped_func(*args, **kwargs)
+            except tce.TileDBCloudError as exc:
+                exc_msg = exc.args and exc.args[0]
+                if not isinstance(exc_msg, str) or _RETRY_MSG not in exc_msg:
+                    # This is not a missing-stored-param error. Don't retry.
+                    raise
+
+            args, kwargs = _replace_nodes_with_results((self.args, self.kwargs))
             return self._wrapped_func(*args, **kwargs)
-        except tce.TileDBCloudError as exc:
-            exc_msg = exc.args and exc.args[0]
-            if not isinstance(exc_msg, str) or _RETRY_MSG not in exc_msg:
-                # This is not a missing-stored-param error. Don't retry.
-                raise
-
-        args, kwargs = _replace_nodes_with_results((self.args, self.kwargs))
-        return self._wrapped_func(*args, **kwargs)
 
     compute = exec
 

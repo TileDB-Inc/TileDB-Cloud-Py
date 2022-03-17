@@ -1,8 +1,9 @@
 import base64
+import contextlib
 import inspect
 import logging
 import urllib
-from typing import Any, Callable, Optional, TypeVar
+from typing import Any, Callable, Iterator, Optional, TypeVar
 
 import cloudpickle
 
@@ -79,3 +80,21 @@ def b64_pickle(obj: Any) -> str:
     """Pickles the given object, then base64 encodes the pickle."""
     pickle = cloudpickle.dumps(obj, protocol=TILEDB_CLOUD_PROTOCOL)
     return base64.b64encode(pickle).decode("ascii")
+
+import datetime
+
+def now() -> datetime.datetime:
+    return datetime.datetime.now(datetime.timezone.utc)
+
+
+@contextlib.contextmanager
+def print_timing(caption: Any) -> Iterator[None]:
+    start_time = now()
+    print(f"=== {start_time:%H:%M:%s.%f} === starting {caption}")
+    try:
+        yield
+    finally:
+        end_time = now()
+        print(f"=== {end_time:%H:%M:%s.%f} === ending {caption}")
+        dur = end_time - start_time
+        print(f"===                 === {dur.total_seconds():12.6f} ")
