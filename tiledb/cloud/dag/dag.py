@@ -23,7 +23,6 @@ from typing import (
 )
 
 import sys
-import datetime
 
 import networkx as nx
 
@@ -224,6 +223,7 @@ class Node(Generic[_T]):
                 else:
                     download_results = self._download_results
                 kwargs["_download_results"] = download_results
+                print(f"***                   Download results? {download_results}", file=sys.stderr)
 
             try:
                 return self._wrapped_func(*args, **kwargs)
