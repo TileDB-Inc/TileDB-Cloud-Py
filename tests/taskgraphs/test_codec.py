@@ -17,69 +17,54 @@ class TestUnescaper(unittest.TestCase):
                 "nested pickle",
                 """
                     {
-                      "__tiledb_sentinel__": {
-                        "__escape__": {
-                          "a": "b",
-                          "__tiledb_sentinel__": {
-                            "__tiledb_sentinel__": {
-                              "immediate": {
-                                "format": "python_pickle",
-                                "base64_data": "gASVEgAAAAAAAACMBGpzb26UjAVsb2Fkc5STlC4="
-                              }
-                            }
-                          }
+                      "__tdbudf__": "__escape__",
+                      "__escape__": {
+                        "a": "b",
+                        "__tdbudf__": {
+                          "__tdbudf__": "immediate",
+                          "format": "python_pickle",
+                          "base64_data": "gASVEgAAAAAAAACMBGpzb26UjAVsb2Fkc5STlC4="
                         }
                       }
                     }
                 """,
                 {
                     "a": "b",
-                    "__tiledb_sentinel__": json.loads,
+                    "__tdbudf__": json.loads,
                 },
             ),
             (
                 "complex",
                 """
                     {
-                      "__tiledb_sentinel__": {
-                        "__escape__": {
-                          "c": "d",
-                          "__tiledb_sentinel__": {
-                            "__tiledb_sentinel__": {
-                              "__escape__": {
-                                "e": null,
-                                "__tiledb_sentinel__": 6,
-                                "f": {
-                                  "__tiledb_sentinel__": {
-                                    "immediate": {
-                                      "format": "bytes",
-                                      "base64_data": "YXNkbGtmamFzZGxm"
-                                    }
-                                  }
-                                },
-                                "g": [
-                                  "here",
-                                  "there",
-                                  "everywhere",
-                                  {
-                                    "__tiledb_sentinel__": {
-                                      "immediate": {
-                                        "format": "python_pickle",
-                                        "base64_data": "gASVNwAAAAAAAACMCGRhdGV0aW1llIwIdGltZXpvbmWUk5RoAIwJdGltZWRlbHRhlJOUSwBLAEsAh5RSlIWUUpQu"
-                                      }
-                                    }
-                                  },
-                                  {
-                                    "__tiledb_sentinel__": {
-                                      "immediate": {
-                                        "format": "python_pickle",
-                                        "base64_data": "gASVFAAAAAAAAACMCGJ1aWx0aW5zlIwDbGVulJOULg=="
-                                      }
-                                    }
-                                  }
-                                ]
+                      "__tdbudf__": "__escape__",
+                      "__escape__": {
+                        "c": "d",
+                        "__tdbudf__": {
+                          "__tdbudf__": "__escape__",
+                          "__escape__": {
+                            "e": null,
+                            "__tdbudf__": 6,
+                            "f": {
+                              "__tdbudf__": "immediate",
+                              "format": "bytes",
+                              "base64_data": "YXNkbGtmamFzZGxm"
+                            },
+                            "g": [
+                              "here",
+                              "there",
+                              "everywhere",
+                              {
+                                "__tdbudf__": "immediate",
+                                "format": "python_pickle",
+                                "base64_data": "gASVNwAAAAAAAACMCGRhdGV0aW1llIwIdGltZXpvbmWUk5RoAIwJdGltZWRlbHRhlJOUSwBLAEsAh5RSlIWUUpQu"
+                              },
+                              {
+                                "__tdbudf__": "immediate",
+                                "format": "python_pickle",
+                                "base64_data": "gASVFAAAAAAAAACMCGJ1aWx0aW5zlIwDbGVulJOULg=="
                               }
-                            }
+                            ]
                           }
                         }
                       }
@@ -87,9 +72,9 @@ class TestUnescaper(unittest.TestCase):
                 """,
                 {
                     "c": "d",
-                    "__tiledb_sentinel__": {
+                    "__tdbudf__": {
                         "e": None,
-                        "__tiledb_sentinel__": 6,
+                        "__tdbudf__": 6,
                         "f": b"asdlkfjasdlf",
                         "g": [
                             "here",
@@ -105,12 +90,9 @@ class TestUnescaper(unittest.TestCase):
                 "just a range",
                 """
                     {
-                      "__tiledb_sentinel__": {
-                        "immediate": {
-                          "format": "python_pickle",
-                          "base64_data": "gASVIQAAAAAAAACMCGJ1aWx0aW5zlIwFcmFuZ2WUk5RLAE2aAksBh5RSlC4="
-                        }
-                      }
+                      "__tdbudf__": "immediate",
+                      "format": "python_pickle",
+                      "base64_data": "gASVIQAAAAAAAACMCGJ1aWx0aW5zlIwFcmFuZ2WUk5RLAE2aAksBh5RSlC4="
                     }
                 """,
                 range(666),
@@ -120,10 +102,6 @@ class TestUnescaper(unittest.TestCase):
         for name, inp, expected in cases:
             with self.subTest(name):
                 decoded_input = json.loads(inp)
-                import sys
-
-                json.dump(decoded_input, sys.stderr, indent=2)
-                print(file=sys.stderr)
                 unesc = _codec.Unescaper()
                 actual = unesc.visit(decoded_input)
                 self.assertEqual(expected, actual)
