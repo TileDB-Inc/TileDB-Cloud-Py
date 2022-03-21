@@ -32,7 +32,11 @@ from tiledb.cloud.tasks import last_sql_task
 from tiledb.cloud.tasks import last_udf_task
 from tiledb.cloud.tasks import task
 from tiledb.cloud.tiledb_cloud_error import TileDBCloudError
-from tiledb.cloud.version import version as __version__
+
+try:
+    from tiledb.cloud.version import version as __version__
+except ImportError:
+    __version__ = "0.0.0.local"
 
 ResultFormat = models.ResultFormat
 UDFResultType = ResultFormat
