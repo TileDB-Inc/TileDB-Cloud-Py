@@ -77,6 +77,7 @@ class Node(Generic[_T]):
         :param kwargs: dictionary for keyword arguments
         """
         self.id = uuid.uuid4()
+        self.name = name or str(self.id)
 
         self.error: Optional[BaseException] = None
         self.status = st.Status.NOT_STARTED
@@ -109,11 +110,12 @@ class Node(Generic[_T]):
         self._future: Optional["futures.Future[results.Result[_T]]"] = None
         self._done = threading.Event()
 
-        self.args: Tuple[Any, ...] = args
-        self.kwargs: Dict[str, Any] = kwargs
         self.parents: Dict[uuid.UUID, Node] = {}
         self.children: Dict[uuid.UUID, Node] = {}
-        self.name = name or str(self.id)
+
+        self._has_node_args = False
+        self.args: Tuple[Any, ...] = args
+        self.kwargs: Dict[str, Any] = kwargs
         self._find_deps()
 
     def __hash__(self):
@@ -127,8 +129,10 @@ class Node(Generic[_T]):
 
     def _find_deps(self):
         """Finds Nodes this depends on and adds them to our dependency list."""
-        for dep in _find_parent_nodes([self.args, self.kwargs]):
+        parents = _find_parent_nodes((self.args, self.kwargs))
+        for dep in parents:
             self.depends_on(dep)
+        self._has_node_args = bool(parents)
 
     def depends_on(self, node: "Node"):
         """
@@ -180,18 +184,21 @@ class Node(Generic[_T]):
         # that we add are not reused across retries.
         raw_kwargs = dict(self.kwargs)
 
-        if self._uses_stored_params:
-            # Stored parameters work only on remote functions.
-            (args, kwargs), param_ids = _replace_nodes_with_stored_params(
-                (self.args, raw_kwargs)
-            )
+        if self._has_node_args:
+            if self._uses_stored_params:
+                # Stored parameters work only on remote functions.
+                (args, kwargs), param_ids = _replace_nodes_with_stored_params(
+                    (self.args, raw_kwargs)
+                )
 
-            if param_ids:
-                kwargs["stored_param_uuids"] = param_ids
+                if param_ids:
+                    kwargs["stored_param_uuids"] = param_ids
 
+            else:
+                # For functions that run locally, give them the results as normal.
+                args, kwargs = _replace_nodes_with_results((self.args, raw_kwargs))
         else:
-            # For functions that run locally, give them the results as normal.
-            args, kwargs = _replace_nodes_with_results((self.args, raw_kwargs))
+            args, kwargs = self.args, raw_kwargs
 
         # Delayed functions bypass all our nice assumptions about how we set up
         # a task graph and are not themselves "prewrapped nodes", so we have to
