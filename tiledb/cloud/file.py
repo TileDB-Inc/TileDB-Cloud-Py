@@ -13,6 +13,7 @@ def create_file(
     input_uri: str,
     output_uri: str,
     name: Optional[str] = None,
+    access_credential_name: Optional[str] = None,
     async_req: bool = False,
 ) -> models.FileCreated:
     """
@@ -21,6 +22,7 @@ def create_file(
     :param name: name to use for registration in TileDB Cloud
     :param input_uri: input file uri
     :param output_uri: output array uri
+    :param access_credential_name: optional access credentials to use
     :param async_req: return future instead of results for async support
     :return: FileCreated details, including file_uuid and output_uri
     """
@@ -33,10 +35,12 @@ def create_file(
             name=name,
         )
 
+        kwargs = {}
+        if access_credential_name is not None:
+            kwargs["x_tiledb_cloud_access_credentials_name"] = access_credential_name
+
         return api_instance.handle_create_file(
-            namespace,
-            file_create,
-            async_req=async_req,
+            namespace, file_create, async_req=async_req, **kwargs
         )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
