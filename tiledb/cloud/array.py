@@ -345,11 +345,12 @@ def parse_ranges(ranges):
     result = list()
     for dim_idx, dim_range in enumerate(ranges):
         dim_list = []
-        # TODO handle numpy scalars here?
-        if isinstance(
+        if isinstance(dim_range, numpy.ndarray):
+            dim_list = dim_range.tolist()
+        elif isinstance(
             dim_range, (int, float, tuple, slice, numpy.datetime64, numpy.timedelta64)
         ):
-            dim_list.extend(make_range(dim_range))
+            dim_list = make_range(dim_range)
         elif isinstance(dim_range, list):
             for r in dim_range:
                 dim_list.extend(make_range(r))
