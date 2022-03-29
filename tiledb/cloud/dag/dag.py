@@ -668,7 +668,7 @@ class DAG:
         if timeout is not None:
             end_time = start_time + timeout
         while not self.done():
-            time.sleep(0.5)
+            time.sleep(0.01)
             if end_time is not None and time.time() >= end_time:
                 raise TimeoutError(
                     "timeout of {} reached and dag is not complete".format(timeout)
