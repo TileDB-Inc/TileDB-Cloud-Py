@@ -299,6 +299,7 @@ def array_activity(uri, async_req=False):
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
+
 def parse_ranges(ranges):
     """
     Takes a list of the following objects per dimension:
@@ -339,7 +340,7 @@ def parse_ranges(ranges):
             end = end.astype("int64").item()
 
         return [start, end]
-    
+
     result = list()
     for dim_idx, dim_range in enumerate(ranges):
         dim_list = []
@@ -360,7 +361,7 @@ def parse_ranges(ranges):
                 ", idx: '{}', value: '{}')".format(type(dim_range), dim_idx, dim_range)
             )
         result.append(dim_list)
-    
+
     return result
 
 
