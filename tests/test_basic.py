@@ -12,6 +12,7 @@ from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import tasks
 from tiledb.cloud import tiledb_cloud_error
+from tiledb.cloud._results import json_safe
 
 tiledb.cloud.login(
     token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
@@ -279,36 +280,36 @@ class BasicTests(unittest.TestCase):
 
 class RangesTest(unittest.TestCase):
     def test_parse_ranges(self):
-        parse_ranges = lambda x: array.parse_ranges(x)
+        parse_ranges = array.parse_ranges
 
         a = [1]
         b = [[1, 1]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         a = [1, 2]
         b = [[1, 1], [2, 2]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         a = [[1, 2], 3]
         b = [[1, 1, 2, 2], [3, 3]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         # tuples
         a = [1, (1, 2)]
         b = [[1, 1], [1, 2]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         a = [1, [(1, 2)]]
         b = [[1, 1], [1, 2]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         a = [1, [slice(1, 2)]]
         b = [[1, 1], [1, 2]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         a = [1, slice(2, 3)], [(1, 2), 4]
         b = [[1, 1, 2, 3], [1, 2, 4, 4]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         a = [
             [
@@ -324,7 +325,7 @@ class RangesTest(unittest.TestCase):
             ),
         ]
         b = [[15372, 18627, 25724, 25724], [1328140800000000000, 1609372800000000000]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         a = [
             [
@@ -340,7 +341,7 @@ class RangesTest(unittest.TestCase):
             ),
         ]
         b = [[15372, 18627, 25724, 25724], [1328140800000000000, 1609372800000000000]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         a = [
             [
@@ -356,30 +357,30 @@ class RangesTest(unittest.TestCase):
             ),
         ]
         b = [[2012, 2020, 6, 6], [1440000000000, 7200000000000]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         start = numpy.datetime64("2019-07-01T00:00:00")
         end = numpy.datetime64("2019-08-01T23:59:59")
         weeks = numpy.arange(start, end, np.timedelta64(1, "W"))
         a = [weeks[0], weeks[1]]
         b = [[1561939200, 1561939200], [1562544000, 1562544000]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         a = [None, [(1, 2), 4]]
         b = [[], [1, 2, 4, 4]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         a = [[], [(1, 2), 4]]
         b = [[], [1, 2, 4, 4]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         a = [(), [(1, 2), 4]]
         b = [[], [1, 2, 4, 4]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         a = [[1, 2, 3], [(1, 2), 4]]
         b = [[1, 1, 2, 2, 3, 3], [1, 2, 4, 4]]
-        self.assertEqual(parse_ranges(a), b)
+        self.assertEqual(parse_ranges(a), json_safe.Value(b))
 
         with self.assertRaises(ValueError):
             parse_ranges(["idx"])

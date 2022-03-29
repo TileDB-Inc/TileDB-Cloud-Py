@@ -25,6 +25,7 @@ from dateutil.parser import parse
 from six.moves.urllib.parse import quote
 
 import tiledb.cloud.rest_api.models
+from tiledb.cloud._results import json_safe
 from tiledb.cloud.rest_api import rest
 from tiledb.cloud.rest_api.configuration import Configuration
 from tiledb.cloud.rest_api.exceptions import ApiException
@@ -251,6 +252,8 @@ class ApiClient(object):
         """
         if obj is None:
             return None
+        elif isinstance(obj, json_safe.Value):
+            return obj.value
         elif isinstance(obj, self.PRIMITIVE_TYPES):
             return obj
         elif isinstance(obj, list):
