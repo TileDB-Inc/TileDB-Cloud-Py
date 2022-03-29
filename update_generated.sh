@@ -108,3 +108,29 @@ for command in isort black; do
     "${command}" "${ROOT}"
   fi
 done
+
+# Apply an api_client patch to avoid descending into known–JSON-safe values.
+git apply - <<EOF
+diff --git a/tiledb/cloud/rest_api/api_client.py b/tiledb/cloud/rest_api/api_client.py
+index 267385d..6d244a0 100644
+--- a/tiledb/cloud/rest_api/api_client.py
++++ b/tiledb/cloud/rest_api/api_client.py
+@@ -25,6 +25,7 @@ from dateutil.parser import parse
+ from six.moves.urllib.parse import quote
+ 
+ import tiledb.cloud.rest_api.models
++from tiledb.cloud._results import json_safe
+ from tiledb.cloud.rest_api import rest
+ from tiledb.cloud.rest_api.configuration import Configuration
+ from tiledb.cloud.rest_api.exceptions import ApiException
+@@ -251,6 +252,8 @@ class ApiClient(object):
+         """
+         if obj is None:
+             return None
++        elif isinstance(obj, json_safe.Value):
++            return obj.value
+         elif isinstance(obj, self.PRIMITIVE_TYPES):
+             return obj
+         elif isinstance(obj, list):
+EOF
+

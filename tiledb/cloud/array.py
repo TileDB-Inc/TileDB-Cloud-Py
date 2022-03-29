@@ -9,6 +9,7 @@ from tiledb.cloud import client
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
 from tiledb.cloud._results import decoders
+from tiledb.cloud._results import json_safe
 from tiledb.cloud._results import results
 from tiledb.cloud._results import sender
 from tiledb.cloud.rest_api import ApiException as GenApiException
@@ -44,10 +45,10 @@ class ArrayList:
         elif layout.upper() == "U":
             converted_layout = "unordered"
 
-        parse_ranges(ranges)  # check that the ranges are parseable.
+        parsed = parse_ranges(ranges)  # check that the ranges are parseable.
         udf_array_details = models.UDFArrayDetails(
             uri=uri,
-            ranges=models.QueryRanges(layout=converted_layout, ranges=ranges),
+            ranges=models.QueryRanges(layout=converted_layout, ranges=parsed),
             buffers=buffers,
         )
         self.arrayList.append(udf_array_details)
@@ -362,7 +363,7 @@ def parse_ranges(ranges):
             )
         result.append(dim_list)
 
-    return result
+    return json_safe.Value(result)
 
 
 def apply_base(
