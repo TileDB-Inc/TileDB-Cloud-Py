@@ -2,6 +2,7 @@ import base64
 import collections
 import collections.abc as cabc
 import itertools
+import math
 import pickle
 import threading
 import time
@@ -315,6 +316,14 @@ class DAGClassTest(unittest.TestCase):
         d.compute()
         d.wait(1)  # Avoid locking up forever if we deadlock.
         self.assertEqual("#0, #1, #2, #3, #4", terminal.result())
+
+    def test_local_processes(self):
+        d = dag.DAG(use_processes=True)
+        inputs = [d.submit_local(math.factorial, i) for i in range(5)]
+        terminal = d.submit_local(", ".join, inputs)
+        d.compute()
+        d.wait(1)
+        self.assertEqual("1, 1, 2, 6, 24", terminal.result())
 
 
 class DAGFailureTest(unittest.TestCase):
