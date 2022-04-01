@@ -1,6 +1,7 @@
 """Things that help you keep track of task results and how to decode them."""
 
 import abc
+import functools
 import threading
 import uuid
 from concurrent import futures
@@ -17,6 +18,7 @@ from tiledb.cloud._results import stored_params
 
 TASK_ID_HEADER = "X-TILEDB-CLOUD-TASK-ID"
 _T = TypeVar("_T")
+_U = TypeVar("_U")
 
 
 class Result(Generic[_T], metaclass=abc.ABCMeta):
@@ -40,7 +42,30 @@ class LocalResult(Result[_T], Generic[_T]):
 
     @classmethod
     def wrap(cls, func: Callable[..., _T]) -> Callable[..., Result[_T]]:
-        return lambda *args, **kwargs: cls(func(*args, **kwargs))
+        return functools.partial(cls._compose, func)
+
+    @classmethod
+    def _compose(cls, __func: Callable[..., _T], *args, **kwargs) -> Result[_T]:
+        """Function composition so that ``.wrap(func)`` can be pickled.
+
+        Task graphs with ``use_processes=True`` need to pickle results across
+        process boundaries. Lambdas cannot be pickled, but ``functools.partial``
+        can.
+        """
+        return cls(__func(*args, **kwargs))
+
+
+def _compose(
+    __outer: Callable[[_U], _T],
+    __func: Callable[..., _U],
+    *args,
+    **kwargs,
+) -> _T:
+    """Composition function so that we can pickle ``LocalResult.wrap(...)``.
+
+    This is needed
+    """
+    return __outer(__func(*args, **kwargs))
 
 
 _SENTINEL = object()
