@@ -5,11 +5,6 @@ import unittest
 import tiledb
 import tiledb.cloud
 
-tiledb.cloud.login(
-    token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
-    host=os.environ.get("TILEDB_CLOUD_REST_HOST", None),
-)
-
 
 class FileTests(unittest.TestCase):
     def test_simple_file_export(self):

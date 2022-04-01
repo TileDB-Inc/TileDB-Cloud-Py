@@ -1,4 +1,3 @@
-import os
 import sys
 import unittest
 
@@ -13,11 +12,6 @@ from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import udf
 from tiledb.cloud import utils
 from tiledb.cloud.rest_api import models
-
-tiledb.cloud.login(
-    token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
-    host=os.environ.get("TILEDB_CLOUD_REST_HOST", None),
-)
 
 
 class GenericUDFTest(unittest.TestCase):
