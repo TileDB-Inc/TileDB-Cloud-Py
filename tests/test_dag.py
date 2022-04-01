@@ -2,7 +2,6 @@ import base64
 import collections
 import collections.abc as cabc
 import itertools
-import os
 import pickle
 import threading
 import time
@@ -25,11 +24,6 @@ from tiledb.cloud._results import stored_params as sp
 from tiledb.cloud._results import visitor
 from tiledb.cloud.dag import dag as dag_dag
 from tiledb.cloud.rest_api import models
-
-tiledb.cloud.login(
-    token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
-    host=os.environ.get("TILEDB_CLOUD_REST_HOST", None),
-)
 
 
 class DAGClassTest(unittest.TestCase):

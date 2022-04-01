@@ -1,4 +1,3 @@
-import os
 import unittest
 import uuid
 
@@ -13,11 +12,6 @@ from tiledb.cloud import client
 from tiledb.cloud import tasks
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud._results import json_safe
-
-tiledb.cloud.login(
-    token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
-    host=os.environ.get("TILEDB_CLOUD_REST_HOST", None),
-)
 
 
 class BasicTests(unittest.TestCase):

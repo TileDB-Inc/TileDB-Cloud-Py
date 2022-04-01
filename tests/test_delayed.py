@@ -1,4 +1,3 @@
-import os
 import time
 import unittest
 
@@ -10,11 +9,6 @@ from tiledb.cloud.compute import Delayed
 from tiledb.cloud.compute import DelayedArrayUDF
 from tiledb.cloud.compute import DelayedSQL
 from tiledb.cloud.compute import Status
-
-tiledb.cloud.login(
-    token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
-    host=os.environ.get("TILEDB_CLOUD_REST_HOST", None),
-)
 
 
 class DelayedClassTest(unittest.TestCase):

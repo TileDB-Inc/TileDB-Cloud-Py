@@ -1,21 +1,7 @@
-import os
-import platform
-import sys
 import unittest
-
-import numpy as np
 
 import tiledb
 import tiledb.cloud
-from tiledb.cloud import array
-from tiledb.cloud import client
-from tiledb.cloud import tasks
-from tiledb.cloud import tiledb_cloud_error
-
-tiledb.cloud.login(
-    token=os.environ["TILEDB_CLOUD_HELPER_VAR"],
-    host=os.environ.get("TILEDB_CLOUD_REST_HOST", None),
-)
 
 
 class BasicTests(unittest.TestCase):
