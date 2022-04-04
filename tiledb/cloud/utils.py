@@ -38,8 +38,9 @@ def getsourcelines(func: Callable) -> Optional[str]:
     try:
         # Attempt to find and serialize the original source...
         return "".join(inspect.getsourcelines(func)[0])
-    except OSError as exc:
-        # ...but if it's not available, don't panic; just go on without it.
+    except Exception as exc:
+        # ...but if it's not available for any reason, don't panic;
+        # just go on without it.
         logger.warning(
             "Failed to serialize function source text, "
             "proceeding with bytecode only: %s",
