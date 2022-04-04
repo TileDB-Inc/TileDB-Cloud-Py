@@ -394,7 +394,7 @@ class DAG:
                     # This should not abort the task graph.
 
                     warnings.warn(
-                        UserWarning(f"Error submitting task graph logging info: {apix}")
+                        UserWarning(f"Could not submit logging metadata: {apix}")
                     )
                 else:
                     try:
