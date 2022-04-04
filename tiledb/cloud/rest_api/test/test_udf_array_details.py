@@ -37,6 +37,7 @@ class TestUDFArrayDetails(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.udf_array_details.UDFArrayDetails()  # noqa: E501
         if include_optional:
             return UDFArrayDetails(
+                parameter_id="0",
                 uri="0",
                 ranges=tiledb.cloud.rest_api.models.query_ranges.QueryRanges(
                     layout="row-major",

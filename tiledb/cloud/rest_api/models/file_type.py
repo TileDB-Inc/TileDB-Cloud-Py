@@ -32,8 +32,15 @@ class FileType(object):
     USER_DEFINED_FUNCTION = "user_defined_function"
     ML_MODEL = "ml_model"
     FILE = "file"
+    REGISTERED_TASK_GRAPH = "registered_task_graph"
 
-    allowable_values = [NOTEBOOK, USER_DEFINED_FUNCTION, ML_MODEL, FILE]  # noqa: E501
+    allowable_values = [
+        NOTEBOOK,
+        USER_DEFINED_FUNCTION,
+        ML_MODEL,
+        FILE,
+        REGISTERED_TASK_GRAPH,
+    ]  # noqa: E501
 
     """
     Attributes:

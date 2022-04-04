@@ -155,8 +155,7 @@ class ArrayInfo(object):
             self.uri = uri
         if namespace is not None:
             self.namespace = namespace
-        if size is not None:
-            self.size = size
+        self.size = size
         if last_accessed is not None:
             self.last_accessed = last_accessed
         self.description = description

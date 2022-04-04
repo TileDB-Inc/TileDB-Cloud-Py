@@ -57,16 +57,32 @@ from tiledb.cloud.rest_api.models.file_export import FileExport
 from tiledb.cloud.rest_api.models.file_exported import FileExported
 from tiledb.cloud.rest_api.models.file_property_name import FilePropertyName
 from tiledb.cloud.rest_api.models.file_type import FileType
+from tiledb.cloud.rest_api.models.file_uploaded import FileUploaded
 from tiledb.cloud.rest_api.models.filter import Filter
 from tiledb.cloud.rest_api.models.filter_data import FilterData
 from tiledb.cloud.rest_api.models.filter_option import FilterOption
 from tiledb.cloud.rest_api.models.filter_pipeline import FilterPipeline
 from tiledb.cloud.rest_api.models.filter_type import FilterType
 from tiledb.cloud.rest_api.models.generic_udf import GenericUDF
-from tiledb.cloud.rest_api.models.group import Group
+from tiledb.cloud.rest_api.models.group_actions import GroupActions
+from tiledb.cloud.rest_api.models.group_browser_data import GroupBrowserData
+from tiledb.cloud.rest_api.models.group_browser_filter_data import (
+    GroupBrowserFilterData,
+)
+from tiledb.cloud.rest_api.models.group_changes import GroupChanges
+from tiledb.cloud.rest_api.models.group_contents import GroupContents
+from tiledb.cloud.rest_api.models.group_contents_filter_data import (
+    GroupContentsFilterData,
+)
 from tiledb.cloud.rest_api.models.group_create import GroupCreate
-from tiledb.cloud.rest_api.models.group_listing import GroupListing
-from tiledb.cloud.rest_api.models.group_listing_all_of import GroupListingAllOf
+from tiledb.cloud.rest_api.models.group_entry import GroupEntry
+from tiledb.cloud.rest_api.models.group_info import GroupInfo
+from tiledb.cloud.rest_api.models.group_member import GroupMember
+from tiledb.cloud.rest_api.models.group_member_asset_type import GroupMemberAssetType
+from tiledb.cloud.rest_api.models.group_member_type import GroupMemberType
+from tiledb.cloud.rest_api.models.group_register import GroupRegister
+from tiledb.cloud.rest_api.models.group_sharing import GroupSharing
+from tiledb.cloud.rest_api.models.group_sharing_request import GroupSharingRequest
 from tiledb.cloud.rest_api.models.group_update import GroupUpdate
 from tiledb.cloud.rest_api.models.inline_object import InlineObject
 from tiledb.cloud.rest_api.models.inline_response200 import InlineResponse200
@@ -88,6 +104,8 @@ from tiledb.cloud.rest_api.models.ml_model_favorites_data import MLModelFavorite
 from tiledb.cloud.rest_api.models.multi_array_udf import MultiArrayUDF
 from tiledb.cloud.rest_api.models.namespace_actions import NamespaceActions
 from tiledb.cloud.rest_api.models.non_empty_domain import NonEmptyDomain
+from tiledb.cloud.rest_api.models.notebook_copied import NotebookCopied
+from tiledb.cloud.rest_api.models.notebook_copy import NotebookCopy
 from tiledb.cloud.rest_api.models.notebook_favorite import NotebookFavorite
 from tiledb.cloud.rest_api.models.notebook_favorites_data import NotebookFavoritesData
 from tiledb.cloud.rest_api.models.notebook_status import NotebookStatus
@@ -126,6 +144,7 @@ from tiledb.cloud.rest_api.models.task_graph_log import TaskGraphLog
 from tiledb.cloud.rest_api.models.task_graph_log_status import TaskGraphLogStatus
 from tiledb.cloud.rest_api.models.task_graph_logs_data import TaskGraphLogsData
 from tiledb.cloud.rest_api.models.task_graph_node_metadata import TaskGraphNodeMetadata
+from tiledb.cloud.rest_api.models.tgudf_argument import TGUDFArgument
 from tiledb.cloud.rest_api.models.tile_db_config import TileDBConfig
 from tiledb.cloud.rest_api.models.token import Token
 from tiledb.cloud.rest_api.models.token_request import TokenRequest

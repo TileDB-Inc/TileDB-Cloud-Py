@@ -1,6 +1,6 @@
 # ResultFormat
 
-Results type
+Data format of a result
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

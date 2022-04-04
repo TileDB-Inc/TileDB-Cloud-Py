@@ -36,7 +36,17 @@ class TestGroupCreate(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.group_create.GroupCreate()  # noqa: E501
         if include_optional:
-            return GroupCreate(parent="0", description="0")
+            return GroupCreate(
+                description="0",
+                name="0",
+                parent="0",
+                uri="0",
+                logo="0",
+                access_credentials_name="0",
+                tags=["0"],
+                license_id="0",
+                license_text="0",
+            )
         else:
             return GroupCreate()
 

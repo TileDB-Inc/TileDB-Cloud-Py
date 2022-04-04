@@ -32,6 +32,14 @@ class TestNotebookApi(unittest.TestCase):
         """Test case for get_notebook_server_status"""
         pass
 
+    def test_handle_copy_notebook(self):
+        """Test case for handle_copy_notebook"""
+        pass
+
+    def test_handle_upload_notebook(self):
+        """Test case for handle_upload_notebook"""
+        pass
+
     def test_shutdown_notebook_server(self):
         """Test case for shutdown_notebook_server"""
         pass

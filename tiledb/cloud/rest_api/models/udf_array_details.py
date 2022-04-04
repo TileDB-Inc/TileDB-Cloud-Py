@@ -32,29 +32,69 @@ class UDFArrayDetails(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"uri": "str", "ranges": "QueryRanges", "buffers": "list[str]"}
+    openapi_types = {
+        "parameter_id": "str",
+        "uri": "str",
+        "ranges": "QueryRanges",
+        "buffers": "list[str]",
+    }
 
-    attribute_map = {"uri": "uri", "ranges": "ranges", "buffers": "buffers"}
+    attribute_map = {
+        "parameter_id": "parameter_id",
+        "uri": "uri",
+        "ranges": "ranges",
+        "buffers": "buffers",
+    }
 
     def __init__(
-        self, uri=None, ranges=None, buffers=None, local_vars_configuration=None
+        self,
+        parameter_id=None,
+        uri=None,
+        ranges=None,
+        buffers=None,
+        local_vars_configuration=None,
     ):  # noqa: E501
         """UDFArrayDetails - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
+        self._parameter_id = None
         self._uri = None
         self._ranges = None
         self._buffers = None
         self.discriminator = None
 
+        self.parameter_id = parameter_id
         if uri is not None:
             self.uri = uri
         if ranges is not None:
             self.ranges = ranges
         if buffers is not None:
             self.buffers = buffers
+
+    @property
+    def parameter_id(self):
+        """Gets the parameter_id of this UDFArrayDetails.  # noqa: E501
+
+        An optional client-generated identifier to distinguish between multiple range/buffer requests from the same array in the same call. This may be set for MultiArrayUDFs that use the `argument_json` style of passing arrays.   # noqa: E501
+
+        :return: The parameter_id of this UDFArrayDetails.  # noqa: E501
+        :rtype: str
+        """
+        return self._parameter_id
+
+    @parameter_id.setter
+    def parameter_id(self, parameter_id):
+        """Sets the parameter_id of this UDFArrayDetails.
+
+        An optional client-generated identifier to distinguish between multiple range/buffer requests from the same array in the same call. This may be set for MultiArrayUDFs that use the `argument_json` style of passing arrays.   # noqa: E501
+
+        :param parameter_id: The parameter_id of this UDFArrayDetails.  # noqa: E501
+        :type: str
+        """
+
+        self._parameter_id = parameter_id
 
     @property
     def uri(self):

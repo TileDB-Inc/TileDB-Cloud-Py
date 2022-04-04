@@ -143,13 +143,23 @@ Class | Method | HTTP request | Description
 *FavoritesApi* | [**list_udf_favorites_uui_ds**](docs/FavoritesApi.md#list_udf_favorites_uui_ds) | **GET** /udfs/favorites/uuids | 
 *FilesApi* | [**handle_create_file**](docs/FilesApi.md#handle_create_file) | **POST** /files/{namespace} | 
 *FilesApi* | [**handle_export_file**](docs/FilesApi.md#handle_export_file) | **POST** /files/{namespace}/{file}/export | 
-*GroupsApi* | [**add_asset**](docs/GroupsApi.md#add_asset) | **POST** /groups/{namespace}/{name}/{asset_namespace}/{asset_name} | 
-*GroupsApi* | [**create_group**](docs/GroupsApi.md#create_group) | **POST** /groups/{namespace}/{name} | 
-*GroupsApi* | [**delete_group**](docs/GroupsApi.md#delete_group) | **DELETE** /groups/{namespace}/{name} | 
-*GroupsApi* | [**list_group**](docs/GroupsApi.md#list_group) | **GET** /groups/{namespace}/{name} | 
-*GroupsApi* | [**list_top_level_groups**](docs/GroupsApi.md#list_top_level_groups) | **GET** /groups/{namespace} | 
-*GroupsApi* | [**remove_asset**](docs/GroupsApi.md#remove_asset) | **DELETE** /groups/{namespace}/{name}/{asset_namespace}/{asset_name} | 
-*GroupsApi* | [**update_group**](docs/GroupsApi.md#update_group) | **PATCH** /groups/{namespace}/{name} | 
+*FilesApi* | [**handle_upload_file**](docs/FilesApi.md#handle_upload_file) | **POST** /files/{namespace}/upload | 
+*GroupsApi* | [**change_group_contents**](docs/GroupsApi.md#change_group_contents) | **POST** /groups/{group_namespace}/{group_name}/contents | 
+*GroupsApi* | [**create_group**](docs/GroupsApi.md#create_group) | **POST** /groups/{namespace}/create | 
+*GroupsApi* | [**delete_group**](docs/GroupsApi.md#delete_group) | **DELETE** /groups/{group_namespace}/{group_name} | 
+*GroupsApi* | [**get_group**](docs/GroupsApi.md#get_group) | **GET** /groups/{group_namespace}/{group_name} | 
+*GroupsApi* | [**get_group_contents**](docs/GroupsApi.md#get_group_contents) | **GET** /groups/{group_namespace}/{group_name}/contents | 
+*GroupsApi* | [**get_group_sharing_policies**](docs/GroupsApi.md#get_group_sharing_policies) | **GET** /groups/{group_namespace}/{group_name}/share | 
+*GroupsApi* | [**groups_browser_owned_filters_get**](docs/GroupsApi.md#groups_browser_owned_filters_get) | **GET** /groups/browser/owned/filters | 
+*GroupsApi* | [**groups_browser_public_filters_get**](docs/GroupsApi.md#groups_browser_public_filters_get) | **GET** /groups/browser/public/filters | 
+*GroupsApi* | [**groups_browser_shared_filters_get**](docs/GroupsApi.md#groups_browser_shared_filters_get) | **GET** /groups/browser/shared/filters | 
+*GroupsApi* | [**groups_group_namespace_group_name_contents_filters_get**](docs/GroupsApi.md#groups_group_namespace_group_name_contents_filters_get) | **GET** /groups/{group_namespace}/{group_name}/contents/filters | 
+*GroupsApi* | [**list_owned_groups**](docs/GroupsApi.md#list_owned_groups) | **GET** /groups/browser/owned | 
+*GroupsApi* | [**list_public_groups**](docs/GroupsApi.md#list_public_groups) | **GET** /groups/browser/public | 
+*GroupsApi* | [**list_shared_groups**](docs/GroupsApi.md#list_shared_groups) | **GET** /groups/browser/shared | 
+*GroupsApi* | [**register_group**](docs/GroupsApi.md#register_group) | **POST** /groups/{namespace}/{array}/register | 
+*GroupsApi* | [**share_group**](docs/GroupsApi.md#share_group) | **PATCH** /groups/{group_namespace}/{group_name}/share | 
+*GroupsApi* | [**update_group**](docs/GroupsApi.md#update_group) | **PATCH** /groups/{group_namespace}/{group_name} | 
 *InvitationApi* | [**accept_invitation**](docs/InvitationApi.md#accept_invitation) | **POST** /invitations/{invitation} | 
 *InvitationApi* | [**cancel_join_organization**](docs/InvitationApi.md#cancel_join_organization) | **DELETE** /invitations/{invitation}/{organization}/join | 
 *InvitationApi* | [**cancel_share_array_by_invite**](docs/InvitationApi.md#cancel_share_array_by_invite) | **DELETE** /invitations/{invitation}/{namespace}/{array}/share | 
@@ -157,6 +167,8 @@ Class | Method | HTTP request | Description
 *InvitationApi* | [**join_organization**](docs/InvitationApi.md#join_organization) | **POST** /invitations/{organization}/join | 
 *InvitationApi* | [**share_array_by_invite**](docs/InvitationApi.md#share_array_by_invite) | **POST** /invitations/{namespace}/{array}/share | 
 *NotebookApi* | [**get_notebook_server_status**](docs/NotebookApi.md#get_notebook_server_status) | **GET** /notebooks/server/{namespace}/status | 
+*NotebookApi* | [**handle_copy_notebook**](docs/NotebookApi.md#handle_copy_notebook) | **POST** /notebooks/{namespace}/{array}/copy | 
+*NotebookApi* | [**handle_upload_notebook**](docs/NotebookApi.md#handle_upload_notebook) | **POST** /notebooks/{namespace}/upload | 
 *NotebookApi* | [**shutdown_notebook_server**](docs/NotebookApi.md#shutdown_notebook_server) | **DELETE** /notebooks/server/{namespace} | 
 *NotebookApi* | [**update_notebook_name**](docs/NotebookApi.md#update_notebook_name) | **PATCH** /notebooks/{namespace}/{array}/rename | 
 *NotebooksApi* | [**notebooks_namespace_array_end_timestamps_get**](docs/NotebooksApi.md#notebooks_namespace_array_end_timestamps_get) | **GET** /notebooks/{namespace}/{array}/end_timestamps | 
@@ -265,16 +277,28 @@ Class | Method | HTTP request | Description
  - [FileExported](docs/FileExported.md)
  - [FilePropertyName](docs/FilePropertyName.md)
  - [FileType](docs/FileType.md)
+ - [FileUploaded](docs/FileUploaded.md)
  - [Filter](docs/Filter.md)
  - [FilterData](docs/FilterData.md)
  - [FilterOption](docs/FilterOption.md)
  - [FilterPipeline](docs/FilterPipeline.md)
  - [FilterType](docs/FilterType.md)
  - [GenericUDF](docs/GenericUDF.md)
- - [Group](docs/Group.md)
+ - [GroupActions](docs/GroupActions.md)
+ - [GroupBrowserData](docs/GroupBrowserData.md)
+ - [GroupBrowserFilterData](docs/GroupBrowserFilterData.md)
+ - [GroupChanges](docs/GroupChanges.md)
+ - [GroupContents](docs/GroupContents.md)
+ - [GroupContentsFilterData](docs/GroupContentsFilterData.md)
  - [GroupCreate](docs/GroupCreate.md)
- - [GroupListing](docs/GroupListing.md)
- - [GroupListingAllOf](docs/GroupListingAllOf.md)
+ - [GroupEntry](docs/GroupEntry.md)
+ - [GroupInfo](docs/GroupInfo.md)
+ - [GroupMember](docs/GroupMember.md)
+ - [GroupMemberAssetType](docs/GroupMemberAssetType.md)
+ - [GroupMemberType](docs/GroupMemberType.md)
+ - [GroupRegister](docs/GroupRegister.md)
+ - [GroupSharing](docs/GroupSharing.md)
+ - [GroupSharingRequest](docs/GroupSharingRequest.md)
  - [GroupUpdate](docs/GroupUpdate.md)
  - [InlineObject](docs/InlineObject.md)
  - [InlineResponse200](docs/InlineResponse200.md)
@@ -292,6 +316,8 @@ Class | Method | HTTP request | Description
  - [MultiArrayUDF](docs/MultiArrayUDF.md)
  - [NamespaceActions](docs/NamespaceActions.md)
  - [NonEmptyDomain](docs/NonEmptyDomain.md)
+ - [NotebookCopied](docs/NotebookCopied.md)
+ - [NotebookCopy](docs/NotebookCopy.md)
  - [NotebookFavorite](docs/NotebookFavorite.md)
  - [NotebookFavoritesData](docs/NotebookFavoritesData.md)
  - [NotebookStatus](docs/NotebookStatus.md)
@@ -322,6 +348,7 @@ Class | Method | HTTP request | Description
  - [SubarrayPartitionerState](docs/SubarrayPartitionerState.md)
  - [SubarrayRanges](docs/SubarrayRanges.md)
  - [Subscription](docs/Subscription.md)
+ - [TGUDFArgument](docs/TGUDFArgument.md)
  - [TaskGraphLog](docs/TaskGraphLog.md)
  - [TaskGraphLogStatus](docs/TaskGraphLogStatus.md)
  - [TaskGraphLogsData](docs/TaskGraphLogsData.md)

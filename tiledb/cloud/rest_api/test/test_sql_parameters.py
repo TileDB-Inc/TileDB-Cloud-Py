@@ -42,7 +42,7 @@ class TestSQLParameters(unittest.TestCase):
                 output_uri="s3://my_bucket/my_output_array",
                 store_results=True,
                 dont_download_results=True,
-                result_format="native",
+                result_format="python_pickle",
                 init_commands=["0"],
                 parameters=[None],
                 task_graph_uuid="0",
