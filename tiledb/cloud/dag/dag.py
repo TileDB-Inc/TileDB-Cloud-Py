@@ -219,9 +219,15 @@ class Node(Generic[_T]):
             # Prewrapped functions support special result handling.
             if self._download_results is None:
                 # If the user didn't explicitly choose, set a download behavior:
-                # If this is a terminal node, download the results.
-                # If this is an intermediate node, do not download the results.
-                download_results = not self.children
+                if self.children:
+                    # If this is an intermediate node, download results only if
+                    # there is a child node which runs locally.
+                    download_results = any(
+                        child.local_mode for child in self.parents.values()
+                    )
+                else:
+                    # If this is a terminal node, always download results.
+                    download_results = True
             else:
                 download_results = self._download_results
             kwargs["_download_results"] = download_results
