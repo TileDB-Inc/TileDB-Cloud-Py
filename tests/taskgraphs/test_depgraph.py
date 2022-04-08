@@ -119,7 +119,7 @@ class TestDepGraph(unittest.TestCase):
         self.assertEqual((True, False), g.leaves())
 
     def test_copy(self):
-        old = depgraph.DepGraph[int]()
+        old: depgraph.DepGraph[int] = depgraph.DepGraph()
         old.add_new_node(1, ())
         old.add_new_node(2, ())
         old.add_new_node(3, (1, 2))
