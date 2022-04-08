@@ -17,10 +17,35 @@ class DepGraph(Generic[_T]):
         self._topo_sorted: List[_T] = []
         """A topologically-sorted list of nodes."""
 
+    def copy(self) -> "DepGraph[_T]":
+        """Makes an independent "deep" copy of this DepGraph.
+
+        The new graph can be edited without affecting this graph.
+        """
+        new = DepGraph[_T]()
+        new._parent_to_children = {
+            k: set(v) for (k, v) in self._parent_to_children.items()
+        }
+        new._child_to_parents = {k: set(v) for (k, v) in self._child_to_parents.items()}
+        new._topo_sorted = list(self._topo_sorted)
+        return new
+
     @property
     def topo_sorted(self) -> Tuple[_T, ...]:
         """A topologically-sorted view of the dependency graph."""
         return tuple(self._topo_sorted)
+
+    def roots(self) -> Tuple[_T, ...]:
+        """Returns the nodes of this graph with no ancestors."""
+        return tuple(
+            n for (n, parents) in self._child_to_parents.items() if not parents
+        )
+
+    def leaves(self) -> Tuple[_T, ...]:
+        """Returns the nodes of this graph with no descendants."""
+        return tuple(
+            n for (n, children) in self._parent_to_children.items() if not children
+        )
 
     def add_new_node(self, child: _T, parents: Iterable[_T]) -> None:
         """Adds a new child to the graph, where all parents exist."""
