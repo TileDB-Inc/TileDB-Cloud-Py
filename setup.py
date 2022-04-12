@@ -41,7 +41,7 @@ setup(
         "cloudpickle==1.4.1",
         # as of 2021-07-06, the runtime (pinned to 1.1) is incompatible with 1.3
         "pandas<1.3",
-        "pyarrow==3.0.0",
+        "pyarrow>=3.0.0",
     ],
     extras_require={
         "viz-tiledb": TILEDB_VIZ_REQUIRES,
