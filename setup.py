@@ -40,7 +40,8 @@ setup(
         "python-dateutil",
         "cloudpickle==1.4.1",
         # as of 2021-07-06, the runtime (pinned to 1.1) is incompatible with 1.3
-        "pandas<1.3",
+        "pandas<1.3; python_version < '3.10'",
+        "pandas>=1.3; python_version >= '3.10'",
         "pyarrow>=3.0.0",
     ],
     extras_require={
