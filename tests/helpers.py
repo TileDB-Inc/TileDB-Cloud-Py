@@ -1,8 +1,3 @@
-"""This module should only be imported from tests.
-
-IT WILL NOT BE INCLUDED when installing TileDB Cloud.
-"""
-
 import contextlib
 import random
 import string

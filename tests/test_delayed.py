@@ -4,7 +4,7 @@ import unittest
 import numpy as np
 
 import tiledb.cloud
-from tiledb.cloud import testonly
+from tests import helpers
 from tiledb.cloud.compute import Delayed
 from tiledb.cloud.compute import DelayedArrayUDF
 from tiledb.cloud.compute import DelayedSQL
@@ -162,7 +162,7 @@ class DelayedCloudApplyTest(unittest.TestCase):
 
             return numpy.sum(x["a"])
 
-        with testonly.register_udf(sum_a) as sum_a_name:
+        with helpers.register_udf(sum_a) as sum_a_name:
             node = DelayedArrayUDF(uri, sum_a_name, name="node")([(1, 4), (1, 4)])
 
             # Add timeout so we don't wait forever in CI
@@ -264,7 +264,7 @@ class DelayedCloudApplyTest(unittest.TestCase):
 
             return numpy.sum(x["a"])
 
-        with testonly.register_udf(sum_a) as sum_a_name:
+        with helpers.register_udf(sum_a) as sum_a_name:
             node_array_apply = DelayedArrayUDF(
                 uri_sparse, sum_a_name, name="node_array_apply"
             )([(1, 4), (1, 4)])

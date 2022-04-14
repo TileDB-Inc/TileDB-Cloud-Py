@@ -5,9 +5,9 @@ import numpy as np
 import urllib3
 
 import tiledb.cloud
+from tests import helpers
 from tiledb.cloud import client
 from tiledb.cloud import config
-from tiledb.cloud import testonly
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import udf
 from tiledb.cloud import utils
@@ -54,7 +54,7 @@ class GenericUDFTest(unittest.TestCase):
             """Function created to call by name in unit tests."""
             return f"called with {args!r} {kwargs!r}"
 
-        with testonly.register_udf(show) as udf_name:
+        with helpers.register_udf(show) as udf_name:
             got = udf.exec(udf_name, 1, 2, 3, easy_as="abc")
         self.assertEqual(got, "called with (1, 2, 3) {'easy_as': 'abc'}")
 
@@ -63,7 +63,7 @@ class GenericUDFTest(unittest.TestCase):
             """Function created to call by name in unit tests."""
             return f"called with {args!r} {kwargs!r}"
 
-        with testonly.register_udf(show) as udf_name:
+        with helpers.register_udf(show) as udf_name:
             first = udf.exec_base(
                 udf_name,
                 1,

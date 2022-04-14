@@ -18,7 +18,7 @@ from setuptools import setup
 
 PACKAGES = ["tiledb.cloud"]
 PACKAGES.extend(
-    "tiledb.cloud." + x for x in find_packages("./tiledb/cloud", exclude=("testonly",))
+    "tiledb.cloud." + x for x in find_packages("./tiledb/cloud")
 )
 VIZ_REQUIRES = ["networkx>=2", "pydot"]
 TILEDB_VIZ_REQUIRES = ["tiledb-plot-widget>=0.1.7", *VIZ_REQUIRES]
