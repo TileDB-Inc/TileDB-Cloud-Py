@@ -142,7 +142,7 @@ class BinaryResult(TDBJSONEncodable):
     """
 
     format: str
-    """The format of the data."""
+    """The TileDB Cloud name of the data's format (see ``_MIME_TO_FORMAT``)."""
     data: bytes
     """The binary data itself."""
 

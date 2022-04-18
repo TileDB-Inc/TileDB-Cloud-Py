@@ -2,6 +2,9 @@ import datetime
 import json
 import unittest
 
+import pyarrow
+import urllib3
+
 from tiledb.cloud.taskgraphs import _codec
 
 
@@ -127,17 +130,53 @@ class BinaryResultTest(unittest.TestCase):
     def test_binary_result_of(self):
         cases = (
             (b"possession", _codec.BinaryResult("bytes", b"possession")),
-            (
-                frozenset(),
-                _codec.BinaryResult(
-                    "python_pickle",
-                    b"\x80\x04\x95\x04\x00\x00\x00\x00\x00\x00\x00(\x91\x94.",
-                ),
-            ),
+            (set(), _codec.BinaryResult("python_pickle", b"\x80\x04\x8f\x94.")),
+            (pyarrow.Table.from_pydict({}), _codec.BinaryResult("arrow", b"")),
         )
         for inval, expected in cases:
             with self.subTest(inval):
                 self.assertEqual(expected, _codec.BinaryResult.of(inval))
+
+    def test_from_response(self):
+        cases = [
+            dict(
+                mime="application/octet-stream",
+                data=b"raw bytes",
+                want_format="bytes",
+                want_output=b"raw bytes",
+            ),
+            dict(
+                mime="application/json",
+                data=b'{"here": "there"}',
+                want_format="json",
+                want_output={"here": "there"},
+            ),
+            dict(
+                mime="application/vnd.tiledb.python-pickle",
+                data=b"\x80\x04\x95\x04\x00\x00\x00\x00\x00\x00\x00(\x91\x94.",
+                want_format="python_pickle",
+                want_output=frozenset(),
+            ),
+            dict(
+                mime="unknown/mime",
+                data=b"bogus data",
+                want_format="mime:unknown/mime",
+            ),
+        ]
+        for case in cases:
+            with self.subTest(case["mime"]):
+                resp = urllib3.HTTPResponse(
+                    body=case["data"],
+                    headers={"Content-Type": case["mime"]},
+                )
+                actual = _codec.BinaryResult.from_response(resp)
+                self.assertEqual(case["want_format"], actual.format)
+                try:
+                    want_out = case["want_output"]
+                except KeyError:
+                    pass
+                else:
+                    self.assertEqual(want_out, actual.decode())
 
 
 class JSONableTest(unittest.TestCase):

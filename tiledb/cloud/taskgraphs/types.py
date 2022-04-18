@@ -1,5 +1,6 @@
 """User-facing types used in task graphs."""
 
+import itertools
 from typing import Any, Dict, List, Tuple, TypeVar, Union
 
 import attrs
@@ -51,8 +52,25 @@ class Arguments:
 
     @classmethod
     def of(cls, *args, **kwargs) -> "Arguments":
-        """Creates an Arguments object representing the given call."""
+        """Creates an Arguments object representing the given call.
+
+        Calling this with any parameters will give you an ``Arguments``
+        representing that call:
+
+        >>> Arguments.of(1, 2, a=1, b="two", **{"c": b"four"})
+        args(1, 2, a=1, b="two", c=b"four")
+
+        """
         return cls(args, kwargs)
+
+    def __repr__(self):
+        """A representation of this which looks like a function call."""
+        parts = itertools.chain(
+            map(repr, self.args),
+            (f"{k}={v!r}" for (k, v) in self.kwargs.items()),
+        )
+        joined = ", ".join(parts)
+        return f"args({joined})"
 
 
 args = Arguments.of
