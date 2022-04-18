@@ -28,11 +28,23 @@ class ResultFormat(object):
     """
     allowed enum values
     """
-    NATIVE = "native"
+    PYTHON_PICKLE = "python_pickle"
+    R_SERIALIZATION = "r_serialization"
     JSON = "json"
     ARROW = "arrow"
+    BYTES = "bytes"
+    TILEDB_JSON = "tiledb_json"
+    NATIVE = "native"
 
-    allowable_values = [NATIVE, JSON, ARROW]  # noqa: E501
+    allowable_values = [
+        PYTHON_PICKLE,
+        R_SERIALIZATION,
+        JSON,
+        ARROW,
+        BYTES,
+        TILEDB_JSON,
+        NATIVE,
+    ]  # noqa: E501
 
     """
     Attributes:

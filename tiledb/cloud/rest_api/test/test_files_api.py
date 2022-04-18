@@ -36,6 +36,10 @@ class TestFilesApi(unittest.TestCase):
         """Test case for handle_export_file"""
         pass
 
+    def test_handle_upload_file(self):
+        """Test case for handle_upload_file"""
+        pass
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -16,12 +16,12 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.group import Group  # noqa: E501
+from tiledb.cloud.rest_api.models.group_sharing import GroupSharing  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestGroup(unittest.TestCase):
-    """Group unit test stubs"""
+class TestGroupSharing(unittest.TestCase):
+    """GroupSharing unit test stubs"""
 
     def setUp(self):
         pass
@@ -30,18 +30,23 @@ class TestGroup(unittest.TestCase):
         pass
 
     def make_instance(self, include_optional):
-        """Test Group
+        """Test GroupSharing
         include_option is a boolean, when False only required
         params are included, when True both required and
         optional params are included"""
-        # model = tiledb.cloud.rest_api.models.group.Group()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.group_sharing.GroupSharing()  # noqa: E501
         if include_optional:
-            return Group(id="0", namespace="0", name="0", description="0")
+            return GroupSharing(
+                group_actions=[read, write],
+                array_actions=[read, write],
+                namespace="MyOrganization",
+                namespace_type="organization",
+            )
         else:
-            return Group()
+            return GroupSharing()
 
-    def testGroup(self):
-        """Test Group"""
+    def testGroupSharing(self):
+        """Test GroupSharing"""
         inst_req_only = self.make_instance(include_optional=False)
         inst_req_and_optional = self.make_instance(include_optional=True)
 

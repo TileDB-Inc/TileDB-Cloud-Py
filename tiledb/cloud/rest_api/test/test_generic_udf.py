@@ -45,7 +45,7 @@ class TestGenericUDF(unittest.TestCase):
                 exec_raw="0",
                 argument="0",
                 stored_param_uuids=["229f38c4-ba89-43d6-ab88-bae3bcca7969"],
-                result_format="native",
+                result_format="python_pickle",
                 task_name="0",
                 store_results=True,
                 timeout=56,

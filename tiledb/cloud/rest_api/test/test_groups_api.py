@@ -28,8 +28,8 @@ class TestGroupsApi(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_add_asset(self):
-        """Test case for add_asset"""
+    def test_change_group_contents(self):
+        """Test case for change_group_contents"""
         pass
 
     def test_create_group(self):
@@ -40,16 +40,52 @@ class TestGroupsApi(unittest.TestCase):
         """Test case for delete_group"""
         pass
 
-    def test_list_group(self):
-        """Test case for list_group"""
+    def test_get_group(self):
+        """Test case for get_group"""
         pass
 
-    def test_list_top_level_groups(self):
-        """Test case for list_top_level_groups"""
+    def test_get_group_contents(self):
+        """Test case for get_group_contents"""
         pass
 
-    def test_remove_asset(self):
-        """Test case for remove_asset"""
+    def test_get_group_sharing_policies(self):
+        """Test case for get_group_sharing_policies"""
+        pass
+
+    def test_groups_browser_owned_filters_get(self):
+        """Test case for groups_browser_owned_filters_get"""
+        pass
+
+    def test_groups_browser_public_filters_get(self):
+        """Test case for groups_browser_public_filters_get"""
+        pass
+
+    def test_groups_browser_shared_filters_get(self):
+        """Test case for groups_browser_shared_filters_get"""
+        pass
+
+    def test_groups_group_namespace_group_name_contents_filters_get(self):
+        """Test case for groups_group_namespace_group_name_contents_filters_get"""
+        pass
+
+    def test_list_owned_groups(self):
+        """Test case for list_owned_groups"""
+        pass
+
+    def test_list_public_groups(self):
+        """Test case for list_public_groups"""
+        pass
+
+    def test_list_shared_groups(self):
+        """Test case for list_shared_groups"""
+        pass
+
+    def test_register_group(self):
+        """Test case for register_group"""
+        pass
+
+    def test_share_group(self):
+        """Test case for share_group"""
         pass
 
     def test_update_group(self):

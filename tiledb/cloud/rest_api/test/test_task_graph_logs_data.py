@@ -167,7 +167,7 @@ class TestTaskGraphLogsData(unittest.TestCase):
                                         duration=3.41e11,
                                         sql_init_commands=["0"],
                                         sql_parameters=[None],
-                                        result_format="native",
+                                        result_format="python_pickle",
                                         task_graph_uuid="0",
                                         client_node_uuid="0",
                                     )

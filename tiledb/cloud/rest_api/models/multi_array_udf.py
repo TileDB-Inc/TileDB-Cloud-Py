@@ -42,6 +42,7 @@ class MultiArrayUDF(object):
         "result_format": "ResultFormat",
         "task_name": "str",
         "argument": "str",
+        "arguments_json": "list[TGUDFArgument]",
         "stored_param_uuids": "list[str]",
         "store_results": "bool",
         "dont_download_results": "bool",
@@ -64,6 +65,7 @@ class MultiArrayUDF(object):
         "result_format": "result_format",
         "task_name": "task_name",
         "argument": "argument",
+        "arguments_json": "arguments_json",
         "stored_param_uuids": "stored_param_uuids",
         "store_results": "store_results",
         "dont_download_results": "dont_download_results",
@@ -87,6 +89,7 @@ class MultiArrayUDF(object):
         result_format=None,
         task_name=None,
         argument=None,
+        arguments_json=None,
         stored_param_uuids=None,
         store_results=None,
         dont_download_results=None,
@@ -113,6 +116,7 @@ class MultiArrayUDF(object):
         self._result_format = None
         self._task_name = None
         self._argument = None
+        self._arguments_json = None
         self._stored_param_uuids = None
         self._store_results = None
         self._dont_download_results = None
@@ -143,6 +147,7 @@ class MultiArrayUDF(object):
             self.task_name = task_name
         if argument is not None:
             self.argument = argument
+        self.arguments_json = arguments_json
         if stored_param_uuids is not None:
             self.stored_param_uuids = stored_param_uuids
         if store_results is not None:
@@ -348,7 +353,7 @@ class MultiArrayUDF(object):
     def argument(self):
         """Gets the argument of this MultiArrayUDF.  # noqa: E501
 
-        Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format  # noqa: E501
+        Deprecated: Prefer to use `argument_json` instead. Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format   # noqa: E501
 
         :return: The argument of this MultiArrayUDF.  # noqa: E501
         :rtype: str
@@ -359,13 +364,36 @@ class MultiArrayUDF(object):
     def argument(self, argument):
         """Sets the argument of this MultiArrayUDF.
 
-        Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format  # noqa: E501
+        Deprecated: Prefer to use `argument_json` instead. Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format   # noqa: E501
 
         :param argument: The argument of this MultiArrayUDF.  # noqa: E501
         :type: str
         """
 
         self._argument = argument
+
+    @property
+    def arguments_json(self):
+        """Gets the arguments_json of this MultiArrayUDF.  # noqa: E501
+
+        A series of key-value pairs to be passed as arguments into the UDF. See `TGUDFNodeData.arguments` for more information. If this format is used to pass arguments, arrays will be passed into the UDF as specified by the Node placeholders passed in here, rather than the classic method of putting all array arguments in the first parameter. Either this or `argument` should be set.   # noqa: E501
+
+        :return: The arguments_json of this MultiArrayUDF.  # noqa: E501
+        :rtype: list[TGUDFArgument]
+        """
+        return self._arguments_json
+
+    @arguments_json.setter
+    def arguments_json(self, arguments_json):
+        """Sets the arguments_json of this MultiArrayUDF.
+
+        A series of key-value pairs to be passed as arguments into the UDF. See `TGUDFNodeData.arguments` for more information. If this format is used to pass arguments, arrays will be passed into the UDF as specified by the Node placeholders passed in here, rather than the classic method of putting all array arguments in the first parameter. Either this or `argument` should be set.   # noqa: E501
+
+        :param arguments_json: The arguments_json of this MultiArrayUDF.  # noqa: E501
+        :type: list[TGUDFArgument]
+        """
+
+        self._arguments_json = arguments_json
 
     @property
     def stored_param_uuids(self):

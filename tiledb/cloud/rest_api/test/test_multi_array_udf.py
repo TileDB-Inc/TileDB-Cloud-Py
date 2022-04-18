@@ -43,9 +43,15 @@ class TestMultiArrayUDF(unittest.TestCase):
                 image_name="0",
                 _exec="0",
                 exec_raw="0",
-                result_format="native",
+                result_format="python_pickle",
                 task_name="0",
                 argument="0",
+                arguments_json=[
+                    tiledb.cloud.rest_api.models.tgudf_argument.TGUDFArgument(
+                        name="0",
+                        value=tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue(),
+                    )
+                ],
                 stored_param_uuids=["0"],
                 store_results=True,
                 dont_download_results=True,
@@ -88,6 +94,7 @@ class TestMultiArrayUDF(unittest.TestCase):
                 buffers=["0"],
                 arrays=[
                     tiledb.cloud.rest_api.models.udf_array_details.UDFArrayDetails(
+                        parameter_id="0",
                         uri="0",
                         ranges=tiledb.cloud.rest_api.models.query_ranges.QueryRanges(
                             layout="row-major",
