@@ -1,4 +1,3 @@
-import sys
 import uuid
 import warnings
 from typing import Any, Callable, Iterable, Optional, Sequence, Union
@@ -473,11 +472,7 @@ def apply_base(
                 buffers=attrs,
             )
         ],
-        version="{}.{}.{}".format(
-            sys.version_info.major,
-            sys.version_info.minor,
-            sys.version_info.micro,
-        ),
+        version=utils.PYTHON_VERSION,
         image_name=image_name,
         task_name=task_name,
         result_format=result_format,
@@ -628,11 +623,7 @@ def exec_multi_array_udf_base(
     udf_model = models.MultiArrayUDF(
         language=models.UDFLanguage.PYTHON,
         arrays=arrays,
-        version="{}.{}.{}".format(
-            sys.version_info.major,
-            sys.version_info.minor,
-            sys.version_info.micro,
-        ),
+        version=utils.PYTHON_VERSION,
         image_name=image_name,
         task_name=task_name,
         result_format=result_format,

@@ -1,6 +1,7 @@
 import base64
 import inspect
 import logging
+import sys
 import urllib
 from typing import Any, Callable, Optional, TypeVar
 
@@ -74,3 +75,7 @@ def b64_pickle(obj: Any) -> str:
     """Pickles the given object, then base64 encodes the pickle."""
     pickle = cloudpickle.dumps(obj, protocol=TILEDB_CLOUD_PROTOCOL)
     return base64.b64encode(pickle).decode("ascii")
+
+
+PYTHON_VERSION = ".".join(map(str, sys.version_info[:3]))
+"""The Python version as an ``X.Y.Z`` string."""
