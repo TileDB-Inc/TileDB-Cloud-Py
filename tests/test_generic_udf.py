@@ -1,4 +1,3 @@
-import sys
 import unittest
 
 import numpy as np
@@ -87,11 +86,7 @@ class GenericUDFTest(unittest.TestCase):
             udf_req = models.GenericUDF(
                 language=models.UDFLanguage.PYTHON,
                 result_format=models.ResultFormat.JSON,
-                version="{}.{}.{}".format(
-                    sys.version_info.major,
-                    sys.version_info.minor,
-                    sys.version_info.micro,
-                ),
+                version=utils.PYTHON_VERSION,
                 image_name="default",
                 udf_info_name=udf_name,
                 argument=pickled,

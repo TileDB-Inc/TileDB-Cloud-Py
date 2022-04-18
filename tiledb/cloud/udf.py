@@ -1,5 +1,4 @@
 import base64
-import sys
 import uuid
 import warnings
 from typing import Any, Callable, Iterable, Optional, Union
@@ -102,11 +101,7 @@ def exec_base(
         language=models.UDFLanguage.PYTHON,
         result_format=result_format,
         store_results=store_results,
-        version="{}.{}.{}".format(
-            sys.version_info.major,
-            sys.version_info.minor,
-            sys.version_info.micro,
-        ),
+        version=utils.PYTHON_VERSION,
         image_name=image_name,
         task_name=task_name,
         stored_param_uuids=list(str(uuid) for uuid in stored_param_uuids),
@@ -198,11 +193,7 @@ def register_udf(
         udf_model = models.UDFInfoUpdate(
             name=name,
             language=models.UDFLanguage.PYTHON,
-            version="{}.{}.{}".format(
-                sys.version_info.major,
-                sys.version_info.minor,
-                sys.version_info.micro,
-            ),
+            version=utils.PYTHON_VERSION,
             image_name=image_name,
             type=type,
             _exec=pickledUDF,
@@ -356,11 +347,7 @@ def update_udf(
         udf_model = models.UDFInfoUpdate(
             name=update_udf_name,
             language=models.UDFLanguage.PYTHON,
-            version="{}.{}.{}".format(
-                sys.version_info.major,
-                sys.version_info.minor,
-                sys.version_info.micro,
-            ),
+            version=utils.PYTHON_VERSION,
             image_name=image_name,
             license_id=license_text,
             license_text=license_id,
