@@ -130,7 +130,13 @@ class BinaryResultTest(unittest.TestCase):
     def test_binary_result_of(self):
         cases = (
             (b"possession", _codec.BinaryResult("bytes", b"possession")),
-            (set(), _codec.BinaryResult("python_pickle", b"\x80\x04\x8f\x94.")),
+            (
+                frozenset(),
+                _codec.BinaryResult(
+                    "python_pickle",
+                    b"\x80\x04\x95\x04\x00\x00\x00\x00\x00\x00\x00(\x91\x94.",
+                ),
+            ),
             (pyarrow.Table.from_pydict({}), _codec.BinaryResult("arrow", b"")),
         )
         for inval, expected in cases:
