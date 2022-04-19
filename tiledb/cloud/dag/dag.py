@@ -313,6 +313,18 @@ class Node(Generic[_T]):
         """
         self._done.wait(timeout)
 
+    def _to_log_metadata(self) -> rest_api.TaskGraphNodeMetadata:
+        return rest_api.TaskGraphNodeMetadata(
+            client_node_uuid=str(self.id),
+            name=self.name,
+            depends_on=[str(dep) for dep in self.parents],
+            run_location=(
+                rest_api.TaskGraphLogRunLocation.CLIENT
+                if self.local_mode
+                else rest_api.TaskGraphLogRunLocation.SERVER
+            ),
+        )
+
 
 class DAG:
     def __init__(
@@ -742,14 +754,7 @@ class DAG:
 
     def _build_log_structure(self) -> rest_api.TaskGraphLog:
         """Builds the structure of this graph for logging."""
-        nodes = [
-            rest_api.TaskGraphNodeMetadata(
-                client_node_uuid=str(node.id),
-                name=node.name,
-                depends_on=[str(dep) for dep in node.parents],
-            )
-            for node in self.nodes.values()
-        ]
+        nodes = [n._to_log_metadata() for n in self.nodes.values()]
         return rest_api.TaskGraphLog(
             name=self.name,
             namespace=self.namespace,
