@@ -75,27 +75,30 @@ class DAGClassTest(unittest.TestCase):
                         client_node_uuid=str(node_1.id),
                         name="node_1",
                         depends_on=[],
+                        run_location="client",
                     ),
                     models.TaskGraphNodeMetadata(
                         client_node_uuid=str(node_2.id),
                         name="node_2",
                         depends_on=[str(node_1.id)],
+                        run_location="client",
                     ),
                     models.TaskGraphNodeMetadata(
                         client_node_uuid=str(node_3.id),
                         name="node_3",
                         depends_on=[str(node_2.id)],
+                        run_location="client",
                     ),
                 ],
             ),
         )
 
     def test_simple_cloud_dag(self):
-        d = dag.DAG()
+        d = dag.DAG(name="a cool server dag")
 
-        node_1 = d.submit(np.median, [1, 2, 3])
-        node_2 = d.submit(lambda x: x * 2, node_1)
-        node_3 = d.submit(lambda x: x * 2, node_2)
+        node_1 = d.submit(np.median, [1, 2, 3], name="node_a")
+        node_2 = d.submit(lambda x: x * 2, node_1, name="node_b")
+        node_3 = d.submit(lambda x: x * 2, node_2, name="node_c")
 
         d.compute()
 
@@ -131,6 +134,34 @@ class DAGClassTest(unittest.TestCase):
                 "not_started": 0,
                 "total_count": 3,
             },
+        )
+
+        self.assertEqual(
+            d._build_log_structure(),
+            models.TaskGraphLog(
+                name="a cool server dag",
+                namespace=client.default_charged_namespace(),
+                nodes=[
+                    models.TaskGraphNodeMetadata(
+                        client_node_uuid=str(node_1.id),
+                        name="node_a",
+                        depends_on=[],
+                        run_location="server",
+                    ),
+                    models.TaskGraphNodeMetadata(
+                        client_node_uuid=str(node_2.id),
+                        name="node_b",
+                        depends_on=[str(node_1.id)],
+                        run_location="server",
+                    ),
+                    models.TaskGraphNodeMetadata(
+                        client_node_uuid=str(node_3.id),
+                        name="node_c",
+                        depends_on=[str(node_2.id)],
+                        run_location="server",
+                    ),
+                ],
+            ),
         )
 
     def _remote_result(self, node: dag_dag.Node) -> results.RemoteResult:
@@ -203,26 +234,31 @@ class DAGClassTest(unittest.TestCase):
                         client_node_uuid=str(node_1.id),
                         name="multi_node_1",
                         depends_on=[],
+                        run_location="client",
                     ),
                     models.TaskGraphNodeMetadata(
                         client_node_uuid=str(node_2.id),
                         name="multi_node_2",
                         depends_on=[str(node_1.id)],
+                        run_location="client",
                     ),
                     models.TaskGraphNodeMetadata(
                         client_node_uuid=str(node_5.id),
                         name="multi_node_5",
                         depends_on=[str(node_2.id)],
+                        run_location="client",
                     ),
                     models.TaskGraphNodeMetadata(
                         client_node_uuid=str(node_4.id),
                         name="multi_node_4",
                         depends_on=[str(node_2.id)],
+                        run_location="client",
                     ),
                     models.TaskGraphNodeMetadata(
                         client_node_uuid=str(node_3.id),
                         name="multi_node_3",
                         depends_on=[str(node_2.id)],
+                        run_location="client",
                     ),
                     models.TaskGraphNodeMetadata(
                         client_node_uuid=str(node_6.id),
@@ -232,6 +268,7 @@ class DAGClassTest(unittest.TestCase):
                             str(node_4.id),
                             str(node_5.id),
                         ],
+                        run_location="client",
                     ),
                 ],
             ),
