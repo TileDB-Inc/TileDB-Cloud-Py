@@ -204,6 +204,7 @@ Class | Method | HTTP request | Description
 *UdfApi* | [**delete_udf_info**](docs/UdfApi.md#delete_udf_info) | **DELETE** /udf/{namespace}/{name} | 
 *UdfApi* | [**get_udf_info**](docs/UdfApi.md#get_udf_info) | **GET** /udf/{namespace}/{name} | 
 *UdfApi* | [**get_udf_info_sharing_policies**](docs/UdfApi.md#get_udf_info_sharing_policies) | **GET** /udf/{namespace}/{name}/share | 
+*UdfApi* | [**handle_copy_udf**](docs/UdfApi.md#handle_copy_udf) | **POST** /udf/{namespace}/{name}/copy | 
 *UdfApi* | [**register_udf_info**](docs/UdfApi.md#register_udf_info) | **POST** /udf/{namespace}/{name} | 
 *UdfApi* | [**share_udf_info**](docs/UdfApi.md#share_udf_info) | **PATCH** /udf/{namespace}/{name}/share | 
 *UdfApi* | [**submit_generic_udf**](docs/UdfApi.md#submit_generic_udf) | **POST** /udfs/generic/{namespace} | 
@@ -350,6 +351,7 @@ Class | Method | HTTP request | Description
  - [Subscription](docs/Subscription.md)
  - [TGUDFArgument](docs/TGUDFArgument.md)
  - [TaskGraphLog](docs/TaskGraphLog.md)
+ - [TaskGraphLogRunLocation](docs/TaskGraphLogRunLocation.md)
  - [TaskGraphLogStatus](docs/TaskGraphLogStatus.md)
  - [TaskGraphLogsData](docs/TaskGraphLogsData.md)
  - [TaskGraphNodeMetadata](docs/TaskGraphNodeMetadata.md)
@@ -359,6 +361,8 @@ Class | Method | HTTP request | Description
  - [TokenScope](docs/TokenScope.md)
  - [UDFActions](docs/UDFActions.md)
  - [UDFArrayDetails](docs/UDFArrayDetails.md)
+ - [UDFCopied](docs/UDFCopied.md)
+ - [UDFCopy](docs/UDFCopy.md)
  - [UDFFavorite](docs/UDFFavorite.md)
  - [UDFFavoritesData](docs/UDFFavoritesData.md)
  - [UDFImage](docs/UDFImage.md)

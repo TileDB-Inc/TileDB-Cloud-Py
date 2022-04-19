@@ -36,6 +36,7 @@ class TaskGraphNodeMetadata(object):
         "client_node_uuid": "str",
         "name": "str",
         "depends_on": "list[str]",
+        "run_location": "TaskGraphLogRunLocation",
         "executions": "list[ArrayTask]",
     }
 
@@ -43,6 +44,7 @@ class TaskGraphNodeMetadata(object):
         "client_node_uuid": "client_node_uuid",
         "name": "name",
         "depends_on": "depends_on",
+        "run_location": "run_location",
         "executions": "executions",
     }
 
@@ -51,6 +53,7 @@ class TaskGraphNodeMetadata(object):
         client_node_uuid=None,
         name=None,
         depends_on=None,
+        run_location=None,
         executions=None,
         local_vars_configuration=None,
     ):  # noqa: E501
@@ -62,6 +65,7 @@ class TaskGraphNodeMetadata(object):
         self._client_node_uuid = None
         self._name = None
         self._depends_on = None
+        self._run_location = None
         self._executions = None
         self.discriminator = None
 
@@ -71,6 +75,8 @@ class TaskGraphNodeMetadata(object):
             self.name = name
         if depends_on is not None:
             self.depends_on = depends_on
+        if run_location is not None:
+            self.run_location = run_location
         if executions is not None:
             self.executions = executions
 
@@ -142,6 +148,27 @@ class TaskGraphNodeMetadata(object):
         """
 
         self._depends_on = depends_on
+
+    @property
+    def run_location(self):
+        """Gets the run_location of this TaskGraphNodeMetadata.  # noqa: E501
+
+
+        :return: The run_location of this TaskGraphNodeMetadata.  # noqa: E501
+        :rtype: TaskGraphLogRunLocation
+        """
+        return self._run_location
+
+    @run_location.setter
+    def run_location(self, run_location):
+        """Sets the run_location of this TaskGraphNodeMetadata.
+
+
+        :param run_location: The run_location of this TaskGraphNodeMetadata.  # noqa: E501
+        :type: TaskGraphLogRunLocation
+        """
+
+        self._run_location = run_location
 
     @property
     def executions(self):

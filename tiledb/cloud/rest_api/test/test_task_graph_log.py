@@ -56,6 +56,7 @@ class TestTaskGraphLog(unittest.TestCase):
                         client_node_uuid="0",
                         name="0",
                         depends_on=["0"],
+                        run_location="server",
                         executions=[
                             tiledb.cloud.rest_api.models.array_task.ArrayTask(
                                 id="0",

@@ -141,6 +141,9 @@ from tiledb.cloud.rest_api.models.subarray_partitioner_state import (
 from tiledb.cloud.rest_api.models.subarray_ranges import SubarrayRanges
 from tiledb.cloud.rest_api.models.subscription import Subscription
 from tiledb.cloud.rest_api.models.task_graph_log import TaskGraphLog
+from tiledb.cloud.rest_api.models.task_graph_log_run_location import (
+    TaskGraphLogRunLocation,
+)
 from tiledb.cloud.rest_api.models.task_graph_log_status import TaskGraphLogStatus
 from tiledb.cloud.rest_api.models.task_graph_logs_data import TaskGraphLogsData
 from tiledb.cloud.rest_api.models.task_graph_node_metadata import TaskGraphNodeMetadata
@@ -151,6 +154,8 @@ from tiledb.cloud.rest_api.models.token_request import TokenRequest
 from tiledb.cloud.rest_api.models.token_scope import TokenScope
 from tiledb.cloud.rest_api.models.udf_actions import UDFActions
 from tiledb.cloud.rest_api.models.udf_array_details import UDFArrayDetails
+from tiledb.cloud.rest_api.models.udf_copied import UDFCopied
+from tiledb.cloud.rest_api.models.udf_copy import UDFCopy
 from tiledb.cloud.rest_api.models.udf_favorite import UDFFavorite
 from tiledb.cloud.rest_api.models.udf_favorites_data import UDFFavoritesData
 from tiledb.cloud.rest_api.models.udf_image import UDFImage

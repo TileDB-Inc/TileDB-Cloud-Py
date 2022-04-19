@@ -439,6 +439,183 @@ class UdfApi(object):
             collection_formats=collection_formats,
         )
 
+    def handle_copy_udf(self, namespace, name, udf_copy, **kwargs):  # noqa: E501
+        """handle_copy_udf  # noqa: E501
+
+        Copy a tiledb udf at the specified location  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.handle_copy_udf(namespace, name, udf_copy, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str name: name of UDFInfo (required)
+        :param UDFCopy udf_copy: Input/Output information to copy a UDF (required)
+        :param str x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
+        :param int end_timestamp: Milliseconds since Unix epoch
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: UDFCopied
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs["_return_http_data_only"] = True
+        return self.handle_copy_udf_with_http_info(
+            namespace, name, udf_copy, **kwargs
+        )  # noqa: E501
+
+    def handle_copy_udf_with_http_info(
+        self, namespace, name, udf_copy, **kwargs
+    ):  # noqa: E501
+        """handle_copy_udf  # noqa: E501
+
+        Copy a tiledb udf at the specified location  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.handle_copy_udf_with_http_info(namespace, name, udf_copy, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str name: name of UDFInfo (required)
+        :param UDFCopy udf_copy: Input/Output information to copy a UDF (required)
+        :param str x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
+        :param int end_timestamp: Milliseconds since Unix epoch
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: tuple(UDFCopied, status_code(int), headers(HTTPHeaderDict))
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = [
+            "namespace",
+            "name",
+            "udf_copy",
+            "x_tiledb_cloud_access_credentials_name",
+            "end_timestamp",
+        ]
+        all_params.extend(
+            [
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params["kwargs"]):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method handle_copy_udf" % key
+                )
+            local_var_params[key] = val
+        del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `handle_copy_udf`"
+            )  # noqa: E501
+        # verify the required parameter 'name' is set
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `name` when calling `handle_copy_udf`"
+            )  # noqa: E501
+        # verify the required parameter 'udf_copy' is set
+        if self.api_client.client_side_validation and (
+            "udf_copy" not in local_var_params
+            or local_var_params["udf_copy"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `udf_copy` when calling `handle_copy_udf`"
+            )  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "name" in local_var_params:
+            path_params["name"] = local_var_params["name"]  # noqa: E501
+
+        query_params = []
+        if (
+            "end_timestamp" in local_var_params
+            and local_var_params["end_timestamp"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("end_timestamp", local_var_params["end_timestamp"])
+            )  # noqa: E501
+
+        header_params = {}
+        if "x_tiledb_cloud_access_credentials_name" in local_var_params:
+            header_params["X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME"] = local_var_params[
+                "x_tiledb_cloud_access_credentials_name"
+            ]  # noqa: E501
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        if "udf_copy" in local_var_params:
+            body_params = local_var_params["udf_copy"]
+        # HTTP header `Accept`
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+
+        return self.api_client.call_api(
+            "/udf/{namespace}/{name}/copy",
+            "POST",
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type="UDFCopied",  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
+
     def register_udf_info(self, namespace, name, udf, **kwargs):  # noqa: E501
         """register_udf_info  # noqa: E501
 
