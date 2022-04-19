@@ -71,7 +71,7 @@ class TestEscaper(unittest.TestCase):
         ]
         grf = builder.TaskGraphBuilder()
         with mock.patch.object(uuid, "uuid4", side_effect=fake_ids):
-            node_a = grf.input("in_a", "one")
+            node_a = grf.array_read("tiledb://uri/i", raw_ranges=[], buffers=["here"])
             node_b = grf.udf(len)
 
         self._do_test(
