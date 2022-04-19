@@ -16,6 +16,7 @@ from typing import (
 
 import numpy as np
 
+from tiledb.cloud import utils
 from tiledb.cloud._common import ordered
 from tiledb.cloud._common import visitor
 from tiledb.cloud.taskgraphs import _codec
@@ -76,6 +77,35 @@ class TaskGraphBuilder:
             when running the task graph.
         """
         return self._add_node(_InputNode(name, default_value))
+
+    def udf(
+        self,
+        func: Funcable[_T],
+        args: types.Arguments = types.Arguments(),
+        *,
+        result_format: Optional[str] = "python_pickle",
+        image_name: Optional[str] = None,
+        name: Optional[str] = None,
+    ) -> "Node[_T]":
+        """Creates a Node which executes a UDF.
+
+        :param func: The function to call; either a Python callable or a
+            registered UDF name.
+        :param args: The arguments to pass to this function. These may contain
+            values or Nodes.
+        :param result_format: The format to return results in.
+        :param image_name: If specified, will execute the UDF within
+            the specified image rather than the default image for its language.
+        """
+        return self._add_node(
+            _UDFNode(
+                func,
+                args,
+                result_format=result_format,
+                image_name=image_name,
+                name=name,
+            )
+        )
 
     def add_dep(self, *, parent: "Node", child: "Node") -> None:
         """Manually requires that the ``parent`` must happen before ``child``.
@@ -203,6 +233,65 @@ class _InputNode(Node[_T]):
         if self.default_value is not _NOTHING:
             input_node["default_value"] = self.default_value
         ret["input_node"] = input_node
+        return ret
+
+
+class _UDFNode(Node[_T]):
+    """The classic node: the execution of a UDF."""
+
+    def __init__(
+        self,
+        func: Funcable[_T],
+        args: types.Arguments,
+        *,
+        result_format: Optional[str],
+        image_name: Optional[str],
+        name: Optional[str],
+    ):
+        """Initializes this UDF node.
+
+        :param func: The function to call; either a Python callable or a
+            registered UDF name.
+        :param args: The arguments to pass to this function. These may contain
+            values or Nodes.
+        :param result_format: The format to return results in.
+        :param image_name: If specified, will execute the UDF within
+            the specified image rather than the default image for its language.
+        """
+        if isinstance(func, str):
+            func_name = func
+        else:
+            try:
+                func_name = func.__name__
+            except AttributeError:
+                func_name = str(func)
+        jsoner = _ParameterEscaper()
+        self.args = jsoner.arguments_to_json(args)
+        super().__init__(
+            name,
+            jsoner.seen_nodes,
+            fallback_name=func_name,
+        )
+        self.func = func
+        self.result_format = result_format
+        self.image_name = image_name
+
+    def to_registration_json(self) -> Dict[str, Any]:
+        ret = super().to_registration_json()
+        udf_node = {"args": self.args, "environment": {}}
+        if self.image_name:
+            udf_node["environment"]["image_name"] = self.image_name
+        if isinstance(self.func, str):
+            udf_node["registered_udf_name"] = self.func
+        else:
+            udf_node["environment"].update(
+                language="python",
+                language_version=utils.PYTHON_VERSION,
+            )
+            udf_node["executable_code"] = _codec.b64_str(_codec.pickle(self.func))
+        if self.result_format:
+            udf_node["result_format"] = self.result_format
+        ret["udf_node"] = udf_node
         return ret
 
 

@@ -3,7 +3,10 @@ import uuid
 from unittest import mock
 
 from tiledb.cloud import testonly
+from tiledb.cloud import utils
 from tiledb.cloud.taskgraphs import builder
+from tiledb.cloud.taskgraphs import depgraph
+from tiledb.cloud.taskgraphs import types
 
 
 class TestEscaper(unittest.TestCase):
@@ -66,9 +69,10 @@ class TestEscaper(unittest.TestCase):
             uuid.UUID("abcdef12-1234-1234-1234-34567890abcd"),
             uuid.UUID("98765432-abcd-abcd-abcd-111111111111"),
         ]
+        grf = builder.TaskGraphBuilder()
         with mock.patch.object(uuid, "uuid4", side_effect=fake_ids):
-            node_a = builder._InputNode("in_a", "one")
-            node_b = builder._InputNode("in_b", builder._NOTHING)
+            node_a = grf.input("in_a", "one")
+            node_b = grf.udf(len)
 
         self._do_test(
             inval={
@@ -115,7 +119,13 @@ class TestBuilder(unittest.TestCase):
             self.assertEqual(
                 {"name": "my cool task graph", "nodes": []}, grf._tdb_to_json()
             )
-            grf.input("start", "value")
+            start = grf.input("start", "value")
+            length = grf.udf(len, types.args(start), name="length")
+            result = grf.udf(
+                "{it!r} has a length of {ln}".format,
+                types.args(it=start, ln=length),
+                name="result",
+            )
             expected = {
                 "name": "my cool task graph",
                 "nodes": [
@@ -125,6 +135,61 @@ class TestBuilder(unittest.TestCase):
                         "input_node": {"default_value": "value"},
                         "name": "start",
                     },
+                    {
+                        "client_node_id": "09f91102-9d74-e35b-d841-000000000001",
+                        "depends_on": ["09f91102-9d74-e35b-d841-000000000000"],
+                        "name": "length",
+                        "udf_node": {
+                            "args": [
+                                {
+                                    "value": {
+                                        "__tdbudf__": "node_output",
+                                        "client_node_id": "09f91102-9d74-e35b-d841-000000000000",
+                                    }
+                                }
+                            ],
+                            "environment": {
+                                "language": "python",
+                                "language_version": utils.PYTHON_VERSION,
+                            },
+                            "executable_code": "gASVFAAAAAAAAACMCGJ1aWx0aW5zlIwDbGVulJOULg==",
+                            "result_format": "python_pickle",
+                        },
+                    },
+                    {
+                        "client_node_id": "09f91102-9d74-e35b-d841-000000000002",
+                        "depends_on": [
+                            "09f91102-9d74-e35b-d841-000000000000",
+                            "09f91102-9d74-e35b-d841-000000000001",
+                        ],
+                        "name": "result",
+                        "udf_node": {
+                            "args": [
+                                {
+                                    "name": "it",
+                                    "value": {
+                                        "__tdbudf__": "node_output",
+                                        "client_node_id": "09f91102-9d74-e35b-d841-000000000000",
+                                    },
+                                },
+                                {
+                                    "name": "ln",
+                                    "value": {
+                                        "__tdbudf__": "node_output",
+                                        "client_node_id": "09f91102-9d74-e35b-d841-000000000001",
+                                    },
+                                },
+                            ],
+                            "environment": {
+                                "language": "python",
+                                "language_version": utils.PYTHON_VERSION,
+                            },
+                            "executable_code": "gASVQwAAAAAAAACMCGJ1aWx0aW5zlIwHZ2V0YXR0cpSTlIwbe2l0IXJ9IGhhcyBhIGxlbmd0aCBvZiB7bG59lIwGZm9ybWF0lIaUUpQu",
+                            "result_format": "python_pickle",
+                        },
+                    },
                 ],
             }
             self.assertEqual(expected, grf._tdb_to_json())
+            with self.assertRaises(depgraph.CyclicGraphError):
+                grf.add_dep(parent=result, child=length)
