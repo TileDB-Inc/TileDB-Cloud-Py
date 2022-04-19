@@ -36,6 +36,9 @@ ArrayMultiIndex = Dict[str, np.ndarray]
 Funcable = Union[str, Callable[..., _T]]
 """Either a Python function or the name of a registered UDF."""
 
+_NOTHING = object()
+"""Sentinel object used when we need to distinguish "unset" from "None"."""
+
 
 class TaskGraphBuilder:
     """The thing you use to build a task graph.
@@ -57,6 +60,22 @@ class TaskGraphBuilder:
         """The named nodes in the graph, by name."""
         self._deps = depgraph.DepGraph[Node]()
         """A mapping from child to set of parents."""
+
+    def input(
+        self,
+        name: str,
+        default_value: _T = _NOTHING,  # type:ignore[assignment]
+    ) -> "Node[_T]":
+        """Creates a Node that can be used as an input to the graph.
+
+        :param name: The name of this input. Required, since it is used
+            when executing to match the input to the Node.
+
+        :param default_value: An optional default value to use when executing.
+            If not provided, the caller is required to set this input
+            when running the task graph.
+        """
+        return self._add_node(_InputNode(name, default_value))
 
     def add_dep(self, *, parent: "Node", child: "Node") -> None:
         """Manually requires that the ``parent`` must happen before ``child``.
@@ -152,6 +171,39 @@ class Node(_codec.TDBJSONEncodable, Generic[_T]):
             "client_node_id": str(self.id),
             "name": self.name,
         }
+
+
+class _InputNode(Node[_T]):
+    """An input Node to a task graph that can be specified at execution time."""
+
+    def __init__(self, name: str, default_value: _T):
+        """Initializes an input Node.
+
+        :param name: The name of this input. Required, since it is used
+            when executing to match the input to the Node.
+
+        :param default_value: An optional default value to use when executing.
+            If not provided, the caller is required to set this input
+            when running the task graph.
+        """
+        super().__init__(name, ())
+        if default_value is _NOTHING:
+            self.default_value = default_value
+        else:
+            node_finder = _ParameterEscaper()
+            if node_finder.seen_nodes:
+                raise ValueError(
+                    "Input nodes cannot have node outputs as default values."
+                )
+            self.default_value = node_finder.visit(default_value)
+
+    def to_registration_json(self) -> Dict[str, Any]:
+        ret = super().to_registration_json()
+        input_node = {}
+        if self.default_value is not _NOTHING:
+            input_node["default_value"] = self.default_value
+        ret["input_node"] = input_node
+        return ret
 
 
 class _ParameterEscaper(_codec.Escaper):
