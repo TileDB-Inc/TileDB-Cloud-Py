@@ -62,6 +62,42 @@ class TaskGraphBuilder:
         self._deps = depgraph.DepGraph[Node]()
         """A mapping from child to set of parents."""
 
+    def array_read(
+        self,
+        uri: ValOrNode[str],
+        *,
+        raw_ranges: Optional[ValOrNodeSeq[Any]],
+        buffers: Optional[ValOrNodeSeq[str]] = None,
+        name: Optional[str] = None,
+    ) -> "Node[ArrayMultiIndex]":
+        """Creates a Node that will read data from a TileDB array.
+
+        This Node is not executed immediately; instead, it is used in the same
+        way as the array input to an Array UDF works: when an actual UDF is
+        executed, the array is queried server-side and is passed as a parameter
+        to the user code.
+
+        :param uri: The URI to query against. This must be a ``tiledb://`` URI.
+            May be provided either as the URI itself, or as the output
+            of an upstream node.
+
+        :param raw_ranges: The ranges to query against. This is called "raw"
+            because we accept the format that is passed to the server::
+
+                [
+                    [startDim1A, endDim1A, startDim1B, endDim1B, ...],
+                    [startDim2A, endDim2A, startDim2B, endDim2B, ...],
+                ]
+
+            This may also be provided as either a value or a Node output.
+
+        :param buffers: Optionally, the buffers to query against.
+            May be either a raw value or the Node output.
+
+        :param name: An optional name for this Node.
+        """
+        return self._add_node(_ArrayNode(uri, raw_ranges, buffers, name=name))
+
     def input(
         self,
         name: str,
@@ -201,6 +237,63 @@ class Node(_codec.TDBJSONEncodable, Generic[_T]):
             "client_node_id": str(self.id),
             "name": self.name,
         }
+
+
+class _ArrayNode(Node[ArrayMultiIndex]):
+    """A virutal node representing a query against a TileDB array.
+
+    When used as a parameter to a downstream Node, this will instruct the server
+    to execute a query against the given Array and pass that value as the
+    parameter to the UDF.
+    """
+
+    def __init__(
+        self,
+        uri: ValOrNode[str],
+        raw_ranges: Optional[ValOrNodeSeq[Any]],
+        buffers: Optional[ValOrNodeSeq[str]],
+        name: Optional[str],
+    ):
+        """Initializes an ``_ArrayNode``.
+
+        :param uri: The URI to query against. This must be a ``tiledb://`` URI.
+            May be provided either as the URI itself, or as the output
+            of an upstream node.
+
+        :param raw_ranges: The ranges to query against. This is called "raw"
+            because we accept the format that is passed to the server::
+
+                [
+                    [startDim1A, endDim1A, startDim1B, endDim1B, ...],
+                    [startDim2A, endDim2A, startDim2B, endDim2B, ...],
+                ]
+
+            This may also be provided as either a value or a Node output.
+
+        :param buffers: Optionally, the buffers to query against.
+            May be either a raw value or the Node output.
+
+        :param name: An optional name for this Node.
+        """
+        # Currently, the format of ranges we accept here is the raw
+        # [[startA1, endA1, startA2, endA2], [startB1, endB1, ...], ...]
+        # format. TODO: Figure out how to reliably encode ranges.
+        jsoner = _ParameterEscaper()
+        self.uri = jsoner.visit(uri)
+        self.raw_ranges = jsoner.visit(raw_ranges)
+        self.buffers = jsoner.visit(buffers)
+
+        super().__init__(name, jsoner.seen_nodes, fallback_name=f"Query {uri}")
+
+    def to_registration_json(self):
+        ret = super().to_registration_json()
+        ret["array_node"] = dict(
+            parameter_id=str(self.id),
+            uri=self.uri,
+            ranges=self.raw_ranges,
+            buffers=self.buffers,
+        )
+        return ret
 
 
 class _InputNode(Node[_T]):
