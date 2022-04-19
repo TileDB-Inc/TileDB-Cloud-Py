@@ -120,8 +120,7 @@ class Organization(object):
             self.updated_at = updated_at
         if logo is not None:
             self.logo = logo
-        if description is not None:
-            self.description = description
+        self.description = description
         if users is not None:
             self.users = users
         if allowed_actions is not None:

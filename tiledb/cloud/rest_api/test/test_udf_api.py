@@ -40,6 +40,10 @@ class TestUdfApi(unittest.TestCase):
         """Test case for get_udf_info_sharing_policies"""
         pass
 
+    def test_handle_copy_udf(self):
+        """Test case for handle_copy_udf"""
+        pass
+
     def test_register_udf_info(self):
         """Test case for register_udf_info"""
         pass

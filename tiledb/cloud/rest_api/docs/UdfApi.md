@@ -7,6 +7,7 @@ Method | HTTP request | Description
 [**delete_udf_info**](UdfApi.md#delete_udf_info) | **DELETE** /udf/{namespace}/{name} | 
 [**get_udf_info**](UdfApi.md#get_udf_info) | **GET** /udf/{namespace}/{name} | 
 [**get_udf_info_sharing_policies**](UdfApi.md#get_udf_info_sharing_policies) | **GET** /udf/{namespace}/{name}/share | 
+[**handle_copy_udf**](UdfApi.md#handle_copy_udf) | **POST** /udf/{namespace}/{name}/copy | 
 [**register_udf_info**](UdfApi.md#register_udf_info) | **POST** /udf/{namespace}/{name} | 
 [**share_udf_info**](UdfApi.md#share_udf_info) | **PATCH** /udf/{namespace}/{name}/share | 
 [**submit_generic_udf**](UdfApi.md#submit_generic_udf) | **POST** /udfs/generic/{namespace} | 
@@ -411,6 +412,148 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 **200** | List of all specific sharing policies |  -  |
 **404** | UDF does not exist or user does not have permissions to view array-sharing policies |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **handle_copy_udf**
+> UDFCopied handle_copy_udf(namespace, name, udf_copy, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name, end_timestamp=end_timestamp)
+
+
+
+Copy a tiledb udf at the specified location
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+name = 'name_example' # str | name of UDFInfo
+udf_copy = tiledb.cloud.rest_api.UDFCopy() # UDFCopy | Input/Output information to copy a UDF
+x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name_example' # str | Optional registered access credentials to use for creation (optional)
+end_timestamp = 56 # int | Milliseconds since Unix epoch (optional)
+
+    try:
+        api_response = api_instance.handle_copy_udf(namespace, name, udf_copy, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name, end_timestamp=end_timestamp)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling UdfApi->handle_copy_udf: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost/v1
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost/v1",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.UdfApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+name = 'name_example' # str | name of UDFInfo
+udf_copy = tiledb.cloud.rest_api.UDFCopy() # UDFCopy | Input/Output information to copy a UDF
+x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name_example' # str | Optional registered access credentials to use for creation (optional)
+end_timestamp = 56 # int | Milliseconds since Unix epoch (optional)
+
+    try:
+        api_response = api_instance.handle_copy_udf(namespace, name, udf_copy, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name, end_timestamp=end_timestamp)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling UdfApi->handle_copy_udf: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
+ **name** | **str**| name of UDFInfo | 
+ **udf_copy** | [**UDFCopy**](UDFCopy.md)| Input/Output information to copy a UDF | 
+ **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
+ **end_timestamp** | **int**| Milliseconds since Unix epoch | [optional] 
+
+### Return type
+
+[**UDFCopied**](UDFCopied.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**201** | UDF copied |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
