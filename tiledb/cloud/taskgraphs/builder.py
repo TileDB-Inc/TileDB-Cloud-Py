@@ -143,6 +143,39 @@ class TaskGraphBuilder:
             )
         )
 
+    # TODO: array_udf -- a combination of udf and array_read
+
+    def sql(
+        self,
+        query: str,
+        init_commands: Iterable[str] = (),
+        parameters: ValOrNodeSeq = (),
+        *,
+        result_format: Optional[str] = None,
+        name: Optional[str] = None,
+    ) -> "Node":
+        """Creates a Node that executes an SQL query.
+
+        :param query: The query to execute. This must be a string, and cannot be
+            the output of a previous node.
+        :param init_commands: A list of SQL commands to execute in the session
+            before running ``query``.
+        :param parameters: A sequence of objects to provide as parameters for
+            the ``?`` placeholders in the ``query``. These may be provided
+            either as values or as the output of earlier Nodes.
+        :param result_format: The format to provide results in. Either ``json``
+            or ``arrow``.
+        """
+        return self._add_node(
+            _SQLNode(
+                query,
+                init_commands,
+                parameters,
+                result_format=result_format,
+                name=name,
+            )
+        )
+
     def add_dep(self, *, parent: "Node", child: "Node") -> None:
         """Manually requires that the ``parent`` must happen before ``child``.
 
@@ -326,6 +359,48 @@ class _InputNode(Node[_T]):
         if self.default_value is not _NOTHING:
             input_node["default_value"] = self.default_value
         ret["input_node"] = input_node
+        return ret
+
+
+class _SQLNode(Node):
+    """A Node that performs a TileDB Cloud SQL query."""
+
+    def __init__(
+        self,
+        query: str,
+        init_commands: Iterable[str],
+        parameters: ValOrNodeSeq,
+        *,
+        result_format: Optional[str],
+        name: Optional[str],
+    ):
+        """Initializes this Node.
+
+        :param query: The query to execute. This must be a string, and cannot be
+            the output of a previous node.
+        :param init_commands: A list of SQL commands to execute in the session
+            before running ``query``.
+        :param parameters: A sequence of objects to provide as parameters for
+            the ``?`` placeholders in the ``query``. These may be provided
+            either as values or as the output of earlier Nodes.
+        :param result_format: The format to provide results in. Either ``json``
+            or ``arrow``.
+        """
+        self.query = query
+        self.init_commands = tuple(init_commands)
+        self.result_format = result_format
+        jsoner = _ParameterEscaper()
+        self.parameters = jsoner.visit(parameters)
+        super().__init__(name, jsoner.seen_nodes, fallback_name="SQL query")
+
+    def to_registration_json(self):
+        ret = super().to_registration_json()
+        ret["sql_node"] = dict(
+            init_commands=self.init_commands,
+            query=self.query,
+            parameters=self.parameters,
+            result_format=self.result_format,
+        )
         return ret
 
 
