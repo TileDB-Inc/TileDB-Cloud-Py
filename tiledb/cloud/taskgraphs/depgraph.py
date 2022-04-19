@@ -1,15 +1,50 @@
 """Common internal-only types and tools."""
 
 import collections
-from typing import AbstractSet, Deque, Dict, Generic, Iterable, List, Tuple, TypeVar
+from typing import (
+    AbstractSet,
+    Collection,
+    Deque,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Tuple,
+    TypeVar,
+)
+
+import attrs
 
 from tiledb.cloud._common import ordered
 
 _T = TypeVar("_T")
 
 
-class DepGraph(Generic[_T]):
+# This really should be a `slots` class, but setting `slots=True` breaks things
+# in python 3.6.
+@attrs.define(frozen=True, slots=False)
+class Edge(Iterable[_T]):
+    """An edge on a dependency graph."""
+
+    parent: _T
+    child: _T
+
+    def __iter__(self) -> Iterator[_T]:
+        """Yields the parent, then the child.
+
+        This can be used for unpacking or iteration::
+
+            for parent, child in edge_generator:
+                ...
+        """
+        yield self.parent
+        yield self.child
+
+
+class DepGraph(Collection[_T]):
     """A directed dependency graph which forbids cycles."""
+
+    # Creation
 
     def __init__(self):
         self._parent_to_children: Dict[_T, ordered.Set[_T]] = {}
@@ -34,10 +69,22 @@ class DepGraph(Generic[_T]):
         new._topo_sorted = list(self._topo_sorted)
         return new
 
+    # Accessors
+
     @property
     def topo_sorted(self) -> Tuple[_T, ...]:
         """A topologically-sorted view of the dependency graph."""
         return tuple(self._topo_sorted)
+
+    def edges(self) -> Iterator[Edge[_T]]:
+        """An iterator over all the edges in the graph.
+
+        Edges are yielded in order of parent (as topo-sorted) to each of its
+        children (in insertion order).
+        """
+        for parent in self._topo_sorted:
+            for child in self._parent_to_children[parent]:
+                yield Edge(parent=parent, child=child)
 
     def roots(self) -> Tuple[_T, ...]:
         """Returns the nodes of this graph with no ancestors."""
@@ -51,9 +98,25 @@ class DepGraph(Generic[_T]):
             n for (n, children) in self._parent_to_children.items() if not children
         )
 
+    # Abstract collection methods
+
+    def __len__(self) -> int:
+        """The number of nodes in this graph."""
+        return len(self._parent_to_children)
+
+    def __iter__(self) -> Iterator[_T]:
+        """An iterator over the nodes in topological order."""
+        return iter(self._topo_sorted)
+
+    def __contains__(self, value) -> bool:
+        """True if this graph contains the given node."""
+        return value in self._parent_to_children
+
+    # Mutators
+
     def add_new_node(self, child: _T, parents: Iterable[_T]) -> None:
         """Adds a new child to the graph, where all parents exist."""
-        if child in self._parent_to_children:
+        if child in self:
             raise KeyError(f"{child!r} is already in the graph.")
         parent_set = set(parents)
         if child in parent_set:
@@ -72,9 +135,9 @@ class DepGraph(Generic[_T]):
 
     def add_edge(self, *, child: _T, parent: _T) -> None:
         """Adds a new edge between two existing nodes."""
-        if child not in self._parent_to_children:
+        if child not in self:
             raise KeyError(f"{child!r} is not part of the graph")
-        if parent not in self._parent_to_children:
+        if parent not in self:
             raise KeyError(f"{parent!r} is not part of the graph")
         self._add_edge_unsafe(child=child, parent=parent)
         try:
@@ -85,7 +148,7 @@ class DepGraph(Generic[_T]):
 
     def remove(self, node: _T) -> None:
         """Removes a node, and all its connections, from the network."""
-        if node not in self._parent_to_children:
+        if node not in self:
             raise KeyError(f"{node!r} is not part of the graph")
         for child in self._parent_to_children[node]:
             self._child_to_parents[child].remove(node)
