@@ -18,6 +18,7 @@ import tiledb.cloud
 from tiledb.cloud import client
 from tiledb.cloud import dag
 from tiledb.cloud import tasks
+from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params as sp
@@ -353,6 +354,25 @@ class DAGClassTest(unittest.TestCase):
         d.wait(1)  # Avoid locking up forever if we deadlock.
         self.assertEqual("#0, #1, #2, #3, #4", terminal.result())
 
+    def test_two_dags(self):
+        local_timeouts = [
+            (True, 5),
+            (False, 30),
+        ]
+        for local, timeout in local_timeouts:
+            with self.subTest(local):
+                g1 = dag.DAG(name=f"two dags 1 (local: {local})")
+                n1 = g1.submit(len, [1, 2, 3], name="two dags len", local_mode=local)
+                g1.compute()
+                g1.wait(timeout)
+
+                g2 = dag.DAG(name=f"two dags 2 (local: {local})")
+                n2 = g2.submit(repr, n1, name="two dags repr", local_mode=local)
+                g2.compute()
+                g2.wait(timeout)
+
+                self.assertEqual(n2.result(), "3")
+
 
 class DAGFailureTest(unittest.TestCase):
     def test_dag_failure(self):
@@ -398,6 +418,13 @@ class DAGFailureTest(unittest.TestCase):
 
         self.assertEqual(node2.status, dag.Status.CANCELLED)
         self.assertEqual(node2.result(), None)
+
+    def test_two_dags_bad(self):
+        d1 = dag.DAG()
+        n1 = d1.submit(repr, "whatever")
+        d2 = dag.DAG()
+        with self.assertRaises(tce.TileDBCloudError):
+            d2.submit(repr, n1)
 
 
 class DAGCancelTest(unittest.TestCase):

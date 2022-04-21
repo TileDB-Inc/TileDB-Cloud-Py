@@ -129,7 +129,21 @@ class Node(Generic[_T]):
         """Finds Nodes this depends on and adds them to our dependency list."""
         parents = _find_parent_nodes((self.args, self.kwargs))
         for dep in parents:
-            self.depends_on(dep)
+            if dep.dag is self.dag:
+                # This is the expected case: where the node we're adding
+                # is part of the same DAG as we are.
+                self.depends_on(dep)
+            else:
+                # This is the less-common case: where the node we're adding
+                # is part of a previous DAG. We can only support when the
+                # previous DAG has already completed execution.
+                try:
+                    dep.future.result(0)
+                except Exception as e:
+                    raise tce.TileDBCloudError(
+                        "Nodes from a previous DAG may only be used as inputs"
+                        " in a subsequent DAG if they are already complete."
+                    ) from e
         self._has_node_args = bool(parents)
 
     def depends_on(self, node: "Node"):
