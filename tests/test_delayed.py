@@ -66,6 +66,17 @@ class DelayedClassTest(unittest.TestCase):
         self.assertEqual(node_5.result(), 8)
         self.assertEqual(node_6.result(), 24)
 
+    def test_two_delayeds(self):
+        node_1 = Delayed(len)([1, 2, 3])
+        node_1.set_timeout(30)
+        node_1.compute()
+        self.assertEqual(node_1.result(), 3)
+
+        node_2 = Delayed("result was {}".format)(node_1)
+        node_2.set_timeout(30)
+        node_2.compute()
+        self.assertEqual(node_2.result(), "result was 3")
+
 
 class DelayedFailureTest(unittest.TestCase):
     def test_failure(self):
