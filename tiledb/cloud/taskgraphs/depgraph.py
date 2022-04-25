@@ -1,7 +1,9 @@
 """Common internal-only types and tools."""
 
 import collections
-from typing import Deque, Dict, FrozenSet, Generic, Iterable, List, Set, Tuple, TypeVar
+from typing import AbstractSet, Deque, Dict, Generic, Iterable, List, Tuple, TypeVar
+
+from tiledb.cloud._common import ordered
 
 _T = TypeVar("_T")
 
@@ -10,9 +12,9 @@ class DepGraph(Generic[_T]):
     """A directed dependency graph which forbids cycles."""
 
     def __init__(self):
-        self._parent_to_children: Dict[_T, Set[_T]] = {}
+        self._parent_to_children: Dict[_T, ordered.Set[_T]] = {}
         """A mapping from parent to children, i.e. parents come before child."""
-        self._child_to_parents: Dict[_T, Set[_T]] = {}
+        self._child_to_parents: Dict[_T, ordered.Set[_T]] = {}
         """A mapping from child to parents, i.e. child comes after parents."""
         self._topo_sorted: List[_T] = []
         """A topologically-sorted list of nodes."""
@@ -24,9 +26,11 @@ class DepGraph(Generic[_T]):
         """
         new = DepGraph[_T]()
         new._parent_to_children = {
-            k: set(v) for (k, v) in self._parent_to_children.items()
+            k: v.copy() for (k, v) in self._parent_to_children.items()
         }
-        new._child_to_parents = {k: set(v) for (k, v) in self._child_to_parents.items()}
+        new._child_to_parents = {
+            k: v.copy() for (k, v) in self._child_to_parents.items()
+        }
         new._topo_sorted = list(self._topo_sorted)
         return new
 
@@ -59,8 +63,8 @@ class DepGraph(Generic[_T]):
             raise KeyError(f"Entries {missing_keys!r} are not in the graph.")
         # This isn't a no-op -- it ensures that the child node exists in both
         # our mappings.
-        self._parent_to_children[child] = set()
-        self._child_to_parents[child] = set()
+        self._parent_to_children[child] = ordered.Set()
+        self._child_to_parents[child] = ordered.Set()
         # When adding a completely new node to a DAG, you can't get a cycle.
         for parent in parents:
             self._add_edge_unsafe(child=child, parent=parent)
@@ -91,13 +95,13 @@ class DepGraph(Generic[_T]):
         del self._child_to_parents[node]
         self._topo_sorted.remove(node)
 
-    def parents_of(self, node: _T) -> FrozenSet[_T]:
+    def parents_of(self, node: _T) -> AbstractSet[_T]:
         """Returns the immediate parents of the given node."""
-        return frozenset(self._child_to_parents[node])
+        return ordered.FrozenSet(self._child_to_parents[node])
 
-    def children_of(self, node: _T) -> FrozenSet[_T]:
+    def children_of(self, node: _T) -> AbstractSet[_T]:
         """Returns the immediate children of the given node."""
-        return frozenset(self._parent_to_children[node])
+        return ordered.FrozenSet(self._parent_to_children[node])
 
     def _topo_sort(self) -> List[_T]:
         in_degrees = {
