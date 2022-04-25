@@ -2,19 +2,24 @@
 
 import abc
 import collections.abc as cabc
-import dataclasses
-from typing import Any, Dict, Iterable, Optional
+from typing import Any, Dict, Generic, Iterable, Optional, TypeVar
+
+import attrs
+
+_T_co = TypeVar("_T_co", covariant=True)
 
 
-@dataclasses.dataclass(frozen=True)
-class Replacement:
+# This really should be a `slots` class, but setting `slots=True` breaks things
+# in python 3.6.
+@attrs.define(frozen=True, slots=False)
+class Replacement(Generic[_T_co]):
     """A sentinel return value to indicate that the value should be replaced.
 
     This wrapper ensures that we are able to replace nodes with `None`
     or other falsey values if needed.
     """
 
-    value: Any
+    value: _T_co
 
 
 class ReplacingVisitor(metaclass=abc.ABCMeta):
