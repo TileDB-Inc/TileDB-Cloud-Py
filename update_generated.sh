@@ -119,7 +119,7 @@ index 267385d..6d244a0 100644
  from six.moves.urllib.parse import quote
  
  import tiledb.cloud.rest_api.models
-+from tiledb.cloud._results import json_safe
++from tiledb.cloud._common import json_safe
  from tiledb.cloud.rest_api import rest
  from tiledb.cloud.rest_api.configuration import Configuration
  from tiledb.cloud.rest_api.exceptions import ApiException

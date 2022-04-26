@@ -11,7 +11,7 @@ from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import tasks
 from tiledb.cloud import tiledb_cloud_error
-from tiledb.cloud._results import json_safe
+from tiledb.cloud._common import json_safe
 
 
 class BasicTests(unittest.TestCase):

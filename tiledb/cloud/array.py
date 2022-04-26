@@ -7,8 +7,8 @@ import numpy
 from tiledb.cloud import client
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
+from tiledb.cloud._common import json_safe
 from tiledb.cloud._results import decoders
-from tiledb.cloud._results import json_safe
 from tiledb.cloud._results import results
 from tiledb.cloud._results import sender
 from tiledb.cloud.rest_api import ApiException as GenApiException

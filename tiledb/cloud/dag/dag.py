@@ -28,9 +28,9 @@ from tiledb.cloud import rest_api
 from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud import udf
+from tiledb.cloud._common import visitor
 from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params
-from tiledb.cloud._results import visitor
 from tiledb.cloud.dag import status as st
 from tiledb.cloud.dag import visualization as viz
 

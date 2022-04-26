@@ -42,7 +42,7 @@ _DECODE_FNS = {
 
 
 @dataclasses.dataclass(frozen=True)
-class Decoder(AbstractDecoder[_T], Generic[_T]):
+class Decoder(AbstractDecoder[_T]):
     """General decoder for the formats we support.
 
     The exact name and location of this class is important, because instances

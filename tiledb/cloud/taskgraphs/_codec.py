@@ -8,8 +8,8 @@ import cloudpickle
 import pyarrow
 import urllib3
 
+from tiledb.cloud._common import visitor
 from tiledb.cloud._results import decoders
-from tiledb.cloud._results import visitor
 from tiledb.cloud.taskgraphs import types
 
 _T = TypeVar("_T")
