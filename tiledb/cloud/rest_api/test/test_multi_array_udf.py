@@ -41,6 +41,7 @@ class TestMultiArrayUDF(unittest.TestCase):
                 language="python",
                 version="0",
                 image_name="0",
+                resource_class="standard",
                 _exec="0",
                 exec_raw="0",
                 result_format="python_pickle",

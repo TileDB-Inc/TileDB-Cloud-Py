@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **language** | [**UDFLanguage**](UDFLanguage.md) |  | [optional] 
 **version** | **str** | Type-specific version | [optional] 
 **image_name** | **str** | Docker image name to use for UDF | [optional] 
+**resource_class** | **str** | The resource class to use for the UDF execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the UDF will execute in the standard resource class of the TileDB Cloud provider.  | [optional] 
 **_exec** | **str** | Type-specific executable text | [optional] 
 **exec_raw** | **str** | optional raw text to store of serialized function, used for showing in UI | [optional] 
 **argument** | **str** | Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format | [optional] 
