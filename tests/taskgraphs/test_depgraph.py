@@ -52,14 +52,15 @@ class TestDepGraph(unittest.TestCase):
         expected_parents_children = {
             "root": ([], ["child", "child 2", "last"]),
             "child": (["root", "child 2"], ["last"]),
-            "child 2": (["root"], ["child", "last"]),
+            "child 2": (["root"], ["last", "child"]),
             "last": (["root", "child", "child 2"], []),
             "floater": ([], []),
         }
         for node, (parents, children) in expected_parents_children.items():
             with self.subTest(f"{node!r} relationships"):
-                self.assertEqual(frozenset(parents), g.parents_of(node))
-                self.assertEqual(frozenset(children), g.children_of(node))
+                # Order is important here.
+                self.assertEqual(parents, list(g.parents_of(node)))
+                self.assertEqual(children, list(g.children_of(node)))
 
         with self.assertRaises(KeyError):
             g.children_of("no")
