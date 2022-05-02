@@ -94,6 +94,8 @@ class DAGClassTest(unittest.TestCase):
             ),
         )
 
+        self.assertIsNone(dag_dag.server_logs(d))
+
     def test_simple_cloud_dag(self):
         d = dag.DAG(name="a cool server dag")
 
@@ -164,6 +166,11 @@ class DAGClassTest(unittest.TestCase):
                 ],
             ),
         )
+
+        actual_log = dag_dag.server_logs(d)
+        self.assertEqual("a cool server dag", actual_log.name)
+        self.assertEqual(3, len(actual_log.nodes))
+        self.assertEqual("succeeded", actual_log.status)
 
     def _remote_result(self, node: dag_dag.Node) -> results.RemoteResult:
         """Extracts the RemoteResult out of the Node's future."""

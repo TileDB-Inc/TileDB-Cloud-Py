@@ -20,6 +20,7 @@ from typing import (
     Set,
     Tuple,
     TypeVar,
+    Union,
 )
 
 from tiledb.cloud import array
@@ -33,6 +34,7 @@ from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params
 from tiledb.cloud.dag import status as st
 from tiledb.cloud.dag import visualization as viz
+from tiledb.cloud.rest_api import models
 
 Status = st.Status  # Re-export for compabitility.
 _T = TypeVar("_T")
@@ -972,6 +974,36 @@ class DAG:
             results[node.name] = node.result()
 
         return results
+
+
+def server_logs(
+    dag_or_id: Union[DAG, uuid.UUID, str],
+    namespace: Optional[str] = None,
+) -> Optional[models.TaskGraphLog]:
+    """Retrieves the server-side logs for the given DAG.
+
+    The DAG can be provided as a DAG object, or the server-provided UUID of a
+    DAG's execution log in either :class:`uuid.UUID` or string form.
+    This can be used to access both completed DAGs and in-progress DAGs.
+
+    Will return None if called with a DAG object that has no server-side nodes.
+    """
+    if isinstance(dag_or_id, DAG):
+        the_id = dag_or_id.server_graph_uuid
+    elif isinstance(dag_or_id, str):
+        the_id = uuid.UUID(hex=dag_or_id)
+    else:
+        the_id = dag_or_id
+
+    if not the_id:
+        return None
+
+    namespace = namespace or client.default_charged_namespace()
+
+    return client.client.task_graph_logs_api.get_task_graph_log(
+        namespace=namespace,
+        id=str(the_id),
+    )
 
 
 _API_STATUSES: Dict[st.Status, str] = {
