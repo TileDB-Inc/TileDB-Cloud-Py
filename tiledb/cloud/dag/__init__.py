@@ -5,10 +5,12 @@ from tiledb.cloud.dag import status
 DAG = dag.DAG
 Node = dag.Node
 Status = status.Status
+server_logs = dag.server_logs
 
 
 __all__ = (
     "DAG",
     "Node",
     "Status",
+    "server_logs",
 )
