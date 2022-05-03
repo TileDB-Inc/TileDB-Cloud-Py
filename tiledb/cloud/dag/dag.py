@@ -162,8 +162,10 @@ class Node(Generic[_T]):
             self.dag = node.dag
 
     def cancel(self):
-        self.status = st.Status.CANCELLED
-        if self._future is not None:
+        if self.status == st.Status.NOT_STARTED:
+            if self._future is None:
+                self._future = futures.Future()
+                self._future.add_done_callback(self._handle_completed_future)
             self._future.cancel()
 
     def finished(self) -> bool:
@@ -618,23 +620,53 @@ class DAG:
         """
         return self._add_raw_node(*args, local_mode=True, **kwargs)
 
-    def report_node_complete(self, node):
+    def report_node_complete(self, node: Node):
         """
         Report a node as complete
         :param node: to mark as complete
         :return
         """
-        del self.running_nodes[node.id]
+        self.running_nodes.pop(node.id, None)
+
+        to_report: Optional[str] = None
+        """The client-side event to report to the server, if needed.
+
+        For nodes that do not run because of a client-side event (e.g. they're
+        cancelled, they are run only on the client side, they crashed before
+        being sent to the server), we want to report an empty ArrayTask so that
+        the graph information on the server can know about these failed nodes
+        even though there will be no ArrayTask for them in our database.
+        """
 
         if node.status == st.Status.COMPLETED:
             self.completed_nodes[node.id] = node
             for child in node.children.values():
                 self._exec_node(child)
+            if node.local_mode:
+                to_report = models.ArrayTaskStatus.COMPLETED
         elif node.status == st.Status.CANCELLED:
             self.cancelled_nodes[node.id] = node
+            to_report = models.ArrayTaskStatus.CANCELLED
         else:
             self.failed_nodes[node.id] = node
             self.cancel()
+            if not isinstance(node.error, tce.TileDBCloudError) or node.local_mode:
+                to_report = models.ArrayTaskStatus.FAILED
+
+        if self.server_graph_uuid and to_report:
+            # Only report client-side events to the server if we've submitted
+            # the structure of the graph.
+            try:
+                client.client.task_graph_logs_api.report_client_node(
+                    id=str(self.server_graph_uuid),
+                    namespace=self.namespace,
+                    report=models.TaskGraphClientNodeStatus(
+                        client_node_uuid=str(node.id),
+                        status=to_report,
+                    ),
+                )
+            except rest_api.ApiException:
+                pass  # If we can't report a node status, don't worry about it.
 
         self.execute_update_callbacks()
 
@@ -713,6 +745,8 @@ class DAG:
             raise next(iter(self.failed_nodes.values())).error
 
     def cancel(self):
+        if self.status not in (st.Status.RUNNING, st.Status.NOT_STARTED):
+            return
         self.status = st.Status.CANCELLED
         for node in self.running_nodes.values():
             node.cancel()
