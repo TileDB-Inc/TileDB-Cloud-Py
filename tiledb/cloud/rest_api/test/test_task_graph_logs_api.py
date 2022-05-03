@@ -42,6 +42,10 @@ class TestTaskGraphLogsApi(unittest.TestCase):
         """Test case for list_task_graph_logs"""
         pass
 
+    def test_report_client_node(self):
+        """Test case for report_client_node"""
+        pass
+
     def test_update_task_graph_log(self):
         """Test case for update_task_graph_log"""
         pass

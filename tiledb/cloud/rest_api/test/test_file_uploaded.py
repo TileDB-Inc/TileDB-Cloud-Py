@@ -36,9 +36,13 @@ class TestFileUploaded(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.file_uploaded.FileUploaded()  # noqa: E501
         if include_optional:
-            return FileUploaded(output_uri="0", file_name="0")
+            return FileUploaded(
+                output_uri="0", file_name="0", id="00000000-0000-0000-0000-000000000000"
+            )
         else:
-            return FileUploaded()
+            return FileUploaded(
+                id="00000000-0000-0000-0000-000000000000",
+            )
 
     def testFileUploaded(self):
         """Test FileUploaded"""

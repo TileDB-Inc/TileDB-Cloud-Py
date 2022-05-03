@@ -196,6 +196,7 @@ Class | Method | HTTP request | Description
 *TaskGraphLogsApi* | [**create_task_graph_log**](docs/TaskGraphLogsApi.md#create_task_graph_log) | **POST** /taskgraphs/{namespace}/log | 
 *TaskGraphLogsApi* | [**get_task_graph_log**](docs/TaskGraphLogsApi.md#get_task_graph_log) | **GET** /taskgraphs/{namespace}/logs/{id} | 
 *TaskGraphLogsApi* | [**list_task_graph_logs**](docs/TaskGraphLogsApi.md#list_task_graph_logs) | **GET** /taskgraphs/logs | 
+*TaskGraphLogsApi* | [**report_client_node**](docs/TaskGraphLogsApi.md#report_client_node) | **POST** /taskgraphs/{namespace}/logs/{id}/report_client_node | 
 *TaskGraphLogsApi* | [**update_task_graph_log**](docs/TaskGraphLogsApi.md#update_task_graph_log) | **PATCH** /taskgraphs/{namespace}/logs/{id} | 
 *TasksApi* | [**run_sql**](docs/TasksApi.md#run_sql) | **POST** /sql/{namespace} | 
 *TasksApi* | [**task_id_get**](docs/TasksApi.md#task_id_get) | **GET** /task/{id} | 
@@ -350,6 +351,7 @@ Class | Method | HTTP request | Description
  - [SubarrayRanges](docs/SubarrayRanges.md)
  - [Subscription](docs/Subscription.md)
  - [TGUDFArgument](docs/TGUDFArgument.md)
+ - [TaskGraphClientNodeStatus](docs/TaskGraphClientNodeStatus.md)
  - [TaskGraphLog](docs/TaskGraphLog.md)
  - [TaskGraphLogRunLocation](docs/TaskGraphLogRunLocation.md)
  - [TaskGraphLogStatus](docs/TaskGraphLogStatus.md)

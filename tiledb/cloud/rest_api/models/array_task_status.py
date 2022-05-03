@@ -34,6 +34,7 @@ class ArrayTaskStatus(object):
     RUNNING = "RUNNING"
     DENIED = "DENIED"
     UNKNOWN = "UNKNOWN"
+    CANCELLED = "CANCELLED"
 
     allowable_values = [
         QUEUED,
@@ -42,6 +43,7 @@ class ArrayTaskStatus(object):
         RUNNING,
         DENIED,
         UNKNOWN,
+        CANCELLED,
     ]  # noqa: E501
 
     """

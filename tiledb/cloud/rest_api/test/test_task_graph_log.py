@@ -51,6 +51,7 @@ class TestTaskGraphLog(unittest.TestCase):
                     "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
                 ),
                 status="submitted",
+                total_cost=1.337,
                 nodes=[
                     tiledb.cloud.rest_api.models.task_graph_node_metadata.TaskGraphNodeMetadata(
                         client_node_uuid="0",
