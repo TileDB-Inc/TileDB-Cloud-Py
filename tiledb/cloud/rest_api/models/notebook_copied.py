@@ -32,16 +32,27 @@ class NotebookCopied(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"output_uri": "str", "name": "str", "namespace": "str"}
+    openapi_types = {
+        "output_uri": "str",
+        "name": "str",
+        "namespace": "str",
+        "id": "str",
+    }
 
     attribute_map = {
         "output_uri": "output_uri",
         "name": "name",
         "namespace": "namespace",
+        "id": "id",
     }
 
     def __init__(
-        self, output_uri=None, name=None, namespace=None, local_vars_configuration=None
+        self,
+        output_uri=None,
+        name=None,
+        namespace=None,
+        id=None,
+        local_vars_configuration=None,
     ):  # noqa: E501
         """NotebookCopied - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
@@ -51,6 +62,7 @@ class NotebookCopied(object):
         self._output_uri = None
         self._name = None
         self._namespace = None
+        self._id = None
         self.discriminator = None
 
         if output_uri is not None:
@@ -59,6 +71,7 @@ class NotebookCopied(object):
             self.name = name
         if namespace is not None:
             self.namespace = namespace
+        self.id = id
 
     @property
     def output_uri(self):
@@ -128,6 +141,33 @@ class NotebookCopied(object):
         """
 
         self._namespace = namespace
+
+    @property
+    def id(self):
+        """Gets the id of this NotebookCopied.  # noqa: E501
+
+        unique ID of the copied notebook  # noqa: E501
+
+        :return: The id of this NotebookCopied.  # noqa: E501
+        :rtype: str
+        """
+        return self._id
+
+    @id.setter
+    def id(self, id):
+        """Sets the id of this NotebookCopied.
+
+        unique ID of the copied notebook  # noqa: E501
+
+        :param id: The id of this NotebookCopied.  # noqa: E501
+        :type: str
+        """
+        if (
+            self.local_vars_configuration.client_side_validation and id is None
+        ):  # noqa: E501
+            raise ValueError("Invalid value for `id`, must not be `None`")  # noqa: E501
+
+        self._id = id
 
     def to_dict(self):
         """Returns the model properties as a dict"""

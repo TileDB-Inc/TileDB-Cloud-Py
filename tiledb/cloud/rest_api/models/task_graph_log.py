@@ -41,6 +41,7 @@ class TaskGraphLog(object):
         "start_time": "datetime",
         "end_time": "datetime",
         "status": "TaskGraphLogStatus",
+        "total_cost": "float",
         "nodes": "list[TaskGraphNodeMetadata]",
     }
 
@@ -53,6 +54,7 @@ class TaskGraphLog(object):
         "start_time": "start_time",
         "end_time": "end_time",
         "status": "status",
+        "total_cost": "total_cost",
         "nodes": "nodes",
     }
 
@@ -66,6 +68,7 @@ class TaskGraphLog(object):
         start_time=None,
         end_time=None,
         status=None,
+        total_cost=None,
         nodes=None,
         local_vars_configuration=None,
     ):  # noqa: E501
@@ -82,6 +85,7 @@ class TaskGraphLog(object):
         self._start_time = None
         self._end_time = None
         self._status = None
+        self._total_cost = None
         self._nodes = None
         self.discriminator = None
 
@@ -99,6 +103,7 @@ class TaskGraphLog(object):
         self.end_time = end_time
         if status is not None:
             self.status = status
+        self.total_cost = total_cost
         if nodes is not None:
             self.nodes = nodes
 
@@ -283,6 +288,29 @@ class TaskGraphLog(object):
         """
 
         self._status = status
+
+    @property
+    def total_cost(self):
+        """Gets the total_cost of this TaskGraphLog.  # noqa: E501
+
+        If present, the total cost of executing all nodes in this task graph.   # noqa: E501
+
+        :return: The total_cost of this TaskGraphLog.  # noqa: E501
+        :rtype: float
+        """
+        return self._total_cost
+
+    @total_cost.setter
+    def total_cost(self, total_cost):
+        """Sets the total_cost of this TaskGraphLog.
+
+        If present, the total cost of executing all nodes in this task graph.   # noqa: E501
+
+        :param total_cost: The total_cost of this TaskGraphLog.  # noqa: E501
+        :type: float
+        """
+
+        self._total_cost = total_cost
 
     @property
     def nodes(self):

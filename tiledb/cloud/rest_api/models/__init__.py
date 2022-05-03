@@ -140,6 +140,9 @@ from tiledb.cloud.rest_api.models.subarray_partitioner_state import (
 )
 from tiledb.cloud.rest_api.models.subarray_ranges import SubarrayRanges
 from tiledb.cloud.rest_api.models.subscription import Subscription
+from tiledb.cloud.rest_api.models.task_graph_client_node_status import (
+    TaskGraphClientNodeStatus,
+)
 from tiledb.cloud.rest_api.models.task_graph_log import TaskGraphLog
 from tiledb.cloud.rest_api.models.task_graph_log_run_location import (
     TaskGraphLogRunLocation,

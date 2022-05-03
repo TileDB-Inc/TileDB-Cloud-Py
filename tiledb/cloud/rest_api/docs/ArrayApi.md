@@ -3599,7 +3599,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **register_array**
-> register_array(namespace, array, array_metadata)
+> ArrayInfo register_array(namespace, array, array_metadata)
 
 
 
@@ -3650,7 +3650,8 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 array_metadata = tiledb.cloud.rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | metadata associated with array
 
     try:
-        api_instance.register_array(namespace, array, array_metadata)
+        api_response = api_instance.register_array(namespace, array, array_metadata)
+        pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->register_array: %s\n" % e)
 ```
@@ -3698,7 +3699,8 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 array_metadata = tiledb.cloud.rest_api.ArrayInfoUpdate() # ArrayInfoUpdate | metadata associated with array
 
     try:
-        api_instance.register_array(namespace, array, array_metadata)
+        api_response = api_instance.register_array(namespace, array, array_metadata)
+        pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->register_array: %s\n" % e)
 ```
@@ -3713,7 +3715,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**ArrayInfo**](ArrayInfo.md)
 
 ### Authorization
 
@@ -3727,7 +3729,7 @@ void (empty response body)
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**204** | schema registered successfully |  -  |
+**200** | array registered successfully |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

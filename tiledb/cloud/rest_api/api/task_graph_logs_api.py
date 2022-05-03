@@ -484,6 +484,159 @@ class TaskGraphLogsApi(object):
             collection_formats=collection_formats,
         )
 
+    def report_client_node(self, namespace, id, report, **kwargs):  # noqa: E501
+        """report_client_node  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.report_client_node(namespace, id, report, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: The namespace that owns this task graph log. (required)
+        :param str id: The UUID of the task graph log entry. (required)
+        :param TaskGraphClientNodeStatus report: The node status to report. (required)
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: None
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs["_return_http_data_only"] = True
+        return self.report_client_node_with_http_info(
+            namespace, id, report, **kwargs
+        )  # noqa: E501
+
+    def report_client_node_with_http_info(
+        self, namespace, id, report, **kwargs
+    ):  # noqa: E501
+        """report_client_node  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.report_client_node_with_http_info(namespace, id, report, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: The namespace that owns this task graph log. (required)
+        :param str id: The UUID of the task graph log entry. (required)
+        :param TaskGraphClientNodeStatus report: The node status to report. (required)
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: None
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = ["namespace", "id", "report"]
+        all_params.extend(
+            [
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params["kwargs"]):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method report_client_node" % key
+                )
+            local_var_params[key] = val
+        del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `report_client_node`"
+            )  # noqa: E501
+        # verify the required parameter 'id' is set
+        if self.api_client.client_side_validation and (
+            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `id` when calling `report_client_node`"
+            )  # noqa: E501
+        # verify the required parameter 'report' is set
+        if self.api_client.client_side_validation and (
+            "report" not in local_var_params
+            or local_var_params["report"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `report` when calling `report_client_node`"
+            )  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "id" in local_var_params:
+            path_params["id"] = local_var_params["id"]  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        if "report" in local_var_params:
+            body_params = local_var_params["report"]
+        # HTTP header `Accept`
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+
+        return self.api_client.call_api(
+            "/taskgraphs/{namespace}/logs/{id}/report_client_node",
+            "POST",
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type=None,  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
+
     def update_task_graph_log(self, namespace, id, log, **kwargs):  # noqa: E501
         """update_task_graph_log  # noqa: E501
 

@@ -37,6 +37,12 @@ class TokenScope(object):
     ARRAY_READ = "array:read"
     ARRAY_READ_WRITE = "array:read-write"
     ARRAY_ADMIN = "array:admin"
+    ORGANIZATION_READ = "organization:read"
+    ORGANIZATION_READ_WRITE = "organization:read-write"
+    ORGANIZATION_ADMIN = "organization:admin"
+    GROUP_READ = "group:read"
+    GROUP_READ_WRITE = "group:read-write"
+    GROUP_ADMIN = "group:admin"
 
     allowable_values = [
         PASSWORD_RESET,
@@ -48,6 +54,12 @@ class TokenScope(object):
         ARRAY_READ,
         ARRAY_READ_WRITE,
         ARRAY_ADMIN,
+        ORGANIZATION_READ,
+        ORGANIZATION_READ_WRITE,
+        ORGANIZATION_ADMIN,
+        GROUP_READ,
+        GROUP_READ_WRITE,
+        GROUP_ADMIN,
     ]  # noqa: E501
 
     """

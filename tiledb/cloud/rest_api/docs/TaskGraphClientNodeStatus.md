@@ -1,12 +1,11 @@
-# FileUploaded
+# TaskGraphClientNodeStatus
 
-Uploaded file name and information
+A report of the execution status of a node that ran on the client side. 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**output_uri** | **str** | output location of the TileDB File | [optional] 
-**file_name** | **str** | name of the file uploaded | [optional] 
-**id** | **str** | unique ID of the uploaded file | 
+**client_node_uuid** | **str** |  | [optional] 
+**status** | [**ArrayTaskStatus**](ArrayTaskStatus.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
