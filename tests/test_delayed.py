@@ -1,5 +1,6 @@
 import time
 import unittest
+from concurrent import futures
 
 import numpy as np
 
@@ -115,7 +116,8 @@ class DelayedFailureTest(unittest.TestCase):
             node.result()
 
         self.assertEqual(node2.status, Status.CANCELLED)
-        self.assertEqual(node2.result(), None)
+        with self.assertRaises(futures.CancelledError):
+            node2.result()
         self.assertEqual(node2.dag.status, Status.FAILED)
 
 
@@ -136,11 +138,13 @@ class DelayedCancelTest(unittest.TestCase):
         self.assertIs(node.dag, node_2.dag)
         self.assertEqual(node.dag.status, Status.CANCELLED)
 
-        self.assertEqual(node.status, Status.CANCELLED)
+        # Because an already-running node can't be cancelled, the sleep will
+        # still run to completion.
         self.assertEqual(node.result(), None)
 
         self.assertEqual(node_2.status, Status.CANCELLED)
-        self.assertEqual(node_2.result(), None)
+        with self.assertRaises(futures.CancelledError):
+            node_2.result()
 
 
 class DelayedCloudApplyTest(unittest.TestCase):

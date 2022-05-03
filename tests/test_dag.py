@@ -424,7 +424,21 @@ class DAGFailureTest(unittest.TestCase):
             node.result()
 
         self.assertEqual(node2.status, dag.Status.CANCELLED)
-        self.assertEqual(node2.result(), None)
+        with self.assertRaises(futures.CancelledError):
+            node2.result()
+
+    def test_failure_server_nodes(self):
+
+        d = dag.DAG(name="divide by zero")
+        node = d.submit(lambda: 1 / 0, name="i'm gonna do it")
+        child = d.submit(lambda x: f"they got {x}", node, name="what happened")
+        d.compute()
+
+        with self.assertRaises(tce.TileDBCloudError):
+            d.wait(30)
+        time.sleep(1)
+        self.assertEqual(node.status, dag.Status.FAILED)
+        self.assertEqual(child.status, dag.Status.CANCELLED)
 
     def test_two_dags_bad(self):
         d1 = dag.DAG()
@@ -447,11 +461,13 @@ class DAGCancelTest(unittest.TestCase):
 
         self.assertEqual(d.status, dag.Status.CANCELLED)
 
-        self.assertEqual(node.status, dag.Status.CANCELLED)
+        # Because an already-running node can't be cancelled, the sleep will
+        # still run to completion.
         self.assertEqual(node.result(), None)
 
         self.assertEqual(node_2.status, dag.Status.CANCELLED)
-        self.assertEqual(node_2.result(), None)
+        with self.assertRaises(futures.CancelledError):
+            node_2.result()
 
 
 class DAGCloudApplyTest(unittest.TestCase):
