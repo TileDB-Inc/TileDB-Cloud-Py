@@ -52,12 +52,17 @@ class TestTaskGraphLog(unittest.TestCase):
                 ),
                 status="submitted",
                 total_cost=1.337,
+                access_cost=1.337,
+                egress_cost=1.337,
+                execution_time="P15H22M0.45S",
+                status_count={"key": 1.337},
                 nodes=[
                     tiledb.cloud.rest_api.models.task_graph_node_metadata.TaskGraphNodeMetadata(
                         client_node_uuid="0",
                         name="0",
                         depends_on=["0"],
                         run_location="server",
+                        status="QUEUED",
                         executions=[
                             tiledb.cloud.rest_api.models.array_task.ArrayTask(
                                 id="0",
@@ -128,7 +133,6 @@ class TestTaskGraphLog(unittest.TestCase):
                                 memory=1073741824,
                                 cpu=4000,
                                 namespace="organization1",
-                                status="QUEUED",
                                 start_time=datetime.datetime.strptime(
                                     "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
                                 ),

@@ -13,6 +13,10 @@ Name | Type | Description | Notes
 **end_time** | **datetime** | The end time of the task graph, recorded when the client reports completion.  | [optional] [readonly] 
 **status** | [**TaskGraphLogStatus**](TaskGraphLogStatus.md) |  | [optional] 
 **total_cost** | **float** | If present, the total cost of executing all nodes in this task graph.  | [optional] 
+**access_cost** | **float** | If present, the total cost of access from execution of the nodes in this task graph.  | [optional] 
+**egress_cost** | **float** | If present, the total cost of access from execution of the nodes in this task graph.  | [optional] 
+**execution_time** | **str** | The total execution time of all the nodes in this graph, in ISO 8601 format with hours, minutes, and seconds.  | [optional] 
+**status_count** | **dict(str, float)** | A mapping from &#x60;ArrayTaskStatus&#x60; string value to the number of nodes in this graph that are in that status.  | [optional] 
 **nodes** | [**list[TaskGraphNodeMetadata]**](TaskGraphNodeMetadata.md) | The structure of the graph. This is provided by the client when first setting up the task graph. Thereafter, it is read-only. This must be topographically sorted; that is, each node must appear after all nodes that it depends upon.  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

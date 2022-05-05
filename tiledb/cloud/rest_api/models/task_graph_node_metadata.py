@@ -37,6 +37,7 @@ class TaskGraphNodeMetadata(object):
         "name": "str",
         "depends_on": "list[str]",
         "run_location": "TaskGraphLogRunLocation",
+        "status": "ArrayTaskStatus",
         "executions": "list[ArrayTask]",
     }
 
@@ -45,6 +46,7 @@ class TaskGraphNodeMetadata(object):
         "name": "name",
         "depends_on": "depends_on",
         "run_location": "run_location",
+        "status": "status",
         "executions": "executions",
     }
 
@@ -54,6 +56,7 @@ class TaskGraphNodeMetadata(object):
         name=None,
         depends_on=None,
         run_location=None,
+        status=None,
         executions=None,
         local_vars_configuration=None,
     ):  # noqa: E501
@@ -66,6 +69,7 @@ class TaskGraphNodeMetadata(object):
         self._name = None
         self._depends_on = None
         self._run_location = None
+        self._status = None
         self._executions = None
         self.discriminator = None
 
@@ -77,6 +81,8 @@ class TaskGraphNodeMetadata(object):
             self.depends_on = depends_on
         if run_location is not None:
             self.run_location = run_location
+        if status is not None:
+            self.status = status
         if executions is not None:
             self.executions = executions
 
@@ -169,6 +175,27 @@ class TaskGraphNodeMetadata(object):
         """
 
         self._run_location = run_location
+
+    @property
+    def status(self):
+        """Gets the status of this TaskGraphNodeMetadata.  # noqa: E501
+
+
+        :return: The status of this TaskGraphNodeMetadata.  # noqa: E501
+        :rtype: ArrayTaskStatus
+        """
+        return self._status
+
+    @status.setter
+    def status(self, status):
+        """Sets the status of this TaskGraphNodeMetadata.
+
+
+        :param status: The status of this TaskGraphNodeMetadata.  # noqa: E501
+        :type: ArrayTaskStatus
+        """
+
+        self._status = status
 
     @property
     def executions(self):

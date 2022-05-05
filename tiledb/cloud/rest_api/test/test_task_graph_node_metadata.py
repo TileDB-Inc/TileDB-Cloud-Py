@@ -43,6 +43,7 @@ class TestTaskGraphNodeMetadata(unittest.TestCase):
                 name="0",
                 depends_on=["0"],
                 run_location="server",
+                status="QUEUED",
                 executions=[
                     tiledb.cloud.rest_api.models.array_task.ArrayTask(
                         id="0",
