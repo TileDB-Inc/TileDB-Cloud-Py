@@ -56,6 +56,10 @@ class TestTaskGraphLogsData(unittest.TestCase):
                         ),
                         status="submitted",
                         total_cost=1.337,
+                        access_cost=1.337,
+                        egress_cost=1.337,
+                        execution_time="P15H22M0.45S",
+                        status_count={"key": 1.337},
                         nodes=[
                             tiledb.cloud.rest_api.models.task_graph_node_metadata.TaskGraphNodeMetadata(
                                 client_node_uuid="0",

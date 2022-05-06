@@ -42,6 +42,10 @@ class TaskGraphLog(object):
         "end_time": "datetime",
         "status": "TaskGraphLogStatus",
         "total_cost": "float",
+        "access_cost": "float",
+        "egress_cost": "float",
+        "execution_time": "str",
+        "status_count": "dict(str, float)",
         "nodes": "list[TaskGraphNodeMetadata]",
     }
 
@@ -55,6 +59,10 @@ class TaskGraphLog(object):
         "end_time": "end_time",
         "status": "status",
         "total_cost": "total_cost",
+        "access_cost": "access_cost",
+        "egress_cost": "egress_cost",
+        "execution_time": "execution_time",
+        "status_count": "status_count",
         "nodes": "nodes",
     }
 
@@ -69,6 +77,10 @@ class TaskGraphLog(object):
         end_time=None,
         status=None,
         total_cost=None,
+        access_cost=None,
+        egress_cost=None,
+        execution_time=None,
+        status_count=None,
         nodes=None,
         local_vars_configuration=None,
     ):  # noqa: E501
@@ -86,6 +98,10 @@ class TaskGraphLog(object):
         self._end_time = None
         self._status = None
         self._total_cost = None
+        self._access_cost = None
+        self._egress_cost = None
+        self._execution_time = None
+        self._status_count = None
         self._nodes = None
         self.discriminator = None
 
@@ -104,6 +120,12 @@ class TaskGraphLog(object):
         if status is not None:
             self.status = status
         self.total_cost = total_cost
+        self.access_cost = access_cost
+        self.egress_cost = egress_cost
+        if execution_time is not None:
+            self.execution_time = execution_time
+        if status_count is not None:
+            self.status_count = status_count
         if nodes is not None:
             self.nodes = nodes
 
@@ -311,6 +333,98 @@ class TaskGraphLog(object):
         """
 
         self._total_cost = total_cost
+
+    @property
+    def access_cost(self):
+        """Gets the access_cost of this TaskGraphLog.  # noqa: E501
+
+        If present, the total cost of access from execution of the nodes in this task graph.   # noqa: E501
+
+        :return: The access_cost of this TaskGraphLog.  # noqa: E501
+        :rtype: float
+        """
+        return self._access_cost
+
+    @access_cost.setter
+    def access_cost(self, access_cost):
+        """Sets the access_cost of this TaskGraphLog.
+
+        If present, the total cost of access from execution of the nodes in this task graph.   # noqa: E501
+
+        :param access_cost: The access_cost of this TaskGraphLog.  # noqa: E501
+        :type: float
+        """
+
+        self._access_cost = access_cost
+
+    @property
+    def egress_cost(self):
+        """Gets the egress_cost of this TaskGraphLog.  # noqa: E501
+
+        If present, the total cost of access from execution of the nodes in this task graph.   # noqa: E501
+
+        :return: The egress_cost of this TaskGraphLog.  # noqa: E501
+        :rtype: float
+        """
+        return self._egress_cost
+
+    @egress_cost.setter
+    def egress_cost(self, egress_cost):
+        """Sets the egress_cost of this TaskGraphLog.
+
+        If present, the total cost of access from execution of the nodes in this task graph.   # noqa: E501
+
+        :param egress_cost: The egress_cost of this TaskGraphLog.  # noqa: E501
+        :type: float
+        """
+
+        self._egress_cost = egress_cost
+
+    @property
+    def execution_time(self):
+        """Gets the execution_time of this TaskGraphLog.  # noqa: E501
+
+        The total execution time of all the nodes in this graph, in ISO 8601 format with hours, minutes, and seconds.   # noqa: E501
+
+        :return: The execution_time of this TaskGraphLog.  # noqa: E501
+        :rtype: str
+        """
+        return self._execution_time
+
+    @execution_time.setter
+    def execution_time(self, execution_time):
+        """Sets the execution_time of this TaskGraphLog.
+
+        The total execution time of all the nodes in this graph, in ISO 8601 format with hours, minutes, and seconds.   # noqa: E501
+
+        :param execution_time: The execution_time of this TaskGraphLog.  # noqa: E501
+        :type: str
+        """
+
+        self._execution_time = execution_time
+
+    @property
+    def status_count(self):
+        """Gets the status_count of this TaskGraphLog.  # noqa: E501
+
+        A mapping from `ArrayTaskStatus` string value to the number of nodes in this graph that are in that status.   # noqa: E501
+
+        :return: The status_count of this TaskGraphLog.  # noqa: E501
+        :rtype: dict(str, float)
+        """
+        return self._status_count
+
+    @status_count.setter
+    def status_count(self, status_count):
+        """Sets the status_count of this TaskGraphLog.
+
+        A mapping from `ArrayTaskStatus` string value to the number of nodes in this graph that are in that status.   # noqa: E501
+
+        :param status_count: The status_count of this TaskGraphLog.  # noqa: E501
+        :type: dict(str, float)
+        """
+
+        self._status_count = status_count
 
     @property
     def nodes(self):

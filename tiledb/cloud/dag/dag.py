@@ -1,4 +1,5 @@
 import collections
+import datetime
 import json
 import numbers
 import threading
@@ -1010,20 +1011,59 @@ class DAG:
         return results
 
 
+def list_logs(
+    *,
+    namespace: Optional[str] = None,
+    created_by: Optional[str] = None,
+    search: Optional[str] = None,
+    start_time: Optional[datetime.datetime] = None,
+    end_time: Optional[datetime.datetime] = None,
+    page: int = 1,
+    per_page: int = 10,
+) -> models.TaskGraphLogsData:
+    """Retrieves the list of task graph logs you can view.
+
+    The returned graph logs will be "light" versions, meaning they will not
+    include any details about the execution state of an individual DAG.
+    To retrieve those, pass the ID to :func:`server_logs`.
+
+    :param namespace: If present, include logs for only this namespace.
+        If absent, include logs for all namespaces you have access to.
+    :param created_by: Include only logs from this user (if present).
+    :param search: A search string for the name of the task graph.
+    :param start_time: Include logs created after this time.
+    :param end_time: Include logs created before this time.
+    :param page: The page number to use, starting from 1.
+    :param per_page: The number of items per page.
+    """
+    return client.client.task_graph_logs_api.list_task_graph_logs(
+        namespace=namespace,
+        created_by=created_by,
+        search=search,
+        start_time=start_time,
+        end_time=end_time,
+        page=page,
+        per_page=per_page,
+    )
+
+
 def server_logs(
-    dag_or_id: Union[DAG, uuid.UUID, str],
+    dag_or_id: Union[DAG, models.TaskGraphLog, uuid.UUID, str],
     namespace: Optional[str] = None,
 ) -> Optional[models.TaskGraphLog]:
-    """Retrieves the server-side logs for the given DAG.
+    """Retrieves the full server-side logs for the given DAG.
 
     The DAG can be provided as a DAG object, or the server-provided UUID of a
     DAG's execution log in either :class:`uuid.UUID` or string form.
     This can be used to access both completed DAGs and in-progress DAGs.
+    The returned DAGs will include full data
 
     Will return None if called with a DAG object that has no server-side nodes.
     """
     if isinstance(dag_or_id, DAG):
         the_id = dag_or_id.server_graph_uuid
+    elif isinstance(dag_or_id, models.TaskGraphLog):
+        the_id = uuid.UUID(hex=dag_or_id.uuid)
     elif isinstance(dag_or_id, str):
         the_id = uuid.UUID(hex=dag_or_id)
     else:
