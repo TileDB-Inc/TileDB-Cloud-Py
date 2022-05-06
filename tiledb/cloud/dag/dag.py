@@ -81,7 +81,6 @@ class Node(Generic[_T]):
         self.name = name or str(self.id)
 
         self.error: Optional[BaseException] = None
-        self.status = st.Status.NOT_STARTED
         self.dag = dag
         self.local_mode: bool = local_mode
 
@@ -108,8 +107,12 @@ class Node(Generic[_T]):
         )
         self._download_results = _download_results
 
-        self._future: Optional["futures.Future[results.Result[_T]]"] = None
-        self._done = threading.Event()
+        self._future: "futures.Future[results.Result[_T]]" = futures.Future()
+        """A proxy Future that is used to handle lifecycle events of this Node.
+
+        The actual Future executes and then sends its results here.
+        """
+        self._future.add_done_callback(self._handle_completed_future)
 
         self.parents: Dict[uuid.UUID, Node] = {}
         self.children: Dict[uuid.UUID, Node] = {}
@@ -163,18 +166,14 @@ class Node(Generic[_T]):
             self.dag = node.dag
 
     def cancel(self):
-        if self.status == st.Status.NOT_STARTED:
-            if self._future is None:
-                self._future = futures.Future()
-                self._future.add_done_callback(self._handle_completed_future)
-            self._future.cancel()
+        self._future.cancel()
 
     def finished(self) -> bool:
         """
         Is the node finished
         :return: True if the node's function is finished
         """
-        return self._done.is_set()
+        return self._future.done()
 
     done = finished
 
@@ -184,17 +183,26 @@ class Node(Generic[_T]):
         :return: None
         """
         assert self.dag
-        if not self.status == st.Status.CANCELLED:
-            self.status = st.Status.RUNNING
-            ft = self.dag.executor.submit(self._do_exec, namespace)
-        else:
-            ft = futures.Future()
-            ft.cancel()
-        self._future = ft
-        ft.add_done_callback(self._handle_completed_future)
+        # This is the actual Future. After it finishes, we proxy its results
+        # back to the proxy we have in `self._future`.
+        real_ft = self.dag.executor.submit(self._do_exec, namespace)
+        real_ft.add_done_callback(self._forward_to_proxy)
+
+    def _forward_to_proxy(self, real: "futures.Future[results.Result[_T]]") -> None:
+        """After the actual Future completes, forwards results to the proxy."""
+        try:
+            self._future.set_result(real.result())
+        except BaseException as exc:
+            if not self._future.cancelled():
+                self.error = exc
+                self._future.set_exception(exc)
 
     def _do_exec(self, namespace: Optional[str]) -> results.Result[_T]:
+        assert self._future
+        if not self._future.set_running_or_notify_cancel():
+            raise futures.CancelledError()
         assert self.dag
+        self.dag.execute_update_callbacks()
         # We have to make a shallow copy of kwargs here.
         # Since we modify the kwargs dictionary here before passing it
         # to the wrapped function, we need to ensure that the arguments
@@ -264,17 +272,7 @@ class Node(Generic[_T]):
 
     compute = exec
 
-    def _handle_completed_future(self, future: futures.Future) -> None:
-        if future.cancelled():
-            self.status = st.Status.CANCELLED
-        else:
-            exc = future.exception()
-            if exc:
-                self.error = exc
-                self.status = st.Status.FAILED
-            elif self.status == st.Status.RUNNING:
-                self.status = st.Status.COMPLETED
-        self._done.set()
+    def _handle_completed_future(self, _) -> None:
         assert self.dag
         self.dag.report_node_complete(self)
 
@@ -296,29 +294,34 @@ class Node(Generic[_T]):
         Fetch results of function, block if not complete
         :return:
         """
-        ft = self._future
-        if not ft:
-            if self.status is st.Status.CANCELLED:
-                return None
-            raise ValueError("Cannot access result of an unstarted Node")
-        return ft.result().get()
+        return self._future.result().get()
 
     @property
-    def future(self) -> "Optional[futures.Future[_T]]":
+    def future(self) -> "futures.Future[_T]":
+        # We return an UnwrapperProxy that acts just like a real Future,
+        # at least as far as the caller is concerned.
+        return results.UnwrapperProxy(self._future)  # type: ignore[return-value]
+
+    @property
+    def status(self) -> st.Status:
         ft = self._future
-        return results.unwrapper_proxy(ft) if ft else None
+        if ft.running():
+            return st.Status.RUNNING
+        if ft.done():
+            if ft.cancelled():
+                return st.Status.CANCELLED
+            if ft.exception():
+                return st.Status.FAILED
+            return st.Status.COMPLETED
+        return st.Status.NOT_STARTED
 
     def task_id(self) -> Optional[uuid.UUID]:
         """Gets the server-side Task ID of this node.
 
-        Raises a ValueError if the Node has not been completed.
         Returns None if this has no task ID (as it was run on the client side).
         """
-        ft = self._future
-        if not ft:
-            raise ValueError("Cannot access task ID of an unstared Node")
         try:
-            sp = ft.result().to_stored_param()
+            sp = self._future.result(timeout=0).to_stored_param()
         except TypeError:
             # Run client-side; can't be converted to a stored param.
             return None
@@ -330,7 +333,7 @@ class Node(Generic[_T]):
         :param timeout: optional timeout in seconds to wait for DAG to be completed
         :return: None or raises TimeoutError if timeout occurs
         """
-        self._done.wait(timeout)
+        self._future.exception(timeout)
 
     def _to_log_metadata(self) -> rest_api.TaskGraphNodeMetadata:
         return rest_api.TaskGraphNodeMetadata(

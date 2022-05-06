@@ -960,9 +960,7 @@ class ReplaceNodesTest(unittest.TestCase):
 def _node(val):
     """Creates a completed node with the given value."""
     n = dag.Node(lambda: None)
-    n._future = futures.Future()
     n._future.set_result(results.LocalResult(val))
-    n.status = dag.Status.COMPLETED
     return n
 
 
