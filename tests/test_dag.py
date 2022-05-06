@@ -444,10 +444,10 @@ class DAGFailureTest(unittest.TestCase):
         def fail():
             raise Exception("expected")
 
-        definitely_failed = futures.Future()
+        definitely_failed = threading.Barrier(2, timeout=5)
 
         def wait(something):
-            definitely_failed.result(1)
+            definitely_failed.wait()
             return something
 
         fail_node = d.submit_local(fail)
@@ -458,7 +458,7 @@ class DAGFailureTest(unittest.TestCase):
         d.compute()
 
         fail_node.wait(1)
-        definitely_failed.set_result(None)
+        definitely_failed.wait()
 
         with self.assertRaisesRegex(Exception, r"^expected$"):
             d.wait(5)

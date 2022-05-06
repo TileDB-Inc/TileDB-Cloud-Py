@@ -387,12 +387,15 @@ class DAG:
         if use_processes:
             self.executor = futures.ProcessPoolExecutor(max_workers=max_workers)
         else:
-            self.executor = futures.ThreadPoolExecutor(max_workers=max_workers)
+            self.executor = futures.ThreadPoolExecutor(
+                thread_name_prefix=f"dag-{self.name or self.id}-worker",
+                max_workers=max_workers,
+            )
 
         self.status = st.Status.NOT_STARTED
 
         self.done_callbacks = []
-        self.called_done_callbacks = False
+        self._called_done_callbacks = threading.Semaphore()
         if done_callback is not None and callable(done_callback):
             self.done_callbacks.append(done_callback)
 
@@ -475,12 +478,11 @@ class DAG:
 
     def _report_completion(self) -> None:
         """Reports the completion of the task graph to the server and callbacks."""
-        if not self.called_done_callbacks:
+        if self._called_done_callbacks.acquire(blocking=False):
+            self.executor.shutdown(wait=False)
             self._report_server_completion()
             for func in self.done_callbacks:
                 func(self)
-
-        self.called_done_callbacks = True
 
     def _report_server_completion(self) -> None:
         if not self.server_graph_uuid:
@@ -500,18 +502,10 @@ class DAG:
         except rest_api.ApiException as apix:
             warnings.warn(UserWarning(f"Error reporting graph completion: {apix}"))
 
-    def done(self):
-        """
-        Checks if DAG is complete
-        :return: True if complete, False otherwise
-        """
-        if self.status == st.Status.NOT_STARTED:
-            raise tce.TileDBCloudError(
-                "Can't call done for DAG before starting DAG with `exec()`"
-            )
-
+    def _update_status(self):
+        """Updates the status and sets completion if we're done."""
         if self.running_nodes or self.not_started_nodes:
-            return False
+            return
 
         # If there is no running nodes we can assume it is complete and check if we should mark as failed or successful
         if len(self.failed_nodes) > 0:
@@ -520,8 +514,14 @@ class DAG:
             self.status = st.Status.CANCELLED
         else:
             self.status = st.Status.COMPLETED
+        self._report_completion()
 
-        return True
+    def done(self):
+        return self.status in (
+            st.Status.FAILED,
+            st.Status.CANCELLED,
+            st.Status.COMPLETED,
+        )
 
     def add_node_obj(self, node):
         """
@@ -670,10 +670,7 @@ class DAG:
         self.running_nodes.pop(node.id, None)
         self.not_started_nodes.pop(node.id, None)
         self.execute_update_callbacks()
-
-        # Check if DAG is done to change status
-        if self.done():
-            self._report_completion()
+        self._update_status()
 
     def _find_root_nodes(self):
         """
@@ -692,7 +689,6 @@ class DAG:
         Start the DAG by executing root nodes
         :return:
         """
-        self.called_done_callbacks = False
         roots = self._find_root_nodes()
         if len(roots) == 0:
             raise tce.TileDBCloudError("DAG is circular, there are no root nodes")
@@ -731,7 +727,7 @@ class DAG:
             end_time = start_time + timeout
         while not self.done():
             if end_time is not None and time.time() >= end_time:
-                raise TimeoutError(
+                raise futures.TimeoutError(
                     "timeout of {} reached and dag is not complete".format(timeout)
                 )
             time.sleep(0.01)
