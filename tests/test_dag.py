@@ -4,7 +4,6 @@ import collections.abc as cabc
 import itertools
 import pickle
 import threading
-import time
 import unittest
 import uuid
 from concurrent import futures
@@ -436,9 +435,39 @@ class DAGFailureTest(unittest.TestCase):
 
         with self.assertRaises(tce.TileDBCloudError):
             d.wait(30)
-        time.sleep(1)
         self.assertEqual(node.status, dag.Status.FAILED)
         self.assertEqual(child.status, dag.Status.CANCELLED)
+
+    def test_cancel_only_children(self):
+        d = dag.DAG()
+
+        def fail():
+            raise Exception("expected")
+
+        definitely_failed = futures.Future()
+
+        def wait(something):
+            definitely_failed.result(1)
+            return something
+
+        fail_node = d.submit_local(fail)
+        fail_child = d.submit_local(repr, fail_node)
+        wait_node = d.submit_local(wait, "value")
+        wait_child = d.submit_local(repr, wait_node)
+
+        d.compute()
+
+        fail_node.wait(1)
+        definitely_failed.set_result(None)
+
+        with self.assertRaisesRegex(Exception, r"^expected$"):
+            d.wait(5)
+
+        self.assertEqual(dag.Status.FAILED, d.status)
+        self.assertEqual(dag.Status.FAILED, fail_node.status)
+        self.assertEqual(dag.Status.CANCELLED, fail_child.status)
+        self.assertEqual("value", wait_node.result())
+        self.assertEqual("'value'", wait_child.result())
 
     def test_two_dags_bad(self):
         d1 = dag.DAG()
@@ -450,20 +479,30 @@ class DAGFailureTest(unittest.TestCase):
 
 class DAGCancelTest(unittest.TestCase):
     def test_dag_cancel(self):
+        in_node = futures.Future()
+        leave_node = futures.Future()
+
+        def rendezvous(value):
+            in_node.set_result(None)
+            leave_node.result(1)
+            return value
+
         d = dag.DAG()
-        node = d.add_node(time.sleep, 1)
-        node_2 = d.add_node(np.mean, [1, 1])
-        node_2.depends_on(node)
+        node = d.add_node(rendezvous, 100)
+        node_2 = d.add_node(np.mean, [node, node])
 
         d.compute()
-        # Cancel DAG
+        # Cancel DAG when we know the first node is running.
+        in_node.result(1)
         d.cancel()
+        leave_node.set_result(None)
 
+        d.wait(1)
         self.assertEqual(d.status, dag.Status.CANCELLED)
 
-        # Because an already-running node can't be cancelled, the sleep will
+        # Because an already-running node can't be cancelled, rendezvous will
         # still run to completion.
-        self.assertEqual(node.result(), None)
+        self.assertEqual(node.result(), 100)
 
         self.assertEqual(node_2.status, dag.Status.CANCELLED)
         with self.assertRaises(futures.CancelledError):
@@ -689,7 +728,7 @@ class DAGCallbackTest(unittest.TestCase):
         self.assertEqual(node_1.result(), 2)
         self.assertEqual(node_2.result(), 4)
         self.assertEqual(node_3.result(), 8)
-        self.assertEqual(self.status_updates, 5)
+        self.assertEqual(self.status_updates, 6)  # two for each Node
         self.assertEqual(self.done_updates, 1)
 
 

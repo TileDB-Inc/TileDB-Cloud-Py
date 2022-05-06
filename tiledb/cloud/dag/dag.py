@@ -165,8 +165,8 @@ class Node(Generic[_T]):
         if self.dag is None and node.dag is not None:
             self.dag = node.dag
 
-    def cancel(self):
-        self._future.cancel()
+    def cancel(self) -> bool:
+        return self._future.cancel()
 
     def finished(self) -> bool:
         """
@@ -198,7 +198,6 @@ class Node(Generic[_T]):
                 self._future.set_exception(exc)
 
     def _do_exec(self, namespace: Optional[str]) -> results.Result[_T]:
-        assert self._future
         if not self._future.set_running_or_notify_cancel():
             raise futures.CancelledError()
         assert self.dag
@@ -284,17 +283,14 @@ class Node(Generic[_T]):
         if self.status != st.Status.NOT_STARTED:
             return False
 
-        for node in self.parents.values():
-            if not node.finished() or node.status != st.Status.COMPLETED:
-                return False
-        return True
+        return all(node.finished() for node in self.parents.values())
 
-    def result(self) -> Optional[_T]:
+    def result(self, timeout: Optional[float] = None) -> Optional[_T]:
         """
         Fetch results of function, block if not complete
         :return:
         """
-        return self._future.result().get()
+        return self._future.result(timeout).get()
 
     @property
     def future(self) -> "futures.Future[_T]":
@@ -514,7 +510,7 @@ class DAG:
                 "Can't call done for DAG before starting DAG with `exec()`"
             )
 
-        if len(self.running_nodes) > 0:
+        if self.running_nodes or self.not_started_nodes:
             return False
 
         # If there is no running nodes we can assume it is complete and check if we should mark as failed or successful
@@ -522,8 +518,6 @@ class DAG:
             self.status = st.Status.FAILED
         elif len(self.cancelled_nodes) > 0:
             self.status = st.Status.CANCELLED
-        elif len(self.not_started_nodes) > 0:
-            return False
         else:
             self.status = st.Status.COMPLETED
 
@@ -630,8 +624,6 @@ class DAG:
         :param node: to mark as complete
         :return
         """
-        self.running_nodes.pop(node.id, None)
-
         to_report: Optional[str] = None
         """The client-side event to report to the server, if needed.
 
@@ -648,14 +640,17 @@ class DAG:
                 self._exec_node(child)
             if node.local_mode:
                 to_report = models.ArrayTaskStatus.COMPLETED
-        elif node.status == st.Status.CANCELLED:
-            self.cancelled_nodes[node.id] = node
-            to_report = models.ArrayTaskStatus.CANCELLED
         else:
-            self.failed_nodes[node.id] = node
-            self.cancel()
-            if not isinstance(node.error, tce.TileDBCloudError) or node.local_mode:
-                to_report = models.ArrayTaskStatus.FAILED
+            if node.status == st.Status.CANCELLED:
+                self.cancelled_nodes[node.id] = node
+                to_report = models.ArrayTaskStatus.CANCELLED
+            else:
+                self.failed_nodes[node.id] = node
+                if not isinstance(node.error, tce.TileDBCloudError) or node.local_mode:
+                    to_report = models.ArrayTaskStatus.FAILED
+            # Cancel dependents since this node has failed or been cancelled.
+            for child in node.children.values():
+                child.cancel()
 
         if self.server_graph_uuid and to_report:
             # Only report client-side events to the server if we've submitted
@@ -672,6 +667,8 @@ class DAG:
             except rest_api.ApiException:
                 pass  # If we can't report a node status, don't worry about it.
 
+        self.running_nodes.pop(node.id, None)
+        self.not_started_nodes.pop(node.id, None)
         self.execute_update_callbacks()
 
         # Check if DAG is done to change status
@@ -703,11 +700,6 @@ class DAG:
         self.status = st.Status.RUNNING
         for node in roots:
             self._exec_node(node)
-            # Make sure to execute any callbacks to signal this node has started
-            self.execute_update_callbacks()
-
-        # Make sure to execute any callbacks to signal things have started
-        self.execute_update_callbacks()
 
     def _exec_node(self, node):
         """
@@ -716,8 +708,8 @@ class DAG:
         :return:
         """
         if node.ready_to_compute():
-            del self.not_started_nodes[node.id]
             self.running_nodes[node.id] = node
+            del self.not_started_nodes[node.id]
             # Execute the node, the node will launch it's task with a worker pool from this dag
             node.exec(namespace=self.namespace)
 
@@ -738,11 +730,11 @@ class DAG:
         if timeout is not None:
             end_time = start_time + timeout
         while not self.done():
-            time.sleep(0.01)
             if end_time is not None and time.time() >= end_time:
                 raise TimeoutError(
                     "timeout of {} reached and dag is not complete".format(timeout)
                 )
+            time.sleep(0.01)
 
         # in case of failure reraise the first failed node exception
         if self.status == st.Status.FAILED:
@@ -751,10 +743,9 @@ class DAG:
     def cancel(self):
         if self.status not in (st.Status.RUNNING, st.Status.NOT_STARTED):
             return
-        self.status = st.Status.CANCELLED
-        for node in self.running_nodes.values():
+        for node in list(self.running_nodes.values()):
             node.cancel()
-        for node in self.not_started_nodes.values():
+        for node in list(self.not_started_nodes.values()):
             node.cancel()
 
     def find_end_nodes(self):

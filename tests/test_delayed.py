@@ -1,4 +1,3 @@
-import time
 import unittest
 from concurrent import futures
 
@@ -123,24 +122,33 @@ class DelayedFailureTest(unittest.TestCase):
 
 class DelayedCancelTest(unittest.TestCase):
     def test_cancel(self):
-        node = Delayed(time.sleep, local=True, name="multi_node_2")(3)
-        node_2 = Delayed(np.mean, local=True, name="multi_node_2")([1, 1])
-        node_2.depends_on(node)
+        in_node = futures.Future()
+        leave_node = futures.Future()
 
-        with self.assertRaises(TimeoutError):
-            # Set timeout to 1 second, the dependency on node will wait for 3 seconds,
-            # so we'll timeout and cancel
+        def rendezvous(value):
+            in_node.set_result(None)
+            leave_node.result()
+            return value
+
+        node = Delayed(rendezvous, local=True, name="multi_node")(3)
+        node_2 = Delayed(np.mean, local=True, name="multi_node_2")([node, node])
+
+        with self.assertRaises(futures.TimeoutError):
             node_2.set_timeout(1)
             node_2.compute()
 
+        in_node.result(1)
         node_2.dag.cancel()
+        leave_node.set_result(None)
+
+        node_2.dag.wait(1)
 
         self.assertIs(node.dag, node_2.dag)
         self.assertEqual(node.dag.status, Status.CANCELLED)
 
         # Because an already-running node can't be cancelled, the sleep will
         # still run to completion.
-        self.assertEqual(node.result(), None)
+        self.assertEqual(node.result(), 3)
 
         self.assertEqual(node_2.status, Status.CANCELLED)
         with self.assertRaises(futures.CancelledError):
