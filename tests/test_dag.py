@@ -4,6 +4,7 @@ import collections.abc as cabc
 import itertools
 import pickle
 import threading
+import time
 import unittest
 import uuid
 from concurrent import futures
@@ -166,6 +167,9 @@ class DAGClassTest(unittest.TestCase):
             ),
         )
 
+        # The status is set asynchronously so there may be a slight delay
+        # between when we send a request and when it's actually recorded.
+        time.sleep(0.5)
         actual_log = dag_dag.server_logs(d)
         self.assertEqual("a cool server dag", actual_log.name)
         self.assertEqual(3, len(actual_log.nodes))
