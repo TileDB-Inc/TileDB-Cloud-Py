@@ -106,11 +106,6 @@ class Delayed(DelayedBase):
                 "and not the registered name of a UDF."
             )
 
-        # Set name of task if it won't interfere with user args
-        if not self.local_mode:
-            if "task_name" not in self.kwargs:
-                self.kwargs["task_name"] = self.name
-
     def __call__(self, *args, **kwargs):
         if not self.local_mode:
             self.args = [self.func_exec, *args]
@@ -118,11 +113,6 @@ class Delayed(DelayedBase):
             self.args = args
         self.kwargs.update(kwargs)
         self._find_deps()
-
-        # Set name of task if it won't interfere with user args
-        if not self.local_mode:
-            if "task_name" not in self.kwargs:
-                self.kwargs["task_name"] = self.name
 
         return self
 

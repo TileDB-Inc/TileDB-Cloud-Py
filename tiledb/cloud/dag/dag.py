@@ -78,7 +78,7 @@ class Node(Generic[_T]):
         :param kwargs: dictionary for keyword arguments
         """
         self.id = uuid.uuid4()
-        self.name = name or str(self.id)
+        self._name = name
 
         self.error: Optional[BaseException] = None
         self.status = st.Status.NOT_STARTED
@@ -127,6 +127,14 @@ class Node(Generic[_T]):
 
     def __ne__(self, other):
         return not (self == other)
+
+    @property
+    def name(self) -> str:
+        return self._name or str(self.id)
+
+    @name.setter
+    def name(self, to: Optional[str]) -> None:
+        self._name = to
 
     def _find_deps(self):
         """Finds Nodes this depends on and adds them to our dependency list."""
@@ -231,6 +239,8 @@ class Node(Generic[_T]):
                 _server_graph_uuid=self.dag.server_graph_uuid,
                 _client_node_uuid=self.id,
             )
+            if self._name:
+                kwargs.setdefault("task_name", self._name)
             if namespace:
                 kwargs["namespace"] = namespace
 
