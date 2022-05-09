@@ -732,6 +732,12 @@ class TopoSortTest(unittest.TestCase):
                         self.assertCountEqual(perm, result)
                         self.assert_topo_sorted(result)
 
+    def test_preserves_order(self):
+        """Verifies that, for a disconnected graph, order is preserved."""
+        nodes = [self._node(str(n)) for n in range(100)]
+        result = dag_dag._topo_sort(nodes)
+        self.assertEqual(nodes, result)
+
     def test_cycle(self):
         with self.assertRaises(ValueError):
             dag_dag._topo_sort(
