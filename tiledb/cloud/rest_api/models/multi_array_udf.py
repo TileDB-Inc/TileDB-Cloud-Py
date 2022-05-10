@@ -37,6 +37,7 @@ class MultiArrayUDF(object):
         "language": "UDFLanguage",
         "version": "str",
         "image_name": "str",
+        "resource_class": "str",
         "_exec": "str",
         "exec_raw": "str",
         "result_format": "ResultFormat",
@@ -60,6 +61,7 @@ class MultiArrayUDF(object):
         "language": "language",
         "version": "version",
         "image_name": "image_name",
+        "resource_class": "resource_class",
         "_exec": "exec",
         "exec_raw": "exec_raw",
         "result_format": "result_format",
@@ -84,6 +86,7 @@ class MultiArrayUDF(object):
         language=None,
         version=None,
         image_name=None,
+        resource_class=None,
         _exec=None,
         exec_raw=None,
         result_format=None,
@@ -111,6 +114,7 @@ class MultiArrayUDF(object):
         self._language = None
         self._version = None
         self._image_name = None
+        self._resource_class = None
         self.__exec = None
         self._exec_raw = None
         self._result_format = None
@@ -137,6 +141,8 @@ class MultiArrayUDF(object):
             self.version = version
         if image_name is not None:
             self.image_name = image_name
+        if resource_class is not None:
+            self.resource_class = resource_class
         if _exec is not None:
             self._exec = _exec
         if exec_raw is not None:
@@ -258,6 +264,29 @@ class MultiArrayUDF(object):
         """
 
         self._image_name = image_name
+
+    @property
+    def resource_class(self):
+        """Gets the resource_class of this MultiArrayUDF.  # noqa: E501
+
+        The resource class to use for the UDF execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the UDF will execute in the standard resource class of the TileDB Cloud provider.   # noqa: E501
+
+        :return: The resource_class of this MultiArrayUDF.  # noqa: E501
+        :rtype: str
+        """
+        return self._resource_class
+
+    @resource_class.setter
+    def resource_class(self, resource_class):
+        """Sets the resource_class of this MultiArrayUDF.
+
+        The resource class to use for the UDF execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the UDF will execute in the standard resource class of the TileDB Cloud provider.   # noqa: E501
+
+        :param resource_class: The resource_class of this MultiArrayUDF.  # noqa: E501
+        :type: str
+        """
+
+        self._resource_class = resource_class
 
     @property
     def _exec(self):
