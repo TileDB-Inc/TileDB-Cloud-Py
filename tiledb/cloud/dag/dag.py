@@ -1198,7 +1198,9 @@ def _topo_sort(
         node.client_node_uuid: node for node in lst
     }
     in_degrees: Counter[str] = collections.Counter()
-    for node in lst:
+    # We reverse the input list so that when we reverse the output,
+    # it's in an order kind of close to what we were given.
+    for node in reversed(lst):
         # Ensure that we have an entry in the counter even for root nodes.
         in_degrees[node.client_node_uuid] += 0
         for dep_id in node.depends_on:
