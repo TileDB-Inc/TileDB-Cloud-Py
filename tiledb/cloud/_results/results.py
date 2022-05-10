@@ -112,24 +112,22 @@ class RemoteResult(Result[_T], Generic[_T]):
     _decoded: Any = attrs.field(default=_SENTINEL)
 
 
-def unwrapper_proxy(ft: "futures.Future[Result[_T]]") -> "futures.Future[_T]":
-    """Creates a Future proxy that unwraps the results of the parent Future."""
-    new_ft: "futures.Future[_T]" = futures.Future()
-    new_ft.cancel = ft.cancel  # type: ignore[assignment]
+class UnwrapperProxy(Generic[_T]):
+    """Implements the public API of a Future but unwraps what it's given."""
 
-    def _forward(_):
-        del _  # unused
-        if ft.cancelled():
-            new_ft.cancel()
-            return
-        exc = ft.exception()
-        if exc:
-            new_ft.set_exception(exc)
-            return
-        new_ft.set_result(ft.result().get())
+    def __init__(self, wrapped: "futures.Future[Result[_T]]"):
+        self._wrapped = wrapped
+        self.cancel = self._wrapped.cancel
+        self.cancelled = self._wrapped.cancelled
+        self.running = self._wrapped.running
+        self.done = self._wrapped.done
+        self.exception = self._wrapped.exception
 
-    ft.add_done_callback(_forward)
-    return new_ft
+    def result(self, timeout: Optional[float] = None) -> _T:
+        return self._wrapped.result(timeout).get()
+
+    def add_done_callback(self, fn: Callable[["futures.Future[_T]"], None]) -> None:
+        self._wrapped.add_done_callback(lambda _: fn(self))  # type: ignore[arg-type]
 
 
 class AsyncResult(Generic[_T]):

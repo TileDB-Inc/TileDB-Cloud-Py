@@ -81,7 +81,6 @@ class Node(Generic[_T]):
         self._name = name
 
         self.error: Optional[BaseException] = None
-        self.status = st.Status.NOT_STARTED
         self.dag = dag
         self.local_mode: bool = local_mode
 
@@ -108,8 +107,12 @@ class Node(Generic[_T]):
         )
         self._download_results = _download_results
 
-        self._future: Optional["futures.Future[results.Result[_T]]"] = None
-        self._done = threading.Event()
+        self._future: "futures.Future[results.Result[_T]]" = futures.Future()
+        """A proxy Future that is used to handle lifecycle events of this Node.
+
+        The actual Future executes and then sends its results here.
+        """
+        self._future.add_done_callback(self._handle_completed_future)
 
         self.parents: Dict[uuid.UUID, Node] = {}
         self.children: Dict[uuid.UUID, Node] = {}
@@ -170,19 +173,15 @@ class Node(Generic[_T]):
         if self.dag is None and node.dag is not None:
             self.dag = node.dag
 
-    def cancel(self):
-        if self.status == st.Status.NOT_STARTED:
-            if self._future is None:
-                self._future = futures.Future()
-                self._future.add_done_callback(self._handle_completed_future)
-            self._future.cancel()
+    def cancel(self) -> bool:
+        return self._future.cancel()
 
     def finished(self) -> bool:
         """
         Is the node finished
         :return: True if the node's function is finished
         """
-        return self._done.is_set()
+        return self._future.done()
 
     done = finished
 
@@ -192,17 +191,25 @@ class Node(Generic[_T]):
         :return: None
         """
         assert self.dag
-        if not self.status == st.Status.CANCELLED:
-            self.status = st.Status.RUNNING
-            ft = self.dag.executor.submit(self._do_exec, namespace)
-        else:
-            ft = futures.Future()
-            ft.cancel()
-        self._future = ft
-        ft.add_done_callback(self._handle_completed_future)
+        # This is the actual Future. After it finishes, we proxy its results
+        # back to the proxy we have in `self._future`.
+        real_ft = self.dag.executor.submit(self._do_exec, namespace)
+        real_ft.add_done_callback(self._forward_to_proxy)
+
+    def _forward_to_proxy(self, real: "futures.Future[results.Result[_T]]") -> None:
+        """After the actual Future completes, forwards results to the proxy."""
+        try:
+            self._future.set_result(real.result())
+        except BaseException as exc:
+            if not self._future.cancelled():
+                self.error = exc
+                self._future.set_exception(exc)
 
     def _do_exec(self, namespace: Optional[str]) -> results.Result[_T]:
+        if not self._future.set_running_or_notify_cancel():
+            raise futures.CancelledError()
         assert self.dag
+        self.dag.execute_update_callbacks()
         # We have to make a shallow copy of kwargs here.
         # Since we modify the kwargs dictionary here before passing it
         # to the wrapped function, we need to ensure that the arguments
@@ -274,17 +281,7 @@ class Node(Generic[_T]):
 
     compute = exec
 
-    def _handle_completed_future(self, future: futures.Future) -> None:
-        if future.cancelled():
-            self.status = st.Status.CANCELLED
-        else:
-            exc = future.exception()
-            if exc:
-                self.error = exc
-                self.status = st.Status.FAILED
-            elif self.status == st.Status.RUNNING:
-                self.status = st.Status.COMPLETED
-        self._done.set()
+    def _handle_completed_future(self, _) -> None:
         assert self.dag
         self.dag.report_node_complete(self)
 
@@ -296,39 +293,41 @@ class Node(Generic[_T]):
         if self.status != st.Status.NOT_STARTED:
             return False
 
-        for node in self.parents.values():
-            if not node.finished() or node.status != st.Status.COMPLETED:
-                return False
-        return True
+        return all(node.finished() for node in self.parents.values())
 
-    def result(self) -> Optional[_T]:
+    def result(self, timeout: Optional[float] = None) -> Optional[_T]:
         """
         Fetch results of function, block if not complete
         :return:
         """
-        ft = self._future
-        if not ft:
-            if self.status is st.Status.CANCELLED:
-                return None
-            raise ValueError("Cannot access result of an unstarted Node")
-        return ft.result().get()
+        return self._future.result(timeout).get()
 
     @property
-    def future(self) -> "Optional[futures.Future[_T]]":
+    def future(self) -> "futures.Future[_T]":
+        # We return an UnwrapperProxy that acts just like a real Future,
+        # at least as far as the caller is concerned.
+        return results.UnwrapperProxy(self._future)  # type: ignore[return-value]
+
+    @property
+    def status(self) -> st.Status:
         ft = self._future
-        return results.unwrapper_proxy(ft) if ft else None
+        if ft.running():
+            return st.Status.RUNNING
+        if ft.done():
+            if ft.cancelled():
+                return st.Status.CANCELLED
+            if ft.exception():
+                return st.Status.FAILED
+            return st.Status.COMPLETED
+        return st.Status.NOT_STARTED
 
     def task_id(self) -> Optional[uuid.UUID]:
         """Gets the server-side Task ID of this node.
 
-        Raises a ValueError if the Node has not been completed.
         Returns None if this has no task ID (as it was run on the client side).
         """
-        ft = self._future
-        if not ft:
-            raise ValueError("Cannot access task ID of an unstared Node")
         try:
-            sp = ft.result().to_stored_param()
+            sp = self._future.result(timeout=0).to_stored_param()
         except TypeError:
             # Run client-side; can't be converted to a stored param.
             return None
@@ -340,7 +339,7 @@ class Node(Generic[_T]):
         :param timeout: optional timeout in seconds to wait for DAG to be completed
         :return: None or raises TimeoutError if timeout occurs
         """
-        self._done.wait(timeout)
+        self._future.exception(timeout)
 
     def _to_log_metadata(self) -> rest_api.TaskGraphNodeMetadata:
         return rest_api.TaskGraphNodeMetadata(
@@ -398,12 +397,15 @@ class DAG:
         if use_processes:
             self.executor = futures.ProcessPoolExecutor(max_workers=max_workers)
         else:
-            self.executor = futures.ThreadPoolExecutor(max_workers=max_workers)
+            self.executor = futures.ThreadPoolExecutor(
+                thread_name_prefix=f"dag-{self.name or self.id}-worker",
+                max_workers=max_workers,
+            )
 
         self.status = st.Status.NOT_STARTED
 
         self.done_callbacks = []
-        self.called_done_callbacks = False
+        self._called_done_callbacks = threading.Semaphore()
         if done_callback is not None and callable(done_callback):
             self.done_callbacks.append(done_callback)
 
@@ -486,12 +488,11 @@ class DAG:
 
     def _report_completion(self) -> None:
         """Reports the completion of the task graph to the server and callbacks."""
-        if not self.called_done_callbacks:
+        if self._called_done_callbacks.acquire(blocking=False):
+            self.executor.shutdown(wait=False)
             self._report_server_completion()
             for func in self.done_callbacks:
                 func(self)
-
-        self.called_done_callbacks = True
 
     def _report_server_completion(self) -> None:
         if not self.server_graph_uuid:
@@ -511,30 +512,26 @@ class DAG:
         except rest_api.ApiException as apix:
             warnings.warn(UserWarning(f"Error reporting graph completion: {apix}"))
 
-    def done(self):
-        """
-        Checks if DAG is complete
-        :return: True if complete, False otherwise
-        """
-        if self.status == st.Status.NOT_STARTED:
-            raise tce.TileDBCloudError(
-                "Can't call done for DAG before starting DAG with `exec()`"
-            )
-
-        if len(self.running_nodes) > 0:
-            return False
+    def _update_status(self):
+        """Updates the status and sets completion if we're done."""
+        if self.running_nodes or self.not_started_nodes:
+            return
 
         # If there is no running nodes we can assume it is complete and check if we should mark as failed or successful
         if len(self.failed_nodes) > 0:
             self.status = st.Status.FAILED
         elif len(self.cancelled_nodes) > 0:
             self.status = st.Status.CANCELLED
-        elif len(self.not_started_nodes) > 0:
-            return False
         else:
             self.status = st.Status.COMPLETED
+        self._report_completion()
 
-        return True
+    def done(self):
+        return self.status in (
+            st.Status.FAILED,
+            st.Status.CANCELLED,
+            st.Status.COMPLETED,
+        )
 
     def add_node_obj(self, node):
         """
@@ -637,8 +634,6 @@ class DAG:
         :param node: to mark as complete
         :return
         """
-        self.running_nodes.pop(node.id, None)
-
         to_report: Optional[str] = None
         """The client-side event to report to the server, if needed.
 
@@ -655,14 +650,17 @@ class DAG:
                 self._exec_node(child)
             if node.local_mode:
                 to_report = models.ArrayTaskStatus.COMPLETED
-        elif node.status == st.Status.CANCELLED:
-            self.cancelled_nodes[node.id] = node
-            to_report = models.ArrayTaskStatus.CANCELLED
         else:
-            self.failed_nodes[node.id] = node
-            self.cancel()
-            if not isinstance(node.error, tce.TileDBCloudError) or node.local_mode:
-                to_report = models.ArrayTaskStatus.FAILED
+            if node.status == st.Status.CANCELLED:
+                self.cancelled_nodes[node.id] = node
+                to_report = models.ArrayTaskStatus.CANCELLED
+            else:
+                self.failed_nodes[node.id] = node
+                if not isinstance(node.error, tce.TileDBCloudError) or node.local_mode:
+                    to_report = models.ArrayTaskStatus.FAILED
+            # Cancel dependents since this node has failed or been cancelled.
+            for child in node.children.values():
+                child.cancel()
 
         if self.server_graph_uuid and to_report:
             # Only report client-side events to the server if we've submitted
@@ -679,11 +677,10 @@ class DAG:
             except rest_api.ApiException:
                 pass  # If we can't report a node status, don't worry about it.
 
+        self.running_nodes.pop(node.id, None)
+        self.not_started_nodes.pop(node.id, None)
         self.execute_update_callbacks()
-
-        # Check if DAG is done to change status
-        if self.done():
-            self._report_completion()
+        self._update_status()
 
     def _find_root_nodes(self):
         """
@@ -702,7 +699,6 @@ class DAG:
         Start the DAG by executing root nodes
         :return:
         """
-        self.called_done_callbacks = False
         roots = self._find_root_nodes()
         if len(roots) == 0:
             raise tce.TileDBCloudError("DAG is circular, there are no root nodes")
@@ -710,11 +706,6 @@ class DAG:
         self.status = st.Status.RUNNING
         for node in roots:
             self._exec_node(node)
-            # Make sure to execute any callbacks to signal this node has started
-            self.execute_update_callbacks()
-
-        # Make sure to execute any callbacks to signal things have started
-        self.execute_update_callbacks()
 
     def _exec_node(self, node):
         """
@@ -723,8 +714,8 @@ class DAG:
         :return:
         """
         if node.ready_to_compute():
-            del self.not_started_nodes[node.id]
             self.running_nodes[node.id] = node
+            del self.not_started_nodes[node.id]
             # Execute the node, the node will launch it's task with a worker pool from this dag
             node.exec(namespace=self.namespace)
 
@@ -745,11 +736,11 @@ class DAG:
         if timeout is not None:
             end_time = start_time + timeout
         while not self.done():
-            time.sleep(0.01)
             if end_time is not None and time.time() >= end_time:
-                raise TimeoutError(
+                raise futures.TimeoutError(
                     "timeout of {} reached and dag is not complete".format(timeout)
                 )
+            time.sleep(0.01)
 
         # in case of failure reraise the first failed node exception
         if self.status == st.Status.FAILED:
@@ -758,10 +749,9 @@ class DAG:
     def cancel(self):
         if self.status not in (st.Status.RUNNING, st.Status.NOT_STARTED):
             return
-        self.status = st.Status.CANCELLED
-        for node in self.running_nodes.values():
+        for node in list(self.running_nodes.values()):
             node.cancel()
-        for node in self.not_started_nodes.values():
+        for node in list(self.not_started_nodes.values()):
             node.cancel()
 
     def find_end_nodes(self):
