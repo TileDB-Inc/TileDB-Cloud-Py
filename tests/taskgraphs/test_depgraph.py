@@ -5,6 +5,8 @@ from tiledb.cloud.taskgraphs import depgraph
 
 
 class TestDepGraph(unittest.TestCase):
+    maxDiff = None
+
     def test_it(self):
         g = depgraph.DepGraph[str]()
         g.add_new_node("root", "")
@@ -67,21 +69,46 @@ class TestDepGraph(unittest.TestCase):
         with self.assertRaises(KeyError):
             g.parents_of("no")
 
+        self.assertEqual(5, len(g))
+        self.assertIn("root", g)
+        self.assertNotIn("bogus", g)
+        self.assertEqual(g.topo_sorted, tuple(g))
+
+        self.assertEqual(
+            (
+                depgraph.Edge(parent="root", child="child"),
+                depgraph.Edge(parent="root", child="child 2"),
+                depgraph.Edge(parent="root", child="last"),
+                depgraph.Edge(parent="child 2", child="last"),
+                depgraph.Edge(parent="child 2", child="child"),
+                depgraph.Edge(parent="child", child="last"),
+            ),
+            tuple(g.edges()),
+        )
+
     def test_tinys(self):
         g = depgraph.DepGraph[int]()
         self.assertEqual((), g.topo_sorted)
         self.assertEqual((), g.roots())
         self.assertEqual((), g.leaves())
+        self.assertEqual(0, len(g))
+        self.assertEqual((), tuple(g.edges()))
 
         g.add_new_node(1, ())
         self.assertEqual((1,), g.topo_sorted)
         self.assertEqual((1,), g.roots())
         self.assertEqual((1,), g.leaves())
+        self.assertEqual(1, len(g))
+        self.assertIn(1, g)
+        self.assertEqual((), tuple(g.edges()))
 
         g.remove(1)
         self.assertEqual((), g.topo_sorted)
         self.assertEqual((), g.roots())
         self.assertEqual((), g.leaves())
+        self.assertEqual(0, len(g))
+        self.assertNotIn(1, g)
+        self.assertEqual((), tuple(g.edges()))
 
     def test_diamond(self):
         g = depgraph.DepGraph[bytes]()
@@ -99,6 +126,16 @@ class TestDepGraph(unittest.TestCase):
         self.assertEqual((b"root", b"right", b"left", b"end"), g.topo_sorted)
         self.assertEqual((b"root",), g.roots())
         self.assertEqual((b"end",), g.leaves())
+        self.assertEqual(
+            (
+                depgraph.Edge(parent=b"root", child=b"left"),
+                depgraph.Edge(parent=b"root", child=b"right"),
+                depgraph.Edge(parent=b"right", child=b"end"),
+                depgraph.Edge(parent=b"right", child=b"left"),
+                depgraph.Edge(parent=b"left", child=b"end"),
+            ),
+            tuple(g.edges()),
+        )
 
     def test_line(self):
         g = depgraph.DepGraph()
@@ -109,6 +146,13 @@ class TestDepGraph(unittest.TestCase):
         self.assertEqual((True, "FileNotFound", False), g.topo_sorted)
         self.assertEqual((True,), g.roots())
         self.assertEqual((False,), g.leaves())
+        self.assertEqual(
+            (
+                depgraph.Edge(parent=True, child="FileNotFound"),
+                depgraph.Edge(parent="FileNotFound", child=False),
+            ),
+            tuple(g.edges()),
+        )
 
         g.remove("FileNotFound")
 
@@ -118,6 +162,7 @@ class TestDepGraph(unittest.TestCase):
                 self.assertEqual(frozenset(), relatives(value))
         self.assertEqual((True, False), g.roots())
         self.assertEqual((True, False), g.leaves())
+        self.assertEqual((), tuple(g.edges()))
 
     def test_copy(self):
         old: depgraph.DepGraph[int] = depgraph.DepGraph()
