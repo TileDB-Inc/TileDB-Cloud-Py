@@ -1,11 +1,78 @@
+import operator
 import unittest
 import uuid
+from concurrent import futures
 from typing import Optional
 
 import attrs
 
 from tiledb.cloud._common import ordered
+from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import client_executor
+from tiledb.cloud.taskgraphs import executor
+from tiledb.cloud.taskgraphs import types
+
+
+class ClientExecutorTestUDFs(unittest.TestCase):
+    def test_one(self):
+        grf = builder.TaskGraphBuilder("test_one")
+        len_node = grf.udf(len, types.args("some string"), result_format="json")
+
+        exec = client_executor.LocalExecutor(grf, name="test_one exec")
+        exec.execute()
+        len_exec = exec.node(len_node)
+        self.assertEqual(11, len_exec.result(15))
+        exec.wait(1)
+        self.assertIs(executor.Status.SUCCEEDED, exec.status)
+
+    def test_two(self):
+        grf = builder.TaskGraphBuilder("test_two")
+        first = grf.udf(lambda: 10)
+        out = grf.udf("my value is {!r}".format, types.args(first))
+
+        exec = client_executor.LocalExecutor(grf, name="test_two exec")
+        exec.execute()
+        self.assertEqual("my value is 10", exec.node(out).result(15))
+        self.assertEqual(10, exec.node(first).result(0))
+        exec.wait(1)
+        self.assertIs(executor.Status.SUCCEEDED, exec.status)
+
+    def test_split_join(self):
+        grf = builder.TaskGraphBuilder("test_diamond")
+        top = grf.udf(lambda: "step on ", name="word")
+        reverser = grf.udf(lambda val: val[::-1], types.args(top), name="reverser")
+        join = grf.udf(operator.add, types.args(top, reverser), name="together")
+
+        exec = client_executor.LocalExecutor(grf, name="test_diamond exec")
+        exec.execute()
+        self.assertEqual("step on  no pets", exec.node(join).result(30))
+
+    def test_failure(self):
+        grf = builder.TaskGraphBuilder("test_failure")
+        to_fail = grf.udf(lambda: 1 / 0, name="div0")
+        failchild = grf.udf(
+            "the value is {}".format, types.args(to_fail), name="failchild"
+        )
+        to_succeed = grf.udf(lambda: 0 / 1, name="zero")
+        succeedchild = grf.udf(
+            "the value is really {}".format, types.args(to_succeed), name="succeedchild"
+        )
+        joined = grf.udf(
+            (lambda a, b: (a, b)), types.args(failchild, succeedchild), name="join"
+        )
+
+        exec = client_executor.LocalExecutor(grf, name="test_failure exec")
+        exec.execute()
+        self.assertEqual(0, exec.node(to_succeed).result(15))
+        self.assertIsNotNone(exec.node(to_fail).exception(15))
+        with self.assertRaises(futures.CancelledError):
+            exec.node(failchild).result(1)
+        with self.assertRaises(futures.CancelledError):
+            exec.node(joined).result(10)
+        self.assertIs(executor.Status.CANCELLED, exec.node(joined).status)
+        self.assertEqual("the value is really 0.0", exec.node(succeedchild).result(0))
+        exec.wait(1)
+        self.assertIs(executor.Status.FAILED, exec.status)
 
 
 class UDFParamReplacerTest(unittest.TestCase):

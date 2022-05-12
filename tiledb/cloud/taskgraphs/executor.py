@@ -215,6 +215,11 @@ class Node(Generic[_ET, _T]):
         """A fallback name for this node if unnamed."""
         return type(self).__name__
 
+    @abc.abstractmethod
+    def wait(self, timeout: Optional[float] = None) -> None:
+        """Waits for the given amount of time for this Node to complete."""
+        raise NotImplementedError()
+
     # Public interface of `futures.Future`.
 
     @abc.abstractmethod
