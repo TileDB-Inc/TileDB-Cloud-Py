@@ -13,6 +13,9 @@ from concurrent import futures
 from typing import Any, Dict, Optional, Set, TypeVar
 
 from tiledb.cloud import client
+from tiledb.cloud._common import ordered
+from tiledb.cloud._common import visitor
+from tiledb.cloud.taskgraphs import _codec
 from tiledb.cloud.taskgraphs import executor
 
 Status = executor.Status
@@ -223,3 +226,63 @@ class Node(executor.Node[LocalExecutor, _T], metaclass=abc.ABCMeta):
         following Node.
         """
         raise NotImplementedError()
+
+    def task_id(self) -> Optional[uuid.UUID]:
+        """The task ID that was returned from the server, if applicable.
+
+        If this was executed on the server side, this should return the UUID of
+        the actual execution of this task. If it was purely client-side, or the
+        server did not return a UUID, this should return None.
+        """
+        return None
+
+
+class _UDFParamReplacer(visitor.ReplacingVisitor):
+    # This isn't an Unescaper since we don't want to unescape non-JSON values,
+    # we only want to replace parent nodes with their data.
+
+    def __init__(
+        self,
+        nodes: Dict[uuid.UUID, Node],
+        mode: _ParamFormat,
+    ):
+        super().__init__()
+        self._nodes = nodes
+        self._mode = mode
+        self.seen_nodes: ordered.Set[Node] = ordered.Set()
+        """All the Nodes that we have actually seen while visiting.
+
+        This allows us to avoid passing unnecessary dependencies to the server.
+        """
+
+    def maybe_replace(self, arg) -> Optional[visitor.Replacement]:
+        if not isinstance(arg, dict):
+            return None
+
+        try:
+            kind = arg[_codec.SENTINEL_KEY]
+        except KeyError:
+            return None
+
+        # The current value is a __tdbudf__ dictionary.
+
+        if kind == _codec.ESCAPE_CODE:
+            # If we have an escaped dictionary, descend into it.
+            escaped: Dict[str, Any] = arg[_codec.ESCAPE_CODE]
+            return visitor.Replacement(
+                {
+                    _codec.SENTINEL_KEY: _codec.ESCAPE_CODE,
+                    _codec.ESCAPE_CODE: {
+                        k: self.visit(v) for (k, v) in escaped.items()
+                    },
+                }
+            )
+        if kind == "node_output":
+            node = self._nodes[uuid.UUID(hex=arg["client_node_id"])]
+            result = visitor.Replacement(node._encode_for_param(self._mode))
+            self.seen_nodes.add(node)
+            return result
+
+        # If it was neither an escape sequence or a node output,
+        # do not dig further into the value.
+        return visitor.Replacement(arg)
