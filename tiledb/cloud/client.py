@@ -7,10 +7,10 @@ from typing import Callable, Optional, Sequence, TypeVar, Union
 import urllib3
 
 import tiledb
+from tiledb.cloud import _pool_manager_wrapper
 from tiledb.cloud import config
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
-from tiledb.cloud.pool_manager_wrapper import _PoolManagerWrapper
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
 
@@ -484,7 +484,7 @@ class Client:
         pool_size = self._thread_pool._max_workers  # type: ignore[attr-defined]
         config.config.connection_pool_maxsize = pool_size
         client = rest_api.ApiClient(config.config)
-        client.rest_client.pool_manager = _PoolManagerWrapper(
+        client.rest_client.pool_manager = _pool_manager_wrapper.wrap(
             client.rest_client.pool_manager
         )
 
