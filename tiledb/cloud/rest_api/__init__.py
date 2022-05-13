@@ -27,6 +27,7 @@ from tiledb.cloud.rest_api.api.notebook_api import NotebookApi
 from tiledb.cloud.rest_api.api.notebooks_api import NotebooksApi
 from tiledb.cloud.rest_api.api.organization_api import OrganizationApi
 from tiledb.cloud.rest_api.api.query_api import QueryApi
+from tiledb.cloud.rest_api.api.registered_task_graphs_api import RegisteredTaskGraphsApi
 from tiledb.cloud.rest_api.api.sql_api import SqlApi
 from tiledb.cloud.rest_api.api.stats_api import StatsApi
 from tiledb.cloud.rest_api.api.task_graph_logs_api import TaskGraphLogsApi
@@ -156,6 +157,10 @@ from tiledb.cloud.rest_api.models.query_reader import QueryReader
 from tiledb.cloud.rest_api.models.querystatus import Querystatus
 from tiledb.cloud.rest_api.models.querytype import Querytype
 from tiledb.cloud.rest_api.models.read_state import ReadState
+from tiledb.cloud.rest_api.models.registered_task_graph import RegisteredTaskGraph
+from tiledb.cloud.rest_api.models.registered_task_graph_node import (
+    RegisteredTaskGraphNode,
+)
 from tiledb.cloud.rest_api.models.result_format import ResultFormat
 from tiledb.cloud.rest_api.models.sql_parameters import SQLParameters
 from tiledb.cloud.rest_api.models.sso_provider import SSOProvider
@@ -169,6 +174,7 @@ from tiledb.cloud.rest_api.models.subarray_partitioner_state import (
 )
 from tiledb.cloud.rest_api.models.subarray_ranges import SubarrayRanges
 from tiledb.cloud.rest_api.models.subscription import Subscription
+from tiledb.cloud.rest_api.models.task_graph_actions import TaskGraphActions
 from tiledb.cloud.rest_api.models.task_graph_client_node_status import (
     TaskGraphClientNodeStatus,
 )
@@ -179,7 +185,12 @@ from tiledb.cloud.rest_api.models.task_graph_log_run_location import (
 from tiledb.cloud.rest_api.models.task_graph_log_status import TaskGraphLogStatus
 from tiledb.cloud.rest_api.models.task_graph_logs_data import TaskGraphLogsData
 from tiledb.cloud.rest_api.models.task_graph_node_metadata import TaskGraphNodeMetadata
+from tiledb.cloud.rest_api.models.task_graph_sharing import TaskGraphSharing
+from tiledb.cloud.rest_api.models.tg_input_node_data import TGInputNodeData
+from tiledb.cloud.rest_api.models.tgsql_node_data import TGSQLNodeData
 from tiledb.cloud.rest_api.models.tgudf_argument import TGUDFArgument
+from tiledb.cloud.rest_api.models.tgudf_environment import TGUDFEnvironment
+from tiledb.cloud.rest_api.models.tgudf_node_data import TGUDFNodeData
 from tiledb.cloud.rest_api.models.tile_db_config import TileDBConfig
 from tiledb.cloud.rest_api.models.token import Token
 from tiledb.cloud.rest_api.models.token_request import TokenRequest

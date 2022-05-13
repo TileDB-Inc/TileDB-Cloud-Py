@@ -191,6 +191,12 @@ Class | Method | HTTP request | Description
 *QueryApi* | [**get_file**](docs/QueryApi.md#get_file) | **GET** /arrays/{namespace}/{array}/query/get_file | 
 *QueryApi* | [**submit_query**](docs/QueryApi.md#submit_query) | **POST** /arrays/{namespace}/{array}/query/submit | 
 *QueryApi* | [**submit_query_json**](docs/QueryApi.md#submit_query_json) | **POST** /arrays/{namespace}/{array}/query/submit_query_json | 
+*RegisteredTaskGraphsApi* | [**delete_registered_task_graph**](docs/RegisteredTaskGraphsApi.md#delete_registered_task_graph) | **DELETE** /taskgraphs/{namespace}/registered/{name} | 
+*RegisteredTaskGraphsApi* | [**get_registered_task_graph**](docs/RegisteredTaskGraphsApi.md#get_registered_task_graph) | **GET** /taskgraphs/{namespace}/registered/{name} | 
+*RegisteredTaskGraphsApi* | [**get_registered_task_graph_sharing_policies**](docs/RegisteredTaskGraphsApi.md#get_registered_task_graph_sharing_policies) | **GET** /taskgraphs/{namespace}/registered/{name}/share | 
+*RegisteredTaskGraphsApi* | [**register_registered_task_graph**](docs/RegisteredTaskGraphsApi.md#register_registered_task_graph) | **POST** /taskgraphs/{namespace}/registered/{name} | 
+*RegisteredTaskGraphsApi* | [**share_registered_task_graph**](docs/RegisteredTaskGraphsApi.md#share_registered_task_graph) | **PATCH** /taskgraphs/{namespace}/registered/{name}/share | 
+*RegisteredTaskGraphsApi* | [**update_registered_task_graph**](docs/RegisteredTaskGraphsApi.md#update_registered_task_graph) | **PATCH** /taskgraphs/{namespace}/registered/{name} | 
 *SqlApi* | [**run_sql**](docs/SqlApi.md#run_sql) | **POST** /sql/{namespace} | 
 *StatsApi* | [**get_tiledb_stats**](docs/StatsApi.md#get_tiledb_stats) | **GET** /.stats | 
 *TaskGraphLogsApi* | [**create_task_graph_log**](docs/TaskGraphLogsApi.md#create_task_graph_log) | **POST** /taskgraphs/{namespace}/log | 
@@ -341,6 +347,8 @@ Class | Method | HTTP request | Description
  - [Querystatus](docs/Querystatus.md)
  - [Querytype](docs/Querytype.md)
  - [ReadState](docs/ReadState.md)
+ - [RegisteredTaskGraph](docs/RegisteredTaskGraph.md)
+ - [RegisteredTaskGraphNode](docs/RegisteredTaskGraphNode.md)
  - [ResultFormat](docs/ResultFormat.md)
  - [SQLParameters](docs/SQLParameters.md)
  - [SSOProvider](docs/SSOProvider.md)
@@ -350,13 +358,19 @@ Class | Method | HTTP request | Description
  - [SubarrayPartitionerState](docs/SubarrayPartitionerState.md)
  - [SubarrayRanges](docs/SubarrayRanges.md)
  - [Subscription](docs/Subscription.md)
+ - [TGInputNodeData](docs/TGInputNodeData.md)
+ - [TGSQLNodeData](docs/TGSQLNodeData.md)
  - [TGUDFArgument](docs/TGUDFArgument.md)
+ - [TGUDFEnvironment](docs/TGUDFEnvironment.md)
+ - [TGUDFNodeData](docs/TGUDFNodeData.md)
+ - [TaskGraphActions](docs/TaskGraphActions.md)
  - [TaskGraphClientNodeStatus](docs/TaskGraphClientNodeStatus.md)
  - [TaskGraphLog](docs/TaskGraphLog.md)
  - [TaskGraphLogRunLocation](docs/TaskGraphLogRunLocation.md)
  - [TaskGraphLogStatus](docs/TaskGraphLogStatus.md)
  - [TaskGraphLogsData](docs/TaskGraphLogsData.md)
  - [TaskGraphNodeMetadata](docs/TaskGraphNodeMetadata.md)
+ - [TaskGraphSharing](docs/TaskGraphSharing.md)
  - [TileDBConfig](docs/TileDBConfig.md)
  - [Token](docs/Token.md)
  - [TokenRequest](docs/TokenRequest.md)
