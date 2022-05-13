@@ -463,6 +463,29 @@ class UDFNode(Node):
         return self._result._tdb_to_json()
 
 
+class _NodeOutputValueReplacer(_codec.Unescaper):
+    """An Unescaper for when the output value of a node must be used locally.
+
+    For Nodes where non–UDF-parameter inputs may be Nodes (e.g. array query
+    ranges), this replaces the node's input with the actual value output by
+    the previous node.
+    """
+
+    def __init__(self, nodes: Dict[uuid.UUID, Node]):
+        super().__init__()
+        self._nodes = nodes
+
+    def _replace_sentinel(
+        self,
+        kind: str,
+        value: Dict[str, Any],
+    ) -> Optional[visitor.Replacement]:
+        if kind == "node_output":
+            node = self._nodes[uuid.UUID(hex=value["client_node_id"])]
+            return visitor.Replacement(node.result())
+        return super()._replace_sentinel(kind, value)
+
+
 class _UDFParamReplacer(visitor.ReplacingVisitor):
     # This isn't an Unescaper since we don't want to unescape non-JSON values,
     # we only want to replace parent nodes with their data.
