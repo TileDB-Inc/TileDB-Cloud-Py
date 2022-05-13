@@ -5,6 +5,7 @@ from concurrent import futures
 from typing import Optional
 
 import attrs
+import numpy
 
 from tiledb.cloud._common import ordered
 from tiledb.cloud.taskgraphs import builder
@@ -73,6 +74,81 @@ class ClientExecutorTestUDFs(unittest.TestCase):
         self.assertEqual("the value is really 0.0", exec.node(succeedchild).result(0))
         exec.wait(1)
         self.assertIs(executor.Status.FAILED, exec.status)
+
+
+class ClientExecutorTestArrays(unittest.TestCase):
+    def test_basic(self):
+        grf = builder.TaskGraphBuilder()
+        arr = grf.array_read(
+            "tiledb://TileDB-Inc/quickstart_dense",
+            raw_ranges=[[1, 1, 2, 4], []],
+        )
+        grf.udf(lambda x: int(numpy.sum(x["a"])), types.args(arr), name="stringify")
+
+        exec = client_executor.LocalExecutor(grf, name="arrays test_basic")
+        exec.execute()
+        self.assertEqual(136, exec.node("stringify").result(30))
+        exec.wait(5)
+        self.assertIs(executor.Status.SUCCEEDED, exec.status)
+
+    def test_two_arrays(self):
+        """Verify that we can pass multiple arrays to one UDF node."""
+        grf = builder.TaskGraphBuilder()
+        dense = grf.array_read(
+            "tiledb://TileDB-Inc/quickstart_dense",
+            raw_ranges=[[1, 4], []],
+        )
+        sparse = grf.array_read(
+            "tiledb://TileDB-Inc/quickstart_sparse",
+            raw_ranges=[[], []],
+        )
+        sums = grf.udf(
+            lambda lst: [int(numpy.sum(x["a"])) for x in lst],
+            types.args([dense, {"a": [-1, -2, -3]}, sparse]),
+        )
+        exec = client_executor.LocalExecutor(grf)
+        exec.execute()
+        self.assertEqual([136, -6, 6], exec.node(sums).result(30))
+        exec.wait(5)
+        self.assertIs(executor.Status.SUCCEEDED, exec.status)
+
+    def test_node_inputs(self):
+        """Tests using the output of other nodes as params for an array read."""
+        grf = builder.TaskGraphBuilder()
+        uri = grf.udf("tiledb://TileDB-Inc/quickstart_{}".format, types.args("dense"))
+        ones = grf.udf(lambda x: [x, x], types.args(1))
+
+        arr = grf.array_read(
+            uri,
+            raw_ranges=[ones, [1, 4]],
+            buffers=grf.udf(lambda: ["a"]),
+        )
+        summed = grf.udf(lambda x: int(numpy.sum(x["a"])), types.args(arr))
+        join = grf.udf(
+            "{name}[{ones}, [1, 4]]['a'] -> {sum}".format,
+            types.args(name=uri, ones=ones, sum=summed),
+        )
+        exec = client_executor.LocalExecutor(grf)
+        exec.execute()
+        self.assertEqual(
+            "tiledb://TileDB-Inc/quickstart_dense[[1, 1], [1, 4]]['a'] -> 10",
+            exec.node(join).result(30),
+        )
+
+    def test_array_split(self):
+        """Tests using a single array-read node in multiple downstream UDFs."""
+        grf = builder.TaskGraphBuilder()
+        arr = grf.array_read(
+            "tiledb://TileDB-Inc/quickstart_sparse",
+            raw_ranges=[[], []],
+        )
+        summed = grf.udf(lambda x: int(numpy.sum(x["a"])), types.args(arr))
+        avgd = grf.udf(lambda x: float(numpy.average(x["a"])), types.args(arr))
+
+        exec = client_executor.LocalExecutor(grf)
+        exec.execute()
+        self.assertEqual(6, exec.node(summed).result(30))
+        self.assertEqual(2.0, exec.node(avgd).result(30))
 
 
 class NodeOutputValueReplacerTest(unittest.TestCase):

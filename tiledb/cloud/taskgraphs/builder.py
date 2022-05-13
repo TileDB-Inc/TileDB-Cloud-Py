@@ -66,7 +66,8 @@ class TaskGraphBuilder:
         self,
         uri: ValOrNode[str],
         *,
-        raw_ranges: Optional[ValOrNodeSeq[Any]],
+        # TODO: Support query layout.
+        raw_ranges: Optional[ValOrNodeSeq[Any]] = None,
         buffers: Optional[ValOrNodeSeq[str]] = None,
         name: Optional[str] = None,
     ) -> "Node[ArrayMultiIndex]":

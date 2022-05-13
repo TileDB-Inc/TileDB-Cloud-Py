@@ -10,7 +10,7 @@ import queue
 import threading
 import uuid
 from concurrent import futures
-from typing import AbstractSet, Any, Dict, List, Optional, Type, TypeVar
+from typing import AbstractSet, Any, Dict, List, Optional, Sequence, Type, TypeVar
 
 import urllib3
 
@@ -132,7 +132,9 @@ class LocalExecutor(executor.Executor["Node"]):
         node_json: Dict[str, Any],
     ) -> "Node":
         cls: Type[Node]
-        if "udf_node" in node_json:
+        if "array_node" in node_json:
+            cls = ArrayNode
+        elif "udf_node" in node_json:
             cls = UDFNode
         else:
             raise ValueError("Could not determine node type")
@@ -340,6 +342,61 @@ class Node(executor.Node[LocalExecutor, _T], metaclass=abc.ABCMeta):
         return None
 
 
+class ArrayNode(Node):
+    """A node representing a read from a TileDB Array.
+
+    This node is not executed by itself; instead, it only appears as an input
+    to TileDB UDF nodes.
+    """
+
+    def __init__(
+        self,
+        uid: uuid.UUID,
+        owner: LocalExecutor,
+        name: Optional[str],
+        json_data: Dict[str, Any],
+    ):
+        super().__init__(uid, owner, name)
+        self._array_data = json_data["array_node"]
+        array_data = json_data["array_node"]
+        self._parameter_id = array_data["parameter_id"]
+        self._details: Optional[Dict[str, Any]] = None
+
+    def _exec_impl(self, parents: Dict[uuid.UUID, Node], input_value: Any) -> None:
+        assert input_value is _NOTHING
+        uri = self._array_data["uri"]
+        ranges = self._array_data.get("ranges")
+        buffers = self._array_data.get("buffers")
+        if parents:
+            replacer = _NodeOutputValueReplacer(parents)
+            uri = replacer.visit(uri)
+            ranges = replacer.visit(ranges)
+            buffers = replacer.visit(buffers)
+        self._details = dict(
+            parameter_id=self._parameter_id,
+            uri=uri,
+            # TODO: Eliminate the `or []` once we fix the server.
+            ranges={"ranges": (ranges or [])},
+            buffers=buffers,
+        )
+
+    def _result_impl(self):
+        raise TypeError("ArrayNode is a virtual node and does not have results.")
+
+    def _udf_array_details(self) -> Dict[str, Any]:
+        self._assert_succeeded()
+        assert self._details
+        return self._details
+
+    def _encode_for_param(self, mode: _ParamFormat):
+        del mode  # unused
+        self._assert_succeeded()
+        return {
+            "__tdbudf__": "udf_array_details",
+            "udf_array_details": self._udf_array_details(),
+        }
+
+
 class UDFNode(Node):
     """A Node that will actually execute a UDF."""
 
@@ -377,21 +434,29 @@ class UDFNode(Node):
         # Parse the arguments.
         raw_args: List[Any] = self._udf_data["arguments"] or []
         stored_param_ids: AbstractSet[uuid.UUID]
+        arrays: Sequence[Dict[str, Any]]
         if parents:
             replacer = _UDFParamReplacer(parents, _ParamFormat.STORED_PARAMS)
             replaced_args = replacer.visit(raw_args)
             stored_param_ids = ordered.FrozenSet(
                 filter(None, (n.task_id() for n in replacer.seen_nodes))
             )
+            arrays = tuple(
+                n._udf_array_details()
+                for n in replacer.seen_nodes
+                if isinstance(n, ArrayNode)
+            )
         else:
             # If there are no parents, then we only have the existing args.
             replaced_args = raw_args
             stored_param_ids = frozenset()
+            arrays = []
 
         # Set up the basics of the call.
         udf_call = models.MultiArrayUDF(
             task_name=self.display_name,
             stored_param_uuids=json_safe.Value([str(uid) for uid in stored_param_ids]),
+            arrays=json_safe.Value(arrays),
             arguments_json=json_safe.Value(replaced_args),
             store_results=True,
             result_format=self._udf_data["result_format"],
