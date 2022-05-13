@@ -75,6 +75,77 @@ class ClientExecutorTestUDFs(unittest.TestCase):
         self.assertIs(executor.Status.FAILED, exec.status)
 
 
+class NodeOutputValueReplacerTest(unittest.TestCase):
+    def test_no_nodes(self):
+        input = {
+            "here": "there",
+            "up": "down",
+            "list": [
+                1,
+                {
+                    "__tdbudf__": "immediate",
+                    "format": "json",
+                    "base64_data": "Mg==",
+                },
+                3,
+                {
+                    "__tdbudf__": "__escape__",
+                    "__escape__": {
+                        "number": "four",
+                        "__tdbudf__": 4,
+                    },
+                },
+            ],
+        }
+        replacer = client_executor._NodeOutputValueReplacer({})
+        output = replacer.visit(input)
+        expected = {
+            "here": "there",
+            "up": "down",
+            "list": [1, 2, 3, {"number": "four", "__tdbudf__": 4}],
+        }
+        self.assertEqual(expected, output)
+
+    def test_nodes(self):
+        input = [
+            None,
+            1,
+            {
+                "__tdbudf__": "immediate",
+                "format": "bytes",
+                "base64_data": "dGVzdF9ub2Rlcw==",
+            },
+            {
+                "__tdbudf__": "__escape__",
+                "__escape__": {
+                    "eights": 888,
+                    "__tdbudf__": {
+                        "__tdbudf__": "node_output",
+                        "client_node_id": "88888888-8888-8888-8888-888888888888",
+                    },
+                },
+            },
+        ]
+        replacer = client_executor._NodeOutputValueReplacer(
+            {
+                uuid.UUID("88888888-8888-8888-8888-888888888888"): _TestNode(
+                    uuid.UUID("99999999-9999-9999-9999-999999999999")
+                ),
+            }
+        )
+        output = replacer.visit(input)
+        expected = [
+            None,
+            1,
+            b"test_nodes",
+            {
+                "eights": 888,
+                "__tdbudf__": "result of 99999999-9999-9999-9999-999999999999",
+            },
+        ]
+        self.assertEqual(expected, output)
+
+
 class UDFParamReplacerTest(unittest.TestCase):
     def test_no_nodes(self):
         input = {
@@ -189,9 +260,12 @@ class UDFParamReplacerTest(unittest.TestCase):
 
 @attrs.define(frozen=True, slots=True)
 class _TestNode:
-    """A dummy class which implements just what _UDFParamReplacer uses."""
+    """A dummy class which implements just what the visitors use."""
 
     _task_id: Optional[uuid.UUID] = None
+
+    def result(self, timeout=None):
+        return f"result of {self._task_id}"
 
     def _encode_for_param(self, mode):
         return f"encoded {self._task_id} in {mode}"
