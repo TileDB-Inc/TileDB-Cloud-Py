@@ -494,6 +494,7 @@ class Client:
         self.organization_api = rest_api.OrganizationApi(client)
         self.sql_api = rest_api.SqlApi(client)
         self.task_graph_logs_api = rest_api.TaskGraphLogsApi(client)
+        self.registered_task_graphs_api = rest_api.RegisteredTaskGraphsApi(client)
         self.tasks_api = rest_api.TasksApi(client)
         self.udf_api = rest_api.UdfApi(client)
         self.user_api = rest_api.UserApi(client)
