@@ -375,7 +375,7 @@ class UDFNode(Node):
         assert input_value is _NOTHING
 
         # Parse the arguments.
-        raw_args: List[Any] = self._udf_data["args"] or []
+        raw_args: List[Any] = self._udf_data["arguments"] or []
         stored_param_ids: AbstractSet[uuid.UUID]
         if parents:
             replacer = _UDFParamReplacer(parents, _ParamFormat.STORED_PARAMS)

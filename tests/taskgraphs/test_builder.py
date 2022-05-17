@@ -144,7 +144,7 @@ class TestBuilder(unittest.TestCase):
                         "depends_on": ["09f91102-9d74-e35b-d841-000000000000"],
                         "name": "length",
                         "udf_node": {
-                            "args": [
+                            "arguments": [
                                 {
                                     "value": {
                                         "__tdbudf__": "node_output",
@@ -168,7 +168,7 @@ class TestBuilder(unittest.TestCase):
                         ],
                         "name": "result",
                         "udf_node": {
-                            "args": [
+                            "arguments": [
                                 {
                                     "name": "it",
                                     "value": {
@@ -314,7 +314,7 @@ class TestBuilder(unittest.TestCase):
                     "depends_on": ["0badc0de-dead-beef-cafe-000000000001"],
                     "name": None,
                     "udf_node": {
-                        "args": [
+                        "arguments": [
                             {
                                 "value": {
                                     "__tdbudf__": "node_output",
@@ -335,7 +335,7 @@ class TestBuilder(unittest.TestCase):
                     "depends_on": ["0badc0de-dead-beef-cafe-000000000002"],
                     "name": None,
                     "udf_node": {
-                        "args": [
+                        "arguments": [
                             {
                                 "value": {
                                     "__tdbudf__": "node_output",
@@ -356,7 +356,7 @@ class TestBuilder(unittest.TestCase):
                     "depends_on": ["0badc0de-dead-beef-cafe-000000000003"],
                     "name": None,
                     "udf_node": {
-                        "args": [
+                        "arguments": [
                             {
                                 "value": {
                                     "__tdbudf__": "node_output",
@@ -381,7 +381,7 @@ class TestBuilder(unittest.TestCase):
                     ],
                     "name": None,
                     "udf_node": {
-                        "args": [
+                        "arguments": [
                             {
                                 "name": "name",
                                 "value": {
@@ -414,7 +414,7 @@ class TestBuilder(unittest.TestCase):
                     ],
                     "name": "output",
                     "udf_node": {
-                        "args": [
+                        "arguments": [
                             {
                                 "value": {
                                     "__tdbudf__": "node_output",
@@ -447,7 +447,7 @@ class TestBuilder(unittest.TestCase):
                     "depends_on": ["0badc0de-dead-beef-cafe-000000000008"],
                     "name": "hello world",
                     "udf_node": {
-                        "args": [
+                        "arguments": [
                             {
                                 "value": {
                                     "__tdbudf__": "node_output",
