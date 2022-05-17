@@ -497,6 +497,7 @@ class Client:
         self.tasks_api = rest_api.TasksApi(client)
         self.udf_api = rest_api.UdfApi(client)
         self.user_api = rest_api.UserApi(client)
+        self.groups_api = rest_api.GroupsApi(client)
 
     def set_disable_retries(self):
         self.retry_mode(RetryMode.DISABLED)
