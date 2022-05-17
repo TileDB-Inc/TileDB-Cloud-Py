@@ -446,7 +446,7 @@ class _UDFNode(Node[_T]):
 
     def to_registration_json(self) -> Dict[str, Any]:
         ret = super().to_registration_json()
-        udf_node = {"args": self.args, "environment": {}}
+        udf_node = {"arguments": self.args, "environment": {}}
         if self.image_name:
             udf_node["environment"]["image_name"] = self.image_name
         if isinstance(self.func, str):
