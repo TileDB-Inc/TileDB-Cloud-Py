@@ -6,6 +6,7 @@ from typing import Optional
 
 import attrs
 import numpy
+import pyarrow
 
 from tiledb.cloud._common import ordered
 from tiledb.cloud.taskgraphs import builder
@@ -149,6 +150,62 @@ class ClientExecutorTestArrays(unittest.TestCase):
         exec.execute()
         self.assertEqual(6, exec.node(summed).result(30))
         self.assertEqual(2.0, exec.node(avgd).result(30))
+
+
+class ClientExecutorTestSQLs(unittest.TestCase):
+    def test_basic(self):
+        grf = builder.TaskGraphBuilder()
+        sql = grf.sql(
+            "select sum(a) as sum from `tiledb://TileDB-Inc/quickstart_sparse`",
+            name="quickstart_sparse",
+        )
+
+        exec = client_executor.LocalExecutor(grf)
+        exec.execute()
+        result_table = exec.node(sql).result(30)
+        self.assertIsInstance(result_table, pyarrow.Table)
+        self.assertEqual({"sum": [6]}, result_table.to_pydict())
+
+    def test_params(self):
+        grf = builder.TaskGraphBuilder()
+        sql = grf.sql(
+            "select * from tbl where ? < intcol",
+            init_commands=[
+                """create temporary table tbl
+                    (intcol int4, floatcol double, uintcol int8 unsigned, strcol text)
+                """,
+                'insert into tbl values (1000000, 400, 77, "one"), (-999, 501, 199, null)',
+            ],
+            parameters=[0],
+            result_format="json",
+        )
+
+        grf.udf(repr, types.args(sql), name="output", result_format="json")
+
+        exec = client_executor.LocalExecutor(grf)
+        exec.execute()
+        self.assertEqual(
+            [{"floatcol": 400, "intcol": 1000000, "strcol": "one", "uintcol": 77}],
+            exec.node(sql).result(30),
+        )
+        self.assertEqual(
+            "[{'floatcol': 400, 'intcol': 1000000, 'strcol': 'one', 'uintcol': 77}]",
+            exec.node("output").result(30),
+        )
+
+    def test_node_inputs(self):
+        grf = builder.TaskGraphBuilder()
+        add = grf.udf(lambda: 500)
+        grf.sql(
+            "select sum(a + ?) + ? a from `tiledb://TileDB-Inc/quickstart_sparse`",
+            parameters=[add, 7],
+            name="sql",
+        )
+        exec = client_executor.LocalExecutor(grf)
+        exec.execute()
+        result_table = exec.node("sql").result(30)
+        self.assertIsInstance(result_table, pyarrow.Table)
+        self.assertEqual({"a": [1513]}, result_table.to_pydict())
 
 
 class NodeOutputValueReplacerTest(unittest.TestCase):

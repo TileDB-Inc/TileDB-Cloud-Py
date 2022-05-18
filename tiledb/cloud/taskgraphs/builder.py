@@ -152,7 +152,7 @@ class TaskGraphBuilder:
         init_commands: Iterable[str] = (),
         parameters: ValOrNodeSeq = (),
         *,
-        result_format: Optional[str] = None,
+        result_format: str = "arrow",
         name: Optional[str] = None,
     ) -> "Node":
         """Creates a Node that executes an SQL query.
@@ -372,7 +372,7 @@ class _SQLNode(Node):
         init_commands: Iterable[str],
         parameters: ValOrNodeSeq,
         *,
-        result_format: Optional[str],
+        result_format: str,
         name: Optional[str],
     ):
         """Initializes this Node.
