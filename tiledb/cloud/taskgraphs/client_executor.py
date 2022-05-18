@@ -107,11 +107,35 @@ class LocalExecutor(executor.Executor["Node"]):
             return self._status
 
     def execute(self, **inputs: Any) -> None:
+        provided_names = frozenset(inputs)
+        input_nodes = {
+            name: node
+            for (name, node) in self._by_name.items()
+            if isinstance(node, InputNode)
+        }
+        try:
+            inputs_by_id = {
+                input_nodes[name].id: value for (name, value) in inputs.items()
+            }
+        except KeyError:
+            extras = list(provided_names.difference(input_nodes))
+            raise TypeError(f"execute() got unexpected arguments {extras}")
+
+        required_names = frozenset(
+            name for (name, node) in input_nodes.items() if not node.has_default()
+        )
+        missing_names = required_names - provided_names
+        if missing_names:
+            raise TypeError(
+                f"execute() missing {len(missing_names)} required keyword-only "
+                f"argument(s): {list(missing_names)}"
+            )
+
         with self._lifecycle_lock:
             if self._status is not Status.WAITING:
                 raise InvalidStateError(f"Cannot execute a graph in {self._status}")
+            self._inputs = inputs_by_id
             self._status = Status.RUNNING
-        # TODO: Handle input nodes.
 
         self._event_loop_thread.start()
 
@@ -134,6 +158,8 @@ class LocalExecutor(executor.Executor["Node"]):
         cls: Type[Node]
         if "array_node" in node_json:
             cls = ArrayNode
+        elif "input_node" in node_json:
+            cls = InputNode
         elif "sql_node" in node_json:
             cls = SQLNode
         elif "udf_node" in node_json:
@@ -154,10 +180,10 @@ class LocalExecutor(executor.Executor["Node"]):
             # This means an exception has occurred on the event loop.
             # This should never happen, but to be safe we record our own
             # cancellation.
+            self._exception = ex
             for node in self._by_id.values():
                 if node.cancel():
                     self._failed_nodes[node.id] = node
-            self._exception = ex
         finally:
             with self._lifecycle_lock:
                 if self._status is not Status.CANCELLED:
@@ -399,6 +425,44 @@ class ArrayNode(Node):
         }
 
 
+class InputNode(Node):
+    def __init__(
+        self,
+        uid: uuid.UUID,
+        owner: LocalExecutor,
+        name: Optional[str],
+        json_data: Dict[str, Any],
+    ):
+        super().__init__(uid, owner, name)
+        input_data = json_data["input_node"]
+        self._default_value_encoded = input_data.get("default_value", _NOTHING)
+        self._value: Any = _NOTHING
+        self._value_encoded: Any = _NOTHING
+
+    def has_default(self):
+        return self._default_value_encoded is not _NOTHING
+
+    def _exec_impl(self, parents: Dict[uuid.UUID, Node], input_value: Any) -> None:
+        assert not parents, "InputNode cannot depend on anything"
+        if input_value is _NOTHING:
+            self._value_encoded = self._default_value_encoded
+            self._value = _codec.Unescaper().visit(self._value_encoded)
+        else:
+            self._value = input_value
+            self._value_encoded = _codec.Escaper().visit(input_value)
+
+        if self._value_encoded is _NOTHING:
+            raise KeyError(f"Input {self.name!r} must be provided")
+
+    def _result_impl(self):
+        return self._value
+
+    def _encode_for_param(self, mode: _ParamFormat):
+        del mode  # unused
+        self._assert_succeeded()
+        return self._value_encoded
+
+
 class SQLNode(Node):
     """A Node that executes a TileDB SQL query."""
 
@@ -579,6 +643,8 @@ class UDFNode(Node):
         except rest_api.ApiException as exc:
             self._task_id = results.extract_task_id(exc)
             raise
+        self._task_id = results.extract_task_id(resp)
+        self._result = _codec.BinaryResult.from_response(resp)
 
     def _result_impl(self):
         return self._result.decode()

@@ -1,3 +1,4 @@
+import datetime
 import operator
 import unittest
 import uuid
@@ -135,6 +136,7 @@ class ClientExecutorTestArrays(unittest.TestCase):
             "tiledb://TileDB-Inc/quickstart_dense[[1, 1], [1, 4]]['a'] -> 10",
             exec.node(join).result(30),
         )
+        exec.wait(5)
 
     def test_array_split(self):
         """Tests using a single array-read node in multiple downstream UDFs."""
@@ -150,6 +152,7 @@ class ClientExecutorTestArrays(unittest.TestCase):
         exec.execute()
         self.assertEqual(6, exec.node(summed).result(30))
         self.assertEqual(2.0, exec.node(avgd).result(30))
+        exec.wait(5)
 
 
 class ClientExecutorTestSQLs(unittest.TestCase):
@@ -165,6 +168,7 @@ class ClientExecutorTestSQLs(unittest.TestCase):
         result_table = exec.node(sql).result(30)
         self.assertIsInstance(result_table, pyarrow.Table)
         self.assertEqual({"sum": [6]}, result_table.to_pydict())
+        exec.wait(5)
 
     def test_params(self):
         grf = builder.TaskGraphBuilder()
@@ -192,6 +196,7 @@ class ClientExecutorTestSQLs(unittest.TestCase):
             "[{'floatcol': 400, 'intcol': 1000000, 'strcol': 'one', 'uintcol': 77}]",
             exec.node("output").result(30),
         )
+        exec.wait(5)
 
     def test_node_inputs(self):
         grf = builder.TaskGraphBuilder()
@@ -206,6 +211,102 @@ class ClientExecutorTestSQLs(unittest.TestCase):
         result_table = exec.node("sql").result(30)
         self.assertIsInstance(result_table, pyarrow.Table)
         self.assertEqual({"a": [1513]}, result_table.to_pydict())
+        exec.wait(5)
+
+
+class ClientExecutorTestInputs(unittest.TestCase):
+    maxDiff = None
+
+    def test_basic(self):
+        grf = builder.TaskGraphBuilder()
+        start = grf.input("start")
+        period = grf.input("period", datetime.timedelta(hours=24))
+
+        added = grf.udf(operator.add, types.args(start, period), name="added")
+        result = grf.udf(
+            "{start:%Y-%m-%d %H:%M:%S%z} + {period} = {sum:%Y-%m-%d %H:%M:%S%z}".format,
+            types.args(start=start, period=period, sum=added),
+        )
+
+        exec_def = client_executor.LocalExecutor(grf)
+        with self.assertRaisesRegex(TypeError, "missing 1 required"):
+            exec_def.execute()
+        with self.assertRaisesRegex(TypeError, "unexpected arguments"):
+            exec_def.execute(start=None, bogus=...)
+
+        exec_def.execute(
+            start=datetime.datetime(2010, 6, 21, 0, 30, tzinfo=datetime.timezone.utc)
+        )
+        self.assertEqual(
+            datetime.datetime(2010, 6, 22, 0, 30, tzinfo=datetime.timezone.utc),
+            exec_def.node("added").result(30),
+        )
+        self.assertEqual(
+            "2010-06-21 00:30:00+0000 + 1 day, 0:00:00 = 2010-06-22 00:30:00+0000",
+            exec_def.node(result).result(30),
+        )
+        exec_def.wait(5)
+        self.assertEqual(executor.Status.SUCCEEDED, exec_def.status)
+
+        exec_non_def = client_executor.LocalExecutor(grf)
+        exec_non_def.execute(
+            start=datetime.datetime(
+                2022, 5, 17, 19, tzinfo=datetime.timezone(datetime.timedelta(hours=-4))
+            ),
+            period=datetime.timedelta(hours=3, minutes=45, seconds=6),
+        )
+        self.assertEqual(
+            "2022-05-17 19:00:00-0400 + 3:45:06 = 2022-05-17 22:45:06-0400",
+            exec_non_def.node(result).result(30),
+        )
+        exec_def.wait(5)
+        exec_non_def.wait(5)
+
+    def test_node_inputs(self):
+        grf = builder.TaskGraphBuilder()
+        uri = grf.input("uri", "tiledb://TileDB-Inc/quickstart_dense")
+        frm = grf.input("frm")
+        to = grf.input("to")
+
+        arr = grf.array_read(uri, raw_ranges=[[], [frm, to]])
+        query = grf.sql(
+            """
+                select * from `tiledb://TileDB-Inc/quickstart_dense`
+                where ? <= `cols` and `cols` <= ?
+            """,
+            parameters=(frm, to),
+            result_format="json",
+        )
+
+        def make_nice(arr, sql_result):
+            nice_arr = {k: v.tolist() for k, v in arr.items()}
+            return nice_arr, sql_result
+
+        result = grf.udf(make_nice, types.args(arr, query))
+
+        exec = client_executor.LocalExecutor(grf)
+        exec.execute(frm=2, to=3)
+        self.assertEqual(
+            (
+                {
+                    "a": [[2, 3], [6, 7], [10, 11], [14, 15]],
+                    "cols": [[2, 3], [2, 3], [2, 3], [2, 3]],
+                    "rows": [[1, 1], [2, 2], [3, 3], [4, 4]],
+                },
+                [
+                    dict(a=2, cols=2, rows=1),
+                    dict(a=3, cols=3, rows=1),
+                    dict(a=6, cols=2, rows=2),
+                    dict(a=7, cols=3, rows=2),
+                    dict(a=10, cols=2, rows=3),
+                    dict(a=11, cols=3, rows=3),
+                    dict(a=14, cols=2, rows=4),
+                    dict(a=15, cols=3, rows=4),
+                ],
+            ),
+            exec.node(result).result(30),
+        )
+        exec.wait(5)
 
 
 class NodeOutputValueReplacerTest(unittest.TestCase):
