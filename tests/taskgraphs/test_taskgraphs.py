@@ -39,10 +39,13 @@ class TaskGraphsTest(unittest.TestCase):
 
         def to_utc(times):
             import datetime
+
             return [t.astimezone(datetime.timezone.utc) for t in times]
 
         utc_start_end = grf.udf(to_utc, tg.args(start_end), name="normalize")
-        length = grf.udf(lambda se: se[1] - se[0], tg.args(utc_start_end), name="length")
+        length = grf.udf(
+            lambda se: se[1] - se[0], tg.args(utc_start_end), name="length"
+        )
 
         def format_info(start_end, zone, length):
             start, end = start_end
