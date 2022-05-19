@@ -17,10 +17,7 @@ class TaskGraphsTest(unittest.TestCase):
 
         as_date = grf.udf(datetime.date, tg.args(year, month, day))
 
-        def to_instants(
-            day: datetime.date,
-            zone_name: str,
-        ) -> Tuple[datetime.datetime, datetime.datetime]:
+        def to_instants(day: datetime.date, zone_name: str):
             import datetime
 
             from dateutil import tz
