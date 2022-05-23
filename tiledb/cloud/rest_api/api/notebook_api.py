@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,16 +8,24 @@
 """
 
 
-from __future__ import absolute_import
-
 import re  # noqa: F401
-
-# python 2 and python 3 compatibility library
-import six
+import sys  # noqa: F401
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import ApiTypeError  # noqa: F401
-from tiledb.cloud.rest_api.exceptions import ApiValueError
+from tiledb.cloud.rest_api.api_client import Endpoint as _Endpoint
+from tiledb.cloud.rest_api.model.array_info_update import ArrayInfoUpdate
+from tiledb.cloud.rest_api.model.error import Error
+from tiledb.cloud.rest_api.model.file_uploaded import FileUploaded
+from tiledb.cloud.rest_api.model.notebook_copied import NotebookCopied
+from tiledb.cloud.rest_api.model.notebook_copy import NotebookCopy
+from tiledb.cloud.rest_api.model.notebook_status import NotebookStatus
+from tiledb.cloud.rest_api.model_utils import check_allowed_values  # noqa: F401
+from tiledb.cloud.rest_api.model_utils import check_validations
+from tiledb.cloud.rest_api.model_utils import date
+from tiledb.cloud.rest_api.model_utils import datetime
+from tiledb.cloud.rest_api.model_utils import file_type
+from tiledb.cloud.rest_api.model_utils import none_type
+from tiledb.cloud.rest_api.model_utils import validate_and_convert_types
 
 
 class NotebookApi(object):
@@ -33,8 +39,251 @@ class NotebookApi(object):
         if api_client is None:
             api_client = ApiClient()
         self.api_client = api_client
+        self.get_notebook_server_status_endpoint = _Endpoint(
+            settings={
+                "response_type": (NotebookStatus,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/notebooks/server/{namespace}/status",
+                "operation_id": "get_notebook_server_status",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                ],
+                "required": [
+                    "namespace",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                },
+                "location_map": {
+                    "namespace": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.handle_copy_notebook_endpoint = _Endpoint(
+            settings={
+                "response_type": (NotebookCopied,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/notebooks/{namespace}/{array}/copy",
+                "operation_id": "handle_copy_notebook",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "array",
+                    "notebook_copy",
+                    "x_tiledb_cloud_access_credentials_name",
+                    "end_timestamp",
+                ],
+                "required": [
+                    "namespace",
+                    "array",
+                    "notebook_copy",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "array": (str,),
+                    "notebook_copy": (NotebookCopy,),
+                    "x_tiledb_cloud_access_credentials_name": (str,),
+                    "end_timestamp": (int,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "array": "array",
+                    "x_tiledb_cloud_access_credentials_name": "X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME",
+                    "end_timestamp": "end_timestamp",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "array": "path",
+                    "notebook_copy": "body",
+                    "x_tiledb_cloud_access_credentials_name": "header",
+                    "end_timestamp": "query",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.handle_upload_notebook_endpoint = _Endpoint(
+            settings={
+                "response_type": (FileUploaded,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/notebooks/{namespace}/upload",
+                "operation_id": "handle_upload_notebook",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "input_file",
+                    "x_tiledb_cloud_access_credentials_name",
+                    "output_uri",
+                    "name",
+                ],
+                "required": [
+                    "namespace",
+                    "input_file",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "input_file": (file_type,),
+                    "x_tiledb_cloud_access_credentials_name": (str,),
+                    "output_uri": (str,),
+                    "name": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "input_file": "input_file",
+                    "x_tiledb_cloud_access_credentials_name": "X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME",
+                    "output_uri": "output_uri",
+                    "name": "name",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "input_file": "form",
+                    "x_tiledb_cloud_access_credentials_name": "header",
+                    "output_uri": "form",
+                    "name": "form",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["multipart/form-data"],
+            },
+            api_client=api_client,
+        )
+        self.shutdown_notebook_server_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/notebooks/server/{namespace}",
+                "operation_id": "shutdown_notebook_server",
+                "http_method": "DELETE",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                ],
+                "required": [
+                    "namespace",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                },
+                "location_map": {
+                    "namespace": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.update_notebook_name_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/notebooks/{namespace}/{array}/rename",
+                "operation_id": "update_notebook_name",
+                "http_method": "PATCH",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "array",
+                    "notebook_metadata",
+                ],
+                "required": [
+                    "namespace",
+                    "array",
+                    "notebook_metadata",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "array": (str,),
+                    "notebook_metadata": (ArrayInfoUpdate,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "array": "array",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "array": "path",
+                    "notebook_metadata": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
 
-    def get_notebook_server_status(self, namespace, **kwargs):  # noqa: E501
+    def get_notebook_server_status(self, namespace, **kwargs):
         """get_notebook_server_status  # noqa: E501
 
         Get status of the notebook server  # noqa: E501
@@ -44,148 +293,46 @@ class NotebookApi(object):
         >>> thread = api.get_notebook_server_status(namespace, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace notebook is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: NotebookStatus
+        Args:
+            namespace (str): namespace notebook is in (an organization name or user's username)
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            NotebookStatus
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_notebook_server_status_with_http_info(
-            namespace, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        return self.get_notebook_server_status_endpoint.call_with_http_info(**kwargs)
 
-    def get_notebook_server_status_with_http_info(
-        self, namespace, **kwargs
-    ):  # noqa: E501
-        """get_notebook_server_status  # noqa: E501
-
-        Get status of the notebook server  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.get_notebook_server_status_with_http_info(namespace, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace notebook is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(NotebookStatus, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_notebook_server_status" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `get_notebook_server_status`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "NotebookStatus",
-            202: None,
-            402: "Error",
-            404: None,
-        }
-
-        return self.api_client.call_api(
-            "/notebooks/server/{namespace}/status",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def handle_copy_notebook(
-        self, namespace, array, notebook_copy, **kwargs
-    ):  # noqa: E501
+    def handle_copy_notebook(self, namespace, array, notebook_copy, **kwargs):
         """handle_copy_notebook  # noqa: E501
 
         Copy a tiledb notebook at the specified location  # noqa: E501
@@ -195,203 +342,52 @@ class NotebookApi(object):
         >>> thread = api.handle_copy_notebook(namespace, array, notebook_copy, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: The namespace of the notebook (required)
-        :type namespace: str
-        :param array: The name of the notebook (required)
-        :type array: str
-        :param notebook_copy: Input/Output information to create a new TileDB file (required)
-        :type notebook_copy: NotebookCopy
-        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :type x_tiledb_cloud_access_credentials_name: str
-        :param end_timestamp: Milliseconds since Unix epoch, copy will use open_at functionality to copy notebook created at the specific timestamp
-        :type end_timestamp: int
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: NotebookCopied
+        Args:
+            namespace (str): The namespace of the notebook
+            array (str): The name of the notebook
+            notebook_copy (NotebookCopy): Input/Output information to create a new TileDB file
+
+        Keyword Args:
+            x_tiledb_cloud_access_credentials_name (str): Optional registered access credentials to use for creation. [optional]
+            end_timestamp (int): Milliseconds since Unix epoch, copy will use open_at functionality to copy notebook created at the specific timestamp. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            NotebookCopied
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.handle_copy_notebook_with_http_info(
-            namespace, array, notebook_copy, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["array"] = array
+        kwargs["notebook_copy"] = notebook_copy
+        return self.handle_copy_notebook_endpoint.call_with_http_info(**kwargs)
 
-    def handle_copy_notebook_with_http_info(
-        self, namespace, array, notebook_copy, **kwargs
-    ):  # noqa: E501
-        """handle_copy_notebook  # noqa: E501
-
-        Copy a tiledb notebook at the specified location  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.handle_copy_notebook_with_http_info(namespace, array, notebook_copy, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: The namespace of the notebook (required)
-        :type namespace: str
-        :param array: The name of the notebook (required)
-        :type array: str
-        :param notebook_copy: Input/Output information to create a new TileDB file (required)
-        :type notebook_copy: NotebookCopy
-        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :type x_tiledb_cloud_access_credentials_name: str
-        :param end_timestamp: Milliseconds since Unix epoch, copy will use open_at functionality to copy notebook created at the specific timestamp
-        :type end_timestamp: int
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(NotebookCopied, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "namespace",
-            "array",
-            "notebook_copy",
-            "x_tiledb_cloud_access_credentials_name",
-            "end_timestamp",
-        ]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method handle_copy_notebook" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `handle_copy_notebook`"
-            )  # noqa: E501
-        # verify the required parameter 'array' is set
-        if self.api_client.client_side_validation and (
-            "array" not in local_var_params
-            or local_var_params["array"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `array` when calling `handle_copy_notebook`"
-            )  # noqa: E501
-        # verify the required parameter 'notebook_copy' is set
-        if self.api_client.client_side_validation and (
-            "notebook_copy" not in local_var_params
-            or local_var_params["notebook_copy"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `notebook_copy` when calling `handle_copy_notebook`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "array" in local_var_params:
-            path_params["array"] = local_var_params["array"]  # noqa: E501
-
-        query_params = []
-        if (
-            "end_timestamp" in local_var_params
-            and local_var_params["end_timestamp"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("end_timestamp", local_var_params["end_timestamp"])
-            )  # noqa: E501
-
-        header_params = {}
-        if "x_tiledb_cloud_access_credentials_name" in local_var_params:
-            header_params["X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME"] = local_var_params[
-                "x_tiledb_cloud_access_credentials_name"
-            ]  # noqa: E501
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "notebook_copy" in local_var_params:
-            body_params = local_var_params["notebook_copy"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            201: "NotebookCopied",
-        }
-
-        return self.api_client.call_api(
-            "/notebooks/{namespace}/{array}/copy",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def handle_upload_notebook(self, namespace, input_file, **kwargs):  # noqa: E501
+    def handle_upload_notebook(self, namespace, input_file, **kwargs):
         """handle_upload_notebook  # noqa: E501
 
         Upload a notebook at the specified location  # noqa: E501
@@ -401,192 +397,51 @@ class NotebookApi(object):
         >>> thread = api.handle_upload_notebook(namespace, input_file, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: The namespace of the notebook (required)
-        :type namespace: str
-        :param input_file: the notebook to upload (required)
-        :type input_file: file
-        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :type x_tiledb_cloud_access_credentials_name: str
-        :param output_uri: output location of the TileDB File
-        :type output_uri: str
-        :param name: name to set for registered file
-        :type name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: FileUploaded
+        Args:
+            namespace (str): The namespace of the notebook
+            input_file (file_type): the notebook to upload
+
+        Keyword Args:
+            x_tiledb_cloud_access_credentials_name (str): Optional registered access credentials to use for creation. [optional]
+            output_uri (str): output location of the TileDB File. [optional]
+            name (str): name to set for registered file. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            FileUploaded
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.handle_upload_notebook_with_http_info(
-            namespace, input_file, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["input_file"] = input_file
+        return self.handle_upload_notebook_endpoint.call_with_http_info(**kwargs)
 
-    def handle_upload_notebook_with_http_info(
-        self, namespace, input_file, **kwargs
-    ):  # noqa: E501
-        """handle_upload_notebook  # noqa: E501
-
-        Upload a notebook at the specified location  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.handle_upload_notebook_with_http_info(namespace, input_file, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: The namespace of the notebook (required)
-        :type namespace: str
-        :param input_file: the notebook to upload (required)
-        :type input_file: file
-        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :type x_tiledb_cloud_access_credentials_name: str
-        :param output_uri: output location of the TileDB File
-        :type output_uri: str
-        :param name: name to set for registered file
-        :type name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(FileUploaded, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "namespace",
-            "input_file",
-            "x_tiledb_cloud_access_credentials_name",
-            "output_uri",
-            "name",
-        ]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method handle_upload_notebook" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `handle_upload_notebook`"
-            )  # noqa: E501
-        # verify the required parameter 'input_file' is set
-        if self.api_client.client_side_validation and (
-            "input_file" not in local_var_params
-            or local_var_params["input_file"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `input_file` when calling `handle_upload_notebook`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-        if "x_tiledb_cloud_access_credentials_name" in local_var_params:
-            header_params["X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME"] = local_var_params[
-                "x_tiledb_cloud_access_credentials_name"
-            ]  # noqa: E501
-
-        form_params = []
-        local_var_files = {}
-        if "input_file" in local_var_params:
-            local_var_files["input_file"] = local_var_params["input_file"]  # noqa: E501
-        if "output_uri" in local_var_params:
-            form_params.append(
-                ("output_uri", local_var_params["output_uri"])
-            )  # noqa: E501
-        if "name" in local_var_params:
-            form_params.append(("name", local_var_params["name"]))  # noqa: E501
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["multipart/form-data"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            201: "FileUploaded",
-        }
-
-        return self.api_client.call_api(
-            "/notebooks/{namespace}/upload",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def shutdown_notebook_server(self, namespace, **kwargs):  # noqa: E501
+    def shutdown_notebook_server(self, namespace, **kwargs):
         """shutdown_notebook_server  # noqa: E501
 
         Shutdown a notebook server  # noqa: E501
@@ -596,143 +451,46 @@ class NotebookApi(object):
         >>> thread = api.shutdown_notebook_server(namespace, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace notebook is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            namespace (str): namespace notebook is in (an organization name or user's username)
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.shutdown_notebook_server_with_http_info(
-            namespace, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        return self.shutdown_notebook_server_endpoint.call_with_http_info(**kwargs)
 
-    def shutdown_notebook_server_with_http_info(
-        self, namespace, **kwargs
-    ):  # noqa: E501
-        """shutdown_notebook_server  # noqa: E501
-
-        Shutdown a notebook server  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.shutdown_notebook_server_with_http_info(namespace, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace notebook is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method shutdown_notebook_server" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `shutdown_notebook_server`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/notebooks/server/{namespace}",
-            "DELETE",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def update_notebook_name(
-        self, namespace, array, notebook_metadata, **kwargs
-    ):  # noqa: E501
+    def update_notebook_name(self, namespace, array, notebook_metadata, **kwargs):
         """update_notebook_name  # noqa: E501
 
         update name on a notebok, moving related S3 object to new location  # noqa: E501
@@ -742,171 +500,45 @@ class NotebookApi(object):
         >>> thread = api.update_notebook_name(namespace, array, notebook_metadata, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of notebook (array) that is url-encoded (required)
-        :type array: str
-        :param notebook_metadata: notebook (array) metadata to update (required)
-        :type notebook_metadata: ArrayInfoUpdate
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            array (str): name/uri of notebook (array) that is url-encoded
+            notebook_metadata (ArrayInfoUpdate): notebook (array) metadata to update
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.update_notebook_name_with_http_info(
-            namespace, array, notebook_metadata, **kwargs
-        )  # noqa: E501
-
-    def update_notebook_name_with_http_info(
-        self, namespace, array, notebook_metadata, **kwargs
-    ):  # noqa: E501
-        """update_notebook_name  # noqa: E501
-
-        update name on a notebok, moving related S3 object to new location  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.update_notebook_name_with_http_info(namespace, array, notebook_metadata, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of notebook (array) that is url-encoded (required)
-        :type array: str
-        :param notebook_metadata: notebook (array) metadata to update (required)
-        :type notebook_metadata: ArrayInfoUpdate
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "array", "notebook_metadata"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method update_notebook_name" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `update_notebook_name`"
-            )  # noqa: E501
-        # verify the required parameter 'array' is set
-        if self.api_client.client_side_validation and (
-            "array" not in local_var_params
-            or local_var_params["array"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `array` when calling `update_notebook_name`"
-            )  # noqa: E501
-        # verify the required parameter 'notebook_metadata' is set
-        if self.api_client.client_side_validation and (
-            "notebook_metadata" not in local_var_params
-            or local_var_params["notebook_metadata"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `notebook_metadata` when calling `update_notebook_name`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "array" in local_var_params:
-            path_params["array"] = local_var_params["array"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "notebook_metadata" in local_var_params:
-            body_params = local_var_params["notebook_metadata"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/notebooks/{namespace}/{array}/rename",
-            "PATCH",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["array"] = array
+        kwargs["notebook_metadata"] = notebook_metadata
+        return self.update_notebook_name_endpoint.call_with_http_info(**kwargs)

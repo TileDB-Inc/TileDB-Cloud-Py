@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,14 +8,11 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.array_task_log import ArrayTaskLog  # noqa: E501
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.array_task_log import ArrayTaskLog
 
 
 class TestArrayTaskLog(unittest.TestCase):
@@ -29,21 +24,11 @@ class TestArrayTaskLog(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test ArrayTaskLog
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.array_task_log.ArrayTaskLog()  # noqa: E501
-        if include_optional:
-            return ArrayTaskLog(array_task_id="", logs="")
-        else:
-            return ArrayTaskLog()
-
     def testArrayTaskLog(self):
         """Test ArrayTaskLog"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = ArrayTaskLog()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

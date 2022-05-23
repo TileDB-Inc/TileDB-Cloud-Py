@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,16 +8,11 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.attribute_buffer_size import (  # noqa: E501
-    AttributeBufferSize,
-)
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.attribute_buffer_size import AttributeBufferSize
 
 
 class TestAttributeBufferSize(unittest.TestCase):
@@ -31,25 +24,11 @@ class TestAttributeBufferSize(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test AttributeBufferSize
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.attribute_buffer_size.AttributeBufferSize()  # noqa: E501
-        if include_optional:
-            return AttributeBufferSize(attribute="", offset_bytes=56, data_bytes=56)
-        else:
-            return AttributeBufferSize(
-                attribute="",
-                offset_bytes=56,
-                data_bytes=56,
-            )
-
     def testAttributeBufferSize(self):
         """Test AttributeBufferSize"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = AttributeBufferSize()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

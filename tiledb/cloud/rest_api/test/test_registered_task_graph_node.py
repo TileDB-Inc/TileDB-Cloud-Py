@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,16 +8,22 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.registered_task_graph_node import (  # noqa: E501
+from tiledb.cloud.rest_api.model.tg_input_node_data import TGInputNodeData
+from tiledb.cloud.rest_api.model.tgsql_node_data import TGSQLNodeData
+from tiledb.cloud.rest_api.model.tgudf_node_data import TGUDFNodeData
+from tiledb.cloud.rest_api.model.udf_array_details import UDFArrayDetails
+
+globals()["TGInputNodeData"] = TGInputNodeData
+globals()["TGSQLNodeData"] = TGSQLNodeData
+globals()["TGUDFNodeData"] = TGUDFNodeData
+globals()["UDFArrayDetails"] = UDFArrayDetails
+from tiledb.cloud.rest_api.model.registered_task_graph_node import (
     RegisteredTaskGraphNode,
 )
-from tiledb.cloud.rest_api.rest import ApiException
 
 
 class TestRegisteredTaskGraphNode(unittest.TestCase):
@@ -31,61 +35,11 @@ class TestRegisteredTaskGraphNode(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test RegisteredTaskGraphNode
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.registered_task_graph_node.RegisteredTaskGraphNode()  # noqa: E501
-        if include_optional:
-            return RegisteredTaskGraphNode(
-                client_node_id="",
-                name="",
-                depends_on=[""],
-                array_node=tiledb.cloud.rest_api.models.udf_array_details.UDFArrayDetails(
-                    parameter_id="",
-                    uri="",
-                    ranges=tiledb.cloud.rest_api.models.query_ranges.QueryRanges(
-                        layout="row-major",
-                    ),
-                    buffers=[""],
-                ),
-                input_node=tiledb.cloud.rest_api.models.tg_input_node_data.TGInputNodeData(
-                    default_value=tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue(),
-                    datatype="",
-                ),
-                sql_node=tiledb.cloud.rest_api.models.tgsql_node_data.TGSQLNodeData(
-                    init_commands=[""],
-                    query="",
-                    parameters=[tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue()],
-                    result_format="python_pickle",
-                ),
-                udf_node=tiledb.cloud.rest_api.models.tgudf_node_data.TGUDFNodeData(
-                    registered_udf_name="",
-                    executable_code="",
-                    source_text="",
-                    environment=tiledb.cloud.rest_api.models.tgudf_environment.TGUDFEnvironment(
-                        language="python",
-                        language_version="",
-                        image_name="",
-                        resource_class="",
-                    ),
-                    arguments=[
-                        tiledb.cloud.rest_api.models.tgudf_argument.TGUDFArgument(
-                            name="",
-                            value=tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue(),
-                        )
-                    ],
-                    result_format="python_pickle",
-                ),
-            )
-        else:
-            return RegisteredTaskGraphNode()
-
     def testRegisteredTaskGraphNode(self):
         """Test RegisteredTaskGraphNode"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = RegisteredTaskGraphNode()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,16 +8,22 @@
 """
 
 
-from __future__ import absolute_import
-
 import re  # noqa: F401
-
-# python 2 and python 3 compatibility library
-import six
+import sys  # noqa: F401
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import ApiTypeError  # noqa: F401
-from tiledb.cloud.rest_api.exceptions import ApiValueError
+from tiledb.cloud.rest_api.api_client import Endpoint as _Endpoint
+from tiledb.cloud.rest_api.model.aws_access_credentials import AWSAccessCredentials
+from tiledb.cloud.rest_api.model.error import Error
+from tiledb.cloud.rest_api.model.organization import Organization
+from tiledb.cloud.rest_api.model.organization_user import OrganizationUser
+from tiledb.cloud.rest_api.model_utils import check_allowed_values  # noqa: F401
+from tiledb.cloud.rest_api.model_utils import check_validations
+from tiledb.cloud.rest_api.model_utils import date
+from tiledb.cloud.rest_api.model_utils import datetime
+from tiledb.cloud.rest_api.model_utils import file_type
+from tiledb.cloud.rest_api.model_utils import none_type
+from tiledb.cloud.rest_api.model_utils import validate_and_convert_types
 
 
 class OrganizationApi(object):
@@ -33,10 +37,606 @@ class OrganizationApi(object):
         if api_client is None:
             api_client = ApiClient()
         self.api_client = api_client
+        self.add_aws_access_credentials_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/credentials/{namespace}/aws",
+                "operation_id": "add_aws_access_credentials",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "aws_access_credentials",
+                ],
+                "required": [
+                    "namespace",
+                    "aws_access_credentials",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "aws_access_credentials": (AWSAccessCredentials,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "aws_access_credentials": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.add_user_to_organization_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/organizations/{organization}/user",
+                "operation_id": "add_user_to_organization",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "organization",
+                    "user",
+                ],
+                "required": [
+                    "organization",
+                    "user",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "organization": (str,),
+                    "user": (OrganizationUser,),
+                },
+                "attribute_map": {
+                    "organization": "organization",
+                },
+                "location_map": {
+                    "organization": "path",
+                    "user": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.check_aws_access_credentials_endpoint = _Endpoint(
+            settings={
+                "response_type": ([AWSAccessCredentials],),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/credentials/{namespace}/aws",
+                "operation_id": "check_aws_access_credentials",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                ],
+                "required": [
+                    "namespace",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                },
+                "location_map": {
+                    "namespace": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.check_aws_access_credentials_by_name_endpoint = _Endpoint(
+            settings={
+                "response_type": (AWSAccessCredentials,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/credentials/{namespace}/aws/{name}",
+                "operation_id": "check_aws_access_credentials_by_name",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "name",
+                ],
+                "required": [
+                    "namespace",
+                    "name",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "name": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "name": "name",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "name": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.create_organization_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/organization",
+                "operation_id": "create_organization",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "organization",
+                ],
+                "required": [
+                    "organization",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "organization": (Organization,),
+                },
+                "attribute_map": {},
+                "location_map": {
+                    "organization": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.delete_aws_access_credentials_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/credentials/{namespace}/aws/{name}",
+                "operation_id": "delete_aws_access_credentials",
+                "http_method": "DELETE",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "name",
+                ],
+                "required": [
+                    "namespace",
+                    "name",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "name": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "name": "name",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "name": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.delete_organization_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/organizations/{organization}",
+                "operation_id": "delete_organization",
+                "http_method": "DELETE",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "organization",
+                ],
+                "required": [
+                    "organization",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "organization": (str,),
+                },
+                "attribute_map": {
+                    "organization": "organization",
+                },
+                "location_map": {
+                    "organization": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.delete_user_from_organization_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/organizations/{organization}/{username}",
+                "operation_id": "delete_user_from_organization",
+                "http_method": "DELETE",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "organization",
+                    "username",
+                ],
+                "required": [
+                    "organization",
+                    "username",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "organization": (str,),
+                    "username": (str,),
+                },
+                "attribute_map": {
+                    "organization": "organization",
+                    "username": "username",
+                },
+                "location_map": {
+                    "organization": "path",
+                    "username": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.get_all_organizations_endpoint = _Endpoint(
+            settings={
+                "response_type": ([Organization],),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/organizations",
+                "operation_id": "get_all_organizations",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [],
+                "required": [],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {},
+                "attribute_map": {},
+                "location_map": {},
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.get_organization_endpoint = _Endpoint(
+            settings={
+                "response_type": (Organization,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/organizations/{organization}",
+                "operation_id": "get_organization",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "organization",
+                ],
+                "required": [
+                    "organization",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "organization": (str,),
+                },
+                "attribute_map": {
+                    "organization": "organization",
+                },
+                "location_map": {
+                    "organization": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.get_organization_user_endpoint = _Endpoint(
+            settings={
+                "response_type": (OrganizationUser,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/organizations/{organization}/{username}",
+                "operation_id": "get_organization_user",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "organization",
+                    "username",
+                ],
+                "required": [
+                    "organization",
+                    "username",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "organization": (str,),
+                    "username": (str,),
+                },
+                "attribute_map": {
+                    "organization": "organization",
+                    "username": "username",
+                },
+                "location_map": {
+                    "organization": "path",
+                    "username": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.update_aws_access_credentials_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/credentials/{namespace}/aws/{name}",
+                "operation_id": "update_aws_access_credentials",
+                "http_method": "PATCH",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "name",
+                    "aws_access_credentials",
+                ],
+                "required": [
+                    "namespace",
+                    "name",
+                    "aws_access_credentials",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "name": (str,),
+                    "aws_access_credentials": (AWSAccessCredentials,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "name": "name",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "name": "path",
+                    "aws_access_credentials": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.update_organization_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/organizations/{organization}",
+                "operation_id": "update_organization",
+                "http_method": "PATCH",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "organization",
+                    "organization_details",
+                ],
+                "required": [
+                    "organization",
+                    "organization_details",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "organization": (str,),
+                    "organization_details": (Organization,),
+                },
+                "attribute_map": {
+                    "organization": "organization",
+                },
+                "location_map": {
+                    "organization": "path",
+                    "organization_details": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.update_user_in_organization_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/organizations/{organization}/{username}",
+                "operation_id": "update_user_in_organization",
+                "http_method": "PATCH",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "organization",
+                    "username",
+                    "user",
+                ],
+                "required": [
+                    "organization",
+                    "username",
+                    "user",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "organization": (str,),
+                    "username": (str,),
+                    "user": (OrganizationUser,),
+                },
+                "attribute_map": {
+                    "organization": "organization",
+                    "username": "username",
+                },
+                "location_map": {
+                    "organization": "path",
+                    "username": "path",
+                    "user": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
 
-    def add_aws_access_credentials(
-        self, namespace, aws_access_credentials, **kwargs
-    ):  # noqa: E501
+    def add_aws_access_credentials(self, namespace, aws_access_credentials, **kwargs):
         """add_aws_access_credentials  # noqa: E501
 
         Add aws keys  # noqa: E501
@@ -46,162 +646,48 @@ class OrganizationApi(object):
         >>> thread = api.add_aws_access_credentials(namespace, aws_access_credentials, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace (required)
-        :type namespace: str
-        :param aws_access_credentials: aws access credentials to store for a namespace (required)
-        :type aws_access_credentials: AWSAccessCredentials
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            namespace (str): namespace
+            aws_access_credentials (AWSAccessCredentials): aws access credentials to store for a namespace
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.add_aws_access_credentials_with_http_info(
-            namespace, aws_access_credentials, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["aws_access_credentials"] = aws_access_credentials
+        return self.add_aws_access_credentials_endpoint.call_with_http_info(**kwargs)
 
-    def add_aws_access_credentials_with_http_info(
-        self, namespace, aws_access_credentials, **kwargs
-    ):  # noqa: E501
-        """add_aws_access_credentials  # noqa: E501
-
-        Add aws keys  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.add_aws_access_credentials_with_http_info(namespace, aws_access_credentials, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace (required)
-        :type namespace: str
-        :param aws_access_credentials: aws access credentials to store for a namespace (required)
-        :type aws_access_credentials: AWSAccessCredentials
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "aws_access_credentials"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method add_aws_access_credentials" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `add_aws_access_credentials`"
-            )  # noqa: E501
-        # verify the required parameter 'aws_access_credentials' is set
-        if self.api_client.client_side_validation and (
-            "aws_access_credentials" not in local_var_params
-            or local_var_params["aws_access_credentials"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `aws_access_credentials` when calling `add_aws_access_credentials`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "aws_access_credentials" in local_var_params:
-            body_params = local_var_params["aws_access_credentials"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/credentials/{namespace}/aws",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def add_user_to_organization(self, organization, user, **kwargs):  # noqa: E501
+    def add_user_to_organization(self, organization, user, **kwargs):
         """add_user_to_organization  # noqa: E501
 
         add a user to an organization  # noqa: E501
@@ -211,162 +697,48 @@ class OrganizationApi(object):
         >>> thread = api.add_user_to_organization(organization, user, async_req=True)
         >>> result = thread.get()
 
-        :param organization: organization name (required)
-        :type organization: str
-        :param user: user to add (required)
-        :type user: OrganizationUser
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            organization (str): organization name
+            user (OrganizationUser): user to add
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.add_user_to_organization_with_http_info(
-            organization, user, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["organization"] = organization
+        kwargs["user"] = user
+        return self.add_user_to_organization_endpoint.call_with_http_info(**kwargs)
 
-    def add_user_to_organization_with_http_info(
-        self, organization, user, **kwargs
-    ):  # noqa: E501
-        """add_user_to_organization  # noqa: E501
-
-        add a user to an organization  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.add_user_to_organization_with_http_info(organization, user, async_req=True)
-        >>> result = thread.get()
-
-        :param organization: organization name (required)
-        :type organization: str
-        :param user: user to add (required)
-        :type user: OrganizationUser
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["organization", "user"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method add_user_to_organization" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'organization' is set
-        if self.api_client.client_side_validation and (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `add_user_to_organization`"
-            )  # noqa: E501
-        # verify the required parameter 'user' is set
-        if self.api_client.client_side_validation and (
-            "user" not in local_var_params
-            or local_var_params["user"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `user` when calling `add_user_to_organization`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "user" in local_var_params:
-            body_params = local_var_params["user"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/organizations/{organization}/user",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def check_aws_access_credentials(self, namespace, **kwargs):  # noqa: E501
+    def check_aws_access_credentials(self, namespace, **kwargs):
         """check_aws_access_credentials  # noqa: E501
 
         Check if aws keys are set  # noqa: E501
@@ -376,145 +748,46 @@ class OrganizationApi(object):
         >>> thread = api.check_aws_access_credentials(namespace, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace (required)
-        :type namespace: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: list[AWSAccessCredentials]
+        Args:
+            namespace (str): namespace
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            [AWSAccessCredentials]
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.check_aws_access_credentials_with_http_info(
-            namespace, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        return self.check_aws_access_credentials_endpoint.call_with_http_info(**kwargs)
 
-    def check_aws_access_credentials_with_http_info(
-        self, namespace, **kwargs
-    ):  # noqa: E501
-        """check_aws_access_credentials  # noqa: E501
-
-        Check if aws keys are set  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.check_aws_access_credentials_with_http_info(namespace, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace (required)
-        :type namespace: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(list[AWSAccessCredentials], status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method check_aws_access_credentials" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `check_aws_access_credentials`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "list[AWSAccessCredentials]",
-        }
-
-        return self.api_client.call_api(
-            "/credentials/{namespace}/aws",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def check_aws_access_credentials_by_name(
-        self, namespace, name, **kwargs
-    ):  # noqa: E501
+    def check_aws_access_credentials_by_name(self, namespace, name, **kwargs):
         """check_aws_access_credentials_by_name  # noqa: E501
 
         Check if aws keys are set by name  # noqa: E501
@@ -524,157 +797,50 @@ class OrganizationApi(object):
         >>> thread = api.check_aws_access_credentials_by_name(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace (required)
-        :type namespace: str
-        :param name: name (required)
-        :type name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: AWSAccessCredentials
+        Args:
+            namespace (str): namespace
+            name (str): name
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            AWSAccessCredentials
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.check_aws_access_credentials_by_name_with_http_info(
-            namespace, name, **kwargs
-        )  # noqa: E501
-
-    def check_aws_access_credentials_by_name_with_http_info(
-        self, namespace, name, **kwargs
-    ):  # noqa: E501
-        """check_aws_access_credentials_by_name  # noqa: E501
-
-        Check if aws keys are set by name  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.check_aws_access_credentials_by_name_with_http_info(namespace, name, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace (required)
-        :type namespace: str
-        :param name: name (required)
-        :type name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(AWSAccessCredentials, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "name"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["name"] = name
+        return self.check_aws_access_credentials_by_name_endpoint.call_with_http_info(
+            **kwargs
         )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method check_aws_access_credentials_by_name" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `check_aws_access_credentials_by_name`"
-            )  # noqa: E501
-        # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and (
-            "name" not in local_var_params
-            or local_var_params["name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `name` when calling `check_aws_access_credentials_by_name`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "name" in local_var_params:
-            path_params["name"] = local_var_params["name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "AWSAccessCredentials",
-        }
-
-        return self.api_client.call_api(
-            "/credentials/{namespace}/aws/{name}",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def create_organization(self, organization, **kwargs):  # noqa: E501
+    def create_organization(self, organization, **kwargs):
         """create_organization  # noqa: E501
 
         create a organization, the user creating will be listed as owner  # noqa: E501
@@ -684,146 +850,46 @@ class OrganizationApi(object):
         >>> thread = api.create_organization(organization, async_req=True)
         >>> result = thread.get()
 
-        :param organization: organization to create (required)
-        :type organization: Organization
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            organization (Organization): organization to create
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.create_organization_with_http_info(
-            organization, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["organization"] = organization
+        return self.create_organization_endpoint.call_with_http_info(**kwargs)
 
-    def create_organization_with_http_info(self, organization, **kwargs):  # noqa: E501
-        """create_organization  # noqa: E501
-
-        create a organization, the user creating will be listed as owner  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.create_organization_with_http_info(organization, async_req=True)
-        >>> result = thread.get()
-
-        :param organization: organization to create (required)
-        :type organization: Organization
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["organization"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method create_organization" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'organization' is set
-        if self.api_client.client_side_validation and (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `create_organization`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "organization" in local_var_params:
-            body_params = local_var_params["organization"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/organization",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def delete_aws_access_credentials(self, namespace, name, **kwargs):  # noqa: E501
+    def delete_aws_access_credentials(self, namespace, name, **kwargs):
         """delete_aws_access_credentials  # noqa: E501
 
         delete a AWS Access credentials in a namespace. This will likely cause arrays to become unreachable  # noqa: E501
@@ -833,155 +899,48 @@ class OrganizationApi(object):
         >>> thread = api.delete_aws_access_credentials(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace (required)
-        :type namespace: str
-        :param name: name (required)
-        :type name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            namespace (str): namespace
+            name (str): name
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.delete_aws_access_credentials_with_http_info(
-            namespace, name, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["name"] = name
+        return self.delete_aws_access_credentials_endpoint.call_with_http_info(**kwargs)
 
-    def delete_aws_access_credentials_with_http_info(
-        self, namespace, name, **kwargs
-    ):  # noqa: E501
-        """delete_aws_access_credentials  # noqa: E501
-
-        delete a AWS Access credentials in a namespace. This will likely cause arrays to become unreachable  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.delete_aws_access_credentials_with_http_info(namespace, name, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace (required)
-        :type namespace: str
-        :param name: name (required)
-        :type name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "name"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method delete_aws_access_credentials" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `delete_aws_access_credentials`"
-            )  # noqa: E501
-        # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and (
-            "name" not in local_var_params
-            or local_var_params["name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `name` when calling `delete_aws_access_credentials`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "name" in local_var_params:
-            path_params["name"] = local_var_params["name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/credentials/{namespace}/aws/{name}",
-            "DELETE",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def delete_organization(self, organization, **kwargs):  # noqa: E501
+    def delete_organization(self, organization, **kwargs):
         """delete_organization  # noqa: E501
 
         delete a organization  # noqa: E501
@@ -991,141 +950,46 @@ class OrganizationApi(object):
         >>> thread = api.delete_organization(organization, async_req=True)
         >>> result = thread.get()
 
-        :param organization: organization name or ID (required)
-        :type organization: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            organization (str): organization name or ID
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.delete_organization_with_http_info(
-            organization, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["organization"] = organization
+        return self.delete_organization_endpoint.call_with_http_info(**kwargs)
 
-    def delete_organization_with_http_info(self, organization, **kwargs):  # noqa: E501
-        """delete_organization  # noqa: E501
-
-        delete a organization  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.delete_organization_with_http_info(organization, async_req=True)
-        >>> result = thread.get()
-
-        :param organization: organization name or ID (required)
-        :type organization: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["organization"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method delete_organization" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'organization' is set
-        if self.api_client.client_side_validation and (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `delete_organization`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/organizations/{organization}",
-            "DELETE",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def delete_user_from_organization(
-        self, organization, username, **kwargs
-    ):  # noqa: E501
+    def delete_user_from_organization(self, organization, username, **kwargs):
         """delete_user_from_organization  # noqa: E501
 
         delete a user from an organization  # noqa: E501
@@ -1135,155 +999,48 @@ class OrganizationApi(object):
         >>> thread = api.delete_user_from_organization(organization, username, async_req=True)
         >>> result = thread.get()
 
-        :param organization: organization name (required)
-        :type organization: str
-        :param username: username to manipulate (required)
-        :type username: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            organization (str): organization name
+            username (str): username to manipulate
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.delete_user_from_organization_with_http_info(
-            organization, username, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["organization"] = organization
+        kwargs["username"] = username
+        return self.delete_user_from_organization_endpoint.call_with_http_info(**kwargs)
 
-    def delete_user_from_organization_with_http_info(
-        self, organization, username, **kwargs
-    ):  # noqa: E501
-        """delete_user_from_organization  # noqa: E501
-
-        delete a user from an organization  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.delete_user_from_organization_with_http_info(organization, username, async_req=True)
-        >>> result = thread.get()
-
-        :param organization: organization name (required)
-        :type organization: str
-        :param username: username to manipulate (required)
-        :type username: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["organization", "username"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method delete_user_from_organization" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'organization' is set
-        if self.api_client.client_side_validation and (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `delete_user_from_organization`"
-            )  # noqa: E501
-        # verify the required parameter 'username' is set
-        if self.api_client.client_side_validation and (
-            "username" not in local_var_params
-            or local_var_params["username"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `username` when calling `delete_user_from_organization`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
-        if "username" in local_var_params:
-            path_params["username"] = local_var_params["username"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/organizations/{organization}/{username}",
-            "DELETE",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def get_all_organizations(self, **kwargs):  # noqa: E501
+    def get_all_organizations(self, **kwargs):
         """get_all_organizations  # noqa: E501
 
         get all organizations that the user is member of  # noqa: E501
@@ -1293,127 +1050,43 @@ class OrganizationApi(object):
         >>> thread = api.get_all_organizations(async_req=True)
         >>> result = thread.get()
 
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: list[Organization]
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            [Organization]
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_all_organizations_with_http_info(**kwargs)  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        return self.get_all_organizations_endpoint.call_with_http_info(**kwargs)
 
-    def get_all_organizations_with_http_info(self, **kwargs):  # noqa: E501
-        """get_all_organizations  # noqa: E501
-
-        get all organizations that the user is member of  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.get_all_organizations_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(list[Organization], status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = []
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_all_organizations" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "list[Organization]",
-            400: None,
-            500: None,
-        }
-
-        return self.api_client.call_api(
-            "/organizations",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def get_organization(self, organization, **kwargs):  # noqa: E501
+    def get_organization(self, organization, **kwargs):
         """get_organization  # noqa: E501
 
         get a organization  # noqa: E501
@@ -1423,142 +1096,46 @@ class OrganizationApi(object):
         >>> thread = api.get_organization(organization, async_req=True)
         >>> result = thread.get()
 
-        :param organization: organization name or ID (required)
-        :type organization: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: Organization
+        Args:
+            organization (str): organization name or ID
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            Organization
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_organization_with_http_info(
-            organization, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["organization"] = organization
+        return self.get_organization_endpoint.call_with_http_info(**kwargs)
 
-    def get_organization_with_http_info(self, organization, **kwargs):  # noqa: E501
-        """get_organization  # noqa: E501
-
-        get a organization  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.get_organization_with_http_info(organization, async_req=True)
-        >>> result = thread.get()
-
-        :param organization: organization name or ID (required)
-        :type organization: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(Organization, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["organization"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_organization" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'organization' is set
-        if self.api_client.client_side_validation and (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `get_organization`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "Organization",
-            404: None,
-        }
-
-        return self.api_client.call_api(
-            "/organizations/{organization}",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def get_organization_user(self, organization, username, **kwargs):  # noqa: E501
+    def get_organization_user(self, organization, username, **kwargs):
         """get_organization_user  # noqa: E501
 
         get a user from an organization  # noqa: E501
@@ -1568,160 +1145,50 @@ class OrganizationApi(object):
         >>> thread = api.get_organization_user(organization, username, async_req=True)
         >>> result = thread.get()
 
-        :param organization: organization name (required)
-        :type organization: str
-        :param username: username to manipulate (required)
-        :type username: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: OrganizationUser
+        Args:
+            organization (str): organization name
+            username (str): username to manipulate
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            OrganizationUser
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_organization_user_with_http_info(
-            organization, username, **kwargs
-        )  # noqa: E501
-
-    def get_organization_user_with_http_info(
-        self, organization, username, **kwargs
-    ):  # noqa: E501
-        """get_organization_user  # noqa: E501
-
-        get a user from an organization  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.get_organization_user_with_http_info(organization, username, async_req=True)
-        >>> result = thread.get()
-
-        :param organization: organization name (required)
-        :type organization: str
-        :param username: username to manipulate (required)
-        :type username: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(OrganizationUser, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["organization", "username"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_organization_user" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'organization' is set
-        if self.api_client.client_side_validation and (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `get_organization_user`"
-            )  # noqa: E501
-        # verify the required parameter 'username' is set
-        if self.api_client.client_side_validation and (
-            "username" not in local_var_params
-            or local_var_params["username"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `username` when calling `get_organization_user`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
-        if "username" in local_var_params:
-            path_params["username"] = local_var_params["username"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "OrganizationUser",
-            404: None,
-        }
-
-        return self.api_client.call_api(
-            "/organizations/{organization}/{username}",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["organization"] = organization
+        kwargs["username"] = username
+        return self.get_organization_user_endpoint.call_with_http_info(**kwargs)
 
     def update_aws_access_credentials(
         self, namespace, name, aws_access_credentials, **kwargs
-    ):  # noqa: E501
+    ):
         """update_aws_access_credentials  # noqa: E501
 
         Update aws keys or associated buckets. This will update the key associations for each array in the namespace  # noqa: E501
@@ -1731,178 +1198,50 @@ class OrganizationApi(object):
         >>> thread = api.update_aws_access_credentials(namespace, name, aws_access_credentials, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace (required)
-        :type namespace: str
-        :param name: name (required)
-        :type name: str
-        :param aws_access_credentials: aws credentials to update (required)
-        :type aws_access_credentials: AWSAccessCredentials
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            namespace (str): namespace
+            name (str): name
+            aws_access_credentials (AWSAccessCredentials): aws credentials to update
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.update_aws_access_credentials_with_http_info(
-            namespace, name, aws_access_credentials, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["name"] = name
+        kwargs["aws_access_credentials"] = aws_access_credentials
+        return self.update_aws_access_credentials_endpoint.call_with_http_info(**kwargs)
 
-    def update_aws_access_credentials_with_http_info(
-        self, namespace, name, aws_access_credentials, **kwargs
-    ):  # noqa: E501
-        """update_aws_access_credentials  # noqa: E501
-
-        Update aws keys or associated buckets. This will update the key associations for each array in the namespace  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.update_aws_access_credentials_with_http_info(namespace, name, aws_access_credentials, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace (required)
-        :type namespace: str
-        :param name: name (required)
-        :type name: str
-        :param aws_access_credentials: aws credentials to update (required)
-        :type aws_access_credentials: AWSAccessCredentials
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "name", "aws_access_credentials"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method update_aws_access_credentials" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `update_aws_access_credentials`"
-            )  # noqa: E501
-        # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and (
-            "name" not in local_var_params
-            or local_var_params["name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `name` when calling `update_aws_access_credentials`"
-            )  # noqa: E501
-        # verify the required parameter 'aws_access_credentials' is set
-        if self.api_client.client_side_validation and (
-            "aws_access_credentials" not in local_var_params
-            or local_var_params["aws_access_credentials"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `aws_access_credentials` when calling `update_aws_access_credentials`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "name" in local_var_params:
-            path_params["name"] = local_var_params["name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "aws_access_credentials" in local_var_params:
-            body_params = local_var_params["aws_access_credentials"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/credentials/{namespace}/aws/{name}",
-            "PATCH",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def update_organization(
-        self, organization, organization_details, **kwargs
-    ):  # noqa: E501
+    def update_organization(self, organization, organization_details, **kwargs):
         """update_organization  # noqa: E501
 
         update a organization  # noqa: E501
@@ -1912,164 +1251,48 @@ class OrganizationApi(object):
         >>> thread = api.update_organization(organization, organization_details, async_req=True)
         >>> result = thread.get()
 
-        :param organization: organization name or ID (required)
-        :type organization: str
-        :param organization_details: organization details to update (required)
-        :type organization_details: Organization
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            organization (str): organization name or ID
+            organization_details (Organization): organization details to update
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.update_organization_with_http_info(
-            organization, organization_details, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["organization"] = organization
+        kwargs["organization_details"] = organization_details
+        return self.update_organization_endpoint.call_with_http_info(**kwargs)
 
-    def update_organization_with_http_info(
-        self, organization, organization_details, **kwargs
-    ):  # noqa: E501
-        """update_organization  # noqa: E501
-
-        update a organization  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.update_organization_with_http_info(organization, organization_details, async_req=True)
-        >>> result = thread.get()
-
-        :param organization: organization name or ID (required)
-        :type organization: str
-        :param organization_details: organization details to update (required)
-        :type organization_details: Organization
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["organization", "organization_details"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method update_organization" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'organization' is set
-        if self.api_client.client_side_validation and (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `update_organization`"
-            )  # noqa: E501
-        # verify the required parameter 'organization_details' is set
-        if self.api_client.client_side_validation and (
-            "organization_details" not in local_var_params
-            or local_var_params["organization_details"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `organization_details` when calling `update_organization`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "organization_details" in local_var_params:
-            body_params = local_var_params["organization_details"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/organizations/{organization}",
-            "PATCH",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def update_user_in_organization(
-        self, organization, username, user, **kwargs
-    ):  # noqa: E501
+    def update_user_in_organization(self, organization, username, user, **kwargs):
         """update_user_in_organization  # noqa: E501
 
         update a user in an organization  # noqa: E501
@@ -2079,171 +1302,45 @@ class OrganizationApi(object):
         >>> thread = api.update_user_in_organization(organization, username, user, async_req=True)
         >>> result = thread.get()
 
-        :param organization: organization name (required)
-        :type organization: str
-        :param username: username to manipulate (required)
-        :type username: str
-        :param user: user details to update (required)
-        :type user: OrganizationUser
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            organization (str): organization name
+            username (str): username to manipulate
+            user (OrganizationUser): user details to update
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.update_user_in_organization_with_http_info(
-            organization, username, user, **kwargs
-        )  # noqa: E501
-
-    def update_user_in_organization_with_http_info(
-        self, organization, username, user, **kwargs
-    ):  # noqa: E501
-        """update_user_in_organization  # noqa: E501
-
-        update a user in an organization  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.update_user_in_organization_with_http_info(organization, username, user, async_req=True)
-        >>> result = thread.get()
-
-        :param organization: organization name (required)
-        :type organization: str
-        :param username: username to manipulate (required)
-        :type username: str
-        :param user: user details to update (required)
-        :type user: OrganizationUser
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["organization", "username", "user"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method update_user_in_organization" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'organization' is set
-        if self.api_client.client_side_validation and (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `update_user_in_organization`"
-            )  # noqa: E501
-        # verify the required parameter 'username' is set
-        if self.api_client.client_side_validation and (
-            "username" not in local_var_params
-            or local_var_params["username"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `username` when calling `update_user_in_organization`"
-            )  # noqa: E501
-        # verify the required parameter 'user' is set
-        if self.api_client.client_side_validation and (
-            "user" not in local_var_params
-            or local_var_params["user"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `user` when calling `update_user_in_organization`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
-        if "username" in local_var_params:
-            path_params["username"] = local_var_params["username"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "user" in local_var_params:
-            body_params = local_var_params["user"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/organizations/{organization}/{username}",
-            "PATCH",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["organization"] = organization
+        kwargs["username"] = username
+        kwargs["user"] = user
+        return self.update_user_in_organization_endpoint.call_with_http_info(**kwargs)

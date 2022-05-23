@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,14 +8,11 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.notebook_status import NotebookStatus  # noqa: E501
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.notebook_status import NotebookStatus
 
 
 class TestNotebookStatus(unittest.TestCase):
@@ -29,28 +24,11 @@ class TestNotebookStatus(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test NotebookStatus
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.notebook_status.NotebookStatus()  # noqa: E501
-        if include_optional:
-            return NotebookStatus(
-                namespace="",
-                uptime=120,
-                cpu_usage=4000,
-                memory_usage=1073741824,
-                memory_limit=1073741824,
-                cpu_count=4000,
-            )
-        else:
-            return NotebookStatus()
-
     def testNotebookStatus(self):
         """Test NotebookStatus"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = NotebookStatus()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,16 +8,24 @@
 """
 
 
-from __future__ import absolute_import
-
 import re  # noqa: F401
-
-# python 2 and python 3 compatibility library
-import six
+import sys  # noqa: F401
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import ApiTypeError  # noqa: F401
-from tiledb.cloud.rest_api.exceptions import ApiValueError
+from tiledb.cloud.rest_api.api_client import Endpoint as _Endpoint
+from tiledb.cloud.rest_api.model.error import Error
+from tiledb.cloud.rest_api.model.file_create import FileCreate
+from tiledb.cloud.rest_api.model.file_created import FileCreated
+from tiledb.cloud.rest_api.model.file_export import FileExport
+from tiledb.cloud.rest_api.model.file_exported import FileExported
+from tiledb.cloud.rest_api.model.file_uploaded import FileUploaded
+from tiledb.cloud.rest_api.model_utils import check_allowed_values  # noqa: F401
+from tiledb.cloud.rest_api.model_utils import check_validations
+from tiledb.cloud.rest_api.model_utils import date
+from tiledb.cloud.rest_api.model_utils import datetime
+from tiledb.cloud.rest_api.model_utils import file_type
+from tiledb.cloud.rest_api.model_utils import none_type
+from tiledb.cloud.rest_api.model_utils import validate_and_convert_types
 
 
 class FilesApi(object):
@@ -33,8 +39,162 @@ class FilesApi(object):
         if api_client is None:
             api_client = ApiClient()
         self.api_client = api_client
+        self.handle_create_file_endpoint = _Endpoint(
+            settings={
+                "response_type": (FileCreated,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/files/{namespace}",
+                "operation_id": "handle_create_file",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "file_create",
+                    "x_tiledb_cloud_access_credentials_name",
+                ],
+                "required": [
+                    "namespace",
+                    "file_create",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "file_create": (FileCreate,),
+                    "x_tiledb_cloud_access_credentials_name": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "x_tiledb_cloud_access_credentials_name": "X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "file_create": "body",
+                    "x_tiledb_cloud_access_credentials_name": "header",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.handle_export_file_endpoint = _Endpoint(
+            settings={
+                "response_type": (FileExported,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/files/{namespace}/{file}/export",
+                "operation_id": "handle_export_file",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "file",
+                    "file_export",
+                ],
+                "required": [
+                    "namespace",
+                    "file",
+                    "file_export",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "file": (str,),
+                    "file_export": (FileExport,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "file": "file",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "file": "path",
+                    "file_export": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.handle_upload_file_endpoint = _Endpoint(
+            settings={
+                "response_type": (FileUploaded,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/files/{namespace}/upload",
+                "operation_id": "handle_upload_file",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "input_file",
+                    "x_tiledb_cloud_access_credentials_name",
+                    "output_uri",
+                    "name",
+                ],
+                "required": [
+                    "namespace",
+                    "input_file",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "input_file": (file_type,),
+                    "x_tiledb_cloud_access_credentials_name": (str,),
+                    "output_uri": (str,),
+                    "name": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "input_file": "input_file",
+                    "x_tiledb_cloud_access_credentials_name": "X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME",
+                    "output_uri": "output_uri",
+                    "name": "name",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "input_file": "form",
+                    "x_tiledb_cloud_access_credentials_name": "header",
+                    "output_uri": "form",
+                    "name": "form",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["multipart/form-data"],
+            },
+            api_client=api_client,
+        )
 
-    def handle_create_file(self, namespace, file_create, **kwargs):  # noqa: E501
+    def handle_create_file(self, namespace, file_create, **kwargs):
         """handle_create_file  # noqa: E501
 
         Create a tiledb file at the specified location  # noqa: E501
@@ -44,176 +204,49 @@ class FilesApi(object):
         >>> thread = api.handle_create_file(namespace, file_create, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: The namespace of the file (required)
-        :type namespace: str
-        :param file_create: Input/Output information to create a new TileDB file (required)
-        :type file_create: FileCreate
-        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :type x_tiledb_cloud_access_credentials_name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: FileCreated
+        Args:
+            namespace (str): The namespace of the file
+            file_create (FileCreate): Input/Output information to create a new TileDB file
+
+        Keyword Args:
+            x_tiledb_cloud_access_credentials_name (str): Optional registered access credentials to use for creation. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            FileCreated
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.handle_create_file_with_http_info(
-            namespace, file_create, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["file_create"] = file_create
+        return self.handle_create_file_endpoint.call_with_http_info(**kwargs)
 
-    def handle_create_file_with_http_info(
-        self, namespace, file_create, **kwargs
-    ):  # noqa: E501
-        """handle_create_file  # noqa: E501
-
-        Create a tiledb file at the specified location  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.handle_create_file_with_http_info(namespace, file_create, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: The namespace of the file (required)
-        :type namespace: str
-        :param file_create: Input/Output information to create a new TileDB file (required)
-        :type file_create: FileCreate
-        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :type x_tiledb_cloud_access_credentials_name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(FileCreated, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "namespace",
-            "file_create",
-            "x_tiledb_cloud_access_credentials_name",
-        ]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method handle_create_file" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `handle_create_file`"
-            )  # noqa: E501
-        # verify the required parameter 'file_create' is set
-        if self.api_client.client_side_validation and (
-            "file_create" not in local_var_params
-            or local_var_params["file_create"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `file_create` when calling `handle_create_file`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-        if "x_tiledb_cloud_access_credentials_name" in local_var_params:
-            header_params["X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME"] = local_var_params[
-                "x_tiledb_cloud_access_credentials_name"
-            ]  # noqa: E501
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "file_create" in local_var_params:
-            body_params = local_var_params["file_create"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            201: "FileCreated",
-        }
-
-        return self.api_client.call_api(
-            "/files/{namespace}",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def handle_export_file(self, namespace, file, file_export, **kwargs):  # noqa: E501
+    def handle_export_file(self, namespace, file, file_export, **kwargs):
         """handle_export_file  # noqa: E501
 
         Export a TileDB File back to its original file format  # noqa: E501
@@ -223,178 +256,50 @@ class FilesApi(object):
         >>> thread = api.handle_export_file(namespace, file, file_export, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: The namespace of the file (required)
-        :type namespace: str
-        :param file: The file identifier (required)
-        :type file: str
-        :param file_export: Export configuration information (required)
-        :type file_export: FileExport
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: FileExported
+        Args:
+            namespace (str): The namespace of the file
+            file (str): The file identifier
+            file_export (FileExport): Export configuration information
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            FileExported
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.handle_export_file_with_http_info(
-            namespace, file, file_export, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["file"] = file
+        kwargs["file_export"] = file_export
+        return self.handle_export_file_endpoint.call_with_http_info(**kwargs)
 
-    def handle_export_file_with_http_info(
-        self, namespace, file, file_export, **kwargs
-    ):  # noqa: E501
-        """handle_export_file  # noqa: E501
-
-        Export a TileDB File back to its original file format  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.handle_export_file_with_http_info(namespace, file, file_export, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: The namespace of the file (required)
-        :type namespace: str
-        :param file: The file identifier (required)
-        :type file: str
-        :param file_export: Export configuration information (required)
-        :type file_export: FileExport
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(FileExported, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "file", "file_export"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method handle_export_file" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `handle_export_file`"
-            )  # noqa: E501
-        # verify the required parameter 'file' is set
-        if self.api_client.client_side_validation and (
-            "file" not in local_var_params
-            or local_var_params["file"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `file` when calling `handle_export_file`"
-            )  # noqa: E501
-        # verify the required parameter 'file_export' is set
-        if self.api_client.client_side_validation and (
-            "file_export" not in local_var_params
-            or local_var_params["file_export"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `file_export` when calling `handle_export_file`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "file" in local_var_params:
-            path_params["file"] = local_var_params["file"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "file_export" in local_var_params:
-            body_params = local_var_params["file_export"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            201: "FileExported",
-        }
-
-        return self.api_client.call_api(
-            "/files/{namespace}/{file}/export",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def handle_upload_file(self, namespace, input_file, **kwargs):  # noqa: E501
+    def handle_upload_file(self, namespace, input_file, **kwargs):
         """handle_upload_file  # noqa: E501
 
         Upload a tiledb file at the specified location  # noqa: E501
@@ -404,187 +309,46 @@ class FilesApi(object):
         >>> thread = api.handle_upload_file(namespace, input_file, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: The namespace of the file (required)
-        :type namespace: str
-        :param input_file: the file to upload (required)
-        :type input_file: file
-        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :type x_tiledb_cloud_access_credentials_name: str
-        :param output_uri: output location of the TileDB File
-        :type output_uri: str
-        :param name: name to set for registered file
-        :type name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: FileUploaded
+        Args:
+            namespace (str): The namespace of the file
+            input_file (file_type): the file to upload
+
+        Keyword Args:
+            x_tiledb_cloud_access_credentials_name (str): Optional registered access credentials to use for creation. [optional]
+            output_uri (str): output location of the TileDB File. [optional]
+            name (str): name to set for registered file. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            FileUploaded
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.handle_upload_file_with_http_info(
-            namespace, input_file, **kwargs
-        )  # noqa: E501
-
-    def handle_upload_file_with_http_info(
-        self, namespace, input_file, **kwargs
-    ):  # noqa: E501
-        """handle_upload_file  # noqa: E501
-
-        Upload a tiledb file at the specified location  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.handle_upload_file_with_http_info(namespace, input_file, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: The namespace of the file (required)
-        :type namespace: str
-        :param input_file: the file to upload (required)
-        :type input_file: file
-        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :type x_tiledb_cloud_access_credentials_name: str
-        :param output_uri: output location of the TileDB File
-        :type output_uri: str
-        :param name: name to set for registered file
-        :type name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(FileUploaded, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "namespace",
-            "input_file",
-            "x_tiledb_cloud_access_credentials_name",
-            "output_uri",
-            "name",
-        ]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method handle_upload_file" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `handle_upload_file`"
-            )  # noqa: E501
-        # verify the required parameter 'input_file' is set
-        if self.api_client.client_side_validation and (
-            "input_file" not in local_var_params
-            or local_var_params["input_file"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `input_file` when calling `handle_upload_file`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-        if "x_tiledb_cloud_access_credentials_name" in local_var_params:
-            header_params["X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME"] = local_var_params[
-                "x_tiledb_cloud_access_credentials_name"
-            ]  # noqa: E501
-
-        form_params = []
-        local_var_files = {}
-        if "input_file" in local_var_params:
-            local_var_files["input_file"] = local_var_params["input_file"]  # noqa: E501
-        if "output_uri" in local_var_params:
-            form_params.append(
-                ("output_uri", local_var_params["output_uri"])
-            )  # noqa: E501
-        if "name" in local_var_params:
-            form_params.append(("name", local_var_params["name"]))  # noqa: E501
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["multipart/form-data"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            201: "FileUploaded",
-        }
-
-        return self.api_client.call_api(
-            "/files/{namespace}/upload",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["input_file"] = input_file
+        return self.handle_upload_file_endpoint.call_with_http_info(**kwargs)

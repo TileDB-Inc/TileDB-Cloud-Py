@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,14 +8,14 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.udf_sharing import UDFSharing  # noqa: E501
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.udf_actions import UDFActions
+
+globals()["UDFActions"] = UDFActions
+from tiledb.cloud.rest_api.model.udf_sharing import UDFSharing
 
 
 class TestUDFSharing(unittest.TestCase):
@@ -29,25 +27,11 @@ class TestUDFSharing(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test UDFSharing
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.udf_sharing.UDFSharing()  # noqa: E501
-        if include_optional:
-            return UDFSharing(
-                actions=[fetch, share],
-                namespace="MyOrganization",
-                namespace_type="organization",
-            )
-        else:
-            return UDFSharing()
-
     def testUDFSharing(self):
         """Test UDFSharing"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = UDFSharing()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,20 +8,17 @@
 """
 
 
-from __future__ import absolute_import
-
 import unittest
 
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.api.files_api import FilesApi  # noqa: E501
-from tiledb.cloud.rest_api.rest import ApiException
 
 
 class TestFilesApi(unittest.TestCase):
     """FilesApi unit test stubs"""
 
     def setUp(self):
-        self.api = tiledb.cloud.rest_api.api.files_api.FilesApi()  # noqa: E501
+        self.api = FilesApi()  # noqa: E501
 
     def tearDown(self):
         pass

@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,14 +8,14 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.query_json import QueryJson  # noqa: E501
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.query_ranges import QueryRanges
+
+globals()["QueryRanges"] = QueryRanges
+from tiledb.cloud.rest_api.model.query_json import QueryJson
 
 
 class TestQueryJson(unittest.TestCase):
@@ -29,27 +27,11 @@ class TestQueryJson(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test QueryJson
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.query_json.QueryJson()  # noqa: E501
-        if include_optional:
-            return QueryJson(
-                query_ranges=tiledb.cloud.rest_api.models.query_ranges.QueryRanges(
-                    layout="row-major",
-                    ranges=[[1.337]],
-                ),
-                fields=[""],
-            )
-        else:
-            return QueryJson()
-
     def testQueryJson(self):
         """Test QueryJson"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = QueryJson()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

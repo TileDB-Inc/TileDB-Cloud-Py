@@ -10,7 +10,7 @@ Method | HTTP request | Description
 
 
 # **handle_create_file**
-> FileCreated handle_create_file(namespace, file_create, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name)
+> FileCreated handle_create_file(namespace, file_create)
 
 
 
@@ -19,56 +19,15 @@ Create a tiledb file at the specified location
 ### Example
 
 * Api Key Authentication (ApiKeyAuth):
-```python
-from __future__ import print_function
-import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
-from pprint import pprint
-# Defining the host is optional and defaults to http://localhost/v1
-# See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1"
-)
-
-# The client must configure the authentication and authorization parameters
-# in accordance with the API server security policy.
-# Examples for each auth method are provided below, use the example that
-# satisfies your auth use case.
-
-# Configure API key authorization: ApiKeyAuth
-configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
-
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
-
-# Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    username = 'YOUR_USERNAME',
-    password = 'YOUR_PASSWORD'
-)
-
-# Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
-    # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.FilesApi(api_client)
-    namespace = 'namespace_example' # str | The namespace of the file
-file_create = tiledb.cloud.rest_api.FileCreate() # FileCreate | Input/Output information to create a new TileDB file
-x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name_example' # str | Optional registered access credentials to use for creation (optional)
-
-    try:
-        api_response = api_instance.handle_create_file(namespace, file_create, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name)
-        pprint(api_response)
-    except ApiException as e:
-        print("Exception when calling FilesApi->handle_create_file: %s\n" % e)
-```
-
 * Basic Authentication (BasicAuth):
+
 ```python
-from __future__ import print_function
 import time
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.api import files_api
+from tiledb.cloud.rest_api.model.error import Error
+from tiledb.cloud.rest_api.model.file_created import FileCreated
+from tiledb.cloud.rest_api.model.file_create import FileCreate
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
@@ -96,25 +55,39 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # Enter a context with an instance of the API client
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.FilesApi(api_client)
-    namespace = 'namespace_example' # str | The namespace of the file
-file_create = tiledb.cloud.rest_api.FileCreate() # FileCreate | Input/Output information to create a new TileDB file
-x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name_example' # str | Optional registered access credentials to use for creation (optional)
+    api_instance = files_api.FilesApi(api_client)
+    namespace = "namespace_example" # str | The namespace of the file
+    file_create = FileCreate(
+        input_uri="input_uri_example",
+        output_uri="output_uri_example",
+        name="name_example",
+    ) # FileCreate | Input/Output information to create a new TileDB file
+    x_tiledb_cloud_access_credentials_name = "X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME_example" # str | Optional registered access credentials to use for creation (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        api_response = api_instance.handle_create_file(namespace, file_create)
+        pprint(api_response)
+    except tiledb.cloud.rest_api.ApiException as e:
+        print("Exception when calling FilesApi->handle_create_file: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         api_response = api_instance.handle_create_file(namespace, file_create, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name)
         pprint(api_response)
-    except ApiException as e:
+    except tiledb.cloud.rest_api.ApiException as e:
         print("Exception when calling FilesApi->handle_create_file: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace of the file | 
- **file_create** | [**FileCreate**](FileCreate.md)| Input/Output information to create a new TileDB file | 
- **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
+ **namespace** | **str**| The namespace of the file |
+ **file_create** | [**FileCreate**](FileCreate.md)| Input/Output information to create a new TileDB file |
+ **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional]
 
 ### Return type
 
@@ -129,7 +102,9 @@ Name | Type | Description  | Notes
  - **Content-Type**: application/json
  - **Accept**: application/json
 
+
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **201** | File created |  -  |
@@ -147,56 +122,15 @@ Export a TileDB File back to its original file format
 ### Example
 
 * Api Key Authentication (ApiKeyAuth):
-```python
-from __future__ import print_function
-import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
-from pprint import pprint
-# Defining the host is optional and defaults to http://localhost/v1
-# See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1"
-)
-
-# The client must configure the authentication and authorization parameters
-# in accordance with the API server security policy.
-# Examples for each auth method are provided below, use the example that
-# satisfies your auth use case.
-
-# Configure API key authorization: ApiKeyAuth
-configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
-
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
-
-# Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    username = 'YOUR_USERNAME',
-    password = 'YOUR_PASSWORD'
-)
-
-# Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
-    # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.FilesApi(api_client)
-    namespace = 'namespace_example' # str | The namespace of the file
-file = 'file_example' # str | The file identifier
-file_export = tiledb.cloud.rest_api.FileExport() # FileExport | Export configuration information
-
-    try:
-        api_response = api_instance.handle_export_file(namespace, file, file_export)
-        pprint(api_response)
-    except ApiException as e:
-        print("Exception when calling FilesApi->handle_export_file: %s\n" % e)
-```
-
 * Basic Authentication (BasicAuth):
+
 ```python
-from __future__ import print_function
 import time
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.api import files_api
+from tiledb.cloud.rest_api.model.file_export import FileExport
+from tiledb.cloud.rest_api.model.error import Error
+from tiledb.cloud.rest_api.model.file_exported import FileExported
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
@@ -224,25 +158,29 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # Enter a context with an instance of the API client
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.FilesApi(api_client)
-    namespace = 'namespace_example' # str | The namespace of the file
-file = 'file_example' # str | The file identifier
-file_export = tiledb.cloud.rest_api.FileExport() # FileExport | Export configuration information
+    api_instance = files_api.FilesApi(api_client)
+    namespace = "namespace_example" # str | The namespace of the file
+    file = "file_example" # str | The file identifier
+    file_export = FileExport(
+        output_uri="output_uri_example",
+    ) # FileExport | Export configuration information
 
+    # example passing only required values which don't have defaults set
     try:
         api_response = api_instance.handle_export_file(namespace, file, file_export)
         pprint(api_response)
-    except ApiException as e:
+    except tiledb.cloud.rest_api.ApiException as e:
         print("Exception when calling FilesApi->handle_export_file: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace of the file | 
- **file** | **str**| The file identifier | 
- **file_export** | [**FileExport**](FileExport.md)| Export configuration information | 
+ **namespace** | **str**| The namespace of the file |
+ **file** | **str**| The file identifier |
+ **file_export** | [**FileExport**](FileExport.md)| Export configuration information |
 
 ### Return type
 
@@ -257,7 +195,9 @@ Name | Type | Description  | Notes
  - **Content-Type**: application/json
  - **Accept**: application/json
 
+
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **201** | File exported |  -  |
@@ -266,7 +206,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **handle_upload_file**
-> FileUploaded handle_upload_file(namespace, input_file, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name, output_uri=output_uri, name=name)
+> FileUploaded handle_upload_file(namespace, input_file)
 
 
 
@@ -275,58 +215,14 @@ Upload a tiledb file at the specified location
 ### Example
 
 * Api Key Authentication (ApiKeyAuth):
-```python
-from __future__ import print_function
-import time
-import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
-from pprint import pprint
-# Defining the host is optional and defaults to http://localhost/v1
-# See configuration.py for a list of all supported configuration parameters.
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1"
-)
-
-# The client must configure the authentication and authorization parameters
-# in accordance with the API server security policy.
-# Examples for each auth method are provided below, use the example that
-# satisfies your auth use case.
-
-# Configure API key authorization: ApiKeyAuth
-configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
-
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
-
-# Configure HTTP basic authorization: BasicAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    username = 'YOUR_USERNAME',
-    password = 'YOUR_PASSWORD'
-)
-
-# Enter a context with an instance of the API client
-with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
-    # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.FilesApi(api_client)
-    namespace = 'namespace_example' # str | The namespace of the file
-input_file = '/path/to/file' # file | the file to upload
-x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name_example' # str | Optional registered access credentials to use for creation (optional)
-output_uri = 'output_uri_example' # str | output location of the TileDB File (optional)
-name = 'name_example' # str | name to set for registered file (optional)
-
-    try:
-        api_response = api_instance.handle_upload_file(namespace, input_file, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name, output_uri=output_uri, name=name)
-        pprint(api_response)
-    except ApiException as e:
-        print("Exception when calling FilesApi->handle_upload_file: %s\n" % e)
-```
-
 * Basic Authentication (BasicAuth):
+
 ```python
-from __future__ import print_function
 import time
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.api import files_api
+from tiledb.cloud.rest_api.model.error import Error
+from tiledb.cloud.rest_api.model.file_uploaded import FileUploaded
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost/v1
 # See configuration.py for a list of all supported configuration parameters.
@@ -354,29 +250,39 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # Enter a context with an instance of the API client
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = tiledb.cloud.rest_api.FilesApi(api_client)
-    namespace = 'namespace_example' # str | The namespace of the file
-input_file = '/path/to/file' # file | the file to upload
-x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name_example' # str | Optional registered access credentials to use for creation (optional)
-output_uri = 'output_uri_example' # str | output location of the TileDB File (optional)
-name = 'name_example' # str | name to set for registered file (optional)
+    api_instance = files_api.FilesApi(api_client)
+    namespace = "namespace_example" # str | The namespace of the file
+    input_file = open('/path/to/file', 'rb') # file_type | the file to upload
+    x_tiledb_cloud_access_credentials_name = "X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME_example" # str | Optional registered access credentials to use for creation (optional)
+    output_uri = "output_uri_example" # str | output location of the TileDB File (optional)
+    name = "name_example" # str | name to set for registered file (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        api_response = api_instance.handle_upload_file(namespace, input_file)
+        pprint(api_response)
+    except tiledb.cloud.rest_api.ApiException as e:
+        print("Exception when calling FilesApi->handle_upload_file: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         api_response = api_instance.handle_upload_file(namespace, input_file, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name, output_uri=output_uri, name=name)
         pprint(api_response)
-    except ApiException as e:
+    except tiledb.cloud.rest_api.ApiException as e:
         print("Exception when calling FilesApi->handle_upload_file: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace of the file | 
- **input_file** | **file**| the file to upload | 
- **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
- **output_uri** | **str**| output location of the TileDB File | [optional] 
- **name** | **str**| name to set for registered file | [optional] 
+ **namespace** | **str**| The namespace of the file |
+ **input_file** | **file_type**| the file to upload |
+ **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional]
+ **output_uri** | **str**| output location of the TileDB File | [optional]
+ **name** | **str**| name to set for registered file | [optional]
 
 ### Return type
 
@@ -391,7 +297,9 @@ Name | Type | Description  | Notes
  - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
+
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **201** | File uploaded |  -  |

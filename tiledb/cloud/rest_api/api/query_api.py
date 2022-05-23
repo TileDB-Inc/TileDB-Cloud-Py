@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,16 +8,21 @@
 """
 
 
-from __future__ import absolute_import
-
 import re  # noqa: F401
-
-# python 2 and python 3 compatibility library
-import six
+import sys  # noqa: F401
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import ApiTypeError  # noqa: F401
-from tiledb.cloud.rest_api.exceptions import ApiValueError
+from tiledb.cloud.rest_api.api_client import Endpoint as _Endpoint
+from tiledb.cloud.rest_api.model.error import Error
+from tiledb.cloud.rest_api.model.query import Query
+from tiledb.cloud.rest_api.model.query_json import QueryJson
+from tiledb.cloud.rest_api.model_utils import check_allowed_values  # noqa: F401
+from tiledb.cloud.rest_api.model_utils import check_validations
+from tiledb.cloud.rest_api.model_utils import date
+from tiledb.cloud.rest_api.model_utils import datetime
+from tiledb.cloud.rest_api.model_utils import file_type
+from tiledb.cloud.rest_api.model_utils import none_type
+from tiledb.cloud.rest_api.model_utils import validate_and_convert_types
 
 
 class QueryApi(object):
@@ -33,1104 +36,621 @@ class QueryApi(object):
         if api_client is None:
             api_client = ApiClient()
         self.api_client = api_client
+        self.finalize_query_endpoint = _Endpoint(
+            settings={
+                "response_type": (Query,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/arrays/{namespace}/{array}/query/finalize",
+                "operation_id": "finalize_query",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "array",
+                    "type",
+                    "content_type",
+                    "query",
+                    "x_payer",
+                    "open_at",
+                ],
+                "required": [
+                    "namespace",
+                    "array",
+                    "type",
+                    "content_type",
+                    "query",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "array": (str,),
+                    "type": (str,),
+                    "content_type": (str,),
+                    "query": (Query,),
+                    "x_payer": (str,),
+                    "open_at": (int,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "array": "array",
+                    "type": "type",
+                    "content_type": "Content-Type",
+                    "x_payer": "X-Payer",
+                    "open_at": "open_at",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "array": "path",
+                    "type": "query",
+                    "content_type": "header",
+                    "query": "body",
+                    "x_payer": "header",
+                    "open_at": "query",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json", "application/capnp"],
+                "content_type": ["application/json", "application/capnp"],
+            },
+            api_client=api_client,
+        )
+        self.get_est_result_sizes_endpoint = _Endpoint(
+            settings={
+                "response_type": (Query,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/arrays/{namespace}/{array}/query/est_result_sizes",
+                "operation_id": "get_est_result_sizes",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "array",
+                    "type",
+                    "content_type",
+                    "query",
+                    "x_payer",
+                    "open_at",
+                ],
+                "required": [
+                    "namespace",
+                    "array",
+                    "type",
+                    "content_type",
+                    "query",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "array": (str,),
+                    "type": (str,),
+                    "content_type": (str,),
+                    "query": (Query,),
+                    "x_payer": (str,),
+                    "open_at": (int,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "array": "array",
+                    "type": "type",
+                    "content_type": "Content-Type",
+                    "x_payer": "X-Payer",
+                    "open_at": "open_at",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "array": "path",
+                    "type": "query",
+                    "content_type": "header",
+                    "query": "body",
+                    "x_payer": "header",
+                    "open_at": "query",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json", "application/capnp"],
+                "content_type": ["application/json", "application/capnp"],
+            },
+            api_client=api_client,
+        )
+        self.get_file_endpoint = _Endpoint(
+            settings={
+                "response_type": (file_type,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/arrays/{namespace}/{array}/query/get_file",
+                "operation_id": "get_file",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "array",
+                    "content_type",
+                    "x_payer",
+                ],
+                "required": [
+                    "namespace",
+                    "array",
+                    "content_type",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "array": (str,),
+                    "content_type": (str,),
+                    "x_payer": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "array": "array",
+                    "content_type": "Content-Type",
+                    "x_payer": "X-Payer",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "array": "path",
+                    "content_type": "header",
+                    "x_payer": "header",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/x-ipynb+json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.submit_query_endpoint = _Endpoint(
+            settings={
+                "response_type": (Query,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/arrays/{namespace}/{array}/query/submit",
+                "operation_id": "submit_query",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "array",
+                    "type",
+                    "content_type",
+                    "query",
+                    "x_payer",
+                    "open_at",
+                ],
+                "required": [
+                    "namespace",
+                    "array",
+                    "type",
+                    "content_type",
+                    "query",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "array": (str,),
+                    "type": (str,),
+                    "content_type": (str,),
+                    "query": (Query,),
+                    "x_payer": (str,),
+                    "open_at": (int,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "array": "array",
+                    "type": "type",
+                    "content_type": "Content-Type",
+                    "x_payer": "X-Payer",
+                    "open_at": "open_at",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "array": "path",
+                    "type": "query",
+                    "content_type": "header",
+                    "query": "body",
+                    "x_payer": "header",
+                    "open_at": "query",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json", "application/capnp"],
+                "content_type": ["application/json", "application/capnp"],
+            },
+            api_client=api_client,
+        )
+        self.submit_query_json_endpoint = _Endpoint(
+            settings={
+                "response_type": (
+                    bool,
+                    date,
+                    datetime,
+                    dict,
+                    float,
+                    int,
+                    list,
+                    str,
+                    none_type,
+                ),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/arrays/{namespace}/{array}/query/submit_query_json",
+                "operation_id": "submit_query_json",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "array",
+                    "content_type",
+                    "query_json",
+                    "x_payer",
+                ],
+                "required": [
+                    "namespace",
+                    "array",
+                    "content_type",
+                    "query_json",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "array": (str,),
+                    "content_type": (str,),
+                    "query_json": (QueryJson,),
+                    "x_payer": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "array": "array",
+                    "content_type": "Content-Type",
+                    "x_payer": "X-Payer",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "array": "path",
+                    "content_type": "header",
+                    "query_json": "body",
+                    "x_payer": "header",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
 
     def finalize_query(
-        self, namespace, array, type, content_type, query, **kwargs
-    ):  # noqa: E501
+        self, namespace, array, type, query, content_type="application/json", **kwargs
+    ):
         """finalize_query  # noqa: E501
 
         send a query to run against a specified array/URI registered to a group/project  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.finalize_query(namespace, array, type, content_type, query, async_req=True)
+        >>> thread = api.finalize_query(namespace, array, type, query, content_type="application/json", async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param type: type of query (required)
-        :type type: str
-        :param content_type: Content Type of input and return mime (required)
-        :type content_type: str
-        :param query: query to run (required)
-        :type query: Query
-        :param x_payer: Name of organization or user who should be charged for this request
-        :type x_payer: str
-        :param open_at: open_at for array in unix epoch
-        :type open_at: int
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: Query
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            array (str): name/uri of array that is url-encoded
+            type (str): type of query
+            query (Query): query to run
+            content_type (str): Content Type of input and return mime. defaults to "application/json", must be one of ["application/json"]
+
+        Keyword Args:
+            x_payer (str): Name of organization or user who should be charged for this request. [optional]
+            open_at (int): open_at for array in unix epoch. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            Query
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.finalize_query_with_http_info(
-            namespace, array, type, content_type, query, **kwargs
-        )  # noqa: E501
-
-    def finalize_query_with_http_info(
-        self, namespace, array, type, content_type, query, **kwargs
-    ):  # noqa: E501
-        """finalize_query  # noqa: E501
-
-        send a query to run against a specified array/URI registered to a group/project  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.finalize_query_with_http_info(namespace, array, type, content_type, query, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param type: type of query (required)
-        :type type: str
-        :param content_type: Content Type of input and return mime (required)
-        :type content_type: str
-        :param query: query to run (required)
-        :type query: Query
-        :param x_payer: Name of organization or user who should be charged for this request
-        :type x_payer: str
-        :param open_at: open_at for array in unix epoch
-        :type open_at: int
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(Query, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "namespace",
-            "array",
-            "type",
-            "content_type",
-            "query",
-            "x_payer",
-            "open_at",
-        ]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method finalize_query" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `finalize_query`"
-            )  # noqa: E501
-        # verify the required parameter 'array' is set
-        if self.api_client.client_side_validation and (
-            "array" not in local_var_params
-            or local_var_params["array"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `array` when calling `finalize_query`"
-            )  # noqa: E501
-        # verify the required parameter 'type' is set
-        if self.api_client.client_side_validation and (
-            "type" not in local_var_params
-            or local_var_params["type"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `type` when calling `finalize_query`"
-            )  # noqa: E501
-        # verify the required parameter 'content_type' is set
-        if self.api_client.client_side_validation and (
-            "content_type" not in local_var_params
-            or local_var_params["content_type"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `content_type` when calling `finalize_query`"
-            )  # noqa: E501
-        # verify the required parameter 'query' is set
-        if self.api_client.client_side_validation and (
-            "query" not in local_var_params
-            or local_var_params["query"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `query` when calling `finalize_query`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "array" in local_var_params:
-            path_params["array"] = local_var_params["array"]  # noqa: E501
-
-        query_params = []
-        if (
-            "type" in local_var_params and local_var_params["type"] is not None
-        ):  # noqa: E501
-            query_params.append(("type", local_var_params["type"]))  # noqa: E501
-        if (
-            "open_at" in local_var_params and local_var_params["open_at"] is not None
-        ):  # noqa: E501
-            query_params.append(("open_at", local_var_params["open_at"]))  # noqa: E501
-
-        header_params = {}
-        if "content_type" in local_var_params:
-            header_params["Content-Type"] = local_var_params[
-                "content_type"
-            ]  # noqa: E501
-        if "x_payer" in local_var_params:
-            header_params["X-Payer"] = local_var_params["x_payer"]  # noqa: E501
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "query" in local_var_params:
-            body_params = local_var_params["query"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json", "application/capnp"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json", "application/capnp"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "Query",
-            204: None,
-        }
-
-        return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/query/finalize",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["array"] = array
+        kwargs["type"] = type
+        kwargs["content_type"] = content_type
+        kwargs["query"] = query
+        return self.finalize_query_endpoint.call_with_http_info(**kwargs)
 
     def get_est_result_sizes(
-        self, namespace, array, type, content_type, query, **kwargs
-    ):  # noqa: E501
+        self, namespace, array, type, query, content_type="application/json", **kwargs
+    ):
         """get_est_result_sizes  # noqa: E501
 
         send a query to run against a specified array/URI registered to a group/project  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.get_est_result_sizes(namespace, array, type, content_type, query, async_req=True)
+        >>> thread = api.get_est_result_sizes(namespace, array, type, query, content_type="application/json", async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param type: type of query (required)
-        :type type: str
-        :param content_type: Content Type of input and return mime (required)
-        :type content_type: str
-        :param query: query to run (required)
-        :type query: Query
-        :param x_payer: Name of organization or user who should be charged for this request
-        :type x_payer: str
-        :param open_at: open_at for array in unix epoch
-        :type open_at: int
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: Query
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            array (str): name/uri of array that is url-encoded
+            type (str): type of query
+            query (Query): query to run
+            content_type (str): Content Type of input and return mime. defaults to "application/json", must be one of ["application/json"]
+
+        Keyword Args:
+            x_payer (str): Name of organization or user who should be charged for this request. [optional]
+            open_at (int): open_at for array in unix epoch. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            Query
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_est_result_sizes_with_http_info(
-            namespace, array, type, content_type, query, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["array"] = array
+        kwargs["type"] = type
+        kwargs["content_type"] = content_type
+        kwargs["query"] = query
+        return self.get_est_result_sizes_endpoint.call_with_http_info(**kwargs)
 
-    def get_est_result_sizes_with_http_info(
-        self, namespace, array, type, content_type, query, **kwargs
-    ):  # noqa: E501
-        """get_est_result_sizes  # noqa: E501
-
-        send a query to run against a specified array/URI registered to a group/project  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.get_est_result_sizes_with_http_info(namespace, array, type, content_type, query, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param type: type of query (required)
-        :type type: str
-        :param content_type: Content Type of input and return mime (required)
-        :type content_type: str
-        :param query: query to run (required)
-        :type query: Query
-        :param x_payer: Name of organization or user who should be charged for this request
-        :type x_payer: str
-        :param open_at: open_at for array in unix epoch
-        :type open_at: int
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(Query, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "namespace",
-            "array",
-            "type",
-            "content_type",
-            "query",
-            "x_payer",
-            "open_at",
-        ]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_est_result_sizes" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `get_est_result_sizes`"
-            )  # noqa: E501
-        # verify the required parameter 'array' is set
-        if self.api_client.client_side_validation and (
-            "array" not in local_var_params
-            or local_var_params["array"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `array` when calling `get_est_result_sizes`"
-            )  # noqa: E501
-        # verify the required parameter 'type' is set
-        if self.api_client.client_side_validation and (
-            "type" not in local_var_params
-            or local_var_params["type"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `type` when calling `get_est_result_sizes`"
-            )  # noqa: E501
-        # verify the required parameter 'content_type' is set
-        if self.api_client.client_side_validation and (
-            "content_type" not in local_var_params
-            or local_var_params["content_type"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `content_type` when calling `get_est_result_sizes`"
-            )  # noqa: E501
-        # verify the required parameter 'query' is set
-        if self.api_client.client_side_validation and (
-            "query" not in local_var_params
-            or local_var_params["query"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `query` when calling `get_est_result_sizes`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "array" in local_var_params:
-            path_params["array"] = local_var_params["array"]  # noqa: E501
-
-        query_params = []
-        if (
-            "type" in local_var_params and local_var_params["type"] is not None
-        ):  # noqa: E501
-            query_params.append(("type", local_var_params["type"]))  # noqa: E501
-        if (
-            "open_at" in local_var_params and local_var_params["open_at"] is not None
-        ):  # noqa: E501
-            query_params.append(("open_at", local_var_params["open_at"]))  # noqa: E501
-
-        header_params = {}
-        if "content_type" in local_var_params:
-            header_params["Content-Type"] = local_var_params[
-                "content_type"
-            ]  # noqa: E501
-        if "x_payer" in local_var_params:
-            header_params["X-Payer"] = local_var_params["x_payer"]  # noqa: E501
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "query" in local_var_params:
-            body_params = local_var_params["query"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json", "application/capnp"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json", "application/capnp"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "Query",
-            204: None,
-        }
-
-        return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/query/est_result_sizes",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def get_file(self, namespace, array, content_type, **kwargs):  # noqa: E501
+    def get_file(self, namespace, array, content_type="application/json", **kwargs):
         """get_file  # noqa: E501
 
         send a query to run against a specified array/URI registered to a group/project, returns file bytes  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.get_file(namespace, array, content_type, async_req=True)
+        >>> thread = api.get_file(namespace, array, content_type="application/json", async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param content_type: Content Type of input and return mime (required)
-        :type content_type: str
-        :param x_payer: Name of organization or user who should be charged for this request
-        :type x_payer: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: file
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            array (str): name/uri of array that is url-encoded
+            content_type (str): Content Type of input and return mime. defaults to "application/json", must be one of ["application/json"]
+
+        Keyword Args:
+            x_payer (str): Name of organization or user who should be charged for this request. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            file_type
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_file_with_http_info(
-            namespace, array, content_type, **kwargs
-        )  # noqa: E501
-
-    def get_file_with_http_info(
-        self, namespace, array, content_type, **kwargs
-    ):  # noqa: E501
-        """get_file  # noqa: E501
-
-        send a query to run against a specified array/URI registered to a group/project, returns file bytes  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.get_file_with_http_info(namespace, array, content_type, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param content_type: Content Type of input and return mime (required)
-        :type content_type: str
-        :param x_payer: Name of organization or user who should be charged for this request
-        :type x_payer: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(file, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "array", "content_type", "x_payer"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_file" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `get_file`"
-            )  # noqa: E501
-        # verify the required parameter 'array' is set
-        if self.api_client.client_side_validation and (
-            "array" not in local_var_params
-            or local_var_params["array"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `array` when calling `get_file`"
-            )  # noqa: E501
-        # verify the required parameter 'content_type' is set
-        if self.api_client.client_side_validation and (
-            "content_type" not in local_var_params
-            or local_var_params["content_type"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `content_type` when calling `get_file`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "array" in local_var_params:
-            path_params["array"] = local_var_params["array"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-        if "content_type" in local_var_params:
-            header_params["Content-Type"] = local_var_params[
-                "content_type"
-            ]  # noqa: E501
-        if "x_payer" in local_var_params:
-            header_params["X-Payer"] = local_var_params["x_payer"]  # noqa: E501
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/x-ipynb+json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "file",
-        }
-
-        return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/query/get_file",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["array"] = array
+        kwargs["content_type"] = content_type
+        return self.get_file_endpoint.call_with_http_info(**kwargs)
 
     def submit_query(
-        self, namespace, array, type, content_type, query, **kwargs
-    ):  # noqa: E501
+        self, namespace, array, type, query, content_type="application/json", **kwargs
+    ):
         """submit_query  # noqa: E501
 
         send a query to run against a specified array/URI registered to a group/project  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.submit_query(namespace, array, type, content_type, query, async_req=True)
+        >>> thread = api.submit_query(namespace, array, type, query, content_type="application/json", async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param type: type of query (required)
-        :type type: str
-        :param content_type: Content Type of input and return mime (required)
-        :type content_type: str
-        :param query: query to run (required)
-        :type query: Query
-        :param x_payer: Name of organization or user who should be charged for this request
-        :type x_payer: str
-        :param open_at: open_at for array in unix epoch
-        :type open_at: int
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: Query
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            array (str): name/uri of array that is url-encoded
+            type (str): type of query
+            query (Query): query to run
+            content_type (str): Content Type of input and return mime. defaults to "application/json", must be one of ["application/json"]
+
+        Keyword Args:
+            x_payer (str): Name of organization or user who should be charged for this request. [optional]
+            open_at (int): open_at for array in unix epoch. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            Query
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.submit_query_with_http_info(
-            namespace, array, type, content_type, query, **kwargs
-        )  # noqa: E501
-
-    def submit_query_with_http_info(
-        self, namespace, array, type, content_type, query, **kwargs
-    ):  # noqa: E501
-        """submit_query  # noqa: E501
-
-        send a query to run against a specified array/URI registered to a group/project  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.submit_query_with_http_info(namespace, array, type, content_type, query, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param type: type of query (required)
-        :type type: str
-        :param content_type: Content Type of input and return mime (required)
-        :type content_type: str
-        :param query: query to run (required)
-        :type query: Query
-        :param x_payer: Name of organization or user who should be charged for this request
-        :type x_payer: str
-        :param open_at: open_at for array in unix epoch
-        :type open_at: int
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(Query, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "namespace",
-            "array",
-            "type",
-            "content_type",
-            "query",
-            "x_payer",
-            "open_at",
-        ]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method submit_query" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `submit_query`"
-            )  # noqa: E501
-        # verify the required parameter 'array' is set
-        if self.api_client.client_side_validation and (
-            "array" not in local_var_params
-            or local_var_params["array"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `array` when calling `submit_query`"
-            )  # noqa: E501
-        # verify the required parameter 'type' is set
-        if self.api_client.client_side_validation and (
-            "type" not in local_var_params
-            or local_var_params["type"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `type` when calling `submit_query`"
-            )  # noqa: E501
-        # verify the required parameter 'content_type' is set
-        if self.api_client.client_side_validation and (
-            "content_type" not in local_var_params
-            or local_var_params["content_type"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `content_type` when calling `submit_query`"
-            )  # noqa: E501
-        # verify the required parameter 'query' is set
-        if self.api_client.client_side_validation and (
-            "query" not in local_var_params
-            or local_var_params["query"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `query` when calling `submit_query`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "array" in local_var_params:
-            path_params["array"] = local_var_params["array"]  # noqa: E501
-
-        query_params = []
-        if (
-            "type" in local_var_params and local_var_params["type"] is not None
-        ):  # noqa: E501
-            query_params.append(("type", local_var_params["type"]))  # noqa: E501
-        if (
-            "open_at" in local_var_params and local_var_params["open_at"] is not None
-        ):  # noqa: E501
-            query_params.append(("open_at", local_var_params["open_at"]))  # noqa: E501
-
-        header_params = {}
-        if "content_type" in local_var_params:
-            header_params["Content-Type"] = local_var_params[
-                "content_type"
-            ]  # noqa: E501
-        if "x_payer" in local_var_params:
-            header_params["X-Payer"] = local_var_params["x_payer"]  # noqa: E501
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "query" in local_var_params:
-            body_params = local_var_params["query"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json", "application/capnp"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json", "application/capnp"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "Query",
-            204: None,
-        }
-
-        return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/query/submit",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["array"] = array
+        kwargs["type"] = type
+        kwargs["content_type"] = content_type
+        kwargs["query"] = query
+        return self.submit_query_endpoint.call_with_http_info(**kwargs)
 
     def submit_query_json(
-        self, namespace, array, content_type, query_json, **kwargs
-    ):  # noqa: E501
+        self, namespace, array, query_json, content_type="application/json", **kwargs
+    ):
         """submit_query_json  # noqa: E501
 
         send a query to run against a specified array/URI registered to a group/project, returns JSON results  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.submit_query_json(namespace, array, content_type, query_json, async_req=True)
+        >>> thread = api.submit_query_json(namespace, array, query_json, content_type="application/json", async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param content_type: Content Type of input and return mime (required)
-        :type content_type: str
-        :param query_json: query to run (required)
-        :type query_json: QueryJson
-        :param x_payer: Name of organization or user who should be charged for this request
-        :type x_payer: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: object
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            array (str): name/uri of array that is url-encoded
+            query_json (QueryJson): query to run
+            content_type (str): Content Type of input and return mime. defaults to "application/json", must be one of ["application/json"]
+
+        Keyword Args:
+            x_payer (str): Name of organization or user who should be charged for this request. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            bool, date, datetime, dict, float, int, list, str, none_type
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.submit_query_json_with_http_info(
-            namespace, array, content_type, query_json, **kwargs
-        )  # noqa: E501
-
-    def submit_query_json_with_http_info(
-        self, namespace, array, content_type, query_json, **kwargs
-    ):  # noqa: E501
-        """submit_query_json  # noqa: E501
-
-        send a query to run against a specified array/URI registered to a group/project, returns JSON results  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.submit_query_json_with_http_info(namespace, array, content_type, query_json, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param content_type: Content Type of input and return mime (required)
-        :type content_type: str
-        :param query_json: query to run (required)
-        :type query_json: QueryJson
-        :param x_payer: Name of organization or user who should be charged for this request
-        :type x_payer: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(object, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "array", "content_type", "query_json", "x_payer"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method submit_query_json" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `submit_query_json`"
-            )  # noqa: E501
-        # verify the required parameter 'array' is set
-        if self.api_client.client_side_validation and (
-            "array" not in local_var_params
-            or local_var_params["array"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `array` when calling `submit_query_json`"
-            )  # noqa: E501
-        # verify the required parameter 'content_type' is set
-        if self.api_client.client_side_validation and (
-            "content_type" not in local_var_params
-            or local_var_params["content_type"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `content_type` when calling `submit_query_json`"
-            )  # noqa: E501
-        # verify the required parameter 'query_json' is set
-        if self.api_client.client_side_validation and (
-            "query_json" not in local_var_params
-            or local_var_params["query_json"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `query_json` when calling `submit_query_json`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "array" in local_var_params:
-            path_params["array"] = local_var_params["array"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-        if "content_type" in local_var_params:
-            header_params["Content-Type"] = local_var_params[
-                "content_type"
-            ]  # noqa: E501
-        if "x_payer" in local_var_params:
-            header_params["X-Payer"] = local_var_params["x_payer"]  # noqa: E501
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "query_json" in local_var_params:
-            body_params = local_var_params["query_json"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "object",
-        }
-
-        return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/query/submit_query_json",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["array"] = array
+        kwargs["content_type"] = content_type
+        kwargs["query_json"] = query_json
+        return self.submit_query_json_endpoint.call_with_http_info(**kwargs)

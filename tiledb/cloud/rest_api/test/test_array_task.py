@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,14 +8,26 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.array_task import ArrayTask  # noqa: E501
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.array_activity_log import ArrayActivityLog
+from tiledb.cloud.rest_api.model.array_info import ArrayInfo
+from tiledb.cloud.rest_api.model.array_task_status import ArrayTaskStatus
+from tiledb.cloud.rest_api.model.array_task_type import ArrayTaskType
+from tiledb.cloud.rest_api.model.domain_array import DomainArray
+from tiledb.cloud.rest_api.model.querytype import Querytype
+from tiledb.cloud.rest_api.model.result_format import ResultFormat
+
+globals()["ArrayActivityLog"] = ArrayActivityLog
+globals()["ArrayInfo"] = ArrayInfo
+globals()["ArrayTaskStatus"] = ArrayTaskStatus
+globals()["ArrayTaskType"] = ArrayTaskType
+globals()["DomainArray"] = DomainArray
+globals()["Querytype"] = Querytype
+globals()["ResultFormat"] = ResultFormat
+from tiledb.cloud.rest_api.model.array_task import ArrayTask
 
 
 class TestArrayTask(unittest.TestCase):
@@ -29,127 +39,11 @@ class TestArrayTask(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test ArrayTask
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.array_task.ArrayTask()  # noqa: E501
-        if include_optional:
-            return ArrayTask(
-                id="",
-                name="subarray-multiplier",
-                description="Return attr a1 in the subarray bounded by coordinates and multiply attr1 by 2",
-                array_metadata=tiledb.cloud.rest_api.models.array_info.ArrayInfo(
-                    id="00000000-0000-0000-0000-000000000000",
-                    file_type="notebook",
-                    file_properties={"key": ""},
-                    uri="s3://bucket/array",
-                    namespace="user1",
-                    size=1024.0,
-                    last_accessed=datetime.datetime.strptime(
-                        "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
-                    ),
-                    description="",
-                    name="myarray1",
-                    allowed_actions=["read"],
-                    pricing=[
-                        tiledb.cloud.rest_api.models.pricing.Pricing(
-                            id="planID",
-                            array_uuid="00000000-0000-0000-0000-000000000000",
-                            pricing_name="",
-                            pricing_type="egress",
-                            product_name="",
-                            product_statement_descriptor="",
-                            product_unit_label="byte",
-                            currency="USD",
-                            aggregate_usage="sum",
-                            interval="month",
-                            divided_by=1048576,
-                            charge=1.337,
-                            activated=False,
-                        )
-                    ],
-                    subscriptions=[
-                        tiledb.cloud.rest_api.models.subscription.Subscription(
-                            id="subscriptionID",
-                            owner_namespace_uuid="00000000-0000-0000-0000-000000000000",
-                            customer_namespace_uuid="00000000-0000-0000-0000-000000000000",
-                        )
-                    ],
-                    logo="",
-                    access_credentials_name="",
-                    type="sparse",
-                    share_count=1.337,
-                    public_share=True,
-                    namespace_subscribed=False,
-                    tiledb_uri="",
-                    tags=[""],
-                    license_id="",
-                    license_text="",
-                    read_only=False,
-                    is_favorite=True,
-                ),
-                subarray=tiledb.cloud.rest_api.models.domain_array.DomainArray(
-                    int8=[56],
-                    uint8=[56],
-                    int16=[56],
-                    uint16=[56],
-                    int32=[56],
-                    uint32=[56],
-                    int64=[56],
-                    uint64=[56],
-                    float32=[1.337],
-                    float64=[1.337],
-                ),
-                memory=1073741824,
-                cpu=4000,
-                namespace="organization1",
-                status="QUEUED",
-                start_time=datetime.datetime.strptime(
-                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
-                ),
-                finish_time=datetime.datetime.strptime(
-                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
-                ),
-                cost=0.12,
-                egress_cost=0.12,
-                access_cost=0.12,
-                query_type="READ",
-                udf_code="",
-                udf_language="",
-                sql_query="",
-                type="SQL",
-                activity=[
-                    tiledb.cloud.rest_api.models.array_activity_log.ArrayActivityLog(
-                        event_at=datetime.datetime.strptime(
-                            "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
-                        ),
-                        action="read_schema",
-                        username="user1",
-                        bytes_sent=1073741824,
-                        bytes_received=1073741824,
-                        array_task_id="00000000-0000-0000-0000-000000000000",
-                        id="00000000-0000-0000-0000-000000000000",
-                        query_ranges='{"rows":[{"start": 1, "end": 1},{"start": 3, "end": 4}],"cols":[{"start": 1, "end": 4}]}',
-                        query_stats='{"timers": {"Context.StorageManager.read_load_array_schema_from_uri.sum": 0.0255293, "...": "..."}, "counters": {"Context.StorageManager.read_unfiltered_byte_num": 191, "...": "..."}}',
-                    )
-                ],
-                logs="",
-                duration=3.41e11,
-                sql_init_commands=[""],
-                sql_parameters=[None],
-                result_format="python_pickle",
-                task_graph_uuid="",
-                client_node_uuid="",
-            )
-        else:
-            return ArrayTask()
-
     def testArrayTask(self):
         """Test ArrayTask"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = ArrayTask()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

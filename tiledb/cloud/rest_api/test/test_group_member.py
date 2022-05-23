@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,14 +8,14 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.group_member import GroupMember  # noqa: E501
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.group_member_type import GroupMemberType
+
+globals()["GroupMemberType"] = GroupMemberType
+from tiledb.cloud.rest_api.model.group_member import GroupMember
 
 
 class TestGroupMember(unittest.TestCase):
@@ -29,21 +27,11 @@ class TestGroupMember(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test GroupMember
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.group_member.GroupMember()  # noqa: E501
-        if include_optional:
-            return GroupMember(namespace="", name="", member_type="group")
-        else:
-            return GroupMember()
-
     def testGroupMember(self):
         """Test GroupMember"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = GroupMember()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

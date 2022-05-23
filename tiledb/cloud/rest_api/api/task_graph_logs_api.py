@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,16 +8,24 @@
 """
 
 
-from __future__ import absolute_import
-
 import re  # noqa: F401
-
-# python 2 and python 3 compatibility library
-import six
+import sys  # noqa: F401
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import ApiTypeError  # noqa: F401
-from tiledb.cloud.rest_api.exceptions import ApiValueError
+from tiledb.cloud.rest_api.api_client import Endpoint as _Endpoint
+from tiledb.cloud.rest_api.model.error import Error
+from tiledb.cloud.rest_api.model.task_graph_client_node_status import (
+    TaskGraphClientNodeStatus,
+)
+from tiledb.cloud.rest_api.model.task_graph_log import TaskGraphLog
+from tiledb.cloud.rest_api.model.task_graph_logs_data import TaskGraphLogsData
+from tiledb.cloud.rest_api.model_utils import check_allowed_values  # noqa: F401
+from tiledb.cloud.rest_api.model_utils import check_validations
+from tiledb.cloud.rest_api.model_utils import date
+from tiledb.cloud.rest_api.model_utils import datetime
+from tiledb.cloud.rest_api.model_utils import file_type
+from tiledb.cloud.rest_api.model_utils import none_type
+from tiledb.cloud.rest_api.model_utils import validate_and_convert_types
 
 
 class TaskGraphLogsApi(object):
@@ -33,8 +39,257 @@ class TaskGraphLogsApi(object):
         if api_client is None:
             api_client = ApiClient()
         self.api_client = api_client
+        self.create_task_graph_log_endpoint = _Endpoint(
+            settings={
+                "response_type": (TaskGraphLog,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/taskgraphs/{namespace}/log",
+                "operation_id": "create_task_graph_log",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "log",
+                ],
+                "required": [
+                    "namespace",
+                    "log",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "log": (TaskGraphLog,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "log": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.get_task_graph_log_endpoint = _Endpoint(
+            settings={
+                "response_type": (TaskGraphLog,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/taskgraphs/{namespace}/logs/{id}",
+                "operation_id": "get_task_graph_log",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "id",
+                ],
+                "required": [
+                    "namespace",
+                    "id",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "id": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "id": "id",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "id": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.list_task_graph_logs_endpoint = _Endpoint(
+            settings={
+                "response_type": (TaskGraphLogsData,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/taskgraphs/logs",
+                "operation_id": "list_task_graph_logs",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "created_by",
+                    "search",
+                    "start_time",
+                    "end_time",
+                    "page",
+                    "per_page",
+                ],
+                "required": [],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "created_by": (str,),
+                    "search": (str,),
+                    "start_time": (datetime,),
+                    "end_time": (datetime,),
+                    "page": (int,),
+                    "per_page": (int,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "created_by": "created_by",
+                    "search": "search",
+                    "start_time": "start_time",
+                    "end_time": "end_time",
+                    "page": "page",
+                    "per_page": "per_page",
+                },
+                "location_map": {
+                    "namespace": "query",
+                    "created_by": "query",
+                    "search": "query",
+                    "start_time": "query",
+                    "end_time": "query",
+                    "page": "query",
+                    "per_page": "query",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.report_client_node_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/taskgraphs/{namespace}/logs/{id}/report_client_node",
+                "operation_id": "report_client_node",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "id",
+                    "report",
+                ],
+                "required": [
+                    "namespace",
+                    "id",
+                    "report",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "id": (str,),
+                    "report": (TaskGraphClientNodeStatus,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "id": "id",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "id": "path",
+                    "report": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.update_task_graph_log_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/taskgraphs/{namespace}/logs/{id}",
+                "operation_id": "update_task_graph_log",
+                "http_method": "PATCH",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "id",
+                    "log",
+                ],
+                "required": [
+                    "namespace",
+                    "id",
+                    "log",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "id": (str,),
+                    "log": (TaskGraphLog,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "id": "id",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "id": "path",
+                    "log": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
 
-    def create_task_graph_log(self, namespace, log, **kwargs):  # noqa: E501
+    def create_task_graph_log(self, namespace, log, **kwargs):
         """create_task_graph_log  # noqa: E501
 
         Create a task graph log.  # noqa: E501
@@ -44,164 +299,48 @@ class TaskGraphLogsApi(object):
         >>> thread = api.create_task_graph_log(namespace, log, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: The namespace that will own this task graph log. (required)
-        :type namespace: str
-        :param log: (required)
-        :type log: TaskGraphLog
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: TaskGraphLog
+        Args:
+            namespace (str): The namespace that will own this task graph log.
+            log (TaskGraphLog):
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            TaskGraphLog
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.create_task_graph_log_with_http_info(
-            namespace, log, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["log"] = log
+        return self.create_task_graph_log_endpoint.call_with_http_info(**kwargs)
 
-    def create_task_graph_log_with_http_info(
-        self, namespace, log, **kwargs
-    ):  # noqa: E501
-        """create_task_graph_log  # noqa: E501
-
-        Create a task graph log.  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.create_task_graph_log_with_http_info(namespace, log, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: The namespace that will own this task graph log. (required)
-        :type namespace: str
-        :param log: (required)
-        :type log: TaskGraphLog
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(TaskGraphLog, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "log"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method create_task_graph_log" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `create_task_graph_log`"
-            )  # noqa: E501
-        # verify the required parameter 'log' is set
-        if self.api_client.client_side_validation and (
-            "log" not in local_var_params
-            or local_var_params["log"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `log` when calling `create_task_graph_log`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "log" in local_var_params:
-            body_params = local_var_params["log"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            201: "TaskGraphLog",
-        }
-
-        return self.api_client.call_api(
-            "/taskgraphs/{namespace}/log",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def get_task_graph_log(self, namespace, id, **kwargs):  # noqa: E501
+    def get_task_graph_log(self, namespace, id, **kwargs):
         """get_task_graph_log  # noqa: E501
 
         Fetch information about a single task graph execution.   # noqa: E501
@@ -211,154 +350,48 @@ class TaskGraphLogsApi(object):
         >>> thread = api.get_task_graph_log(namespace, id, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: The namespace that owns this task graph log. (required)
-        :type namespace: str
-        :param id: The UUID of the task graph log entry. (required)
-        :type id: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: TaskGraphLog
+        Args:
+            namespace (str): The namespace that owns this task graph log.
+            id (str): The UUID of the task graph log entry.
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            TaskGraphLog
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_task_graph_log_with_http_info(
-            namespace, id, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["id"] = id
+        return self.get_task_graph_log_endpoint.call_with_http_info(**kwargs)
 
-    def get_task_graph_log_with_http_info(self, namespace, id, **kwargs):  # noqa: E501
-        """get_task_graph_log  # noqa: E501
-
-        Fetch information about a single task graph execution.   # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.get_task_graph_log_with_http_info(namespace, id, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: The namespace that owns this task graph log. (required)
-        :type namespace: str
-        :param id: The UUID of the task graph log entry. (required)
-        :type id: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(TaskGraphLog, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "id"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_task_graph_log" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `get_task_graph_log`"
-            )  # noqa: E501
-        # verify the required parameter 'id' is set
-        if self.api_client.client_side_validation and (
-            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `id` when calling `get_task_graph_log`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "id" in local_var_params:
-            path_params["id"] = local_var_params["id"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "TaskGraphLog",
-        }
-
-        return self.api_client.call_api(
-            "/taskgraphs/{namespace}/logs/{id}",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def list_task_graph_logs(self, **kwargs):  # noqa: E501
+    def list_task_graph_logs(self, **kwargs):
         """list_task_graph_logs  # noqa: E501
 
         Fetch the task graph logs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata.   # noqa: E501
@@ -368,202 +401,50 @@ class TaskGraphLogsApi(object):
         >>> thread = api.list_task_graph_logs(async_req=True)
         >>> result = thread.get()
 
-        :param namespace: Include logs for this namespace.
-        :type namespace: str
-        :param created_by: Include logs from only this user.
-        :type created_by: str
-        :param search: search string that will look at name.
-        :type search: str
-        :param start_time: Include logs created after this time.
-        :type start_time: datetime
-        :param end_time: Include logs created before this time.
-        :type end_time: datetime
-        :param page: pagination offset
-        :type page: int
-        :param per_page: pagination limit
-        :type per_page: int
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: TaskGraphLogsData
+
+        Keyword Args:
+            namespace (str): Include logs for this namespace.. [optional]
+            created_by (str): Include logs from only this user.. [optional]
+            search (str): search string that will look at name.. [optional]
+            start_time (datetime): Include logs created after this time.. [optional]
+            end_time (datetime): Include logs created before this time.. [optional]
+            page (int): pagination offset. [optional]
+            per_page (int): pagination limit. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            TaskGraphLogsData
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.list_task_graph_logs_with_http_info(**kwargs)  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        return self.list_task_graph_logs_endpoint.call_with_http_info(**kwargs)
 
-    def list_task_graph_logs_with_http_info(self, **kwargs):  # noqa: E501
-        """list_task_graph_logs  # noqa: E501
-
-        Fetch the task graph logs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata.   # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.list_task_graph_logs_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: Include logs for this namespace.
-        :type namespace: str
-        :param created_by: Include logs from only this user.
-        :type created_by: str
-        :param search: search string that will look at name.
-        :type search: str
-        :param start_time: Include logs created after this time.
-        :type start_time: datetime
-        :param end_time: Include logs created before this time.
-        :type end_time: datetime
-        :param page: pagination offset
-        :type page: int
-        :param per_page: pagination limit
-        :type per_page: int
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(TaskGraphLogsData, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "namespace",
-            "created_by",
-            "search",
-            "start_time",
-            "end_time",
-            "page",
-            "per_page",
-        ]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method list_task_graph_logs" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-        if (
-            "namespace" in local_var_params
-            and local_var_params["namespace"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("namespace", local_var_params["namespace"])
-            )  # noqa: E501
-        if (
-            "created_by" in local_var_params
-            and local_var_params["created_by"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("created_by", local_var_params["created_by"])
-            )  # noqa: E501
-        if (
-            "search" in local_var_params and local_var_params["search"] is not None
-        ):  # noqa: E501
-            query_params.append(("search", local_var_params["search"]))  # noqa: E501
-        if (
-            "start_time" in local_var_params
-            and local_var_params["start_time"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("start_time", local_var_params["start_time"])
-            )  # noqa: E501
-        if (
-            "end_time" in local_var_params and local_var_params["end_time"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("end_time", local_var_params["end_time"])
-            )  # noqa: E501
-        if (
-            "page" in local_var_params and local_var_params["page"] is not None
-        ):  # noqa: E501
-            query_params.append(("page", local_var_params["page"]))  # noqa: E501
-        if (
-            "per_page" in local_var_params and local_var_params["per_page"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("per_page", local_var_params["per_page"])
-            )  # noqa: E501
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "TaskGraphLogsData",
-        }
-
-        return self.api_client.call_api(
-            "/taskgraphs/logs",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def report_client_node(self, namespace, id, report, **kwargs):  # noqa: E501
+    def report_client_node(self, namespace, id, report, **kwargs):
         """report_client_node  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
@@ -572,174 +453,50 @@ class TaskGraphLogsApi(object):
         >>> thread = api.report_client_node(namespace, id, report, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: The namespace that owns this task graph log. (required)
-        :type namespace: str
-        :param id: The UUID of the task graph log entry. (required)
-        :type id: str
-        :param report: The node status to report. (required)
-        :type report: TaskGraphClientNodeStatus
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            namespace (str): The namespace that owns this task graph log.
+            id (str): The UUID of the task graph log entry.
+            report (TaskGraphClientNodeStatus): The node status to report.
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.report_client_node_with_http_info(
-            namespace, id, report, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["id"] = id
+        kwargs["report"] = report
+        return self.report_client_node_endpoint.call_with_http_info(**kwargs)
 
-    def report_client_node_with_http_info(
-        self, namespace, id, report, **kwargs
-    ):  # noqa: E501
-        """report_client_node  # noqa: E501
-
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.report_client_node_with_http_info(namespace, id, report, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: The namespace that owns this task graph log. (required)
-        :type namespace: str
-        :param id: The UUID of the task graph log entry. (required)
-        :type id: str
-        :param report: The node status to report. (required)
-        :type report: TaskGraphClientNodeStatus
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "id", "report"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method report_client_node" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `report_client_node`"
-            )  # noqa: E501
-        # verify the required parameter 'id' is set
-        if self.api_client.client_side_validation and (
-            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `id` when calling `report_client_node`"
-            )  # noqa: E501
-        # verify the required parameter 'report' is set
-        if self.api_client.client_side_validation and (
-            "report" not in local_var_params
-            or local_var_params["report"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `report` when calling `report_client_node`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "id" in local_var_params:
-            path_params["id"] = local_var_params["id"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "report" in local_var_params:
-            body_params = local_var_params["report"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/taskgraphs/{namespace}/logs/{id}/report_client_node",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def update_task_graph_log(self, namespace, id, log, **kwargs):  # noqa: E501
+    def update_task_graph_log(self, namespace, id, log, **kwargs):
         """update_task_graph_log  # noqa: E501
 
         Update information about a single task graph execution.   # noqa: E501
@@ -749,170 +506,45 @@ class TaskGraphLogsApi(object):
         >>> thread = api.update_task_graph_log(namespace, id, log, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: The namespace that owns this task graph log. (required)
-        :type namespace: str
-        :param id: The UUID of the task graph log entry. (required)
-        :type id: str
-        :param log: Updates to make to the task graph log. The only manual update that a client should need to make to a task graph log is to update its completion status to `succeeded`, `failed`, or `cancelled`.  (required)
-        :type log: TaskGraphLog
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            namespace (str): The namespace that owns this task graph log.
+            id (str): The UUID of the task graph log entry.
+            log (TaskGraphLog): Updates to make to the task graph log. The only manual update that a client should need to make to a task graph log is to update its completion status to `succeeded`, `failed`, or `cancelled`.
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.update_task_graph_log_with_http_info(
-            namespace, id, log, **kwargs
-        )  # noqa: E501
-
-    def update_task_graph_log_with_http_info(
-        self, namespace, id, log, **kwargs
-    ):  # noqa: E501
-        """update_task_graph_log  # noqa: E501
-
-        Update information about a single task graph execution.   # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.update_task_graph_log_with_http_info(namespace, id, log, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: The namespace that owns this task graph log. (required)
-        :type namespace: str
-        :param id: The UUID of the task graph log entry. (required)
-        :type id: str
-        :param log: Updates to make to the task graph log. The only manual update that a client should need to make to a task graph log is to update its completion status to `succeeded`, `failed`, or `cancelled`.  (required)
-        :type log: TaskGraphLog
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "id", "log"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method update_task_graph_log" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `update_task_graph_log`"
-            )  # noqa: E501
-        # verify the required parameter 'id' is set
-        if self.api_client.client_side_validation and (
-            "id" not in local_var_params or local_var_params["id"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `id` when calling `update_task_graph_log`"
-            )  # noqa: E501
-        # verify the required parameter 'log' is set
-        if self.api_client.client_side_validation and (
-            "log" not in local_var_params
-            or local_var_params["log"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `log` when calling `update_task_graph_log`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "id" in local_var_params:
-            path_params["id"] = local_var_params["id"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "log" in local_var_params:
-            body_params = local_var_params["log"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/taskgraphs/{namespace}/logs/{id}",
-            "PATCH",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["id"] = id
+        kwargs["log"] = log
+        return self.update_task_graph_log_endpoint.call_with_http_info(**kwargs)

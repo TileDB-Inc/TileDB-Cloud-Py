@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,16 +8,27 @@
 """
 
 
-from __future__ import absolute_import
-
 import re  # noqa: F401
-
-# python 2 and python 3 compatibility library
-import six
+import sys  # noqa: F401
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import ApiTypeError  # noqa: F401
-from tiledb.cloud.rest_api.exceptions import ApiValueError
+from tiledb.cloud.rest_api.api_client import Endpoint as _Endpoint
+from tiledb.cloud.rest_api.model.array_end_timestamp_data import ArrayEndTimestampData
+from tiledb.cloud.rest_api.model.error import Error
+from tiledb.cloud.rest_api.model.generic_udf import GenericUDF
+from tiledb.cloud.rest_api.model.multi_array_udf import MultiArrayUDF
+from tiledb.cloud.rest_api.model.udf_copied import UDFCopied
+from tiledb.cloud.rest_api.model.udf_copy import UDFCopy
+from tiledb.cloud.rest_api.model.udf_info import UDFInfo
+from tiledb.cloud.rest_api.model.udf_info_update import UDFInfoUpdate
+from tiledb.cloud.rest_api.model.udf_sharing import UDFSharing
+from tiledb.cloud.rest_api.model_utils import check_allowed_values  # noqa: F401
+from tiledb.cloud.rest_api.model_utils import check_validations
+from tiledb.cloud.rest_api.model_utils import date
+from tiledb.cloud.rest_api.model_utils import datetime
+from tiledb.cloud.rest_api.model_utils import file_type
+from tiledb.cloud.rest_api.model_utils import none_type
+from tiledb.cloud.rest_api.model_utils import validate_and_convert_types
 
 
 class UdfApi(object):
@@ -33,8 +42,557 @@ class UdfApi(object):
         if api_client is None:
             api_client = ApiClient()
         self.api_client = api_client
+        self.delete_udf_info_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/udf/{namespace}/{name}",
+                "operation_id": "delete_udf_info",
+                "http_method": "DELETE",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "name",
+                ],
+                "required": [
+                    "namespace",
+                    "name",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "name": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "name": "name",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "name": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.get_udf_info_endpoint = _Endpoint(
+            settings={
+                "response_type": (UDFInfo,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/udf/{namespace}/{name}",
+                "operation_id": "get_udf_info",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "name",
+                ],
+                "required": [
+                    "namespace",
+                    "name",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "name": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "name": "name",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "name": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.get_udf_info_sharing_policies_endpoint = _Endpoint(
+            settings={
+                "response_type": ([UDFSharing],),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/udf/{namespace}/{name}/share",
+                "operation_id": "get_udf_info_sharing_policies",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "name",
+                ],
+                "required": [
+                    "namespace",
+                    "name",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "name": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "name": "name",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "name": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.handle_copy_udf_endpoint = _Endpoint(
+            settings={
+                "response_type": (UDFCopied,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/udf/{namespace}/{name}/copy",
+                "operation_id": "handle_copy_udf",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "name",
+                    "udf_copy",
+                    "x_tiledb_cloud_access_credentials_name",
+                    "end_timestamp",
+                ],
+                "required": [
+                    "namespace",
+                    "name",
+                    "udf_copy",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "name": (str,),
+                    "udf_copy": (UDFCopy,),
+                    "x_tiledb_cloud_access_credentials_name": (str,),
+                    "end_timestamp": (int,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "name": "name",
+                    "x_tiledb_cloud_access_credentials_name": "X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME",
+                    "end_timestamp": "end_timestamp",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "name": "path",
+                    "udf_copy": "body",
+                    "x_tiledb_cloud_access_credentials_name": "header",
+                    "end_timestamp": "query",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.register_udf_info_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/udf/{namespace}/{name}",
+                "operation_id": "register_udf_info",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "name",
+                    "udf",
+                ],
+                "required": [
+                    "namespace",
+                    "name",
+                    "udf",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "name": (str,),
+                    "udf": (UDFInfoUpdate,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "name": "name",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "name": "path",
+                    "udf": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.share_udf_info_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/udf/{namespace}/{name}/share",
+                "operation_id": "share_udf_info",
+                "http_method": "PATCH",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "name",
+                    "udf_sharing",
+                ],
+                "required": [
+                    "namespace",
+                    "name",
+                    "udf_sharing",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "name": (str,),
+                    "udf_sharing": (UDFSharing,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "name": "name",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "name": "path",
+                    "udf_sharing": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.submit_generic_udf_endpoint = _Endpoint(
+            settings={
+                "response_type": (file_type,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/udfs/generic/{namespace}",
+                "operation_id": "submit_generic_udf",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "udf",
+                    "accept_encoding",
+                ],
+                "required": [
+                    "namespace",
+                    "udf",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "udf": (GenericUDF,),
+                    "accept_encoding": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "accept_encoding": "Accept-Encoding",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "udf": "body",
+                    "accept_encoding": "header",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/octet-stream"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.submit_multi_array_udf_endpoint = _Endpoint(
+            settings={
+                "response_type": (file_type,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/udfs/arrays/{namespace}",
+                "operation_id": "submit_multi_array_udf",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "udf",
+                    "accept_encoding",
+                ],
+                "required": [
+                    "namespace",
+                    "udf",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "udf": (MultiArrayUDF,),
+                    "accept_encoding": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "accept_encoding": "Accept-Encoding",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "udf": "body",
+                    "accept_encoding": "header",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/octet-stream"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.submit_udf_endpoint = _Endpoint(
+            settings={
+                "response_type": (file_type,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/arrays/{namespace}/{array}/udf/submit",
+                "operation_id": "submit_udf",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "array",
+                    "udf",
+                    "x_payer",
+                    "accept_encoding",
+                    "v2",
+                ],
+                "required": [
+                    "namespace",
+                    "array",
+                    "udf",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "array": (str,),
+                    "udf": (MultiArrayUDF,),
+                    "x_payer": (str,),
+                    "accept_encoding": (str,),
+                    "v2": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "array": "array",
+                    "x_payer": "X-Payer",
+                    "accept_encoding": "Accept-Encoding",
+                    "v2": "v2",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "array": "path",
+                    "udf": "body",
+                    "x_payer": "header",
+                    "accept_encoding": "header",
+                    "v2": "query",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/octet-stream"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.udf_namespace_array_end_timestamps_get_endpoint = _Endpoint(
+            settings={
+                "response_type": (ArrayEndTimestampData,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/udf/{namespace}/{array}/end_timestamps",
+                "operation_id": "udf_namespace_array_end_timestamps_get",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "array",
+                    "page",
+                    "per_page",
+                ],
+                "required": [
+                    "namespace",
+                    "array",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "array": (str,),
+                    "page": (int,),
+                    "per_page": (int,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "array": "array",
+                    "page": "page",
+                    "per_page": "per_page",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "array": "path",
+                    "page": "query",
+                    "per_page": "query",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.update_udf_info_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/udf/{namespace}/{name}",
+                "operation_id": "update_udf_info",
+                "http_method": "PATCH",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "name",
+                    "udf",
+                ],
+                "required": [
+                    "namespace",
+                    "name",
+                    "udf",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "name": (str,),
+                    "udf": (UDFInfoUpdate,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "name": "name",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "name": "path",
+                    "udf": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
 
-    def delete_udf_info(self, namespace, name, **kwargs):  # noqa: E501
+    def delete_udf_info(self, namespace, name, **kwargs):
         """delete_udf_info  # noqa: E501
 
         delete a registered UDF -- this will remove all sharing and can not be undone  # noqa: E501
@@ -44,153 +602,48 @@ class UdfApi(object):
         >>> thread = api.delete_udf_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param name: name to register UDF under (required)
-        :type name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            name (str): name to register UDF under
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.delete_udf_info_with_http_info(
-            namespace, name, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["name"] = name
+        return self.delete_udf_info_endpoint.call_with_http_info(**kwargs)
 
-    def delete_udf_info_with_http_info(self, namespace, name, **kwargs):  # noqa: E501
-        """delete_udf_info  # noqa: E501
-
-        delete a registered UDF -- this will remove all sharing and can not be undone  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.delete_udf_info_with_http_info(namespace, name, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param name: name to register UDF under (required)
-        :type name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "name"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method delete_udf_info" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `delete_udf_info`"
-            )  # noqa: E501
-        # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and (
-            "name" not in local_var_params
-            or local_var_params["name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `name` when calling `delete_udf_info`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "name" in local_var_params:
-            path_params["name"] = local_var_params["name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/udf/{namespace}/{name}",
-            "DELETE",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def get_udf_info(self, namespace, name, **kwargs):  # noqa: E501
+    def get_udf_info(self, namespace, name, **kwargs):
         """get_udf_info  # noqa: E501
 
         get a specific UDF in the given namespace  # noqa: E501
@@ -200,154 +653,48 @@ class UdfApi(object):
         >>> thread = api.get_udf_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param name: name to register UDF under (required)
-        :type name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: UDFInfo
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            name (str): name to register UDF under
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            UDFInfo
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_udf_info_with_http_info(namespace, name, **kwargs)  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["name"] = name
+        return self.get_udf_info_endpoint.call_with_http_info(**kwargs)
 
-    def get_udf_info_with_http_info(self, namespace, name, **kwargs):  # noqa: E501
-        """get_udf_info  # noqa: E501
-
-        get a specific UDF in the given namespace  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.get_udf_info_with_http_info(namespace, name, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param name: name to register UDF under (required)
-        :type name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(UDFInfo, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "name"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_udf_info" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `get_udf_info`"
-            )  # noqa: E501
-        # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and (
-            "name" not in local_var_params
-            or local_var_params["name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `name` when calling `get_udf_info`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "name" in local_var_params:
-            path_params["name"] = local_var_params["name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "UDFInfo",
-            404: None,
-        }
-
-        return self.api_client.call_api(
-            "/udf/{namespace}/{name}",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def get_udf_info_sharing_policies(self, namespace, name, **kwargs):  # noqa: E501
+    def get_udf_info_sharing_policies(self, namespace, name, **kwargs):
         """get_udf_info_sharing_policies  # noqa: E501
 
         Get all sharing details of the UDF  # noqa: E501
@@ -357,158 +704,48 @@ class UdfApi(object):
         >>> thread = api.get_udf_info_sharing_policies(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param name: name of UDFInfo (required)
-        :type name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: list[UDFSharing]
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            name (str): name of UDFInfo
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            [UDFSharing]
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_udf_info_sharing_policies_with_http_info(
-            namespace, name, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["name"] = name
+        return self.get_udf_info_sharing_policies_endpoint.call_with_http_info(**kwargs)
 
-    def get_udf_info_sharing_policies_with_http_info(
-        self, namespace, name, **kwargs
-    ):  # noqa: E501
-        """get_udf_info_sharing_policies  # noqa: E501
-
-        Get all sharing details of the UDF  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.get_udf_info_sharing_policies_with_http_info(namespace, name, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param name: name of UDFInfo (required)
-        :type name: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(list[UDFSharing], status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "name"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_udf_info_sharing_policies" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `get_udf_info_sharing_policies`"
-            )  # noqa: E501
-        # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and (
-            "name" not in local_var_params
-            or local_var_params["name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `name` when calling `get_udf_info_sharing_policies`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "name" in local_var_params:
-            path_params["name"] = local_var_params["name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "list[UDFSharing]",
-            404: None,
-        }
-
-        return self.api_client.call_api(
-            "/udf/{namespace}/{name}/share",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def handle_copy_udf(self, namespace, name, udf_copy, **kwargs):  # noqa: E501
+    def handle_copy_udf(self, namespace, name, udf_copy, **kwargs):
         """handle_copy_udf  # noqa: E501
 
         Copy a tiledb udf at the specified location  # noqa: E501
@@ -518,203 +755,52 @@ class UdfApi(object):
         >>> thread = api.handle_copy_udf(namespace, name, udf_copy, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param name: name of UDFInfo (required)
-        :type name: str
-        :param udf_copy: Input/Output information to copy a UDF (required)
-        :type udf_copy: UDFCopy
-        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :type x_tiledb_cloud_access_credentials_name: str
-        :param end_timestamp: Milliseconds since Unix epoch
-        :type end_timestamp: int
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: UDFCopied
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            name (str): name of UDFInfo
+            udf_copy (UDFCopy): Input/Output information to copy a UDF
+
+        Keyword Args:
+            x_tiledb_cloud_access_credentials_name (str): Optional registered access credentials to use for creation. [optional]
+            end_timestamp (int): Milliseconds since Unix epoch. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            UDFCopied
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.handle_copy_udf_with_http_info(
-            namespace, name, udf_copy, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["name"] = name
+        kwargs["udf_copy"] = udf_copy
+        return self.handle_copy_udf_endpoint.call_with_http_info(**kwargs)
 
-    def handle_copy_udf_with_http_info(
-        self, namespace, name, udf_copy, **kwargs
-    ):  # noqa: E501
-        """handle_copy_udf  # noqa: E501
-
-        Copy a tiledb udf at the specified location  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.handle_copy_udf_with_http_info(namespace, name, udf_copy, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param name: name of UDFInfo (required)
-        :type name: str
-        :param udf_copy: Input/Output information to copy a UDF (required)
-        :type udf_copy: UDFCopy
-        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :type x_tiledb_cloud_access_credentials_name: str
-        :param end_timestamp: Milliseconds since Unix epoch
-        :type end_timestamp: int
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(UDFCopied, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "namespace",
-            "name",
-            "udf_copy",
-            "x_tiledb_cloud_access_credentials_name",
-            "end_timestamp",
-        ]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method handle_copy_udf" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `handle_copy_udf`"
-            )  # noqa: E501
-        # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and (
-            "name" not in local_var_params
-            or local_var_params["name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `name` when calling `handle_copy_udf`"
-            )  # noqa: E501
-        # verify the required parameter 'udf_copy' is set
-        if self.api_client.client_side_validation and (
-            "udf_copy" not in local_var_params
-            or local_var_params["udf_copy"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `udf_copy` when calling `handle_copy_udf`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "name" in local_var_params:
-            path_params["name"] = local_var_params["name"]  # noqa: E501
-
-        query_params = []
-        if (
-            "end_timestamp" in local_var_params
-            and local_var_params["end_timestamp"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("end_timestamp", local_var_params["end_timestamp"])
-            )  # noqa: E501
-
-        header_params = {}
-        if "x_tiledb_cloud_access_credentials_name" in local_var_params:
-            header_params["X-TILEDB-CLOUD-ACCESS-CREDENTIALS-NAME"] = local_var_params[
-                "x_tiledb_cloud_access_credentials_name"
-            ]  # noqa: E501
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "udf_copy" in local_var_params:
-            body_params = local_var_params["udf_copy"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            201: "UDFCopied",
-        }
-
-        return self.api_client.call_api(
-            "/udf/{namespace}/{name}/copy",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def register_udf_info(self, namespace, name, udf, **kwargs):  # noqa: E501
+    def register_udf_info(self, namespace, name, udf, **kwargs):
         """register_udf_info  # noqa: E501
 
         register a UDF in the given namespace  # noqa: E501
@@ -724,176 +810,50 @@ class UdfApi(object):
         >>> thread = api.register_udf_info(namespace, name, udf, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param name: name to register UDF under (required)
-        :type name: str
-        :param udf: UDF to register (required)
-        :type udf: UDFInfoUpdate
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            name (str): name to register UDF under
+            udf (UDFInfoUpdate): UDF to register
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.register_udf_info_with_http_info(
-            namespace, name, udf, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["name"] = name
+        kwargs["udf"] = udf
+        return self.register_udf_info_endpoint.call_with_http_info(**kwargs)
 
-    def register_udf_info_with_http_info(
-        self, namespace, name, udf, **kwargs
-    ):  # noqa: E501
-        """register_udf_info  # noqa: E501
-
-        register a UDF in the given namespace  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.register_udf_info_with_http_info(namespace, name, udf, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param name: name to register UDF under (required)
-        :type name: str
-        :param udf: UDF to register (required)
-        :type udf: UDFInfoUpdate
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "name", "udf"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method register_udf_info" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `register_udf_info`"
-            )  # noqa: E501
-        # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and (
-            "name" not in local_var_params
-            or local_var_params["name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `name` when calling `register_udf_info`"
-            )  # noqa: E501
-        # verify the required parameter 'udf' is set
-        if self.api_client.client_side_validation and (
-            "udf" not in local_var_params
-            or local_var_params["udf"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `udf` when calling `register_udf_info`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "name" in local_var_params:
-            path_params["name"] = local_var_params["name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "udf" in local_var_params:
-            body_params = local_var_params["udf"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/udf/{namespace}/{name}",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def share_udf_info(self, namespace, name, udf_sharing, **kwargs):  # noqa: E501
+    def share_udf_info(self, namespace, name, udf_sharing, **kwargs):
         """share_udf_info  # noqa: E501
 
         Share a UDF with a user  # noqa: E501
@@ -903,176 +863,50 @@ class UdfApi(object):
         >>> thread = api.share_udf_info(namespace, name, udf_sharing, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param name: name of UDFInfo (required)
-        :type name: str
-        :param udf_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all. (required)
-        :type udf_sharing: UDFSharing
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            name (str): name of UDFInfo
+            udf_sharing (UDFSharing): Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all.
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.share_udf_info_with_http_info(
-            namespace, name, udf_sharing, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["name"] = name
+        kwargs["udf_sharing"] = udf_sharing
+        return self.share_udf_info_endpoint.call_with_http_info(**kwargs)
 
-    def share_udf_info_with_http_info(
-        self, namespace, name, udf_sharing, **kwargs
-    ):  # noqa: E501
-        """share_udf_info  # noqa: E501
-
-        Share a UDF with a user  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.share_udf_info_with_http_info(namespace, name, udf_sharing, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param name: name of UDFInfo (required)
-        :type name: str
-        :param udf_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all. (required)
-        :type udf_sharing: UDFSharing
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "name", "udf_sharing"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method share_udf_info" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `share_udf_info`"
-            )  # noqa: E501
-        # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and (
-            "name" not in local_var_params
-            or local_var_params["name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `name` when calling `share_udf_info`"
-            )  # noqa: E501
-        # verify the required parameter 'udf_sharing' is set
-        if self.api_client.client_side_validation and (
-            "udf_sharing" not in local_var_params
-            or local_var_params["udf_sharing"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `udf_sharing` when calling `share_udf_info`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "name" in local_var_params:
-            path_params["name"] = local_var_params["name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "udf_sharing" in local_var_params:
-            body_params = local_var_params["udf_sharing"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/udf/{namespace}/{name}/share",
-            "PATCH",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def submit_generic_udf(self, namespace, udf, **kwargs):  # noqa: E501
+    def submit_generic_udf(self, namespace, udf, **kwargs):
         """submit_generic_udf  # noqa: E501
 
         submit a generic UDF in the given namespace  # noqa: E501
@@ -1082,170 +916,49 @@ class UdfApi(object):
         >>> thread = api.submit_generic_udf(namespace, udf, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param udf: UDF to run (required)
-        :type udf: GenericUDF
-        :param accept_encoding: Encoding to use
-        :type accept_encoding: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: file
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            udf (GenericUDF): UDF to run
+
+        Keyword Args:
+            accept_encoding (str): Encoding to use. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            file_type
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.submit_generic_udf_with_http_info(
-            namespace, udf, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["udf"] = udf
+        return self.submit_generic_udf_endpoint.call_with_http_info(**kwargs)
 
-    def submit_generic_udf_with_http_info(self, namespace, udf, **kwargs):  # noqa: E501
-        """submit_generic_udf  # noqa: E501
-
-        submit a generic UDF in the given namespace  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.submit_generic_udf_with_http_info(namespace, udf, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param udf: UDF to run (required)
-        :type udf: GenericUDF
-        :param accept_encoding: Encoding to use
-        :type accept_encoding: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(file, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "udf", "accept_encoding"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method submit_generic_udf" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `submit_generic_udf`"
-            )  # noqa: E501
-        # verify the required parameter 'udf' is set
-        if self.api_client.client_side_validation and (
-            "udf" not in local_var_params
-            or local_var_params["udf"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `udf` when calling `submit_generic_udf`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-        if "accept_encoding" in local_var_params:
-            header_params["Accept-Encoding"] = local_var_params[
-                "accept_encoding"
-            ]  # noqa: E501
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "udf" in local_var_params:
-            body_params = local_var_params["udf"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/octet-stream"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "file",
-        }
-
-        return self.api_client.call_api(
-            "/udfs/generic/{namespace}",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def submit_multi_array_udf(self, namespace, udf, **kwargs):  # noqa: E501
+    def submit_multi_array_udf(self, namespace, udf, **kwargs):
         """submit_multi_array_udf  # noqa: E501
 
         submit a multi-array UDF in the given namespace  # noqa: E501
@@ -1255,172 +968,49 @@ class UdfApi(object):
         >>> thread = api.submit_multi_array_udf(namespace, udf, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param udf: UDF to run (required)
-        :type udf: MultiArrayUDF
-        :param accept_encoding: Encoding to use
-        :type accept_encoding: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: file
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            udf (MultiArrayUDF): UDF to run
+
+        Keyword Args:
+            accept_encoding (str): Encoding to use. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            file_type
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.submit_multi_array_udf_with_http_info(
-            namespace, udf, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["udf"] = udf
+        return self.submit_multi_array_udf_endpoint.call_with_http_info(**kwargs)
 
-    def submit_multi_array_udf_with_http_info(
-        self, namespace, udf, **kwargs
-    ):  # noqa: E501
-        """submit_multi_array_udf  # noqa: E501
-
-        submit a multi-array UDF in the given namespace  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.submit_multi_array_udf_with_http_info(namespace, udf, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param udf: UDF to run (required)
-        :type udf: MultiArrayUDF
-        :param accept_encoding: Encoding to use
-        :type accept_encoding: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(file, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "udf", "accept_encoding"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method submit_multi_array_udf" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `submit_multi_array_udf`"
-            )  # noqa: E501
-        # verify the required parameter 'udf' is set
-        if self.api_client.client_side_validation and (
-            "udf" not in local_var_params
-            or local_var_params["udf"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `udf` when calling `submit_multi_array_udf`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-        if "accept_encoding" in local_var_params:
-            header_params["Accept-Encoding"] = local_var_params[
-                "accept_encoding"
-            ]  # noqa: E501
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "udf" in local_var_params:
-            body_params = local_var_params["udf"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/octet-stream"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "file",
-        }
-
-        return self.api_client.call_api(
-            "/udfs/arrays/{namespace}",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def submit_udf(self, namespace, array, udf, **kwargs):  # noqa: E501
+    def submit_udf(self, namespace, array, udf, **kwargs):
         """submit_udf  # noqa: E501
 
         send a UDF to run against a specified array/URI registered to a group/project  # noqa: E501
@@ -1430,200 +1020,53 @@ class UdfApi(object):
         >>> thread = api.submit_udf(namespace, array, udf, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param udf: UDF to run (required)
-        :type udf: MultiArrayUDF
-        :param x_payer: Name of organization or user who should be charged for this request
-        :type x_payer: str
-        :param accept_encoding: Encoding to use
-        :type accept_encoding: str
-        :param v2: flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.
-        :type v2: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: file
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            array (str): name/uri of array that is url-encoded
+            udf (MultiArrayUDF): UDF to run
+
+        Keyword Args:
+            x_payer (str): Name of organization or user who should be charged for this request. [optional]
+            accept_encoding (str): Encoding to use. [optional]
+            v2 (str): flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            file_type
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.submit_udf_with_http_info(
-            namespace, array, udf, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["array"] = array
+        kwargs["udf"] = udf
+        return self.submit_udf_endpoint.call_with_http_info(**kwargs)
 
-    def submit_udf_with_http_info(self, namespace, array, udf, **kwargs):  # noqa: E501
-        """submit_udf  # noqa: E501
-
-        send a UDF to run against a specified array/URI registered to a group/project  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.submit_udf_with_http_info(namespace, array, udf, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param udf: UDF to run (required)
-        :type udf: MultiArrayUDF
-        :param x_payer: Name of organization or user who should be charged for this request
-        :type x_payer: str
-        :param accept_encoding: Encoding to use
-        :type accept_encoding: str
-        :param v2: flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.
-        :type v2: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(file, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "array", "udf", "x_payer", "accept_encoding", "v2"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method submit_udf" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `submit_udf`"
-            )  # noqa: E501
-        # verify the required parameter 'array' is set
-        if self.api_client.client_side_validation and (
-            "array" not in local_var_params
-            or local_var_params["array"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `array` when calling `submit_udf`"
-            )  # noqa: E501
-        # verify the required parameter 'udf' is set
-        if self.api_client.client_side_validation and (
-            "udf" not in local_var_params
-            or local_var_params["udf"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `udf` when calling `submit_udf`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "array" in local_var_params:
-            path_params["array"] = local_var_params["array"]  # noqa: E501
-
-        query_params = []
-        if (
-            "v2" in local_var_params and local_var_params["v2"] is not None
-        ):  # noqa: E501
-            query_params.append(("v2", local_var_params["v2"]))  # noqa: E501
-
-        header_params = {}
-        if "x_payer" in local_var_params:
-            header_params["X-Payer"] = local_var_params["x_payer"]  # noqa: E501
-        if "accept_encoding" in local_var_params:
-            header_params["Accept-Encoding"] = local_var_params[
-                "accept_encoding"
-            ]  # noqa: E501
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "udf" in local_var_params:
-            body_params = local_var_params["udf"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/octet-stream"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "file",
-        }
-
-        return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/udf/submit",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def udf_namespace_array_end_timestamps_get(
-        self, namespace, array, **kwargs
-    ):  # noqa: E501
+    def udf_namespace_array_end_timestamps_get(self, namespace, array, **kwargs):
         """udf_namespace_array_end_timestamps_get  # noqa: E501
 
         retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated  # noqa: E501
@@ -1633,175 +1076,52 @@ class UdfApi(object):
         >>> thread = api.udf_namespace_array_end_timestamps_get(namespace, array, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param page: pagination offset
-        :type page: int
-        :param per_page: pagination limit
-        :type per_page: int
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: ArrayEndTimestampData
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            array (str): name/uri of array that is url-encoded
+
+        Keyword Args:
+            page (int): pagination offset. [optional]
+            per_page (int): pagination limit. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            ArrayEndTimestampData
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.udf_namespace_array_end_timestamps_get_with_http_info(
-            namespace, array, **kwargs
-        )  # noqa: E501
-
-    def udf_namespace_array_end_timestamps_get_with_http_info(
-        self, namespace, array, **kwargs
-    ):  # noqa: E501
-        """udf_namespace_array_end_timestamps_get  # noqa: E501
-
-        retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.udf_namespace_array_end_timestamps_get_with_http_info(namespace, array, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param page: pagination offset
-        :type page: int
-        :param per_page: pagination limit
-        :type per_page: int
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(ArrayEndTimestampData, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "array", "page", "per_page"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["array"] = array
+        return self.udf_namespace_array_end_timestamps_get_endpoint.call_with_http_info(
+            **kwargs
         )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method udf_namespace_array_end_timestamps_get" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `udf_namespace_array_end_timestamps_get`"
-            )  # noqa: E501
-        # verify the required parameter 'array' is set
-        if self.api_client.client_side_validation and (
-            "array" not in local_var_params
-            or local_var_params["array"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `array` when calling `udf_namespace_array_end_timestamps_get`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "array" in local_var_params:
-            path_params["array"] = local_var_params["array"]  # noqa: E501
-
-        query_params = []
-        if (
-            "page" in local_var_params and local_var_params["page"] is not None
-        ):  # noqa: E501
-            query_params.append(("page", local_var_params["page"]))  # noqa: E501
-        if (
-            "per_page" in local_var_params and local_var_params["per_page"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("per_page", local_var_params["per_page"])
-            )  # noqa: E501
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "ArrayEndTimestampData",
-        }
-
-        return self.api_client.call_api(
-            "/udf/{namespace}/{array}/end_timestamps",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def update_udf_info(self, namespace, name, udf, **kwargs):  # noqa: E501
+    def update_udf_info(self, namespace, name, udf, **kwargs):
         """update_udf_info  # noqa: E501
 
         update an existing registered UDF in the given namespace  # noqa: E501
@@ -1811,171 +1131,45 @@ class UdfApi(object):
         >>> thread = api.update_udf_info(namespace, name, udf, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param name: name to register UDF under (required)
-        :type name: str
-        :param udf: UDF to update (required)
-        :type udf: UDFInfoUpdate
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            name (str): name to register UDF under
+            udf (UDFInfoUpdate): UDF to update
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.update_udf_info_with_http_info(
-            namespace, name, udf, **kwargs
-        )  # noqa: E501
-
-    def update_udf_info_with_http_info(
-        self, namespace, name, udf, **kwargs
-    ):  # noqa: E501
-        """update_udf_info  # noqa: E501
-
-        update an existing registered UDF in the given namespace  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.update_udf_info_with_http_info(namespace, name, udf, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param name: name to register UDF under (required)
-        :type name: str
-        :param udf: UDF to update (required)
-        :type udf: UDFInfoUpdate
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "name", "udf"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method update_udf_info" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `update_udf_info`"
-            )  # noqa: E501
-        # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and (
-            "name" not in local_var_params
-            or local_var_params["name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `name` when calling `update_udf_info`"
-            )  # noqa: E501
-        # verify the required parameter 'udf' is set
-        if self.api_client.client_side_validation and (
-            "udf" not in local_var_params
-            or local_var_params["udf"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `udf` when calling `update_udf_info`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "name" in local_var_params:
-            path_params["name"] = local_var_params["name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "udf" in local_var_params:
-            body_params = local_var_params["udf"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/udf/{namespace}/{name}",
-            "PATCH",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["name"] = name
+        kwargs["udf"] = udf
+        return self.update_udf_info_endpoint.call_with_http_info(**kwargs)

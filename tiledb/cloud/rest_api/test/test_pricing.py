@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,14 +8,22 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.pricing import Pricing  # noqa: E501
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.pricing_aggregate_usage import PricingAggregateUsage
+from tiledb.cloud.rest_api.model.pricing_currency import PricingCurrency
+from tiledb.cloud.rest_api.model.pricing_interval import PricingInterval
+from tiledb.cloud.rest_api.model.pricing_type import PricingType
+from tiledb.cloud.rest_api.model.pricing_unit_label import PricingUnitLabel
+
+globals()["PricingAggregateUsage"] = PricingAggregateUsage
+globals()["PricingCurrency"] = PricingCurrency
+globals()["PricingInterval"] = PricingInterval
+globals()["PricingType"] = PricingType
+globals()["PricingUnitLabel"] = PricingUnitLabel
+from tiledb.cloud.rest_api.model.pricing import Pricing
 
 
 class TestPricing(unittest.TestCase):
@@ -29,35 +35,11 @@ class TestPricing(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test Pricing
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.pricing.Pricing()  # noqa: E501
-        if include_optional:
-            return Pricing(
-                id="planID",
-                array_uuid="00000000-0000-0000-0000-000000000000",
-                pricing_name="",
-                pricing_type="egress",
-                product_name="",
-                product_statement_descriptor="",
-                product_unit_label="byte",
-                currency="USD",
-                aggregate_usage="sum",
-                interval="month",
-                divided_by=1048576,
-                charge=1.337,
-                activated=False,
-            )
-        else:
-            return Pricing()
-
     def testPricing(self):
         """Test Pricing"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = Pricing()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

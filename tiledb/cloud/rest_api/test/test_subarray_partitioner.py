@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,16 +8,24 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.subarray_partitioner import (  # noqa: E501
-    SubarrayPartitioner,
+from tiledb.cloud.rest_api.model.attribute_buffer_size import AttributeBufferSize
+from tiledb.cloud.rest_api.model.subarray import Subarray
+from tiledb.cloud.rest_api.model.subarray_partitioner_current import (
+    SubarrayPartitionerCurrent,
 )
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.subarray_partitioner_state import (
+    SubarrayPartitionerState,
+)
+
+globals()["AttributeBufferSize"] = AttributeBufferSize
+globals()["Subarray"] = Subarray
+globals()["SubarrayPartitionerCurrent"] = SubarrayPartitionerCurrent
+globals()["SubarrayPartitionerState"] = SubarrayPartitionerState
+from tiledb.cloud.rest_api.model.subarray_partitioner import SubarrayPartitioner
 
 
 class TestSubarrayPartitioner(unittest.TestCase):
@@ -31,73 +37,11 @@ class TestSubarrayPartitioner(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test SubarrayPartitioner
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.subarray_partitioner.SubarrayPartitioner()  # noqa: E501
-        if include_optional:
-            return SubarrayPartitioner(
-                subarray=tiledb.cloud.rest_api.models.subarray.Subarray(
-                    layout="row-major",
-                    ranges=[
-                        tiledb.cloud.rest_api.models.subarray_ranges.SubarrayRanges(
-                            type="INT32",
-                            has_default_range=True,
-                            buffer=[56],
-                        )
-                    ],
-                ),
-                budget=[
-                    tiledb.cloud.rest_api.models.attribute_buffer_size.AttributeBufferSize(
-                        attribute="",
-                        offset_bytes=56,
-                        data_bytes=56,
-                    )
-                ],
-                current=tiledb.cloud.rest_api.models.subarray_partitioner_current.SubarrayPartitioner_current(
-                    subarray=tiledb.cloud.rest_api.models.subarray.Subarray(
-                        layout="row-major",
-                        ranges=[
-                            tiledb.cloud.rest_api.models.subarray_ranges.SubarrayRanges(
-                                type="INT32",
-                                has_default_range=True,
-                                buffer=[56],
-                            )
-                        ],
-                    ),
-                    start=56,
-                    end=56,
-                    split_multi_range=True,
-                ),
-                state=tiledb.cloud.rest_api.models.subarray_partitioner_state.SubarrayPartitioner_state(
-                    start=56,
-                    end=56,
-                    single_range=[
-                        tiledb.cloud.rest_api.models.subarray.Subarray(
-                            layout="row-major",
-                            ranges=[
-                                tiledb.cloud.rest_api.models.subarray_ranges.SubarrayRanges(
-                                    type="INT32",
-                                    has_default_range=True,
-                                    buffer=[56],
-                                )
-                            ],
-                        )
-                    ],
-                    multi_range=[tiledb.cloud.rest_api.models.subarray.Subarray()],
-                ),
-                memory_budget=56,
-                memory_budget_var=56,
-            )
-        else:
-            return SubarrayPartitioner()
-
     def testSubarrayPartitioner(self):
         """Test SubarrayPartitioner"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = SubarrayPartitioner()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

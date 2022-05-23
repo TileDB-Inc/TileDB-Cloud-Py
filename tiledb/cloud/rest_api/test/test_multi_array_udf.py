@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,14 +8,24 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.multi_array_udf import MultiArrayUDF  # noqa: E501
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.query_ranges import QueryRanges
+from tiledb.cloud.rest_api.model.result_format import ResultFormat
+from tiledb.cloud.rest_api.model.tgudf_argument import TGUDFArgument
+from tiledb.cloud.rest_api.model.udf_array_details import UDFArrayDetails
+from tiledb.cloud.rest_api.model.udf_language import UDFLanguage
+from tiledb.cloud.rest_api.model.udf_subarray import UDFSubarray
+
+globals()["QueryRanges"] = QueryRanges
+globals()["ResultFormat"] = ResultFormat
+globals()["TGUDFArgument"] = TGUDFArgument
+globals()["UDFArrayDetails"] = UDFArrayDetails
+globals()["UDFLanguage"] = UDFLanguage
+globals()["UDFSubarray"] = UDFSubarray
+from tiledb.cloud.rest_api.model.multi_array_udf import MultiArrayUDF
 
 
 class TestMultiArrayUDF(unittest.TestCase):
@@ -29,91 +37,11 @@ class TestMultiArrayUDF(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test MultiArrayUDF
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.multi_array_udf.MultiArrayUDF()  # noqa: E501
-        if include_optional:
-            return MultiArrayUDF(
-                udf_info_name="TileDB-Inc/quickstart_median",
-                language="python",
-                version="",
-                image_name="",
-                resource_class="standard",
-                _exec="",
-                exec_raw="",
-                result_format="python_pickle",
-                task_name="",
-                argument="",
-                arguments_json=[
-                    tiledb.cloud.rest_api.models.tgudf_argument.TGUDFArgument(
-                        name="",
-                        value=tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue(),
-                    )
-                ],
-                stored_param_uuids=[""],
-                store_results=True,
-                dont_download_results=True,
-                ranges=tiledb.cloud.rest_api.models.query_ranges.QueryRanges(
-                    layout="row-major",
-                    ranges=[[1.337]],
-                ),
-                subarray=tiledb.cloud.rest_api.models.udf_subarray.UDFSubarray(
-                    layout="row-major",
-                    ranges=[
-                        tiledb.cloud.rest_api.models.udf_subarray_range.UDFSubarrayRange(
-                            dimension_id=56,
-                            range_start=tiledb.cloud.rest_api.models.dimension_coordinate.DimensionCoordinate(
-                                int8=56,
-                                uint8=56,
-                                int16=56,
-                                uint16=56,
-                                int32=56,
-                                uint32=56,
-                                int64=56,
-                                uint64=56,
-                                float32=1.337,
-                                float64=1.337,
-                            ),
-                            range_end=tiledb.cloud.rest_api.models.dimension_coordinate.DimensionCoordinate(
-                                int8=56,
-                                uint8=56,
-                                int16=56,
-                                uint16=56,
-                                int32=56,
-                                uint32=56,
-                                int64=56,
-                                uint64=56,
-                                float32=1.337,
-                                float64=1.337,
-                            ),
-                        )
-                    ],
-                ),
-                buffers=[""],
-                arrays=[
-                    tiledb.cloud.rest_api.models.udf_array_details.UDFArrayDetails(
-                        parameter_id="",
-                        uri="",
-                        ranges=tiledb.cloud.rest_api.models.query_ranges.QueryRanges(
-                            layout="row-major",
-                        ),
-                        buffers=[""],
-                    )
-                ],
-                timeout=56,
-                task_graph_uuid="",
-                client_node_uuid="",
-            )
-        else:
-            return MultiArrayUDF()
-
     def testMultiArrayUDF(self):
         """Test MultiArrayUDF"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = MultiArrayUDF()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

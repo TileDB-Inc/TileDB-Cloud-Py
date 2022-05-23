@@ -5,16 +5,17 @@ Domain object for an array of each type
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**int8** | **list[int]** |  | [optional] 
-**uint8** | **list[int]** |  | [optional] 
-**int16** | **list[int]** |  | [optional] 
-**uint16** | **list[int]** |  | [optional] 
-**int32** | **list[int]** |  | [optional] 
-**uint32** | **list[int]** |  | [optional] 
-**int64** | **list[int]** |  | [optional] 
-**uint64** | **list[int]** |  | [optional] 
-**float32** | **list[float]** |  | [optional] 
-**float64** | **list[float]** |  | [optional] 
+**int8** | **[int]** |  | [optional] 
+**uint8** | **[int]** |  | [optional] 
+**int16** | **[int]** |  | [optional] 
+**uint16** | **[int]** |  | [optional] 
+**int32** | **[int]** |  | [optional] 
+**uint32** | **[int]** |  | [optional] 
+**int64** | **[int]** |  | [optional] 
+**uint64** | **[int]** |  | [optional] 
+**float32** | **[float]** |  | [optional] 
+**float64** | **[float]** |  | [optional] 
+**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,16 +8,14 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.tgudf_environment import (  # noqa: E501
-    TGUDFEnvironment,
-)
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.udf_language import UDFLanguage
+
+globals()["UDFLanguage"] = UDFLanguage
+from tiledb.cloud.rest_api.model.tgudf_environment import TGUDFEnvironment
 
 
 class TestTGUDFEnvironment(unittest.TestCase):
@@ -31,23 +27,11 @@ class TestTGUDFEnvironment(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test TGUDFEnvironment
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.tgudf_environment.TGUDFEnvironment()  # noqa: E501
-        if include_optional:
-            return TGUDFEnvironment(
-                language="python", language_version="", image_name="", resource_class=""
-            )
-        else:
-            return TGUDFEnvironment()
-
     def testTGUDFEnvironment(self):
         """Test TGUDFEnvironment"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = TGUDFEnvironment()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

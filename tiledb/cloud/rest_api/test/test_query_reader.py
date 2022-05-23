@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,14 +8,18 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.query_reader import QueryReader  # noqa: E501
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.layout import Layout
+from tiledb.cloud.rest_api.model.read_state import ReadState
+from tiledb.cloud.rest_api.model.subarray import Subarray
+
+globals()["Layout"] = Layout
+globals()["ReadState"] = ReadState
+globals()["Subarray"] = Subarray
+from tiledb.cloud.rest_api.model.query_reader import QueryReader
 
 
 class TestQueryReader(unittest.TestCase):
@@ -29,77 +31,11 @@ class TestQueryReader(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test QueryReader
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.query_reader.QueryReader()  # noqa: E501
-        if include_optional:
-            return QueryReader(
-                layout="row-major",
-                subarray=tiledb.cloud.rest_api.models.subarray.Subarray(
-                    layout="row-major",
-                    ranges=[
-                        tiledb.cloud.rest_api.models.subarray_ranges.SubarrayRanges(
-                            type="INT32",
-                            has_default_range=True,
-                            buffer=[56],
-                        )
-                    ],
-                ),
-                read_state=tiledb.cloud.rest_api.models.read_state.ReadState(
-                    initialized=True,
-                    overflowed=True,
-                    unsplittable=True,
-                    subarray_partitioner=tiledb.cloud.rest_api.models.subarray_partitioner.SubarrayPartitioner(
-                        subarray=tiledb.cloud.rest_api.models.subarray.Subarray(
-                            layout="row-major",
-                            ranges=[
-                                tiledb.cloud.rest_api.models.subarray_ranges.SubarrayRanges(
-                                    type="INT32",
-                                    has_default_range=True,
-                                    buffer=[56],
-                                )
-                            ],
-                        ),
-                        budget=[
-                            tiledb.cloud.rest_api.models.attribute_buffer_size.AttributeBufferSize(
-                                attribute="",
-                                offset_bytes=56,
-                                data_bytes=56,
-                            )
-                        ],
-                        current=tiledb.cloud.rest_api.models.subarray_partitioner_current.SubarrayPartitioner_current(
-                            start=56,
-                            end=56,
-                            split_multi_range=True,
-                        ),
-                        state=tiledb.cloud.rest_api.models.subarray_partitioner_state.SubarrayPartitioner_state(
-                            start=56,
-                            end=56,
-                            single_range=[
-                                tiledb.cloud.rest_api.models.subarray.Subarray()
-                            ],
-                            multi_range=[
-                                tiledb.cloud.rest_api.models.subarray.Subarray()
-                            ],
-                        ),
-                        memory_budget=56,
-                        memory_budget_var=56,
-                    ),
-                ),
-                var_offsets_mode="",
-                var_offsets_add_extra_element=True,
-                var_offsets_bitsize=56,
-            )
-        else:
-            return QueryReader()
-
     def testQueryReader(self):
         """Test QueryReader"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = QueryReader()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

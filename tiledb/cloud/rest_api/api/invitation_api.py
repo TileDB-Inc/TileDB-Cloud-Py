@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,16 +8,26 @@
 """
 
 
-from __future__ import absolute_import
-
 import re  # noqa: F401
-
-# python 2 and python 3 compatibility library
-import six
+import sys  # noqa: F401
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import ApiTypeError  # noqa: F401
-from tiledb.cloud.rest_api.exceptions import ApiValueError
+from tiledb.cloud.rest_api.api_client import Endpoint as _Endpoint
+from tiledb.cloud.rest_api.model.error import Error
+from tiledb.cloud.rest_api.model.invitation_array_share_email import (
+    InvitationArrayShareEmail,
+)
+from tiledb.cloud.rest_api.model.invitation_data import InvitationData
+from tiledb.cloud.rest_api.model.invitation_organization_join_email import (
+    InvitationOrganizationJoinEmail,
+)
+from tiledb.cloud.rest_api.model_utils import check_allowed_values  # noqa: F401
+from tiledb.cloud.rest_api.model_utils import check_validations
+from tiledb.cloud.rest_api.model_utils import date
+from tiledb.cloud.rest_api.model_utils import datetime
+from tiledb.cloud.rest_api.model_utils import file_type
+from tiledb.cloud.rest_api.model_utils import none_type
+from tiledb.cloud.rest_api.model_utils import validate_and_convert_types
 
 
 class InvitationApi(object):
@@ -33,8 +41,306 @@ class InvitationApi(object):
         if api_client is None:
             api_client = ApiClient()
         self.api_client = api_client
+        self.accept_invitation_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/invitations/{invitation}",
+                "operation_id": "accept_invitation",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "invitation",
+                ],
+                "required": [
+                    "invitation",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "invitation": (str,),
+                },
+                "attribute_map": {
+                    "invitation": "invitation",
+                },
+                "location_map": {
+                    "invitation": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.cancel_join_organization_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/invitations/{invitation}/{organization}/join",
+                "operation_id": "cancel_join_organization",
+                "http_method": "DELETE",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "invitation",
+                    "organization",
+                ],
+                "required": [
+                    "invitation",
+                    "organization",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "invitation": (str,),
+                    "organization": (str,),
+                },
+                "attribute_map": {
+                    "invitation": "invitation",
+                    "organization": "organization",
+                },
+                "location_map": {
+                    "invitation": "path",
+                    "organization": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.cancel_share_array_by_invite_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/invitations/{invitation}/{namespace}/{array}/share",
+                "operation_id": "cancel_share_array_by_invite",
+                "http_method": "DELETE",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "invitation",
+                    "array",
+                ],
+                "required": [
+                    "namespace",
+                    "invitation",
+                    "array",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "invitation": (str,),
+                    "array": (str,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "invitation": "invitation",
+                    "array": "array",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "invitation": "path",
+                    "array": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.fetch_invitations_endpoint = _Endpoint(
+            settings={
+                "response_type": (InvitationData,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/invitations",
+                "operation_id": "fetch_invitations",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "organization",
+                    "array",
+                    "start",
+                    "end",
+                    "page",
+                    "per_page",
+                    "type",
+                    "status",
+                    "orderby",
+                ],
+                "required": [],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "organization": (str,),
+                    "array": (str,),
+                    "start": (int,),
+                    "end": (int,),
+                    "page": (int,),
+                    "per_page": (int,),
+                    "type": (str,),
+                    "status": (str,),
+                    "orderby": (str,),
+                },
+                "attribute_map": {
+                    "organization": "organization",
+                    "array": "array",
+                    "start": "start",
+                    "end": "end",
+                    "page": "page",
+                    "per_page": "per_page",
+                    "type": "type",
+                    "status": "status",
+                    "orderby": "orderby",
+                },
+                "location_map": {
+                    "organization": "query",
+                    "array": "query",
+                    "start": "query",
+                    "end": "query",
+                    "page": "query",
+                    "per_page": "query",
+                    "type": "query",
+                    "status": "query",
+                    "orderby": "query",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.join_organization_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/invitations/{organization}/join",
+                "operation_id": "join_organization",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "organization",
+                    "email_invite",
+                ],
+                "required": [
+                    "organization",
+                    "email_invite",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "organization": (str,),
+                    "email_invite": (InvitationOrganizationJoinEmail,),
+                },
+                "attribute_map": {
+                    "organization": "organization",
+                },
+                "location_map": {
+                    "organization": "path",
+                    "email_invite": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.share_array_by_invite_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/invitations/{namespace}/{array}/share",
+                "operation_id": "share_array_by_invite",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "array",
+                    "email_invite",
+                ],
+                "required": [
+                    "namespace",
+                    "array",
+                    "email_invite",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "array": (str,),
+                    "email_invite": (InvitationArrayShareEmail,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "array": "array",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "array": "path",
+                    "email_invite": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
 
-    def accept_invitation(self, invitation, **kwargs):  # noqa: E501
+    def accept_invitation(self, invitation, **kwargs):
         """accept_invitation  # noqa: E501
 
         Accepts invitation  # noqa: E501
@@ -44,139 +350,46 @@ class InvitationApi(object):
         >>> thread = api.accept_invitation(invitation, async_req=True)
         >>> result = thread.get()
 
-        :param invitation: the ID of invitation about to be accepted (required)
-        :type invitation: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            invitation (str): the ID of invitation about to be accepted
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.accept_invitation_with_http_info(invitation, **kwargs)  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["invitation"] = invitation
+        return self.accept_invitation_endpoint.call_with_http_info(**kwargs)
 
-    def accept_invitation_with_http_info(self, invitation, **kwargs):  # noqa: E501
-        """accept_invitation  # noqa: E501
-
-        Accepts invitation  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.accept_invitation_with_http_info(invitation, async_req=True)
-        >>> result = thread.get()
-
-        :param invitation: the ID of invitation about to be accepted (required)
-        :type invitation: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["invitation"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method accept_invitation" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'invitation' is set
-        if self.api_client.client_side_validation and (
-            "invitation" not in local_var_params
-            or local_var_params["invitation"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `invitation` when calling `accept_invitation`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "invitation" in local_var_params:
-            path_params["invitation"] = local_var_params["invitation"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/invitations/{invitation}",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def cancel_join_organization(
-        self, invitation, organization, **kwargs
-    ):  # noqa: E501
+    def cancel_join_organization(self, invitation, organization, **kwargs):
         """cancel_join_organization  # noqa: E501
 
         Cancels join organization invitation  # noqa: E501
@@ -186,157 +399,48 @@ class InvitationApi(object):
         >>> thread = api.cancel_join_organization(invitation, organization, async_req=True)
         >>> result = thread.get()
 
-        :param invitation: the ID of invitation about to be cancelled (required)
-        :type invitation: str
-        :param organization: name or UUID of organization (required)
-        :type organization: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            invitation (str): the ID of invitation about to be cancelled
+            organization (str): name or UUID of organization
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.cancel_join_organization_with_http_info(
-            invitation, organization, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["invitation"] = invitation
+        kwargs["organization"] = organization
+        return self.cancel_join_organization_endpoint.call_with_http_info(**kwargs)
 
-    def cancel_join_organization_with_http_info(
-        self, invitation, organization, **kwargs
-    ):  # noqa: E501
-        """cancel_join_organization  # noqa: E501
-
-        Cancels join organization invitation  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.cancel_join_organization_with_http_info(invitation, organization, async_req=True)
-        >>> result = thread.get()
-
-        :param invitation: the ID of invitation about to be cancelled (required)
-        :type invitation: str
-        :param organization: name or UUID of organization (required)
-        :type organization: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["invitation", "organization"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method cancel_join_organization" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'invitation' is set
-        if self.api_client.client_side_validation and (
-            "invitation" not in local_var_params
-            or local_var_params["invitation"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `invitation` when calling `cancel_join_organization`"
-            )  # noqa: E501
-        # verify the required parameter 'organization' is set
-        if self.api_client.client_side_validation and (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `cancel_join_organization`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "invitation" in local_var_params:
-            path_params["invitation"] = local_var_params["invitation"]  # noqa: E501
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/invitations/{invitation}/{organization}/join",
-            "DELETE",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def cancel_share_array_by_invite(
-        self, namespace, invitation, array, **kwargs
-    ):  # noqa: E501
+    def cancel_share_array_by_invite(self, namespace, invitation, array, **kwargs):
         """cancel_share_array_by_invite  # noqa: E501
 
         Cancels array sharing invitation  # noqa: E501
@@ -346,169 +450,50 @@ class InvitationApi(object):
         >>> thread = api.cancel_share_array_by_invite(namespace, invitation, array, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param invitation: the ID of invitation about to be cancelled (required)
-        :type invitation: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            invitation (str): the ID of invitation about to be cancelled
+            array (str): name/uri of array that is url-encoded
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.cancel_share_array_by_invite_with_http_info(
-            namespace, invitation, array, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["invitation"] = invitation
+        kwargs["array"] = array
+        return self.cancel_share_array_by_invite_endpoint.call_with_http_info(**kwargs)
 
-    def cancel_share_array_by_invite_with_http_info(
-        self, namespace, invitation, array, **kwargs
-    ):  # noqa: E501
-        """cancel_share_array_by_invite  # noqa: E501
-
-        Cancels array sharing invitation  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.cancel_share_array_by_invite_with_http_info(namespace, invitation, array, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param invitation: the ID of invitation about to be cancelled (required)
-        :type invitation: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "invitation", "array"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method cancel_share_array_by_invite" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `cancel_share_array_by_invite`"
-            )  # noqa: E501
-        # verify the required parameter 'invitation' is set
-        if self.api_client.client_side_validation and (
-            "invitation" not in local_var_params
-            or local_var_params["invitation"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `invitation` when calling `cancel_share_array_by_invite`"
-            )  # noqa: E501
-        # verify the required parameter 'array' is set
-        if self.api_client.client_side_validation and (
-            "array" not in local_var_params
-            or local_var_params["array"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `array` when calling `cancel_share_array_by_invite`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "invitation" in local_var_params:
-            path_params["invitation"] = local_var_params["invitation"]  # noqa: E501
-        if "array" in local_var_params:
-            path_params["array"] = local_var_params["array"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/invitations/{invitation}/{namespace}/{array}/share",
-            "DELETE",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def fetch_invitations(self, **kwargs):  # noqa: E501
+    def fetch_invitations(self, **kwargs):
         """fetch_invitations  # noqa: E501
 
         Fetch a list of invitations  # noqa: E501
@@ -518,212 +503,52 @@ class InvitationApi(object):
         >>> thread = api.fetch_invitations(async_req=True)
         >>> result = thread.get()
 
-        :param organization: name or ID of organization to filter
-        :type organization: str
-        :param array: name/uri of array that is url-encoded to filter
-        :type array: str
-        :param start: start time for tasks to filter by
-        :type start: int
-        :param end: end time for tasks to filter by
-        :type end: int
-        :param page: pagination offset
-        :type page: int
-        :param per_page: pagination limit
-        :type per_page: int
-        :param type: invitation type, \"ARRAY_SHARE\", \"JOIN_ORGANIZATION\"
-        :type type: str
-        :param status: Filter to only return \"PENDING\", \"ACCEPTED\"
-        :type status: str
-        :param orderby: sort by which field valid values include timestamp, array_name, organization_name
-        :type orderby: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: InvitationData
+
+        Keyword Args:
+            organization (str): name or ID of organization to filter. [optional]
+            array (str): name/uri of array that is url-encoded to filter. [optional]
+            start (int): start time for tasks to filter by. [optional]
+            end (int): end time for tasks to filter by. [optional]
+            page (int): pagination offset. [optional]
+            per_page (int): pagination limit. [optional]
+            type (str): invitation type, \"ARRAY_SHARE\", \"JOIN_ORGANIZATION\". [optional]
+            status (str): Filter to only return \"PENDING\", \"ACCEPTED\". [optional]
+            orderby (str): sort by which field valid values include timestamp, array_name, organization_name. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            InvitationData
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.fetch_invitations_with_http_info(**kwargs)  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        return self.fetch_invitations_endpoint.call_with_http_info(**kwargs)
 
-    def fetch_invitations_with_http_info(self, **kwargs):  # noqa: E501
-        """fetch_invitations  # noqa: E501
-
-        Fetch a list of invitations  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.fetch_invitations_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param organization: name or ID of organization to filter
-        :type organization: str
-        :param array: name/uri of array that is url-encoded to filter
-        :type array: str
-        :param start: start time for tasks to filter by
-        :type start: int
-        :param end: end time for tasks to filter by
-        :type end: int
-        :param page: pagination offset
-        :type page: int
-        :param per_page: pagination limit
-        :type per_page: int
-        :param type: invitation type, \"ARRAY_SHARE\", \"JOIN_ORGANIZATION\"
-        :type type: str
-        :param status: Filter to only return \"PENDING\", \"ACCEPTED\"
-        :type status: str
-        :param orderby: sort by which field valid values include timestamp, array_name, organization_name
-        :type orderby: str
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: tuple(InvitationData, status_code(int), headers(HTTPHeaderDict))
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "organization",
-            "array",
-            "start",
-            "end",
-            "page",
-            "per_page",
-            "type",
-            "status",
-            "orderby",
-        ]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method fetch_invitations" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-        if (
-            "organization" in local_var_params
-            and local_var_params["organization"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("organization", local_var_params["organization"])
-            )  # noqa: E501
-        if (
-            "array" in local_var_params and local_var_params["array"] is not None
-        ):  # noqa: E501
-            query_params.append(("array", local_var_params["array"]))  # noqa: E501
-        if (
-            "start" in local_var_params and local_var_params["start"] is not None
-        ):  # noqa: E501
-            query_params.append(("start", local_var_params["start"]))  # noqa: E501
-        if (
-            "end" in local_var_params and local_var_params["end"] is not None
-        ):  # noqa: E501
-            query_params.append(("end", local_var_params["end"]))  # noqa: E501
-        if (
-            "page" in local_var_params and local_var_params["page"] is not None
-        ):  # noqa: E501
-            query_params.append(("page", local_var_params["page"]))  # noqa: E501
-        if (
-            "per_page" in local_var_params and local_var_params["per_page"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("per_page", local_var_params["per_page"])
-            )  # noqa: E501
-        if (
-            "type" in local_var_params and local_var_params["type"] is not None
-        ):  # noqa: E501
-            query_params.append(("type", local_var_params["type"]))  # noqa: E501
-        if (
-            "status" in local_var_params and local_var_params["status"] is not None
-        ):  # noqa: E501
-            query_params.append(("status", local_var_params["status"]))  # noqa: E501
-        if (
-            "orderby" in local_var_params and local_var_params["orderby"] is not None
-        ):  # noqa: E501
-            query_params.append(("orderby", local_var_params["orderby"]))  # noqa: E501
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {
-            200: "InvitationData",
-        }
-
-        return self.api_client.call_api(
-            "/invitations",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def join_organization(self, organization, email_invite, **kwargs):  # noqa: E501
+    def join_organization(self, organization, email_invite, **kwargs):
         """join_organization  # noqa: E501
 
         Sends email to multiple recipients with joining information regarding an organization  # noqa: E501
@@ -733,164 +558,48 @@ class InvitationApi(object):
         >>> thread = api.join_organization(organization, email_invite, async_req=True)
         >>> result = thread.get()
 
-        :param organization: name or UUID of organization (required)
-        :type organization: str
-        :param email_invite: list of email recipients (required)
-        :type email_invite: InvitationOrganizationJoinEmail
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            organization (str): name or UUID of organization
+            email_invite (InvitationOrganizationJoinEmail): list of email recipients
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.join_organization_with_http_info(
-            organization, email_invite, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["organization"] = organization
+        kwargs["email_invite"] = email_invite
+        return self.join_organization_endpoint.call_with_http_info(**kwargs)
 
-    def join_organization_with_http_info(
-        self, organization, email_invite, **kwargs
-    ):  # noqa: E501
-        """join_organization  # noqa: E501
-
-        Sends email to multiple recipients with joining information regarding an organization  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.join_organization_with_http_info(organization, email_invite, async_req=True)
-        >>> result = thread.get()
-
-        :param organization: name or UUID of organization (required)
-        :type organization: str
-        :param email_invite: list of email recipients (required)
-        :type email_invite: InvitationOrganizationJoinEmail
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["organization", "email_invite"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method join_organization" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'organization' is set
-        if self.api_client.client_side_validation and (
-            "organization" not in local_var_params
-            or local_var_params["organization"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `organization` when calling `join_organization`"
-            )  # noqa: E501
-        # verify the required parameter 'email_invite' is set
-        if self.api_client.client_side_validation and (
-            "email_invite" not in local_var_params
-            or local_var_params["email_invite"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `email_invite` when calling `join_organization`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "organization" in local_var_params:
-            path_params["organization"] = local_var_params["organization"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "email_invite" in local_var_params:
-            body_params = local_var_params["email_invite"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/invitations/{organization}/join",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
-
-    def share_array_by_invite(
-        self, namespace, array, email_invite, **kwargs
-    ):  # noqa: E501
+    def share_array_by_invite(self, namespace, array, email_invite, **kwargs):
         """share_array_by_invite  # noqa: E501
 
         Sends email to multiple recipients with sharing information regarding an array  # noqa: E501
@@ -900,171 +609,45 @@ class InvitationApi(object):
         >>> thread = api.share_array_by_invite(namespace, array, email_invite, async_req=True)
         >>> result = thread.get()
 
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param email_invite: list of email recipients (required)
-        :type email_invite: InvitationArrayShareEmail
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
+        Args:
+            namespace (str): namespace array is in (an organization name or user's username)
+            array (str): name/uri of array that is url-encoded
+            email_invite (InvitationArrayShareEmail): list of email recipients
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.share_array_by_invite_with_http_info(
-            namespace, array, email_invite, **kwargs
-        )  # noqa: E501
-
-    def share_array_by_invite_with_http_info(
-        self, namespace, array, email_invite, **kwargs
-    ):  # noqa: E501
-        """share_array_by_invite  # noqa: E501
-
-        Sends email to multiple recipients with sharing information regarding an array  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-        >>> thread = api.share_array_by_invite_with_http_info(namespace, array, email_invite, async_req=True)
-        >>> result = thread.get()
-
-        :param namespace: namespace array is in (an organization name or user's username) (required)
-        :type namespace: str
-        :param array: name/uri of array that is url-encoded (required)
-        :type array: str
-        :param email_invite: list of email recipients (required)
-        :type email_invite: InvitationArrayShareEmail
-        :param async_req: Whether to execute the request asynchronously.
-        :type async_req: bool, optional
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :type _return_http_data_only: bool, optional
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :type _preload_content: bool, optional
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_auth: dict, optional
-        :return: Returns the result object.
-                 If the method is called asynchronously,
-                 returns the request thread.
-        :rtype: None
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "array", "email_invite"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-                "_request_auth",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method share_array_by_invite" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `share_array_by_invite`"
-            )  # noqa: E501
-        # verify the required parameter 'array' is set
-        if self.api_client.client_side_validation and (
-            "array" not in local_var_params
-            or local_var_params["array"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `array` when calling `share_array_by_invite`"
-            )  # noqa: E501
-        # verify the required parameter 'email_invite' is set
-        if self.api_client.client_side_validation and (
-            "email_invite" not in local_var_params
-            or local_var_params["email_invite"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `email_invite` when calling `share_array_by_invite`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "array" in local_var_params:
-            path_params["array"] = local_var_params["array"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "email_invite" in local_var_params:
-            body_params = local_var_params["email_invite"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        response_types_map = {}
-
-        return self.api_client.call_api(
-            "/invitations/{namespace}/{array}/share",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_types_map=response_types_map,
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-            _request_auth=local_var_params.get("_request_auth"),
-        )
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["array"] = array
+        kwargs["email_invite"] = email_invite
+        return self.share_array_by_invite_endpoint.call_with_http_info(**kwargs)

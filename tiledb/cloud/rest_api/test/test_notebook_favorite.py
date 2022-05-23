@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,16 +8,11 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.notebook_favorite import (  # noqa: E501
-    NotebookFavorite,
-)
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.notebook_favorite import NotebookFavorite
 
 
 class TestNotebookFavorite(unittest.TestCase):
@@ -31,21 +24,11 @@ class TestNotebookFavorite(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test NotebookFavorite
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.notebook_favorite.NotebookFavorite()  # noqa: E501
-        if include_optional:
-            return NotebookFavorite(notebook_uuid="", namespace="", name="")
-        else:
-            return NotebookFavorite()
-
     def testNotebookFavorite(self):
         """Test NotebookFavorite"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = NotebookFavorite()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

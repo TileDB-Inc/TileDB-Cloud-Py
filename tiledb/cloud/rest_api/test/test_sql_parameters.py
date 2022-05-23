@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,14 +8,14 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.sql_parameters import SQLParameters  # noqa: E501
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.result_format import ResultFormat
+
+globals()["ResultFormat"] = ResultFormat
+from tiledb.cloud.rest_api.model.sql_parameters import SQLParameters
 
 
 class TestSQLParameters(unittest.TestCase):
@@ -29,32 +27,11 @@ class TestSQLParameters(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test SQLParameters
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.sql_parameters.SQLParameters()  # noqa: E501
-        if include_optional:
-            return SQLParameters(
-                name="",
-                query="",
-                output_uri="s3://my_bucket/my_output_array",
-                store_results=True,
-                dont_download_results=True,
-                result_format="python_pickle",
-                init_commands=[""],
-                parameters=[None],
-                task_graph_uuid="",
-                client_node_uuid="",
-            )
-        else:
-            return SQLParameters()
-
     def testSQLParameters(self):
         """Test SQLParameters"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = SQLParameters()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

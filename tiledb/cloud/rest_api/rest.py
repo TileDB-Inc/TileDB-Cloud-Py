@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,18 +8,14 @@
 """
 
 
-from __future__ import absolute_import
-
 import io
 import json
 import logging
 import re
 import ssl
+from urllib.parse import urlencode
 
-# python 2 and python 3 compatibility library
-import six
 import urllib3
-from six.moves.urllib.parse import urlencode
 
 from tiledb.cloud.rest_api.exceptions import ApiException
 from tiledb.cloud.rest_api.exceptions import ApiValueError
@@ -147,24 +141,24 @@ class RESTClientObject(object):
 
         timeout = None
         if _request_timeout:
-            if isinstance(
-                _request_timeout, six.integer_types + (float,)
-            ):  # noqa: E501,F821
+            if isinstance(_request_timeout, (int, float)):  # noqa: E501,F821
                 timeout = urllib3.Timeout(total=_request_timeout)
             elif isinstance(_request_timeout, tuple) and len(_request_timeout) == 2:
                 timeout = urllib3.Timeout(
                     connect=_request_timeout[0], read=_request_timeout[1]
                 )
 
-        if "Content-Type" not in headers:
-            headers["Content-Type"] = "application/json"
-
         try:
             # For `POST`, `PUT`, `PATCH`, `OPTIONS`, `DELETE`
             if method in ["POST", "PUT", "PATCH", "OPTIONS", "DELETE"]:
+                # Only set a default Content-Type for POST, PUT, PATCH and OPTIONS requests
+                if (method != "DELETE") and ("Content-Type" not in headers):
+                    headers["Content-Type"] = "application/json"
                 if query_params:
                     url += "?" + urlencode(query_params)
-                if re.search("json", headers["Content-Type"], re.IGNORECASE):
+                if ("Content-Type" not in headers) or (
+                    re.search("json", headers["Content-Type"], re.IGNORECASE)
+                ):
                     request_body = None
                     if body is not None:
                         request_body = json.dumps(body)
