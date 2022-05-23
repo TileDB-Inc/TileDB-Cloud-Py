@@ -1,6 +1,7 @@
 # GroupBrowserFilterData
 
 Object with data to fill browser filter
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

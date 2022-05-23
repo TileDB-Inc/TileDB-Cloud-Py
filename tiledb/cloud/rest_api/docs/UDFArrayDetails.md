@@ -1,6 +1,7 @@
 # UDFArrayDetails
 
 Contains array details for multi-array query including uri, ranges buffers
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

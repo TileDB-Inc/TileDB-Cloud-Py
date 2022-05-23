@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -98,7 +103,7 @@ class User(object):
     ):  # noqa: E501
         """User - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._id = None
@@ -175,7 +180,7 @@ class User(object):
         unique ID of user  # noqa: E501
 
         :param id: The id of this User.  # noqa: E501
-        :type: str
+        :type id: str
         """
 
         self._id = id
@@ -198,7 +203,7 @@ class User(object):
         username must be unique  # noqa: E501
 
         :param username: The username of this User.  # noqa: E501
-        :type: str
+        :type username: str
         """
         if (
             self.local_vars_configuration.client_side_validation and username is None
@@ -251,7 +256,7 @@ class User(object):
         password  # noqa: E501
 
         :param password: The password of this User.  # noqa: E501
-        :type: str
+        :type password: str
         """
         if (
             self.local_vars_configuration.client_side_validation
@@ -282,7 +287,7 @@ class User(object):
         the user's full, real name  # noqa: E501
 
         :param name: The name of this User.  # noqa: E501
-        :type: str
+        :type name: str
         """
         if (
             self.local_vars_configuration.client_side_validation
@@ -313,7 +318,7 @@ class User(object):
         the user's email  # noqa: E501
 
         :param email: The email of this User.  # noqa: E501
-        :type: str
+        :type email: str
         """
 
         self._email = email
@@ -336,7 +341,7 @@ class User(object):
         user's email is validated to be correct  # noqa: E501
 
         :param is_valid_email: The is_valid_email of this User.  # noqa: E501
-        :type: bool
+        :type is_valid_email: bool
         """
 
         self._is_valid_email = is_valid_email
@@ -359,7 +364,7 @@ class User(object):
         Denotes that the user is able to apply pricing to arrays by means of Stripe Connect  # noqa: E501
 
         :param stripe_connect: The stripe_connect of this User.  # noqa: E501
-        :type: bool
+        :type stripe_connect: bool
         """
 
         self._stripe_connect = stripe_connect
@@ -382,7 +387,7 @@ class User(object):
         the user's company  # noqa: E501
 
         :param company: The company of this User.  # noqa: E501
-        :type: str
+        :type company: str
         """
 
         self._company = company
@@ -405,7 +410,7 @@ class User(object):
         the user's logo  # noqa: E501
 
         :param logo: The logo of this User.  # noqa: E501
-        :type: str
+        :type logo: str
         """
 
         self._logo = logo
@@ -428,7 +433,7 @@ class User(object):
         when the user last logged in (set by the server)  # noqa: E501
 
         :param last_activity_date: The last_activity_date of this User.  # noqa: E501
-        :type: datetime
+        :type last_activity_date: datetime
         """
 
         self._last_activity_date = last_activity_date
@@ -449,7 +454,7 @@ class User(object):
 
 
         :param timezone: The timezone of this User.  # noqa: E501
-        :type: str
+        :type timezone: str
         """
 
         self._timezone = timezone
@@ -472,7 +477,7 @@ class User(object):
         Array of organizations a user is part of and their roles  # noqa: E501
 
         :param organizations: The organizations of this User.  # noqa: E501
-        :type: list[OrganizationUser]
+        :type organizations: list[OrganizationUser]
         """
 
         self._organizations = organizations
@@ -495,7 +500,7 @@ class User(object):
         list of actions user is allowed to do on this organization  # noqa: E501
 
         :param allowed_actions: The allowed_actions of this User.  # noqa: E501
-        :type: list[NamespaceActions]
+        :type allowed_actions: list[NamespaceActions]
         """
 
         self._allowed_actions = allowed_actions
@@ -518,7 +523,7 @@ class User(object):
         List of extra/optional/beta features to enable for namespace  # noqa: E501
 
         :param enabled_features: The enabled_features of this User.  # noqa: E501
-        :type: list[str]
+        :type enabled_features: list[str]
         """
 
         self._enabled_features = enabled_features
@@ -541,7 +546,7 @@ class User(object):
         A notice that the user has an unpaid subscription  # noqa: E501
 
         :param unpaid_subscription: The unpaid_subscription of this User.  # noqa: E501
-        :type: bool
+        :type unpaid_subscription: bool
         """
 
         self._unpaid_subscription = unpaid_subscription
@@ -564,7 +569,7 @@ class User(object):
         default S3 path to store newly created notebooks  # noqa: E501
 
         :param default_s3_path: The default_s3_path of this User.  # noqa: E501
-        :type: str
+        :type default_s3_path: str
         """
 
         self._default_s3_path = default_s3_path
@@ -587,7 +592,7 @@ class User(object):
         Default S3 path credentials name is the credentials name to use along with default_s3_path  # noqa: E501
 
         :param default_s3_path_credentials_name: The default_s3_path_credentials_name of this User.  # noqa: E501
-        :type: str
+        :type default_s3_path_credentials_name: str
         """
 
         self._default_s3_path_credentials_name = default_s3_path_credentials_name
@@ -610,34 +615,36 @@ class User(object):
         Override the default namespace charged for actions when no namespace is specified  # noqa: E501
 
         :param default_namespace_charged: The default_namespace_charged of this User.  # noqa: E501
-        :type: str
+        :type default_namespace_charged: str
         """
 
         self._default_namespace_charged = default_namespace_charged
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

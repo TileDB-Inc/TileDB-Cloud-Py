@@ -1,6 +1,7 @@
 # GroupMember
 
 A groups member, array or another groups, to add or remove from an existing group.
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

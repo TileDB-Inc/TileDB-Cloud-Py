@@ -1,6 +1,7 @@
 # TGSQLNodeData
 
 A node specifying an SQL query to execute in TileDB Cloud. 
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

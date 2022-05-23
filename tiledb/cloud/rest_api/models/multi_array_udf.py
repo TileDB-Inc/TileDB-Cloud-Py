@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -107,7 +112,7 @@ class MultiArrayUDF(object):
     ):  # noqa: E501
         """MultiArrayUDF - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._udf_info_name = None
@@ -193,7 +198,7 @@ class MultiArrayUDF(object):
         name of UDFInfo to run, format is {namespace}/{udf_name}. Can not be used with exec  # noqa: E501
 
         :param udf_info_name: The udf_info_name of this MultiArrayUDF.  # noqa: E501
-        :type: str
+        :type udf_info_name: str
         """
 
         self._udf_info_name = udf_info_name
@@ -214,7 +219,7 @@ class MultiArrayUDF(object):
 
 
         :param language: The language of this MultiArrayUDF.  # noqa: E501
-        :type: UDFLanguage
+        :type language: UDFLanguage
         """
 
         self._language = language
@@ -237,7 +242,7 @@ class MultiArrayUDF(object):
         Type-specific version  # noqa: E501
 
         :param version: The version of this MultiArrayUDF.  # noqa: E501
-        :type: str
+        :type version: str
         """
 
         self._version = version
@@ -260,7 +265,7 @@ class MultiArrayUDF(object):
         Docker image name to use for UDF  # noqa: E501
 
         :param image_name: The image_name of this MultiArrayUDF.  # noqa: E501
-        :type: str
+        :type image_name: str
         """
 
         self._image_name = image_name
@@ -283,7 +288,7 @@ class MultiArrayUDF(object):
         The resource class to use for the UDF execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the UDF will execute in the standard resource class of the TileDB Cloud provider.   # noqa: E501
 
         :param resource_class: The resource_class of this MultiArrayUDF.  # noqa: E501
-        :type: str
+        :type resource_class: str
         """
 
         self._resource_class = resource_class
@@ -306,7 +311,7 @@ class MultiArrayUDF(object):
         Type-specific executable text  # noqa: E501
 
         :param _exec: The _exec of this MultiArrayUDF.  # noqa: E501
-        :type: str
+        :type _exec: str
         """
 
         self.__exec = _exec
@@ -329,7 +334,7 @@ class MultiArrayUDF(object):
         optional raw text to store of serialized function, used for showing in UI  # noqa: E501
 
         :param exec_raw: The exec_raw of this MultiArrayUDF.  # noqa: E501
-        :type: str
+        :type exec_raw: str
         """
 
         self._exec_raw = exec_raw
@@ -350,7 +355,7 @@ class MultiArrayUDF(object):
 
 
         :param result_format: The result_format of this MultiArrayUDF.  # noqa: E501
-        :type: ResultFormat
+        :type result_format: ResultFormat
         """
 
         self._result_format = result_format
@@ -373,7 +378,7 @@ class MultiArrayUDF(object):
         name of task, optional  # noqa: E501
 
         :param task_name: The task_name of this MultiArrayUDF.  # noqa: E501
-        :type: str
+        :type task_name: str
         """
 
         self._task_name = task_name
@@ -396,7 +401,7 @@ class MultiArrayUDF(object):
         Deprecated: Prefer to use `argument_json` instead. Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format   # noqa: E501
 
         :param argument: The argument of this MultiArrayUDF.  # noqa: E501
-        :type: str
+        :type argument: str
         """
 
         self._argument = argument
@@ -419,7 +424,7 @@ class MultiArrayUDF(object):
         A series of key-value pairs to be passed as arguments into the UDF. See `TGUDFNodeData.arguments` for more information. If this format is used to pass arguments, arrays will be passed into the UDF as specified by the Node placeholders passed in here, rather than the classic method of putting all array arguments in the first parameter. Either this or `argument` should be set.   # noqa: E501
 
         :param arguments_json: The arguments_json of this MultiArrayUDF.  # noqa: E501
-        :type: list[TGUDFArgument]
+        :type arguments_json: list[TGUDFArgument]
         """
 
         self._arguments_json = arguments_json
@@ -442,7 +447,7 @@ class MultiArrayUDF(object):
         The UUIDs of stored input parameters (passed in a language-specific format within \"argument\") to be retrieved from the server-side cache. Serialized in standard hex format with no {}.  # noqa: E501
 
         :param stored_param_uuids: The stored_param_uuids of this MultiArrayUDF.  # noqa: E501
-        :type: list[str]
+        :type stored_param_uuids: list[str]
         """
 
         self._stored_param_uuids = stored_param_uuids
@@ -465,7 +470,7 @@ class MultiArrayUDF(object):
         store results for later retrieval  # noqa: E501
 
         :param store_results: The store_results of this MultiArrayUDF.  # noqa: E501
-        :type: bool
+        :type store_results: bool
         """
 
         self._store_results = store_results
@@ -488,7 +493,7 @@ class MultiArrayUDF(object):
         Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\"yes download results\").  # noqa: E501
 
         :param dont_download_results: The dont_download_results of this MultiArrayUDF.  # noqa: E501
-        :type: bool
+        :type dont_download_results: bool
         """
 
         self._dont_download_results = dont_download_results
@@ -509,7 +514,7 @@ class MultiArrayUDF(object):
 
 
         :param ranges: The ranges of this MultiArrayUDF.  # noqa: E501
-        :type: QueryRanges
+        :type ranges: QueryRanges
         """
 
         self._ranges = ranges
@@ -530,7 +535,7 @@ class MultiArrayUDF(object):
 
 
         :param subarray: The subarray of this MultiArrayUDF.  # noqa: E501
-        :type: UDFSubarray
+        :type subarray: UDFSubarray
         """
 
         self._subarray = subarray
@@ -553,7 +558,7 @@ class MultiArrayUDF(object):
         List of buffers to fetch (attributes + dimensions). Deprecated; please set arrays with `UDFArrayDetails`.  # noqa: E501
 
         :param buffers: The buffers of this MultiArrayUDF.  # noqa: E501
-        :type: list[str]
+        :type buffers: list[str]
         """
 
         self._buffers = buffers
@@ -576,7 +581,7 @@ class MultiArrayUDF(object):
         Array ranges/buffer into to run UDF on  # noqa: E501
 
         :param arrays: The arrays of this MultiArrayUDF.  # noqa: E501
-        :type: list[UDFArrayDetails]
+        :type arrays: list[UDFArrayDetails]
         """
 
         self._arrays = arrays
@@ -599,7 +604,7 @@ class MultiArrayUDF(object):
         UDF-type timeout in seconds (default: 900)  # noqa: E501
 
         :param timeout: The timeout of this MultiArrayUDF.  # noqa: E501
-        :type: int
+        :type timeout: int
         """
 
         self._timeout = timeout
@@ -622,7 +627,7 @@ class MultiArrayUDF(object):
         If set, the ID of the log for the task graph that this was part of.   # noqa: E501
 
         :param task_graph_uuid: The task_graph_uuid of this MultiArrayUDF.  # noqa: E501
-        :type: str
+        :type task_graph_uuid: str
         """
 
         self._task_graph_uuid = task_graph_uuid
@@ -645,34 +650,36 @@ class MultiArrayUDF(object):
         If set, the client-defined ID of the node within this task's graph.   # noqa: E501
 
         :param client_node_uuid: The client_node_uuid of this MultiArrayUDF.  # noqa: E501
-        :type: str
+        :type client_node_uuid: str
         """
 
         self._client_node_uuid = client_node_uuid
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

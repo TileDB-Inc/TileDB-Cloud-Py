@@ -40,21 +40,26 @@ class NotebookApi(object):
         Get status of the notebook server  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_notebook_server_status(namespace, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace notebook is in (an organization name or user's username) (required)
+        :param namespace: namespace notebook is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: NotebookStatus
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: NotebookStatus
         """
         kwargs["_return_http_data_only"] = True
         return self.get_notebook_server_status_with_http_info(
@@ -69,23 +74,33 @@ class NotebookApi(object):
         Get status of the notebook server  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_notebook_server_status_with_http_info(namespace, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace notebook is in (an organization name or user's username) (required)
+        :param namespace: namespace notebook is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(NotebookStatus, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(NotebookStatus, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -97,6 +112,7 @@ class NotebookApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -139,6 +155,13 @@ class NotebookApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "NotebookStatus",
+            202: None,
+            402: "Error",
+            404: None,
+        }
+
         return self.api_client.call_api(
             "/notebooks/server/{namespace}/status",
             "GET",
@@ -148,7 +171,7 @@ class NotebookApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="NotebookStatus",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -157,6 +180,7 @@ class NotebookApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def handle_copy_notebook(
@@ -167,25 +191,34 @@ class NotebookApi(object):
         Copy a tiledb notebook at the specified location  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.handle_copy_notebook(namespace, array, notebook_copy, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the notebook (required)
-        :param str array: The name of the notebook (required)
-        :param NotebookCopy notebook_copy: Input/Output information to create a new TileDB file (required)
-        :param str x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :param int end_timestamp: Milliseconds since Unix epoch, copy will use open_at functionality to copy notebook created at the specific timestamp
+        :param namespace: The namespace of the notebook (required)
+        :type namespace: str
+        :param array: The name of the notebook (required)
+        :type array: str
+        :param notebook_copy: Input/Output information to create a new TileDB file (required)
+        :type notebook_copy: NotebookCopy
+        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
+        :type x_tiledb_cloud_access_credentials_name: str
+        :param end_timestamp: Milliseconds since Unix epoch, copy will use open_at functionality to copy notebook created at the specific timestamp
+        :type end_timestamp: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: NotebookCopied
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: NotebookCopied
         """
         kwargs["_return_http_data_only"] = True
         return self.handle_copy_notebook_with_http_info(
@@ -200,27 +233,41 @@ class NotebookApi(object):
         Copy a tiledb notebook at the specified location  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.handle_copy_notebook_with_http_info(namespace, array, notebook_copy, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the notebook (required)
-        :param str array: The name of the notebook (required)
-        :param NotebookCopy notebook_copy: Input/Output information to create a new TileDB file (required)
-        :param str x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :param int end_timestamp: Milliseconds since Unix epoch, copy will use open_at functionality to copy notebook created at the specific timestamp
+        :param namespace: The namespace of the notebook (required)
+        :type namespace: str
+        :param array: The name of the notebook (required)
+        :type array: str
+        :param notebook_copy: Input/Output information to create a new TileDB file (required)
+        :type notebook_copy: NotebookCopy
+        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
+        :type x_tiledb_cloud_access_credentials_name: str
+        :param end_timestamp: Milliseconds since Unix epoch, copy will use open_at functionality to copy notebook created at the specific timestamp
+        :type end_timestamp: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(NotebookCopied, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(NotebookCopied, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -238,6 +285,7 @@ class NotebookApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -318,6 +366,10 @@ class NotebookApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            201: "NotebookCopied",
+        }
+
         return self.api_client.call_api(
             "/notebooks/{namespace}/{array}/copy",
             "POST",
@@ -327,7 +379,7 @@ class NotebookApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="NotebookCopied",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -336,6 +388,7 @@ class NotebookApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def handle_upload_notebook(self, namespace, input_file, **kwargs):  # noqa: E501
@@ -344,25 +397,34 @@ class NotebookApi(object):
         Upload a notebook at the specified location  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.handle_upload_notebook(namespace, input_file, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the notebook (required)
-        :param file input_file: the notebook to upload (required)
-        :param str x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :param str output_uri: output location of the TileDB File
-        :param str name: name to set for registered file
+        :param namespace: The namespace of the notebook (required)
+        :type namespace: str
+        :param input_file: the notebook to upload (required)
+        :type input_file: file
+        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
+        :type x_tiledb_cloud_access_credentials_name: str
+        :param output_uri: output location of the TileDB File
+        :type output_uri: str
+        :param name: name to set for registered file
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: FileUploaded
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: FileUploaded
         """
         kwargs["_return_http_data_only"] = True
         return self.handle_upload_notebook_with_http_info(
@@ -377,27 +439,41 @@ class NotebookApi(object):
         Upload a notebook at the specified location  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.handle_upload_notebook_with_http_info(namespace, input_file, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the notebook (required)
-        :param file input_file: the notebook to upload (required)
-        :param str x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :param str output_uri: output location of the TileDB File
-        :param str name: name to set for registered file
+        :param namespace: The namespace of the notebook (required)
+        :type namespace: str
+        :param input_file: the notebook to upload (required)
+        :type input_file: file
+        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
+        :type x_tiledb_cloud_access_credentials_name: str
+        :param output_uri: output location of the TileDB File
+        :type output_uri: str
+        :param name: name to set for registered file
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(FileUploaded, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(FileUploaded, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -415,6 +491,7 @@ class NotebookApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -484,6 +561,10 @@ class NotebookApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            201: "FileUploaded",
+        }
+
         return self.api_client.call_api(
             "/notebooks/{namespace}/upload",
             "POST",
@@ -493,7 +574,7 @@ class NotebookApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="FileUploaded",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -502,6 +583,7 @@ class NotebookApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def shutdown_notebook_server(self, namespace, **kwargs):  # noqa: E501
@@ -510,21 +592,26 @@ class NotebookApi(object):
         Shutdown a notebook server  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.shutdown_notebook_server(namespace, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace notebook is in (an organization name or user's username) (required)
+        :param namespace: namespace notebook is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.shutdown_notebook_server_with_http_info(
@@ -539,23 +626,33 @@ class NotebookApi(object):
         Shutdown a notebook server  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.shutdown_notebook_server_with_http_info(namespace, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace notebook is in (an organization name or user's username) (required)
+        :param namespace: namespace notebook is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -567,6 +664,7 @@ class NotebookApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -609,6 +707,8 @@ class NotebookApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/notebooks/server/{namespace}",
             "DELETE",
@@ -618,7 +718,7 @@ class NotebookApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -627,6 +727,7 @@ class NotebookApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def update_notebook_name(
@@ -637,23 +738,30 @@ class NotebookApi(object):
         update name on a notebok, moving related S3 object to new location  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.update_notebook_name(namespace, array, notebook_metadata, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str array: name/uri of notebook (array) that is url-encoded (required)
-        :param ArrayInfoUpdate notebook_metadata: notebook (array) metadata to update (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param array: name/uri of notebook (array) that is url-encoded (required)
+        :type array: str
+        :param notebook_metadata: notebook (array) metadata to update (required)
+        :type notebook_metadata: ArrayInfoUpdate
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.update_notebook_name_with_http_info(
@@ -668,25 +776,37 @@ class NotebookApi(object):
         update name on a notebok, moving related S3 object to new location  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.update_notebook_name_with_http_info(namespace, array, notebook_metadata, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str array: name/uri of notebook (array) that is url-encoded (required)
-        :param ArrayInfoUpdate notebook_metadata: notebook (array) metadata to update (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param array: name/uri of notebook (array) that is url-encoded (required)
+        :type array: str
+        :param notebook_metadata: notebook (array) metadata to update (required)
+        :type notebook_metadata: ArrayInfoUpdate
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -698,6 +818,7 @@ class NotebookApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -767,6 +888,8 @@ class NotebookApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/notebooks/{namespace}/{array}/rename",
             "PATCH",
@@ -776,7 +899,7 @@ class NotebookApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -785,4 +908,5 @@ class NotebookApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )

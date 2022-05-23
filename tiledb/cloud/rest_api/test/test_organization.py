@@ -39,15 +39,15 @@ class TestOrganization(unittest.TestCase):
             return Organization(
                 id="00000000-0000-0000-0000-000000000000",
                 role="owner",
-                name="a",
+                name="20",
                 created_at=datetime.datetime.strptime(
                     "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
                 ),
                 updated_at=datetime.datetime.strptime(
                     "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
                 ),
-                logo="0",
-                description="0",
+                logo="",
+                description="",
                 users=[
                     tiledb.cloud.rest_api.models.organization_user.OrganizationUser(
                         user_id="00000000-0000-0000-0000-000000000000",
@@ -60,15 +60,15 @@ class TestOrganization(unittest.TestCase):
                 ],
                 allowed_actions=["read"],
                 num_of_arrays=1.337,
-                enabled_features=["0"],
+                enabled_features=[""],
                 unpaid_subscription=True,
-                default_s3_path="0",
-                default_s3_path_credentials_name="0",
+                default_s3_path="",
+                default_s3_path_credentials_name="",
                 stripe_connect=False,
             )
         else:
             return Organization(
-                name="a",
+                name="20",
             )
 
     def testOrganization(self):

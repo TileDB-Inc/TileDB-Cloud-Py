@@ -41,7 +41,7 @@ class TestQueryJson(unittest.TestCase):
                     layout="row-major",
                     ranges=[[1.337]],
                 ),
-                fields=["0"],
+                fields=[""],
             )
         else:
             return QueryJson()

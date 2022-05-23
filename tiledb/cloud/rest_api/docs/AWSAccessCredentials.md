@@ -1,6 +1,7 @@
 # AWSAccessCredentials
 
 Model representing aws keys or service role, service roles are currently ignored, but will be preferred option in the future
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

@@ -40,9 +40,9 @@ class TestGroupInfo(unittest.TestCase):
                 id="00000000-0000-0000-0000-000000000000",
                 namespace="user1",
                 name="myarray1",
-                description="0",
+                description="",
                 uri="s3://bucket/asset",
-                tiledb_uri="0",
+                tiledb_uri="",
                 asset_count=12.0,
                 group_count=4.0,
                 size=16.0,
@@ -50,13 +50,13 @@ class TestGroupInfo(unittest.TestCase):
                     "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
                 ),
                 allowed_actions=["read"],
-                logo="0",
-                access_credentials_name="0",
+                logo="",
+                access_credentials_name="",
                 share_count=1.337,
                 public_share=True,
-                tags=["0"],
-                license_id="0",
-                license_text="0",
+                tags=[""],
+                license_id="",
+                license_text="",
             )
         else:
             return GroupInfo()

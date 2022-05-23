@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -74,7 +79,7 @@ class FilterData(object):
     ):  # noqa: E501
         """FilterData - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._int8 = None
@@ -126,7 +131,7 @@ class FilterData(object):
 
 
         :param int8: The int8 of this FilterData.  # noqa: E501
-        :type: int
+        :type int8: int
         """
 
         self._int8 = int8
@@ -147,7 +152,7 @@ class FilterData(object):
 
 
         :param uint8: The uint8 of this FilterData.  # noqa: E501
-        :type: int
+        :type uint8: int
         """
 
         self._uint8 = uint8
@@ -168,7 +173,7 @@ class FilterData(object):
 
 
         :param int16: The int16 of this FilterData.  # noqa: E501
-        :type: int
+        :type int16: int
         """
 
         self._int16 = int16
@@ -189,7 +194,7 @@ class FilterData(object):
 
 
         :param uint16: The uint16 of this FilterData.  # noqa: E501
-        :type: int
+        :type uint16: int
         """
 
         self._uint16 = uint16
@@ -210,7 +215,7 @@ class FilterData(object):
 
 
         :param int32: The int32 of this FilterData.  # noqa: E501
-        :type: int
+        :type int32: int
         """
 
         self._int32 = int32
@@ -231,7 +236,7 @@ class FilterData(object):
 
 
         :param uint32: The uint32 of this FilterData.  # noqa: E501
-        :type: int
+        :type uint32: int
         """
 
         self._uint32 = uint32
@@ -252,7 +257,7 @@ class FilterData(object):
 
 
         :param int64: The int64 of this FilterData.  # noqa: E501
-        :type: int
+        :type int64: int
         """
 
         self._int64 = int64
@@ -273,7 +278,7 @@ class FilterData(object):
 
 
         :param uint64: The uint64 of this FilterData.  # noqa: E501
-        :type: int
+        :type uint64: int
         """
 
         self._uint64 = uint64
@@ -294,7 +299,7 @@ class FilterData(object):
 
 
         :param float32: The float32 of this FilterData.  # noqa: E501
-        :type: int
+        :type float32: int
         """
 
         self._float32 = float32
@@ -315,34 +320,36 @@ class FilterData(object):
 
 
         :param float64: The float64 of this FilterData.  # noqa: E501
-        :type: int
+        :type float64: int
         """
 
         self._float64 = float64
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

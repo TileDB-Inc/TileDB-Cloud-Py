@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -56,7 +61,7 @@ class PaginationMetadata(object):
     ):  # noqa: E501
         """PaginationMetadata - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._page = None
@@ -92,7 +97,7 @@ class PaginationMetadata(object):
         pagination offset. Use it to skip the first ((page - 1) * per_page) items  # noqa: E501
 
         :param page: The page of this PaginationMetadata.  # noqa: E501
-        :type: float
+        :type page: float
         """
 
         self._page = page
@@ -115,7 +120,7 @@ class PaginationMetadata(object):
         pagination limit (page size)  # noqa: E501
 
         :param per_page: The per_page of this PaginationMetadata.  # noqa: E501
-        :type: float
+        :type per_page: float
         """
 
         self._per_page = per_page
@@ -138,7 +143,7 @@ class PaginationMetadata(object):
         number of total pages with current limit  # noqa: E501
 
         :param total_pages: The total_pages of this PaginationMetadata.  # noqa: E501
-        :type: float
+        :type total_pages: float
         """
 
         self._total_pages = total_pages
@@ -161,34 +166,36 @@ class PaginationMetadata(object):
         number of total available items  # noqa: E501
 
         :param total_items: The total_items of this PaginationMetadata.  # noqa: E501
-        :type: float
+        :type total_items: float
         """
 
         self._total_items = total_items
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

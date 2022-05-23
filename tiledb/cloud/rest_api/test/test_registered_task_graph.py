@@ -39,51 +39,51 @@ class TestRegisteredTaskGraph(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.registered_task_graph.RegisteredTaskGraph()  # noqa: E501
         if include_optional:
             return RegisteredTaskGraph(
-                uuid="0",
-                namespace="0",
-                name="0",
-                readme="0",
-                license_id="0",
-                license_text="0",
-                tags=["0"],
+                uuid="",
+                namespace="",
+                name="",
+                readme="",
+                license_id="",
+                license_text="",
+                tags=[""],
                 nodes=[
                     tiledb.cloud.rest_api.models.registered_task_graph_node.RegisteredTaskGraphNode(
-                        client_node_id="0",
-                        name="0",
-                        depends_on=["0"],
+                        client_node_id="",
+                        name="",
+                        depends_on=[""],
                         array_node=tiledb.cloud.rest_api.models.udf_array_details.UDFArrayDetails(
-                            parameter_id="0",
-                            uri="0",
+                            parameter_id="",
+                            uri="",
                             ranges=tiledb.cloud.rest_api.models.query_ranges.QueryRanges(
                                 layout="row-major",
                             ),
-                            buffers=["0"],
+                            buffers=[""],
                         ),
                         input_node=tiledb.cloud.rest_api.models.tg_input_node_data.TGInputNodeData(
                             default_value=tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue(),
-                            datatype="0",
+                            datatype="",
                         ),
                         sql_node=tiledb.cloud.rest_api.models.tgsql_node_data.TGSQLNodeData(
-                            init_commands=["0"],
-                            query="0",
+                            init_commands=[""],
+                            query="",
                             parameters=[
                                 tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue()
                             ],
                             result_format="python_pickle",
                         ),
                         udf_node=tiledb.cloud.rest_api.models.tgudf_node_data.TGUDFNodeData(
-                            registered_udf_name="0",
-                            executable_code="0",
-                            source_text="0",
+                            registered_udf_name="",
+                            executable_code="",
+                            source_text="",
                             environment=tiledb.cloud.rest_api.models.tgudf_environment.TGUDFEnvironment(
                                 language="python",
-                                language_version="0",
-                                image_name="0",
-                                resource_class="0",
+                                language_version="",
+                                image_name="",
+                                resource_class="",
                             ),
                             arguments=[
                                 tiledb.cloud.rest_api.models.tgudf_argument.TGUDFArgument(
-                                    name="0",
+                                    name="",
                                     value=tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue(),
                                 )
                             ],

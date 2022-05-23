@@ -40,23 +40,30 @@ class TasksApi(object):
         Run a sql query  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.run_sql(namespace, sql, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace to run task under is in (an organization name or user's username) (required)
-        :param SQLParameters sql: sql being submitted (required)
-        :param str accept_encoding: Encoding to use
+        :param namespace: namespace to run task under is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param sql: sql being submitted (required)
+        :type sql: SQLParameters
+        :param accept_encoding: Encoding to use
+        :type accept_encoding: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: list[object]
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: list[object]
         """
         kwargs["_return_http_data_only"] = True
         return self.run_sql_with_http_info(namespace, sql, **kwargs)  # noqa: E501
@@ -67,25 +74,37 @@ class TasksApi(object):
         Run a sql query  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.run_sql_with_http_info(namespace, sql, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace to run task under is in (an organization name or user's username) (required)
-        :param SQLParameters sql: sql being submitted (required)
-        :param str accept_encoding: Encoding to use
+        :param namespace: namespace to run task under is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param sql: sql being submitted (required)
+        :type sql: SQLParameters
+        :param accept_encoding: Encoding to use
+        :type accept_encoding: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(list[object], status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(list[object], status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -97,6 +116,7 @@ class TasksApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -159,6 +179,11 @@ class TasksApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "list[object]",
+            204: None,
+        }
+
         return self.api_client.call_api(
             "/sql/{namespace}",
             "POST",
@@ -168,7 +193,7 @@ class TasksApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="list[object]",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -177,6 +202,7 @@ class TasksApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def task_id_get(self, id, **kwargs):  # noqa: E501
@@ -185,21 +211,26 @@ class TasksApi(object):
         Fetch an array task  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.task_id_get(id, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str id: task ID to fetch (required)
+        :param id: task ID to fetch (required)
+        :type id: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: ArrayTask
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: ArrayTask
         """
         kwargs["_return_http_data_only"] = True
         return self.task_id_get_with_http_info(id, **kwargs)  # noqa: E501
@@ -210,23 +241,33 @@ class TasksApi(object):
         Fetch an array task  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.task_id_get_with_http_info(id, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str id: task ID to fetch (required)
+        :param id: task ID to fetch (required)
+        :type id: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(ArrayTask, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(ArrayTask, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -238,6 +279,7 @@ class TasksApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -279,6 +321,10 @@ class TasksApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "ArrayTask",
+        }
+
         return self.api_client.call_api(
             "/task/{id}",
             "GET",
@@ -288,7 +334,7 @@ class TasksApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="ArrayTask",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -297,6 +343,7 @@ class TasksApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def task_id_result_get(self, id, **kwargs):  # noqa: E501
@@ -305,22 +352,28 @@ class TasksApi(object):
         Retrieve results of an array task  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.task_id_result_get(id, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str id: task ID to retrieve stored results (required)
-        :param str accept_encoding: Encoding to use
+        :param id: task ID to retrieve stored results (required)
+        :type id: str
+        :param accept_encoding: Encoding to use
+        :type accept_encoding: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: str
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: str
         """
         kwargs["_return_http_data_only"] = True
         return self.task_id_result_get_with_http_info(id, **kwargs)  # noqa: E501
@@ -331,24 +384,35 @@ class TasksApi(object):
         Retrieve results of an array task  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.task_id_result_get_with_http_info(id, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str id: task ID to retrieve stored results (required)
-        :param str accept_encoding: Encoding to use
+        :param id: task ID to retrieve stored results (required)
+        :type id: str
+        :param accept_encoding: Encoding to use
+        :type accept_encoding: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(str, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(str, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -360,6 +424,7 @@ class TasksApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -405,6 +470,12 @@ class TasksApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "str",
+            202: None,
+            404: "Error",
+        }
+
         return self.api_client.call_api(
             "/task/{id}/result",
             "GET",
@@ -414,7 +485,7 @@ class TasksApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="str",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -423,6 +494,7 @@ class TasksApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def tasks_get(self, **kwargs):  # noqa: E501
@@ -431,34 +503,52 @@ class TasksApi(object):
         Fetch a list of all array tasks a user has access to  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.tasks_get(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace to filter
-        :param str created_by: username to filter
-        :param str array: name/uri of array that is url-encoded to filter
-        :param int start: start time for tasks to filter by
-        :param int end: end time for tasks to filter by
-        :param int page: pagination offset
-        :param int per_page: pagination limit
-        :param str type: task type, \"QUERY\", \"SQL\", \"UDF\", \"GENERIC_UDF\"
-        :param list[str] exclude_type: task_type to exclude matching array in results, more than one can be included
-        :param list[str] file_type: match file_type of task array, more than one can be included
-        :param list[str] exclude_file_type: exclude file_type of task arrays, more than one can be included
-        :param str status: Filter to only return these statuses
-        :param str search: search string that will look at name, namespace or description fields
-        :param str orderby: sort by which field valid values include start_time, name
+        :param namespace: namespace to filter
+        :type namespace: str
+        :param created_by: username to filter
+        :type created_by: str
+        :param array: name/uri of array that is url-encoded to filter
+        :type array: str
+        :param start: start time for tasks to filter by
+        :type start: int
+        :param end: end time for tasks to filter by
+        :type end: int
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param type: task type, \"QUERY\", \"SQL\", \"UDF\", \"GENERIC_UDF\"
+        :type type: str
+        :param exclude_type: task_type to exclude matching array in results, more than one can be included
+        :type exclude_type: list[str]
+        :param file_type: match file_type of task array, more than one can be included
+        :type file_type: list[str]
+        :param exclude_file_type: exclude file_type of task arrays, more than one can be included
+        :type exclude_file_type: list[str]
+        :param status: Filter to only return these statuses
+        :type status: str
+        :param search: search string that will look at name, namespace or description fields
+        :type search: str
+        :param orderby: sort by which field valid values include start_time, name
+        :type orderby: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: ArrayTaskData
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: ArrayTaskData
         """
         kwargs["_return_http_data_only"] = True
         return self.tasks_get_with_http_info(**kwargs)  # noqa: E501
@@ -469,36 +559,59 @@ class TasksApi(object):
         Fetch a list of all array tasks a user has access to  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.tasks_get_with_http_info(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace to filter
-        :param str created_by: username to filter
-        :param str array: name/uri of array that is url-encoded to filter
-        :param int start: start time for tasks to filter by
-        :param int end: end time for tasks to filter by
-        :param int page: pagination offset
-        :param int per_page: pagination limit
-        :param str type: task type, \"QUERY\", \"SQL\", \"UDF\", \"GENERIC_UDF\"
-        :param list[str] exclude_type: task_type to exclude matching array in results, more than one can be included
-        :param list[str] file_type: match file_type of task array, more than one can be included
-        :param list[str] exclude_file_type: exclude file_type of task arrays, more than one can be included
-        :param str status: Filter to only return these statuses
-        :param str search: search string that will look at name, namespace or description fields
-        :param str orderby: sort by which field valid values include start_time, name
+        :param namespace: namespace to filter
+        :type namespace: str
+        :param created_by: username to filter
+        :type created_by: str
+        :param array: name/uri of array that is url-encoded to filter
+        :type array: str
+        :param start: start time for tasks to filter by
+        :type start: int
+        :param end: end time for tasks to filter by
+        :type end: int
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param type: task type, \"QUERY\", \"SQL\", \"UDF\", \"GENERIC_UDF\"
+        :type type: str
+        :param exclude_type: task_type to exclude matching array in results, more than one can be included
+        :type exclude_type: list[str]
+        :param file_type: match file_type of task array, more than one can be included
+        :type file_type: list[str]
+        :param exclude_file_type: exclude file_type of task arrays, more than one can be included
+        :type exclude_file_type: list[str]
+        :param status: Filter to only return these statuses
+        :type status: str
+        :param search: search string that will look at name, namespace or description fields
+        :type search: str
+        :param orderby: sort by which field valid values include start_time, name
+        :type orderby: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(ArrayTaskData, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(ArrayTaskData, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -525,6 +638,7 @@ class TasksApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -633,6 +747,10 @@ class TasksApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "ArrayTaskData",
+        }
+
         return self.api_client.call_api(
             "/tasks",
             "GET",
@@ -642,7 +760,7 @@ class TasksApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="ArrayTaskData",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -651,4 +769,5 @@ class TasksApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )

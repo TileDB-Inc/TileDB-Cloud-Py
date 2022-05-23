@@ -1,6 +1,7 @@
 # Pricing
 
 Pricing created by converting an array to product
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

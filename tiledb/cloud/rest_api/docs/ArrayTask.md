@@ -1,6 +1,7 @@
 # ArrayTask
 
 Synchronous Task to Run
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

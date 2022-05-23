@@ -1,6 +1,7 @@
 # ArraySharing
 
 details for sharing a given array
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

@@ -1,6 +1,7 @@
 # MLModelFavoritesData
 
 Object including MLModel favorites and pagination metadata
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

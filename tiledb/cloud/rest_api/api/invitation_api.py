@@ -40,21 +40,26 @@ class InvitationApi(object):
         Accepts invitation  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.accept_invitation(invitation, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str invitation: the ID of invitation about to be accepted (required)
+        :param invitation: the ID of invitation about to be accepted (required)
+        :type invitation: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.accept_invitation_with_http_info(invitation, **kwargs)  # noqa: E501
@@ -65,23 +70,33 @@ class InvitationApi(object):
         Accepts invitation  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.accept_invitation_with_http_info(invitation, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str invitation: the ID of invitation about to be accepted (required)
+        :param invitation: the ID of invitation about to be accepted (required)
+        :type invitation: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -93,6 +108,7 @@ class InvitationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -135,6 +151,8 @@ class InvitationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/invitations/{invitation}",
             "POST",
@@ -144,7 +162,7 @@ class InvitationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -153,6 +171,7 @@ class InvitationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def cancel_join_organization(
@@ -163,22 +182,28 @@ class InvitationApi(object):
         Cancels join organization invitation  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.cancel_join_organization(invitation, organization, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str invitation: the ID of invitation about to be cancelled (required)
-        :param str organization: name or UUID of organization (required)
+        :param invitation: the ID of invitation about to be cancelled (required)
+        :type invitation: str
+        :param organization: name or UUID of organization (required)
+        :type organization: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.cancel_join_organization_with_http_info(
@@ -193,24 +218,35 @@ class InvitationApi(object):
         Cancels join organization invitation  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.cancel_join_organization_with_http_info(invitation, organization, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str invitation: the ID of invitation about to be cancelled (required)
-        :param str organization: name or UUID of organization (required)
+        :param invitation: the ID of invitation about to be cancelled (required)
+        :type invitation: str
+        :param organization: name or UUID of organization (required)
+        :type organization: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -222,6 +258,7 @@ class InvitationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -274,6 +311,8 @@ class InvitationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/invitations/{invitation}/{organization}/join",
             "DELETE",
@@ -283,7 +322,7 @@ class InvitationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -292,6 +331,7 @@ class InvitationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def cancel_share_array_by_invite(
@@ -302,23 +342,30 @@ class InvitationApi(object):
         Cancels array sharing invitation  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.cancel_share_array_by_invite(namespace, invitation, array, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str invitation: the ID of invitation about to be cancelled (required)
-        :param str array: name/uri of array that is url-encoded (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param invitation: the ID of invitation about to be cancelled (required)
+        :type invitation: str
+        :param array: name/uri of array that is url-encoded (required)
+        :type array: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.cancel_share_array_by_invite_with_http_info(
@@ -333,25 +380,37 @@ class InvitationApi(object):
         Cancels array sharing invitation  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.cancel_share_array_by_invite_with_http_info(namespace, invitation, array, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str invitation: the ID of invitation about to be cancelled (required)
-        :param str array: name/uri of array that is url-encoded (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param invitation: the ID of invitation about to be cancelled (required)
+        :type invitation: str
+        :param array: name/uri of array that is url-encoded (required)
+        :type array: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -363,6 +422,7 @@ class InvitationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -425,6 +485,8 @@ class InvitationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/invitations/{invitation}/{namespace}/{array}/share",
             "DELETE",
@@ -434,7 +496,7 @@ class InvitationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -443,6 +505,7 @@ class InvitationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def fetch_invitations(self, **kwargs):  # noqa: E501
@@ -451,29 +514,42 @@ class InvitationApi(object):
         Fetch a list of invitations  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.fetch_invitations(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: name or ID of organization to filter
-        :param str array: name/uri of array that is url-encoded to filter
-        :param int start: start time for tasks to filter by
-        :param int end: end time for tasks to filter by
-        :param int page: pagination offset
-        :param int per_page: pagination limit
-        :param str type: invitation type, \"ARRAY_SHARE\", \"JOIN_ORGANIZATION\"
-        :param str status: Filter to only return \"PENDING\", \"ACCEPTED\"
-        :param str orderby: sort by which field valid values include timestamp, array_name, organization_name
+        :param organization: name or ID of organization to filter
+        :type organization: str
+        :param array: name/uri of array that is url-encoded to filter
+        :type array: str
+        :param start: start time for tasks to filter by
+        :type start: int
+        :param end: end time for tasks to filter by
+        :type end: int
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param type: invitation type, \"ARRAY_SHARE\", \"JOIN_ORGANIZATION\"
+        :type type: str
+        :param status: Filter to only return \"PENDING\", \"ACCEPTED\"
+        :type status: str
+        :param orderby: sort by which field valid values include timestamp, array_name, organization_name
+        :type orderby: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: InvitationData
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: InvitationData
         """
         kwargs["_return_http_data_only"] = True
         return self.fetch_invitations_with_http_info(**kwargs)  # noqa: E501
@@ -484,31 +560,49 @@ class InvitationApi(object):
         Fetch a list of invitations  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.fetch_invitations_with_http_info(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: name or ID of organization to filter
-        :param str array: name/uri of array that is url-encoded to filter
-        :param int start: start time for tasks to filter by
-        :param int end: end time for tasks to filter by
-        :param int page: pagination offset
-        :param int per_page: pagination limit
-        :param str type: invitation type, \"ARRAY_SHARE\", \"JOIN_ORGANIZATION\"
-        :param str status: Filter to only return \"PENDING\", \"ACCEPTED\"
-        :param str orderby: sort by which field valid values include timestamp, array_name, organization_name
+        :param organization: name or ID of organization to filter
+        :type organization: str
+        :param array: name/uri of array that is url-encoded to filter
+        :type array: str
+        :param start: start time for tasks to filter by
+        :type start: int
+        :param end: end time for tasks to filter by
+        :type end: int
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param type: invitation type, \"ARRAY_SHARE\", \"JOIN_ORGANIZATION\"
+        :type type: str
+        :param status: Filter to only return \"PENDING\", \"ACCEPTED\"
+        :type status: str
+        :param orderby: sort by which field valid values include timestamp, array_name, organization_name
+        :type orderby: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(InvitationData, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(InvitationData, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -530,6 +624,7 @@ class InvitationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -603,6 +698,10 @@ class InvitationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "InvitationData",
+        }
+
         return self.api_client.call_api(
             "/invitations",
             "GET",
@@ -612,7 +711,7 @@ class InvitationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="InvitationData",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -621,6 +720,7 @@ class InvitationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def join_organization(self, organization, email_invite, **kwargs):  # noqa: E501
@@ -629,22 +729,28 @@ class InvitationApi(object):
         Sends email to multiple recipients with joining information regarding an organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.join_organization(organization, email_invite, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: name or UUID of organization (required)
-        :param InvitationOrganizationJoinEmail email_invite: list of email recipients (required)
+        :param organization: name or UUID of organization (required)
+        :type organization: str
+        :param email_invite: list of email recipients (required)
+        :type email_invite: InvitationOrganizationJoinEmail
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.join_organization_with_http_info(
@@ -659,24 +765,35 @@ class InvitationApi(object):
         Sends email to multiple recipients with joining information regarding an organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.join_organization_with_http_info(organization, email_invite, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: name or UUID of organization (required)
-        :param InvitationOrganizationJoinEmail email_invite: list of email recipients (required)
+        :param organization: name or UUID of organization (required)
+        :type organization: str
+        :param email_invite: list of email recipients (required)
+        :type email_invite: InvitationOrganizationJoinEmail
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -688,6 +805,7 @@ class InvitationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -747,6 +865,8 @@ class InvitationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/invitations/{organization}/join",
             "POST",
@@ -756,7 +876,7 @@ class InvitationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -765,6 +885,7 @@ class InvitationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def share_array_by_invite(
@@ -775,23 +896,30 @@ class InvitationApi(object):
         Sends email to multiple recipients with sharing information regarding an array  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.share_array_by_invite(namespace, array, email_invite, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str array: name/uri of array that is url-encoded (required)
-        :param InvitationArrayShareEmail email_invite: list of email recipients (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param array: name/uri of array that is url-encoded (required)
+        :type array: str
+        :param email_invite: list of email recipients (required)
+        :type email_invite: InvitationArrayShareEmail
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.share_array_by_invite_with_http_info(
@@ -806,25 +934,37 @@ class InvitationApi(object):
         Sends email to multiple recipients with sharing information regarding an array  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.share_array_by_invite_with_http_info(namespace, array, email_invite, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str array: name/uri of array that is url-encoded (required)
-        :param InvitationArrayShareEmail email_invite: list of email recipients (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param array: name/uri of array that is url-encoded (required)
+        :type array: str
+        :param email_invite: list of email recipients (required)
+        :type email_invite: InvitationArrayShareEmail
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -836,6 +976,7 @@ class InvitationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -905,6 +1046,8 @@ class InvitationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/invitations/{namespace}/{array}/share",
             "POST",
@@ -914,7 +1057,7 @@ class InvitationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -923,4 +1066,5 @@ class InvitationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )

@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -86,7 +91,7 @@ class TaskGraphLog(object):
     ):  # noqa: E501
         """TaskGraphLog - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._uuid = None
@@ -147,7 +152,7 @@ class TaskGraphLog(object):
         The server-generated UUID of the task graph.  # noqa: E501
 
         :param uuid: The uuid of this TaskGraphLog.  # noqa: E501
-        :type: str
+        :type uuid: str
         """
 
         self._uuid = uuid
@@ -170,7 +175,7 @@ class TaskGraphLog(object):
         The namespace that owns this task graph log. When creating a task graph log, this is used as the namespace to create the log in; thereafter it is read-only.   # noqa: E501
 
         :param namespace: The namespace of this TaskGraphLog.  # noqa: E501
-        :type: str
+        :type namespace: str
         """
 
         self._namespace = namespace
@@ -193,7 +198,7 @@ class TaskGraphLog(object):
         The name of the user who created this task graph log.  # noqa: E501
 
         :param created_by: The created_by of this TaskGraphLog.  # noqa: E501
-        :type: str
+        :type created_by: str
         """
 
         self._created_by = created_by
@@ -216,7 +221,7 @@ class TaskGraphLog(object):
         A name for this task graph log, displayed in the UI. Does not need to be unique.   # noqa: E501
 
         :param name: The name of this TaskGraphLog.  # noqa: E501
-        :type: str
+        :type name: str
         """
 
         self._name = name
@@ -239,7 +244,7 @@ class TaskGraphLog(object):
         The date/time when this task graph log was originally created. This is distinct from the execution start_time.   # noqa: E501
 
         :param created_at: The created_at of this TaskGraphLog.  # noqa: E501
-        :type: datetime
+        :type created_at: datetime
         """
 
         self._created_at = created_at
@@ -262,7 +267,7 @@ class TaskGraphLog(object):
         The start time of the task graph, recorded when the server starts executing the first node.   # noqa: E501
 
         :param start_time: The start_time of this TaskGraphLog.  # noqa: E501
-        :type: datetime
+        :type start_time: datetime
         """
 
         self._start_time = start_time
@@ -285,7 +290,7 @@ class TaskGraphLog(object):
         The end time of the task graph, recorded when the client reports completion.   # noqa: E501
 
         :param end_time: The end_time of this TaskGraphLog.  # noqa: E501
-        :type: datetime
+        :type end_time: datetime
         """
 
         self._end_time = end_time
@@ -306,7 +311,7 @@ class TaskGraphLog(object):
 
 
         :param status: The status of this TaskGraphLog.  # noqa: E501
-        :type: TaskGraphLogStatus
+        :type status: TaskGraphLogStatus
         """
 
         self._status = status
@@ -329,7 +334,7 @@ class TaskGraphLog(object):
         If present, the total cost of executing all nodes in this task graph.   # noqa: E501
 
         :param total_cost: The total_cost of this TaskGraphLog.  # noqa: E501
-        :type: float
+        :type total_cost: float
         """
 
         self._total_cost = total_cost
@@ -352,7 +357,7 @@ class TaskGraphLog(object):
         If present, the total cost of access from execution of the nodes in this task graph.   # noqa: E501
 
         :param access_cost: The access_cost of this TaskGraphLog.  # noqa: E501
-        :type: float
+        :type access_cost: float
         """
 
         self._access_cost = access_cost
@@ -375,7 +380,7 @@ class TaskGraphLog(object):
         If present, the total cost of access from execution of the nodes in this task graph.   # noqa: E501
 
         :param egress_cost: The egress_cost of this TaskGraphLog.  # noqa: E501
-        :type: float
+        :type egress_cost: float
         """
 
         self._egress_cost = egress_cost
@@ -398,7 +403,7 @@ class TaskGraphLog(object):
         The total execution time of all the nodes in this graph, in ISO 8601 format with hours, minutes, and seconds.   # noqa: E501
 
         :param execution_time: The execution_time of this TaskGraphLog.  # noqa: E501
-        :type: str
+        :type execution_time: str
         """
 
         self._execution_time = execution_time
@@ -421,7 +426,7 @@ class TaskGraphLog(object):
         A mapping from `ArrayTaskStatus` string value to the number of nodes in this graph that are in that status.   # noqa: E501
 
         :param status_count: The status_count of this TaskGraphLog.  # noqa: E501
-        :type: dict(str, float)
+        :type status_count: dict(str, float)
         """
 
         self._status_count = status_count
@@ -444,34 +449,36 @@ class TaskGraphLog(object):
         The structure of the graph. This is provided by the client when first setting up the task graph. Thereafter, it is read-only. This must be topographically sorted; that is, each node must appear after all nodes that it depends upon.   # noqa: E501
 
         :param nodes: The nodes of this TaskGraphLog.  # noqa: E501
-        :type: list[TaskGraphNodeMetadata]
+        :type nodes: list[TaskGraphNodeMetadata]
         """
 
         self._nodes = nodes
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

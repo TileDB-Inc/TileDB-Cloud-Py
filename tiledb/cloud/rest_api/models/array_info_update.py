@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -77,7 +82,7 @@ class ArrayInfoUpdate(object):
     ):  # noqa: E501
         """ArrayInfoUpdate - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._description = None
@@ -133,7 +138,7 @@ class ArrayInfoUpdate(object):
         description of array  # noqa: E501
 
         :param description: The description of this ArrayInfoUpdate.  # noqa: E501
-        :type: str
+        :type description: str
         """
 
         self._description = description
@@ -156,7 +161,7 @@ class ArrayInfoUpdate(object):
         description of array  # noqa: E501
 
         :param name: The name of this ArrayInfoUpdate.  # noqa: E501
-        :type: str
+        :type name: str
         """
 
         self._name = name
@@ -179,7 +184,7 @@ class ArrayInfoUpdate(object):
         uri of array  # noqa: E501
 
         :param uri: The uri of this ArrayInfoUpdate.  # noqa: E501
-        :type: str
+        :type uri: str
         """
 
         self._uri = uri
@@ -200,7 +205,7 @@ class ArrayInfoUpdate(object):
 
 
         :param file_type: The file_type of this ArrayInfoUpdate.  # noqa: E501
-        :type: FileType
+        :type file_type: FileType
         """
 
         self._file_type = file_type
@@ -223,7 +228,7 @@ class ArrayInfoUpdate(object):
         map of file properties created for this array  # noqa: E501
 
         :param file_properties: The file_properties of this ArrayInfoUpdate.  # noqa: E501
-        :type: dict(str, str)
+        :type file_properties: dict(str, str)
         """
 
         self._file_properties = file_properties
@@ -246,7 +251,7 @@ class ArrayInfoUpdate(object):
         the name of the access credentials to use. if unset, the default credentials will be used  # noqa: E501
 
         :param access_credentials_name: The access_credentials_name of this ArrayInfoUpdate.  # noqa: E501
-        :type: str
+        :type access_credentials_name: str
         """
 
         self._access_credentials_name = access_credentials_name
@@ -269,7 +274,7 @@ class ArrayInfoUpdate(object):
         logo (base64 encoded) for the array. Optional  # noqa: E501
 
         :param logo: The logo of this ArrayInfoUpdate.  # noqa: E501
-        :type: str
+        :type logo: str
         """
 
         self._logo = logo
@@ -292,7 +297,7 @@ class ArrayInfoUpdate(object):
         optional tags for array  # noqa: E501
 
         :param tags: The tags of this ArrayInfoUpdate.  # noqa: E501
-        :type: list[str]
+        :type tags: list[str]
         """
 
         self._tags = tags
@@ -315,7 +320,7 @@ class ArrayInfoUpdate(object):
         License identifier from SPDX License List or Custom  # noqa: E501
 
         :param license_id: The license_id of this ArrayInfoUpdate.  # noqa: E501
-        :type: str
+        :type license_id: str
         """
 
         self._license_id = license_id
@@ -338,7 +343,7 @@ class ArrayInfoUpdate(object):
         License text  # noqa: E501
 
         :param license_text: The license_text of this ArrayInfoUpdate.  # noqa: E501
-        :type: str
+        :type license_text: str
         """
 
         self._license_text = license_text
@@ -361,34 +366,36 @@ class ArrayInfoUpdate(object):
         Suggests if the array is in read_only mode  # noqa: E501
 
         :param read_only: The read_only of this ArrayInfoUpdate.  # noqa: E501
-        :type: bool
+        :type read_only: bool
         """
 
         self._read_only = read_only
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

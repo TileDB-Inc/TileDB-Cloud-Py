@@ -39,7 +39,7 @@ class TestArrayTaskBrowserSidebar(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.array_task_browser_sidebar.ArrayTaskBrowserSidebar()  # noqa: E501
         if include_optional:
             return ArrayTaskBrowserSidebar(
-                organizations=["0"],
+                organizations=[""],
                 result_count_for_all=56,
                 result_count_by_namespace=None,
             )

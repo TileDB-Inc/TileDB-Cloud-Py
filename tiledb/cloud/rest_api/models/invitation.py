@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -89,7 +94,7 @@ class Invitation(object):
     ):  # noqa: E501
         """Invitation - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._id = None
@@ -158,7 +163,7 @@ class Invitation(object):
         Unique ID of invitation added to magic link  # noqa: E501
 
         :param id: The id of this Invitation.  # noqa: E501
-        :type: str
+        :type id: str
         """
 
         self._id = id
@@ -179,7 +184,7 @@ class Invitation(object):
 
 
         :param invitation_type: The invitation_type of this Invitation.  # noqa: E501
-        :type: InvitationType
+        :type invitation_type: InvitationType
         """
 
         self._invitation_type = invitation_type
@@ -202,7 +207,7 @@ class Invitation(object):
         Namespace of the owner of the invitation (user or organization)  # noqa: E501
 
         :param owner_namespace_uuid: The owner_namespace_uuid of this Invitation.  # noqa: E501
-        :type: str
+        :type owner_namespace_uuid: str
         """
 
         self._owner_namespace_uuid = owner_namespace_uuid
@@ -225,7 +230,7 @@ class Invitation(object):
         Unique ID of the user accepted the invitation  # noqa: E501
 
         :param user_namespace_uuid: The user_namespace_uuid of this Invitation.  # noqa: E501
-        :type: str
+        :type user_namespace_uuid: str
         """
 
         self._user_namespace_uuid = user_namespace_uuid
@@ -248,7 +253,7 @@ class Invitation(object):
         Unique ID of the organization user accepted the invitation  # noqa: E501
 
         :param organization_user_uuid: The organization_user_uuid of this Invitation.  # noqa: E501
-        :type: str
+        :type organization_user_uuid: str
         """
 
         self._organization_user_uuid = organization_user_uuid
@@ -271,7 +276,7 @@ class Invitation(object):
         Name of the organization, does not persist in database  # noqa: E501
 
         :param organization_name: The organization_name of this Invitation.  # noqa: E501
-        :type: str
+        :type organization_name: str
         """
 
         self._organization_name = organization_name
@@ -292,7 +297,7 @@ class Invitation(object):
 
 
         :param organization_role: The organization_role of this Invitation.  # noqa: E501
-        :type: OrganizationRoles
+        :type organization_role: OrganizationRoles
         """
 
         self._organization_role = organization_role
@@ -315,7 +320,7 @@ class Invitation(object):
         Unique ID of the array  # noqa: E501
 
         :param array_uuid: The array_uuid of this Invitation.  # noqa: E501
-        :type: str
+        :type array_uuid: str
         """
 
         self._array_uuid = array_uuid
@@ -338,7 +343,7 @@ class Invitation(object):
         Name of the array, does not persist in database  # noqa: E501
 
         :param array_name: The array_name of this Invitation.  # noqa: E501
-        :type: str
+        :type array_name: str
         """
 
         self._array_name = array_name
@@ -361,7 +366,7 @@ class Invitation(object):
         Email of the individual we send the invitation to  # noqa: E501
 
         :param email: The email of this Invitation.  # noqa: E501
-        :type: str
+        :type email: str
         """
 
         self._email = email
@@ -384,7 +389,7 @@ class Invitation(object):
         A comma separated list of ArrayActions or NamespaceActions  # noqa: E501
 
         :param actions: The actions of this Invitation.  # noqa: E501
-        :type: str
+        :type actions: str
         """
 
         self._actions = actions
@@ -405,7 +410,7 @@ class Invitation(object):
 
 
         :param status: The status of this Invitation.  # noqa: E501
-        :type: InvitationStatus
+        :type status: InvitationStatus
         """
 
         self._status = status
@@ -428,7 +433,7 @@ class Invitation(object):
         Datetime the invitation was created in UTC  # noqa: E501
 
         :param created_at: The created_at of this Invitation.  # noqa: E501
-        :type: datetime
+        :type created_at: datetime
         """
 
         self._created_at = created_at
@@ -451,7 +456,7 @@ class Invitation(object):
         Datetime the invitation is expected to expire in UTC  # noqa: E501
 
         :param expires_at: The expires_at of this Invitation.  # noqa: E501
-        :type: datetime
+        :type expires_at: datetime
         """
 
         self._expires_at = expires_at
@@ -474,34 +479,36 @@ class Invitation(object):
         Datetime the invitation was accepted in UTC  # noqa: E501
 
         :param accepted_at: The accepted_at of this Invitation.  # noqa: E501
-        :type: datetime
+        :type accepted_at: datetime
         """
 
         self._accepted_at = accepted_at
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

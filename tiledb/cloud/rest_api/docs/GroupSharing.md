@@ -1,6 +1,7 @@
 # GroupSharing
 
 sharing state of a group with a namespace
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

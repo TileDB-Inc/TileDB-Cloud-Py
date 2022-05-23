@@ -1,6 +1,7 @@
 # TaskGraphLogStatus
 
 The status of a given task graph execution.
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

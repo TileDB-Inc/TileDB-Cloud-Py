@@ -1,6 +1,7 @@
 # SubarrayPartitionerState
 
 The state information for the remaining partitions to be produced
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

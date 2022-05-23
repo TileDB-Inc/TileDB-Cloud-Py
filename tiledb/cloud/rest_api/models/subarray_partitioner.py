@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -62,7 +67,7 @@ class SubarrayPartitioner(object):
     ):  # noqa: E501
         """SubarrayPartitioner - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._subarray = None
@@ -102,7 +107,7 @@ class SubarrayPartitioner(object):
 
 
         :param subarray: The subarray of this SubarrayPartitioner.  # noqa: E501
-        :type: Subarray
+        :type subarray: Subarray
         """
 
         self._subarray = subarray
@@ -125,7 +130,7 @@ class SubarrayPartitioner(object):
         Result size budget (in bytes) for all attributes.  # noqa: E501
 
         :param budget: The budget of this SubarrayPartitioner.  # noqa: E501
-        :type: list[AttributeBufferSize]
+        :type budget: list[AttributeBufferSize]
         """
 
         self._budget = budget
@@ -146,7 +151,7 @@ class SubarrayPartitioner(object):
 
 
         :param current: The current of this SubarrayPartitioner.  # noqa: E501
-        :type: SubarrayPartitionerCurrent
+        :type current: SubarrayPartitionerCurrent
         """
 
         self._current = current
@@ -167,7 +172,7 @@ class SubarrayPartitioner(object):
 
 
         :param state: The state of this SubarrayPartitioner.  # noqa: E501
-        :type: SubarrayPartitionerState
+        :type state: SubarrayPartitionerState
         """
 
         self._state = state
@@ -190,7 +195,7 @@ class SubarrayPartitioner(object):
         The memory budget for the fixed-sized attributes and the offsets of the var-sized attributes  # noqa: E501
 
         :param memory_budget: The memory_budget of this SubarrayPartitioner.  # noqa: E501
-        :type: int
+        :type memory_budget: int
         """
 
         self._memory_budget = memory_budget
@@ -213,34 +218,36 @@ class SubarrayPartitioner(object):
         The memory budget for the var-sized attributes  # noqa: E501
 
         :param memory_budget_var: The memory_budget_var of this SubarrayPartitioner.  # noqa: E501
-        :type: int
+        :type memory_budget_var: int
         """
 
         self._memory_budget_var = memory_budget_var
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

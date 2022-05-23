@@ -1,6 +1,7 @@
 # NonEmptyDomain
 
 object representing a non-empty domain
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

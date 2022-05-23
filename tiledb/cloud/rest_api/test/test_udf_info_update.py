@@ -37,17 +37,17 @@ class TestUDFInfoUpdate(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.udf_info_update.UDFInfoUpdate()  # noqa: E501
         if include_optional:
             return UDFInfoUpdate(
-                name="0",
+                name="",
                 language="python",
-                version="0",
-                image_name="0",
+                version="",
+                image_name="",
                 type="multi_array",
-                _exec="0",
-                exec_raw="0",
-                readme="0",
-                license_id="0",
-                license_text="0",
-                tags=["0"],
+                _exec="",
+                exec_raw="",
+                readme="",
+                license_id="",
+                license_text="",
+                tags=[""],
             )
         else:
             return UDFInfoUpdate()

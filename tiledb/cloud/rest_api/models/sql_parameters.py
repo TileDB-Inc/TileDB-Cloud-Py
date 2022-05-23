@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -74,7 +79,7 @@ class SQLParameters(object):
     ):  # noqa: E501
         """SQLParameters - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._name = None
@@ -128,7 +133,7 @@ class SQLParameters(object):
         name of task, optional  # noqa: E501
 
         :param name: The name of this SQLParameters.  # noqa: E501
-        :type: str
+        :type name: str
         """
 
         self._name = name
@@ -151,7 +156,7 @@ class SQLParameters(object):
         query to run  # noqa: E501
 
         :param query: The query of this SQLParameters.  # noqa: E501
-        :type: str
+        :type query: str
         """
 
         self._query = query
@@ -174,7 +179,7 @@ class SQLParameters(object):
         Output array uri  # noqa: E501
 
         :param output_uri: The output_uri of this SQLParameters.  # noqa: E501
-        :type: str
+        :type output_uri: str
         """
 
         self._output_uri = output_uri
@@ -197,7 +202,7 @@ class SQLParameters(object):
         store results for later retrieval  # noqa: E501
 
         :param store_results: The store_results of this SQLParameters.  # noqa: E501
-        :type: bool
+        :type store_results: bool
         """
 
         self._store_results = store_results
@@ -220,7 +225,7 @@ class SQLParameters(object):
         Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\"yes download results\").  # noqa: E501
 
         :param dont_download_results: The dont_download_results of this SQLParameters.  # noqa: E501
-        :type: bool
+        :type dont_download_results: bool
         """
 
         self._dont_download_results = dont_download_results
@@ -241,7 +246,7 @@ class SQLParameters(object):
 
 
         :param result_format: The result_format of this SQLParameters.  # noqa: E501
-        :type: ResultFormat
+        :type result_format: ResultFormat
         """
 
         self._result_format = result_format
@@ -264,7 +269,7 @@ class SQLParameters(object):
         Queries or commands to run before main query  # noqa: E501
 
         :param init_commands: The init_commands of this SQLParameters.  # noqa: E501
-        :type: list[str]
+        :type init_commands: list[str]
         """
 
         self._init_commands = init_commands
@@ -287,7 +292,7 @@ class SQLParameters(object):
         SQL query parameters  # noqa: E501
 
         :param parameters: The parameters of this SQLParameters.  # noqa: E501
-        :type: list[object]
+        :type parameters: list[object]
         """
 
         self._parameters = parameters
@@ -310,7 +315,7 @@ class SQLParameters(object):
         If set, the ID of the log for the task graph that this was part of.   # noqa: E501
 
         :param task_graph_uuid: The task_graph_uuid of this SQLParameters.  # noqa: E501
-        :type: str
+        :type task_graph_uuid: str
         """
 
         self._task_graph_uuid = task_graph_uuid
@@ -333,34 +338,36 @@ class SQLParameters(object):
         If set, the client-defined ID of the node within this task's graph.   # noqa: E501
 
         :param client_node_uuid: The client_node_uuid of this SQLParameters.  # noqa: E501
-        :type: str
+        :type client_node_uuid: str
         """
 
         self._client_node_uuid = client_node_uuid
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

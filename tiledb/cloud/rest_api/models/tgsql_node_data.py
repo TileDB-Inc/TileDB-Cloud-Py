@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -56,7 +61,7 @@ class TGSQLNodeData(object):
     ):  # noqa: E501
         """TGSQLNodeData - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._init_commands = None
@@ -92,7 +97,7 @@ class TGSQLNodeData(object):
         The commands to execute before running the query itself.  # noqa: E501
 
         :param init_commands: The init_commands of this TGSQLNodeData.  # noqa: E501
-        :type: list[str]
+        :type init_commands: list[str]
         """
 
         self._init_commands = init_commands
@@ -115,7 +120,7 @@ class TGSQLNodeData(object):
         The text of the SQL query to execute. Parameters are substituted in for `?`s, just as in a regular MariaDB query.   # noqa: E501
 
         :param query: The query of this TGSQLNodeData.  # noqa: E501
-        :type: str
+        :type query: str
         """
 
         self._query = query
@@ -138,7 +143,7 @@ class TGSQLNodeData(object):
         The parameters to substitute in for arguments in the `query`. Fixed-length. Arguments must be in JSON format.   # noqa: E501
 
         :param parameters: The parameters of this TGSQLNodeData.  # noqa: E501
-        :type: list[object]
+        :type parameters: list[object]
         """
 
         self._parameters = parameters
@@ -159,34 +164,36 @@ class TGSQLNodeData(object):
 
 
         :param result_format: The result_format of this TGSQLNodeData.  # noqa: E501
-        :type: ResultFormat
+        :type result_format: ResultFormat
         """
 
         self._result_format = result_format
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

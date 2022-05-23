@@ -39,10 +39,7 @@ class TestTGUDFEnvironment(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.tgudf_environment.TGUDFEnvironment()  # noqa: E501
         if include_optional:
             return TGUDFEnvironment(
-                language="python",
-                language_version="0",
-                image_name="0",
-                resource_class="0",
+                language="python", language_version="", image_name="", resource_class=""
             )
         else:
             return TGUDFEnvironment()

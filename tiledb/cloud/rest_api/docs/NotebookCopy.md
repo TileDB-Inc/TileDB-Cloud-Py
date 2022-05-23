@@ -1,6 +1,7 @@
 # NotebookCopy
 
 Output information required to copy a notebook
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

@@ -40,22 +40,28 @@ class RegisteredTaskGraphsApi(object):
         Delete the given registered task graph.   # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_registered_task_graph(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace that owns this registered UDF. (required)
-        :param str name: The name of the registered task graph. (required)
+        :param namespace: The namespace that owns this registered UDF. (required)
+        :type namespace: str
+        :param name: The name of the registered task graph. (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.delete_registered_task_graph_with_http_info(
@@ -70,24 +76,35 @@ class RegisteredTaskGraphsApi(object):
         Delete the given registered task graph.   # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_registered_task_graph_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace that owns this registered UDF. (required)
-        :param str name: The name of the registered task graph. (required)
+        :param namespace: The namespace that owns this registered UDF. (required)
+        :type namespace: str
+        :param name: The name of the registered task graph. (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -99,6 +116,7 @@ class RegisteredTaskGraphsApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -151,6 +169,8 @@ class RegisteredTaskGraphsApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/taskgraphs/{namespace}/registered/{name}",
             "DELETE",
@@ -160,7 +180,7 @@ class RegisteredTaskGraphsApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -169,6 +189,7 @@ class RegisteredTaskGraphsApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def get_registered_task_graph(self, namespace, name, **kwargs):  # noqa: E501
@@ -177,22 +198,28 @@ class RegisteredTaskGraphsApi(object):
         Fetch the contents of this registered task graph.   # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_registered_task_graph(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace that owns this registered UDF. (required)
-        :param str name: The name of the registered task graph. (required)
+        :param namespace: The namespace that owns this registered UDF. (required)
+        :type namespace: str
+        :param name: The name of the registered task graph. (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: RegisteredTaskGraph
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: RegisteredTaskGraph
         """
         kwargs["_return_http_data_only"] = True
         return self.get_registered_task_graph_with_http_info(
@@ -207,24 +234,35 @@ class RegisteredTaskGraphsApi(object):
         Fetch the contents of this registered task graph.   # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_registered_task_graph_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace that owns this registered UDF. (required)
-        :param str name: The name of the registered task graph. (required)
+        :param namespace: The namespace that owns this registered UDF. (required)
+        :type namespace: str
+        :param name: The name of the registered task graph. (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(RegisteredTaskGraph, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(RegisteredTaskGraph, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -236,6 +274,7 @@ class RegisteredTaskGraphsApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -288,6 +327,10 @@ class RegisteredTaskGraphsApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "RegisteredTaskGraph",
+        }
+
         return self.api_client.call_api(
             "/taskgraphs/{namespace}/registered/{name}",
             "GET",
@@ -297,7 +340,7 @@ class RegisteredTaskGraphsApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="RegisteredTaskGraph",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -306,6 +349,7 @@ class RegisteredTaskGraphsApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def get_registered_task_graph_sharing_policies(
@@ -316,22 +360,28 @@ class RegisteredTaskGraphsApi(object):
         Get sharing policies for the task graph.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_registered_task_graph_sharing_policies(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace that owns the registered task graph. (required)
-        :param str name: The name of the task graph. (required)
+        :param namespace: The namespace that owns the registered task graph. (required)
+        :type namespace: str
+        :param name: The name of the task graph. (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: list[TaskGraphSharing]
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: list[TaskGraphSharing]
         """
         kwargs["_return_http_data_only"] = True
         return self.get_registered_task_graph_sharing_policies_with_http_info(
@@ -346,24 +396,35 @@ class RegisteredTaskGraphsApi(object):
         Get sharing policies for the task graph.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_registered_task_graph_sharing_policies_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace that owns the registered task graph. (required)
-        :param str name: The name of the task graph. (required)
+        :param namespace: The namespace that owns the registered task graph. (required)
+        :type namespace: str
+        :param name: The name of the task graph. (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(list[TaskGraphSharing], status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(list[TaskGraphSharing], status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -375,6 +436,7 @@ class RegisteredTaskGraphsApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -427,6 +489,11 @@ class RegisteredTaskGraphsApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "list[TaskGraphSharing]",
+            404: "Error",
+        }
+
         return self.api_client.call_api(
             "/taskgraphs/{namespace}/registered/{name}/share",
             "GET",
@@ -436,7 +503,7 @@ class RegisteredTaskGraphsApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="list[TaskGraphSharing]",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -445,6 +512,7 @@ class RegisteredTaskGraphsApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def register_registered_task_graph(self, namespace, name, **kwargs):  # noqa: E501
@@ -453,23 +521,30 @@ class RegisteredTaskGraphsApi(object):
         Register a task graph in the given namespace, with the given name.   # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.register_registered_task_graph(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace that owns this registered UDF. (required)
-        :param str name: The name of the registered task graph. (required)
-        :param RegisteredTaskGraph graph: Task graph to register.
+        :param namespace: The namespace that owns this registered UDF. (required)
+        :type namespace: str
+        :param name: The name of the registered task graph. (required)
+        :type name: str
+        :param graph: Task graph to register.
+        :type graph: RegisteredTaskGraph
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.register_registered_task_graph_with_http_info(
@@ -484,25 +559,37 @@ class RegisteredTaskGraphsApi(object):
         Register a task graph in the given namespace, with the given name.   # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.register_registered_task_graph_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace that owns this registered UDF. (required)
-        :param str name: The name of the registered task graph. (required)
-        :param RegisteredTaskGraph graph: Task graph to register.
+        :param namespace: The namespace that owns this registered UDF. (required)
+        :type namespace: str
+        :param name: The name of the registered task graph. (required)
+        :type name: str
+        :param graph: Task graph to register.
+        :type graph: RegisteredTaskGraph
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -514,6 +601,7 @@ class RegisteredTaskGraphsApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -575,6 +663,8 @@ class RegisteredTaskGraphsApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/taskgraphs/{namespace}/registered/{name}",
             "POST",
@@ -584,7 +674,7 @@ class RegisteredTaskGraphsApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -593,6 +683,7 @@ class RegisteredTaskGraphsApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def share_registered_task_graph(
@@ -603,23 +694,30 @@ class RegisteredTaskGraphsApi(object):
         Share a task graph.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.share_registered_task_graph(namespace, name, task_graph_sharing, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace that owns the registered task graph. (required)
-        :param str name: The name of the task graph. (required)
-        :param TaskGraphSharing task_graph_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all.  (required)
+        :param namespace: The namespace that owns the registered task graph. (required)
+        :type namespace: str
+        :param name: The name of the task graph. (required)
+        :type name: str
+        :param task_graph_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all.  (required)
+        :type task_graph_sharing: TaskGraphSharing
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.share_registered_task_graph_with_http_info(
@@ -634,25 +732,37 @@ class RegisteredTaskGraphsApi(object):
         Share a task graph.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.share_registered_task_graph_with_http_info(namespace, name, task_graph_sharing, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace that owns the registered task graph. (required)
-        :param str name: The name of the task graph. (required)
-        :param TaskGraphSharing task_graph_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all.  (required)
+        :param namespace: The namespace that owns the registered task graph. (required)
+        :type namespace: str
+        :param name: The name of the task graph. (required)
+        :type name: str
+        :param task_graph_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all.  (required)
+        :type task_graph_sharing: TaskGraphSharing
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -664,6 +774,7 @@ class RegisteredTaskGraphsApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -733,6 +844,8 @@ class RegisteredTaskGraphsApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/taskgraphs/{namespace}/registered/{name}/share",
             "PATCH",
@@ -742,7 +855,7 @@ class RegisteredTaskGraphsApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -751,6 +864,7 @@ class RegisteredTaskGraphsApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def update_registered_task_graph(self, namespace, name, **kwargs):  # noqa: E501
@@ -759,23 +873,30 @@ class RegisteredTaskGraphsApi(object):
         Update the contents of an existing registered task graph.   # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.update_registered_task_graph(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace that owns this registered UDF. (required)
-        :param str name: The name of the registered task graph. (required)
-        :param RegisteredTaskGraph graph: The new contents of the task graph.
+        :param namespace: The namespace that owns this registered UDF. (required)
+        :type namespace: str
+        :param name: The name of the registered task graph. (required)
+        :type name: str
+        :param graph: The new contents of the task graph.
+        :type graph: RegisteredTaskGraph
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.update_registered_task_graph_with_http_info(
@@ -790,25 +911,37 @@ class RegisteredTaskGraphsApi(object):
         Update the contents of an existing registered task graph.   # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.update_registered_task_graph_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace that owns this registered UDF. (required)
-        :param str name: The name of the registered task graph. (required)
-        :param RegisteredTaskGraph graph: The new contents of the task graph.
+        :param namespace: The namespace that owns this registered UDF. (required)
+        :type namespace: str
+        :param name: The name of the registered task graph. (required)
+        :type name: str
+        :param graph: The new contents of the task graph.
+        :type graph: RegisteredTaskGraph
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -820,6 +953,7 @@ class RegisteredTaskGraphsApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -881,6 +1015,8 @@ class RegisteredTaskGraphsApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/taskgraphs/{namespace}/registered/{name}",
             "PATCH",
@@ -890,7 +1026,7 @@ class RegisteredTaskGraphsApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -899,4 +1035,5 @@ class RegisteredTaskGraphsApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )

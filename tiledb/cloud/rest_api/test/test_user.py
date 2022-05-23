@@ -45,7 +45,7 @@ class TestUser(unittest.TestCase):
                 is_valid_email=False,
                 stripe_connect=False,
                 company="TileDB",
-                logo="0",
+                logo="",
                 last_activity_date=datetime.datetime.strptime(
                     "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
                 ),
@@ -61,11 +61,11 @@ class TestUser(unittest.TestCase):
                     )
                 ],
                 allowed_actions=["read"],
-                enabled_features=["0"],
+                enabled_features=[""],
                 unpaid_subscription=True,
-                default_s3_path="0",
-                default_s3_path_credentials_name="0",
-                default_namespace_charged="0",
+                default_s3_path="",
+                default_s3_path_credentials_name="",
+                default_namespace_charged="",
             )
         else:
             return User(

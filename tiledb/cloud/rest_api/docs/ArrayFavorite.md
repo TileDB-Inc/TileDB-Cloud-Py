@@ -1,6 +1,7 @@
 # ArrayFavorite
 
 A user-favorite array item
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

@@ -38,11 +38,11 @@ class TestInvitationArrayShareEmail(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.invitation_array_share_email.InvitationArrayShareEmail()  # noqa: E501
         if include_optional:
-            return InvitationArrayShareEmail(actions=[read, write], invitee_email=["0"])
+            return InvitationArrayShareEmail(actions=[read, write], invitee_email=[""])
         else:
             return InvitationArrayShareEmail(
                 actions=[read, write],
-                invitee_email=["0"],
+                invitee_email=[""],
             )
 
     def testInvitationArrayShareEmail(self):

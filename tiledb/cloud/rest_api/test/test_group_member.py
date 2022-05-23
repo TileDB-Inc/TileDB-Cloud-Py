@@ -36,7 +36,7 @@ class TestGroupMember(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.group_member.GroupMember()  # noqa: E501
         if include_optional:
-            return GroupMember(namespace="0", name="0", member_type="group")
+            return GroupMember(namespace="", name="", member_type="group")
         else:
             return GroupMember()
 

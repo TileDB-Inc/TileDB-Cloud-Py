@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -68,7 +73,7 @@ class AWSAccessCredentials(object):
     ):  # noqa: E501
         """AWSAccessCredentials - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._secret_access_key = None
@@ -116,7 +121,7 @@ class AWSAccessCredentials(object):
         aws secret access key, never returned in get requests  # noqa: E501
 
         :param secret_access_key: The secret_access_key of this AWSAccessCredentials.  # noqa: E501
-        :type: str
+        :type secret_access_key: str
         """
 
         self._secret_access_key = secret_access_key
@@ -139,7 +144,7 @@ class AWSAccessCredentials(object):
         aws access key  # noqa: E501
 
         :param access_key_id: The access_key_id of this AWSAccessCredentials.  # noqa: E501
-        :type: str
+        :type access_key_id: str
         """
 
         self._access_key_id = access_key_id
@@ -162,7 +167,7 @@ class AWSAccessCredentials(object):
         aws service role to use for access  # noqa: E501
 
         :param service_role_arn: The service_role_arn of this AWSAccessCredentials.  # noqa: E501
-        :type: str
+        :type service_role_arn: str
         """
 
         self._service_role_arn = service_role_arn
@@ -185,7 +190,7 @@ class AWSAccessCredentials(object):
         human readable name  # noqa: E501
 
         :param name: The name of this AWSAccessCredentials.  # noqa: E501
-        :type: str
+        :type name: str
         """
 
         self._name = name
@@ -208,7 +213,7 @@ class AWSAccessCredentials(object):
         true if this is the default credential to be used within this namespace  # noqa: E501
 
         :param default: The default of this AWSAccessCredentials.  # noqa: E501
-        :type: bool
+        :type default: bool
         """
 
         self._default = default
@@ -231,7 +236,7 @@ class AWSAccessCredentials(object):
         a whitelist of one or more buckets this key should access  # noqa: E501
 
         :param buckets: The buckets of this AWSAccessCredentials.  # noqa: E501
-        :type: list[str]
+        :type buckets: list[str]
         """
 
         self._buckets = buckets
@@ -254,7 +259,7 @@ class AWSAccessCredentials(object):
         Time when UDF dependencies were created (rfc3339)  # noqa: E501
 
         :param created_at: The created_at of this AWSAccessCredentials.  # noqa: E501
-        :type: datetime
+        :type created_at: datetime
         """
 
         self._created_at = created_at
@@ -277,34 +282,36 @@ class AWSAccessCredentials(object):
         Time when UDF dependencies was last updated (rfc3339)  # noqa: E501
 
         :param updated_at: The updated_at of this AWSAccessCredentials.  # noqa: E501
-        :type: datetime
+        :type updated_at: datetime
         """
 
         self._updated_at = updated_at
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

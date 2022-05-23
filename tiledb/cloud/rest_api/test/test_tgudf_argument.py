@@ -37,7 +37,7 @@ class TestTGUDFArgument(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.tgudf_argument.TGUDFArgument()  # noqa: E501
         if include_optional:
             return TGUDFArgument(
-                name="0", value=tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue()
+                name="", value=tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue()
             )
         else:
             return TGUDFArgument()

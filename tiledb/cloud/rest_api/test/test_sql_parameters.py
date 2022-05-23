@@ -37,16 +37,16 @@ class TestSQLParameters(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.sql_parameters.SQLParameters()  # noqa: E501
         if include_optional:
             return SQLParameters(
-                name="0",
-                query="0",
+                name="",
+                query="",
                 output_uri="s3://my_bucket/my_output_array",
                 store_results=True,
                 dont_download_results=True,
                 result_format="python_pickle",
-                init_commands=["0"],
+                init_commands=[""],
                 parameters=[None],
-                task_graph_uuid="0",
-                client_node_uuid="0",
+                task_graph_uuid="",
+                client_node_uuid="",
             )
         else:
             return SQLParameters()

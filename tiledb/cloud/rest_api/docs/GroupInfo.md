@@ -1,6 +1,7 @@
 # GroupInfo
 
 metadata of a group
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

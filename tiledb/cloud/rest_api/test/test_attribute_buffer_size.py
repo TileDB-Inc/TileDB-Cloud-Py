@@ -38,10 +38,10 @@ class TestAttributeBufferSize(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.attribute_buffer_size.AttributeBufferSize()  # noqa: E501
         if include_optional:
-            return AttributeBufferSize(attribute="0", offset_bytes=56, data_bytes=56)
+            return AttributeBufferSize(attribute="", offset_bytes=56, data_bytes=56)
         else:
             return AttributeBufferSize(
-                attribute="0",
+                attribute="",
                 offset_bytes=56,
                 data_bytes=56,
             )

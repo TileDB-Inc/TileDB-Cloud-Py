@@ -39,10 +39,10 @@ class TestAWSAccessCredentials(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.aws_access_credentials.AWSAccessCredentials()  # noqa: E501
         if include_optional:
             return AWSAccessCredentials(
-                secret_access_key="0",
-                access_key_id="0",
-                service_role_arn="0",
-                name="0",
+                secret_access_key="",
+                access_key_id="",
+                service_role_arn="",
+                name="",
                 default=True,
                 buckets=["s3://company-bucket-1/tiledb/"],
                 created_at=datetime.datetime.strptime(

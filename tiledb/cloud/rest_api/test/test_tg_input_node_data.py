@@ -40,7 +40,7 @@ class TestTGInputNodeData(unittest.TestCase):
         if include_optional:
             return TGInputNodeData(
                 default_value=tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue(),
-                datatype="0",
+                datatype="",
             )
         else:
             return TGInputNodeData()

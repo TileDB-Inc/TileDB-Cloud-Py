@@ -38,9 +38,9 @@ class TestUDFImageVersion(unittest.TestCase):
         if include_optional:
             return UDFImageVersion(
                 id="00000000-0000-0000-0000-000000000000",
-                name="0",
+                name="",
                 udf_image_uuid="00000000-0000-0000-0000-000000000000",
-                docker_image="0",
+                docker_image="",
                 version=2.0,
                 default=True,
                 latest=True,

@@ -36,7 +36,7 @@ class TestNotebookCopy(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.notebook_copy.NotebookCopy()  # noqa: E501
         if include_optional:
-            return NotebookCopy(output_uri="0", name="0", namespace="0")
+            return NotebookCopy(output_uri="", name="", namespace="")
         else:
             return NotebookCopy()
 

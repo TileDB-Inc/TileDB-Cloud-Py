@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -116,7 +121,7 @@ class ArrayInfo(object):
     ):  # noqa: E501
         """ArrayInfo - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._id = None
@@ -209,7 +214,7 @@ class ArrayInfo(object):
         unique ID of registered array  # noqa: E501
 
         :param id: The id of this ArrayInfo.  # noqa: E501
-        :type: str
+        :type id: str
         """
 
         self._id = id
@@ -230,7 +235,7 @@ class ArrayInfo(object):
 
 
         :param file_type: The file_type of this ArrayInfo.  # noqa: E501
-        :type: FileType
+        :type file_type: FileType
         """
 
         self._file_type = file_type
@@ -253,7 +258,7 @@ class ArrayInfo(object):
         map of file properties created for this array  # noqa: E501
 
         :param file_properties: The file_properties of this ArrayInfo.  # noqa: E501
-        :type: dict(str, str)
+        :type file_properties: dict(str, str)
         """
 
         self._file_properties = file_properties
@@ -276,7 +281,7 @@ class ArrayInfo(object):
         uri of array  # noqa: E501
 
         :param uri: The uri of this ArrayInfo.  # noqa: E501
-        :type: str
+        :type uri: str
         """
 
         self._uri = uri
@@ -299,7 +304,7 @@ class ArrayInfo(object):
         namespace array is in  # noqa: E501
 
         :param namespace: The namespace of this ArrayInfo.  # noqa: E501
-        :type: str
+        :type namespace: str
         """
 
         self._namespace = namespace
@@ -322,7 +327,7 @@ class ArrayInfo(object):
         size in bytes of array  # noqa: E501
 
         :param size: The size of this ArrayInfo.  # noqa: E501
-        :type: float
+        :type size: float
         """
 
         self._size = size
@@ -345,7 +350,7 @@ class ArrayInfo(object):
         Datetime array was last accessed in UTC  # noqa: E501
 
         :param last_accessed: The last_accessed of this ArrayInfo.  # noqa: E501
-        :type: datetime
+        :type last_accessed: datetime
         """
 
         self._last_accessed = last_accessed
@@ -368,7 +373,7 @@ class ArrayInfo(object):
         description of array  # noqa: E501
 
         :param description: The description of this ArrayInfo.  # noqa: E501
-        :type: str
+        :type description: str
         """
 
         self._description = description
@@ -391,7 +396,7 @@ class ArrayInfo(object):
         name of array  # noqa: E501
 
         :param name: The name of this ArrayInfo.  # noqa: E501
-        :type: str
+        :type name: str
         """
 
         self._name = name
@@ -414,7 +419,7 @@ class ArrayInfo(object):
         list of actions user is allowed to do on this array  # noqa: E501
 
         :param allowed_actions: The allowed_actions of this ArrayInfo.  # noqa: E501
-        :type: list[ArrayActions]
+        :type allowed_actions: list[ArrayActions]
         """
 
         self._allowed_actions = allowed_actions
@@ -437,7 +442,7 @@ class ArrayInfo(object):
         list of pricing created for this array  # noqa: E501
 
         :param pricing: The pricing of this ArrayInfo.  # noqa: E501
-        :type: list[Pricing]
+        :type pricing: list[Pricing]
         """
 
         self._pricing = pricing
@@ -460,7 +465,7 @@ class ArrayInfo(object):
         list of subscriptions created for this array  # noqa: E501
 
         :param subscriptions: The subscriptions of this ArrayInfo.  # noqa: E501
-        :type: list[Subscription]
+        :type subscriptions: list[Subscription]
         """
 
         self._subscriptions = subscriptions
@@ -483,7 +488,7 @@ class ArrayInfo(object):
         logo (base64 encoded) for the array. Optional  # noqa: E501
 
         :param logo: The logo of this ArrayInfo.  # noqa: E501
-        :type: str
+        :type logo: str
         """
 
         self._logo = logo
@@ -506,7 +511,7 @@ class ArrayInfo(object):
         the name of the access credentials to use. if unset, the default credentials will be used  # noqa: E501
 
         :param access_credentials_name: The access_credentials_name of this ArrayInfo.  # noqa: E501
-        :type: str
+        :type access_credentials_name: str
         """
 
         self._access_credentials_name = access_credentials_name
@@ -529,7 +534,7 @@ class ArrayInfo(object):
         Array type (dense, key-value, sparse)  # noqa: E501
 
         :param type: The type of this ArrayInfo.  # noqa: E501
-        :type: str
+        :type type: str
         """
 
         self._type = type
@@ -552,7 +557,7 @@ class ArrayInfo(object):
         number of unique namespaces this array is shared with  # noqa: E501
 
         :param share_count: The share_count of this ArrayInfo.  # noqa: E501
-        :type: float
+        :type share_count: float
         """
 
         self._share_count = share_count
@@ -575,7 +580,7 @@ class ArrayInfo(object):
         Suggests if the array was shared to public by owner  # noqa: E501
 
         :param public_share: The public_share of this ArrayInfo.  # noqa: E501
-        :type: bool
+        :type public_share: bool
         """
 
         self._public_share = public_share
@@ -598,7 +603,7 @@ class ArrayInfo(object):
         Depends on the namespace asking, denotes the existence of subscription of namespace to this array  # noqa: E501
 
         :param namespace_subscribed: The namespace_subscribed of this ArrayInfo.  # noqa: E501
-        :type: bool
+        :type namespace_subscribed: bool
         """
 
         self._namespace_subscribed = namespace_subscribed
@@ -621,7 +626,7 @@ class ArrayInfo(object):
         uri for access through TileDB cloud  # noqa: E501
 
         :param tiledb_uri: The tiledb_uri of this ArrayInfo.  # noqa: E501
-        :type: str
+        :type tiledb_uri: str
         """
 
         self._tiledb_uri = tiledb_uri
@@ -644,7 +649,7 @@ class ArrayInfo(object):
         optional tags for array  # noqa: E501
 
         :param tags: The tags of this ArrayInfo.  # noqa: E501
-        :type: list[str]
+        :type tags: list[str]
         """
 
         self._tags = tags
@@ -667,7 +672,7 @@ class ArrayInfo(object):
         License identifier from SPDX License List or Custom  # noqa: E501
 
         :param license_id: The license_id of this ArrayInfo.  # noqa: E501
-        :type: str
+        :type license_id: str
         """
 
         self._license_id = license_id
@@ -690,7 +695,7 @@ class ArrayInfo(object):
         License text  # noqa: E501
 
         :param license_text: The license_text of this ArrayInfo.  # noqa: E501
-        :type: str
+        :type license_text: str
         """
 
         self._license_text = license_text
@@ -713,7 +718,7 @@ class ArrayInfo(object):
         Suggests if the array is in read_only mode  # noqa: E501
 
         :param read_only: The read_only of this ArrayInfo.  # noqa: E501
-        :type: bool
+        :type read_only: bool
         """
 
         self._read_only = read_only
@@ -736,34 +741,36 @@ class ArrayInfo(object):
         Indicates whether the array is in user favorites  # noqa: E501
 
         :param is_favorite: The is_favorite of this ArrayInfo.  # noqa: E501
-        :type: bool
+        :type is_favorite: bool
         """
 
         self._is_favorite = is_favorite
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

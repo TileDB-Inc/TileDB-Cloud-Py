@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -77,7 +82,7 @@ class ArraySchema(object):
     ):  # noqa: E501
         """ArraySchema - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._uri = None
@@ -125,7 +130,7 @@ class ArraySchema(object):
         URI of schema  # noqa: E501
 
         :param uri: The uri of this ArraySchema.  # noqa: E501
-        :type: str
+        :type uri: str
         """
 
         self._uri = uri
@@ -148,7 +153,7 @@ class ArraySchema(object):
         file format version  # noqa: E501
 
         :param version: The version of this ArraySchema.  # noqa: E501
-        :type: list[int]
+        :type version: list[int]
         """
         if (
             self.local_vars_configuration.client_side_validation and version is None
@@ -175,7 +180,7 @@ class ArraySchema(object):
 
 
         :param array_type: The array_type of this ArraySchema.  # noqa: E501
-        :type: ArrayType
+        :type array_type: ArrayType
         """
         if (
             self.local_vars_configuration.client_side_validation and array_type is None
@@ -202,7 +207,7 @@ class ArraySchema(object):
 
 
         :param tile_order: The tile_order of this ArraySchema.  # noqa: E501
-        :type: Layout
+        :type tile_order: Layout
         """
         if (
             self.local_vars_configuration.client_side_validation and tile_order is None
@@ -229,7 +234,7 @@ class ArraySchema(object):
 
 
         :param cell_order: The cell_order of this ArraySchema.  # noqa: E501
-        :type: Layout
+        :type cell_order: Layout
         """
         if (
             self.local_vars_configuration.client_side_validation and cell_order is None
@@ -258,7 +263,7 @@ class ArraySchema(object):
         Capacity of array  # noqa: E501
 
         :param capacity: The capacity of this ArraySchema.  # noqa: E501
-        :type: int
+        :type capacity: int
         """
         if (
             self.local_vars_configuration.client_side_validation and capacity is None
@@ -285,7 +290,7 @@ class ArraySchema(object):
 
 
         :param coords_filter_pipeline: The coords_filter_pipeline of this ArraySchema.  # noqa: E501
-        :type: FilterPipeline
+        :type coords_filter_pipeline: FilterPipeline
         """
         if (
             self.local_vars_configuration.client_side_validation
@@ -313,7 +318,7 @@ class ArraySchema(object):
 
 
         :param offset_filter_pipeline: The offset_filter_pipeline of this ArraySchema.  # noqa: E501
-        :type: FilterPipeline
+        :type offset_filter_pipeline: FilterPipeline
         """
         if (
             self.local_vars_configuration.client_side_validation
@@ -341,7 +346,7 @@ class ArraySchema(object):
 
 
         :param domain: The domain of this ArraySchema.  # noqa: E501
-        :type: Domain
+        :type domain: Domain
         """
         if (
             self.local_vars_configuration.client_side_validation and domain is None
@@ -370,7 +375,7 @@ class ArraySchema(object):
         Attributes of array  # noqa: E501
 
         :param attributes: The attributes of this ArraySchema.  # noqa: E501
-        :type: list[Attribute]
+        :type attributes: list[Attribute]
         """
         if (
             self.local_vars_configuration.client_side_validation and attributes is None
@@ -399,34 +404,36 @@ class ArraySchema(object):
         True if the array allows coordinate duplicates. Applicable only to sparse arrays.  # noqa: E501
 
         :param allows_duplicates: The allows_duplicates of this ArraySchema.  # noqa: E501
-        :type: bool
+        :type allows_duplicates: bool
         """
 
         self._allows_duplicates = allows_duplicates
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

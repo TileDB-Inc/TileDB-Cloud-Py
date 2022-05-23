@@ -1,6 +1,7 @@
 # NotebookFavoritesData
 
 Object including notebook favorites and pagination metadata
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

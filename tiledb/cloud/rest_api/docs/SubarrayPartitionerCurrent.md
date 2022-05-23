@@ -1,6 +1,7 @@
 # SubarrayPartitionerCurrent
 
 The current partition info
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

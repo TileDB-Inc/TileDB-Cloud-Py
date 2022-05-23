@@ -39,21 +39,21 @@ class TestMultiArrayUDF(unittest.TestCase):
             return MultiArrayUDF(
                 udf_info_name="TileDB-Inc/quickstart_median",
                 language="python",
-                version="0",
-                image_name="0",
+                version="",
+                image_name="",
                 resource_class="standard",
-                _exec="0",
-                exec_raw="0",
+                _exec="",
+                exec_raw="",
                 result_format="python_pickle",
-                task_name="0",
-                argument="0",
+                task_name="",
+                argument="",
                 arguments_json=[
                     tiledb.cloud.rest_api.models.tgudf_argument.TGUDFArgument(
-                        name="0",
+                        name="",
                         value=tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue(),
                     )
                 ],
-                stored_param_uuids=["0"],
+                stored_param_uuids=[""],
                 store_results=True,
                 dont_download_results=True,
                 ranges=tiledb.cloud.rest_api.models.query_ranges.QueryRanges(
@@ -92,20 +92,20 @@ class TestMultiArrayUDF(unittest.TestCase):
                         )
                     ],
                 ),
-                buffers=["0"],
+                buffers=[""],
                 arrays=[
                     tiledb.cloud.rest_api.models.udf_array_details.UDFArrayDetails(
-                        parameter_id="0",
-                        uri="0",
+                        parameter_id="",
+                        uri="",
                         ranges=tiledb.cloud.rest_api.models.query_ranges.QueryRanges(
                             layout="row-major",
                         ),
-                        buffers=["0"],
+                        buffers=[""],
                     )
                 ],
                 timeout=56,
-                task_graph_uuid="0",
-                client_node_uuid="0",
+                task_graph_uuid="",
+                client_node_uuid="",
             )
         else:
             return MultiArrayUDF()

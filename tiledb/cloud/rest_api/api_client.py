@@ -135,13 +135,14 @@ class ApiClient(object):
         body=None,
         post_params=None,
         files=None,
-        response_type=None,
+        response_types_map=None,
         auth_settings=None,
         _return_http_data_only=None,
         collection_formats=None,
         _preload_content=True,
         _request_timeout=None,
         _host=None,
+        _request_auth=None,
     ):
 
         config = self.configuration
@@ -180,7 +181,9 @@ class ApiClient(object):
             post_params.extend(self.files_parameters(files))
 
         # auth setting
-        self.update_params_for_auth(header_params, query_params, auth_settings)
+        self.update_params_for_auth(
+            header_params, query_params, auth_settings, request_auth=_request_auth
+        )
 
         # body
         if body:
@@ -209,8 +212,6 @@ class ApiClient(object):
             e.body = e.body.decode("utf-8") if six.PY3 else e.body
             raise e
 
-        content_type = response_data.getheader("content-type")
-
         self.last_response = response_data
 
         return_data = response_data
@@ -218,14 +219,18 @@ class ApiClient(object):
         if not _preload_content:
             return return_data
 
+        response_type = response_types_map.get(response_data.status, None)
+
         if six.PY3 and response_type not in ["file", "bytes"]:
             match = None
+            content_type = response_data.getheader("content-type")
             if content_type is not None:
                 match = re.search(r"charset=([a-zA-Z\-\d]+)[\s\;]?", content_type)
             encoding = match.group(1) if match else "utf-8"
             response_data.data = response_data.data.decode(encoding)
 
         # deserialize response data
+
         if response_type:
             return_data = self.deserialize(response_data, response_type)
         else:
@@ -353,7 +358,7 @@ class ApiClient(object):
         body=None,
         post_params=None,
         files=None,
-        response_type=None,
+        response_types_map=None,
         auth_settings=None,
         async_req=None,
         _return_http_data_only=None,
@@ -361,6 +366,7 @@ class ApiClient(object):
         _preload_content=True,
         _request_timeout=None,
         _host=None,
+        _request_auth=None,
     ):
         """Makes the HTTP request (synchronous) and returns deserialized data.
 
@@ -391,6 +397,10 @@ class ApiClient(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_token: dict, optional
         :return:
             If async_req parameter is True,
             the request will be called asynchronously.
@@ -408,13 +418,14 @@ class ApiClient(object):
                 body,
                 post_params,
                 files,
-                response_type,
+                response_types_map,
                 auth_settings,
                 _return_http_data_only,
                 collection_formats,
                 _preload_content,
                 _request_timeout,
                 _host,
+                _request_auth,
             )
 
         return self.pool.apply_async(
@@ -428,13 +439,14 @@ class ApiClient(object):
                 body,
                 post_params,
                 files,
-                response_type,
+                response_types_map,
                 auth_settings,
                 _return_http_data_only,
                 collection_formats,
                 _preload_content,
                 _request_timeout,
                 _host,
+                _request_auth,
             ),
         )
 
@@ -607,29 +619,44 @@ class ApiClient(object):
         else:
             return content_types[0]
 
-    def update_params_for_auth(self, headers, querys, auth_settings):
+    def update_params_for_auth(
+        self, headers, queries, auth_settings, request_auth=None
+    ):
         """Updates header and query params based on authentication setting.
 
         :param headers: Header parameters dict to be updated.
-        :param querys: Query parameters tuple list to be updated.
+        :param queries: Query parameters tuple list to be updated.
         :param auth_settings: Authentication setting identifiers list.
+        :param request_auth: if set, the provided settings will
+                             override the token in the configuration.
         """
         if not auth_settings:
+            return
+
+        if request_auth:
+            self._apply_auth_params(headers, queries, request_auth)
             return
 
         for auth in auth_settings:
             auth_setting = self.configuration.auth_settings().get(auth)
             if auth_setting:
-                if auth_setting["in"] == "cookie":
-                    headers["Cookie"] = auth_setting["value"]
-                elif auth_setting["in"] == "header":
-                    headers[auth_setting["key"]] = auth_setting["value"]
-                elif auth_setting["in"] == "query":
-                    querys.append((auth_setting["key"], auth_setting["value"]))
-                else:
-                    raise ApiValueError(
-                        "Authentication token must be in `query` or `header`"
-                    )
+                self._apply_auth_params(headers, queries, auth_setting)
+
+    def _apply_auth_params(self, headers, queries, auth_setting):
+        """Updates the request parameters based on a single auth_setting
+
+        :param headers: Header parameters dict to be updated.
+        :param queries: Query parameters tuple list to be updated.
+        :param auth_setting: auth settings for the endpoint
+        """
+        if auth_setting["in"] == "cookie":
+            headers["Cookie"] = auth_setting["value"]
+        elif auth_setting["in"] == "header":
+            headers[auth_setting["key"]] = auth_setting["value"]
+        elif auth_setting["in"] == "query":
+            queries.append((auth_setting["key"], auth_setting["value"]))
+        else:
+            raise ApiValueError("Authentication token must be in `query` or `header`")
 
     def __deserialize_file(self, response):
         """Deserializes body to file

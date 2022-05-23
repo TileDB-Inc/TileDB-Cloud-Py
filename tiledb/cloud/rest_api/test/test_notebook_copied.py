@@ -37,9 +37,9 @@ class TestNotebookCopied(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.notebook_copied.NotebookCopied()  # noqa: E501
         if include_optional:
             return NotebookCopied(
-                output_uri="0",
-                name="0",
-                namespace="0",
+                output_uri="",
+                name="",
+                namespace="",
                 id="00000000-0000-0000-0000-000000000000",
             )
         else:

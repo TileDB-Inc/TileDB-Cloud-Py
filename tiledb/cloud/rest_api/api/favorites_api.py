@@ -40,22 +40,28 @@ class FavoritesApi(object):
         Add a new array favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_array_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the array (required)
-        :param str name: The name of the array (required)
+        :param namespace: The namespace of the array (required)
+        :type namespace: str
+        :param name: The name of the array (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.add_array_favorite_with_http_info(
@@ -70,24 +76,35 @@ class FavoritesApi(object):
         Add a new array favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_array_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the array (required)
-        :param str name: The name of the array (required)
+        :param namespace: The namespace of the array (required)
+        :type namespace: str
+        :param name: The name of the array (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -99,6 +116,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -151,6 +169,8 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/arrays/favorites/{namespace}/{name}",
             "POST",
@@ -160,7 +180,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -169,6 +189,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def add_ml_model_favorite(self, namespace, name, **kwargs):  # noqa: E501
@@ -177,22 +198,28 @@ class FavoritesApi(object):
         Add a new ML model favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_ml_model_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the ML model (required)
-        :param str name: The name of the ML model (required)
+        :param namespace: The namespace of the ML model (required)
+        :type namespace: str
+        :param name: The name of the ML model (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.add_ml_model_favorite_with_http_info(
@@ -207,24 +234,35 @@ class FavoritesApi(object):
         Add a new ML model favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_ml_model_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the ML model (required)
-        :param str name: The name of the ML model (required)
+        :param namespace: The namespace of the ML model (required)
+        :type namespace: str
+        :param name: The name of the ML model (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -236,6 +274,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -288,6 +327,8 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/ml_models/favorites/{namespace}/{name}",
             "POST",
@@ -297,7 +338,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -306,6 +347,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def add_notebook_favorite(self, namespace, name, **kwargs):  # noqa: E501
@@ -314,22 +356,28 @@ class FavoritesApi(object):
         Add a new notebook favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_notebook_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the notebook (required)
-        :param str name: The name of the notebook (required)
+        :param namespace: The namespace of the notebook (required)
+        :type namespace: str
+        :param name: The name of the notebook (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.add_notebook_favorite_with_http_info(
@@ -344,24 +392,35 @@ class FavoritesApi(object):
         Add a new notebook favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_notebook_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the notebook (required)
-        :param str name: The name of the notebook (required)
+        :param namespace: The namespace of the notebook (required)
+        :type namespace: str
+        :param name: The name of the notebook (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -373,6 +432,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -425,6 +485,8 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/notebooks/favorites/{namespace}/{name}",
             "POST",
@@ -434,7 +496,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -443,6 +505,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def add_udf_favorite(self, namespace, name, **kwargs):  # noqa: E501
@@ -451,22 +514,28 @@ class FavoritesApi(object):
         Add a new UDF favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_udf_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the UDF (required)
-        :param str name: The name of the UDF (required)
+        :param namespace: The namespace of the UDF (required)
+        :type namespace: str
+        :param name: The name of the UDF (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.add_udf_favorite_with_http_info(
@@ -479,24 +548,35 @@ class FavoritesApi(object):
         Add a new UDF favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_udf_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the UDF (required)
-        :param str name: The name of the UDF (required)
+        :param namespace: The namespace of the UDF (required)
+        :type namespace: str
+        :param name: The name of the UDF (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -508,6 +588,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -560,6 +641,8 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/udfs/favorites/{namespace}/{name}",
             "POST",
@@ -569,7 +652,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -578,6 +661,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def delete_array_favorite(self, namespace, name, **kwargs):  # noqa: E501
@@ -586,22 +670,28 @@ class FavoritesApi(object):
         Delete specific array favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_array_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the array (required)
-        :param str name: The name of the array (required)
+        :param namespace: The namespace of the array (required)
+        :type namespace: str
+        :param name: The name of the array (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.delete_array_favorite_with_http_info(
@@ -616,24 +706,35 @@ class FavoritesApi(object):
         Delete specific array favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_array_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the array (required)
-        :param str name: The name of the array (required)
+        :param namespace: The namespace of the array (required)
+        :type namespace: str
+        :param name: The name of the array (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -645,6 +746,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -697,6 +799,8 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/arrays/favorites/{namespace}/{name}",
             "DELETE",
@@ -706,7 +810,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -715,6 +819,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def delete_ml_model_favorite(self, namespace, name, **kwargs):  # noqa: E501
@@ -723,22 +828,28 @@ class FavoritesApi(object):
         Delete specific ML model favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_ml_model_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the ML model (required)
-        :param str name: The name of the ML model (required)
+        :param namespace: The namespace of the ML model (required)
+        :type namespace: str
+        :param name: The name of the ML model (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.delete_ml_model_favorite_with_http_info(
@@ -753,24 +864,35 @@ class FavoritesApi(object):
         Delete specific ML model favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_ml_model_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the ML model (required)
-        :param str name: The name of the ML model (required)
+        :param namespace: The namespace of the ML model (required)
+        :type namespace: str
+        :param name: The name of the ML model (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -782,6 +904,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -834,6 +957,8 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/ml_models/favorites/{namespace}/{name}",
             "DELETE",
@@ -843,7 +968,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -852,6 +977,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def delete_notebook_favorite(self, namespace, name, **kwargs):  # noqa: E501
@@ -860,22 +986,28 @@ class FavoritesApi(object):
         Delete specific notebook favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_notebook_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the notebook (required)
-        :param str name: The name of the notebook (required)
+        :param namespace: The namespace of the notebook (required)
+        :type namespace: str
+        :param name: The name of the notebook (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.delete_notebook_favorite_with_http_info(
@@ -890,24 +1022,35 @@ class FavoritesApi(object):
         Delete specific notebook favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_notebook_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the notebook (required)
-        :param str name: The name of the notebook (required)
+        :param namespace: The namespace of the notebook (required)
+        :type namespace: str
+        :param name: The name of the notebook (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -919,6 +1062,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -971,6 +1115,8 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/notebooks/favorites/{namespace}/{name}",
             "DELETE",
@@ -980,7 +1126,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -989,6 +1135,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def delete_udf_favorite(self, namespace, name, **kwargs):  # noqa: E501
@@ -997,22 +1144,28 @@ class FavoritesApi(object):
         Delete specific UDF favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_udf_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the UDF (required)
-        :param str name: The name of the UDF (required)
+        :param namespace: The namespace of the UDF (required)
+        :type namespace: str
+        :param name: The name of the UDF (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.delete_udf_favorite_with_http_info(
@@ -1027,24 +1180,35 @@ class FavoritesApi(object):
         Delete specific UDF favorite  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_udf_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the UDF (required)
-        :param str name: The name of the UDF (required)
+        :param namespace: The namespace of the UDF (required)
+        :type namespace: str
+        :param name: The name of the UDF (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -1056,6 +1220,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1108,6 +1273,8 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/udfs/favorites/{namespace}/{name}",
             "DELETE",
@@ -1117,7 +1284,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1126,6 +1293,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def get_array_favorite(self, namespace, name, **kwargs):  # noqa: E501
@@ -1134,22 +1302,28 @@ class FavoritesApi(object):
         Fetch array favorite of a specific array  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_array_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the array (required)
-        :param str name: The name of the array (required)
+        :param namespace: The namespace of the array (required)
+        :type namespace: str
+        :param name: The name of the array (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: ArrayFavorite
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: ArrayFavorite
         """
         kwargs["_return_http_data_only"] = True
         return self.get_array_favorite_with_http_info(
@@ -1164,24 +1338,35 @@ class FavoritesApi(object):
         Fetch array favorite of a specific array  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_array_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the array (required)
-        :param str name: The name of the array (required)
+        :param namespace: The namespace of the array (required)
+        :type namespace: str
+        :param name: The name of the array (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(ArrayFavorite, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(ArrayFavorite, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1193,6 +1378,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1245,6 +1431,10 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "ArrayFavorite",
+        }
+
         return self.api_client.call_api(
             "/arrays/favorites/{namespace}/{name}",
             "GET",
@@ -1254,7 +1444,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="ArrayFavorite",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1263,6 +1453,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def get_ml_model_favorite(self, namespace, name, **kwargs):  # noqa: E501
@@ -1271,22 +1462,28 @@ class FavoritesApi(object):
         Fetch ML model favorite of a specific ML model  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_ml_model_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the ML model (required)
-        :param str name: The name of the ML model (required)
+        :param namespace: The namespace of the ML model (required)
+        :type namespace: str
+        :param name: The name of the ML model (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: MLModelFavorite
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: MLModelFavorite
         """
         kwargs["_return_http_data_only"] = True
         return self.get_ml_model_favorite_with_http_info(
@@ -1301,24 +1498,35 @@ class FavoritesApi(object):
         Fetch ML model favorite of a specific ML model  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_ml_model_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the ML model (required)
-        :param str name: The name of the ML model (required)
+        :param namespace: The namespace of the ML model (required)
+        :type namespace: str
+        :param name: The name of the ML model (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(MLModelFavorite, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(MLModelFavorite, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1330,6 +1538,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1382,6 +1591,10 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "MLModelFavorite",
+        }
+
         return self.api_client.call_api(
             "/ml_models/favorites/{namespace}/{name}",
             "GET",
@@ -1391,7 +1604,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="MLModelFavorite",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1400,6 +1613,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def get_notebook_favorite(self, namespace, name, **kwargs):  # noqa: E501
@@ -1408,22 +1622,28 @@ class FavoritesApi(object):
         Fetch notebook favorite of a specific notebook  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_notebook_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the notebook (required)
-        :param str name: The name of the notebook (required)
+        :param namespace: The namespace of the notebook (required)
+        :type namespace: str
+        :param name: The name of the notebook (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: NotebookFavorite
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: NotebookFavorite
         """
         kwargs["_return_http_data_only"] = True
         return self.get_notebook_favorite_with_http_info(
@@ -1438,24 +1658,35 @@ class FavoritesApi(object):
         Fetch notebook favorite of a specific notebook  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_notebook_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the notebook (required)
-        :param str name: The name of the notebook (required)
+        :param namespace: The namespace of the notebook (required)
+        :type namespace: str
+        :param name: The name of the notebook (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(NotebookFavorite, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(NotebookFavorite, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1467,6 +1698,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1519,6 +1751,10 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "NotebookFavorite",
+        }
+
         return self.api_client.call_api(
             "/notebooks/favorites/{namespace}/{name}",
             "GET",
@@ -1528,7 +1764,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="NotebookFavorite",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1537,6 +1773,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def get_udf_favorite(self, namespace, name, **kwargs):  # noqa: E501
@@ -1545,22 +1782,28 @@ class FavoritesApi(object):
         Fetch UDF favorite of a specific UDF  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_udf_favorite(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the UDF (required)
-        :param str name: The name of the UDF (required)
+        :param namespace: The namespace of the UDF (required)
+        :type namespace: str
+        :param name: The name of the UDF (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: UDFFavorite
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: UDFFavorite
         """
         kwargs["_return_http_data_only"] = True
         return self.get_udf_favorite_with_http_info(
@@ -1573,24 +1816,35 @@ class FavoritesApi(object):
         Fetch UDF favorite of a specific UDF  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_udf_favorite_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the UDF (required)
-        :param str name: The name of the UDF (required)
+        :param namespace: The namespace of the UDF (required)
+        :type namespace: str
+        :param name: The name of the UDF (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(UDFFavorite, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(UDFFavorite, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1602,6 +1856,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1654,6 +1909,10 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "UDFFavorite",
+        }
+
         return self.api_client.call_api(
             "/udfs/favorites/{namespace}/{name}",
             "GET",
@@ -1663,7 +1922,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="UDFFavorite",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1672,6 +1931,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def list_array_favorites(self, **kwargs):  # noqa: E501
@@ -1680,22 +1940,28 @@ class FavoritesApi(object):
         Fetch a page of array favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.list_array_favorites(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param int page: pagination offset
-        :param int per_page: pagination limit
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: ArrayFavoritesData
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: ArrayFavoritesData
         """
         kwargs["_return_http_data_only"] = True
         return self.list_array_favorites_with_http_info(**kwargs)  # noqa: E501
@@ -1706,24 +1972,35 @@ class FavoritesApi(object):
         Fetch a page of array favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.list_array_favorites_with_http_info(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param int page: pagination offset
-        :param int per_page: pagination limit
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(ArrayFavoritesData, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(ArrayFavoritesData, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1735,6 +2012,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1777,6 +2055,10 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "ArrayFavoritesData",
+        }
+
         return self.api_client.call_api(
             "/arrays/favorites",
             "GET",
@@ -1786,7 +2068,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="ArrayFavoritesData",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1795,54 +2077,68 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
-    def list_array_favorites_uui_ds(self, **kwargs):  # noqa: E501
-        """list_array_favorites_uui_ds  # noqa: E501
+    def list_array_favorites_uuids(self, **kwargs):  # noqa: E501
+        """list_array_favorites_uuids  # noqa: E501
 
         Fetch all favorite array uuids of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_array_favorites_uui_ds(async_req=True)
+
+        >>> thread = api.list_array_favorites_uuids(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: list[ArrayFavorite]
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: list[ArrayFavorite]
         """
         kwargs["_return_http_data_only"] = True
-        return self.list_array_favorites_uui_ds_with_http_info(**kwargs)  # noqa: E501
+        return self.list_array_favorites_uuids_with_http_info(**kwargs)  # noqa: E501
 
-    def list_array_favorites_uui_ds_with_http_info(self, **kwargs):  # noqa: E501
-        """list_array_favorites_uui_ds  # noqa: E501
+    def list_array_favorites_uuids_with_http_info(self, **kwargs):  # noqa: E501
+        """list_array_favorites_uuids  # noqa: E501
 
         Fetch all favorite array uuids of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_array_favorites_uui_ds_with_http_info(async_req=True)
+
+        >>> thread = api.list_array_favorites_uuids_with_http_info(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(list[ArrayFavorite], status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(list[ArrayFavorite], status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1854,6 +2150,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1861,7 +2158,7 @@ class FavoritesApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method list_array_favorites_uui_ds" % key
+                    " to method list_array_favorites_uuids" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
@@ -1886,6 +2183,10 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "list[ArrayFavorite]",
+        }
+
         return self.api_client.call_api(
             "/arrays/favorites/uuids",
             "GET",
@@ -1895,7 +2196,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="list[ArrayFavorite]",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1904,6 +2205,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def list_ml_model_favorites(self, **kwargs):  # noqa: E501
@@ -1912,22 +2214,28 @@ class FavoritesApi(object):
         Fetch a page of ML models favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.list_ml_model_favorites(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param int page: pagination offset
-        :param int per_page: pagination limit
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: MLModelFavoritesData
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: MLModelFavoritesData
         """
         kwargs["_return_http_data_only"] = True
         return self.list_ml_model_favorites_with_http_info(**kwargs)  # noqa: E501
@@ -1938,24 +2246,35 @@ class FavoritesApi(object):
         Fetch a page of ML models favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.list_ml_model_favorites_with_http_info(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param int page: pagination offset
-        :param int per_page: pagination limit
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(MLModelFavoritesData, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(MLModelFavoritesData, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1967,6 +2286,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -2009,6 +2329,10 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "MLModelFavoritesData",
+        }
+
         return self.api_client.call_api(
             "/ml_models/favorites",
             "GET",
@@ -2018,7 +2342,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="MLModelFavoritesData",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -2027,56 +2351,68 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
-    def list_ml_model_favorites_uui_ds(self, **kwargs):  # noqa: E501
-        """list_ml_model_favorites_uui_ds  # noqa: E501
+    def list_ml_model_favorites_uuids(self, **kwargs):  # noqa: E501
+        """list_ml_model_favorites_uuids  # noqa: E501
 
         Fetch all favorite ML models uuids of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_ml_model_favorites_uui_ds(async_req=True)
+
+        >>> thread = api.list_ml_model_favorites_uuids(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: list[MLModelFavorite]
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: list[MLModelFavorite]
         """
         kwargs["_return_http_data_only"] = True
-        return self.list_ml_model_favorites_uui_ds_with_http_info(
-            **kwargs
-        )  # noqa: E501
+        return self.list_ml_model_favorites_uuids_with_http_info(**kwargs)  # noqa: E501
 
-    def list_ml_model_favorites_uui_ds_with_http_info(self, **kwargs):  # noqa: E501
-        """list_ml_model_favorites_uui_ds  # noqa: E501
+    def list_ml_model_favorites_uuids_with_http_info(self, **kwargs):  # noqa: E501
+        """list_ml_model_favorites_uuids  # noqa: E501
 
         Fetch all favorite ML models uuids of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_ml_model_favorites_uui_ds_with_http_info(async_req=True)
+
+        >>> thread = api.list_ml_model_favorites_uuids_with_http_info(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(list[MLModelFavorite], status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(list[MLModelFavorite], status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -2088,6 +2424,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -2095,7 +2432,7 @@ class FavoritesApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method list_ml_model_favorites_uui_ds" % key
+                    " to method list_ml_model_favorites_uuids" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
@@ -2120,6 +2457,10 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "list[MLModelFavorite]",
+        }
+
         return self.api_client.call_api(
             "/ml_models/favorites/uuids",
             "GET",
@@ -2129,7 +2470,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="list[MLModelFavorite]",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -2138,6 +2479,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def list_notebook_favorites(self, **kwargs):  # noqa: E501
@@ -2146,23 +2488,30 @@ class FavoritesApi(object):
         Fetch a page of notebook favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.list_notebook_favorites(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param bool is_dashboard: return only dashboards
-        :param int page: pagination offset
-        :param int per_page: pagination limit
+        :param is_dashboard: return only dashboards
+        :type is_dashboard: bool
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: NotebookFavoritesData
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: NotebookFavoritesData
         """
         kwargs["_return_http_data_only"] = True
         return self.list_notebook_favorites_with_http_info(**kwargs)  # noqa: E501
@@ -2173,25 +2522,37 @@ class FavoritesApi(object):
         Fetch a page of notebook favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.list_notebook_favorites_with_http_info(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param bool is_dashboard: return only dashboards
-        :param int page: pagination offset
-        :param int per_page: pagination limit
+        :param is_dashboard: return only dashboards
+        :type is_dashboard: bool
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(NotebookFavoritesData, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(NotebookFavoritesData, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -2203,6 +2564,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -2252,6 +2614,10 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "NotebookFavoritesData",
+        }
+
         return self.api_client.call_api(
             "/notebooks/favorites",
             "GET",
@@ -2261,7 +2627,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="NotebookFavoritesData",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -2270,56 +2636,68 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
-    def list_notebook_favorites_uui_ds(self, **kwargs):  # noqa: E501
-        """list_notebook_favorites_uui_ds  # noqa: E501
+    def list_notebook_favorites_uuids(self, **kwargs):  # noqa: E501
+        """list_notebook_favorites_uuids  # noqa: E501
 
         Fetch all favorite notebook uuids of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_notebook_favorites_uui_ds(async_req=True)
+
+        >>> thread = api.list_notebook_favorites_uuids(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: list[NotebookFavorite]
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: list[NotebookFavorite]
         """
         kwargs["_return_http_data_only"] = True
-        return self.list_notebook_favorites_uui_ds_with_http_info(
-            **kwargs
-        )  # noqa: E501
+        return self.list_notebook_favorites_uuids_with_http_info(**kwargs)  # noqa: E501
 
-    def list_notebook_favorites_uui_ds_with_http_info(self, **kwargs):  # noqa: E501
-        """list_notebook_favorites_uui_ds  # noqa: E501
+    def list_notebook_favorites_uuids_with_http_info(self, **kwargs):  # noqa: E501
+        """list_notebook_favorites_uuids  # noqa: E501
 
         Fetch all favorite notebook uuids of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_notebook_favorites_uui_ds_with_http_info(async_req=True)
+
+        >>> thread = api.list_notebook_favorites_uuids_with_http_info(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(list[NotebookFavorite], status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(list[NotebookFavorite], status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -2331,6 +2709,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -2338,7 +2717,7 @@ class FavoritesApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method list_notebook_favorites_uui_ds" % key
+                    " to method list_notebook_favorites_uuids" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
@@ -2363,6 +2742,10 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "list[NotebookFavorite]",
+        }
+
         return self.api_client.call_api(
             "/notebooks/favorites/uuids",
             "GET",
@@ -2372,7 +2755,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="list[NotebookFavorite]",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -2381,6 +2764,7 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def list_udf_favorites(self, **kwargs):  # noqa: E501
@@ -2389,22 +2773,28 @@ class FavoritesApi(object):
         Fetch a page of UDF favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.list_udf_favorites(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param int page: pagination offset
-        :param int per_page: pagination limit
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: UDFFavoritesData
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: UDFFavoritesData
         """
         kwargs["_return_http_data_only"] = True
         return self.list_udf_favorites_with_http_info(**kwargs)  # noqa: E501
@@ -2415,24 +2805,35 @@ class FavoritesApi(object):
         Fetch a page of UDF favorites of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.list_udf_favorites_with_http_info(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param int page: pagination offset
-        :param int per_page: pagination limit
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(UDFFavoritesData, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(UDFFavoritesData, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -2444,6 +2845,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -2486,6 +2888,10 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "UDFFavoritesData",
+        }
+
         return self.api_client.call_api(
             "/udfs/favorites",
             "GET",
@@ -2495,7 +2901,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="UDFFavoritesData",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -2504,54 +2910,68 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
-    def list_udf_favorites_uui_ds(self, **kwargs):  # noqa: E501
-        """list_udf_favorites_uui_ds  # noqa: E501
+    def list_udf_favorites_uuids(self, **kwargs):  # noqa: E501
+        """list_udf_favorites_uuids  # noqa: E501
 
         Fetch all favorite UDF uuids of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_udf_favorites_uui_ds(async_req=True)
+
+        >>> thread = api.list_udf_favorites_uuids(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: list[UDFFavorite]
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: list[UDFFavorite]
         """
         kwargs["_return_http_data_only"] = True
-        return self.list_udf_favorites_uui_ds_with_http_info(**kwargs)  # noqa: E501
+        return self.list_udf_favorites_uuids_with_http_info(**kwargs)  # noqa: E501
 
-    def list_udf_favorites_uui_ds_with_http_info(self, **kwargs):  # noqa: E501
-        """list_udf_favorites_uui_ds  # noqa: E501
+    def list_udf_favorites_uuids_with_http_info(self, **kwargs):  # noqa: E501
+        """list_udf_favorites_uuids  # noqa: E501
 
         Fetch all favorite UDF uuids of connected user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_udf_favorites_uui_ds_with_http_info(async_req=True)
+
+        >>> thread = api.list_udf_favorites_uuids_with_http_info(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(list[UDFFavorite], status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(list[UDFFavorite], status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -2563,6 +2983,7 @@ class FavoritesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -2570,7 +2991,7 @@ class FavoritesApi(object):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method list_udf_favorites_uui_ds" % key
+                    " to method list_udf_favorites_uuids" % key
                 )
             local_var_params[key] = val
         del local_var_params["kwargs"]
@@ -2595,6 +3016,10 @@ class FavoritesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "list[UDFFavorite]",
+        }
+
         return self.api_client.call_api(
             "/udfs/favorites/uuids",
             "GET",
@@ -2604,7 +3029,7 @@ class FavoritesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="list[UDFFavorite]",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -2613,4 +3038,5 @@ class FavoritesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )

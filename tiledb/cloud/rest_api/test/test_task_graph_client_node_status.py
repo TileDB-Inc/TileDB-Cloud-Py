@@ -38,7 +38,7 @@ class TestTaskGraphClientNodeStatus(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.task_graph_client_node_status.TaskGraphClientNodeStatus()  # noqa: E501
         if include_optional:
-            return TaskGraphClientNodeStatus(client_node_uuid="0", status="QUEUED")
+            return TaskGraphClientNodeStatus(client_node_uuid="", status="QUEUED")
         else:
             return TaskGraphClientNodeStatus()
 

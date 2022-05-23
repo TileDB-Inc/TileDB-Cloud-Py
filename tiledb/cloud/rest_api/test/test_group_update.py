@@ -37,13 +37,13 @@ class TestGroupUpdate(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.group_update.GroupUpdate()  # noqa: E501
         if include_optional:
             return GroupUpdate(
-                description="0",
-                name="0",
-                logo="0",
-                access_credentials_name="0",
-                tags=["0"],
-                license_id="0",
-                license_text="0",
+                description="",
+                name="",
+                logo="",
+                access_credentials_name="",
+                tags=[""],
+                license_id="",
+                license_text="",
             )
         else:
             return GroupUpdate()

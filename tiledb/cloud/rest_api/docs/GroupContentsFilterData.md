@@ -1,6 +1,7 @@
 # GroupContentsFilterData
 
 Object with data to fill contents filter
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

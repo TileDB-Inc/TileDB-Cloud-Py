@@ -40,22 +40,28 @@ class UdfApi(object):
         delete a registered UDF -- this will remove all sharing and can not be undone  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_udf_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register UDF under (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param name: name to register UDF under (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.delete_udf_info_with_http_info(
@@ -68,24 +74,35 @@ class UdfApi(object):
         delete a registered UDF -- this will remove all sharing and can not be undone  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_udf_info_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register UDF under (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param name: name to register UDF under (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -97,6 +114,7 @@ class UdfApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -149,6 +167,8 @@ class UdfApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/udf/{namespace}/{name}",
             "DELETE",
@@ -158,7 +178,7 @@ class UdfApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -167,6 +187,7 @@ class UdfApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def get_udf_info(self, namespace, name, **kwargs):  # noqa: E501
@@ -175,22 +196,28 @@ class UdfApi(object):
         get a specific UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_udf_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register UDF under (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param name: name to register UDF under (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: UDFInfo
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: UDFInfo
         """
         kwargs["_return_http_data_only"] = True
         return self.get_udf_info_with_http_info(namespace, name, **kwargs)  # noqa: E501
@@ -201,24 +228,35 @@ class UdfApi(object):
         get a specific UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_udf_info_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register UDF under (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param name: name to register UDF under (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(UDFInfo, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(UDFInfo, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -230,6 +268,7 @@ class UdfApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -282,6 +321,11 @@ class UdfApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "UDFInfo",
+            404: None,
+        }
+
         return self.api_client.call_api(
             "/udf/{namespace}/{name}",
             "GET",
@@ -291,7 +335,7 @@ class UdfApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="UDFInfo",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -300,6 +344,7 @@ class UdfApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def get_udf_info_sharing_policies(self, namespace, name, **kwargs):  # noqa: E501
@@ -308,22 +353,28 @@ class UdfApi(object):
         Get all sharing details of the UDF  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_udf_info_sharing_policies(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name of UDFInfo (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param name: name of UDFInfo (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: list[UDFSharing]
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: list[UDFSharing]
         """
         kwargs["_return_http_data_only"] = True
         return self.get_udf_info_sharing_policies_with_http_info(
@@ -338,24 +389,35 @@ class UdfApi(object):
         Get all sharing details of the UDF  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_udf_info_sharing_policies_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name of UDFInfo (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param name: name of UDFInfo (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(list[UDFSharing], status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(list[UDFSharing], status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -367,6 +429,7 @@ class UdfApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -419,6 +482,11 @@ class UdfApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "list[UDFSharing]",
+            404: None,
+        }
+
         return self.api_client.call_api(
             "/udf/{namespace}/{name}/share",
             "GET",
@@ -428,7 +496,7 @@ class UdfApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="list[UDFSharing]",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -437,6 +505,7 @@ class UdfApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def handle_copy_udf(self, namespace, name, udf_copy, **kwargs):  # noqa: E501
@@ -445,25 +514,34 @@ class UdfApi(object):
         Copy a tiledb udf at the specified location  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.handle_copy_udf(namespace, name, udf_copy, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name of UDFInfo (required)
-        :param UDFCopy udf_copy: Input/Output information to copy a UDF (required)
-        :param str x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :param int end_timestamp: Milliseconds since Unix epoch
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param name: name of UDFInfo (required)
+        :type name: str
+        :param udf_copy: Input/Output information to copy a UDF (required)
+        :type udf_copy: UDFCopy
+        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
+        :type x_tiledb_cloud_access_credentials_name: str
+        :param end_timestamp: Milliseconds since Unix epoch
+        :type end_timestamp: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: UDFCopied
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: UDFCopied
         """
         kwargs["_return_http_data_only"] = True
         return self.handle_copy_udf_with_http_info(
@@ -478,27 +556,41 @@ class UdfApi(object):
         Copy a tiledb udf at the specified location  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.handle_copy_udf_with_http_info(namespace, name, udf_copy, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name of UDFInfo (required)
-        :param UDFCopy udf_copy: Input/Output information to copy a UDF (required)
-        :param str x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :param int end_timestamp: Milliseconds since Unix epoch
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param name: name of UDFInfo (required)
+        :type name: str
+        :param udf_copy: Input/Output information to copy a UDF (required)
+        :type udf_copy: UDFCopy
+        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
+        :type x_tiledb_cloud_access_credentials_name: str
+        :param end_timestamp: Milliseconds since Unix epoch
+        :type end_timestamp: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(UDFCopied, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(UDFCopied, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -516,6 +608,7 @@ class UdfApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -596,6 +689,10 @@ class UdfApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            201: "UDFCopied",
+        }
+
         return self.api_client.call_api(
             "/udf/{namespace}/{name}/copy",
             "POST",
@@ -605,7 +702,7 @@ class UdfApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="UDFCopied",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -614,6 +711,7 @@ class UdfApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def register_udf_info(self, namespace, name, udf, **kwargs):  # noqa: E501
@@ -622,23 +720,30 @@ class UdfApi(object):
         register a UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.register_udf_info(namespace, name, udf, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register UDF under (required)
-        :param UDFInfoUpdate udf: UDF to register (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param name: name to register UDF under (required)
+        :type name: str
+        :param udf: UDF to register (required)
+        :type udf: UDFInfoUpdate
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.register_udf_info_with_http_info(
@@ -653,25 +758,37 @@ class UdfApi(object):
         register a UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.register_udf_info_with_http_info(namespace, name, udf, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register UDF under (required)
-        :param UDFInfoUpdate udf: UDF to register (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param name: name to register UDF under (required)
+        :type name: str
+        :param udf: UDF to register (required)
+        :type udf: UDFInfoUpdate
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -683,6 +800,7 @@ class UdfApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -752,6 +870,8 @@ class UdfApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/udf/{namespace}/{name}",
             "POST",
@@ -761,7 +881,7 @@ class UdfApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -770,6 +890,7 @@ class UdfApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def share_udf_info(self, namespace, name, udf_sharing, **kwargs):  # noqa: E501
@@ -778,23 +899,30 @@ class UdfApi(object):
         Share a UDF with a user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.share_udf_info(namespace, name, udf_sharing, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name of UDFInfo (required)
-        :param UDFSharing udf_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all. (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param name: name of UDFInfo (required)
+        :type name: str
+        :param udf_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all. (required)
+        :type udf_sharing: UDFSharing
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.share_udf_info_with_http_info(
@@ -809,25 +937,37 @@ class UdfApi(object):
         Share a UDF with a user  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.share_udf_info_with_http_info(namespace, name, udf_sharing, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name of UDFInfo (required)
-        :param UDFSharing udf_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all. (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param name: name of UDFInfo (required)
+        :type name: str
+        :param udf_sharing: Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all. (required)
+        :type udf_sharing: UDFSharing
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -839,6 +979,7 @@ class UdfApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -908,6 +1049,8 @@ class UdfApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/udf/{namespace}/{name}/share",
             "PATCH",
@@ -917,7 +1060,7 @@ class UdfApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -926,6 +1069,7 @@ class UdfApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def submit_generic_udf(self, namespace, udf, **kwargs):  # noqa: E501
@@ -934,23 +1078,30 @@ class UdfApi(object):
         submit a generic UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.submit_generic_udf(namespace, udf, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param GenericUDF udf: UDF to run (required)
-        :param str accept_encoding: Encoding to use
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param udf: UDF to run (required)
+        :type udf: GenericUDF
+        :param accept_encoding: Encoding to use
+        :type accept_encoding: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: file
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: file
         """
         kwargs["_return_http_data_only"] = True
         return self.submit_generic_udf_with_http_info(
@@ -963,25 +1114,37 @@ class UdfApi(object):
         submit a generic UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.submit_generic_udf_with_http_info(namespace, udf, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param GenericUDF udf: UDF to run (required)
-        :param str accept_encoding: Encoding to use
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param udf: UDF to run (required)
+        :type udf: GenericUDF
+        :param accept_encoding: Encoding to use
+        :type accept_encoding: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(file, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(file, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -993,6 +1156,7 @@ class UdfApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1056,6 +1220,10 @@ class UdfApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "file",
+        }
+
         return self.api_client.call_api(
             "/udfs/generic/{namespace}",
             "POST",
@@ -1065,7 +1233,7 @@ class UdfApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="file",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1074,6 +1242,7 @@ class UdfApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def submit_multi_array_udf(self, namespace, udf, **kwargs):  # noqa: E501
@@ -1082,23 +1251,30 @@ class UdfApi(object):
         submit a multi-array UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.submit_multi_array_udf(namespace, udf, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param MultiArrayUDF udf: UDF to run (required)
-        :param str accept_encoding: Encoding to use
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param udf: UDF to run (required)
+        :type udf: MultiArrayUDF
+        :param accept_encoding: Encoding to use
+        :type accept_encoding: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: file
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: file
         """
         kwargs["_return_http_data_only"] = True
         return self.submit_multi_array_udf_with_http_info(
@@ -1113,25 +1289,37 @@ class UdfApi(object):
         submit a multi-array UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.submit_multi_array_udf_with_http_info(namespace, udf, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param MultiArrayUDF udf: UDF to run (required)
-        :param str accept_encoding: Encoding to use
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param udf: UDF to run (required)
+        :type udf: MultiArrayUDF
+        :param accept_encoding: Encoding to use
+        :type accept_encoding: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(file, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(file, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1143,6 +1331,7 @@ class UdfApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1206,6 +1395,10 @@ class UdfApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "file",
+        }
+
         return self.api_client.call_api(
             "/udfs/arrays/{namespace}",
             "POST",
@@ -1215,7 +1408,7 @@ class UdfApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="file",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1224,6 +1417,7 @@ class UdfApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def submit_udf(self, namespace, array, udf, **kwargs):  # noqa: E501
@@ -1232,26 +1426,36 @@ class UdfApi(object):
         send a UDF to run against a specified array/URI registered to a group/project  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.submit_udf(namespace, array, udf, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str array: name/uri of array that is url-encoded (required)
-        :param MultiArrayUDF udf: UDF to run (required)
-        :param str x_payer: Name of organization or user who should be charged for this request
-        :param str accept_encoding: Encoding to use
-        :param str v2: flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param array: name/uri of array that is url-encoded (required)
+        :type array: str
+        :param udf: UDF to run (required)
+        :type udf: MultiArrayUDF
+        :param x_payer: Name of organization or user who should be charged for this request
+        :type x_payer: str
+        :param accept_encoding: Encoding to use
+        :type accept_encoding: str
+        :param v2: flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.
+        :type v2: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: file
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: file
         """
         kwargs["_return_http_data_only"] = True
         return self.submit_udf_with_http_info(
@@ -1264,28 +1468,43 @@ class UdfApi(object):
         send a UDF to run against a specified array/URI registered to a group/project  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.submit_udf_with_http_info(namespace, array, udf, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str array: name/uri of array that is url-encoded (required)
-        :param MultiArrayUDF udf: UDF to run (required)
-        :param str x_payer: Name of organization or user who should be charged for this request
-        :param str accept_encoding: Encoding to use
-        :param str v2: flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param array: name/uri of array that is url-encoded (required)
+        :type array: str
+        :param udf: UDF to run (required)
+        :type udf: MultiArrayUDF
+        :param x_payer: Name of organization or user who should be charged for this request
+        :type x_payer: str
+        :param accept_encoding: Encoding to use
+        :type accept_encoding: str
+        :param v2: flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.
+        :type v2: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(file, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(file, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1297,6 +1516,7 @@ class UdfApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1376,6 +1596,10 @@ class UdfApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "file",
+        }
+
         return self.api_client.call_api(
             "/arrays/{namespace}/{array}/udf/submit",
             "POST",
@@ -1385,7 +1609,7 @@ class UdfApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="file",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1394,6 +1618,7 @@ class UdfApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def udf_namespace_array_end_timestamps_get(
@@ -1404,24 +1629,32 @@ class UdfApi(object):
         retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.udf_namespace_array_end_timestamps_get(namespace, array, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str array: name/uri of array that is url-encoded (required)
-        :param int page: pagination offset
-        :param int per_page: pagination limit
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param array: name/uri of array that is url-encoded (required)
+        :type array: str
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: ArrayEndTimestampData
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: ArrayEndTimestampData
         """
         kwargs["_return_http_data_only"] = True
         return self.udf_namespace_array_end_timestamps_get_with_http_info(
@@ -1436,26 +1669,39 @@ class UdfApi(object):
         retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.udf_namespace_array_end_timestamps_get_with_http_info(namespace, array, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str array: name/uri of array that is url-encoded (required)
-        :param int page: pagination offset
-        :param int per_page: pagination limit
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param array: name/uri of array that is url-encoded (required)
+        :type array: str
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(ArrayEndTimestampData, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(ArrayEndTimestampData, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1467,6 +1713,7 @@ class UdfApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1529,6 +1776,10 @@ class UdfApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "ArrayEndTimestampData",
+        }
+
         return self.api_client.call_api(
             "/udf/{namespace}/{array}/end_timestamps",
             "GET",
@@ -1538,7 +1789,7 @@ class UdfApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="ArrayEndTimestampData",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1547,6 +1798,7 @@ class UdfApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def update_udf_info(self, namespace, name, udf, **kwargs):  # noqa: E501
@@ -1555,23 +1807,30 @@ class UdfApi(object):
         update an existing registered UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.update_udf_info(namespace, name, udf, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register UDF under (required)
-        :param UDFInfoUpdate udf: UDF to update (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param name: name to register UDF under (required)
+        :type name: str
+        :param udf: UDF to update (required)
+        :type udf: UDFInfoUpdate
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.update_udf_info_with_http_info(
@@ -1586,25 +1845,37 @@ class UdfApi(object):
         update an existing registered UDF in the given namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.update_udf_info_with_http_info(namespace, name, udf, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str name: name to register UDF under (required)
-        :param UDFInfoUpdate udf: UDF to update (required)
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param name: name to register UDF under (required)
+        :type name: str
+        :param udf: UDF to update (required)
+        :type udf: UDFInfoUpdate
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -1616,6 +1887,7 @@ class UdfApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1685,6 +1957,8 @@ class UdfApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/udf/{namespace}/{name}",
             "PATCH",
@@ -1694,7 +1968,7 @@ class UdfApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1703,4 +1977,5 @@ class UdfApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )

@@ -38,7 +38,7 @@ class TestGroupContentsFilterData(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.group_contents_filter_data.GroupContentsFilterData()  # noqa: E501
         if include_optional:
-            return GroupContentsFilterData(namespaces=["0"])
+            return GroupContentsFilterData(namespaces=[""])
         else:
             return GroupContentsFilterData()
 

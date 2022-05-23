@@ -1,6 +1,7 @@
 # TokenRequest
 
 A request from a user for an api token
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

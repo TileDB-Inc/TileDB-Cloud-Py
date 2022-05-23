@@ -40,23 +40,30 @@ class FilesApi(object):
         Create a tiledb file at the specified location  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.handle_create_file(namespace, file_create, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the file (required)
-        :param FileCreate file_create: Input/Output information to create a new TileDB file (required)
-        :param str x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
+        :param namespace: The namespace of the file (required)
+        :type namespace: str
+        :param file_create: Input/Output information to create a new TileDB file (required)
+        :type file_create: FileCreate
+        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
+        :type x_tiledb_cloud_access_credentials_name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: FileCreated
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: FileCreated
         """
         kwargs["_return_http_data_only"] = True
         return self.handle_create_file_with_http_info(
@@ -71,25 +78,37 @@ class FilesApi(object):
         Create a tiledb file at the specified location  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.handle_create_file_with_http_info(namespace, file_create, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the file (required)
-        :param FileCreate file_create: Input/Output information to create a new TileDB file (required)
-        :param str x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
+        :param namespace: The namespace of the file (required)
+        :type namespace: str
+        :param file_create: Input/Output information to create a new TileDB file (required)
+        :type file_create: FileCreate
+        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
+        :type x_tiledb_cloud_access_credentials_name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(FileCreated, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(FileCreated, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -105,6 +124,7 @@ class FilesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -168,6 +188,10 @@ class FilesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            201: "FileCreated",
+        }
+
         return self.api_client.call_api(
             "/files/{namespace}",
             "POST",
@@ -177,7 +201,7 @@ class FilesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="FileCreated",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -186,6 +210,7 @@ class FilesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def handle_export_file(self, namespace, file, file_export, **kwargs):  # noqa: E501
@@ -194,23 +219,30 @@ class FilesApi(object):
         Export a TileDB File back to its original file format  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.handle_export_file(namespace, file, file_export, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the file (required)
-        :param str file: The file identifier (required)
-        :param FileExport file_export: Export configuration information (required)
+        :param namespace: The namespace of the file (required)
+        :type namespace: str
+        :param file: The file identifier (required)
+        :type file: str
+        :param file_export: Export configuration information (required)
+        :type file_export: FileExport
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: FileExported
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: FileExported
         """
         kwargs["_return_http_data_only"] = True
         return self.handle_export_file_with_http_info(
@@ -225,25 +257,37 @@ class FilesApi(object):
         Export a TileDB File back to its original file format  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.handle_export_file_with_http_info(namespace, file, file_export, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the file (required)
-        :param str file: The file identifier (required)
-        :param FileExport file_export: Export configuration information (required)
+        :param namespace: The namespace of the file (required)
+        :type namespace: str
+        :param file: The file identifier (required)
+        :type file: str
+        :param file_export: Export configuration information (required)
+        :type file_export: FileExport
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(FileExported, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(FileExported, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -255,6 +299,7 @@ class FilesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -324,6 +369,10 @@ class FilesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            201: "FileExported",
+        }
+
         return self.api_client.call_api(
             "/files/{namespace}/{file}/export",
             "POST",
@@ -333,7 +382,7 @@ class FilesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="FileExported",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -342,6 +391,7 @@ class FilesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def handle_upload_file(self, namespace, input_file, **kwargs):  # noqa: E501
@@ -350,25 +400,34 @@ class FilesApi(object):
         Upload a tiledb file at the specified location  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.handle_upload_file(namespace, input_file, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the file (required)
-        :param file input_file: the file to upload (required)
-        :param str x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :param str output_uri: output location of the TileDB File
-        :param str name: name to set for registered file
+        :param namespace: The namespace of the file (required)
+        :type namespace: str
+        :param input_file: the file to upload (required)
+        :type input_file: file
+        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
+        :type x_tiledb_cloud_access_credentials_name: str
+        :param output_uri: output location of the TileDB File
+        :type output_uri: str
+        :param name: name to set for registered file
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: FileUploaded
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: FileUploaded
         """
         kwargs["_return_http_data_only"] = True
         return self.handle_upload_file_with_http_info(
@@ -383,27 +442,41 @@ class FilesApi(object):
         Upload a tiledb file at the specified location  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.handle_upload_file_with_http_info(namespace, input_file, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the file (required)
-        :param file input_file: the file to upload (required)
-        :param str x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
-        :param str output_uri: output location of the TileDB File
-        :param str name: name to set for registered file
+        :param namespace: The namespace of the file (required)
+        :type namespace: str
+        :param input_file: the file to upload (required)
+        :type input_file: file
+        :param x_tiledb_cloud_access_credentials_name: Optional registered access credentials to use for creation
+        :type x_tiledb_cloud_access_credentials_name: str
+        :param output_uri: output location of the TileDB File
+        :type output_uri: str
+        :param name: name to set for registered file
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(FileUploaded, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(FileUploaded, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -421,6 +494,7 @@ class FilesApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -490,6 +564,10 @@ class FilesApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            201: "FileUploaded",
+        }
+
         return self.api_client.call_api(
             "/files/{namespace}/upload",
             "POST",
@@ -499,7 +577,7 @@ class FilesApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="FileUploaded",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -508,4 +586,5 @@ class FilesApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )

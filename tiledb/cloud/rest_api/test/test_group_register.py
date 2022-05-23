@@ -37,15 +37,15 @@ class TestGroupRegister(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.group_register.GroupRegister()  # noqa: E501
         if include_optional:
             return GroupRegister(
-                description="0",
-                name="0",
-                parent="0",
-                uri="0",
-                logo="0",
-                access_credentials_name="0",
-                tags=["0"],
-                license_id="0",
-                license_text="0",
+                description="",
+                name="",
+                parent="",
+                uri="",
+                logo="",
+                access_credentials_name="",
+                tags=[""],
+                license_id="",
+                license_text="",
             )
         else:
             return GroupRegister()

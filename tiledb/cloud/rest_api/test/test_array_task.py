@@ -37,30 +37,30 @@ class TestArrayTask(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.array_task.ArrayTask()  # noqa: E501
         if include_optional:
             return ArrayTask(
-                id="0",
+                id="",
                 name="subarray-multiplier",
                 description="Return attr a1 in the subarray bounded by coordinates and multiply attr1 by 2",
                 array_metadata=tiledb.cloud.rest_api.models.array_info.ArrayInfo(
                     id="00000000-0000-0000-0000-000000000000",
                     file_type="notebook",
-                    file_properties={"key": "0"},
+                    file_properties={"key": ""},
                     uri="s3://bucket/array",
                     namespace="user1",
                     size=1024.0,
                     last_accessed=datetime.datetime.strptime(
                         "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
                     ),
-                    description="0",
+                    description="",
                     name="myarray1",
                     allowed_actions=["read"],
                     pricing=[
                         tiledb.cloud.rest_api.models.pricing.Pricing(
                             id="planID",
                             array_uuid="00000000-0000-0000-0000-000000000000",
-                            pricing_name="0",
+                            pricing_name="",
                             pricing_type="egress",
-                            product_name="0",
-                            product_statement_descriptor="0",
+                            product_name="",
+                            product_statement_descriptor="",
                             product_unit_label="byte",
                             currency="USD",
                             aggregate_usage="sum",
@@ -77,16 +77,16 @@ class TestArrayTask(unittest.TestCase):
                             customer_namespace_uuid="00000000-0000-0000-0000-000000000000",
                         )
                     ],
-                    logo="0",
-                    access_credentials_name="0",
+                    logo="",
+                    access_credentials_name="",
                     type="sparse",
                     share_count=1.337,
                     public_share=True,
                     namespace_subscribed=False,
-                    tiledb_uri="0",
-                    tags=["0"],
-                    license_id="0",
-                    license_text="0",
+                    tiledb_uri="",
+                    tags=[""],
+                    license_id="",
+                    license_text="",
                     read_only=False,
                     is_favorite=True,
                 ),
@@ -116,9 +116,9 @@ class TestArrayTask(unittest.TestCase):
                 egress_cost=0.12,
                 access_cost=0.12,
                 query_type="READ",
-                udf_code="0",
-                udf_language="0",
-                sql_query="0",
+                udf_code="",
+                udf_language="",
+                sql_query="",
                 type="SQL",
                 activity=[
                     tiledb.cloud.rest_api.models.array_activity_log.ArrayActivityLog(
@@ -135,13 +135,13 @@ class TestArrayTask(unittest.TestCase):
                         query_stats='{"timers": {"Context.StorageManager.read_load_array_schema_from_uri.sum": 0.0255293, "...": "..."}, "counters": {"Context.StorageManager.read_unfiltered_byte_num": 191, "...": "..."}}',
                     )
                 ],
-                logs="0",
+                logs="",
                 duration=3.41e11,
-                sql_init_commands=["0"],
+                sql_init_commands=[""],
                 sql_parameters=[None],
                 result_format="python_pickle",
-                task_graph_uuid="0",
-                client_node_uuid="0",
+                task_graph_uuid="",
+                client_node_uuid="",
             )
         else:
             return ArrayTask()

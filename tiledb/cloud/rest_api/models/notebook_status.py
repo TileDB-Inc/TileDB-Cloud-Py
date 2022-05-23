@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -62,7 +67,7 @@ class NotebookStatus(object):
     ):  # noqa: E501
         """NotebookStatus - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._namespace = None
@@ -104,7 +109,7 @@ class NotebookStatus(object):
         namespace of notebook  # noqa: E501
 
         :param namespace: The namespace of this NotebookStatus.  # noqa: E501
-        :type: str
+        :type namespace: str
         """
 
         self._namespace = namespace
@@ -127,7 +132,7 @@ class NotebookStatus(object):
         duration notebook has been running in seconds  # noqa: E501
 
         :param uptime: The uptime of this NotebookStatus.  # noqa: E501
-        :type: int
+        :type uptime: int
         """
 
         self._uptime = uptime
@@ -150,7 +155,7 @@ class NotebookStatus(object):
         current cpu usage in millicpu  # noqa: E501
 
         :param cpu_usage: The cpu_usage of this NotebookStatus.  # noqa: E501
-        :type: int
+        :type cpu_usage: int
         """
 
         self._cpu_usage = cpu_usage
@@ -173,7 +178,7 @@ class NotebookStatus(object):
         memory usage in bytes  # noqa: E501
 
         :param memory_usage: The memory_usage of this NotebookStatus.  # noqa: E501
-        :type: int
+        :type memory_usage: int
         """
 
         self._memory_usage = memory_usage
@@ -196,7 +201,7 @@ class NotebookStatus(object):
         memory allocated to notebook server in bytes  # noqa: E501
 
         :param memory_limit: The memory_limit of this NotebookStatus.  # noqa: E501
-        :type: int
+        :type memory_limit: int
         """
 
         self._memory_limit = memory_limit
@@ -219,34 +224,36 @@ class NotebookStatus(object):
         millicpu allocated to notebook server  # noqa: E501
 
         :param cpu_count: The cpu_count of this NotebookStatus.  # noqa: E501
-        :type: int
+        :type cpu_count: int
         """
 
         self._cpu_count = cpu_count
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

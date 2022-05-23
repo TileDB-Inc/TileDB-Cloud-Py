@@ -36,12 +36,12 @@ class TestArray(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.array.Array()  # noqa: E501
         if include_optional:
-            return Array(timestamp=1540471791873, query_type="READ", uri="0")
+            return Array(timestamp=1540471791873, query_type="READ", uri="")
         else:
             return Array(
                 timestamp=1540471791873,
                 query_type="READ",
-                uri="0",
+                uri="",
             )
 
     def testArray(self):

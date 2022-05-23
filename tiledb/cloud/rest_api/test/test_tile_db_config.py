@@ -36,7 +36,7 @@ class TestTileDBConfig(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.tile_db_config.TileDBConfig()  # noqa: E501
         if include_optional:
-            return TileDBConfig(configs={"key": "0"})
+            return TileDBConfig(configs={"key": ""})
         else:
             return TileDBConfig()
 

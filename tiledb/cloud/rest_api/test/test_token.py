@@ -37,8 +37,8 @@ class TestToken(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.token.Token()  # noqa: E501
         if include_optional:
             return Token(
-                token="0",
-                name="0",
+                token="",
+                name="",
                 issued_at=datetime.datetime.strptime(
                     "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
                 ),

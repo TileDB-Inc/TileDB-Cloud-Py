@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -98,7 +103,7 @@ class GroupInfo(object):
     ):  # noqa: E501
         """GroupInfo - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._id = None
@@ -175,7 +180,7 @@ class GroupInfo(object):
         unique ID of registered group  # noqa: E501
 
         :param id: The id of this GroupInfo.  # noqa: E501
-        :type: str
+        :type id: str
         """
 
         self._id = id
@@ -198,7 +203,7 @@ class GroupInfo(object):
         namespace group is in  # noqa: E501
 
         :param namespace: The namespace of this GroupInfo.  # noqa: E501
-        :type: str
+        :type namespace: str
         """
 
         self._namespace = namespace
@@ -221,7 +226,7 @@ class GroupInfo(object):
         name of group  # noqa: E501
 
         :param name: The name of this GroupInfo.  # noqa: E501
-        :type: str
+        :type name: str
         """
 
         self._name = name
@@ -244,7 +249,7 @@ class GroupInfo(object):
         description of group  # noqa: E501
 
         :param description: The description of this GroupInfo.  # noqa: E501
-        :type: str
+        :type description: str
         """
 
         self._description = description
@@ -267,7 +272,7 @@ class GroupInfo(object):
         uri of group  # noqa: E501
 
         :param uri: The uri of this GroupInfo.  # noqa: E501
-        :type: str
+        :type uri: str
         """
 
         self._uri = uri
@@ -290,7 +295,7 @@ class GroupInfo(object):
         uri for access through TileDB cloud  # noqa: E501
 
         :param tiledb_uri: The tiledb_uri of this GroupInfo.  # noqa: E501
-        :type: str
+        :type tiledb_uri: str
         """
 
         self._tiledb_uri = tiledb_uri
@@ -313,7 +318,7 @@ class GroupInfo(object):
         A count of direct array members  # noqa: E501
 
         :param asset_count: The asset_count of this GroupInfo.  # noqa: E501
-        :type: float
+        :type asset_count: float
         """
 
         self._asset_count = asset_count
@@ -336,7 +341,7 @@ class GroupInfo(object):
         A count of direct group members  # noqa: E501
 
         :param group_count: The group_count of this GroupInfo.  # noqa: E501
-        :type: float
+        :type group_count: float
         """
 
         self._group_count = group_count
@@ -359,7 +364,7 @@ class GroupInfo(object):
         A count of direct members. This is the sum of asset_count and group_count  # noqa: E501
 
         :param size: The size of this GroupInfo.  # noqa: E501
-        :type: float
+        :type size: float
         """
 
         self._size = size
@@ -382,7 +387,7 @@ class GroupInfo(object):
         Datetime groups was last accessed in UTC  # noqa: E501
 
         :param last_accessed: The last_accessed of this GroupInfo.  # noqa: E501
-        :type: datetime
+        :type last_accessed: datetime
         """
 
         self._last_accessed = last_accessed
@@ -405,7 +410,7 @@ class GroupInfo(object):
         list of actions user is allowed to do on this group  # noqa: E501
 
         :param allowed_actions: The allowed_actions of this GroupInfo.  # noqa: E501
-        :type: list[GroupActions]
+        :type allowed_actions: list[GroupActions]
         """
 
         self._allowed_actions = allowed_actions
@@ -428,7 +433,7 @@ class GroupInfo(object):
         logo (base64 encoded) for the gruop. Optional  # noqa: E501
 
         :param logo: The logo of this GroupInfo.  # noqa: E501
-        :type: str
+        :type logo: str
         """
 
         self._logo = logo
@@ -451,7 +456,7 @@ class GroupInfo(object):
         the name of the access credentials to use. if unset, the default credentials will be used  # noqa: E501
 
         :param access_credentials_name: The access_credentials_name of this GroupInfo.  # noqa: E501
-        :type: str
+        :type access_credentials_name: str
         """
 
         self._access_credentials_name = access_credentials_name
@@ -474,7 +479,7 @@ class GroupInfo(object):
         number of unique namespaces this group is shared with  # noqa: E501
 
         :param share_count: The share_count of this GroupInfo.  # noqa: E501
-        :type: float
+        :type share_count: float
         """
 
         self._share_count = share_count
@@ -497,7 +502,7 @@ class GroupInfo(object):
         Suggests if the group was shared to public by owner  # noqa: E501
 
         :param public_share: The public_share of this GroupInfo.  # noqa: E501
-        :type: bool
+        :type public_share: bool
         """
 
         self._public_share = public_share
@@ -520,7 +525,7 @@ class GroupInfo(object):
         optional tags for group  # noqa: E501
 
         :param tags: The tags of this GroupInfo.  # noqa: E501
-        :type: list[str]
+        :type tags: list[str]
         """
 
         self._tags = tags
@@ -543,7 +548,7 @@ class GroupInfo(object):
         License identifier from SPDX License List or Custom  # noqa: E501
 
         :param license_id: The license_id of this GroupInfo.  # noqa: E501
-        :type: str
+        :type license_id: str
         """
 
         self._license_id = license_id
@@ -566,34 +571,36 @@ class GroupInfo(object):
         License text  # noqa: E501
 
         :param license_text: The license_text of this GroupInfo.  # noqa: E501
-        :type: str
+        :type license_text: str
         """
 
         self._license_text = license_text
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

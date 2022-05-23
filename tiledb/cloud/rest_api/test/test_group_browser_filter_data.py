@@ -38,7 +38,7 @@ class TestGroupBrowserFilterData(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.group_browser_filter_data.GroupBrowserFilterData()  # noqa: E501
         if include_optional:
-            return GroupBrowserFilterData(namespaces=["0"])
+            return GroupBrowserFilterData(namespaces=[""])
         else:
             return GroupBrowserFilterData()
 

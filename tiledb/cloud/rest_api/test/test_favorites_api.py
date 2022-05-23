@@ -80,32 +80,32 @@ class TestFavoritesApi(unittest.TestCase):
         """Test case for list_array_favorites"""
         pass
 
-    def test_list_array_favorites_uui_ds(self):
-        """Test case for list_array_favorites_uui_ds"""
+    def test_list_array_favorites_uuids(self):
+        """Test case for list_array_favorites_uuids"""
         pass
 
     def test_list_ml_model_favorites(self):
         """Test case for list_ml_model_favorites"""
         pass
 
-    def test_list_ml_model_favorites_uui_ds(self):
-        """Test case for list_ml_model_favorites_uui_ds"""
+    def test_list_ml_model_favorites_uuids(self):
+        """Test case for list_ml_model_favorites_uuids"""
         pass
 
     def test_list_notebook_favorites(self):
         """Test case for list_notebook_favorites"""
         pass
 
-    def test_list_notebook_favorites_uui_ds(self):
-        """Test case for list_notebook_favorites_uui_ds"""
+    def test_list_notebook_favorites_uuids(self):
+        """Test case for list_notebook_favorites_uuids"""
         pass
 
     def test_list_udf_favorites(self):
         """Test case for list_udf_favorites"""
         pass
 
-    def test_list_udf_favorites_uui_ds(self):
-        """Test case for list_udf_favorites_uui_ds"""
+    def test_list_udf_favorites_uuids(self):
+        """Test case for list_udf_favorites_uuids"""
         pass
 
 

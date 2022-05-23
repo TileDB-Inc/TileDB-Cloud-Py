@@ -39,14 +39,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -87,14 +83,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -172,14 +164,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -220,14 +208,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -305,14 +289,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -358,14 +338,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -451,14 +427,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -499,14 +471,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -585,14 +553,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -633,14 +597,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(

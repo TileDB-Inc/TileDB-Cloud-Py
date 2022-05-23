@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -68,7 +73,7 @@ class RegisteredTaskGraph(object):
     ):  # noqa: E501
         """RegisteredTaskGraph - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._uuid = None
@@ -114,7 +119,7 @@ class RegisteredTaskGraph(object):
         A server-assigned unique ID for the UDF, in UUID format.  # noqa: E501
 
         :param uuid: The uuid of this RegisteredTaskGraph.  # noqa: E501
-        :type: str
+        :type uuid: str
         """
 
         self._uuid = uuid
@@ -137,7 +142,7 @@ class RegisteredTaskGraph(object):
         The namespace that owns this task graph log.  # noqa: E501
 
         :param namespace: The namespace of this RegisteredTaskGraph.  # noqa: E501
-        :type: str
+        :type namespace: str
         """
 
         self._namespace = namespace
@@ -160,7 +165,7 @@ class RegisteredTaskGraph(object):
         The name of this graph, to appear in URLs. Must be unique per-namespace.   # noqa: E501
 
         :param name: The name of this RegisteredTaskGraph.  # noqa: E501
-        :type: str
+        :type name: str
         """
 
         self._name = name
@@ -183,7 +188,7 @@ class RegisteredTaskGraph(object):
         Documentation for the task graph, in Markdown format.  # noqa: E501
 
         :param readme: The readme of this RegisteredTaskGraph.  # noqa: E501
-        :type: str
+        :type readme: str
         """
 
         self._readme = readme
@@ -206,7 +211,7 @@ class RegisteredTaskGraph(object):
         SPDX license identifier.  # noqa: E501
 
         :param license_id: The license_id of this RegisteredTaskGraph.  # noqa: E501
-        :type: str
+        :type license_id: str
         """
 
         self._license_id = license_id
@@ -229,7 +234,7 @@ class RegisteredTaskGraph(object):
         Full text of the license.  # noqa: E501
 
         :param license_text: The license_text of this RegisteredTaskGraph.  # noqa: E501
-        :type: str
+        :type license_text: str
         """
 
         self._license_text = license_text
@@ -252,7 +257,7 @@ class RegisteredTaskGraph(object):
         Optional tags to classify the graph.  # noqa: E501
 
         :param tags: The tags of this RegisteredTaskGraph.  # noqa: E501
-        :type: list[str]
+        :type tags: list[str]
         """
 
         self._tags = tags
@@ -275,34 +280,36 @@ class RegisteredTaskGraph(object):
         The structure of the graph, in the form of the nodes that make it up. As with `TaskGraphLog`, nodes must topologically sorted, so that any node appears after all the nodes it depends on.   # noqa: E501
 
         :param nodes: The nodes of this RegisteredTaskGraph.  # noqa: E501
-        :type: list[RegisteredTaskGraphNode]
+        :type nodes: list[RegisteredTaskGraphNode]
         """
 
         self._nodes = nodes
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

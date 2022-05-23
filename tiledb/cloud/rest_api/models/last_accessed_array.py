@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -59,7 +64,7 @@ class LastAccessedArray(object):
     ):  # noqa: E501
         """LastAccessedArray - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._array_id = None
@@ -98,7 +103,7 @@ class LastAccessedArray(object):
         unique ID of array  # noqa: E501
 
         :param array_id: The array_id of this LastAccessedArray.  # noqa: E501
-        :type: str
+        :type array_id: str
         """
 
         self._array_id = array_id
@@ -121,7 +126,7 @@ class LastAccessedArray(object):
         name of the array  # noqa: E501
 
         :param array_name: The array_name of this LastAccessedArray.  # noqa: E501
-        :type: str
+        :type array_name: str
         """
 
         self._array_name = array_name
@@ -144,7 +149,7 @@ class LastAccessedArray(object):
         namespace of a user or organization  # noqa: E501
 
         :param namespace: The namespace of this LastAccessedArray.  # noqa: E501
-        :type: str
+        :type namespace: str
         """
 
         self._namespace = namespace
@@ -167,7 +172,7 @@ class LastAccessedArray(object):
         timestamp (epoch milliseconds) array is last accessed  # noqa: E501
 
         :param accessed_time: The accessed_time of this LastAccessedArray.  # noqa: E501
-        :type: float
+        :type accessed_time: float
         """
 
         self._accessed_time = accessed_time
@@ -188,34 +193,36 @@ class LastAccessedArray(object):
 
 
         :param access_type: The access_type of this LastAccessedArray.  # noqa: E501
-        :type: ActivityEventType
+        :type access_type: ActivityEventType
         """
 
         self._access_type = access_type
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

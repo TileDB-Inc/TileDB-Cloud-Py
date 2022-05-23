@@ -1,6 +1,7 @@
 # GroupSharingRequest
 
 a request to share a group and all the contents with a namespace
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

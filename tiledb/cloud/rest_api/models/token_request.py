@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -41,7 +46,7 @@ class TokenRequest(object):
     ):  # noqa: E501
         """TokenRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._expires = None
@@ -74,7 +79,7 @@ class TokenRequest(object):
         Expiration date for token, if empty token defaults to 30 minutes  # noqa: E501
 
         :param expires: The expires of this TokenRequest.  # noqa: E501
-        :type: datetime
+        :type expires: datetime
         """
 
         self._expires = expires
@@ -97,7 +102,7 @@ class TokenRequest(object):
         Optional name for token, if the name already exists for the user it will be auto incremented (i.e. myToken-1)  # noqa: E501
 
         :param name: The name of this TokenRequest.  # noqa: E501
-        :type: str
+        :type name: str
         """
 
         self._name = name
@@ -120,34 +125,36 @@ class TokenRequest(object):
         Optional scope to limit token, defaults to all permissions, current supported values are password_reset or *  # noqa: E501
 
         :param scope: The scope of this TokenRequest.  # noqa: E501
-        :type: str
+        :type scope: str
         """
 
         self._scope = scope
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 
