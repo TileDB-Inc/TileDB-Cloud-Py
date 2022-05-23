@@ -104,6 +104,14 @@ class Executor(Generic[_N], metaclass=abc.ABCMeta):
         """Waits for the execution of this task graph to complete."""
         raise NotImplementedError()
 
+    @property
+    @abc.abstractmethod
+    def server_graph_uuid(self) -> Optional[uuid.UUID]:
+        """The UUID of this execution's log as returned by the server.
+
+        If log submission failed (or the graph was not yet submitted), None.
+        """
+
     # Internals.
 
     def _add_node(self, node_json: Dict[str, Any]) -> None:

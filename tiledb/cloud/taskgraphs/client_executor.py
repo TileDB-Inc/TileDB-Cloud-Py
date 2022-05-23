@@ -9,8 +9,19 @@ import enum
 import queue
 import threading
 import uuid
+import warnings
 from concurrent import futures
-from typing import AbstractSet, Any, Dict, List, Optional, Sequence, Type, TypeVar
+from typing import (
+    AbstractSet,
+    Any,
+    Dict,
+    Iterable,
+    List,
+    Optional,
+    Sequence,
+    Type,
+    TypeVar,
+)
 
 import urllib3
 
@@ -84,6 +95,7 @@ class LocalExecutor(executor.Executor["Node"]):
 
         self._lifecycle_lock = threading.Lock()
         self._status: Status = Status.WAITING
+        self._server_graph_uuid: Optional[uuid.UUID] = None
 
         if self.name:
             prefix = f"task-graph-{self.name}"
@@ -134,8 +146,27 @@ class LocalExecutor(executor.Executor["Node"]):
         with self._lifecycle_lock:
             if self._status is not Status.WAITING:
                 raise InvalidStateError(f"Cannot execute a graph in {self._status}")
+
             self._inputs = inputs_by_id
             self._status = Status.RUNNING
+
+        try:
+            result = self._client.task_graph_logs_api.create_task_graph_log(
+                namespace=self._namespace,
+                log=self._build_log_structure(),
+            )
+        except rest_api.ApiException as apix:
+            # There was a problem submitting the task graph for logging.
+            # This should not abort the task graph.
+            warnings.warn(UserWarning(f"Could not submit logging metadata: {apix}"))
+        else:
+            try:
+                with self._lifecycle_lock:
+                    self._server_graph_uuid = uuid.UUID(hex=result.uuid)
+            except ValueError as ve:
+                warnings.warn(
+                    UserWarning(f"Server-provided graph ID was invalid: {ve}")
+                )
 
         self._event_loop_thread.start()
 
@@ -148,6 +179,11 @@ class LocalExecutor(executor.Executor["Node"]):
 
     def wait(self, timeout: Optional[float] = None) -> None:
         _wait_for(self._done_event, timeout)
+
+    @property
+    def server_graph_uuid(self):
+        with self._lifecycle_lock:
+            return self._server_graph_uuid
 
     def _make_node(
         self,
@@ -193,6 +229,7 @@ class LocalExecutor(executor.Executor["Node"]):
                         self._status = Status.SUCCEEDED
             self._done_event.set()
             self._pool.shutdown()
+            self._report_server_completion()
 
     def _handle_node_done(self, node: "Node") -> None:
         assert threading.current_thread() is self._event_loop_thread
@@ -225,6 +262,38 @@ class LocalExecutor(executor.Executor["Node"]):
             return
         else:
             node._exec(parents, self._inputs.get(node.id, _NOTHING))
+
+    def _build_log_structure(self) -> rest_api.TaskGraphLog:
+        return rest_api.TaskGraphLog(
+            name=self.name,
+            namespace=self._namespace,
+            nodes=[n._to_log_metadata(self._deps.parents_of(n)) for n in self._deps],
+        )
+
+    def _report_server_completion(self) -> None:
+        if not self.server_graph_uuid:
+            return
+        try:
+            api_st = _API_STATUSES[self.status]
+        except KeyError as ke:
+            raise ValueError(
+                f"Task graph ended in invalid state {self.status!r}"
+            ) from ke
+        try:
+            client.client.task_graph_logs_api.update_task_graph_log(
+                id=str(self.server_graph_uuid),
+                namespace=self._namespace,
+                log=rest_api.TaskGraphLog(status=api_st),
+            )
+        except rest_api.ApiException as apix:
+            warnings.warn(UserWarning(f"Error reporting graph completion: {apix}"))
+
+
+_API_STATUSES = {
+    Status.SUCCEEDED: rest_api.TaskGraphLogStatus.SUCCEEDED,
+    Status.FAILED: rest_api.TaskGraphLogStatus.FAILED,
+    Status.CANCELLED: rest_api.TaskGraphLogStatus.CANCELLED,
+}
 
 
 class _ParamFormat(enum.Enum):
@@ -360,6 +429,22 @@ class Node(executor.Node[LocalExecutor, _T], metaclass=abc.ABCMeta):
         """
         raise NotImplementedError()
 
+    def _to_log_metadata(
+        self,
+        deps: Iterable["Node"],
+    ) -> rest_api.TaskGraphNodeMetadata:
+        """Builds the entry that will be used to include in the logs."""
+        return rest_api.TaskGraphNodeMetadata(
+            client_node_uuid=str(self.id),
+            name=self.display_name,
+            run_location=self._run_location(),
+            depends_on=[str(dep.id) for dep in deps],
+        )
+
+    def _run_location(self) -> str:
+        """The location where this node will be executed."""
+        return rest_api.TaskGraphLogRunLocation.SERVER
+
     def task_id(self, timeout: Optional[float] = None) -> Optional[uuid.UUID]:
         """The task ID that was returned from the server, if applicable.
 
@@ -424,6 +509,9 @@ class ArrayNode(Node):
             "udf_array_details": self._udf_array_details(),
         }
 
+    def _run_location(self) -> str:
+        return rest_api.TaskGraphLogRunLocation.VIRTUAL
+
 
 class InputNode(Node):
     def __init__(
@@ -442,7 +530,13 @@ class InputNode(Node):
     def has_default(self):
         return self._default_value_encoded is not _NOTHING
 
-    def _exec_impl(self, parents: Dict[uuid.UUID, Node], input_value: Any) -> None:
+    def _exec_impl(
+        self,
+        parents: Dict[uuid.UUID, Node],
+        input_value: Any,
+        server_graph_uuid: Optional[uuid.UUID] = None,
+    ) -> None:
+        del server_graph_uuid  # Unused.
         assert not parents, "InputNode cannot depend on anything"
         if input_value is _NOTHING:
             self._value_encoded = self._default_value_encoded
@@ -461,6 +555,9 @@ class InputNode(Node):
         del mode  # unused
         self._assert_succeeded()
         return self._value_encoded
+
+    def _run_location(self) -> str:
+        return rest_api.TaskGraphLogRunLocation.VIRTUAL
 
 
 class SQLNode(Node):
@@ -504,6 +601,8 @@ class SQLNode(Node):
                     parameters=parameters,
                     result_format=self._sql_data["result_format"],
                     store_results=True,
+                    client_node_uuid=str(self.id),
+                    task_graph_uuid=str(self.owner._server_graph_uuid),
                 ),
                 _preload_content=False,
             )
@@ -591,6 +690,8 @@ class UDFNode(Node):
             arguments_json=json_safe.Value(replaced_args),
             store_results=True,
             result_format=self._udf_data.get("result_format") or "python_pickle",
+            client_node_uuid=str(self.id),
+            task_graph_uuid=str(self.owner._server_graph_uuid),
         )
 
         # Executable code.
