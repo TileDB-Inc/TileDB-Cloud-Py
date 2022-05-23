@@ -64,7 +64,7 @@ java -jar "$GENERATOR" \
   -c "$TEMP_PATH/openapi_config-api" \
   -o "$TEMP_PATH" \
   -i "$SPEC" \
-  -g python-legacy
+  -g python
 
 # Rewrite imports and links in docs,
 # and work around https://github.com/OpenAPITools/openapi-generator/issues/10236
@@ -113,24 +113,24 @@ done
 # Apply an api_client patch to avoid descending into known–JSON-safe values.
 git apply - <<EOF
 diff --git a/tiledb/cloud/rest_api/api_client.py b/tiledb/cloud/rest_api/api_client.py
-index 267385d..6d244a0 100644
+index 79ad4fe..7f224da 100644
 --- a/tiledb/cloud/rest_api/api_client.py
 +++ b/tiledb/cloud/rest_api/api_client.py
-@@ -25,6 +25,7 @@ from dateutil.parser import parse
- from six.moves.urllib.parse import quote
+@@ -20,6 +20,7 @@ from urllib.parse import quote
 
- import tiledb.cloud.rest_api.models
+ from urllib3.fields import RequestField
+
 +from tiledb.cloud._common import json_safe
  from tiledb.cloud.rest_api import rest
  from tiledb.cloud.rest_api.configuration import Configuration
  from tiledb.cloud.rest_api.exceptions import ApiException
-@@ -251,6 +252,8 @@ class ApiClient(object):
-         """
-         if obj is None:
-             return None
+@@ -284,6 +285,8 @@ class ApiClient(object):
+                 key: cls.sanitize_for_serialization(val)
+                 for key, val in model_to_dict(obj, serialize=True).items()
+             }
 +        elif isinstance(obj, json_safe.Value):
 +            return obj.value
-         elif isinstance(obj, self.PRIMITIVE_TYPES):
-             return obj
-         elif isinstance(obj, list):
+         elif isinstance(obj, io.IOBase):
+             return cls.get_file_data_and_close_file(obj)
+         elif isinstance(obj, (str, int, float, none_type, bool)):
 EOF
