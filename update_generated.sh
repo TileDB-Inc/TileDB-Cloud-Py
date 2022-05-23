@@ -17,11 +17,12 @@ fi
 
 ROOT="$(git rev-parse --show-toplevel)"
 
-GENERATOR="$ROOT/.cache/openapi-generator-cli-4.3.1.jar"
+GEN_VERSION=5.3.0
+GENERATOR="$ROOT/.cache/openapi-generator-cli-${GEN_VERSION}.jar"
 
 if [[ ! -f "$GENERATOR" ]]; then
   mkdir -p "$ROOT/.cache"
-  wget -O "$GENERATOR" "https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/4.3.1/openapi-generator-cli-4.3.1.jar"
+  wget -O "$GENERATOR" "https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/${GEN_VERSION}/openapi-generator-cli-${GEN_VERSION}.jar"
 fi
 
 SPEC="$1"
@@ -63,7 +64,7 @@ java -jar "$GENERATOR" \
   -c "$TEMP_PATH/openapi_config-api" \
   -o "$TEMP_PATH" \
   -i "$SPEC" \
-  -g python
+  -g python-legacy
 
 # Rewrite imports and links in docs,
 # and work around https://github.com/OpenAPITools/openapi-generator/issues/10236
@@ -117,7 +118,7 @@ index 267385d..6d244a0 100644
 +++ b/tiledb/cloud/rest_api/api_client.py
 @@ -25,6 +25,7 @@ from dateutil.parser import parse
  from six.moves.urllib.parse import quote
- 
+
  import tiledb.cloud.rest_api.models
 +from tiledb.cloud._common import json_safe
  from tiledb.cloud.rest_api import rest
@@ -133,4 +134,3 @@ index 267385d..6d244a0 100644
              return obj
          elif isinstance(obj, list):
 EOF
-
