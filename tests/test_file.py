@@ -1,9 +1,9 @@
-import os
+import hashlib
+import os.path
 import tempfile
 import unittest
 
-import tiledb
-import tiledb.cloud
+from tiledb.cloud import file
 
 
 class FileTests(unittest.TestCase):
@@ -12,7 +12,13 @@ class FileTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as dirpath:
             output_path = os.path.join(dirpath, "VLDB17_TileDB.pdf")
-            tiledb.cloud.file.export_file_local(test_file, output_path)
+            file.export_file_local(test_file, output_path)
 
-            self.assertTrue(os.path.exists(output_path))
-            self.assertGreater(os.path.getsize(output_path), 0)
+            with open(output_path, "rb") as exported:
+                digest = hashlib.sha256(exported.read()).hexdigest()
+                self.assertEqual(619181, exported.tell(), "exported file size")
+
+            self.assertEqual(
+                "14065c5debdf5eeff1478533a6484b9d26dc0b9d7a4cb228aa03f9e22f390300",
+                digest,
+            )

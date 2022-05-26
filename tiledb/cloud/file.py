@@ -69,7 +69,9 @@ def export_file_local(
             # Row major partial export of single attribute
             iterable = A.query(
                 attrs=["contents"], return_incomplete=True, order="C"
-            ).multi_index[0:file_size]
+            ).multi_index[: file_size - 1]
+            # Most Python indices are [start, end), but TileDB indices are
+            # [start, end], which is why we subtract 1 here.
 
             fh = vfs.open(output_uri, "wb")
             for part in iterable:
