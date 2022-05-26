@@ -10,6 +10,7 @@ from tiledb.cloud.compute import Delayed
 from tiledb.cloud.compute import DelayedArrayUDF
 from tiledb.cloud.compute import DelayedSQL
 from tiledb.cloud.compute import Status
+from tiledb.cloud.compute.delayed import DelayedMultiArrayUDF
 
 
 class DelayedClassTest(unittest.TestCase):
@@ -174,6 +175,37 @@ class DelayedCloudApplyTest(unittest.TestCase):
         node.compute()
 
         self.assertEqual(node.result(), numpy.sum(orig["a"]))
+
+    def test_multi_array_apply(self):
+
+        uri_sparse = "tiledb://TileDB-inc/quickstart_sparse"
+        with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:
+            orig_sparse = A[:]
+
+        uri_dense = "tiledb://TileDB-inc/quickstart_dense"
+        with tiledb.open(uri_dense, ctx=tiledb.cloud.Ctx()) as A:
+            orig_dense = A[:]
+
+        import numpy
+
+        array_list = tiledb.cloud.array.ArrayList()
+        array_list.add(uri_sparse, [(1, 4), (1, 4)], ["a"])
+        array_list.add(uri_dense, [(1, 4), (1, 4)], ["a"])
+
+        def sum_func(data):
+            import numpy
+
+            return numpy.sum(data[0]["a"]) + numpy.sum(data[1]["a"])
+
+        node = DelayedMultiArrayUDF(sum_func, array_list, name="node")()
+
+        # Add timeout so we don't wait forever in CI
+        node.set_timeout(30)
+        node.compute()
+
+        self.assertEqual(
+            node.result(), numpy.sum(orig_sparse["a"]) + numpy.sum(orig_dense["a"])
+        )
 
     def test_array_apply_by_name(self):
 
