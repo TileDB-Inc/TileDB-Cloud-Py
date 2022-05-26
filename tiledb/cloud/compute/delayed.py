@@ -1,6 +1,9 @@
 import numbers
+from typing import Callable, Union
 
+from tiledb.cloud.array import ArrayList
 from tiledb.cloud.array import apply as array_apply
+from tiledb.cloud.array import exec_multi_array_udf
 from tiledb.cloud.dag.dag import DAG
 from tiledb.cloud.dag.dag import Node
 from tiledb.cloud.sql import exec as sql_exec
@@ -160,6 +163,39 @@ class DelayedArrayUDF(DelayedBase):
 
     def __call__(self, *args, **kwargs):
         self.args = [self.uri, self.func_exec, *args]
+        self.kwargs.update(kwargs)
+        self._find_deps()
+
+        # Set name of task if it won't interfere with user args
+        if "task_name" not in self.kwargs:
+            self.kwargs["task_name"] = self.name
+
+        return self
+
+
+class DelayedMultiArrayUDF(DelayedBase):
+    def __init__(
+        self,
+        func: Union[str, Callable],
+        array_list: ArrayList,
+        *args,
+        **kwargs,
+    ):
+        self.func_exec = func
+        self.array_list = array_list
+
+        _check_funcable(func_exec=func)
+
+        super().__init__(
+            exec_multi_array_udf, self.func_exec, self.array_list, *args, **kwargs
+        )
+
+        # Set name of task if it won't interfere with user args
+        if "task_name" not in self.kwargs:
+            self.kwargs["task_name"] = self.name
+
+    def __call__(self, *args, **kwargs):
+        self.args = [self.func_exec, self.array_list, *args]
         self.kwargs.update(kwargs)
         self._find_deps()
 
