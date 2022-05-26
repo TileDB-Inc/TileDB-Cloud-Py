@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,16 +8,32 @@
 """
 
 
-from __future__ import absolute_import
-
 import re  # noqa: F401
-
-# python 2 and python 3 compatibility library
-import six
+import sys  # noqa: F401
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import ApiTypeError  # noqa: F401
-from tiledb.cloud.rest_api.exceptions import ApiValueError
+from tiledb.cloud.rest_api.api_client import Endpoint as _Endpoint
+from tiledb.cloud.rest_api.model.error import Error
+from tiledb.cloud.rest_api.model.group_browser_data import GroupBrowserData
+from tiledb.cloud.rest_api.model.group_browser_filter_data import GroupBrowserFilterData
+from tiledb.cloud.rest_api.model.group_changes import GroupChanges
+from tiledb.cloud.rest_api.model.group_contents import GroupContents
+from tiledb.cloud.rest_api.model.group_contents_filter_data import (
+    GroupContentsFilterData,
+)
+from tiledb.cloud.rest_api.model.group_create import GroupCreate
+from tiledb.cloud.rest_api.model.group_info import GroupInfo
+from tiledb.cloud.rest_api.model.group_register import GroupRegister
+from tiledb.cloud.rest_api.model.group_sharing import GroupSharing
+from tiledb.cloud.rest_api.model.group_sharing_request import GroupSharingRequest
+from tiledb.cloud.rest_api.model.group_update import GroupUpdate
+from tiledb.cloud.rest_api.model_utils import check_allowed_values  # noqa: F401
+from tiledb.cloud.rest_api.model_utils import check_validations
+from tiledb.cloud.rest_api.model_utils import date
+from tiledb.cloud.rest_api.model_utils import datetime
+from tiledb.cloud.rest_api.model_utils import file_type
+from tiledb.cloud.rest_api.model_utils import none_type
+from tiledb.cloud.rest_api.model_utils import validate_and_convert_types
 
 
 class GroupsApi(object):
@@ -33,2441 +47,1665 @@ class GroupsApi(object):
         if api_client is None:
             api_client = ApiClient()
         self.api_client = api_client
+        self.change_group_contents_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/{group_namespace}/{group_name}/contents",
+                "operation_id": "change_group_contents",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "group_namespace",
+                    "group_name",
+                    "group_changes",
+                ],
+                "required": [
+                    "group_namespace",
+                    "group_name",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "group_namespace": (str,),
+                    "group_name": (str,),
+                    "group_changes": (GroupChanges,),
+                },
+                "attribute_map": {
+                    "group_namespace": "group_namespace",
+                    "group_name": "group_name",
+                },
+                "location_map": {
+                    "group_namespace": "path",
+                    "group_name": "path",
+                    "group_changes": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.create_group_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/{namespace}/create",
+                "operation_id": "create_group",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "group_create",
+                ],
+                "required": [
+                    "namespace",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "group_create": (GroupCreate,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "group_create": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.delete_group_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/{group_namespace}/{group_name}",
+                "operation_id": "delete_group",
+                "http_method": "DELETE",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "group_namespace",
+                    "group_name",
+                ],
+                "required": [
+                    "group_namespace",
+                    "group_name",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "group_namespace": (str,),
+                    "group_name": (str,),
+                },
+                "attribute_map": {
+                    "group_namespace": "group_namespace",
+                    "group_name": "group_name",
+                },
+                "location_map": {
+                    "group_namespace": "path",
+                    "group_name": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.get_group_endpoint = _Endpoint(
+            settings={
+                "response_type": (GroupInfo,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/{group_namespace}/{group_name}",
+                "operation_id": "get_group",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "group_namespace",
+                    "group_name",
+                ],
+                "required": [
+                    "group_namespace",
+                    "group_name",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "group_namespace": (str,),
+                    "group_name": (str,),
+                },
+                "attribute_map": {
+                    "group_namespace": "group_namespace",
+                    "group_name": "group_name",
+                },
+                "location_map": {
+                    "group_namespace": "path",
+                    "group_name": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.get_group_contents_endpoint = _Endpoint(
+            settings={
+                "response_type": (GroupContents,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/{group_namespace}/{group_name}/contents",
+                "operation_id": "get_group_contents",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "group_namespace",
+                    "group_name",
+                    "page",
+                    "per_page",
+                    "namespace",
+                    "search",
+                    "orderby",
+                    "tag",
+                    "exclude_tag",
+                    "member_type",
+                    "exclude_member_type",
+                ],
+                "required": [
+                    "group_namespace",
+                    "group_name",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "group_namespace": (str,),
+                    "group_name": (str,),
+                    "page": (int,),
+                    "per_page": (int,),
+                    "namespace": (str,),
+                    "search": (str,),
+                    "orderby": (str,),
+                    "tag": ([str],),
+                    "exclude_tag": ([str],),
+                    "member_type": ([str],),
+                    "exclude_member_type": ([str],),
+                },
+                "attribute_map": {
+                    "group_namespace": "group_namespace",
+                    "group_name": "group_name",
+                    "page": "page",
+                    "per_page": "per_page",
+                    "namespace": "namespace",
+                    "search": "search",
+                    "orderby": "orderby",
+                    "tag": "tag",
+                    "exclude_tag": "exclude_tag",
+                    "member_type": "member_type",
+                    "exclude_member_type": "exclude_member_type",
+                },
+                "location_map": {
+                    "group_namespace": "path",
+                    "group_name": "path",
+                    "page": "query",
+                    "per_page": "query",
+                    "namespace": "query",
+                    "search": "query",
+                    "orderby": "query",
+                    "tag": "query",
+                    "exclude_tag": "query",
+                    "member_type": "query",
+                    "exclude_member_type": "query",
+                },
+                "collection_format_map": {
+                    "tag": "multi",
+                    "exclude_tag": "multi",
+                    "member_type": "multi",
+                    "exclude_member_type": "multi",
+                },
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.get_group_sharing_policies_endpoint = _Endpoint(
+            settings={
+                "response_type": ([GroupSharing],),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/{group_namespace}/{group_name}/share",
+                "operation_id": "get_group_sharing_policies",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "group_namespace",
+                    "group_name",
+                ],
+                "required": [
+                    "group_namespace",
+                    "group_name",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "group_namespace": (str,),
+                    "group_name": (str,),
+                },
+                "attribute_map": {
+                    "group_namespace": "group_namespace",
+                    "group_name": "group_name",
+                },
+                "location_map": {
+                    "group_namespace": "path",
+                    "group_name": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.groups_browser_owned_filters_get_endpoint = _Endpoint(
+            settings={
+                "response_type": (GroupBrowserFilterData,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/browser/owned/filters",
+                "operation_id": "groups_browser_owned_filters_get",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [],
+                "required": [],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {},
+                "attribute_map": {},
+                "location_map": {},
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.groups_browser_public_filters_get_endpoint = _Endpoint(
+            settings={
+                "response_type": (GroupBrowserFilterData,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/browser/public/filters",
+                "operation_id": "groups_browser_public_filters_get",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [],
+                "required": [],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {},
+                "attribute_map": {},
+                "location_map": {},
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.groups_browser_shared_filters_get_endpoint = _Endpoint(
+            settings={
+                "response_type": (GroupBrowserFilterData,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/browser/shared/filters",
+                "operation_id": "groups_browser_shared_filters_get",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [],
+                "required": [],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {},
+                "attribute_map": {},
+                "location_map": {},
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.groups_group_namespace_group_name_contents_filters_get_endpoint = _Endpoint(
+            settings={
+                "response_type": (GroupContentsFilterData,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/{group_namespace}/{group_name}/contents/filters",
+                "operation_id": "groups_group_namespace_group_name_contents_filters_get",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "group_namespace",
+                    "group_name",
+                ],
+                "required": [
+                    "group_namespace",
+                    "group_name",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "group_namespace": (str,),
+                    "group_name": (str,),
+                },
+                "attribute_map": {
+                    "group_namespace": "group_namespace",
+                    "group_name": "group_name",
+                },
+                "location_map": {
+                    "group_namespace": "path",
+                    "group_name": "path",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.list_owned_groups_endpoint = _Endpoint(
+            settings={
+                "response_type": (GroupBrowserData,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/browser/owned",
+                "operation_id": "list_owned_groups",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "page",
+                    "per_page",
+                    "search",
+                    "namespace",
+                    "orderby",
+                    "permissions",
+                    "tag",
+                    "exclude_tag",
+                    "flat",
+                    "parent",
+                ],
+                "required": [],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "page": (int,),
+                    "per_page": (int,),
+                    "search": (str,),
+                    "namespace": (str,),
+                    "orderby": (str,),
+                    "permissions": (str,),
+                    "tag": ([str],),
+                    "exclude_tag": ([str],),
+                    "flat": (bool,),
+                    "parent": (str,),
+                },
+                "attribute_map": {
+                    "page": "page",
+                    "per_page": "per_page",
+                    "search": "search",
+                    "namespace": "namespace",
+                    "orderby": "orderby",
+                    "permissions": "permissions",
+                    "tag": "tag",
+                    "exclude_tag": "exclude_tag",
+                    "flat": "flat",
+                    "parent": "parent",
+                },
+                "location_map": {
+                    "page": "query",
+                    "per_page": "query",
+                    "search": "query",
+                    "namespace": "query",
+                    "orderby": "query",
+                    "permissions": "query",
+                    "tag": "query",
+                    "exclude_tag": "query",
+                    "flat": "query",
+                    "parent": "query",
+                },
+                "collection_format_map": {
+                    "tag": "multi",
+                    "exclude_tag": "multi",
+                },
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.list_public_groups_endpoint = _Endpoint(
+            settings={
+                "response_type": (GroupBrowserData,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/browser/public",
+                "operation_id": "list_public_groups",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "page",
+                    "per_page",
+                    "search",
+                    "namespace",
+                    "orderby",
+                    "permissions",
+                    "tag",
+                    "exclude_tag",
+                    "flat",
+                    "parent",
+                ],
+                "required": [],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "page": (int,),
+                    "per_page": (int,),
+                    "search": (str,),
+                    "namespace": (str,),
+                    "orderby": (str,),
+                    "permissions": (str,),
+                    "tag": ([str],),
+                    "exclude_tag": ([str],),
+                    "flat": (bool,),
+                    "parent": (str,),
+                },
+                "attribute_map": {
+                    "page": "page",
+                    "per_page": "per_page",
+                    "search": "search",
+                    "namespace": "namespace",
+                    "orderby": "orderby",
+                    "permissions": "permissions",
+                    "tag": "tag",
+                    "exclude_tag": "exclude_tag",
+                    "flat": "flat",
+                    "parent": "parent",
+                },
+                "location_map": {
+                    "page": "query",
+                    "per_page": "query",
+                    "search": "query",
+                    "namespace": "query",
+                    "orderby": "query",
+                    "permissions": "query",
+                    "tag": "query",
+                    "exclude_tag": "query",
+                    "flat": "query",
+                    "parent": "query",
+                },
+                "collection_format_map": {
+                    "tag": "multi",
+                    "exclude_tag": "multi",
+                },
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.list_shared_groups_endpoint = _Endpoint(
+            settings={
+                "response_type": (GroupBrowserData,),
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/browser/shared",
+                "operation_id": "list_shared_groups",
+                "http_method": "GET",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "page",
+                    "per_page",
+                    "search",
+                    "namespace",
+                    "orderby",
+                    "permissions",
+                    "tag",
+                    "exclude_tag",
+                    "flat",
+                    "parent",
+                ],
+                "required": [],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "page": (int,),
+                    "per_page": (int,),
+                    "search": (str,),
+                    "namespace": (str,),
+                    "orderby": (str,),
+                    "permissions": (str,),
+                    "tag": ([str],),
+                    "exclude_tag": ([str],),
+                    "flat": (bool,),
+                    "parent": (str,),
+                },
+                "attribute_map": {
+                    "page": "page",
+                    "per_page": "per_page",
+                    "search": "search",
+                    "namespace": "namespace",
+                    "orderby": "orderby",
+                    "permissions": "permissions",
+                    "tag": "tag",
+                    "exclude_tag": "exclude_tag",
+                    "flat": "flat",
+                    "parent": "parent",
+                },
+                "location_map": {
+                    "page": "query",
+                    "per_page": "query",
+                    "search": "query",
+                    "namespace": "query",
+                    "orderby": "query",
+                    "permissions": "query",
+                    "tag": "query",
+                    "exclude_tag": "query",
+                    "flat": "query",
+                    "parent": "query",
+                },
+                "collection_format_map": {
+                    "tag": "multi",
+                    "exclude_tag": "multi",
+                },
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": [],
+            },
+            api_client=api_client,
+        )
+        self.register_group_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/{namespace}/{array}/register",
+                "operation_id": "register_group",
+                "http_method": "POST",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "namespace",
+                    "array",
+                    "group_register",
+                ],
+                "required": [
+                    "namespace",
+                    "array",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "namespace": (str,),
+                    "array": (str,),
+                    "group_register": (GroupRegister,),
+                },
+                "attribute_map": {
+                    "namespace": "namespace",
+                    "array": "array",
+                },
+                "location_map": {
+                    "namespace": "path",
+                    "array": "path",
+                    "group_register": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.share_group_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/{group_namespace}/{group_name}/share",
+                "operation_id": "share_group",
+                "http_method": "PATCH",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "group_namespace",
+                    "group_name",
+                    "group_sharing_request",
+                ],
+                "required": [
+                    "group_namespace",
+                    "group_name",
+                    "group_sharing_request",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "group_namespace": (str,),
+                    "group_name": (str,),
+                    "group_sharing_request": (GroupSharingRequest,),
+                },
+                "attribute_map": {
+                    "group_namespace": "group_namespace",
+                    "group_name": "group_name",
+                },
+                "location_map": {
+                    "group_namespace": "path",
+                    "group_name": "path",
+                    "group_sharing_request": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
+        self.update_group_endpoint = _Endpoint(
+            settings={
+                "response_type": None,
+                "auth": ["ApiKeyAuth", "BasicAuth"],
+                "endpoint_path": "/groups/{group_namespace}/{group_name}",
+                "operation_id": "update_group",
+                "http_method": "PATCH",
+                "servers": None,
+            },
+            params_map={
+                "all": [
+                    "group_namespace",
+                    "group_name",
+                    "group_update",
+                ],
+                "required": [
+                    "group_namespace",
+                    "group_name",
+                ],
+                "nullable": [],
+                "enum": [],
+                "validation": [],
+            },
+            root_map={
+                "validations": {},
+                "allowed_values": {},
+                "openapi_types": {
+                    "group_namespace": (str,),
+                    "group_name": (str,),
+                    "group_update": (GroupUpdate,),
+                },
+                "attribute_map": {
+                    "group_namespace": "group_namespace",
+                    "group_name": "group_name",
+                },
+                "location_map": {
+                    "group_namespace": "path",
+                    "group_name": "path",
+                    "group_update": "body",
+                },
+                "collection_format_map": {},
+            },
+            headers_map={
+                "accept": ["application/json"],
+                "content_type": ["application/json"],
+            },
+            api_client=api_client,
+        )
 
-    def change_group_contents(
-        self, group_namespace, group_name, **kwargs
-    ):  # noqa: E501
+    def change_group_contents(self, group_namespace, group_name, **kwargs):
         """change_group_contents  # noqa: E501
 
         Changes the contents of the group by adding/removing members.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.change_group_contents(group_namespace, group_name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param GroupChanges group_changes:
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
+        Args:
+            group_namespace (str): The namespace of the group
+            group_name (str): The unique name or id of the group
+
+        Keyword Args:
+            group_changes (GroupChanges): [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.change_group_contents_with_http_info(
-            group_namespace, group_name, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["group_namespace"] = group_namespace
+        kwargs["group_name"] = group_name
+        return self.change_group_contents_endpoint.call_with_http_info(**kwargs)
 
-    def change_group_contents_with_http_info(
-        self, group_namespace, group_name, **kwargs
-    ):  # noqa: E501
-        """change_group_contents  # noqa: E501
-
-        Changes the contents of the group by adding/removing members.  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.change_group_contents_with_http_info(group_namespace, group_name, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param GroupChanges group_changes:
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["group_namespace", "group_name", "group_changes"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method change_group_contents" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'group_namespace' is set
-        if self.api_client.client_side_validation and (
-            "group_namespace" not in local_var_params
-            or local_var_params["group_namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_namespace` when calling `change_group_contents`"
-            )  # noqa: E501
-        # verify the required parameter 'group_name' is set
-        if self.api_client.client_side_validation and (
-            "group_name" not in local_var_params
-            or local_var_params["group_name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_name` when calling `change_group_contents`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "group_namespace" in local_var_params:
-            path_params["group_namespace"] = local_var_params[
-                "group_namespace"
-            ]  # noqa: E501
-        if "group_name" in local_var_params:
-            path_params["group_name"] = local_var_params["group_name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "group_changes" in local_var_params:
-            body_params = local_var_params["group_changes"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}/contents",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type=None,  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def create_group(self, namespace, **kwargs):  # noqa: E501
+    def create_group(self, namespace, **kwargs):
         """create_group  # noqa: E501
 
         Creates a new group in the namespace.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.create_group(namespace, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the group (required)
-        :param GroupCreate group_create:
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
+        Args:
+            namespace (str): The namespace of the group
+
+        Keyword Args:
+            group_create (GroupCreate): [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.create_group_with_http_info(namespace, **kwargs)  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        return self.create_group_endpoint.call_with_http_info(**kwargs)
 
-    def create_group_with_http_info(self, namespace, **kwargs):  # noqa: E501
-        """create_group  # noqa: E501
-
-        Creates a new group in the namespace.  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.create_group_with_http_info(namespace, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the group (required)
-        :param GroupCreate group_create:
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "group_create"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method create_group" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `create_group`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "group_create" in local_var_params:
-            body_params = local_var_params["group_create"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/{namespace}/create",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type=None,  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def delete_group(self, group_namespace, group_name, **kwargs):  # noqa: E501
+    def delete_group(self, group_namespace, group_name, **kwargs):
         """delete_group  # noqa: E501
 
         Deletes the group. The assets are not deleted nor are not relocated to any other group  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_group(group_namespace, group_name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
+        Args:
+            group_namespace (str): The namespace of the group
+            group_name (str): The unique name or id of the group
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.delete_group_with_http_info(
-            group_namespace, group_name, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["group_namespace"] = group_namespace
+        kwargs["group_name"] = group_name
+        return self.delete_group_endpoint.call_with_http_info(**kwargs)
 
-    def delete_group_with_http_info(
-        self, group_namespace, group_name, **kwargs
-    ):  # noqa: E501
-        """delete_group  # noqa: E501
-
-        Deletes the group. The assets are not deleted nor are not relocated to any other group  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.delete_group_with_http_info(group_namespace, group_name, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["group_namespace", "group_name"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method delete_group" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'group_namespace' is set
-        if self.api_client.client_side_validation and (
-            "group_namespace" not in local_var_params
-            or local_var_params["group_namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_namespace` when calling `delete_group`"
-            )  # noqa: E501
-        # verify the required parameter 'group_name' is set
-        if self.api_client.client_side_validation and (
-            "group_name" not in local_var_params
-            or local_var_params["group_name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_name` when calling `delete_group`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "group_namespace" in local_var_params:
-            path_params["group_namespace"] = local_var_params[
-                "group_namespace"
-            ]  # noqa: E501
-        if "group_name" in local_var_params:
-            path_params["group_name"] = local_var_params["group_name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}",
-            "DELETE",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type=None,  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def get_group(self, group_namespace, group_name, **kwargs):  # noqa: E501
+    def get_group(self, group_namespace, group_name, **kwargs):
         """get_group  # noqa: E501
 
         Returns the the group  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_group(group_namespace, group_name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: GroupInfo
-                 If the method is called asynchronously,
-                 returns the request thread.
+        Args:
+            group_namespace (str): The namespace of the group
+            group_name (str): The unique name or id of the group
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            GroupInfo
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_group_with_http_info(
-            group_namespace, group_name, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["group_namespace"] = group_namespace
+        kwargs["group_name"] = group_name
+        return self.get_group_endpoint.call_with_http_info(**kwargs)
 
-    def get_group_with_http_info(
-        self, group_namespace, group_name, **kwargs
-    ):  # noqa: E501
-        """get_group  # noqa: E501
-
-        Returns the the group  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_group_with_http_info(group_namespace, group_name, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(GroupInfo, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["group_namespace", "group_name"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_group" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'group_namespace' is set
-        if self.api_client.client_side_validation and (
-            "group_namespace" not in local_var_params
-            or local_var_params["group_namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_namespace` when calling `get_group`"
-            )  # noqa: E501
-        # verify the required parameter 'group_name' is set
-        if self.api_client.client_side_validation and (
-            "group_name" not in local_var_params
-            or local_var_params["group_name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_name` when calling `get_group`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "group_namespace" in local_var_params:
-            path_params["group_namespace"] = local_var_params[
-                "group_namespace"
-            ]  # noqa: E501
-        if "group_name" in local_var_params:
-            path_params["group_name"] = local_var_params["group_name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="GroupInfo",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def get_group_contents(self, group_namespace, group_name, **kwargs):  # noqa: E501
+    def get_group_contents(self, group_namespace, group_name, **kwargs):
         """get_group_contents  # noqa: E501
 
         Returns the contents of the group  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_group_contents(group_namespace, group_name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param int page: pagination offset for assets
-        :param int per_page: pagination limit for assets
-        :param str namespace: namespace to search for
-        :param str search: search string that will look at name, namespace or description fields
-        :param str orderby: sort by which field valid values include last_accessed, size, name
-        :param list[str] tag: tag to search for, more than one can be included
-        :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
-        :param list[str] member_type: member type to search for, more than one can be included
-        :param list[str] exclude_member_type: member type to exclude matching groups in results, more than one can be included
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: GroupContents
-                 If the method is called asynchronously,
-                 returns the request thread.
+        Args:
+            group_namespace (str): The namespace of the group
+            group_name (str): The unique name or id of the group
+
+        Keyword Args:
+            page (int): pagination offset for assets. [optional]
+            per_page (int): pagination limit for assets. [optional]
+            namespace (str): namespace to search for. [optional]
+            search (str): search string that will look at name, namespace or description fields. [optional]
+            orderby (str): sort by which field valid values include last_accessed, size, name. [optional]
+            tag ([str]): tag to search for, more than one can be included. [optional]
+            exclude_tag ([str]): tags to exclude matching array in results, more than one can be included. [optional]
+            member_type ([str]): member type to search for, more than one can be included. [optional]
+            exclude_member_type ([str]): member type to exclude matching groups in results, more than one can be included. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            GroupContents
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_group_contents_with_http_info(
-            group_namespace, group_name, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["group_namespace"] = group_namespace
+        kwargs["group_name"] = group_name
+        return self.get_group_contents_endpoint.call_with_http_info(**kwargs)
 
-    def get_group_contents_with_http_info(
-        self, group_namespace, group_name, **kwargs
-    ):  # noqa: E501
-        """get_group_contents  # noqa: E501
-
-        Returns the contents of the group  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_group_contents_with_http_info(group_namespace, group_name, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param int page: pagination offset for assets
-        :param int per_page: pagination limit for assets
-        :param str namespace: namespace to search for
-        :param str search: search string that will look at name, namespace or description fields
-        :param str orderby: sort by which field valid values include last_accessed, size, name
-        :param list[str] tag: tag to search for, more than one can be included
-        :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
-        :param list[str] member_type: member type to search for, more than one can be included
-        :param list[str] exclude_member_type: member type to exclude matching groups in results, more than one can be included
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(GroupContents, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "group_namespace",
-            "group_name",
-            "page",
-            "per_page",
-            "namespace",
-            "search",
-            "orderby",
-            "tag",
-            "exclude_tag",
-            "member_type",
-            "exclude_member_type",
-        ]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_group_contents" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'group_namespace' is set
-        if self.api_client.client_side_validation and (
-            "group_namespace" not in local_var_params
-            or local_var_params["group_namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_namespace` when calling `get_group_contents`"
-            )  # noqa: E501
-        # verify the required parameter 'group_name' is set
-        if self.api_client.client_side_validation and (
-            "group_name" not in local_var_params
-            or local_var_params["group_name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_name` when calling `get_group_contents`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "group_namespace" in local_var_params:
-            path_params["group_namespace"] = local_var_params[
-                "group_namespace"
-            ]  # noqa: E501
-        if "group_name" in local_var_params:
-            path_params["group_name"] = local_var_params["group_name"]  # noqa: E501
-
-        query_params = []
-        if (
-            "page" in local_var_params and local_var_params["page"] is not None
-        ):  # noqa: E501
-            query_params.append(("page", local_var_params["page"]))  # noqa: E501
-        if (
-            "per_page" in local_var_params and local_var_params["per_page"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("per_page", local_var_params["per_page"])
-            )  # noqa: E501
-        if (
-            "namespace" in local_var_params
-            and local_var_params["namespace"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("namespace", local_var_params["namespace"])
-            )  # noqa: E501
-        if (
-            "search" in local_var_params and local_var_params["search"] is not None
-        ):  # noqa: E501
-            query_params.append(("search", local_var_params["search"]))  # noqa: E501
-        if (
-            "orderby" in local_var_params and local_var_params["orderby"] is not None
-        ):  # noqa: E501
-            query_params.append(("orderby", local_var_params["orderby"]))  # noqa: E501
-        if (
-            "tag" in local_var_params and local_var_params["tag"] is not None
-        ):  # noqa: E501
-            query_params.append(("tag", local_var_params["tag"]))  # noqa: E501
-            collection_formats["tag"] = "multi"  # noqa: E501
-        if (
-            "exclude_tag" in local_var_params
-            and local_var_params["exclude_tag"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("exclude_tag", local_var_params["exclude_tag"])
-            )  # noqa: E501
-            collection_formats["exclude_tag"] = "multi"  # noqa: E501
-        if (
-            "member_type" in local_var_params
-            and local_var_params["member_type"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("member_type", local_var_params["member_type"])
-            )  # noqa: E501
-            collection_formats["member_type"] = "multi"  # noqa: E501
-        if (
-            "exclude_member_type" in local_var_params
-            and local_var_params["exclude_member_type"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("exclude_member_type", local_var_params["exclude_member_type"])
-            )  # noqa: E501
-            collection_formats["exclude_member_type"] = "multi"  # noqa: E501
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}/contents",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="GroupContents",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def get_group_sharing_policies(
-        self, group_namespace, group_name, **kwargs
-    ):  # noqa: E501
+    def get_group_sharing_policies(self, group_namespace, group_name, **kwargs):
         """get_group_sharing_policies  # noqa: E501
 
         Get all sharing details of the group  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_group_sharing_policies(group_namespace, group_name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: list[GroupSharing]
-                 If the method is called asynchronously,
-                 returns the request thread.
+        Args:
+            group_namespace (str): The namespace of the group
+            group_name (str): The unique name or id of the group
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            [GroupSharing]
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.get_group_sharing_policies_with_http_info(
-            group_namespace, group_name, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["group_namespace"] = group_namespace
+        kwargs["group_name"] = group_name
+        return self.get_group_sharing_policies_endpoint.call_with_http_info(**kwargs)
 
-    def get_group_sharing_policies_with_http_info(
-        self, group_namespace, group_name, **kwargs
-    ):  # noqa: E501
-        """get_group_sharing_policies  # noqa: E501
-
-        Get all sharing details of the group  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_group_sharing_policies_with_http_info(group_namespace, group_name, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(list[GroupSharing], status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["group_namespace", "group_name"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method get_group_sharing_policies" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'group_namespace' is set
-        if self.api_client.client_side_validation and (
-            "group_namespace" not in local_var_params
-            or local_var_params["group_namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_namespace` when calling `get_group_sharing_policies`"
-            )  # noqa: E501
-        # verify the required parameter 'group_name' is set
-        if self.api_client.client_side_validation and (
-            "group_name" not in local_var_params
-            or local_var_params["group_name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_name` when calling `get_group_sharing_policies`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "group_namespace" in local_var_params:
-            path_params["group_namespace"] = local_var_params[
-                "group_namespace"
-            ]  # noqa: E501
-        if "group_name" in local_var_params:
-            path_params["group_name"] = local_var_params["group_name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}/share",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="list[GroupSharing]",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def groups_browser_owned_filters_get(self, **kwargs):  # noqa: E501
+    def groups_browser_owned_filters_get(self, **kwargs):
         """groups_browser_owned_filters_get  # noqa: E501
 
         Fetch data to initialize filters for the groups browser  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.groups_browser_owned_filters_get(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: GroupBrowserFilterData
-                 If the method is called asynchronously,
-                 returns the request thread.
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            GroupBrowserFilterData
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.groups_browser_owned_filters_get_with_http_info(
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        return self.groups_browser_owned_filters_get_endpoint.call_with_http_info(
             **kwargs
-        )  # noqa: E501
-
-    def groups_browser_owned_filters_get_with_http_info(self, **kwargs):  # noqa: E501
-        """groups_browser_owned_filters_get  # noqa: E501
-
-        Fetch data to initialize filters for the groups browser  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.groups_browser_owned_filters_get_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(GroupBrowserFilterData, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = []
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
         )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method groups_browser_owned_filters_get" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/browser/owned/filters",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="GroupBrowserFilterData",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def groups_browser_public_filters_get(self, **kwargs):  # noqa: E501
+    def groups_browser_public_filters_get(self, **kwargs):
         """groups_browser_public_filters_get  # noqa: E501
 
         Fetch data to initialize filters for the groups browser  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.groups_browser_public_filters_get(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: GroupBrowserFilterData
-                 If the method is called asynchronously,
-                 returns the request thread.
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            GroupBrowserFilterData
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.groups_browser_public_filters_get_with_http_info(
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        return self.groups_browser_public_filters_get_endpoint.call_with_http_info(
             **kwargs
-        )  # noqa: E501
-
-    def groups_browser_public_filters_get_with_http_info(self, **kwargs):  # noqa: E501
-        """groups_browser_public_filters_get  # noqa: E501
-
-        Fetch data to initialize filters for the groups browser  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.groups_browser_public_filters_get_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(GroupBrowserFilterData, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = []
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
         )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method groups_browser_public_filters_get" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/browser/public/filters",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="GroupBrowserFilterData",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def groups_browser_shared_filters_get(self, **kwargs):  # noqa: E501
+    def groups_browser_shared_filters_get(self, **kwargs):
         """groups_browser_shared_filters_get  # noqa: E501
 
         Fetch data to initialize filters for the groups browser  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.groups_browser_shared_filters_get(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: GroupBrowserFilterData
-                 If the method is called asynchronously,
-                 returns the request thread.
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            GroupBrowserFilterData
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.groups_browser_shared_filters_get_with_http_info(
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        return self.groups_browser_shared_filters_get_endpoint.call_with_http_info(
             **kwargs
-        )  # noqa: E501
-
-    def groups_browser_shared_filters_get_with_http_info(self, **kwargs):  # noqa: E501
-        """groups_browser_shared_filters_get  # noqa: E501
-
-        Fetch data to initialize filters for the groups browser  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.groups_browser_shared_filters_get_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(GroupBrowserFilterData, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = []
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method groups_browser_shared_filters_get" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/browser/shared/filters",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="GroupBrowserFilterData",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
         )
 
     def groups_group_namespace_group_name_contents_filters_get(
         self, group_namespace, group_name, **kwargs
-    ):  # noqa: E501
+    ):
         """groups_group_namespace_group_name_contents_filters_get  # noqa: E501
 
         Fetch data to initialize filters for the group contents  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.groups_group_namespace_group_name_contents_filters_get(group_namespace, group_name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: GroupContentsFilterData
-                 If the method is called asynchronously,
-                 returns the request thread.
+        Args:
+            group_namespace (str): The namespace of the group
+            group_name (str): The unique name or id of the group
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            GroupContentsFilterData
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return (
-            self.groups_group_namespace_group_name_contents_filters_get_with_http_info(
-                group_namespace, group_name, **kwargs
-            )
-        )  # noqa: E501
-
-    def groups_group_namespace_group_name_contents_filters_get_with_http_info(
-        self, group_namespace, group_name, **kwargs
-    ):  # noqa: E501
-        """groups_group_namespace_group_name_contents_filters_get  # noqa: E501
-
-        Fetch data to initialize filters for the group contents  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.groups_group_namespace_group_name_contents_filters_get_with_http_info(group_namespace, group_name, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(GroupContentsFilterData, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["group_namespace", "group_name"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["group_namespace"] = group_namespace
+        kwargs["group_name"] = group_name
+        return self.groups_group_namespace_group_name_contents_filters_get_endpoint.call_with_http_info(
+            **kwargs
         )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method groups_group_namespace_group_name_contents_filters_get"
-                    % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'group_namespace' is set
-        if self.api_client.client_side_validation and (
-            "group_namespace" not in local_var_params
-            or local_var_params["group_namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_namespace` when calling `groups_group_namespace_group_name_contents_filters_get`"
-            )  # noqa: E501
-        # verify the required parameter 'group_name' is set
-        if self.api_client.client_side_validation and (
-            "group_name" not in local_var_params
-            or local_var_params["group_name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_name` when calling `groups_group_namespace_group_name_contents_filters_get`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "group_namespace" in local_var_params:
-            path_params["group_namespace"] = local_var_params[
-                "group_namespace"
-            ]  # noqa: E501
-        if "group_name" in local_var_params:
-            path_params["group_name"] = local_var_params["group_name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}/contents/filters",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="GroupContentsFilterData",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def list_owned_groups(self, **kwargs):  # noqa: E501
+    def list_owned_groups(self, **kwargs):
         """list_owned_groups  # noqa: E501
 
         Returns one page of owned groups.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.list_owned_groups(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param int page: pagination offset
-        :param int per_page: pagination limit
-        :param str search: search string that will look at name, namespace or description fields
-        :param str namespace: namespace
-        :param str orderby: sort by which field valid values include last_accessed, size, name
-        :param str permissions: permissions valid values include read, read_write, write, admin
-        :param list[str] tag: tag to search for, more than one can be included
-        :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
-        :param bool flat: if true, ignores the nesting of groups and searches all of them
-        :param str parent: search only the children of the groups with this uuid
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: GroupBrowserData
-                 If the method is called asynchronously,
-                 returns the request thread.
+
+        Keyword Args:
+            page (int): pagination offset. [optional]
+            per_page (int): pagination limit. [optional]
+            search (str): search string that will look at name, namespace or description fields. [optional]
+            namespace (str): namespace. [optional]
+            orderby (str): sort by which field valid values include last_accessed, size, name. [optional]
+            permissions (str): permissions valid values include read, read_write, write, admin. [optional]
+            tag ([str]): tag to search for, more than one can be included. [optional]
+            exclude_tag ([str]): tags to exclude matching array in results, more than one can be included. [optional]
+            flat (bool): if true, ignores the nesting of groups and searches all of them. [optional]
+            parent (str): search only the children of the groups with this uuid. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            GroupBrowserData
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.list_owned_groups_with_http_info(**kwargs)  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        return self.list_owned_groups_endpoint.call_with_http_info(**kwargs)
 
-    def list_owned_groups_with_http_info(self, **kwargs):  # noqa: E501
-        """list_owned_groups  # noqa: E501
-
-        Returns one page of owned groups.  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_owned_groups_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param int page: pagination offset
-        :param int per_page: pagination limit
-        :param str search: search string that will look at name, namespace or description fields
-        :param str namespace: namespace
-        :param str orderby: sort by which field valid values include last_accessed, size, name
-        :param str permissions: permissions valid values include read, read_write, write, admin
-        :param list[str] tag: tag to search for, more than one can be included
-        :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
-        :param bool flat: if true, ignores the nesting of groups and searches all of them
-        :param str parent: search only the children of the groups with this uuid
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(GroupBrowserData, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "page",
-            "per_page",
-            "search",
-            "namespace",
-            "orderby",
-            "permissions",
-            "tag",
-            "exclude_tag",
-            "flat",
-            "parent",
-        ]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method list_owned_groups" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-        if (
-            "page" in local_var_params and local_var_params["page"] is not None
-        ):  # noqa: E501
-            query_params.append(("page", local_var_params["page"]))  # noqa: E501
-        if (
-            "per_page" in local_var_params and local_var_params["per_page"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("per_page", local_var_params["per_page"])
-            )  # noqa: E501
-        if (
-            "search" in local_var_params and local_var_params["search"] is not None
-        ):  # noqa: E501
-            query_params.append(("search", local_var_params["search"]))  # noqa: E501
-        if (
-            "namespace" in local_var_params
-            and local_var_params["namespace"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("namespace", local_var_params["namespace"])
-            )  # noqa: E501
-        if (
-            "orderby" in local_var_params and local_var_params["orderby"] is not None
-        ):  # noqa: E501
-            query_params.append(("orderby", local_var_params["orderby"]))  # noqa: E501
-        if (
-            "permissions" in local_var_params
-            and local_var_params["permissions"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("permissions", local_var_params["permissions"])
-            )  # noqa: E501
-        if (
-            "tag" in local_var_params and local_var_params["tag"] is not None
-        ):  # noqa: E501
-            query_params.append(("tag", local_var_params["tag"]))  # noqa: E501
-            collection_formats["tag"] = "multi"  # noqa: E501
-        if (
-            "exclude_tag" in local_var_params
-            and local_var_params["exclude_tag"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("exclude_tag", local_var_params["exclude_tag"])
-            )  # noqa: E501
-            collection_formats["exclude_tag"] = "multi"  # noqa: E501
-        if (
-            "flat" in local_var_params and local_var_params["flat"] is not None
-        ):  # noqa: E501
-            query_params.append(("flat", local_var_params["flat"]))  # noqa: E501
-        if (
-            "parent" in local_var_params and local_var_params["parent"] is not None
-        ):  # noqa: E501
-            query_params.append(("parent", local_var_params["parent"]))  # noqa: E501
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/browser/owned",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="GroupBrowserData",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def list_public_groups(self, **kwargs):  # noqa: E501
+    def list_public_groups(self, **kwargs):
         """list_public_groups  # noqa: E501
 
         Returns one page of public groups.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.list_public_groups(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param int page: pagination offset
-        :param int per_page: pagination limit
-        :param str search: search string that will look at name, namespace or description fields
-        :param str namespace: namespace
-        :param str orderby: sort by which field valid values include last_accessed, size, name
-        :param str permissions: permissions valid values include read, read_write, write, admin
-        :param list[str] tag: tag to search for, more than one can be included
-        :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
-        :param bool flat: if true, ignores the nesting of groups and searches all of them
-        :param str parent: search only the children of the groups with this uuid
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: GroupBrowserData
-                 If the method is called asynchronously,
-                 returns the request thread.
+
+        Keyword Args:
+            page (int): pagination offset. [optional]
+            per_page (int): pagination limit. [optional]
+            search (str): search string that will look at name, namespace or description fields. [optional]
+            namespace (str): namespace. [optional]
+            orderby (str): sort by which field valid values include last_accessed, size, name. [optional]
+            permissions (str): permissions valid values include read, read_write, write, admin. [optional]
+            tag ([str]): tag to search for, more than one can be included. [optional]
+            exclude_tag ([str]): tags to exclude matching array in results, more than one can be included. [optional]
+            flat (bool): if true, ignores the nesting of groups and searches all of them. [optional]
+            parent (str): search only the children of the groups with this uuid. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            GroupBrowserData
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.list_public_groups_with_http_info(**kwargs)  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        return self.list_public_groups_endpoint.call_with_http_info(**kwargs)
 
-    def list_public_groups_with_http_info(self, **kwargs):  # noqa: E501
-        """list_public_groups  # noqa: E501
-
-        Returns one page of public groups.  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_public_groups_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param int page: pagination offset
-        :param int per_page: pagination limit
-        :param str search: search string that will look at name, namespace or description fields
-        :param str namespace: namespace
-        :param str orderby: sort by which field valid values include last_accessed, size, name
-        :param str permissions: permissions valid values include read, read_write, write, admin
-        :param list[str] tag: tag to search for, more than one can be included
-        :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
-        :param bool flat: if true, ignores the nesting of groups and searches all of them
-        :param str parent: search only the children of the groups with this uuid
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(GroupBrowserData, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "page",
-            "per_page",
-            "search",
-            "namespace",
-            "orderby",
-            "permissions",
-            "tag",
-            "exclude_tag",
-            "flat",
-            "parent",
-        ]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method list_public_groups" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-        if (
-            "page" in local_var_params and local_var_params["page"] is not None
-        ):  # noqa: E501
-            query_params.append(("page", local_var_params["page"]))  # noqa: E501
-        if (
-            "per_page" in local_var_params and local_var_params["per_page"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("per_page", local_var_params["per_page"])
-            )  # noqa: E501
-        if (
-            "search" in local_var_params and local_var_params["search"] is not None
-        ):  # noqa: E501
-            query_params.append(("search", local_var_params["search"]))  # noqa: E501
-        if (
-            "namespace" in local_var_params
-            and local_var_params["namespace"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("namespace", local_var_params["namespace"])
-            )  # noqa: E501
-        if (
-            "orderby" in local_var_params and local_var_params["orderby"] is not None
-        ):  # noqa: E501
-            query_params.append(("orderby", local_var_params["orderby"]))  # noqa: E501
-        if (
-            "permissions" in local_var_params
-            and local_var_params["permissions"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("permissions", local_var_params["permissions"])
-            )  # noqa: E501
-        if (
-            "tag" in local_var_params and local_var_params["tag"] is not None
-        ):  # noqa: E501
-            query_params.append(("tag", local_var_params["tag"]))  # noqa: E501
-            collection_formats["tag"] = "multi"  # noqa: E501
-        if (
-            "exclude_tag" in local_var_params
-            and local_var_params["exclude_tag"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("exclude_tag", local_var_params["exclude_tag"])
-            )  # noqa: E501
-            collection_formats["exclude_tag"] = "multi"  # noqa: E501
-        if (
-            "flat" in local_var_params and local_var_params["flat"] is not None
-        ):  # noqa: E501
-            query_params.append(("flat", local_var_params["flat"]))  # noqa: E501
-        if (
-            "parent" in local_var_params and local_var_params["parent"] is not None
-        ):  # noqa: E501
-            query_params.append(("parent", local_var_params["parent"]))  # noqa: E501
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/browser/public",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="GroupBrowserData",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def list_shared_groups(self, **kwargs):  # noqa: E501
+    def list_shared_groups(self, **kwargs):
         """list_shared_groups  # noqa: E501
 
         Returns one page of shared groups.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.list_shared_groups(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param int page: pagination offset
-        :param int per_page: pagination limit
-        :param str search: search string that will look at name, namespace or description fields
-        :param str namespace: namespace
-        :param str orderby: sort by which field valid values include last_accessed, size, name
-        :param str permissions: permissions valid values include read, read_write, write, admin
-        :param list[str] tag: tag to search for, more than one can be included
-        :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
-        :param bool flat: if true, ignores the nesting of groups and searches all of them
-        :param str parent: search only the children of the groups with this uuid
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: GroupBrowserData
-                 If the method is called asynchronously,
-                 returns the request thread.
+
+        Keyword Args:
+            page (int): pagination offset. [optional]
+            per_page (int): pagination limit. [optional]
+            search (str): search string that will look at name, namespace or description fields. [optional]
+            namespace (str): namespace. [optional]
+            orderby (str): sort by which field valid values include last_accessed, size, name. [optional]
+            permissions (str): permissions valid values include read, read_write, write, admin. [optional]
+            tag ([str]): tag to search for, more than one can be included. [optional]
+            exclude_tag ([str]): tags to exclude matching array in results, more than one can be included. [optional]
+            flat (bool): if true, ignores the nesting of groups and searches all of them. [optional]
+            parent (str): search only the children of the groups with this uuid. [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            GroupBrowserData
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.list_shared_groups_with_http_info(**kwargs)  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        return self.list_shared_groups_endpoint.call_with_http_info(**kwargs)
 
-    def list_shared_groups_with_http_info(self, **kwargs):  # noqa: E501
-        """list_shared_groups  # noqa: E501
-
-        Returns one page of shared groups.  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_shared_groups_with_http_info(async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param int page: pagination offset
-        :param int per_page: pagination limit
-        :param str search: search string that will look at name, namespace or description fields
-        :param str namespace: namespace
-        :param str orderby: sort by which field valid values include last_accessed, size, name
-        :param str permissions: permissions valid values include read, read_write, write, admin
-        :param list[str] tag: tag to search for, more than one can be included
-        :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
-        :param bool flat: if true, ignores the nesting of groups and searches all of them
-        :param str parent: search only the children of the groups with this uuid
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(GroupBrowserData, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = [
-            "page",
-            "per_page",
-            "search",
-            "namespace",
-            "orderby",
-            "permissions",
-            "tag",
-            "exclude_tag",
-            "flat",
-            "parent",
-        ]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method list_shared_groups" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-
-        collection_formats = {}
-
-        path_params = {}
-
-        query_params = []
-        if (
-            "page" in local_var_params and local_var_params["page"] is not None
-        ):  # noqa: E501
-            query_params.append(("page", local_var_params["page"]))  # noqa: E501
-        if (
-            "per_page" in local_var_params and local_var_params["per_page"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("per_page", local_var_params["per_page"])
-            )  # noqa: E501
-        if (
-            "search" in local_var_params and local_var_params["search"] is not None
-        ):  # noqa: E501
-            query_params.append(("search", local_var_params["search"]))  # noqa: E501
-        if (
-            "namespace" in local_var_params
-            and local_var_params["namespace"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("namespace", local_var_params["namespace"])
-            )  # noqa: E501
-        if (
-            "orderby" in local_var_params and local_var_params["orderby"] is not None
-        ):  # noqa: E501
-            query_params.append(("orderby", local_var_params["orderby"]))  # noqa: E501
-        if (
-            "permissions" in local_var_params
-            and local_var_params["permissions"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("permissions", local_var_params["permissions"])
-            )  # noqa: E501
-        if (
-            "tag" in local_var_params and local_var_params["tag"] is not None
-        ):  # noqa: E501
-            query_params.append(("tag", local_var_params["tag"]))  # noqa: E501
-            collection_formats["tag"] = "multi"  # noqa: E501
-        if (
-            "exclude_tag" in local_var_params
-            and local_var_params["exclude_tag"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("exclude_tag", local_var_params["exclude_tag"])
-            )  # noqa: E501
-            collection_formats["exclude_tag"] = "multi"  # noqa: E501
-        if (
-            "flat" in local_var_params and local_var_params["flat"] is not None
-        ):  # noqa: E501
-            query_params.append(("flat", local_var_params["flat"]))  # noqa: E501
-        if (
-            "parent" in local_var_params and local_var_params["parent"] is not None
-        ):  # noqa: E501
-            query_params.append(("parent", local_var_params["parent"]))  # noqa: E501
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/browser/shared",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="GroupBrowserData",  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def register_group(self, namespace, array, **kwargs):  # noqa: E501
+    def register_group(self, namespace, array, **kwargs):
         """register_group  # noqa: E501
 
         Registers an existing group in the namespace.  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.register_group(namespace, array, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the group (required)
-        :param str array: The unique name or id of the group (required)
-        :param GroupRegister group_register:
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
+        Args:
+            namespace (str): The namespace of the group
+            array (str): The unique name or id of the group
+
+        Keyword Args:
+            group_register (GroupRegister): [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.register_group_with_http_info(
-            namespace, array, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["namespace"] = namespace
+        kwargs["array"] = array
+        return self.register_group_endpoint.call_with_http_info(**kwargs)
 
-    def register_group_with_http_info(self, namespace, array, **kwargs):  # noqa: E501
-        """register_group  # noqa: E501
-
-        Registers an existing group in the namespace.  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.register_group_with_http_info(namespace, array, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str namespace: The namespace of the group (required)
-        :param str array: The unique name or id of the group (required)
-        :param GroupRegister group_register:
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "array", "group_register"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method register_group" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `register_group`"
-            )  # noqa: E501
-        # verify the required parameter 'array' is set
-        if self.api_client.client_side_validation and (
-            "array" not in local_var_params
-            or local_var_params["array"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `array` when calling `register_group`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "array" in local_var_params:
-            path_params["array"] = local_var_params["array"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "group_register" in local_var_params:
-            body_params = local_var_params["group_register"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/{namespace}/{array}/register",
-            "POST",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type=None,  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def share_group(
-        self, group_namespace, group_name, group_sharing_request, **kwargs
-    ):  # noqa: E501
+    def share_group(self, group_namespace, group_name, group_sharing_request, **kwargs):
         """share_group  # noqa: E501
 
         Share a group with a namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.share_group(group_namespace, group_name, group_sharing_request, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param GroupSharingRequest group_sharing_request: Namespace and list of permissions to share with. Sharing is recursive, it is applied to all reachable subgroups and arrays of the group. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the group will not be shared with the namespace at all. (required)
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
+        Args:
+            group_namespace (str): The namespace of the group
+            group_name (str): The unique name or id of the group
+            group_sharing_request (GroupSharingRequest): Namespace and list of permissions to share with. Sharing is recursive, it is applied to all reachable subgroups and arrays of the group. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the group will not be shared with the namespace at all.
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.share_group_with_http_info(
-            group_namespace, group_name, group_sharing_request, **kwargs
-        )  # noqa: E501
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["group_namespace"] = group_namespace
+        kwargs["group_name"] = group_name
+        kwargs["group_sharing_request"] = group_sharing_request
+        return self.share_group_endpoint.call_with_http_info(**kwargs)
 
-    def share_group_with_http_info(
-        self, group_namespace, group_name, group_sharing_request, **kwargs
-    ):  # noqa: E501
-        """share_group  # noqa: E501
-
-        Share a group with a namespace  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.share_group_with_http_info(group_namespace, group_name, group_sharing_request, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param GroupSharingRequest group_sharing_request: Namespace and list of permissions to share with. Sharing is recursive, it is applied to all reachable subgroups and arrays of the group. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the group will not be shared with the namespace at all. (required)
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["group_namespace", "group_name", "group_sharing_request"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method share_group" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'group_namespace' is set
-        if self.api_client.client_side_validation and (
-            "group_namespace" not in local_var_params
-            or local_var_params["group_namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_namespace` when calling `share_group`"
-            )  # noqa: E501
-        # verify the required parameter 'group_name' is set
-        if self.api_client.client_side_validation and (
-            "group_name" not in local_var_params
-            or local_var_params["group_name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_name` when calling `share_group`"
-            )  # noqa: E501
-        # verify the required parameter 'group_sharing_request' is set
-        if self.api_client.client_side_validation and (
-            "group_sharing_request" not in local_var_params
-            or local_var_params["group_sharing_request"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_sharing_request` when calling `share_group`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "group_namespace" in local_var_params:
-            path_params["group_namespace"] = local_var_params[
-                "group_namespace"
-            ]  # noqa: E501
-        if "group_name" in local_var_params:
-            path_params["group_name"] = local_var_params["group_name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "group_sharing_request" in local_var_params:
-            body_params = local_var_params["group_sharing_request"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}/share",
-            "PATCH",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type=None,  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def update_group(self, group_namespace, group_name, **kwargs):  # noqa: E501
+    def update_group(self, group_namespace, group_name, **kwargs):
         """update_group  # noqa: E501
 
         Changes attributes of the group  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.update_group(group_namespace, group_name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param GroupUpdate group_update:
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
+        Args:
+            group_namespace (str): The namespace of the group
+            group_name (str): The unique name or id of the group
+
+        Keyword Args:
+            group_update (GroupUpdate): [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
         """
-        kwargs["_return_http_data_only"] = True
-        return self.update_group_with_http_info(
-            group_namespace, group_name, **kwargs
-        )  # noqa: E501
-
-    def update_group_with_http_info(
-        self, group_namespace, group_name, **kwargs
-    ):  # noqa: E501
-        """update_group  # noqa: E501
-
-        Changes attributes of the group  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.update_group_with_http_info(group_namespace, group_name, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str group_namespace: The namespace of the group (required)
-        :param str group_name: The unique name or id of the group (required)
-        :param GroupUpdate group_update:
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: None
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["group_namespace", "group_name", "group_update"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method update_group" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'group_namespace' is set
-        if self.api_client.client_side_validation and (
-            "group_namespace" not in local_var_params
-            or local_var_params["group_namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_namespace` when calling `update_group`"
-            )  # noqa: E501
-        # verify the required parameter 'group_name' is set
-        if self.api_client.client_side_validation and (
-            "group_name" not in local_var_params
-            or local_var_params["group_name"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group_name` when calling `update_group`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "group_namespace" in local_var_params:
-            path_params["group_namespace"] = local_var_params[
-                "group_namespace"
-            ]  # noqa: E501
-        if "group_name" in local_var_params:
-            path_params["group_name"] = local_var_params["group_name"]  # noqa: E501
-
-        query_params = []
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        if "group_update" in local_var_params:
-            body_params = local_var_params["group_update"]
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}",
-            "PATCH",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type=None,  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+        kwargs["async_req"] = kwargs.get("async_req", False)
+        kwargs["_return_http_data_only"] = kwargs.get("_return_http_data_only", True)
+        kwargs["_preload_content"] = kwargs.get("_preload_content", True)
+        kwargs["_request_timeout"] = kwargs.get("_request_timeout", None)
+        kwargs["_check_input_type"] = kwargs.get("_check_input_type", True)
+        kwargs["_check_return_type"] = kwargs.get("_check_return_type", True)
+        kwargs["_host_index"] = kwargs.get("_host_index")
+        kwargs["group_namespace"] = group_namespace
+        kwargs["group_name"] = group_name
+        return self.update_group_endpoint.call_with_http_info(**kwargs)

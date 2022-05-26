@@ -1,9 +1,11 @@
 # PricingUnitLabel
 
 Unit label
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**value** | **str** | Unit label |  must be one of ["byte", "second", ]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

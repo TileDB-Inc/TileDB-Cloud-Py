@@ -17,11 +17,12 @@ fi
 
 ROOT="$(git rev-parse --show-toplevel)"
 
-GENERATOR="$ROOT/.cache/openapi-generator-cli-4.3.1.jar"
+GEN_VERSION=5.3.0
+GENERATOR="$ROOT/.cache/openapi-generator-cli-${GEN_VERSION}.jar"
 
 if [[ ! -f "$GENERATOR" ]]; then
   mkdir -p "$ROOT/.cache"
-  wget -O "$GENERATOR" "https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/4.3.1/openapi-generator-cli-4.3.1.jar"
+  wget -O "$GENERATOR" "https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/${GEN_VERSION}/openapi-generator-cli-${GEN_VERSION}.jar"
 fi
 
 SPEC="$1"
@@ -112,25 +113,24 @@ done
 # Apply an api_client patch to avoid descending into known–JSON-safe values.
 git apply - <<EOF
 diff --git a/tiledb/cloud/rest_api/api_client.py b/tiledb/cloud/rest_api/api_client.py
-index 267385d..6d244a0 100644
+index 79ad4fe..7f224da 100644
 --- a/tiledb/cloud/rest_api/api_client.py
 +++ b/tiledb/cloud/rest_api/api_client.py
-@@ -25,6 +25,7 @@ from dateutil.parser import parse
- from six.moves.urllib.parse import quote
- 
- import tiledb.cloud.rest_api.models
+@@ -20,6 +20,7 @@ from urllib.parse import quote
+
+ from urllib3.fields import RequestField
+
 +from tiledb.cloud._common import json_safe
  from tiledb.cloud.rest_api import rest
  from tiledb.cloud.rest_api.configuration import Configuration
  from tiledb.cloud.rest_api.exceptions import ApiException
-@@ -251,6 +252,8 @@ class ApiClient(object):
-         """
-         if obj is None:
-             return None
+@@ -284,6 +285,8 @@ class ApiClient(object):
+                 key: cls.sanitize_for_serialization(val)
+                 for key, val in model_to_dict(obj, serialize=True).items()
+             }
 +        elif isinstance(obj, json_safe.Value):
 +            return obj.value
-         elif isinstance(obj, self.PRIMITIVE_TYPES):
-             return obj
-         elif isinstance(obj, list):
+         elif isinstance(obj, io.IOBase):
+             return cls.get_file_data_and_close_file(obj)
+         elif isinstance(obj, (str, int, float, none_type, bool)):
 EOF
-

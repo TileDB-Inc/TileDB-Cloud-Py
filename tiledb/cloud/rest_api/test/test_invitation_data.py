@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,14 +8,16 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.invitation_data import InvitationData  # noqa: E501
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.invitation import Invitation
+from tiledb.cloud.rest_api.model.pagination_metadata import PaginationMetadata
+
+globals()["Invitation"] = Invitation
+globals()["PaginationMetadata"] = PaginationMetadata
+from tiledb.cloud.rest_api.model.invitation_data import InvitationData
 
 
 class TestInvitationData(unittest.TestCase):
@@ -29,53 +29,11 @@ class TestInvitationData(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test InvitationData
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.invitation_data.InvitationData()  # noqa: E501
-        if include_optional:
-            return InvitationData(
-                invitations=[
-                    tiledb.cloud.rest_api.models.invitation.Invitation(
-                        id="00000000-0000-0000-0000-000000000000",
-                        invitation_type="ARRAY_SHARE",
-                        owner_namespace_uuid="00000000-0000-0000-0000-000000000000",
-                        user_namespace_uuid="00000000-0000-0000-0000-000000000000",
-                        organization_user_uuid="00000000-0000-0000-0000-000000000000",
-                        organization_name="organization_name",
-                        organization_role="owner",
-                        array_uuid="00000000-0000-0000-0000-000000000000",
-                        array_name="array_name",
-                        email="jane@doe.com",
-                        actions="read,write",
-                        status="PENDING",
-                        created_at=datetime.datetime.strptime(
-                            "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
-                        ),
-                        expires_at=datetime.datetime.strptime(
-                            "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
-                        ),
-                        accepted_at=datetime.datetime.strptime(
-                            "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
-                        ),
-                    )
-                ],
-                pagination_metadata=tiledb.cloud.rest_api.models.pagination_metadata.PaginationMetadata(
-                    page=1.0,
-                    per_page=10.0,
-                    total_pages=14.0,
-                    total_items=138.0,
-                ),
-            )
-        else:
-            return InvitationData()
-
     def testInvitationData(self):
         """Test InvitationData"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = InvitationData()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

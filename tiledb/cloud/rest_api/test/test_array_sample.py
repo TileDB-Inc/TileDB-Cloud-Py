@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,14 +8,11 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.array_sample import ArraySample  # noqa: E501
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.array_sample import ArraySample
 
 
 class TestArraySample(unittest.TestCase):
@@ -29,21 +24,11 @@ class TestArraySample(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test ArraySample
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.array_sample.ArraySample()  # noqa: E501
-        if include_optional:
-            return ArraySample(data=None)
-        else:
-            return ArraySample()
-
     def testArraySample(self):
         """Test ArraySample"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = ArraySample()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":

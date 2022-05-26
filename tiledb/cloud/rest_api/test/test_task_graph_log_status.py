@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     TileDB Storage Platform API
 
@@ -10,16 +8,11 @@
 """
 
 
-from __future__ import absolute_import
-
-import datetime
+import sys
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.task_graph_log_status import (  # noqa: E501
-    TaskGraphLogStatus,
-)
-from tiledb.cloud.rest_api.rest import ApiException
+from tiledb.cloud.rest_api.model.task_graph_log_status import TaskGraphLogStatus
 
 
 class TestTaskGraphLogStatus(unittest.TestCase):
@@ -31,21 +24,11 @@ class TestTaskGraphLogStatus(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional):
-        """Test TaskGraphLogStatus
-        include_option is a boolean, when False only required
-        params are included, when True both required and
-        optional params are included"""
-        # model = tiledb.cloud.rest_api.models.task_graph_log_status.TaskGraphLogStatus()  # noqa: E501
-        if include_optional:
-            return TaskGraphLogStatus()
-        else:
-            return TaskGraphLogStatus()
-
     def testTaskGraphLogStatus(self):
         """Test TaskGraphLogStatus"""
-        inst_req_only = self.make_instance(include_optional=False)
-        inst_req_and_optional = self.make_instance(include_optional=True)
+        # FIXME: construct object with mandatory attributes with example values
+        # model = TaskGraphLogStatus()  # noqa: E501
+        pass
 
 
 if __name__ == "__main__":
