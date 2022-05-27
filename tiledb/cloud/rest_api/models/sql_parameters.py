@@ -38,6 +38,7 @@ class SQLParameters(object):
         "output_uri": "str",
         "store_results": "bool",
         "dont_download_results": "bool",
+        "resource_class": "str",
         "result_format": "ResultFormat",
         "init_commands": "list[str]",
         "parameters": "list[object]",
@@ -51,6 +52,7 @@ class SQLParameters(object):
         "output_uri": "output_uri",
         "store_results": "store_results",
         "dont_download_results": "dont_download_results",
+        "resource_class": "resource_class",
         "result_format": "result_format",
         "init_commands": "init_commands",
         "parameters": "parameters",
@@ -65,6 +67,7 @@ class SQLParameters(object):
         output_uri=None,
         store_results=None,
         dont_download_results=None,
+        resource_class=None,
         result_format=None,
         init_commands=None,
         parameters=None,
@@ -82,6 +85,7 @@ class SQLParameters(object):
         self._output_uri = None
         self._store_results = None
         self._dont_download_results = None
+        self._resource_class = None
         self._result_format = None
         self._init_commands = None
         self._parameters = None
@@ -99,6 +103,8 @@ class SQLParameters(object):
             self.store_results = store_results
         if dont_download_results is not None:
             self.dont_download_results = dont_download_results
+        if resource_class is not None:
+            self.resource_class = resource_class
         if result_format is not None:
             self.result_format = result_format
         if init_commands is not None:
@@ -224,6 +230,29 @@ class SQLParameters(object):
         """
 
         self._dont_download_results = dont_download_results
+
+    @property
+    def resource_class(self):
+        """Gets the resource_class of this SQLParameters.  # noqa: E501
+
+        The resource class to use for the SQL execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the SQL will execute in the standard resource class of the TileDB Cloud provider.   # noqa: E501
+
+        :return: The resource_class of this SQLParameters.  # noqa: E501
+        :rtype: str
+        """
+        return self._resource_class
+
+    @resource_class.setter
+    def resource_class(self, resource_class):
+        """Sets the resource_class of this SQLParameters.
+
+        The resource class to use for the SQL execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the SQL will execute in the standard resource class of the TileDB Cloud provider.   # noqa: E501
+
+        :param resource_class: The resource_class of this SQLParameters.  # noqa: E501
+        :type: str
+        """
+
+        self._resource_class = resource_class
 
     @property
     def result_format(self):
