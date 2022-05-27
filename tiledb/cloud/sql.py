@@ -32,6 +32,7 @@ def exec_base(
     result_format: str = models.ResultFormat.ARROW,
     result_format_version=None,
     store_results: bool = False,
+    resource_class: Optional[str] = None,
     _download_results: bool = True,
     _server_graph_uuid: Optional[uuid.UUID] = None,
     _client_node_uuid: Optional[uuid.UUID] = None,
@@ -52,6 +53,8 @@ def exec_base(
     :param str result_format_version: Deprecated and ignored.
     :param store_results: True to temporarily store results on the server side
         for later retrieval (in addition to downloading them).
+    :param resource_class: The name of the resource class to use. Resource classes
+        define maximum limits for cpu and memory usage.
     :param _server_graph_uuid: If this function is being executed within a DAG,
         the server-generated ID of the graph's log. Otherwise, None.
     :param _client_node_uuid: If this function is being executed within a DAG,
@@ -115,6 +118,7 @@ def exec_base(
             parameters=parameters,
             result_format=result_format,
             store_results=store_results,
+            resource_class=resource_class,
             dont_download_results=not _download_results,
             task_graph_uuid=_server_graph_uuid and str(_server_graph_uuid),
             client_node_uuid=_client_node_uuid and str(_client_node_uuid),
