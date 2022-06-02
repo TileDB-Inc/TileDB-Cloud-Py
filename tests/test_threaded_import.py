@@ -46,4 +46,4 @@ class TestThreadedImport(DiskTestCase):
         p2.start()
         p2.join()
         # fixed by https://github.com/TileDB-Inc/TileDB-Py/pull/1096
-        self.assertEqual(p2.exitcode, 1 if tiledb.__version__ < "0.15.2" else 0)
+        self.assertEqual(p2.exitcode, 0)
