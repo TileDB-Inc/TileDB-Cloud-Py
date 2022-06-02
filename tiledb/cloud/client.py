@@ -418,7 +418,7 @@ RetryOrStr = Union[RetryMode, str]
 
 _RETRY_CONFIGS = {
     RetryMode.DEFAULT: urllib3.Retry(
-        total=10,
+        total=100,
         backoff_factor=0.25,
         status_forcelist=[503],
         allowed_methods=[
@@ -436,7 +436,7 @@ _RETRY_CONFIGS = {
         remove_headers_on_redirect=[],
     ),
     RetryMode.FORCEFUL: urllib3.Retry(
-        total=10,
+        total=100,
         backoff_factor=0.25,
         status_forcelist=[400, 500, 501, 502, 503],
         allowed_methods=[
