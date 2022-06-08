@@ -458,6 +458,9 @@ class _UDFNode(Node[_T]):
                 language_version=utils.PYTHON_VERSION,
             )
             udf_node["executable_code"] = _codec.b64_str(_codec.pickle(self.func))
+            source = utils.getsourcelines(self.func)
+            if source:
+                udf_node["source_text"] = source
         if self.result_format:
             udf_node["result_format"] = self.result_format
         ret["udf_node"] = udf_node
