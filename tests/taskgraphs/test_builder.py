@@ -348,6 +348,7 @@ class TestBuilder(unittest.TestCase):
                             "language_version": utils.PYTHON_VERSION,
                         },
                         "executable_code": "gASVEQAAAAAAAACMBW51bXB5lIwDc3VtlJOULg==",
+                        "source_text": utils.getsourcelines(numpy.sum),
                         "result_format": "python_pickle",
                     },
                 },

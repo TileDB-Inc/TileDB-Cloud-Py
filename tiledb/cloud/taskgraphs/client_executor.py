@@ -692,6 +692,8 @@ class UDFNode(Node):
             result_format=self._udf_data.get("result_format") or "python_pickle",
             client_node_uuid=str(self.id),
             task_graph_uuid=str(self.owner._server_graph_uuid),
+            # This is for reference only.
+            exec_raw=self._udf_data.get("source_text"),
         )
 
         # Executable code.
