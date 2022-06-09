@@ -15,7 +15,12 @@ def check_exc(exc):
 
     # Make sure exc.status and exc.body exist before dereferncing them.
     if not isinstance(exc, rest_api.ApiException):
-        raise Exception(internal_err_msg)
+        # If this isn't an ApiException, something non–API-related happened.
+        # We shouldn't try to wrap it.
+        #
+        # Bare "raise" here is OK because this function is already called from
+        # within an exception handler.
+        raise
 
     if exc.status == 404 and len(exc.body) == 0:
         return TileDBCloudError("Array or Namespace Not found")
@@ -25,7 +30,7 @@ def check_exc(exc):
         new_exc = TileDBCloudError(
             "{} - Code: {}".format(body["message"], body["code"])
         )
-    except:
-        raise Exception(internal_err_msg) from exc
+    except Exception:
+        raise TileDBCloudError(internal_err_msg) from exc
 
     return new_exc
