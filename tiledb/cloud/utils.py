@@ -3,7 +3,7 @@ import inspect
 import logging
 import sys
 import urllib
-from typing import Any, Callable, Optional, TypeVar
+from typing import Any, Callable, Optional, TypeVar, Union
 
 import cloudpickle
 
@@ -12,7 +12,9 @@ TILEDB_CLOUD_PROTOCOL = 4
 # General-use logger for TileDB Cloud.
 logger = logging.getLogger("tiledb.cloud")
 
-
+_T = TypeVar("_T")
+Funcable = Union[str, Callable[..., _T]]
+"""Either a Python function or the name of a registered UDF."""
 _builtin_function = type(len)
 """The type of functions implemented in C."""
 
@@ -39,12 +41,9 @@ def getsourcelines(func: Callable) -> Optional[str]:
     try:
         # Attempt to find and serialize the original source...
         return "".join(inspect.getsourcelines(func)[0])
-    except Exception as exc:
+    except Exception:
         pass
     return None
-
-
-_T = TypeVar("_T")
 
 
 def signature_of(src: Callable) -> Callable[[_T], _T]:
@@ -79,3 +78,25 @@ def b64_pickle(obj: Any) -> str:
 
 PYTHON_VERSION = ".".join(map(str, sys.version_info[:3]))
 """The Python version as an ``X.Y.Z`` string."""
+
+
+def check_funcable(**kwargs) -> None:
+    """Checks whether the given parameter can be treated as a function.
+
+    For a function like::
+
+        def process(some_func: Funcable, more, params):
+            utils.check_funcable(some_func=some_func)
+            # ...
+
+    If it's a Funcable, then execution continues as normal. If not, then
+    it raises an informative exception.
+    """
+    name, func = kwargs.popitem()
+    assert not kwargs, "Too many args passed to _check_funcable"
+    if callable(func) or type(func) == str:
+        return
+    raise TypeError(
+        f"{name} argument must be a callable or the registered name of a UDF, "
+        f"not {type(func)}"
+    )

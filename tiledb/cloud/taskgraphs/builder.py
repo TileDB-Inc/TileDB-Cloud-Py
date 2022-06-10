@@ -5,11 +5,11 @@ import uuid
 from typing import (
     AbstractSet,
     Any,
-    Callable,
     Dict,
     Generic,
     Iterable,
     Optional,
+    Set,
     TypeVar,
     Union,
 )
@@ -34,8 +34,6 @@ ValOrNodeSeq = Union[
 """Either a Node that yields a sequence or a sequence that may contain nodes."""
 ArrayMultiIndex = Dict[str, np.ndarray]
 """Type returned from an array query."""
-Funcable = Union[str, Callable[..., _T]]
-"""Either a Python function or the name of a registered UDF."""
 
 _NOTHING = object()
 """Sentinel object used when we need to distinguish "unset" from "None"."""
@@ -117,7 +115,7 @@ class TaskGraphBuilder:
 
     def udf(
         self,
-        func: Funcable[_T],
+        func: utils.Funcable[_T],
         args: types.Arguments = types.Arguments(),
         *,
         result_format: Optional[str] = "python_pickle",
@@ -198,7 +196,9 @@ class TaskGraphBuilder:
     def _tdb_to_json(self):
         """Converts this task graph to a registerable/executable format."""
         nodes = self._deps.topo_sorted
-        node_jsons = [n.to_registration_json() for n in nodes]
+        # We need to guarantee that the existing node names are maintained.
+        existing_names = set(self._by_name)
+        node_jsons = [n.to_registration_json(existing_names) for n in nodes]
         for n, n_json in zip(nodes, node_jsons):
             n_json["depends_on"] = [
                 str(parent.id) for parent in self._deps.parents_of(n)
@@ -261,16 +261,50 @@ class Node(_codec.TDBJSONEncodable, Generic[_T]):
         }
 
     @abc.abstractmethod
-    def to_registration_json(self) -> Dict[str, Any]:
+    def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
         """Converts this node to the form used when registering the graph.
 
         This is the form of the Node that will be used to represent it in the
         ``RegisteredTaskGraph`` object, i.e. a ``RegisteredTaskGraphNode``.
+
+        :param existing_names: The set of names that have already been used,
+            so that we don't generate a duplicate node name.
         """
         return {
             "client_node_id": str(self.id),
-            "name": self.name,
+            "name": self._registration_name(existing_names),
         }
+
+    def _registration_name(self, existing: Set[str]) -> str:
+        """Generates the unique name to be used when building the graph.
+
+        If the node has a ``name``, then that is used. If not, then it generates
+        a new unique name that is not contained within the ``existing`` set,
+        and adds that newly-generated name to the set so subsequent Nodes don't
+        reuse that name.
+        """
+        if self.name is not None:
+            # A Node which already has a Name does not need to have one generated.
+            return self.name
+        try:
+            return _set_add(existing, self._fallback_name)
+        except KeyError:
+            pass  # Already present; we gotta try something new.
+        id_to_use = self.id
+        while True:
+            id_str = str(id_to_use)
+            for chars in range(2, 13, 2):
+                # Try to generate unique names with increasingly large slices
+                # of the node's UUID.
+                end = id_str[-chars:]
+                try:
+                    return _set_add(existing, f"{self._fallback_name} ({end})")
+                except KeyError:
+                    pass  # Sigh, give it more.
+            # At this point every single alternate generated name we could generate,
+            # from "name (xx)" to "name (xxxxxxxxxxxx)", has been taken.
+            # Just throw in a new ID to start from.
+            id_to_use = uuid.uuid4()
 
 
 class _ArrayNode(Node[ArrayMultiIndex]):
@@ -319,8 +353,8 @@ class _ArrayNode(Node[ArrayMultiIndex]):
 
         super().__init__(name, jsoner.seen_nodes, fallback_name=f"Query {uri}")
 
-    def to_registration_json(self):
-        ret = super().to_registration_json()
+    def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
+        ret = super().to_registration_json(existing_names)
         ret["array_node"] = dict(
             parameter_id=str(self.id),
             uri=self.uri,
@@ -345,17 +379,17 @@ class _InputNode(Node[_T]):
         """
         super().__init__(name, ())
         if default_value is _NOTHING:
-            self.default_value = default_value
+            self.default_value = _NOTHING
         else:
             node_finder = _ParameterEscaper()
+            self.default_value = node_finder.visit(default_value)
             if node_finder.seen_nodes:
                 raise ValueError(
                     "Input nodes cannot have node outputs as default values."
                 )
-            self.default_value = node_finder.visit(default_value)
 
-    def to_registration_json(self) -> Dict[str, Any]:
-        ret = super().to_registration_json()
+    def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
+        ret = super().to_registration_json(existing_names)
         input_node = {}
         if self.default_value is not _NOTHING:
             input_node["default_value"] = self.default_value
@@ -394,8 +428,8 @@ class _SQLNode(Node):
         self.parameters = jsoner.visit(parameters)
         super().__init__(name, jsoner.seen_nodes, fallback_name="SQL query")
 
-    def to_registration_json(self):
-        ret = super().to_registration_json()
+    def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
+        ret = super().to_registration_json(existing_names)
         ret["sql_node"] = dict(
             init_commands=self.init_commands,
             query=self.query,
@@ -410,7 +444,7 @@ class _UDFNode(Node[_T]):
 
     def __init__(
         self,
-        func: Funcable[_T],
+        func: utils.Funcable[_T],
         args: types.Arguments,
         *,
         result_format: Optional[str],
@@ -427,13 +461,8 @@ class _UDFNode(Node[_T]):
         :param image_name: If specified, will execute the UDF within
             the specified image rather than the default image for its language.
         """
-        if isinstance(func, str):
-            func_name = func
-        else:
-            try:
-                func_name = func.__name__
-            except AttributeError:
-                func_name = str(func)
+        utils.check_funcable(func=func)
+        func_name = _func_name(func)
         jsoner = _ParameterEscaper()
         self.args = jsoner.arguments_to_json(args)
         super().__init__(
@@ -445,8 +474,8 @@ class _UDFNode(Node[_T]):
         self.result_format = result_format
         self.image_name = image_name
 
-    def to_registration_json(self) -> Dict[str, Any]:
-        ret = super().to_registration_json()
+    def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
+        ret = super().to_registration_json(existing_names)
         udf_node = {"arguments": self.args, "environment": {}}
         if self.image_name:
             udf_node["environment"]["image_name"] = self.image_name
@@ -492,3 +521,23 @@ class _ParameterEscaper(_codec.Escaper):
             for (name, value) in arg.kwargs.items()
         ]
         return arg_outputs + kwarg_outputs
+
+
+def _func_name(f: utils.Funcable) -> str:
+    """Generates a "full name" to the given function for human reference."""
+    if isinstance(f, str):
+        return f"registered UDF {f!r}"
+    try:
+        if f.__module__:
+            return f"{f.__module__}.{f.__qualname__}"
+        return f.__qualname__
+    except AttributeError:
+        return str(f)
+
+
+def _set_add(s: Set[_T], elem: _T) -> _T:
+    """Adds an element to a set, but only if it was missing before."""
+    if elem in s:
+        raise KeyError(elem)
+    s.add(elem)
+    return elem
