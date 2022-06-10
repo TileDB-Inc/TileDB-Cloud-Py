@@ -1,4 +1,5 @@
 import numbers
+import random
 from typing import Callable, Union
 
 from tiledb.cloud import utils
@@ -100,6 +101,8 @@ class Delayed(DelayedBase):
         utils.check_funcable(func_exec=func_exec)
         self.func_exec = func_exec
 
+        kwargs.setdefault("name", utils.func_name(func_exec) + _random_suffix())
+
         if not local:
             super().__init__(udf_exec, func_exec, *args, local_mode=local, **kwargs)
         elif callable(func_exec):
@@ -123,6 +126,8 @@ class Delayed(DelayedBase):
 
 class DelayedSQL(DelayedBase):
     def __init__(self, *args, **kwargs):
+        kwargs.setdefault("name", "SQL query" + _random_suffix())
+
         super().__init__(sql_exec, *args, **kwargs)
 
         # Set name of task if it won't interfere with user args
@@ -154,6 +159,7 @@ class DelayedArrayUDF(DelayedBase):
         utils.check_funcable(func_exec=func_exec)
         self.func_exec = func_exec
         self.uri = uri
+        kwargs.setdefault("name", utils.func_name(func_exec) + _random_suffix())
 
         super().__init__(array_apply, self.uri, self.func_exec, *args, **kwargs)
 
@@ -181,9 +187,10 @@ class DelayedMultiArrayUDF(DelayedBase):
         *args,
         **kwargs,
     ):
-        utils.check_funcable(func_exec=func)
+        utils.check_funcable(func=func)
         self.func_exec = func
         self.array_list = array_list
+        kwargs.setdefault("name", utils.func_name(func) + _random_suffix())
 
         super().__init__(
             exec_multi_array_udf, self.func_exec, self.array_list, *args, **kwargs
@@ -203,3 +210,15 @@ class DelayedMultiArrayUDF(DelayedBase):
             self.kwargs["task_name"] = self.name
 
         return self
+
+
+def _random_suffix() -> str:
+    """Generates a random suffix for node names.
+
+    Because Delayed objects don't have access to a DAG when they are created,
+    it's impossible for them to know what names have or have not been used.
+    To work around this, we generate a random suffix and assume it works.
+    """
+    # Alphanumerics with no ambiguous symbols and no vowels.
+    letters = (random.choice("3479bcdfghjkmnpqrstvwxz") for _ in range(4))
+    return f" ({''.join(letters)})"

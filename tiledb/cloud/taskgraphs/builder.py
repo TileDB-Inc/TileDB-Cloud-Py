@@ -462,13 +462,12 @@ class _UDFNode(Node[_T]):
             the specified image rather than the default image for its language.
         """
         utils.check_funcable(func=func)
-        func_name = _func_name(func)
         jsoner = _ParameterEscaper()
         self.args = jsoner.arguments_to_json(args)
         super().__init__(
             name,
             jsoner.seen_nodes,
-            fallback_name=func_name,
+            fallback_name=utils.func_name(func),
         )
         self.func = func
         self.result_format = result_format
@@ -521,18 +520,6 @@ class _ParameterEscaper(_codec.Escaper):
             for (name, value) in arg.kwargs.items()
         ]
         return arg_outputs + kwarg_outputs
-
-
-def _func_name(f: utils.Funcable) -> str:
-    """Generates a "full name" to the given function for human reference."""
-    if isinstance(f, str):
-        return f"registered UDF {f!r}"
-    try:
-        if f.__module__:
-            return f"{f.__module__}.{f.__qualname__}"
-        return f.__qualname__
-    except AttributeError:
-        return str(f)
 
 
 def _set_add(s: Set[_T], elem: _T) -> _T:
