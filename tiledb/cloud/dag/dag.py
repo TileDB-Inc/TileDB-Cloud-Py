@@ -1,5 +1,6 @@
 import collections
 import datetime
+import itertools
 import json
 import numbers
 import threading
@@ -30,6 +31,7 @@ from tiledb.cloud import rest_api
 from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud import udf
+from tiledb.cloud import utils
 from tiledb.cloud._common import visitor
 from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params
@@ -563,14 +565,44 @@ class DAG:
             **kwargs,
         )
 
-    def _add_raw_node(self, func_exec, *args, **kwargs):
+    def _suffix_name(self, name: str) -> str:
+        if name not in self.nodes_by_name:
+            return name
+        for i in itertools.count(1):
+            suffixed = f"{name} ({i})"
+            if suffixed not in self.nodes_by_name:
+                return suffixed
+        assert False, "It is impossible to get here."
+
+    def _add_raw_node(
+        self,
+        func_exec,
+        *args,
+        name: Optional[str] = None,
+        _fallback_name: Optional[str] = None,
+        **kwargs,
+    ):
         """Adds a generic (usually local) node to the graph."""
-        node = Node(func_exec, *args, dag=self, **kwargs)
+        if name is None and _fallback_name is not None:
+            # If the node is unnamed, generate a name to give to it,
+            # without trampling on the user's selected name.
+            name = self._suffix_name(_fallback_name)
+        node = Node(func_exec, *args, name=name, dag=self, **kwargs)
         return self.add_node_obj(node)
 
     def _add_prewrapped_node(
-        self, func_exec, *args, name=None, store_results=True, **kwargs
+        self,
+        func_exec,
+        *args,
+        name=None,
+        _fallback_name: Optional[str] = None,
+        store_results=True,
+        **kwargs,
     ):
+        if name is None and _fallback_name is not None:
+            # If the node is unnamed, generate a name to give to it,
+            # without trampling on the user's selected name.
+            name = self._suffix_name(_fallback_name)
         node = Node(
             *args,
             _internal_prewrapped_func=func_exec,
@@ -581,25 +613,37 @@ class DAG:
         )
         return self.add_node_obj(node)
 
-    def submit_array_udf(self, *args, **kwargs):
+    def submit_array_udf(self, func, *args, **kwargs):
         """
         Submit a function that will be executed in the cloud serverlessly
-        :param func_exec: function to execute
+        :param func: function to execute
         :param args: arguments for function execution
         :param name: name
         :return: Node that is created
         """
-        return self._add_prewrapped_node(array.apply_base, *args, **kwargs)
+        return self._add_prewrapped_node(
+            array.apply_base,
+            func,
+            *args,
+            _fallback_name=utils.func_name(func),
+            **kwargs,
+        )
 
-    def submit_udf(self, *args, **kwargs):
+    def submit_udf(self, func, *args, **kwargs):
         """
         Submit a function that will be executed in the cloud serverlessly
-        :param func_exec: function to execute
+        :param func: function to execute
         :param args: arguments for function execution
         :param name: name
         :return: Node that is created
         """
-        return self._add_prewrapped_node(udf.exec_base, *args, **kwargs)
+        return self._add_prewrapped_node(
+            udf.exec_base,
+            func,
+            *args,
+            _fallback_name=utils.func_name(func),
+            **kwargs,
+        )
 
     submit = submit_udf
 
@@ -615,18 +659,20 @@ class DAG:
             sql.exec_base,
             *args,
             _internal_accepts_stored_params=False,
+            _fallback_name="SQL query",
             **kwargs,
         )
 
-    def submit_local(self, *args, **kwargs):
+    def submit_local(self, func, *args, **kwargs):
         """
         Submit a function that will run locally
-        :param func_exec: function to execute
+        :param func: function to execute
         :param args: arguments for function execution
         :param name: name
         :return: Node that is created
         """
-        return self._add_raw_node(*args, local_mode=True, **kwargs)
+        kwargs.setdefault("name", utils.func_name(func))
+        return self._add_raw_node(func, *args, local_mode=True, **kwargs)
 
     def report_node_complete(self, node: Node):
         """

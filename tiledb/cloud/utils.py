@@ -33,6 +33,18 @@ def split_uri(uri):
     return parsed.netloc, parsed.path[1:]
 
 
+def func_name(f: Funcable) -> str:
+    """Generates a "full name" to the given function for human reference."""
+    if isinstance(f, str):
+        return f"registered UDF {f!r}"
+    try:
+        if f.__module__:
+            return f"{f.__module__}.{f.__qualname__}"
+        return f.__qualname__
+    except AttributeError:
+        return str(f)
+
+
 def getsourcelines(func: Callable) -> Optional[str]:
     """Attempt to extract the source code of ``func``, but accept failure."""
     if isinstance(func, _builtin_function):
