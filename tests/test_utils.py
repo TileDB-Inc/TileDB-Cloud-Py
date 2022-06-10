@@ -42,6 +42,40 @@ class SourceLinesTest(unittest.TestCase):
         self.assertIsNone(utils.getsourcelines(dir))
 
 
+class FuncableTest(unittest.TestCase):
+    def test_good(self):
+        class ImCallable:
+            def __call__(self):
+                pass
+
+        items = (
+            "registered/udf",
+            len,
+            lambda: None,
+            self.test_good,
+            utils.check_funcable,
+            str.format,
+            "".format,
+            object,
+            FuncableTest,
+            ImCallable(),
+        )
+        for item in items:
+            with self.subTest(item):
+                utils.check_funcable(item=item)
+
+    def test_bad(self):
+        items = (
+            5,
+            object(),
+            os.path,
+        )
+        for item in items:
+            with self.subTest(item):
+                with self.assertRaises(TypeError):
+                    utils.check_funcable(item=item)
+
+
 class PickleTest(unittest.TestCase):
     def test_roundtrip(self):
         cases = (

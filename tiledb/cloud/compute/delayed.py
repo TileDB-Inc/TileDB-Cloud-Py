@@ -1,6 +1,7 @@
 import numbers
 from typing import Callable, Union
 
+from tiledb.cloud import utils
 from tiledb.cloud.array import ArrayList
 from tiledb.cloud.array import apply as array_apply
 from tiledb.cloud.array import exec_multi_array_udf
@@ -96,7 +97,7 @@ class DelayedBase(Node):
 
 class Delayed(DelayedBase):
     def __init__(self, func_exec, *args, local=False, **kwargs):
-        _check_funcable(func_exec=func_exec)
+        utils.check_funcable(func_exec=func_exec)
         self.func_exec = func_exec
 
         if not local:
@@ -150,10 +151,9 @@ class DelayedSQL(DelayedBase):
 
 class DelayedArrayUDF(DelayedBase):
     def __init__(self, uri, func_exec, *args, **kwargs):
+        utils.check_funcable(func_exec=func_exec)
         self.func_exec = func_exec
         self.uri = uri
-
-        _check_funcable(func_exec=func_exec)
 
         super().__init__(array_apply, self.uri, self.func_exec, *args, **kwargs)
 
@@ -181,10 +181,9 @@ class DelayedMultiArrayUDF(DelayedBase):
         *args,
         **kwargs,
     ):
+        utils.check_funcable(func_exec=func)
         self.func_exec = func
         self.array_list = array_list
-
-        _check_funcable(func_exec=func)
 
         super().__init__(
             exec_multi_array_udf, self.func_exec, self.array_list, *args, **kwargs
@@ -204,17 +203,3 @@ class DelayedMultiArrayUDF(DelayedBase):
             self.kwargs["task_name"] = self.name
 
         return self
-
-
-def _check_funcable(**kwargs) -> None:
-    """Checks whether the given parameter can be treated as a function."""
-    name, func = kwargs.popitem()
-    assert not kwargs, "Too many args passed to _check_funcable"
-    if not func:
-        raise TypeError(f"must pass a callable or UDF to {name}")
-    if callable(func) or type(func) == str:
-        return
-    raise TypeError(
-        f"{name} argument must be a callable or the registered name of a UDF, "
-        f"not {type(func)}"
-    )

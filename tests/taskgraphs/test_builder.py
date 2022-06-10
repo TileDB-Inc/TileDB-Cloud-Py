@@ -296,7 +296,7 @@ class TestBuilder(unittest.TestCase):
                 {
                     "client_node_id": "0badc0de-dead-beef-cafe-000000000007",
                     "depends_on": ["0badc0de-dead-beef-cafe-000000000006"],
-                    "name": None,
+                    "name": "SQL query",
                     "sql_node": {
                         "init_commands": (),
                         "parameters": [
@@ -312,7 +312,7 @@ class TestBuilder(unittest.TestCase):
                 {
                     "client_node_id": "0badc0de-dead-beef-cafe-000000000002",
                     "depends_on": ["0badc0de-dead-beef-cafe-000000000001"],
-                    "name": None,
+                    "name": "operator.itemgetter('a')",
                     "udf_node": {
                         "arguments": [
                             {
@@ -333,7 +333,7 @@ class TestBuilder(unittest.TestCase):
                 {
                     "client_node_id": "0badc0de-dead-beef-cafe-000000000003",
                     "depends_on": ["0badc0de-dead-beef-cafe-000000000002"],
-                    "name": None,
+                    "name": "numpy.sum",
                     "udf_node": {
                         "arguments": [
                             {
@@ -355,7 +355,7 @@ class TestBuilder(unittest.TestCase):
                 {
                     "client_node_id": "0badc0de-dead-beef-cafe-000000000004",
                     "depends_on": ["0badc0de-dead-beef-cafe-000000000003"],
-                    "name": None,
+                    "name": "builtins.int",
                     "udf_node": {
                         "arguments": [
                             {
@@ -380,7 +380,7 @@ class TestBuilder(unittest.TestCase):
                         "0badc0de-dead-beef-cafe-000000000004",
                         "0badc0de-dead-beef-cafe-000000000007",
                     ],
-                    "name": None,
+                    "name": "str.format",
                     "udf_node": {
                         "arguments": [
                             {
@@ -464,3 +464,138 @@ class TestBuilder(unittest.TestCase):
             ],
         }
         self.assertEqual(expected, grf._tdb_to_json())
+
+    def test_name_collisions(self):
+        grf = builder.TaskGraphBuilder()
+        uuid_factory = testonly.sequential_uuids("aaaaaaaa-bbbb-cccc-dddd-000000000000")
+        with mock.patch.object(uuid, "uuid4", side_effect=uuid_factory):
+            # Ensure that, despite the fact that the `len` node with a fallback
+            # name of `builtins.len` is added first, the input node with name
+            # `builtins.len` overrides it for naming purposes.
+            len_node = grf.udf(len, types.args("it"))
+            in_node = grf.input("builtins.len")
+            grf.udf(len, types.args([len_node, in_node]))
+
+        expected = {
+            "name": None,
+            "nodes": [
+                {
+                    "client_node_id": "aaaaaaaa-bbbb-cccc-dddd-000000000000",
+                    "depends_on": [],
+                    "name": "builtins.len (00)",
+                    "udf_node": {
+                        "arguments": [{"value": "it"}],
+                        "environment": {
+                            "language": "python",
+                            "language_version": utils.PYTHON_VERSION,
+                        },
+                        "executable_code": "gASVFAAAAAAAAACMCGJ1aWx0aW5zlIwDbGVulJOULg==",
+                        "result_format": "python_pickle",
+                    },
+                },
+                {
+                    "client_node_id": "aaaaaaaa-bbbb-cccc-dddd-000000000001",
+                    "depends_on": [],
+                    "name": "builtins.len",
+                    "input_node": {},
+                },
+                {
+                    "client_node_id": "aaaaaaaa-bbbb-cccc-dddd-000000000002",
+                    "depends_on": [
+                        "aaaaaaaa-bbbb-cccc-dddd-000000000000",
+                        "aaaaaaaa-bbbb-cccc-dddd-000000000001",
+                    ],
+                    "name": "builtins.len (02)",
+                    "udf_node": {
+                        "arguments": [
+                            {
+                                "value": [
+                                    {
+                                        "__tdbudf__": "node_output",
+                                        "client_node_id": "aaaaaaaa-bbbb-cccc-dddd-000000000000",
+                                    },
+                                    {
+                                        "__tdbudf__": "node_output",
+                                        "client_node_id": "aaaaaaaa-bbbb-cccc-dddd-000000000001",
+                                    },
+                                ]
+                            }
+                        ],
+                        "environment": {
+                            "language": "python",
+                            "language_version": utils.PYTHON_VERSION,
+                        },
+                        "executable_code": "gASVFAAAAAAAAACMCGJ1aWx0aW5zlIwDbGVulJOULg==",
+                        "result_format": "python_pickle",
+                    },
+                },
+            ],
+        }
+        self.assertEqual(expected, grf._tdb_to_json())
+
+
+class GenerateNameTest(unittest.TestCase):
+    def test_regular(self):
+        grf = builder.TaskGraphBuilder()
+        fake_id = uuid.UUID("38b00ae6-eca7-e9a9-f022-eaa33ccb1c3c")
+        with mock.patch.object(uuid, "uuid4", return_value=fake_id):
+            len_node = grf.udf(len)
+        existing = {"builtins.len", "builtins.len (ab)", "builtins.len (3c)"}
+        self.assertEqual(len_node._registration_name(existing), "builtins.len (1c3c)")
+        self.assertEqual(
+            existing,
+            {
+                "builtins.len",
+                "builtins.len (ab)",
+                "builtins.len (3c)",
+                "builtins.len (1c3c)",
+            },
+        )
+        int_node = grf.udf(int)
+        self.assertEqual(int_node._registration_name(existing), "builtins.int")
+        self.assertEqual(
+            existing,
+            {
+                "builtins.len",
+                "builtins.len (ab)",
+                "builtins.len (3c)",
+                "builtins.len (1c3c)",
+                "builtins.int",
+            },
+        )
+
+    def test_adversarial(self):
+        grf = builder.TaskGraphBuilder()
+
+        node_id = uuid.UUID("3cd50ab3-a6b9-aed8-d2a0-46964788fae0")
+        with mock.patch.object(uuid, "uuid4", return_value=node_id):
+            node = grf.udf(id)
+
+        existing = {
+            "builtins.id",
+            "builtins.id (e0)",
+            "builtins.id (fae0)",
+            "builtins.id (88fae0)",
+            "builtins.id (4788fae0)",
+            "builtins.id (964788fae0)",
+            "builtins.id (46964788fae0)",
+        }
+        second_id = uuid.UUID("11805aa8-1c78-2699-daeb-f7339eb9b5e0")
+        with mock.patch.object(uuid, "uuid4", return_value=second_id):
+            self.assertEqual(
+                node._registration_name(existing),
+                "builtins.id (b5e0)",
+            )
+            self.assertEqual(
+                existing,
+                {
+                    "builtins.id",
+                    "builtins.id (e0)",
+                    "builtins.id (fae0)",
+                    "builtins.id (88fae0)",
+                    "builtins.id (4788fae0)",
+                    "builtins.id (964788fae0)",
+                    "builtins.id (46964788fae0)",
+                    "builtins.id (b5e0)",
+                },
+            )
