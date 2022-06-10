@@ -38,7 +38,7 @@ setup(
         "six>=1.10",
         "certifi",
         "python-dateutil",
-        "cloudpickle==1.4.1",
+        "cloudpickle>=2.0",
         # as of 2021-07-06, the runtime (pinned to 1.1) is incompatible with 1.3
         "pandas<1.3; python_version < '3.10'",
         "pandas>=1.3; python_version >= '3.10'",
