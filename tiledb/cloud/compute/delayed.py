@@ -19,6 +19,13 @@ class DelayedBase(Node):
             func, *args, name=name, dag=dag, local_mode=local_mode, **kwargs
         )
 
+    def __call__(self, *args, **kwargs):
+        self.args += args
+        self.kwargs.update(kwargs)
+        self._find_deps()
+
+        return self
+
     def set_timeout(self, timeout):
         if timeout is not None and not isinstance(timeout, numbers.Number):
             raise TypeError(
@@ -113,45 +120,12 @@ class Delayed(DelayedBase):
                 "and not the registered name of a UDF."
             )
 
-    def __call__(self, *args, **kwargs):
-        if not self.local_mode:
-            self.args = [self.func_exec, *args]
-        else:
-            self.args = args
-        self.kwargs.update(kwargs)
-        self._find_deps()
-
-        return self
-
 
 class DelayedSQL(DelayedBase):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "SQL query" + _random_suffix())
 
         super().__init__(sql_exec, *args, **kwargs)
-
-        # Set name of task if it won't interfere with user args
-        if "task_name" not in self.kwargs:
-            self.kwargs["task_name"] = self.name
-
-    def __call__(self, *args, **kwargs):
-        self.args = args
-        self.kwargs.update(kwargs)
-        # Loop through non-default parameters and find any Node objects
-        # Node objects will be used to automatically add dependencies
-        if self.args is not None:
-            super()._build_dependencies_list(self.args)
-
-        # Loop through defaulted named parameters and find any Node objects
-        # Node objects will be used to automatically add dependencies
-        if self.kwargs is not None:
-            super()._build_dependencies_list(self.kwargs)
-
-        # Set name of task if it won't interfere with user args
-        if "task_name" not in self.kwargs:
-            self.kwargs["task_name"] = self.name
-
-        return self
 
 
 class DelayedArrayUDF(DelayedBase):
@@ -162,21 +136,6 @@ class DelayedArrayUDF(DelayedBase):
         kwargs.setdefault("name", utils.func_name(func_exec) + _random_suffix())
 
         super().__init__(array_apply, self.uri, self.func_exec, *args, **kwargs)
-
-        # Set name of task if it won't interfere with user args
-        if "task_name" not in self.kwargs:
-            self.kwargs["task_name"] = self.name
-
-    def __call__(self, *args, **kwargs):
-        self.args = [self.uri, self.func_exec, *args]
-        self.kwargs.update(kwargs)
-        self._find_deps()
-
-        # Set name of task if it won't interfere with user args
-        if "task_name" not in self.kwargs:
-            self.kwargs["task_name"] = self.name
-
-        return self
 
 
 class DelayedMultiArrayUDF(DelayedBase):
@@ -195,21 +154,6 @@ class DelayedMultiArrayUDF(DelayedBase):
         super().__init__(
             exec_multi_array_udf, self.func_exec, self.array_list, *args, **kwargs
         )
-
-        # Set name of task if it won't interfere with user args
-        if "task_name" not in self.kwargs:
-            self.kwargs["task_name"] = self.name
-
-    def __call__(self, *args, **kwargs):
-        self.args = [self.func_exec, self.array_list, *args]
-        self.kwargs.update(kwargs)
-        self._find_deps()
-
-        # Set name of task if it won't interfere with user args
-        if "task_name" not in self.kwargs:
-            self.kwargs["task_name"] = self.name
-
-        return self
 
 
 def _random_suffix() -> str:
