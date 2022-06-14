@@ -227,9 +227,9 @@ class LocalExecutor(executor.Executor["Node"]):
                         self._status = Status.FAILED
                     else:
                         self._status = Status.SUCCEEDED
+            self._report_server_completion()
             self._done_event.set()
             self._pool.shutdown()
-            self._report_server_completion()
 
     def _handle_node_done(self, node: "Node") -> None:
         assert threading.current_thread() is self._event_loop_thread
@@ -275,18 +275,57 @@ class LocalExecutor(executor.Executor["Node"]):
             return
         try:
             api_st = _API_STATUSES[self.status]
-        except KeyError as ke:
-            raise ValueError(
-                f"Task graph ended in invalid state {self.status!r}"
-            ) from ke
-        try:
-            client.client.task_graph_logs_api.update_task_graph_log(
-                id=str(self.server_graph_uuid),
-                namespace=self._namespace,
-                log=rest_api.TaskGraphLog(status=api_st),
+        except KeyError:
+            warnings.warn(
+                UserWarning(f"Task graph ended in invalid state {self.status!r}")
             )
-        except rest_api.ApiException as apix:
-            warnings.warn(UserWarning(f"Error reporting graph completion: {apix}"))
+
+        # Kick off a non-daemonic thread to report completion so that we don't
+        # block on the server call when reporting doneness to the caller,
+        # but also we don't let the process terminate while we're still
+        # reporting.
+        #
+        # ┄: blocked, ═: running, •: synchronization point, ×: termination
+        # [d] = daemon thread
+        #
+        # main:  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╒══════×
+        # worker[d]:     ══════•══×              │      ┊
+        # event loop[d]: ┄┄┄┄┄┄╘═══════•═╕┄┄┄┄╒══•══×   main terminates
+        # reporter:            ┊       ┊ ┊   ═•══╪═══════════×
+        #         last node done       ┊ ┊    ┊  ┊           ┊
+        #                 start reporter ┊    ┊  ┊           reporter terminates
+        #            reporter_running.wait    ┊  ┊
+        #                  reporter_running.set  ┊
+        #                         self._done_event
+        #
+        # Without this non-daemon reporter, the Python interpreter could stop
+        # as soon as main terminates, meaning that the reporter might not
+        # get the chance to report graph completion to the server.
+        # With the non-daemon reporter, the interpreter remains running until
+        # the reporting thread completes.
+        #
+        # The reporter_running event is needed because otherwise it's possible
+        # for self._done_event to be set and main to terminate before the
+        # reporter thread even has time to get started.
+        reporter_running = threading.Event()
+
+        def report_completion():
+            reporter_running.set()
+            try:
+                client.client.task_graph_logs_api.update_task_graph_log(
+                    id=str(self.server_graph_uuid),
+                    namespace=self._namespace,
+                    log=rest_api.TaskGraphLog(status=api_st),
+                )
+            except rest_api.ApiException as apix:
+                warnings.warn(UserWarning(f"Error reporting graph completion: {apix}"))
+
+        threading.Thread(
+            target=report_completion,
+            name=f"{self!r} reporter",
+            daemon=False,
+        ).start()
+        reporter_running.wait()
 
 
 _API_STATUSES = {
