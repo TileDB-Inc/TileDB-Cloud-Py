@@ -169,7 +169,7 @@ class DAGClassTest(unittest.TestCase):
 
         # The status is set asynchronously so there may be a slight delay
         # between when we send a request and when it's actually recorded.
-        time.sleep(0.5)
+        time.sleep(2)
         actual_log = dag_dag.server_logs(d)
         self.assertEqual("a cool server dag", actual_log.name)
         self.assertEqual(3, len(actual_log.nodes))
@@ -366,7 +366,7 @@ class DAGClassTest(unittest.TestCase):
 
     def test_two_dags(self):
         local_timeouts = [
-            (True, 5),
+            (True, 10),
             (False, 30),
         ]
         for local, timeout in local_timeouts:

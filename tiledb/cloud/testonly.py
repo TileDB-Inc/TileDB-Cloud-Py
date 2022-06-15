@@ -6,6 +6,7 @@ IT WILL NOT BE INCLUDED when installing TileDB Cloud.
 import contextlib
 import random
 import string
+import time
 import uuid
 from typing import Callable, Iterator
 
@@ -28,6 +29,7 @@ def register_udf(func: Callable) -> Iterator[str]:
     suffix = "".join(random.choices(string.ascii_letters, k=10))
     func_name = f"zzz_unittest_{func.__name__}_{suffix}"
     udf.register_udf(func, func_name, namespace=ns)
+    time.sleep(1)  # Sometimes permissions take a bit to propagate.
     try:
         yield f"{ns}/{func_name}"
     finally:
