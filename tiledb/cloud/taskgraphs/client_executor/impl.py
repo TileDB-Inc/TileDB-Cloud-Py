@@ -72,6 +72,8 @@ class LocalExecutor(_base.IClientExecutor):
 
         This acts as the event loop for ``_exec_loop.``
         """
+        for n in self._deps:
+            n.add_done_callback(self._done_node_queue.put)
         self._inputs: Dict[uuid.UUID, Any] = {}
         self._client = api_client or client.client
 
@@ -80,6 +82,7 @@ class LocalExecutor(_base.IClientExecutor):
 
         This includes both currently-running and to-be-executed Nodes.
         """
+        self._unstarted_nodes = ordered.Set(self._deps)
         self._running_nodes = ordered.Set[Node]()
         self._failed_nodes = ordered.Set[Node]()
         self._succeeded_nodes = ordered.Set[Node]()
@@ -89,17 +92,17 @@ class LocalExecutor(_base.IClientExecutor):
         self._server_graph_uuid = None
 
         if self.name:
-            prefix = f"task-graph-{self.name}"
+            self._prefix = f"task-graph-{self.name}"
         else:
-            prefix = repr(self)
+            self._prefix = repr(self)
         self._event_loop_thread = threading.Thread(
-            name=prefix + "-executor",
+            name=self._prefix + "-executor",
             target=self._run,
             daemon=True,
         )
         self._pool = futures.ThreadPoolExecutor(
             max_workers=parallel_server_tasks,
-            thread_name_prefix=prefix + "-worker",
+            thread_name_prefix=self._prefix + "-worker",
         )
         self._done_event = threading.Event()
         self._exception: Optional[BaseException] = None
@@ -208,9 +211,6 @@ class LocalExecutor(_base.IClientExecutor):
             # This should never happen, but to be safe we record our own
             # cancellation.
             self._exception = ex
-            for node in self._by_id.values():
-                if node.cancel():
-                    self._failed_nodes[node.id] = node
         finally:
             with self._lifecycle_lock:
                 if self._status is not Status.CANCELLED:
@@ -224,9 +224,13 @@ class LocalExecutor(_base.IClientExecutor):
 
     def _handle_node_done(self, node: "Node") -> None:
         assert threading.current_thread() is self._event_loop_thread
+        # The node may not be running, e.g. if it was cancelled.
+        # That's fine.
         self._running_nodes.discard(node)
-        self._active_deps.remove(node)
         if node.status is Status.SUCCEEDED:
+            # Only remove successful nodes from the "active deps" list
+            # to support retrying failed/cancelled nodes.
+            self._active_deps.remove(node)
             self._succeeded_nodes.add(node)
         else:
             self._exception = self._exception or node._exception
@@ -234,25 +238,23 @@ class LocalExecutor(_base.IClientExecutor):
 
     def _start_ready_nodes(self):
         """Starts all nodes that are ready to run."""
-        for node in self._active_deps.roots():
-            if node in self._running_nodes:
-                continue
-            node._set_ready()
-            self._running_nodes.add(node)
-            node.add_done_callback(self._done_node_queue.put)
-            self._pool.submit(self._exec_one_node, node)
-
-    def _exec_one_node(self, node: "Node") -> None:
-        """Handles the execution of exactly one Node."""
-        if self.status == Status.CANCELLED:
-            node.cancel()
+        if self.status is Status.CANCELLED:
             return
+        # Using an explicit annotation here because, while collections.abc–based
+        # sets accept any iterable in __and__, that can't be reflected in
+        # typeshed because the `set` builtin does not do so.
+        eligible: ordered.Set[Node] = self._unstarted_nodes & self._active_deps.roots()
+        for node in eligible:
+            self._start_one_node(node)
+
+    def _start_one_node(self, node: Node) -> None:
+        """Handles the execution of exactly one Node."""
         parents = {n.id: n for n in self._deps.parents_of(node)}
         if not all(p.status is Status.SUCCEEDED for p in parents.values()):
-            node.cancel()
             return
-        else:
-            node._exec(parents, self._inputs.get(node.id, _base.NOTHING))
+        self._unstarted_nodes.discard(node)
+        self._running_nodes.add(node)
+        self._pool.submit(node._exec, parents, self._inputs.get(node.id, _base.NOTHING))
 
     def _build_log_structure(self) -> rest_api.TaskGraphLog:
         return rest_api.TaskGraphLog(
@@ -313,7 +315,7 @@ class LocalExecutor(_base.IClientExecutor):
 
         threading.Thread(
             target=report_completion,
-            name=f"{self!r} reporter",
+            name=self._prefix + "-reporter",
             daemon=False,
         ).start()
         reporter_running.wait()
