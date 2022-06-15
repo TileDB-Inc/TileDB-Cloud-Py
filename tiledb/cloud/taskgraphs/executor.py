@@ -153,6 +153,7 @@ _ET = TypeVar("_ET", bound=Executor)
 """The type of the executor of a node."""
 _T = TypeVar("_T")
 """The type of the value that a Node yields."""
+_Self = TypeVar("_Self", bound="Node")
 
 
 class Node(Generic[_ET, _T]):
@@ -181,7 +182,7 @@ class Node(Generic[_ET, _T]):
     # TODO: Retry functionality. When we do add retry functionality, assumptions
     # around a node "finishing" exactly once will be broken.
 
-    def __init__(self, uid: uuid.UUID, owner: _ET, name: Optional[str]):
+    def __init__(self: _Self, uid: uuid.UUID, owner: _ET, name: Optional[str]):
         self.id = uid
         """The client-generated UUID of this node."""
         self.owner = owner
@@ -191,7 +192,7 @@ class Node(Generic[_ET, _T]):
 
         self._lifecycle_lock = threading.Lock()
         """A lock to protect lifecycle events and callback list management."""
-        self._callbacks: List[Callable[[Node[_ET, _T]], None]] = []
+        self._callbacks: List[Callable[[_Self], None]] = []
         """Callbacks that will be called when the Node completes."""
 
     # Node-specific APIs.
@@ -269,7 +270,7 @@ class Node(Generic[_ET, _T]):
         with self._lifecycle_lock:
             return self._done()
 
-    def add_done_callback(self, fn: Callable[["Node[_ET, _T]"], None]) -> None:
+    def add_done_callback(self: _Self, fn: Callable[[_Self], None]) -> None:
         """Adds a callback that will be called when this Node completes.
 
         While the current behavior is similar to the way ``add_done_callback``
@@ -306,7 +307,7 @@ class Node(Generic[_ET, _T]):
             Status.FAILED,
         )
 
-    def _do_callbacks(self) -> None:
+    def _do_callbacks(self: _Self) -> None:
         """Actually performs the callbacks when a Node completes.
 
         This should be called by the Node implementation exactly once,
