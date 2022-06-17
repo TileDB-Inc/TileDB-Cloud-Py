@@ -1,7 +1,6 @@
 import datetime
 import operator
 import unittest
-from concurrent import futures
 
 import numpy
 import pyarrow
@@ -13,6 +12,13 @@ from tiledb.cloud.taskgraphs import types
 
 
 class ClientExecutorTestUDFs(unittest.TestCase):
+    def test_empty(self):
+        grf = builder.TaskGraphBuilder("empty")
+        exec = client_executor.LocalExecutor(grf, name="empty")
+        exec.execute()
+        exec.wait(1)
+        self.assertIs(executor.Status.SUCCEEDED, exec.status)
+
     def test_one(self):
         grf = builder.TaskGraphBuilder("test_one")
         len_node = grf.udf(len, types.args("some string"), result_format="json")
@@ -64,12 +70,15 @@ class ClientExecutorTestUDFs(unittest.TestCase):
         exec.execute()
         self.assertEqual(0, exec.node(to_succeed).result(15))
         self.assertIsNotNone(exec.node(to_fail).exception(15))
-        with self.assertRaises(futures.CancelledError):
-            exec.node(failchild).result(1)
-        with self.assertRaises(futures.CancelledError):
-            exec.node(joined).result(10)
-        self.assertIs(executor.Status.CANCELLED, exec.node(joined).status)
-        self.assertEqual("the value is really 0.0", exec.node(succeedchild).result(0))
+        # # We're temporarily not testing cancellation because we no longer
+        # # propagate failures as cancellations.
+        # with self.assertRaises(futures.CancelledError):
+        #     exec.node(failchild).result(1)
+        # with self.assertRaises(futures.CancelledError):
+        #     exec.node(joined).result(10)
+        # self.assertIs(executor.Status.CANCELLED, exec.node(joined).status)
+        _ = joined  # Silence warning over not using `joined`.
+        self.assertEqual("the value is really 0.0", exec.node(succeedchild).result(10))
         exec.wait(1)
         self.assertIs(executor.Status.FAILED, exec.status)
 
@@ -174,7 +183,7 @@ class ClientExecutorTestSQLs(unittest.TestCase):
                 """create temporary table tbl
                     (intcol int4, floatcol double, uintcol int8 unsigned, strcol text)
                 """,
-                'insert into tbl values (1000000, 400, 77, "one"), (-999, 501, 199, null)',
+                'insert into tbl values (1000000, 400, 77, "one"), (-999, 501, 199, null)',  # noqa: E501
             ],
             parameters=[0],
             result_format="json",

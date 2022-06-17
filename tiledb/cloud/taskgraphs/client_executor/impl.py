@@ -8,7 +8,7 @@ import threading
 import uuid
 import warnings
 from concurrent import futures
-from typing import Any, Dict, Optional, Type, TypeVar
+from typing import Any, Callable, Dict, Optional, Type, TypeVar
 
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
@@ -67,29 +67,18 @@ class LocalExecutor(_base.IClientExecutor):
         super().__init__(graph)
         self.name = name
         self._namespace = namespace or client.default_charged_namespace()
-        self._done_node_queue: queue.Queue[Node] = queue.Queue()
-        """Queue where completed nodes are added as they are done.
+        self._event_queue: queue.Queue[Callable[[], None]] = queue.Queue()
+        """Event queue used by the main loop.
 
-        This acts as the event loop for ``_exec_loop.``
+        All events dispatched in the queue will be executed with
+        ``_done_condition`` held.
         """
         for n in self._deps:
-            n.add_done_callback(self._done_node_queue.put)
+            n.add_done_callback(
+                lambda s: self._event_queue.put(lambda: self._handle_node_done(s))
+            )
         self._inputs: Dict[uuid.UUID, Any] = {}
         self._client = api_client or client.client
-
-        self._active_deps = self._deps.copy()
-        """The dependency graph of not-yet-complete nodes.
-
-        This includes both currently-running and to-be-executed Nodes.
-        """
-        self._unstarted_nodes = ordered.Set(self._deps)
-        self._running_nodes = ordered.Set[Node]()
-        self._failed_nodes = ordered.Set[Node]()
-        self._succeeded_nodes = ordered.Set[Node]()
-
-        self._lifecycle_lock = threading.Lock()
-        self._status: Status = Status.WAITING
-        self._server_graph_uuid = None
 
         if self.name:
             self._prefix = f"task-graph-{self.name}"
@@ -104,12 +93,39 @@ class LocalExecutor(_base.IClientExecutor):
             max_workers=parallel_server_tasks,
             thread_name_prefix=self._prefix + "-worker",
         )
-        self._done_event = threading.Event()
-        self._exception: Optional[BaseException] = None
+
+        self._done_condition = threading.Condition(threading.Lock())
+        """Guards lifecycle events and is notified when the graph is done.
+
+        The guarded state includes everything below here. All the state is owned
+        by the event loop thread, but the lock must be held when modifying it
+        in an externally-visible manner.
+        """
+        self._status: Status = Status.WAITING
+        self._server_graph_uuid = None
+
+        self._active_deps = self._deps.copy()
+        """The dependency graph of not-yet-complete nodes.
+
+        This includes both currently-running and to-be-executed Nodes.
+        """
+        self._unstarted_nodes = ordered.Set(self._deps)
+        self._running_nodes = ordered.Set[Node]()
+        self._failed_nodes = ordered.Set[Node]()
+        self._succeeded_nodes = ordered.Set[Node]()
+
+        self._exception: Optional[Exception] = None
+        """The first exception that was raised by a failed Node."""
+        self._internal_exception: Optional[Exception] = None
+        """An exception raised in the event loop causing it to permafail.
+
+        This should never happen; it indicates an internal logic error, but we
+        keep it around to ensure that users don't block forever on failed tasks.
+        """
 
     @property
     def status(self) -> Status:
-        with self._lifecycle_lock:
+        with self._done_condition:
             return self._status
 
     def execute(self, **inputs: Any) -> None:
@@ -137,7 +153,7 @@ class LocalExecutor(_base.IClientExecutor):
                 f"argument(s): {list(missing_names)}"
             )
 
-        with self._lifecycle_lock:
+        with self._done_condition:
             if self._status is not Status.WAITING:
                 raise InvalidStateError(f"Cannot execute a graph in {self._status}")
 
@@ -155,7 +171,7 @@ class LocalExecutor(_base.IClientExecutor):
             warnings.warn(UserWarning(f"Could not submit logging metadata: {apix}"))
         else:
             try:
-                with self._lifecycle_lock:
+                with self._done_condition:
                     self._server_graph_uuid = uuid.UUID(hex=result.uuid)
             except ValueError as ve:
                 warnings.warn(
@@ -165,18 +181,27 @@ class LocalExecutor(_base.IClientExecutor):
         self._event_loop_thread.start()
 
     def cancel(self) -> bool:
-        with self._lifecycle_lock:
+        with self._done_condition:
             if self._status in (Status.SUCCEEDED, Status.FAILED):
                 return False
             self._status = Status.CANCELLED
         return True
 
     def wait(self, timeout: Optional[float] = None) -> None:
-        _base.wait_for(self._done_event, timeout)
+        with self._done_condition:
+
+            def is_done():
+                return self._status in (
+                    Status.CANCELLED,
+                    Status.FAILED,
+                    Status.SUCCEEDED,
+                )
+
+            self._done_condition.wait_for(is_done, timeout)
 
     @property
     def server_graph_uuid(self):
-        with self._lifecycle_lock:
+        with self._done_condition:
             return self._server_graph_uuid
 
     def _make_node(
@@ -200,27 +225,34 @@ class LocalExecutor(_base.IClientExecutor):
 
     def _run(self):
         """The main event loop of this Executor."""
-        try:
+        with self._done_condition:
             self._start_ready_nodes()
-            while self._running_nodes:
-                node = self._done_node_queue.get()
-                self._handle_node_done(node)
-                self._start_ready_nodes()
+        just_reported_completion = False
+        try:
+            while self._active_deps:
+                # The main loop continues to run until all nodes are finalized
+                # (i.e., there are no failures or cancellations left).
+                just_reported_completion = False
+                event = self._event_queue.get()
+                with self._done_condition:
+                    event()
+                    if not self._running_nodes:
+                        just_reported_completion = True
+                        self._report_completion()
         except Exception as ex:
             # This means an exception has occurred on the event loop.
             # This should never happen, but to be safe we record our own
-            # cancellation.
-            self._exception = ex
+            # cancellation and permafail.
+            with self._done_condition:
+                self._exception = self._exception or ex
+                self._internal_exception = ex
+            just_reported_completion = False
         finally:
-            with self._lifecycle_lock:
-                if self._status is not Status.CANCELLED:
-                    if self._failed_nodes:
-                        self._status = Status.FAILED
-                    else:
-                        self._status = Status.SUCCEEDED
-            self._report_server_completion()
-            self._done_event.set()
-            self._pool.shutdown()
+            if not just_reported_completion:
+                with self._done_condition:
+                    self._report_completion()
+
+        self._pool.shutdown()
 
     def _handle_node_done(self, node: "Node") -> None:
         assert threading.current_thread() is self._event_loop_thread
@@ -235,26 +267,26 @@ class LocalExecutor(_base.IClientExecutor):
         else:
             self._exception = self._exception or node._exception
             self._failed_nodes.add(node)
+            # TODO: Go through children and set them to PARENT FAILED.
+        self._start_ready_nodes()
 
-    def _start_ready_nodes(self):
+    def _start_ready_nodes(self) -> None:
         """Starts all nodes that are ready to run."""
-        if self.status is Status.CANCELLED:
+        if self._status is Status.CANCELLED:
             return
         # Using an explicit annotation here because, while collections.abc–based
         # sets accept any iterable in __and__, that can't be reflected in
         # typeshed because the `set` builtin does not do so.
-        eligible: ordered.Set[Node] = self._unstarted_nodes & self._active_deps.roots()
+        eligible: ordered.Set[Node] = self._unstarted_nodes & self._active_deps.roots()  # type: ignore[assignment,operator] # noqa: E501
         for node in eligible:
-            self._start_one_node(node)
-
-    def _start_one_node(self, node: Node) -> None:
-        """Handles the execution of exactly one Node."""
-        parents = {n.id: n for n in self._deps.parents_of(node)}
-        if not all(p.status is Status.SUCCEEDED for p in parents.values()):
-            return
-        self._unstarted_nodes.discard(node)
-        self._running_nodes.add(node)
-        self._pool.submit(node._exec, parents, self._inputs.get(node.id, _base.NOTHING))
+            parents = {n.id: n for n in self._deps.parents_of(node)}
+            if not all(p.status is Status.SUCCEEDED for p in parents.values()):
+                return
+            self._unstarted_nodes.discard(node)
+            self._running_nodes.add(node)
+            self._pool.submit(
+                node._exec, parents, self._inputs.get(node.id, _base.NOTHING)
+            )
 
     def _build_log_structure(self) -> rest_api.TaskGraphLog:
         return rest_api.TaskGraphLog(
@@ -263,15 +295,23 @@ class LocalExecutor(_base.IClientExecutor):
             nodes=[n._to_log_metadata(self._deps.parents_of(n)) for n in self._deps],
         )
 
+    def _report_completion(self) -> None:
+        if self._status is not Status.CANCELLED:
+            if self._failed_nodes:
+                self._status = Status.FAILED
+            else:
+                self._status = Status.SUCCEEDED
+        self._report_server_completion()
+        self._done_condition.notify_all()
+
     def _report_server_completion(self) -> None:
-        if not self.server_graph_uuid:
+        if not self._server_graph_uuid:
             return
+        st = self._status
         try:
-            api_st = _API_STATUSES[self.status]
+            api_st = _API_STATUSES[st]
         except KeyError:
-            warnings.warn(
-                UserWarning(f"Task graph ended in invalid state {self.status!r}")
-            )
+            warnings.warn(UserWarning(f"Task graph ended in invalid state {st!r}"))
 
         # Kick off a non-daemonic thread to report completion so that we don't
         # block on the server call when reporting doneness to the caller,
@@ -306,7 +346,7 @@ class LocalExecutor(_base.IClientExecutor):
             reporter_running.set()
             try:
                 client.client.task_graph_logs_api.update_task_graph_log(
-                    id=str(self.server_graph_uuid),
+                    id=str(self._server_graph_uuid),
                     namespace=self._namespace,
                     log=rest_api.TaskGraphLog(status=api_st),
                 )
