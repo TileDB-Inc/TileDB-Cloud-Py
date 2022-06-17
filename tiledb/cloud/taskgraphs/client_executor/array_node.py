@@ -50,6 +50,9 @@ class ArrayNode(_base.Node[_base.ET, _T]):
             buffers=buffers,
         )
 
+    def task_id(self, timeout: Optional[float] = None) -> Optional[uuid.UUID]:
+        return None
+
     def _result_impl(self):
         raise TypeError("ArrayNode is a virtual node and does not have results.")
 

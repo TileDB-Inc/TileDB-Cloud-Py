@@ -43,6 +43,9 @@ class InputNode(_base.Node[_base.ET, _T]):
         if self._value_encoded is _base.NOTHING:
             raise KeyError(f"Input {self.name!r} must be provided")
 
+    def task_id(self, timeout: Optional[float] = None) -> Optional[uuid.UUID]:
+        return None
+
     def _result_impl(self):
         return self._value
 

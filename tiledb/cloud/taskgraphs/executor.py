@@ -156,7 +156,7 @@ _T = TypeVar("_T")
 _Self = TypeVar("_Self", bound="Node")
 
 
-class Node(Generic[_ET, _T]):
+class Node(Generic[_ET, _T], metaclass=abc.ABCMeta):
     """An abstract type specifying the operations on a Node of a task graph.
 
     Executor implementations will return instances of implementations of these
@@ -288,6 +288,16 @@ class Node(Generic[_ET, _T]):
             fn(self)
         except Exception:
             _log.exception("%r callback %r failed", self, fn)
+
+    @abc.abstractmethod
+    def task_id(self, timeout: Optional[float] = None) -> Optional[uuid.UUID]:
+        """The task ID that was returned from the server, if applicable.
+
+        If this was executed on the server side, this should return the UUID of
+        the actual execution of this task. If it was purely client-side, or the
+        server did not return a UUID, this should return None.
+        """
+        raise NotImplementedError()
 
     # Internals to handle Future methods.
 

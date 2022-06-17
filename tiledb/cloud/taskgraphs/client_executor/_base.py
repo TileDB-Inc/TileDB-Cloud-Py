@@ -177,15 +177,6 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
         """The location where this node will be executed."""
         return rest_api.TaskGraphLogRunLocation.SERVER
 
-    def task_id(self, timeout: Optional[float] = None) -> Optional[uuid.UUID]:
-        """The task ID that was returned from the server, if applicable.
-
-        If this was executed on the server side, this should return the UUID of
-        the actual execution of this task. If it was purely client-side, or the
-        server did not return a UUID, this should return None.
-        """
-        return None
-
 
 def wait_for(evt: threading.Event, timeout: Optional[float]) -> None:
     if not evt.wait(timeout):
