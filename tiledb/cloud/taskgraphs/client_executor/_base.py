@@ -57,7 +57,14 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
         super().__init__(*args)
         self._event = threading.Event()
         self._status: Status = Status.WAITING
-        self._exception: Optional[Exception] = None
+        self._result_exception: Optional[Exception] = None
+        """An exception that was raised when executing the Node."""
+        self._lifecycle_exception: Optional[futures.CancelledError] = None
+        """An exception that was set on the node by a lifecycle event.
+
+        This is distinct from ``_result_exception`` because it will be RAISED
+        by methods like `.exception()` rather than returned.
+        """
 
     # External API
 
@@ -65,15 +72,16 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
         self.wait(timeout)
         # Because it's guaranteed that `exception` will *never be written to*
         # after the `_event` is set, we don't need to hold a lock here.
-        if self._exception:
-            raise self._exception
+        exc = self._lifecycle_exception or self._result_exception
+        if exc:
+            raise exc
         return self._result_impl()
 
     def exception(self, timeout: Optional[float] = None) -> Optional[Exception]:
         self.wait(timeout)
-        if self._status is Status.CANCELLED:
-            raise futures.CancelledError()
-        return self._exception
+        if self._lifecycle_exception:
+            raise self._lifecycle_exception
+        return self._result_exception
 
     def cancel(self) -> bool:
         cancelled = self._set_status_if_can_start(Status.CANCELLED)
@@ -81,7 +89,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
             # If we were successful at cancelling this Node, we effectively
             # "own" the result fields on this thread. We can set them safely
             # ourselves before firing the Event.
-            self._exception = futures.CancelledError()
+            self._lifecycle_exception = futures.CancelledError()
             self._event.set()
             self._do_callbacks()
         return cancelled
@@ -109,7 +117,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
         except Exception as ex:
             with self._lifecycle_lock:
                 self._status = Status.FAILED
-                self._exception = ex
+                self._result_exception = ex
             raise
         else:
             with self._lifecycle_lock:
@@ -151,6 +159,32 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
                 self._status = status
                 return True
             return False
+
+    def _set_parent_failed(self, pfe: executor.ParentFailedError) -> None:
+        failed = self._set_status_if_can_start(Status.PARENT_FAILED)
+        if failed:
+            self._lifecycle_exception = pfe
+            self._event.set()
+            self._do_callbacks()
+
+    def _parent_failed_error(self) -> executor.ParentFailedError:
+        """Returns the PFE that should be associated with this Node.
+
+        If this node is the one that failed (or was cancelled), then returns
+        a PFE corresponding to this node. If this node has a parent-failed
+        status, returns the PFE that caused it.
+        """
+        st = self.status
+        if st is Status.FAILED:
+            assert self._result_exception
+            return executor.ParentFailedError(self._result_exception, self)
+        if st is Status.CANCELLED:
+            assert self._lifecycle_exception
+            return executor.ParentFailedError(self._lifecycle_exception, self)
+        if st is Status.PARENT_FAILED:
+            assert isinstance(self._lifecycle_exception, executor.ParentFailedError)
+            return self._lifecycle_exception
+        raise AssertionError(f"Accessing _parent_failed_error with status {st}")
 
     @abc.abstractmethod
     def _encode_for_param(self, mode: ParamFormat) -> Any:

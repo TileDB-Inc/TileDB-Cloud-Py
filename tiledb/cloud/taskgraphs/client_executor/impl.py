@@ -247,12 +247,12 @@ class LocalExecutor(_base.IClientExecutor):
                 self._exception = self._exception or ex
                 self._internal_exception = ex
             just_reported_completion = False
+            raise
         finally:
             if not just_reported_completion:
                 with self._done_condition:
                     self._report_completion()
-
-        self._pool.shutdown()
+            self._pool.shutdown()
 
     def _handle_node_done(self, node: "Node") -> None:
         assert threading.current_thread() is self._event_loop_thread
@@ -265,9 +265,17 @@ class LocalExecutor(_base.IClientExecutor):
             self._active_deps.remove(node)
             self._succeeded_nodes.add(node)
         else:
-            self._exception = self._exception or node._exception
             self._failed_nodes.add(node)
-            # TODO: Go through children and set them to PARENT FAILED.
+            try:
+                nex = node.exception()
+            except Exception as exc_exc:
+                nex = exc_exc
+            self._exception = self._exception or nex
+            self._failed_nodes.add(node)
+            pfe = node._parent_failed_error()
+
+            for child in self._deps.children_of(node):
+                child._set_parent_failed(pfe)
         self._start_ready_nodes()
 
     def _start_ready_nodes(self) -> None:

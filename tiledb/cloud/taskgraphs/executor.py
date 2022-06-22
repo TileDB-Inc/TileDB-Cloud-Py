@@ -1,6 +1,7 @@
 """Generic interfaces for task graph executors."""
 
 import abc
+from concurrent import futures
 import enum
 import logging
 import threading
@@ -28,12 +29,27 @@ class Status(enum.Enum):
     """The Node failed to complete."""
     CANCELLED = enum.auto()
     """The Node was cancelled before it could complete."""
+    PARENT_FAILED = enum.auto()
+    """One of the Node's parents failed, so the Node could not run.
+
+    For the purposes of the Future-like API of a Node, this is treated as
+    cancellation.
+    """
 
 
 GraphStructure = Union[Dict[str, Any], builder.TaskGraphBuilder]
 """The structure of a task graph, as the JSON serialization or a Builder."""
 _N = TypeVar("_N", bound="Node")
 """The specific type of Node that an executor uses."""
+
+
+class ParentFailedError(futures.CancelledError, Generic[_N]):
+    """Raised when the parent of a Node fails."""
+
+    def __init__(self, cause: Exception, node: _N):
+        super().__init__(f"{cause} on node {node}")
+        self.cause = cause
+        self.node = node
 
 
 class Executor(Generic[_N], metaclass=abc.ABCMeta):
@@ -315,6 +331,7 @@ class Node(Generic[_ET, _T], metaclass=abc.ABCMeta):
             Status.CANCELLED,
             Status.SUCCEEDED,
             Status.FAILED,
+            Status.PARENT_FAILED,
         )
 
     def _do_callbacks(self: _Self) -> None:
