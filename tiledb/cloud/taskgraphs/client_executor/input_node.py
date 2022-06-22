@@ -1,0 +1,55 @@
+import uuid
+from typing import Any, Dict, Optional, TypeVar
+
+from tiledb.cloud import rest_api
+from tiledb.cloud.taskgraphs import _codec
+from tiledb.cloud.taskgraphs.client_executor import _base
+
+_T = TypeVar("_T")
+
+
+class InputNode(_base.Node[_base.ET, _T]):
+    def __init__(
+        self,
+        uid: uuid.UUID,
+        owner: _base.ET,
+        name: Optional[str],
+        json_data: Dict[str, Any],
+    ):
+        super().__init__(uid, owner, name)
+        input_data = json_data["input_node"]
+        self._default_value_encoded = input_data.get("default_value", _base.NOTHING)
+        self._value: Any = _base.NOTHING
+        self._value_encoded: Any = _base.NOTHING
+
+    def has_default(self):
+        return self._default_value_encoded is not _base.NOTHING
+
+    def _exec_impl(
+        self,
+        parents: Dict[uuid.UUID, _base.Node],
+        input_value: Any,
+        server_graph_uuid: Optional[uuid.UUID] = None,
+    ) -> None:
+        del server_graph_uuid  # Unused.
+        assert not parents, "InputNode cannot depend on anything"
+        if input_value is _base.NOTHING:
+            self._value_encoded = self._default_value_encoded
+            self._value = _codec.Unescaper().visit(self._value_encoded)
+        else:
+            self._value = input_value
+            self._value_encoded = _codec.Escaper().visit(input_value)
+
+        if self._value_encoded is _base.NOTHING:
+            raise KeyError(f"Input {self.name!r} must be provided")
+
+    def _result_impl(self):
+        return self._value
+
+    def _encode_for_param(self, mode: _base.ParamFormat):
+        del mode  # unused
+        self._assert_succeeded()
+        return self._value_encoded
+
+    def _run_location(self) -> str:
+        return rest_api.TaskGraphLogRunLocation.VIRTUAL
