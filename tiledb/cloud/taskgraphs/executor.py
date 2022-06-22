@@ -6,7 +6,18 @@ import enum
 import logging
 import threading
 import uuid
-from typing import Any, Callable, Dict, Generic, List, Optional, TypeVar, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Generic,
+    Iterable,
+    List,
+    Optional,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import depgraph
@@ -206,9 +217,9 @@ class Node(Generic[_ET, _T], metaclass=abc.ABCMeta):
         self.name = name
         """The name of the node, if present."""
 
-        self._lifecycle_lock = threading.Lock()
+        self._lifecycle_condition = threading.Condition(threading.Lock())
         """A lock to protect lifecycle events and callback list management."""
-        self._callbacks: List[Callable[[_Self], None]] = []
+        self._cb_list: List[Callable[[_Self], None]] = []
         """Callbacks that will be called when the Node completes."""
 
     # Node-specific APIs.
@@ -216,7 +227,7 @@ class Node(Generic[_ET, _T], metaclass=abc.ABCMeta):
     @property
     def status(self) -> Status:
         """The current lifecycle state of this Node."""
-        with self._lifecycle_lock:
+        with self._lifecycle_condition:
             return self._status_impl()
 
     @abc.abstractmethod
@@ -283,7 +294,7 @@ class Node(Generic[_ET, _T], metaclass=abc.ABCMeta):
 
     def done(self) -> bool:
         """Returns True if this Node has completed or been cancelled."""
-        with self._lifecycle_lock:
+        with self._lifecycle_condition:
             return self._done()
 
     def add_done_callback(self: _Self, fn: Callable[[_Self], None]) -> None:
@@ -292,18 +303,26 @@ class Node(Generic[_ET, _T], metaclass=abc.ABCMeta):
         While the current behavior is similar to the way ``add_done_callback``
         on a regular ``Future`` works, we don't guarantee that it will remain
         the same (e.g. will it be called immediately, on what thread).
-        Particularly, when retry functionality is later added to Nodes, this
-        behavior is likely to change.
+        A callback may be called back multiple times if the Node completes
+        multiple times.
         """
-        with self._lifecycle_lock:
+
+        with self._lifecycle_condition:
+            self._cb_list.append(fn)
             if not self._done():
-                self._callbacks.append(fn)
                 return
 
         try:
             fn(self)
         except Exception:
             _log.exception("%r callback %r failed", self, fn)
+
+    def _callbacks(self: _Self) -> Tuple[Callable[[_Self], None], ...]:
+        """Returns an immutable copy of the callback list.
+
+        Must be called with ``_lifecycle_condition`` held.
+        """
+        return tuple(self._cb_list)
 
     @abc.abstractmethod
     def task_id(self, timeout: Optional[float] = None) -> Optional[uuid.UUID]:
@@ -334,19 +353,21 @@ class Node(Generic[_ET, _T], metaclass=abc.ABCMeta):
             Status.PARENT_FAILED,
         )
 
-    def _do_callbacks(self: _Self) -> None:
-        """Actually performs the callbacks when a Node completes.
 
-        This should be called by the Node implementation exactly once,
-        with ``_lifecycle_lock`` *not* held.
-        """
-        assert self.done(), "_do_callbacks called when Node is not done"
+def do_callbacks(node: _T, cbs: Iterable[Callable[[_T], None]]) -> None:
+    """Actually performs the callbacks when a Node completes.
 
-        # We don't need to hold _lifecycle_lock to iterate through _callbacks
-        # because add_done_callbacks guarantees that if the node is done,
-        # no more callbacks will be added to the list.
-        for fn in self._callbacks:
-            try:
-                fn(self)
-            except Exception:
-                _log.exception("%r callback %r failed", self, fn)
+    This should be called by the Node implementation exactly once for each time
+    that the node "completes" (e.g. fails or succeeds on retry).
+    """
+
+    # With retries, it's possible for a node to fail, start calling callbacks,
+    # then get set to a retry state such that it's no longer "done", without
+    # any way for a caller to know what the original result was.
+    # TODO: Figure out a way around this.
+
+    for fn in cbs:
+        try:
+            fn(node)
+        except Exception:
+            _log.exception("%r callback %r failed", node, fn)

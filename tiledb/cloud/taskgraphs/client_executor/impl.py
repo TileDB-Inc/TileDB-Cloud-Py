@@ -73,10 +73,6 @@ class LocalExecutor(_base.IClientExecutor):
         All events dispatched in the queue will be executed with
         ``_done_condition`` held.
         """
-        for n in self._deps:
-            n.add_done_callback(
-                lambda s: self._event_queue.put(lambda: self._handle_node_done(s))
-            )
         self._inputs: Dict[uuid.UUID, Any] = {}
         self._client = api_client or client.client
 
@@ -254,11 +250,24 @@ class LocalExecutor(_base.IClientExecutor):
                     self._report_completion()
             self._pool.shutdown()
 
+    def _enqueue_done_node(self, node: "Node") -> None:
+        """Called by a Node when it is about to be done.
+
+        This should be called while the node's lifecycle lock is held, but
+        about to be released so that all the invariants of a completed node
+        are held, to guarantee that waiters are woken up only *after* the node
+        is put onto the event queue.
+        """
+        self._event_queue.put(lambda: self._handle_node_done(node))
+
     def _handle_node_done(self, node: "Node") -> None:
         assert threading.current_thread() is self._event_loop_thread
         # The node may not be running, e.g. if it was cancelled.
         # That's fine.
         self._running_nodes.discard(node)
+        # We're guaranteed that the post-completion status of the node will not
+        # change here because the only thread allowed to  reset a node back to
+        # an incomplete state is this event loop.
         if node.status is Status.SUCCEEDED:
             # Only remove successful nodes from the "active deps" list
             # to support retrying failed/cancelled nodes.
