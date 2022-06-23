@@ -1,11 +1,11 @@
 """Generic interfaces for task graph executors."""
 
 import abc
-from concurrent import futures
 import enum
 import logging
 import threading
 import uuid
+from concurrent import futures
 from typing import (
     Any,
     Callable,
@@ -119,6 +119,18 @@ class Executor(Generic[_N], metaclass=abc.ABCMeta):
         be cancelled, and ``False`` if not.
         """
         return False
+
+    def retry(self, node: _N) -> bool:
+        """Attempts to retry a node.
+
+        Returns True if the node was retried, false if not.
+        """
+        del node  # Default implementation does nothing.
+        return False
+
+    def retry_all(self) -> None:
+        """Retries all retry-able nodes."""
+        pass  # By default, do nothing
 
     @property
     @abc.abstractmethod
@@ -333,6 +345,10 @@ class Node(Generic[_ET, _T], metaclass=abc.ABCMeta):
         server did not return a UUID, this should return None.
         """
         raise NotImplementedError()
+
+    def retry(self) -> bool:
+        """Attempts to submit this node for retry, if possible."""
+        return self.owner.retry(self)
 
     # Internals to handle Future methods.
 
