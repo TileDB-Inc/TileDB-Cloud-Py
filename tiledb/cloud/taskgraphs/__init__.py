@@ -27,6 +27,7 @@ from tiledb.cloud.taskgraphs import types
 
 Builder = builder.TaskGraphBuilder
 InvalidStateError = client_executor.InvalidStateError
+ParentFailedError = executor.ParentFailedError
 Status = executor.Status
 args = types.args
 ArrayMultiIndex = types.ArrayMultiIndex

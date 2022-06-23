@@ -2,9 +2,9 @@
 
 import datetime
 import unittest
-from typing import Tuple
 
 import tiledb.cloud.taskgraphs as tg
+from tiledb.cloud import testonly
 
 
 class TaskGraphsTest(unittest.TestCase):
@@ -48,18 +48,19 @@ class TaskGraphsTest(unittest.TestCase):
             start, end = start_end
             return f"{start:%Y-%m-%d} to {end:%Y-%m-%d} in {zone} is {length}"
 
-        grf.udf(
-            format_info,
-            tg.args(start_end, zone, length),
-            result_format="json",
-            name="output",
-        )
+        with testonly.register_udf(format_info) as registered_info:
+            grf.udf(
+                registered_info,
+                tg.args(start_end, zone, length),
+                result_format="json",
+                name="output",
+            )
 
-        exec = tg.execute(grf, year=2022, month=3, day=27)
-        exec.wait(30)
-        self.assertEqual(exec.status, tg.Status.SUCCEEDED)
-        self.assertEqual(datetime.timedelta(hours=23), exec.node(length).result())
-        self.assertEqual(
-            "2022-03-27 to 2022-03-28 in Europe/Athens is 23:00:00",
-            exec.node("output").result(),
-        )
+            exec = tg.execute(grf, year=2022, month=3, day=27)
+            exec.wait(30)
+            self.assertEqual(exec.status, tg.Status.SUCCEEDED)
+            self.assertEqual(datetime.timedelta(hours=23), exec.node(length).result())
+            self.assertEqual(
+                "2022-03-27 to 2022-03-28 in Europe/Athens is 23:00:00",
+                exec.node("output").result(),
+            )

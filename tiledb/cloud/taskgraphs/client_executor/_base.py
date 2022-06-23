@@ -5,7 +5,7 @@ import enum
 import threading
 import uuid
 from concurrent import futures
-from typing import Any, Dict, Iterable, Optional, TypeVar
+from typing import Any, Callable, Dict, Iterable, Optional, TypeVar
 
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
@@ -79,7 +79,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
 
     def result(self, timeout: Optional[float] = None) -> _T:
         with self._lifecycle_condition:
-            self._lifecycle_condition.wait_for(self._done, timeout)
+            wait_for(self._lifecycle_condition, self._done, timeout)
             exc = self._lifecycle_exception or self._result_exception
             if exc:
                 raise exc
@@ -87,7 +87,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
 
     def exception(self, timeout: Optional[float] = None) -> Optional[Exception]:
         with self._lifecycle_condition:
-            self._lifecycle_condition.wait_for(self._done, timeout)
+            wait_for(self._lifecycle_condition, self._done, timeout)
             if self._lifecycle_exception:
                 raise self._lifecycle_exception
             return self._result_exception
@@ -107,7 +107,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
 
     def wait(self, timeout: Optional[float] = None) -> None:
         with self._lifecycle_condition:
-            self._lifecycle_condition.wait_for(self._done, timeout)
+            wait_for(self._lifecycle_condition, self._done, timeout)
 
     #
     # Abstract methods to be implemented by subclasses to do the work of a Node.
@@ -209,12 +209,23 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
         self._status = status
         self._lifecycle_condition.notify_all()
 
-    def _set_parent_failed(self: _Self, pfe: executor.ParentFailedError) -> None:
+    def _set_parent_failed(
+        self,
+        pfe: executor.ParentFailedError,
+        *,
+        overwrite: bool = False,
+    ) -> None:
         with self._lifecycle_condition:
             could_set = self._set_status_if_can_start(Status.PARENT_FAILED)
             if not could_set:
                 return
-            self._lifecycle_exception = pfe
+            updated = False
+            if overwrite or not self._lifecycle_exception:
+                if self._lifecycle_exception is not pfe:
+                    updated = True
+                self._lifecycle_exception = pfe
+            if not updated:
+                return
             self.owner._enqueue_done_node(self)
             cbs = self._callbacks()
 
@@ -227,17 +238,20 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
         a PFE corresponding to this node. If this node has a parent-failed
         status, returns the PFE that caused it.
         """
-        st = self.status
-        if st is Status.FAILED:
-            assert self._result_exception
-            return executor.ParentFailedError(self._result_exception, self)
-        if st is Status.CANCELLED:
-            assert self._lifecycle_exception
-            return executor.ParentFailedError(self._lifecycle_exception, self)
-        if st is Status.PARENT_FAILED:
-            assert isinstance(self._lifecycle_exception, executor.ParentFailedError)
-            return self._lifecycle_exception
-        raise AssertionError(f"Accessing {self}._parent_failed_error() with status {st}")
+        with self._lifecycle_condition:
+            st = self._status
+            if st is Status.FAILED:
+                assert self._result_exception
+                return executor.ParentFailedError(self._result_exception, self)
+            if st is Status.CANCELLED:
+                assert self._lifecycle_exception
+                return executor.ParentFailedError(self._lifecycle_exception, self)
+            if st is Status.PARENT_FAILED:
+                assert isinstance(self._lifecycle_exception, executor.ParentFailedError)
+                return self._lifecycle_exception
+        raise AssertionError(
+            f"Accessing {self}._parent_failed_error() with status {st}"
+        )
 
     def _prepare_to_retry(self) -> None:
         with self._lifecycle_condition:
@@ -266,7 +280,20 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
         """The location where this node will be executed."""
         return rest_api.TaskGraphLogRunLocation.SERVER
 
+    def __repr__(self) -> str:
+        return f"<{type(self).__name__} {self.display_name!r}>"
 
-def wait_for(evt: threading.Event, timeout: Optional[float]) -> None:
-    if not evt.wait(timeout):
+
+def wait_for(
+    cond: threading.Condition,
+    pred: Callable[[], bool],
+    timeout: Optional[float],
+) -> None:
+    """Waits for the given condition variable, with a timeout.
+
+    Condition's ``wait_for`` method will return after the given amount of time,
+    even if the condition was not met, rather than raising a timeout (as one
+    might expect). This corrects that expectation to raise that timeout.
+    """
+    if not cond.wait_for(pred, timeout):
         raise futures.TimeoutError(f"timed out after {timeout} sec")

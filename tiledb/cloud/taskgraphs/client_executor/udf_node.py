@@ -4,6 +4,7 @@ from typing import AbstractSet, Any, Dict, List, Optional, Sequence, TypeVar
 import urllib3
 
 from tiledb.cloud import rest_api
+from tiledb.cloud import utils
 from tiledb.cloud._common import json_safe
 from tiledb.cloud._common import ordered
 from tiledb.cloud._results import results
@@ -88,16 +89,6 @@ class UDFNode(_base.Node[_base.ET, _T]):
             exec_raw=self._udf_data.get("source_text"),
         )
 
-        # Executable code.
-        exec_code = self._udf_data.get("executable_code")
-        if exec_code:
-            udf_call._exec = exec_code
-        else:
-            try:
-                udf_call.udf_info_name = self._udf_data["registered_udf_name"]
-            except KeyError as ke:
-                raise AssertionError("Neither executable code nor UDF name set") from ke
-
         # Set up the environment. The default value of everything in the
         # udf_call object is `None`, so setting it to None is equivalent to
         # leaving it unset.
@@ -105,6 +96,21 @@ class UDFNode(_base.Node[_base.ET, _T]):
         udf_call.image_name = env.get("image_name")
         udf_call.language = env.get("language")
         udf_call.version = env.get("language_version")
+
+        # Executable code.
+        exec_code = self._udf_data.get("executable_code")
+        if exec_code:
+            udf_call._exec = exec_code
+        else:
+            try:
+                udf_call.udf_info_name = self._udf_data["registered_udf_name"]
+                # TEMPORARY FIX: The server is not properly extracting the
+                # language/version information from registered UDFs.
+                # Include the current language/version here until that's fixed.
+                udf_call.language = "python"
+                udf_call.version = utils.PYTHON_VERSION
+            except KeyError as ke:
+                raise AssertionError("Neither executable code nor UDF name set") from ke
 
         # Actually make the call.
         api = self.owner._client.udf_api

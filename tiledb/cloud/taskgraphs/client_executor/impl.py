@@ -5,6 +5,7 @@ Ordinarily you should just import this via its alias in `client_executor`.
 
 import queue
 import threading
+import traceback
 import uuid
 import warnings
 from concurrent import futures
@@ -193,7 +194,7 @@ class LocalExecutor(_base.IClientExecutor):
                     Status.SUCCEEDED,
                 )
 
-            self._done_condition.wait_for(is_done, timeout)
+            _base.wait_for(self._done_condition, is_done, timeout)
 
     @property
     def server_graph_uuid(self):
@@ -205,7 +206,7 @@ class LocalExecutor(_base.IClientExecutor):
         uid: uuid.UUID,
         name: Optional[str],
         node_json: Dict[str, Any],
-    ) -> "Node":
+    ) -> Node:
         cls: Type[Node]
         if "array_node" in node_json:
             cls = array_node.ArrayNode
@@ -232,7 +233,14 @@ class LocalExecutor(_base.IClientExecutor):
                 event = self._event_queue.get()
                 with self._done_condition:
                     event()
-                    if not self._running_nodes:
+                    self._start_ready_nodes()
+                    if self._running_nodes:
+                        # Update ourselves to no longer be done if we still have
+                        # nodes that are running.
+                        if self._status is not Status.RUNNING:
+                            self._status = Status.RUNNING
+                            self._done_condition.notify_all()
+                    else:
                         just_reported_completion = True
                         self._report_completion()
         except Exception as ex:
@@ -250,7 +258,7 @@ class LocalExecutor(_base.IClientExecutor):
                     self._report_completion()
             self._pool.shutdown()
 
-    def _enqueue_done_node(self, node: "Node") -> None:
+    def _enqueue_done_node(self, node: Node) -> None:
         """Called by a Node when it is about to be done.
 
         This should be called while the node's lifecycle lock is held, but
@@ -260,7 +268,7 @@ class LocalExecutor(_base.IClientExecutor):
         """
         self._event_queue.put(lambda: self._handle_node_done(node))
 
-    def _handle_node_done(self, node: "Node") -> None:
+    def _handle_node_done(self, node: Node) -> None:
         assert threading.current_thread() is self._event_loop_thread
         # The node may not be running, e.g. if it was cancelled.
         # That's fine.
@@ -285,7 +293,6 @@ class LocalExecutor(_base.IClientExecutor):
 
             for child in self._deps.children_of(node):
                 child._set_parent_failed(pfe)
-        self._start_ready_nodes()
 
     def _start_ready_nodes(self) -> None:
         """Starts all nodes that are ready to run."""
@@ -298,12 +305,83 @@ class LocalExecutor(_base.IClientExecutor):
         for node in eligible:
             parents = {n.id: n for n in self._deps.parents_of(node)}
             if not all(p.status is Status.SUCCEEDED for p in parents.values()):
-                return
+                continue
             self._unstarted_nodes.discard(node)
             self._running_nodes.add(node)
             self._pool.submit(
                 node._exec, parents, self._inputs.get(node.id, _base.NOTHING)
             )
+
+    def retry(self, node: Node) -> bool:
+        ft: "futures.Future[bool]" = futures.Future()
+        self._event_queue.put(lambda: self._do_retry(node, ft))
+        return ft.result()
+
+    def _do_retry(self, node: Node, ft: "futures.Future[bool]") -> None:
+        try:
+            ft.set_result(self._retry_one(node))
+        except Exception as e:
+            ft.set_exception(e)
+            raise
+
+    def _retry_one(self, node: Node) -> bool:
+        st = node.status
+        if st not in (Status.FAILED, Status.CANCELLED):
+            # We only actually retry nodes that failed (or were cancelled)
+            # themselves. Parent-failed (or active) nodes cannot be retried.
+            return False
+        node._prepare_to_retry()
+        self._failed_nodes.remove(node)
+        self._unstarted_nodes.add(node)
+
+        to_visit = ordered.Set(self._deps.children_of(node))
+        # We use an ordered set as a queue, since we only want to visit a node
+        # once while it's in the queue (e.g. if it was touched by both A and B,
+        # while in the queue, we only need to visit it once) but we may still
+        # need to visit a node multiple times (e.g. if a node is touched by A,
+        # leaves the queue, then is later touched by B).
+
+        while to_visit:
+            visiting = to_visit.popleft()
+            parents = self._deps.parents_of(visiting)
+            failed_parents = tuple(
+                p
+                for p in parents
+                if p.status in (Status.FAILED, Status.CANCELLED, Status.PARENT_FAILED)
+            )
+            if failed_parents:
+                first = failed_parents[0]
+                visiting._set_parent_failed(
+                    first._parent_failed_error(), overwrite=True
+                )
+            elif visiting.status is Status.PARENT_FAILED:
+                # If a node was manually cancelled, don't prepare it to be restarted.
+                visiting._prepare_to_retry()
+                self._failed_nodes.remove(visiting)
+                self._unstarted_nodes.add(visiting)
+            # Only continue on to visit parent-failed nodes.
+            to_visit.update(self._deps.children_of(visiting))
+        return True
+
+    def retry_all(self) -> None:
+        ft: "futures.Future[None]" = futures.Future()
+        self._event_queue.put(lambda: self._do_retry_all(ft))
+        return ft.result()
+
+    def _do_retry_all(self, ft: "futures.Future[None]") -> None:
+        try:
+            all_failures = self._failed_nodes.copy()
+            for n in all_failures:
+                self._retry_one(n)
+        except Exception as exc:
+            ft.set_exception(exc)
+            traceback.print_exc()
+            raise
+        ft.set_result(None)
+
+    #
+    # Logging
+    #
 
     def _build_log_structure(self) -> rest_api.TaskGraphLog:
         return rest_api.TaskGraphLog(

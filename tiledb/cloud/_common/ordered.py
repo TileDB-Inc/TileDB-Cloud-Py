@@ -53,7 +53,10 @@ class FrozenSet(AbstractSet[_T_co]):
 
 
 class Set(FrozenSet[_T], MutableSet[_T]):
-    """An :class:`_OrderedFrozenSet`, but this time it's mutable."""
+    """An :class:`_OrderedFrozenSet`, but this time it's mutable.
+
+    Not guaranteed to be thread-safe.
+    """
 
     def copy(self: _Self) -> _Self:
         """Returns a shallow copy of this set. Equivalent to ``set.copy()``."""
@@ -77,6 +80,21 @@ class Set(FrozenSet[_T], MutableSet[_T]):
 
     def clear(self) -> None:
         self._dict.clear()
+
+    def popleft(self) -> _T:
+        """Drops and returns the least recently-added item. New!"""
+        try:
+            start = next(iter(self))
+        except StopIteration:
+            raise KeyError("pop from an empty ordered set")
+        self._dict.pop(start)
+        return start
+
+    def update(self, *others: Iterable[_T]) -> None:
+        """Adds every element from the ``others`` iterables to this one."""
+        for oth in others:
+            for item in oth:
+                self.add(item)
 
     __hash__ = None  # type: ignore[assignment]
     """This is mutable, so it's not hashable."""

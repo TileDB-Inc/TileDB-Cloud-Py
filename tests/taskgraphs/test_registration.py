@@ -4,6 +4,7 @@ import time
 import unittest
 
 from tiledb.cloud import rest_api
+from tiledb.cloud import testonly
 from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import registration
 from tiledb.cloud.taskgraphs import types
@@ -13,7 +14,7 @@ class RegistrationTest(unittest.TestCase):
     maxDiff = None
 
     def test_register(self):
-        name = f"zzz_unittest_manual_{random_letters(10)}"
+        name = testonly.random_name("registered_graph")
         grf = builder.TaskGraphBuilder(name=name)
         original = grf._tdb_to_json()
 
