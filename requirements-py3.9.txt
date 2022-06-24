@@ -1,7 +1,7 @@
 attrs==21.4.0
 certifi==2022.6.15
 cloudpickle==1.4.1
-numpy==1.23.0
+numpy==1.22.0
 packaging==21.3
 pandas==1.2.5
 pyarrow==8.0.0
