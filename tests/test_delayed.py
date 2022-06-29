@@ -1,3 +1,4 @@
+import operator
 import threading
 import unittest
 from concurrent import futures
@@ -118,10 +119,38 @@ class DelayedFailureTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             node.result()
 
-        self.assertEqual(node2.status, Status.CANCELLED)
+        node2.wait(1)
+        self.assertEqual(node2.status, Status.PARENT_FAILED)
         with self.assertRaises(futures.CancelledError):
             node2.result()
         self.assertEqual(node2.dag.status, Status.FAILED)
+
+    def test_failure_retry(self):
+        n1 = Delayed(self._fail_once_func(), 5, local=True)
+        n1.set_timeout(5)
+        n2 = Delayed(operator.pow, n1, n1)
+        n2.set_timeout(15)
+        with self.assertRaises(futures.CancelledError):
+            n2.compute()
+        with self.assertRaises(FloatingPointError):
+            n1.result()
+        self.assertEqual(n2.status, Status.PARENT_FAILED)
+        self.assertEqual(n1.status, Status.FAILED)
+        n1.retry()
+        n1.dag.wait(15)
+        self.assertEqual(n2.result(0), 3125)
+
+    def _fail_once_func(self):
+        ran = False
+
+        def fail_once(val=None):
+            nonlocal ran
+            if not ran:
+                ran = True
+                raise FloatingPointError("fails first time")
+            return val
+
+        return fail_once
 
 
 class DelayedCancelTest(unittest.TestCase):
@@ -154,9 +183,13 @@ class DelayedCancelTest(unittest.TestCase):
         # still run to completion.
         self.assertEqual(node.result(), 3)
 
+        node_2.wait(1)
         self.assertEqual(node_2.status, Status.CANCELLED)
         with self.assertRaises(futures.CancelledError):
             node_2.result()
+
+        node_2.retry()
+        self.assertEqual(node_2.result(1), 3)
 
 
 class DelayedCloudApplyTest(unittest.TestCase):

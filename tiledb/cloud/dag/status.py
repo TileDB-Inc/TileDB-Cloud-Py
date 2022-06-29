@@ -7,6 +7,7 @@ class Status(enum.Enum):
     COMPLETED = 3
     FAILED = 4
     CANCELLED = 5
+    PARENT_FAILED = 6
 
     def __str__(self):
         return self.name.replace("_", " ").title()

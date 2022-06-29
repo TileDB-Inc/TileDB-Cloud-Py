@@ -112,24 +112,6 @@ class RemoteResult(Result[_T], Generic[_T]):
     _decoded: Any = attrs.field(default=_SENTINEL)
 
 
-class UnwrapperProxy(Generic[_T]):
-    """Implements the public API of a Future but unwraps what it's given."""
-
-    def __init__(self, wrapped: "futures.Future[Result[_T]]"):
-        self._wrapped = wrapped
-        self.cancel = self._wrapped.cancel
-        self.cancelled = self._wrapped.cancelled
-        self.running = self._wrapped.running
-        self.done = self._wrapped.done
-        self.exception = self._wrapped.exception
-
-    def result(self, timeout: Optional[float] = None) -> _T:
-        return self._wrapped.result(timeout).get()
-
-    def add_done_callback(self, fn: Callable[["futures.Future[_T]"], None]) -> None:
-        self._wrapped.add_done_callback(lambda _: fn(self))  # type: ignore[arg-type]
-
-
 class AsyncResult(Generic[_T]):
     """Asynchronous wrapper for compatibility with the old array.TaskResult."""
 
