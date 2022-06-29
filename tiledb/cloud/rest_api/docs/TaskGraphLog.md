@@ -1,6 +1,7 @@
 # TaskGraphLog
 
 Logging information about the execution of a task graph.
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

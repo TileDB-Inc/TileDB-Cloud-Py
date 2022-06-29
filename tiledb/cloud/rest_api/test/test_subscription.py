@@ -44,10 +44,10 @@ class TestSubscription(unittest.TestCase):
                     tiledb.cloud.rest_api.models.pricing.Pricing(
                         id="planID",
                         array_uuid="00000000-0000-0000-0000-000000000000",
-                        pricing_name="0",
+                        pricing_name="",
                         pricing_type="egress",
-                        product_name="0",
-                        product_statement_descriptor="0",
+                        product_name="",
+                        product_statement_descriptor="",
                         product_unit_label="byte",
                         currency="USD",
                         aggregate_usage="sum",

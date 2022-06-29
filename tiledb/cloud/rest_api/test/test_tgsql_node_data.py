@@ -37,8 +37,8 @@ class TestTGSQLNodeData(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.tgsql_node_data.TGSQLNodeData()  # noqa: E501
         if include_optional:
             return TGSQLNodeData(
-                init_commands=["0"],
-                query="0",
+                init_commands=[""],
+                query="",
                 parameters=[tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue()],
                 result_format="python_pickle",
             )

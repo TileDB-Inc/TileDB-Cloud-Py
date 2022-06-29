@@ -51,7 +51,7 @@ class TestSubarrayPartitioner(unittest.TestCase):
                 ),
                 budget=[
                     tiledb.cloud.rest_api.models.attribute_buffer_size.AttributeBufferSize(
-                        attribute="0",
+                        attribute="",
                         offset_bytes=56,
                         data_bytes=56,
                     )

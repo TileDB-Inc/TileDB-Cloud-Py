@@ -1,6 +1,7 @@
 # Invitation
 
 Invitations to share or collaborate
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

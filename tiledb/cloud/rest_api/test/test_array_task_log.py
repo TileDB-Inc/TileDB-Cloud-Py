@@ -36,7 +36,7 @@ class TestArrayTaskLog(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.array_task_log.ArrayTaskLog()  # noqa: E501
         if include_optional:
-            return ArrayTaskLog(array_task_id="0", logs="0")
+            return ArrayTaskLog(array_task_id="", logs="")
         else:
             return ArrayTaskLog()
 

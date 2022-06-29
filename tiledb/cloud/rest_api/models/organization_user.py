@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -62,7 +67,7 @@ class OrganizationUser(object):
     ):  # noqa: E501
         """OrganizationUser - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._user_id = None
@@ -104,7 +109,7 @@ class OrganizationUser(object):
         unique ID of user  # noqa: E501
 
         :param user_id: The user_id of this OrganizationUser.  # noqa: E501
-        :type: str
+        :type user_id: str
         """
 
         self._user_id = user_id
@@ -127,7 +132,7 @@ class OrganizationUser(object):
         unique ID of organization  # noqa: E501
 
         :param organization_id: The organization_id of this OrganizationUser.  # noqa: E501
-        :type: str
+        :type organization_id: str
         """
 
         self._organization_id = organization_id
@@ -150,7 +155,7 @@ class OrganizationUser(object):
         username for user  # noqa: E501
 
         :param username: The username of this OrganizationUser.  # noqa: E501
-        :type: str
+        :type username: str
         """
 
         self._username = username
@@ -173,7 +178,7 @@ class OrganizationUser(object):
         name of organization  # noqa: E501
 
         :param organization_name: The organization_name of this OrganizationUser.  # noqa: E501
-        :type: str
+        :type organization_name: str
         """
 
         self._organization_name = organization_name
@@ -194,7 +199,7 @@ class OrganizationUser(object):
 
 
         :param role: The role of this OrganizationUser.  # noqa: E501
-        :type: OrganizationRoles
+        :type role: OrganizationRoles
         """
 
         self._role = role
@@ -217,34 +222,36 @@ class OrganizationUser(object):
         list of actions user is allowed to do on this organization  # noqa: E501
 
         :param allowed_actions: The allowed_actions of this OrganizationUser.  # noqa: E501
-        :type: list[NamespaceActions]
+        :type allowed_actions: list[NamespaceActions]
         """
 
         self._allowed_actions = allowed_actions
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

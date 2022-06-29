@@ -1,6 +1,7 @@
 # GroupContents
 
 Object including a page of members of a group and pagination metadata
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

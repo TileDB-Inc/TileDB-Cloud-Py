@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -71,7 +76,7 @@ class ArrayActivityLog(object):
     ):  # noqa: E501
         """ArrayActivityLog - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._event_at = None
@@ -122,7 +127,7 @@ class ArrayActivityLog(object):
         time event took place (RFC3339)  # noqa: E501
 
         :param event_at: The event_at of this ArrayActivityLog.  # noqa: E501
-        :type: datetime
+        :type event_at: datetime
         """
 
         self._event_at = event_at
@@ -143,7 +148,7 @@ class ArrayActivityLog(object):
 
 
         :param action: The action of this ArrayActivityLog.  # noqa: E501
-        :type: ActivityEventType
+        :type action: ActivityEventType
         """
 
         self._action = action
@@ -166,7 +171,7 @@ class ArrayActivityLog(object):
         User who performed action  # noqa: E501
 
         :param username: The username of this ArrayActivityLog.  # noqa: E501
-        :type: str
+        :type username: str
         """
 
         self._username = username
@@ -189,7 +194,7 @@ class ArrayActivityLog(object):
         Bytes sent to client  # noqa: E501
 
         :param bytes_sent: The bytes_sent of this ArrayActivityLog.  # noqa: E501
-        :type: int
+        :type bytes_sent: int
         """
 
         self._bytes_sent = bytes_sent
@@ -212,7 +217,7 @@ class ArrayActivityLog(object):
         Bytes recieved from client  # noqa: E501
 
         :param bytes_received: The bytes_received of this ArrayActivityLog.  # noqa: E501
-        :type: int
+        :type bytes_received: int
         """
 
         self._bytes_received = bytes_received
@@ -235,7 +240,7 @@ class ArrayActivityLog(object):
         UUID of associated array task  # noqa: E501
 
         :param array_task_id: The array_task_id of this ArrayActivityLog.  # noqa: E501
-        :type: str
+        :type array_task_id: str
         """
 
         self._array_task_id = array_task_id
@@ -258,7 +263,7 @@ class ArrayActivityLog(object):
         ID of the activity  # noqa: E501
 
         :param id: The id of this ArrayActivityLog.  # noqa: E501
-        :type: str
+        :type id: str
         """
 
         self._id = id
@@ -281,7 +286,7 @@ class ArrayActivityLog(object):
         ranges for query  # noqa: E501
 
         :param query_ranges: The query_ranges of this ArrayActivityLog.  # noqa: E501
-        :type: str
+        :type query_ranges: str
         """
 
         self._query_ranges = query_ranges
@@ -304,34 +309,36 @@ class ArrayActivityLog(object):
         stats for query  # noqa: E501
 
         :param query_stats: The query_stats of this ArrayActivityLog.  # noqa: E501
-        :type: str
+        :type query_stats: str
         """
 
         self._query_stats = query_stats
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

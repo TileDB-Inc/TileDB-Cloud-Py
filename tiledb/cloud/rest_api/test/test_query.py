@@ -82,7 +82,7 @@ class TestQuery(unittest.TestCase):
                         subarray_partitioner=tiledb.cloud.rest_api.models.subarray_partitioner.SubarrayPartitioner(
                             budget=[
                                 tiledb.cloud.rest_api.models.attribute_buffer_size.AttributeBufferSize(
-                                    attribute="0",
+                                    attribute="",
                                     offset_bytes=56,
                                     data_bytes=56,
                                 )
@@ -106,14 +106,14 @@ class TestQuery(unittest.TestCase):
                             memory_budget_var=56,
                         ),
                     ),
-                    var_offsets_mode="0",
+                    var_offsets_mode="",
                     var_offsets_add_extra_element=True,
                     var_offsets_bitsize=56,
                 ),
                 array=tiledb.cloud.rest_api.models.array.Array(
                     timestamp=1540471791873,
                     query_type="READ",
-                    uri="0",
+                    uri="",
                 ),
                 total_fixed_length_buffer_bytes=56,
                 total_var_len_buffer_bytes=56,
@@ -133,7 +133,7 @@ class TestQuery(unittest.TestCase):
                 array=tiledb.cloud.rest_api.models.array.Array(
                     timestamp=1540471791873,
                     query_type="READ",
-                    uri="0",
+                    uri="",
                 ),
                 total_fixed_length_buffer_bytes=56,
                 total_var_len_buffer_bytes=56,

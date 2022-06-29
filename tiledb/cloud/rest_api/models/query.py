@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -71,7 +76,7 @@ class Query(object):
     ):  # noqa: E501
         """Query - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._type = None
@@ -113,7 +118,7 @@ class Query(object):
 
 
         :param type: The type of this Query.  # noqa: E501
-        :type: Querytype
+        :type type: Querytype
         """
         if (
             self.local_vars_configuration.client_side_validation and type is None
@@ -140,7 +145,7 @@ class Query(object):
 
 
         :param layout: The layout of this Query.  # noqa: E501
-        :type: Layout
+        :type layout: Layout
         """
         if (
             self.local_vars_configuration.client_side_validation and layout is None
@@ -167,7 +172,7 @@ class Query(object):
 
 
         :param status: The status of this Query.  # noqa: E501
-        :type: Querystatus
+        :type status: Querystatus
         """
         if (
             self.local_vars_configuration.client_side_validation and status is None
@@ -196,7 +201,7 @@ class Query(object):
         List of attribute buffer headers  # noqa: E501
 
         :param attribute_buffer_headers: The attribute_buffer_headers of this Query.  # noqa: E501
-        :type: list[AttributeBufferHeader]
+        :type attribute_buffer_headers: list[AttributeBufferHeader]
         """
         if (
             self.local_vars_configuration.client_side_validation
@@ -224,7 +229,7 @@ class Query(object):
 
 
         :param writer: The writer of this Query.  # noqa: E501
-        :type: Writer
+        :type writer: Writer
         """
 
         self._writer = writer
@@ -245,7 +250,7 @@ class Query(object):
 
 
         :param reader: The reader of this Query.  # noqa: E501
-        :type: QueryReader
+        :type reader: QueryReader
         """
 
         self._reader = reader
@@ -266,7 +271,7 @@ class Query(object):
 
 
         :param array: The array of this Query.  # noqa: E501
-        :type: Array
+        :type array: Array
         """
         if (
             self.local_vars_configuration.client_side_validation and array is None
@@ -295,7 +300,7 @@ class Query(object):
         Total number of bytes in fixed size attribute buffers.  # noqa: E501
 
         :param total_fixed_length_buffer_bytes: The total_fixed_length_buffer_bytes of this Query.  # noqa: E501
-        :type: int
+        :type total_fixed_length_buffer_bytes: int
         """
         if (
             self.local_vars_configuration.client_side_validation
@@ -325,7 +330,7 @@ class Query(object):
         Total number of bytes in variable size attribute buffers.  # noqa: E501
 
         :param total_var_len_buffer_bytes: The total_var_len_buffer_bytes of this Query.  # noqa: E501
-        :type: int
+        :type total_var_len_buffer_bytes: int
         """
         if (
             self.local_vars_configuration.client_side_validation
@@ -337,29 +342,31 @@ class Query(object):
 
         self._total_var_len_buffer_bytes = total_var_len_buffer_bytes
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

@@ -42,24 +42,32 @@ class NotebooksApi(object):
         retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.notebooks_namespace_array_end_timestamps_get(namespace, array, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str array: name/uri of array that is url-encoded (required)
-        :param int page: pagination offset
-        :param int per_page: pagination limit
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param array: name/uri of array that is url-encoded (required)
+        :type array: str
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: ArrayEndTimestampData
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: ArrayEndTimestampData
         """
         kwargs["_return_http_data_only"] = True
         return self.notebooks_namespace_array_end_timestamps_get_with_http_info(
@@ -74,26 +82,39 @@ class NotebooksApi(object):
         retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.notebooks_namespace_array_end_timestamps_get_with_http_info(namespace, array, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace array is in (an organization name or user's username) (required)
-        :param str array: name/uri of array that is url-encoded (required)
-        :param int page: pagination offset
-        :param int per_page: pagination limit
+        :param namespace: namespace array is in (an organization name or user's username) (required)
+        :type namespace: str
+        :param array: name/uri of array that is url-encoded (required)
+        :type array: str
+        :param page: pagination offset
+        :type page: int
+        :param per_page: pagination limit
+        :type per_page: int
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(ArrayEndTimestampData, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(ArrayEndTimestampData, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -105,6 +126,7 @@ class NotebooksApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -167,6 +189,10 @@ class NotebooksApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "ArrayEndTimestampData",
+        }
+
         return self.api_client.call_api(
             "/notebooks/{namespace}/{array}/end_timestamps",
             "GET",
@@ -176,7 +202,7 @@ class NotebooksApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="ArrayEndTimestampData",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -185,4 +211,5 @@ class NotebooksApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )

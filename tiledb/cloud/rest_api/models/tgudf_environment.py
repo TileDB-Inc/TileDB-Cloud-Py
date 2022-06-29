@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -56,7 +61,7 @@ class TGUDFEnvironment(object):
     ):  # noqa: E501
         """TGUDFEnvironment - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._language = None
@@ -90,7 +95,7 @@ class TGUDFEnvironment(object):
 
 
         :param language: The language of this TGUDFEnvironment.  # noqa: E501
-        :type: UDFLanguage
+        :type language: UDFLanguage
         """
 
         self._language = language
@@ -113,7 +118,7 @@ class TGUDFEnvironment(object):
         The language version used to execute this UDF. Neither this nor `language` needs to be set for registered UDFs, since the language and version are stored server-side with the UDF itself.   # noqa: E501
 
         :param language_version: The language_version of this TGUDFEnvironment.  # noqa: E501
-        :type: str
+        :type language_version: str
         """
 
         self._language_version = language_version
@@ -136,7 +141,7 @@ class TGUDFEnvironment(object):
         The name of the image to use for the execution environment.   # noqa: E501
 
         :param image_name: The image_name of this TGUDFEnvironment.  # noqa: E501
-        :type: str
+        :type image_name: str
         """
 
         self._image_name = image_name
@@ -159,34 +164,36 @@ class TGUDFEnvironment(object):
         The resource class to use for the UDF execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the UDF will execute in the standard resource class of the TileDB Cloud provider.   # noqa: E501
 
         :param resource_class: The resource_class of this TGUDFEnvironment.  # noqa: E501
-        :type: str
+        :type resource_class: str
         """
 
         self._resource_class = resource_class
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

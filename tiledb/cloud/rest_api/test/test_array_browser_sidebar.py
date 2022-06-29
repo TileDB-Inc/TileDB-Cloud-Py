@@ -39,9 +39,7 @@ class TestArrayBrowserSidebar(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.array_browser_sidebar.ArrayBrowserSidebar()  # noqa: E501
         if include_optional:
             return ArrayBrowserSidebar(
-                namespaces=["0"],
-                result_count_for_all=56,
-                result_count_by_namespace=None,
+                namespaces=[""], result_count_for_all=56, result_count_by_namespace=None
             )
         else:
             return ArrayBrowserSidebar()

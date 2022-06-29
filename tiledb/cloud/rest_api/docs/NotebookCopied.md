@@ -1,6 +1,7 @@
 # NotebookCopied
 
 Copied notebook uri and information
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

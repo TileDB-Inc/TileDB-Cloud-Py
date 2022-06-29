@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -56,7 +61,7 @@ class Writer(object):
     ):  # noqa: E501
         """Writer - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._check_coord_dups = None
@@ -90,7 +95,7 @@ class Writer(object):
 
 
         :param check_coord_dups: The check_coord_dups of this Writer.  # noqa: E501
-        :type: bool
+        :type check_coord_dups: bool
         """
 
         self._check_coord_dups = check_coord_dups
@@ -111,7 +116,7 @@ class Writer(object):
 
 
         :param check_coord_oob: The check_coord_oob of this Writer.  # noqa: E501
-        :type: bool
+        :type check_coord_oob: bool
         """
 
         self._check_coord_oob = check_coord_oob
@@ -132,7 +137,7 @@ class Writer(object):
 
 
         :param dedup_coords: The dedup_coords of this Writer.  # noqa: E501
-        :type: bool
+        :type dedup_coords: bool
         """
 
         self._dedup_coords = dedup_coords
@@ -153,34 +158,36 @@ class Writer(object):
 
 
         :param subarray: The subarray of this Writer.  # noqa: E501
-        :type: DomainArray
+        :type subarray: DomainArray
         """
 
         self._subarray = subarray
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

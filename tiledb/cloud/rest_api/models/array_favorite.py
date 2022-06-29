@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -45,7 +50,7 @@ class ArrayFavorite(object):
     ):  # noqa: E501
         """ArrayFavorite - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._array_uuid = None
@@ -78,7 +83,7 @@ class ArrayFavorite(object):
         unique UUID of the array  # noqa: E501
 
         :param array_uuid: The array_uuid of this ArrayFavorite.  # noqa: E501
-        :type: str
+        :type array_uuid: str
         """
 
         self._array_uuid = array_uuid
@@ -101,7 +106,7 @@ class ArrayFavorite(object):
         the namespace of the array  # noqa: E501
 
         :param namespace: The namespace of this ArrayFavorite.  # noqa: E501
-        :type: str
+        :type namespace: str
         """
 
         self._namespace = namespace
@@ -124,34 +129,36 @@ class ArrayFavorite(object):
         the name of the array  # noqa: E501
 
         :param name: The name of this ArrayFavorite.  # noqa: E501
-        :type: str
+        :type name: str
         """
 
         self._name = name
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

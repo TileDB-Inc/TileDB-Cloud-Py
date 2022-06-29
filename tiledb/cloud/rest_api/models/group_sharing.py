@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -56,7 +61,7 @@ class GroupSharing(object):
     ):  # noqa: E501
         """GroupSharing - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._group_actions = None
@@ -92,7 +97,7 @@ class GroupSharing(object):
         List of permitted actions for the group and all subgroups  # noqa: E501
 
         :param group_actions: The group_actions of this GroupSharing.  # noqa: E501
-        :type: list[GroupActions]
+        :type group_actions: list[GroupActions]
         """
 
         self._group_actions = group_actions
@@ -115,7 +120,7 @@ class GroupSharing(object):
         List of permitted actions for all the subarrays of the group  # noqa: E501
 
         :param array_actions: The array_actions of this GroupSharing.  # noqa: E501
-        :type: list[ArrayActions]
+        :type array_actions: list[ArrayActions]
         """
 
         self._array_actions = array_actions
@@ -138,7 +143,7 @@ class GroupSharing(object):
         namespace being granted group access can be a user or organization  # noqa: E501
 
         :param namespace: The namespace of this GroupSharing.  # noqa: E501
-        :type: str
+        :type namespace: str
         """
 
         self._namespace = namespace
@@ -161,34 +166,36 @@ class GroupSharing(object):
         details on if the namespace is a organization or user  # noqa: E501
 
         :param namespace_type: The namespace_type of this GroupSharing.  # noqa: E501
-        :type: str
+        :type namespace_type: str
         """
 
         self._namespace_type = namespace_type
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

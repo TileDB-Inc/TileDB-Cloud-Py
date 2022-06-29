@@ -1,6 +1,7 @@
 # DimensionCoordinate
 
 A single, typed coordinate for a dimension
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

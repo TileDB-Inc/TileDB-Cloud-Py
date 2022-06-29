@@ -38,6 +38,7 @@ from tiledb.cloud.rest_api.api.user_api import UserApi
 # import ApiClient
 from tiledb.cloud.rest_api.api_client import ApiClient
 from tiledb.cloud.rest_api.configuration import Configuration
+from tiledb.cloud.rest_api.exceptions import ApiAttributeError
 from tiledb.cloud.rest_api.exceptions import ApiException
 from tiledb.cloud.rest_api.exceptions import ApiKeyError
 from tiledb.cloud.rest_api.exceptions import ApiTypeError

@@ -37,7 +37,7 @@ class TestUDFImage(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.udf_image.UDFImage()  # noqa: E501
         if include_optional:
             return UDFImage(
-                id="00000000-0000-0000-0000-000000000000", name="0", language="python"
+                id="00000000-0000-0000-0000-000000000000", name="", language="python"
             )
         else:
             return UDFImage()

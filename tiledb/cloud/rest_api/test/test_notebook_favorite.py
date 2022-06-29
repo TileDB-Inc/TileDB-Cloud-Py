@@ -38,7 +38,7 @@ class TestNotebookFavorite(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.notebook_favorite.NotebookFavorite()  # noqa: E501
         if include_optional:
-            return NotebookFavorite(notebook_uuid="0", namespace="0", name="0")
+            return NotebookFavorite(notebook_uuid="", namespace="", name="")
         else:
             return NotebookFavorite()
 

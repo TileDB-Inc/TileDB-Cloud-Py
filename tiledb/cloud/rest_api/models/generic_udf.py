@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -92,7 +97,7 @@ class GenericUDF(object):
     ):  # noqa: E501
         """GenericUDF - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._udf_info_name = None
@@ -164,7 +169,7 @@ class GenericUDF(object):
         name of UDFInfo to run, format is {namespace}/{udf_name}. Can not be used with exec  # noqa: E501
 
         :param udf_info_name: The udf_info_name of this GenericUDF.  # noqa: E501
-        :type: str
+        :type udf_info_name: str
         """
 
         self._udf_info_name = udf_info_name
@@ -185,7 +190,7 @@ class GenericUDF(object):
 
 
         :param language: The language of this GenericUDF.  # noqa: E501
-        :type: UDFLanguage
+        :type language: UDFLanguage
         """
 
         self._language = language
@@ -208,7 +213,7 @@ class GenericUDF(object):
         Type-specific version  # noqa: E501
 
         :param version: The version of this GenericUDF.  # noqa: E501
-        :type: str
+        :type version: str
         """
 
         self._version = version
@@ -231,7 +236,7 @@ class GenericUDF(object):
         Docker image name to use for UDF  # noqa: E501
 
         :param image_name: The image_name of this GenericUDF.  # noqa: E501
-        :type: str
+        :type image_name: str
         """
 
         self._image_name = image_name
@@ -254,7 +259,7 @@ class GenericUDF(object):
         The resource class to use for the UDF execution. Resource classes define resource limits for memory and CPUs. If this is empty, then the UDF will execute in the standard resource class of the TileDB Cloud provider.   # noqa: E501
 
         :param resource_class: The resource_class of this GenericUDF.  # noqa: E501
-        :type: str
+        :type resource_class: str
         """
 
         self._resource_class = resource_class
@@ -277,7 +282,7 @@ class GenericUDF(object):
         Type-specific executable text  # noqa: E501
 
         :param _exec: The _exec of this GenericUDF.  # noqa: E501
-        :type: str
+        :type _exec: str
         """
 
         self.__exec = _exec
@@ -300,7 +305,7 @@ class GenericUDF(object):
         optional raw text to store of serialized function, used for showing in UI  # noqa: E501
 
         :param exec_raw: The exec_raw of this GenericUDF.  # noqa: E501
-        :type: str
+        :type exec_raw: str
         """
 
         self._exec_raw = exec_raw
@@ -323,7 +328,7 @@ class GenericUDF(object):
         Argument(s) to pass to UDF function, tuple or list of args/kwargs which can be in native or JSON format  # noqa: E501
 
         :param argument: The argument of this GenericUDF.  # noqa: E501
-        :type: str
+        :type argument: str
         """
 
         self._argument = argument
@@ -346,7 +351,7 @@ class GenericUDF(object):
         The UUIDs of stored input parameters (passed in a language-specific format within \"argument\") to be retrieved from the server-side cache. Serialized in standard hex format with no {}.  # noqa: E501
 
         :param stored_param_uuids: The stored_param_uuids of this GenericUDF.  # noqa: E501
-        :type: list[str]
+        :type stored_param_uuids: list[str]
         """
 
         self._stored_param_uuids = stored_param_uuids
@@ -367,7 +372,7 @@ class GenericUDF(object):
 
 
         :param result_format: The result_format of this GenericUDF.  # noqa: E501
-        :type: ResultFormat
+        :type result_format: ResultFormat
         """
 
         self._result_format = result_format
@@ -390,7 +395,7 @@ class GenericUDF(object):
         name of task, optional  # noqa: E501
 
         :param task_name: The task_name of this GenericUDF.  # noqa: E501
-        :type: str
+        :type task_name: str
         """
 
         self._task_name = task_name
@@ -413,7 +418,7 @@ class GenericUDF(object):
         store results for later retrieval  # noqa: E501
 
         :param store_results: The store_results of this GenericUDF.  # noqa: E501
-        :type: bool
+        :type store_results: bool
         """
 
         self._store_results = store_results
@@ -436,7 +441,7 @@ class GenericUDF(object):
         UDF-type timeout in seconds (default: 900)  # noqa: E501
 
         :param timeout: The timeout of this GenericUDF.  # noqa: E501
-        :type: int
+        :type timeout: int
         """
 
         self._timeout = timeout
@@ -459,7 +464,7 @@ class GenericUDF(object):
         Set to true to avoid downloading the results of this UDF. Useful for intermediate nodes in a task graph where you will not be using the results of your function. Defaults to false (\"yes download results\").  # noqa: E501
 
         :param dont_download_results: The dont_download_results of this GenericUDF.  # noqa: E501
-        :type: bool
+        :type dont_download_results: bool
         """
 
         self._dont_download_results = dont_download_results
@@ -482,7 +487,7 @@ class GenericUDF(object):
         If set, the ID of the log for the task graph that this was part of.   # noqa: E501
 
         :param task_graph_uuid: The task_graph_uuid of this GenericUDF.  # noqa: E501
-        :type: str
+        :type task_graph_uuid: str
         """
 
         self._task_graph_uuid = task_graph_uuid
@@ -505,34 +510,36 @@ class GenericUDF(object):
         If set, the client-defined ID of the node within this task's graph.   # noqa: E501
 
         :param client_node_uuid: The client_node_uuid of this GenericUDF.  # noqa: E501
-        :type: str
+        :type client_node_uuid: str
         """
 
         self._client_node_uuid = client_node_uuid
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

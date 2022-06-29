@@ -1,6 +1,7 @@
 # GroupChanges
 
 A request to change the members of a group. Contains assets to add or remove.
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

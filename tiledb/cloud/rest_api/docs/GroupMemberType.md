@@ -1,6 +1,7 @@
 # GroupMemberType
 
 File types that can be included in groups
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

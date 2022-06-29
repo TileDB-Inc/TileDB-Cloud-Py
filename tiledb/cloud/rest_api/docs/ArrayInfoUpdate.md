@@ -1,6 +1,7 @@
 # ArrayInfoUpdate
 
 metadata of an array
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

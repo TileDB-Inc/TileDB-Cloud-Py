@@ -1,6 +1,7 @@
 # GroupRegister
 
 Initial attributes for the registration of a an existing group.
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

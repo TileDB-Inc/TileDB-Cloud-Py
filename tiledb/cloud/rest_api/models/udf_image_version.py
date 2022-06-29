@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -65,7 +70,7 @@ class UDFImageVersion(object):
     ):  # noqa: E501
         """UDFImageVersion - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._id = None
@@ -110,7 +115,7 @@ class UDFImageVersion(object):
         Unique ID of a versioned image  # noqa: E501
 
         :param id: The id of this UDFImageVersion.  # noqa: E501
-        :type: str
+        :type id: str
         """
 
         self._id = id
@@ -133,7 +138,7 @@ class UDFImageVersion(object):
         name of UDFImageVersion  # noqa: E501
 
         :param name: The name of this UDFImageVersion.  # noqa: E501
-        :type: str
+        :type name: str
         """
 
         self._name = name
@@ -156,7 +161,7 @@ class UDFImageVersion(object):
         Unique ID of the UDF image set  # noqa: E501
 
         :param udf_image_uuid: The udf_image_uuid of this UDFImageVersion.  # noqa: E501
-        :type: str
+        :type udf_image_uuid: str
         """
 
         self._udf_image_uuid = udf_image_uuid
@@ -179,7 +184,7 @@ class UDFImageVersion(object):
         Uri of docker image related to current entry  # noqa: E501
 
         :param docker_image: The docker_image of this UDFImageVersion.  # noqa: E501
-        :type: str
+        :type docker_image: str
         """
 
         self._docker_image = docker_image
@@ -202,7 +207,7 @@ class UDFImageVersion(object):
         Image-specific version  # noqa: E501
 
         :param version: The version of this UDFImageVersion.  # noqa: E501
-        :type: float
+        :type version: float
         """
 
         self._version = version
@@ -225,7 +230,7 @@ class UDFImageVersion(object):
         If current image is default version  # noqa: E501
 
         :param default: The default of this UDFImageVersion.  # noqa: E501
-        :type: bool
+        :type default: bool
         """
 
         self._default = default
@@ -248,34 +253,36 @@ class UDFImageVersion(object):
         If current image is latest version  # noqa: E501
 
         :param latest: The latest of this UDFImageVersion.  # noqa: E501
-        :type: bool
+        :type latest: bool
         """
 
         self._latest = latest
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

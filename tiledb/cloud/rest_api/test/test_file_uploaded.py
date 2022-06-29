@@ -37,7 +37,7 @@ class TestFileUploaded(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.file_uploaded.FileUploaded()  # noqa: E501
         if include_optional:
             return FileUploaded(
-                output_uri="0", file_name="0", id="00000000-0000-0000-0000-000000000000"
+                output_uri="", file_name="", id="00000000-0000-0000-0000-000000000000"
             )
         else:
             return FileUploaded(

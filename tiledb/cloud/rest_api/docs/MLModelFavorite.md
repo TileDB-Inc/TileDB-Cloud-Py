@@ -1,6 +1,7 @@
 # MLModelFavorite
 
 A user-favorite MLModel item
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

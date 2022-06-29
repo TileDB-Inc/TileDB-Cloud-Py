@@ -1,6 +1,7 @@
 # NotebookStatus
 
 Status details of a notebook server
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

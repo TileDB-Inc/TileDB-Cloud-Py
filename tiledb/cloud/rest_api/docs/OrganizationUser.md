@@ -1,6 +1,7 @@
 # OrganizationUser
 
 user in an organization
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

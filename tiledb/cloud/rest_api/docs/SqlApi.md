@@ -35,14 +35,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -84,14 +80,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -138,8 +130,8 @@ Name | Type | Description  | Notes
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | JSON results in array of objects form, if the query returns results |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br>  |
-**204** | SQL executed successfully |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br>  |
+**200** | JSON results in array of objects form, if the query returns results |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed request <br>  |
+**204** | SQL executed successfully |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed request <br>  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

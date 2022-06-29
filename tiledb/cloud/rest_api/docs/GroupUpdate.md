@@ -1,6 +1,7 @@
 # GroupUpdate
 
 Updates for a group. New values for the attributes.
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

@@ -1,6 +1,7 @@
 # TaskGraphLogsData
 
 Response data for a task graph list, including pagination metadata.
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

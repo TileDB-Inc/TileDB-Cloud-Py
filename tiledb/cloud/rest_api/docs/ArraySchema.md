@@ -1,6 +1,7 @@
 # ArraySchema
 
 ArraySchema during creation or retrieval
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

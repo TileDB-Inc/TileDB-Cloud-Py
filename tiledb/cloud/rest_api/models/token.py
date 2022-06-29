@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -59,7 +64,7 @@ class Token(object):
     ):  # noqa: E501
         """Token - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._token = None
@@ -98,7 +103,7 @@ class Token(object):
         A api token  # noqa: E501
 
         :param token: The token of this Token.  # noqa: E501
-        :type: str
+        :type token: str
         """
 
         self._token = token
@@ -121,7 +126,7 @@ class Token(object):
         Name of token to revoke  # noqa: E501
 
         :param name: The name of this Token.  # noqa: E501
-        :type: str
+        :type name: str
         """
 
         self._name = name
@@ -144,7 +149,7 @@ class Token(object):
         datetime the token was created  # noqa: E501
 
         :param issued_at: The issued_at of this Token.  # noqa: E501
-        :type: datetime
+        :type issued_at: datetime
         """
 
         self._issued_at = issued_at
@@ -167,7 +172,7 @@ class Token(object):
         datetime the token when token will expire  # noqa: E501
 
         :param expires_at: The expires_at of this Token.  # noqa: E501
-        :type: datetime
+        :type expires_at: datetime
         """
 
         self._expires_at = expires_at
@@ -190,34 +195,36 @@ class Token(object):
         Optional scope to limit token, defaults to all permissions, current supported values are password_reset or *  # noqa: E501
 
         :param scope: The scope of this Token.  # noqa: E501
-        :type: str
+        :type scope: str
         """
 
         self._scope = scope
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

@@ -1,6 +1,7 @@
 # ArrayFavoritesData
 
 Object including array favorites and pagination metadata
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

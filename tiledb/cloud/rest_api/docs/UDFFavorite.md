@@ -1,6 +1,7 @@
 # UDFFavorite
 
 A user-favorite UDF item
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

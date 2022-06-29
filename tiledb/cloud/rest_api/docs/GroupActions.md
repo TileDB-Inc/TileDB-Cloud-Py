@@ -1,6 +1,7 @@
 # GroupActions
 
 actions a user can take on a group
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

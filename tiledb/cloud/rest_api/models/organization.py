@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -89,7 +94,7 @@ class Organization(object):
     ):  # noqa: E501
         """Organization - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._id = None
@@ -156,7 +161,7 @@ class Organization(object):
         unique ID of organization  # noqa: E501
 
         :param id: The id of this Organization.  # noqa: E501
-        :type: str
+        :type id: str
         """
 
         self._id = id
@@ -177,7 +182,7 @@ class Organization(object):
 
 
         :param role: The role of this Organization.  # noqa: E501
-        :type: OrganizationRoles
+        :type role: OrganizationRoles
         """
 
         self._role = role
@@ -200,7 +205,7 @@ class Organization(object):
         organization name must be unique  # noqa: E501
 
         :param name: The name of this Organization.  # noqa: E501
-        :type: str
+        :type name: str
         """
         if (
             self.local_vars_configuration.client_side_validation and name is None
@@ -253,7 +258,7 @@ class Organization(object):
         Datetime organization was created in UTC  # noqa: E501
 
         :param created_at: The created_at of this Organization.  # noqa: E501
-        :type: datetime
+        :type created_at: datetime
         """
 
         self._created_at = created_at
@@ -276,7 +281,7 @@ class Organization(object):
         Datetime organization was updated in UTC  # noqa: E501
 
         :param updated_at: The updated_at of this Organization.  # noqa: E501
-        :type: datetime
+        :type updated_at: datetime
         """
 
         self._updated_at = updated_at
@@ -299,7 +304,7 @@ class Organization(object):
         Organization logo  # noqa: E501
 
         :param logo: The logo of this Organization.  # noqa: E501
-        :type: str
+        :type logo: str
         """
 
         self._logo = logo
@@ -322,7 +327,7 @@ class Organization(object):
         Organization description  # noqa: E501
 
         :param description: The description of this Organization.  # noqa: E501
-        :type: str
+        :type description: str
         """
 
         self._description = description
@@ -343,7 +348,7 @@ class Organization(object):
 
 
         :param users: The users of this Organization.  # noqa: E501
-        :type: list[OrganizationUser]
+        :type users: list[OrganizationUser]
         """
 
         self._users = users
@@ -366,7 +371,7 @@ class Organization(object):
         list of actions user is allowed to do on this organization  # noqa: E501
 
         :param allowed_actions: The allowed_actions of this Organization.  # noqa: E501
-        :type: list[NamespaceActions]
+        :type allowed_actions: list[NamespaceActions]
         """
 
         self._allowed_actions = allowed_actions
@@ -389,7 +394,7 @@ class Organization(object):
         number of registered arrays for this organization  # noqa: E501
 
         :param num_of_arrays: The num_of_arrays of this Organization.  # noqa: E501
-        :type: float
+        :type num_of_arrays: float
         """
 
         self._num_of_arrays = num_of_arrays
@@ -412,7 +417,7 @@ class Organization(object):
         List of extra/optional/beta features to enable for namespace  # noqa: E501
 
         :param enabled_features: The enabled_features of this Organization.  # noqa: E501
-        :type: list[str]
+        :type enabled_features: list[str]
         """
 
         self._enabled_features = enabled_features
@@ -435,7 +440,7 @@ class Organization(object):
         A notice that the user has an unpaid subscription  # noqa: E501
 
         :param unpaid_subscription: The unpaid_subscription of this Organization.  # noqa: E501
-        :type: bool
+        :type unpaid_subscription: bool
         """
 
         self._unpaid_subscription = unpaid_subscription
@@ -458,7 +463,7 @@ class Organization(object):
         default S3 path to store newly created notebooks  # noqa: E501
 
         :param default_s3_path: The default_s3_path of this Organization.  # noqa: E501
-        :type: str
+        :type default_s3_path: str
         """
 
         self._default_s3_path = default_s3_path
@@ -481,7 +486,7 @@ class Organization(object):
         Default S3 path credentials name is the credentials name to use along with default_s3_path  # noqa: E501
 
         :param default_s3_path_credentials_name: The default_s3_path_credentials_name of this Organization.  # noqa: E501
-        :type: str
+        :type default_s3_path_credentials_name: str
         """
 
         self._default_s3_path_credentials_name = default_s3_path_credentials_name
@@ -504,34 +509,36 @@ class Organization(object):
         Denotes that the organization is able to apply pricing to arrays by means of Stripe Connect  # noqa: E501
 
         :param stripe_connect: The stripe_connect of this Organization.  # noqa: E501
-        :type: bool
+        :type stripe_connect: bool
         """
 
         self._stripe_connect = stripe_connect
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

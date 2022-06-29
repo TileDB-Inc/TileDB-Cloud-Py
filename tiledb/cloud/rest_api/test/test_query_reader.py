@@ -65,7 +65,7 @@ class TestQueryReader(unittest.TestCase):
                         ),
                         budget=[
                             tiledb.cloud.rest_api.models.attribute_buffer_size.AttributeBufferSize(
-                                attribute="0",
+                                attribute="",
                                 offset_bytes=56,
                                 data_bytes=56,
                             )
@@ -89,7 +89,7 @@ class TestQueryReader(unittest.TestCase):
                         memory_budget_var=56,
                     ),
                 ),
-                var_offsets_mode="0",
+                var_offsets_mode="",
                 var_offsets_add_extra_element=True,
                 var_offsets_bitsize=56,
             )

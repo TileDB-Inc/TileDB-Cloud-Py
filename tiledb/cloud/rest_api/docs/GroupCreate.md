@@ -1,6 +1,7 @@
 # GroupCreate
 
 Initial attributes for the creation of a group.
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

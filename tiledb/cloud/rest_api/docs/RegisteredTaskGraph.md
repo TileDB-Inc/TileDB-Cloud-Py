@@ -1,6 +1,7 @@
 # RegisteredTaskGraph
 
 The structure and metadata of a task graph that can be stored on TileDB Cloud and executed by users who have access to it. 
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

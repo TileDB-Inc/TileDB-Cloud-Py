@@ -1,6 +1,7 @@
 # QueryReader
 
 Read struct (can't be called reader due to class name conflict)
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

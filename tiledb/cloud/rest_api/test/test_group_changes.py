@@ -39,15 +39,15 @@ class TestGroupChanges(unittest.TestCase):
             return GroupChanges(
                 add=[
                     tiledb.cloud.rest_api.models.group_member.GroupMember(
-                        namespace="0",
-                        name="0",
+                        namespace="",
+                        name="",
                         member_type="group",
                     )
                 ],
                 remove=[
                     tiledb.cloud.rest_api.models.group_member.GroupMember(
-                        namespace="0",
-                        name="0",
+                        namespace="",
+                        name="",
                         member_type="group",
                     )
                 ],

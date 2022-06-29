@@ -37,7 +37,7 @@ class TestNotebookStatus(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.notebook_status.NotebookStatus()  # noqa: E501
         if include_optional:
             return NotebookStatus(
-                namespace="0",
+                namespace="",
                 uptime=120,
                 cpu_usage=4000,
                 memory_usage=1073741824,

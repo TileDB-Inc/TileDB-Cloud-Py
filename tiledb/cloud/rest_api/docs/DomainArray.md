@@ -1,6 +1,7 @@
 # DomainArray
 
 Domain object for an array of each type
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

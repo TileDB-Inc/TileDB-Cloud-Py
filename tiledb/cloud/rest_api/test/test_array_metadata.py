@@ -39,8 +39,8 @@ class TestArrayMetadata(unittest.TestCase):
             return ArrayMetadata(
                 entries=[
                     tiledb.cloud.rest_api.models.array_metadata_entry.ArrayMetadataEntry(
-                        key="0",
-                        type="0",
+                        key="",
+                        type="",
                         value_num=56,
                         value=[56],
                         _del=True,

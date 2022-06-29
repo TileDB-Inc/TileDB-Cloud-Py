@@ -1,6 +1,7 @@
 # SubarrayRanges
 
 A set of 1D ranges for a subarray
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

@@ -39,7 +39,7 @@ class TestArrayMetadataEntry(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.array_metadata_entry.ArrayMetadataEntry()  # noqa: E501
         if include_optional:
             return ArrayMetadataEntry(
-                key="0", type="0", value_num=56, value=[56], _del=True
+                key="", type="", value_num=56, value=[56], _del=True
             )
         else:
             return ArrayMetadataEntry()

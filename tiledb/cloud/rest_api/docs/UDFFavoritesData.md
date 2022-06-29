@@ -1,6 +1,7 @@
 # UDFFavoritesData
 
 Object including UDF favorites and pagination metadata
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

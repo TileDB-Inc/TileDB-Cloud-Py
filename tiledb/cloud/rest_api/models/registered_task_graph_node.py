@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -65,7 +70,7 @@ class RegisteredTaskGraphNode(object):
     ):  # noqa: E501
         """RegisteredTaskGraphNode - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._client_node_id = None
@@ -106,7 +111,7 @@ class RegisteredTaskGraphNode(object):
         The client-generated UUID of the given graph node.  # noqa: E501
 
         :param client_node_id: The client_node_id of this RegisteredTaskGraphNode.  # noqa: E501
-        :type: str
+        :type client_node_id: str
         """
 
         self._client_node_id = client_node_id
@@ -129,7 +134,7 @@ class RegisteredTaskGraphNode(object):
         A client-specified name for the node. If provided, this must be unique.   # noqa: E501
 
         :param name: The name of this RegisteredTaskGraphNode.  # noqa: E501
-        :type: str
+        :type name: str
         """
 
         self._name = name
@@ -152,7 +157,7 @@ class RegisteredTaskGraphNode(object):
         The client_node_uuid of each node that this node depends upon. Used to define the structure of the graph.   # noqa: E501
 
         :param depends_on: The depends_on of this RegisteredTaskGraphNode.  # noqa: E501
-        :type: list[str]
+        :type depends_on: list[str]
         """
 
         self._depends_on = depends_on
@@ -173,7 +178,7 @@ class RegisteredTaskGraphNode(object):
 
 
         :param array_node: The array_node of this RegisteredTaskGraphNode.  # noqa: E501
-        :type: UDFArrayDetails
+        :type array_node: UDFArrayDetails
         """
 
         self._array_node = array_node
@@ -194,7 +199,7 @@ class RegisteredTaskGraphNode(object):
 
 
         :param input_node: The input_node of this RegisteredTaskGraphNode.  # noqa: E501
-        :type: TGInputNodeData
+        :type input_node: TGInputNodeData
         """
 
         self._input_node = input_node
@@ -215,7 +220,7 @@ class RegisteredTaskGraphNode(object):
 
 
         :param sql_node: The sql_node of this RegisteredTaskGraphNode.  # noqa: E501
-        :type: TGSQLNodeData
+        :type sql_node: TGSQLNodeData
         """
 
         self._sql_node = sql_node
@@ -236,34 +241,36 @@ class RegisteredTaskGraphNode(object):
 
 
         :param udf_node: The udf_node of this RegisteredTaskGraphNode.  # noqa: E501
-        :type: TGUDFNodeData
+        :type udf_node: TGUDFNodeData
         """
 
         self._udf_node = udf_node
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

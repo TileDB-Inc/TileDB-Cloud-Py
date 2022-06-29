@@ -1,6 +1,7 @@
 # GenericUDF
 
 User-defined function
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

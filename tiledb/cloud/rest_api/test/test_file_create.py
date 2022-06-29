@@ -36,7 +36,7 @@ class TestFileCreate(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.file_create.FileCreate()  # noqa: E501
         if include_optional:
-            return FileCreate(input_uri="0", output_uri="0", name="0")
+            return FileCreate(input_uri="", output_uri="", name="")
         else:
             return FileCreate()
 

@@ -1,6 +1,7 @@
 # UDFCopy
 
 information required to copy a udf
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

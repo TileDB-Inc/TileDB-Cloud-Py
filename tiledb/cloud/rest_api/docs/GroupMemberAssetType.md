@@ -1,6 +1,7 @@
 # GroupMemberAssetType
 
 Specific file types of group members
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

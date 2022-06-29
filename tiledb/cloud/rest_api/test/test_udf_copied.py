@@ -37,9 +37,9 @@ class TestUDFCopied(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.udf_copied.UDFCopied()  # noqa: E501
         if include_optional:
             return UDFCopied(
-                output_uri="0",
-                namespace="0",
-                name="0",
+                output_uri="",
+                namespace="",
+                name="",
                 id="00000000-0000-0000-0000-000000000000",
             )
         else:

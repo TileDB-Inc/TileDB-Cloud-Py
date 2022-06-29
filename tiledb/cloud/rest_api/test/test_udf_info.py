@@ -38,13 +38,13 @@ class TestUDFInfo(unittest.TestCase):
         if include_optional:
             return UDFInfo(
                 id="00000000-0000-0000-0000-000000000000",
-                name="0",
+                name="",
                 language="python",
                 type="multi_array",
-                readme="0",
-                license_id="0",
-                license_text="0",
-                tags=["0"],
+                readme="",
+                license_id="",
+                license_text="",
+                tags=[""],
             )
         else:
             return UDFInfo()

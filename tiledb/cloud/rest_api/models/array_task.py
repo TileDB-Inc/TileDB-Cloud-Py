@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -125,7 +130,7 @@ class ArrayTask(object):
     ):  # noqa: E501
         """ArrayTask - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._id = None
@@ -229,7 +234,7 @@ class ArrayTask(object):
         task ID  # noqa: E501
 
         :param id: The id of this ArrayTask.  # noqa: E501
-        :type: str
+        :type id: str
         """
 
         self._id = id
@@ -252,7 +257,7 @@ class ArrayTask(object):
         Optional task name  # noqa: E501
 
         :param name: The name of this ArrayTask.  # noqa: E501
-        :type: str
+        :type name: str
         """
 
         self._name = name
@@ -275,7 +280,7 @@ class ArrayTask(object):
         Optional task description (Tasks purpose)  # noqa: E501
 
         :param description: The description of this ArrayTask.  # noqa: E501
-        :type: str
+        :type description: str
         """
 
         self._description = description
@@ -296,7 +301,7 @@ class ArrayTask(object):
 
 
         :param array_metadata: The array_metadata of this ArrayTask.  # noqa: E501
-        :type: ArrayInfo
+        :type array_metadata: ArrayInfo
         """
 
         self._array_metadata = array_metadata
@@ -317,7 +322,7 @@ class ArrayTask(object):
 
 
         :param subarray: The subarray of this ArrayTask.  # noqa: E501
-        :type: DomainArray
+        :type subarray: DomainArray
         """
 
         self._subarray = subarray
@@ -340,7 +345,7 @@ class ArrayTask(object):
         memory allocated to task in bytes  # noqa: E501
 
         :param memory: The memory of this ArrayTask.  # noqa: E501
-        :type: int
+        :type memory: int
         """
 
         self._memory = memory
@@ -363,7 +368,7 @@ class ArrayTask(object):
         millicpu allocated to task  # noqa: E501
 
         :param cpu: The cpu of this ArrayTask.  # noqa: E501
-        :type: int
+        :type cpu: int
         """
 
         self._cpu = cpu
@@ -386,7 +391,7 @@ class ArrayTask(object):
         namespace task is tied to  # noqa: E501
 
         :param namespace: The namespace of this ArrayTask.  # noqa: E501
-        :type: str
+        :type namespace: str
         """
 
         self._namespace = namespace
@@ -407,7 +412,7 @@ class ArrayTask(object):
 
 
         :param status: The status of this ArrayTask.  # noqa: E501
-        :type: ArrayTaskStatus
+        :type status: ArrayTaskStatus
         """
 
         self._status = status
@@ -430,7 +435,7 @@ class ArrayTask(object):
         Start time RFC3339 for job  # noqa: E501
 
         :param start_time: The start_time of this ArrayTask.  # noqa: E501
-        :type: datetime
+        :type start_time: datetime
         """
 
         self._start_time = start_time
@@ -453,7 +458,7 @@ class ArrayTask(object):
         Finish time RFC3339 for job  # noqa: E501
 
         :param finish_time: The finish_time of this ArrayTask.  # noqa: E501
-        :type: datetime
+        :type finish_time: datetime
         """
 
         self._finish_time = finish_time
@@ -476,7 +481,7 @@ class ArrayTask(object):
         Total accumulated for task in USD, example is $0.12  # noqa: E501
 
         :param cost: The cost of this ArrayTask.  # noqa: E501
-        :type: float
+        :type cost: float
         """
 
         self._cost = cost
@@ -499,7 +504,7 @@ class ArrayTask(object):
         Total accumulated for egress task in USD, example is $0.12  # noqa: E501
 
         :param egress_cost: The egress_cost of this ArrayTask.  # noqa: E501
-        :type: float
+        :type egress_cost: float
         """
 
         self._egress_cost = egress_cost
@@ -522,7 +527,7 @@ class ArrayTask(object):
         Cost accumulated for access task in USD, example is $0.12  # noqa: E501
 
         :param access_cost: The access_cost of this ArrayTask.  # noqa: E501
-        :type: float
+        :type access_cost: float
         """
 
         self._access_cost = access_cost
@@ -543,7 +548,7 @@ class ArrayTask(object):
 
 
         :param query_type: The query_type of this ArrayTask.  # noqa: E501
-        :type: Querytype
+        :type query_type: Querytype
         """
 
         self._query_type = query_type
@@ -566,7 +571,7 @@ class ArrayTask(object):
         Optional actual code that is going to be executed  # noqa: E501
 
         :param udf_code: The udf_code of this ArrayTask.  # noqa: E501
-        :type: str
+        :type udf_code: str
         """
 
         self._udf_code = udf_code
@@ -589,7 +594,7 @@ class ArrayTask(object):
         Optional actual language used to express udf_code  # noqa: E501
 
         :param udf_language: The udf_language of this ArrayTask.  # noqa: E501
-        :type: str
+        :type udf_language: str
         """
 
         self._udf_language = udf_language
@@ -612,7 +617,7 @@ class ArrayTask(object):
         Optional actual sql query that is going to be executed  # noqa: E501
 
         :param sql_query: The sql_query of this ArrayTask.  # noqa: E501
-        :type: str
+        :type sql_query: str
         """
 
         self._sql_query = sql_query
@@ -633,7 +638,7 @@ class ArrayTask(object):
 
 
         :param type: The type of this ArrayTask.  # noqa: E501
-        :type: ArrayTaskType
+        :type type: ArrayTaskType
         """
 
         self._type = type
@@ -656,7 +661,7 @@ class ArrayTask(object):
         Array activity logs for task  # noqa: E501
 
         :param activity: The activity of this ArrayTask.  # noqa: E501
-        :type: list[ArrayActivityLog]
+        :type activity: list[ArrayActivityLog]
         """
 
         self._activity = activity
@@ -679,7 +684,7 @@ class ArrayTask(object):
         logs from array task  # noqa: E501
 
         :param logs: The logs of this ArrayTask.  # noqa: E501
-        :type: str
+        :type logs: str
         """
 
         self._logs = logs
@@ -702,7 +707,7 @@ class ArrayTask(object):
         duration in nanoseconds of an array task  # noqa: E501
 
         :param duration: The duration of this ArrayTask.  # noqa: E501
-        :type: float
+        :type duration: float
         """
 
         self._duration = duration
@@ -725,7 +730,7 @@ class ArrayTask(object):
         SQL queries or commands to run before main sql query  # noqa: E501
 
         :param sql_init_commands: The sql_init_commands of this ArrayTask.  # noqa: E501
-        :type: list[str]
+        :type sql_init_commands: list[str]
         """
 
         self._sql_init_commands = sql_init_commands
@@ -748,7 +753,7 @@ class ArrayTask(object):
         SQL query parameters  # noqa: E501
 
         :param sql_parameters: The sql_parameters of this ArrayTask.  # noqa: E501
-        :type: list[object]
+        :type sql_parameters: list[object]
         """
 
         self._sql_parameters = sql_parameters
@@ -769,7 +774,7 @@ class ArrayTask(object):
 
 
         :param result_format: The result_format of this ArrayTask.  # noqa: E501
-        :type: ResultFormat
+        :type result_format: ResultFormat
         """
 
         self._result_format = result_format
@@ -792,7 +797,7 @@ class ArrayTask(object):
         If set, the ID of the log for the task graph that this was part of.   # noqa: E501
 
         :param task_graph_uuid: The task_graph_uuid of this ArrayTask.  # noqa: E501
-        :type: str
+        :type task_graph_uuid: str
         """
 
         self._task_graph_uuid = task_graph_uuid
@@ -815,34 +820,36 @@ class ArrayTask(object):
         If set, the client-defined ID of the node within this task's graph.   # noqa: E501
 
         :param client_node_uuid: The client_node_uuid of this ArrayTask.  # noqa: E501
-        :type: str
+        :type client_node_uuid: str
         """
 
         self._client_node_uuid = client_node_uuid
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

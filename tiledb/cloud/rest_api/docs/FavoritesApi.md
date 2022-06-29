@@ -17,13 +17,13 @@ Method | HTTP request | Description
 [**get_notebook_favorite**](FavoritesApi.md#get_notebook_favorite) | **GET** /notebooks/favorites/{namespace}/{name} | 
 [**get_udf_favorite**](FavoritesApi.md#get_udf_favorite) | **GET** /udfs/favorites/{namespace}/{name} | 
 [**list_array_favorites**](FavoritesApi.md#list_array_favorites) | **GET** /arrays/favorites | 
-[**list_array_favorites_uui_ds**](FavoritesApi.md#list_array_favorites_uui_ds) | **GET** /arrays/favorites/uuids | 
+[**list_array_favorites_uuids**](FavoritesApi.md#list_array_favorites_uuids) | **GET** /arrays/favorites/uuids | 
 [**list_ml_model_favorites**](FavoritesApi.md#list_ml_model_favorites) | **GET** /ml_models/favorites | 
-[**list_ml_model_favorites_uui_ds**](FavoritesApi.md#list_ml_model_favorites_uui_ds) | **GET** /ml_models/favorites/uuids | 
+[**list_ml_model_favorites_uuids**](FavoritesApi.md#list_ml_model_favorites_uuids) | **GET** /ml_models/favorites/uuids | 
 [**list_notebook_favorites**](FavoritesApi.md#list_notebook_favorites) | **GET** /notebooks/favorites | 
-[**list_notebook_favorites_uui_ds**](FavoritesApi.md#list_notebook_favorites_uui_ds) | **GET** /notebooks/favorites/uuids | 
+[**list_notebook_favorites_uuids**](FavoritesApi.md#list_notebook_favorites_uuids) | **GET** /notebooks/favorites/uuids | 
 [**list_udf_favorites**](FavoritesApi.md#list_udf_favorites) | **GET** /udfs/favorites | 
-[**list_udf_favorites_uui_ds**](FavoritesApi.md#list_udf_favorites_uui_ds) | **GET** /udfs/favorites/uuids | 
+[**list_udf_favorites_uuids**](FavoritesApi.md#list_udf_favorites_uuids) | **GET** /udfs/favorites/uuids | 
 
 
 # **add_array_favorite**
@@ -54,14 +54,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -101,14 +97,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -185,14 +177,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -232,14 +220,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -316,14 +300,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -363,14 +343,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -447,14 +423,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -494,14 +466,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -578,14 +546,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -625,14 +589,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -709,14 +669,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -756,14 +712,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -840,14 +792,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -887,14 +835,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -971,14 +915,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1018,14 +958,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1102,14 +1038,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1150,14 +1082,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1235,14 +1163,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1283,14 +1207,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1368,14 +1288,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1416,14 +1332,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1501,14 +1413,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1549,14 +1457,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1634,14 +1538,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1682,14 +1582,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1739,8 +1635,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **list_array_favorites_uui_ds**
-> list[ArrayFavorite] list_array_favorites_uui_ds()
+# **list_array_favorites_uuids**
+> list[ArrayFavorite] list_array_favorites_uuids()
 
 
 
@@ -1767,14 +1663,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1788,10 +1680,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
     
     try:
-        api_response = api_instance.list_array_favorites_uui_ds()
+        api_response = api_instance.list_array_favorites_uuids()
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling FavoritesApi->list_array_favorites_uui_ds: %s\n" % e)
+        print("Exception when calling FavoritesApi->list_array_favorites_uuids: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -1813,14 +1705,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1834,10 +1722,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
     
     try:
-        api_response = api_instance.list_array_favorites_uui_ds()
+        api_response = api_instance.list_array_favorites_uuids()
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling FavoritesApi->list_array_favorites_uui_ds: %s\n" % e)
+        print("Exception when calling FavoritesApi->list_array_favorites_uuids: %s\n" % e)
 ```
 
 ### Parameters
@@ -1892,14 +1780,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1940,14 +1824,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -1997,8 +1877,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **list_ml_model_favorites_uui_ds**
-> list[MLModelFavorite] list_ml_model_favorites_uui_ds()
+# **list_ml_model_favorites_uuids**
+> list[MLModelFavorite] list_ml_model_favorites_uuids()
 
 
 
@@ -2025,14 +1905,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -2046,10 +1922,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
     
     try:
-        api_response = api_instance.list_ml_model_favorites_uui_ds()
+        api_response = api_instance.list_ml_model_favorites_uuids()
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling FavoritesApi->list_ml_model_favorites_uui_ds: %s\n" % e)
+        print("Exception when calling FavoritesApi->list_ml_model_favorites_uuids: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -2071,14 +1947,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -2092,10 +1964,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
     
     try:
-        api_response = api_instance.list_ml_model_favorites_uui_ds()
+        api_response = api_instance.list_ml_model_favorites_uuids()
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling FavoritesApi->list_ml_model_favorites_uui_ds: %s\n" % e)
+        print("Exception when calling FavoritesApi->list_ml_model_favorites_uuids: %s\n" % e)
 ```
 
 ### Parameters
@@ -2150,14 +2022,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -2199,14 +2067,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -2258,8 +2122,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **list_notebook_favorites_uui_ds**
-> list[NotebookFavorite] list_notebook_favorites_uui_ds()
+# **list_notebook_favorites_uuids**
+> list[NotebookFavorite] list_notebook_favorites_uuids()
 
 
 
@@ -2286,14 +2150,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -2307,10 +2167,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
     
     try:
-        api_response = api_instance.list_notebook_favorites_uui_ds()
+        api_response = api_instance.list_notebook_favorites_uuids()
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling FavoritesApi->list_notebook_favorites_uui_ds: %s\n" % e)
+        print("Exception when calling FavoritesApi->list_notebook_favorites_uuids: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -2332,14 +2192,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -2353,10 +2209,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
     
     try:
-        api_response = api_instance.list_notebook_favorites_uui_ds()
+        api_response = api_instance.list_notebook_favorites_uuids()
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling FavoritesApi->list_notebook_favorites_uui_ds: %s\n" % e)
+        print("Exception when calling FavoritesApi->list_notebook_favorites_uuids: %s\n" % e)
 ```
 
 ### Parameters
@@ -2411,14 +2267,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -2459,14 +2311,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -2516,8 +2364,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **list_udf_favorites_uui_ds**
-> list[UDFFavorite] list_udf_favorites_uui_ds()
+# **list_udf_favorites_uuids**
+> list[UDFFavorite] list_udf_favorites_uuids()
 
 
 
@@ -2544,14 +2392,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -2565,10 +2409,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
     
     try:
-        api_response = api_instance.list_udf_favorites_uui_ds()
+        api_response = api_instance.list_udf_favorites_uuids()
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling FavoritesApi->list_udf_favorites_uui_ds: %s\n" % e)
+        print("Exception when calling FavoritesApi->list_udf_favorites_uuids: %s\n" % e)
 ```
 
 * Basic Authentication (BasicAuth):
@@ -2590,14 +2434,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 # satisfies your auth use case.
 
 # Configure API key authorization: ApiKeyAuth
-configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
-    api_key = {
-        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
-    }
-)
+configuration.api_key['ApiKeyAuth'] = 'YOUR_API_KEY'
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+# configuration.api_key_prefix['ApiKeyAuth'] = 'Bearer'
 
 # Configure HTTP basic authorization: BasicAuth
 configuration = tiledb.cloud.rest_api.Configuration(
@@ -2611,10 +2451,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.FavoritesApi(api_client)
     
     try:
-        api_response = api_instance.list_udf_favorites_uui_ds()
+        api_response = api_instance.list_udf_favorites_uuids()
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling FavoritesApi->list_udf_favorites_uui_ds: %s\n" % e)
+        print("Exception when calling FavoritesApi->list_udf_favorites_uuids: %s\n" % e)
 ```
 
 ### Parameters

@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -83,7 +88,7 @@ class Pricing(object):
     ):  # noqa: E501
         """Pricing - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._id = None
@@ -146,7 +151,7 @@ class Pricing(object):
         Unique ID of plan as defined by Stripe  # noqa: E501
 
         :param id: The id of this Pricing.  # noqa: E501
-        :type: str
+        :type id: str
         """
 
         self._id = id
@@ -169,7 +174,7 @@ class Pricing(object):
         Unique ID of registered array  # noqa: E501
 
         :param array_uuid: The array_uuid of this Pricing.  # noqa: E501
-        :type: str
+        :type array_uuid: str
         """
 
         self._array_uuid = array_uuid
@@ -192,7 +197,7 @@ class Pricing(object):
         Name of pricing  # noqa: E501
 
         :param pricing_name: The pricing_name of this Pricing.  # noqa: E501
-        :type: str
+        :type pricing_name: str
         """
 
         self._pricing_name = pricing_name
@@ -213,7 +218,7 @@ class Pricing(object):
 
 
         :param pricing_type: The pricing_type of this Pricing.  # noqa: E501
-        :type: PricingType
+        :type pricing_type: PricingType
         """
 
         self._pricing_type = pricing_type
@@ -236,7 +241,7 @@ class Pricing(object):
         Name of product  # noqa: E501
 
         :param product_name: The product_name of this Pricing.  # noqa: E501
-        :type: str
+        :type product_name: str
         """
 
         self._product_name = product_name
@@ -259,7 +264,7 @@ class Pricing(object):
         Extra information about a product which will appear on the credit card statement of the customer  # noqa: E501
 
         :param product_statement_descriptor: The product_statement_descriptor of this Pricing.  # noqa: E501
-        :type: str
+        :type product_statement_descriptor: str
         """
 
         self._product_statement_descriptor = product_statement_descriptor
@@ -280,7 +285,7 @@ class Pricing(object):
 
 
         :param product_unit_label: The product_unit_label of this Pricing.  # noqa: E501
-        :type: PricingUnitLabel
+        :type product_unit_label: PricingUnitLabel
         """
 
         self._product_unit_label = product_unit_label
@@ -301,7 +306,7 @@ class Pricing(object):
 
 
         :param currency: The currency of this Pricing.  # noqa: E501
-        :type: PricingCurrency
+        :type currency: PricingCurrency
         """
 
         self._currency = currency
@@ -322,7 +327,7 @@ class Pricing(object):
 
 
         :param aggregate_usage: The aggregate_usage of this Pricing.  # noqa: E501
-        :type: PricingAggregateUsage
+        :type aggregate_usage: PricingAggregateUsage
         """
 
         self._aggregate_usage = aggregate_usage
@@ -343,7 +348,7 @@ class Pricing(object):
 
 
         :param interval: The interval of this Pricing.  # noqa: E501
-        :type: PricingInterval
+        :type interval: PricingInterval
         """
 
         self._interval = interval
@@ -366,7 +371,7 @@ class Pricing(object):
         Group of n product unit labels  # noqa: E501
 
         :param divided_by: The divided_by of this Pricing.  # noqa: E501
-        :type: int
+        :type divided_by: int
         """
 
         self._divided_by = divided_by
@@ -389,7 +394,7 @@ class Pricing(object):
         Price in cents (decimal) per unitlabel  # noqa: E501
 
         :param charge: The charge of this Pricing.  # noqa: E501
-        :type: float
+        :type charge: float
         """
 
         self._charge = charge
@@ -412,34 +417,36 @@ class Pricing(object):
         If pricing is activated  # noqa: E501
 
         :param activated: The activated of this Pricing.  # noqa: E501
-        :type: bool
+        :type activated: bool
         """
 
         self._activated = activated
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

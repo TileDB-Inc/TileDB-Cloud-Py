@@ -1,6 +1,7 @@
 # AttributeBufferHeader
 
 Represents an attribute buffer header information
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

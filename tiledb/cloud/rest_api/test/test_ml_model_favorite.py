@@ -36,7 +36,7 @@ class TestMLModelFavorite(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.ml_model_favorite.MLModelFavorite()  # noqa: E501
         if include_optional:
-            return MLModelFavorite(mlmodel_uuid="0", namespace="0", name="0")
+            return MLModelFavorite(mlmodel_uuid="", namespace="", name="")
         else:
             return MLModelFavorite()
 

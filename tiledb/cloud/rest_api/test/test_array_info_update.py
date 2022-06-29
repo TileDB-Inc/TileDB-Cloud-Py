@@ -37,16 +37,16 @@ class TestArrayInfoUpdate(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.array_info_update.ArrayInfoUpdate()  # noqa: E501
         if include_optional:
             return ArrayInfoUpdate(
-                description="0",
+                description="",
                 name="myarray1",
                 uri="s3://bucket/array",
                 file_type="notebook",
-                file_properties={"key": "0"},
-                access_credentials_name="0",
-                logo="0",
-                tags=["0"],
-                license_id="0",
-                license_text="0",
+                file_properties={"key": ""},
+                access_credentials_name="",
+                logo="",
+                tags=[""],
+                license_id="",
+                license_text="",
                 read_only=True,
             )
         else:

@@ -36,7 +36,7 @@ class TestFileExported(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.file_exported.FileExported()  # noqa: E501
         if include_optional:
-            return FileExported(output_uri="0")
+            return FileExported(output_uri="")
         else:
             return FileExported()
 

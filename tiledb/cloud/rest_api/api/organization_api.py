@@ -42,22 +42,28 @@ class OrganizationApi(object):
         Add aws keys  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_aws_access_credentials(namespace, aws_access_credentials, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace (required)
-        :param AWSAccessCredentials aws_access_credentials: aws access credentials to store for a namespace (required)
+        :param namespace: namespace (required)
+        :type namespace: str
+        :param aws_access_credentials: aws access credentials to store for a namespace (required)
+        :type aws_access_credentials: AWSAccessCredentials
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.add_aws_access_credentials_with_http_info(
@@ -72,24 +78,35 @@ class OrganizationApi(object):
         Add aws keys  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_aws_access_credentials_with_http_info(namespace, aws_access_credentials, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace (required)
-        :param AWSAccessCredentials aws_access_credentials: aws access credentials to store for a namespace (required)
+        :param namespace: namespace (required)
+        :type namespace: str
+        :param aws_access_credentials: aws access credentials to store for a namespace (required)
+        :type aws_access_credentials: AWSAccessCredentials
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -101,6 +118,7 @@ class OrganizationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -160,6 +178,8 @@ class OrganizationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/credentials/{namespace}/aws",
             "POST",
@@ -169,7 +189,7 @@ class OrganizationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -178,6 +198,7 @@ class OrganizationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def add_user_to_organization(self, organization, user, **kwargs):  # noqa: E501
@@ -186,22 +207,28 @@ class OrganizationApi(object):
         add a user to an organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_user_to_organization(organization, user, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: organization name (required)
-        :param OrganizationUser user: user to add (required)
+        :param organization: organization name (required)
+        :type organization: str
+        :param user: user to add (required)
+        :type user: OrganizationUser
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.add_user_to_organization_with_http_info(
@@ -216,24 +243,35 @@ class OrganizationApi(object):
         add a user to an organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.add_user_to_organization_with_http_info(organization, user, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: organization name (required)
-        :param OrganizationUser user: user to add (required)
+        :param organization: organization name (required)
+        :type organization: str
+        :param user: user to add (required)
+        :type user: OrganizationUser
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -245,6 +283,7 @@ class OrganizationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -304,6 +343,8 @@ class OrganizationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/organizations/{organization}/user",
             "POST",
@@ -313,7 +354,7 @@ class OrganizationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -322,6 +363,7 @@ class OrganizationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def check_aws_access_credentials(self, namespace, **kwargs):  # noqa: E501
@@ -330,21 +372,26 @@ class OrganizationApi(object):
         Check if aws keys are set  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.check_aws_access_credentials(namespace, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace (required)
+        :param namespace: namespace (required)
+        :type namespace: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: list[AWSAccessCredentials]
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: list[AWSAccessCredentials]
         """
         kwargs["_return_http_data_only"] = True
         return self.check_aws_access_credentials_with_http_info(
@@ -359,23 +406,33 @@ class OrganizationApi(object):
         Check if aws keys are set  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.check_aws_access_credentials_with_http_info(namespace, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace (required)
+        :param namespace: namespace (required)
+        :type namespace: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(list[AWSAccessCredentials], status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(list[AWSAccessCredentials], status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -387,6 +444,7 @@ class OrganizationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -429,6 +487,10 @@ class OrganizationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "list[AWSAccessCredentials]",
+        }
+
         return self.api_client.call_api(
             "/credentials/{namespace}/aws",
             "GET",
@@ -438,7 +500,7 @@ class OrganizationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="list[AWSAccessCredentials]",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -447,6 +509,7 @@ class OrganizationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def check_aws_access_credentials_by_name(
@@ -457,22 +520,28 @@ class OrganizationApi(object):
         Check if aws keys are set by name  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.check_aws_access_credentials_by_name(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace (required)
-        :param str name: name (required)
+        :param namespace: namespace (required)
+        :type namespace: str
+        :param name: name (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: AWSAccessCredentials
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: AWSAccessCredentials
         """
         kwargs["_return_http_data_only"] = True
         return self.check_aws_access_credentials_by_name_with_http_info(
@@ -487,24 +556,35 @@ class OrganizationApi(object):
         Check if aws keys are set by name  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.check_aws_access_credentials_by_name_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace (required)
-        :param str name: name (required)
+        :param namespace: namespace (required)
+        :type namespace: str
+        :param name: name (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(AWSAccessCredentials, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(AWSAccessCredentials, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -516,6 +596,7 @@ class OrganizationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -568,6 +649,10 @@ class OrganizationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "AWSAccessCredentials",
+        }
+
         return self.api_client.call_api(
             "/credentials/{namespace}/aws/{name}",
             "GET",
@@ -577,7 +662,7 @@ class OrganizationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="AWSAccessCredentials",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -586,6 +671,7 @@ class OrganizationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def create_organization(self, organization, **kwargs):  # noqa: E501
@@ -594,21 +680,26 @@ class OrganizationApi(object):
         create a organization, the user creating will be listed as owner  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.create_organization(organization, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param Organization organization: organization to create (required)
+        :param organization: organization to create (required)
+        :type organization: Organization
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.create_organization_with_http_info(
@@ -621,23 +712,33 @@ class OrganizationApi(object):
         create a organization, the user creating will be listed as owner  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.create_organization_with_http_info(organization, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param Organization organization: organization to create (required)
+        :param organization: organization to create (required)
+        :type organization: Organization
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -649,6 +750,7 @@ class OrganizationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -698,6 +800,8 @@ class OrganizationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/organization",
             "POST",
@@ -707,7 +811,7 @@ class OrganizationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -716,6 +820,7 @@ class OrganizationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def delete_aws_access_credentials(self, namespace, name, **kwargs):  # noqa: E501
@@ -724,22 +829,28 @@ class OrganizationApi(object):
         delete a AWS Access credentials in a namespace. This will likely cause arrays to become unreachable  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_aws_access_credentials(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace (required)
-        :param str name: name (required)
+        :param namespace: namespace (required)
+        :type namespace: str
+        :param name: name (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.delete_aws_access_credentials_with_http_info(
@@ -754,24 +865,35 @@ class OrganizationApi(object):
         delete a AWS Access credentials in a namespace. This will likely cause arrays to become unreachable  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_aws_access_credentials_with_http_info(namespace, name, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace (required)
-        :param str name: name (required)
+        :param namespace: namespace (required)
+        :type namespace: str
+        :param name: name (required)
+        :type name: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -783,6 +905,7 @@ class OrganizationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -835,6 +958,8 @@ class OrganizationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/credentials/{namespace}/aws/{name}",
             "DELETE",
@@ -844,7 +969,7 @@ class OrganizationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -853,6 +978,7 @@ class OrganizationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def delete_organization(self, organization, **kwargs):  # noqa: E501
@@ -861,21 +987,26 @@ class OrganizationApi(object):
         delete a organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_organization(organization, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: organization name or ID (required)
+        :param organization: organization name or ID (required)
+        :type organization: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.delete_organization_with_http_info(
@@ -888,23 +1019,33 @@ class OrganizationApi(object):
         delete a organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_organization_with_http_info(organization, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: organization name or ID (required)
+        :param organization: organization name or ID (required)
+        :type organization: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -916,6 +1057,7 @@ class OrganizationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -958,6 +1100,8 @@ class OrganizationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/organizations/{organization}",
             "DELETE",
@@ -967,7 +1111,7 @@ class OrganizationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -976,6 +1120,7 @@ class OrganizationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def delete_user_from_organization(
@@ -986,22 +1131,28 @@ class OrganizationApi(object):
         delete a user from an organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_user_from_organization(organization, username, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: organization name (required)
-        :param str username: username to manipulate (required)
+        :param organization: organization name (required)
+        :type organization: str
+        :param username: username to manipulate (required)
+        :type username: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.delete_user_from_organization_with_http_info(
@@ -1016,24 +1167,35 @@ class OrganizationApi(object):
         delete a user from an organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.delete_user_from_organization_with_http_info(organization, username, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: organization name (required)
-        :param str username: username to manipulate (required)
+        :param organization: organization name (required)
+        :type organization: str
+        :param username: username to manipulate (required)
+        :type username: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -1045,6 +1207,7 @@ class OrganizationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1097,6 +1260,8 @@ class OrganizationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/organizations/{organization}/{username}",
             "DELETE",
@@ -1106,7 +1271,7 @@ class OrganizationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1115,6 +1280,7 @@ class OrganizationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def get_all_organizations(self, **kwargs):  # noqa: E501
@@ -1123,20 +1289,24 @@ class OrganizationApi(object):
         get all organizations that the user is member of  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_all_organizations(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: list[Organization]
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: list[Organization]
         """
         kwargs["_return_http_data_only"] = True
         return self.get_all_organizations_with_http_info(**kwargs)  # noqa: E501
@@ -1147,22 +1317,31 @@ class OrganizationApi(object):
         get all organizations that the user is member of  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_all_organizations_with_http_info(async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(list[Organization], status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(list[Organization], status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1174,6 +1353,7 @@ class OrganizationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1206,6 +1386,12 @@ class OrganizationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "list[Organization]",
+            400: None,
+            500: None,
+        }
+
         return self.api_client.call_api(
             "/organizations",
             "GET",
@@ -1215,7 +1401,7 @@ class OrganizationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="list[Organization]",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1224,6 +1410,7 @@ class OrganizationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def get_organization(self, organization, **kwargs):  # noqa: E501
@@ -1232,21 +1419,26 @@ class OrganizationApi(object):
         get a organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_organization(organization, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: organization name or ID (required)
+        :param organization: organization name or ID (required)
+        :type organization: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: Organization
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: Organization
         """
         kwargs["_return_http_data_only"] = True
         return self.get_organization_with_http_info(
@@ -1259,23 +1451,33 @@ class OrganizationApi(object):
         get a organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_organization_with_http_info(organization, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: organization name or ID (required)
+        :param organization: organization name or ID (required)
+        :type organization: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(Organization, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(Organization, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1287,6 +1489,7 @@ class OrganizationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1329,6 +1532,11 @@ class OrganizationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "Organization",
+            404: None,
+        }
+
         return self.api_client.call_api(
             "/organizations/{organization}",
             "GET",
@@ -1338,7 +1546,7 @@ class OrganizationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="Organization",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1347,6 +1555,7 @@ class OrganizationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def get_organization_user(self, organization, username, **kwargs):  # noqa: E501
@@ -1355,22 +1564,28 @@ class OrganizationApi(object):
         get a user from an organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_organization_user(organization, username, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: organization name (required)
-        :param str username: username to manipulate (required)
+        :param organization: organization name (required)
+        :type organization: str
+        :param username: username to manipulate (required)
+        :type username: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: OrganizationUser
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: OrganizationUser
         """
         kwargs["_return_http_data_only"] = True
         return self.get_organization_user_with_http_info(
@@ -1385,24 +1600,35 @@ class OrganizationApi(object):
         get a user from an organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.get_organization_user_with_http_info(organization, username, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: organization name (required)
-        :param str username: username to manipulate (required)
+        :param organization: organization name (required)
+        :type organization: str
+        :param username: username to manipulate (required)
+        :type username: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(OrganizationUser, status_code(int), headers(HTTPHeaderDict))
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: tuple(OrganizationUser, status_code(int), headers(HTTPHeaderDict))
         """
 
         local_var_params = locals()
@@ -1414,6 +1640,7 @@ class OrganizationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1466,6 +1693,11 @@ class OrganizationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {
+            200: "OrganizationUser",
+            404: None,
+        }
+
         return self.api_client.call_api(
             "/organizations/{organization}/{username}",
             "GET",
@@ -1475,7 +1707,7 @@ class OrganizationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="OrganizationUser",  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1484,6 +1716,7 @@ class OrganizationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def update_aws_access_credentials(
@@ -1494,23 +1727,30 @@ class OrganizationApi(object):
         Update aws keys or associated buckets. This will update the key associations for each array in the namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.update_aws_access_credentials(namespace, name, aws_access_credentials, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace (required)
-        :param str name: name (required)
-        :param AWSAccessCredentials aws_access_credentials: aws credentials to update (required)
+        :param namespace: namespace (required)
+        :type namespace: str
+        :param name: name (required)
+        :type name: str
+        :param aws_access_credentials: aws credentials to update (required)
+        :type aws_access_credentials: AWSAccessCredentials
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.update_aws_access_credentials_with_http_info(
@@ -1525,25 +1765,37 @@ class OrganizationApi(object):
         Update aws keys or associated buckets. This will update the key associations for each array in the namespace  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.update_aws_access_credentials_with_http_info(namespace, name, aws_access_credentials, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace (required)
-        :param str name: name (required)
-        :param AWSAccessCredentials aws_access_credentials: aws credentials to update (required)
+        :param namespace: namespace (required)
+        :type namespace: str
+        :param name: name (required)
+        :type name: str
+        :param aws_access_credentials: aws credentials to update (required)
+        :type aws_access_credentials: AWSAccessCredentials
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -1555,6 +1807,7 @@ class OrganizationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1624,6 +1877,8 @@ class OrganizationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/credentials/{namespace}/aws/{name}",
             "PATCH",
@@ -1633,7 +1888,7 @@ class OrganizationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1642,6 +1897,7 @@ class OrganizationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def update_organization(
@@ -1652,22 +1908,28 @@ class OrganizationApi(object):
         update a organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.update_organization(organization, organization_details, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: organization name or ID (required)
-        :param Organization organization_details: organization details to update (required)
+        :param organization: organization name or ID (required)
+        :type organization: str
+        :param organization_details: organization details to update (required)
+        :type organization_details: Organization
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.update_organization_with_http_info(
@@ -1682,24 +1944,35 @@ class OrganizationApi(object):
         update a organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.update_organization_with_http_info(organization, organization_details, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: organization name or ID (required)
-        :param Organization organization_details: organization details to update (required)
+        :param organization: organization name or ID (required)
+        :type organization: str
+        :param organization_details: organization details to update (required)
+        :type organization_details: Organization
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -1711,6 +1984,7 @@ class OrganizationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1770,6 +2044,8 @@ class OrganizationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/organizations/{organization}",
             "PATCH",
@@ -1779,7 +2055,7 @@ class OrganizationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1788,6 +2064,7 @@ class OrganizationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )
 
     def update_user_in_organization(
@@ -1798,23 +2075,30 @@ class OrganizationApi(object):
         update a user in an organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.update_user_in_organization(organization, username, user, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: organization name (required)
-        :param str username: username to manipulate (required)
-        :param OrganizationUser user: user details to update (required)
+        :param organization: organization name (required)
+        :type organization: str
+        :param username: username to manipulate (required)
+        :type username: str
+        :param user: user details to update (required)
+        :type user: OrganizationUser
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
         kwargs["_return_http_data_only"] = True
         return self.update_user_in_organization_with_http_info(
@@ -1829,25 +2113,37 @@ class OrganizationApi(object):
         update a user in an organization  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
+
         >>> thread = api.update_user_in_organization_with_http_info(organization, username, user, async_req=True)
         >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param str organization: organization name (required)
-        :param str username: username to manipulate (required)
-        :param OrganizationUser user: user details to update (required)
+        :param organization: organization name (required)
+        :type organization: str
+        :param username: username to manipulate (required)
+        :type username: str
+        :param user: user details to update (required)
+        :type user: OrganizationUser
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
         :param _return_http_data_only: response data without head status code
                                        and headers
+        :type _return_http_data_only: bool, optional
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
+        :type _preload_content: bool, optional
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: None
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
+        :rtype: None
         """
 
         local_var_params = locals()
@@ -1859,6 +2155,7 @@ class OrganizationApi(object):
                 "_return_http_data_only",
                 "_preload_content",
                 "_request_timeout",
+                "_request_auth",
             ]
         )
 
@@ -1928,6 +2225,8 @@ class OrganizationApi(object):
         # Authentication setting
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
+        response_types_map = {}
+
         return self.api_client.call_api(
             "/organizations/{organization}/{username}",
             "PATCH",
@@ -1937,7 +2236,7 @@ class OrganizationApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type=None,  # noqa: E501
+            response_types_map=response_types_map,
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -1946,4 +2245,5 @@ class OrganizationApi(object):
             _preload_content=local_var_params.get("_preload_content", True),
             _request_timeout=local_var_params.get("_request_timeout"),
             collection_formats=collection_formats,
+            _request_auth=local_var_params.get("_request_auth"),
         )

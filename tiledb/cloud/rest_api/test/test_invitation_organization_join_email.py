@@ -39,12 +39,12 @@ class TestInvitationOrganizationJoinEmail(unittest.TestCase):
         # model = tiledb.cloud.rest_api.models.invitation_organization_join_email.InvitationOrganizationJoinEmail()  # noqa: E501
         if include_optional:
             return InvitationOrganizationJoinEmail(
-                actions=[read, write], organization_role="owner", invitee_email=["0"]
+                actions=[read, write], organization_role="owner", invitee_email=[""]
             )
         else:
             return InvitationOrganizationJoinEmail(
                 organization_role="owner",
-                invitee_email=["0"],
+                invitee_email=[""],
             )
 
     def testInvitationOrganizationJoinEmail(self):

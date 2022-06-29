@@ -1,6 +1,7 @@
 # TaskGraphNodeMetadata
 
 Metadata about an individual node in a task graph.
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

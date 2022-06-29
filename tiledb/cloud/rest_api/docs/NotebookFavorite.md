@@ -1,6 +1,7 @@
 # NotebookFavorite
 
 A user-favorite notebook item
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

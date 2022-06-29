@@ -39,20 +39,20 @@ class TestGenericUDF(unittest.TestCase):
             return GenericUDF(
                 udf_info_name="TileDB-Inc/csv_ingestor",
                 language="python",
-                version="0",
-                image_name="0",
+                version="",
+                image_name="",
                 resource_class="standard",
-                _exec="0",
-                exec_raw="0",
-                argument="0",
+                _exec="",
+                exec_raw="",
+                argument="",
                 stored_param_uuids=["229f38c4-ba89-43d6-ab88-bae3bcca7969"],
                 result_format="python_pickle",
-                task_name="0",
+                task_name="",
                 store_results=True,
                 timeout=56,
                 dont_download_results=True,
-                task_graph_uuid="0",
-                client_node_uuid="0",
+                task_graph_uuid="",
+                client_node_uuid="",
             )
         else:
             return GenericUDF()

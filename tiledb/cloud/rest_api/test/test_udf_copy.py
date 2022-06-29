@@ -36,7 +36,7 @@ class TestUDFCopy(unittest.TestCase):
         optional params are included"""
         # model = tiledb.cloud.rest_api.models.udf_copy.UDFCopy()  # noqa: E501
         if include_optional:
-            return UDFCopy(output_uri="0", namespace="0", name="0")
+            return UDFCopy(output_uri="", namespace="", name="")
         else:
             return UDFCopy()
 

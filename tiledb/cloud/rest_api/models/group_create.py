@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -71,7 +76,7 @@ class GroupCreate(object):
     ):  # noqa: E501
         """GroupCreate - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._description = None
@@ -122,7 +127,7 @@ class GroupCreate(object):
         A human readable description of the contents of the group.  # noqa: E501
 
         :param description: The description of this GroupCreate.  # noqa: E501
-        :type: str
+        :type description: str
         """
 
         self._description = description
@@ -145,7 +150,7 @@ class GroupCreate(object):
         The name of the group. If must be unique within the group.  # noqa: E501
 
         :param name: The name of this GroupCreate.  # noqa: E501
-        :type: str
+        :type name: str
         """
 
         self._name = name
@@ -168,7 +173,7 @@ class GroupCreate(object):
         The unique name or id of the parent of the group. If empty, then the new group will be a top level group.  # noqa: E501
 
         :param parent: The parent of this GroupCreate.  # noqa: E501
-        :type: str
+        :type parent: str
         """
 
         self._parent = parent
@@ -191,7 +196,7 @@ class GroupCreate(object):
         uri of group.  # noqa: E501
 
         :param uri: The uri of this GroupCreate.  # noqa: E501
-        :type: str
+        :type uri: str
         """
 
         self._uri = uri
@@ -214,7 +219,7 @@ class GroupCreate(object):
         logo (base64 encoded) for the group. Optional  # noqa: E501
 
         :param logo: The logo of this GroupCreate.  # noqa: E501
-        :type: str
+        :type logo: str
         """
 
         self._logo = logo
@@ -237,7 +242,7 @@ class GroupCreate(object):
         the name of the access credentials to use. if unset, the default credentials will be used.  # noqa: E501
 
         :param access_credentials_name: The access_credentials_name of this GroupCreate.  # noqa: E501
-        :type: str
+        :type access_credentials_name: str
         """
 
         self._access_credentials_name = access_credentials_name
@@ -260,7 +265,7 @@ class GroupCreate(object):
         optional tags for groups.  # noqa: E501
 
         :param tags: The tags of this GroupCreate.  # noqa: E501
-        :type: list[str]
+        :type tags: list[str]
         """
 
         self._tags = tags
@@ -283,7 +288,7 @@ class GroupCreate(object):
         License identifier from SPDX License List or Custom.  # noqa: E501
 
         :param license_id: The license_id of this GroupCreate.  # noqa: E501
-        :type: str
+        :type license_id: str
         """
 
         self._license_id = license_id
@@ -306,34 +311,36 @@ class GroupCreate(object):
         License text  # noqa: E501
 
         :param license_text: The license_text of this GroupCreate.  # noqa: E501
-        :type: str
+        :type license_text: str
         """
 
         self._license_text = license_text
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 

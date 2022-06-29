@@ -10,6 +10,11 @@
 """
 
 
+try:
+    from inspect import getfullargspec
+except ImportError:
+    from inspect import getargspec as getfullargspec
+
 import pprint
 import re  # noqa: F401
 
@@ -62,7 +67,7 @@ class Attribute(object):
     ):  # noqa: E501
         """Attribute - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
-            local_vars_configuration = Configuration()
+            local_vars_configuration = Configuration.get_default_copy()
         self.local_vars_configuration = local_vars_configuration
 
         self._name = None
@@ -100,7 +105,7 @@ class Attribute(object):
         Attribute name  # noqa: E501
 
         :param name: The name of this Attribute.  # noqa: E501
-        :type: str
+        :type name: str
         """
         if (
             self.local_vars_configuration.client_side_validation and name is None
@@ -127,7 +132,7 @@ class Attribute(object):
 
 
         :param type: The type of this Attribute.  # noqa: E501
-        :type: Datatype
+        :type type: Datatype
         """
         if (
             self.local_vars_configuration.client_side_validation and type is None
@@ -154,7 +159,7 @@ class Attribute(object):
 
 
         :param filter_pipeline: The filter_pipeline of this Attribute.  # noqa: E501
-        :type: FilterPipeline
+        :type filter_pipeline: FilterPipeline
         """
         if (
             self.local_vars_configuration.client_side_validation
@@ -184,7 +189,7 @@ class Attribute(object):
         Attribute number of values per cell  # noqa: E501
 
         :param cell_val_num: The cell_val_num of this Attribute.  # noqa: E501
-        :type: int
+        :type cell_val_num: int
         """
         if (
             self.local_vars_configuration.client_side_validation
@@ -214,7 +219,7 @@ class Attribute(object):
         Is attribute nullable  # noqa: E501
 
         :param nullable: The nullable of this Attribute.  # noqa: E501
-        :type: bool
+        :type nullable: bool
         """
 
         self._nullable = nullable
@@ -237,34 +242,36 @@ class Attribute(object):
         The default fill value  # noqa: E501
 
         :param fill_value: The fill_value of this Attribute.  # noqa: E501
-        :type: list[int]
+        :type fill_value: list[int]
         """
 
         self._fill_value = fill_value
 
-    def to_dict(self):
+    def to_dict(self, serialize=False):
         """Returns the model properties as a dict"""
         result = {}
 
+        def convert(x):
+            if hasattr(x, "to_dict"):
+                args = getfullargspec(x.to_dict).args
+                if len(args) == 1:
+                    return x.to_dict()
+                else:
+                    return x.to_dict(serialize)
+            else:
+                return x
+
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
+            attr = self.attribute_map.get(attr, attr) if serialize else attr
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
-            elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[attr] = list(map(lambda x: convert(x), value))
             elif isinstance(value, dict):
                 result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
+                    map(lambda item: (item[0], convert(item[1])), value.items())
                 )
             else:
-                result[attr] = value
+                result[attr] = convert(value)
 
         return result
 
