@@ -2,6 +2,7 @@ import base64
 import collections
 import collections.abc as cabc
 import itertools
+import operator
 import pickle
 import threading
 import time
@@ -177,7 +178,7 @@ class DAGClassTest(unittest.TestCase):
 
     def _remote_result(self, node: dag_dag.Node) -> results.RemoteResult:
         """Extracts the RemoteResult out of the Node's future."""
-        result = node._future.result()  # type: ignore
+        result = node._result  # type: ignore
         self.assertIsInstance(result, results.RemoteResult)
         return result  # type: ignore
 
@@ -426,7 +427,8 @@ class DAGFailureTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             node.result()
 
-        self.assertEqual(node2.status, dag.Status.CANCELLED)
+        node2.wait(1)
+        self.assertEqual(node2.status, dag.Status.PARENT_FAILED)
         with self.assertRaises(futures.CancelledError):
             node2.result()
 
@@ -440,7 +442,7 @@ class DAGFailureTest(unittest.TestCase):
         with self.assertRaises(tce.TileDBCloudError):
             d.wait(30)
         self.assertEqual(node.status, dag.Status.FAILED)
-        self.assertEqual(child.status, dag.Status.CANCELLED)
+        self.assertEqual(child.status, dag.Status.PARENT_FAILED)
 
     def test_cancel_only_children(self):
         d = dag.DAG()
@@ -469,7 +471,7 @@ class DAGFailureTest(unittest.TestCase):
 
         self.assertEqual(dag.Status.FAILED, d.status)
         self.assertEqual(dag.Status.FAILED, fail_node.status)
-        self.assertEqual(dag.Status.CANCELLED, fail_child.status)
+        self.assertEqual(dag.Status.PARENT_FAILED, fail_child.status)
         self.assertEqual("value", wait_node.result())
         self.assertEqual("'value'", wait_child.result())
 
@@ -479,6 +481,91 @@ class DAGFailureTest(unittest.TestCase):
         d2 = dag.DAG()
         with self.assertRaises(tce.TileDBCloudError):
             d2.submit(repr, n1)
+
+    def test_retry(self):
+        d = dag.DAG()
+
+        n1 = d.submit_local(self._fail_once_func(), 5)
+        n2 = d.submit(operator.mul, n1, 2)
+
+        d.compute()
+
+        with self.assertRaises(FloatingPointError):
+            d.wait(10)
+
+        self.assertEqual(d.status, dag.Status.FAILED)
+        self.assertEqual(n1.status, dag.Status.FAILED)
+        self.assertEqual(n2.status, dag.Status.PARENT_FAILED)
+
+        self.assertTrue(n1.retry())
+        d.wait(10)
+        self.assertEqual(d.status, dag.Status.COMPLETED)
+        self.assertEqual(n2.result(), 10)
+
+    def test_retry_all(self):
+        d = dag.DAG()
+
+        n1 = d.submit_local(self._fail_once_func())
+        n2 = d.submit_local(repr, n1)
+
+        d.compute()
+
+        with self.assertRaises(FloatingPointError):
+            d.wait(2)
+        self.assertEqual(d.status, dag.Status.FAILED)
+        self.assertEqual(n1.status, dag.Status.FAILED)
+        self.assertEqual(n2.status, dag.Status.PARENT_FAILED)
+
+        d.retry_all()
+        d.wait(2)
+        self.assertEqual(d.status, dag.Status.COMPLETED)
+        self.assertEqual(n1.result(), None)
+        self.assertEqual(n2.result(), "None")
+
+    def test_retry_cancelled(self):
+        d = dag.DAG()
+
+        barrier = threading.Barrier(2)
+
+        def rendezvous(value=None):
+            barrier.wait()
+            barrier.wait()
+            return value
+
+        n1 = d.submit_local(rendezvous, 5)
+        n2 = d.submit_local(self._fail_once_func(), n1)
+        n3 = d.submit("the value is {v}".format, v=n2)
+
+        d.compute()
+
+        barrier.wait(2)
+        d.cancel()
+        barrier.wait(1)
+
+        self.assertEqual(n2.status, dag.Status.CANCELLED)
+        self.assertEqual(n3.status, dag.Status.PARENT_FAILED)
+        d.wait(1)
+
+        d.retry_all()
+        with self.assertRaises(FloatingPointError):
+            d.wait(2)
+        self.assertEqual(n3.status, dag.Status.PARENT_FAILED)
+
+        n2.retry()
+        d.wait(10)
+        self.assertEqual(n3.result(1), "the value is 5")
+
+    def _fail_once_func(self):
+        ran = False
+
+        def fail_once(val=None):
+            nonlocal ran
+            if not ran:
+                ran = True
+                raise FloatingPointError("fails first time")
+            return val
+
+        return fail_once
 
 
 class DAGCancelTest(unittest.TestCase):
@@ -508,6 +595,7 @@ class DAGCancelTest(unittest.TestCase):
         # still run to completion.
         self.assertEqual(node.result(), 100)
 
+        node_2.wait(1)
         self.assertEqual(node_2.status, dag.Status.CANCELLED)
         with self.assertRaises(futures.CancelledError):
             node_2.result()
@@ -1009,7 +1097,8 @@ class ReplaceNodesTest(unittest.TestCase):
 def _node(val):
     """Creates a completed node with the given value."""
     n = dag.Node(lambda: None)
-    n._future.set_result(results.LocalResult(val))
+    n._result = results.LocalResult(val)
+    n._status = dag.Status.CANCELLED
     return n
 
 
