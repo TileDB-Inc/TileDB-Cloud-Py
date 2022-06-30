@@ -23,9 +23,12 @@ class RegistrationTest(unittest.TestCase):
             loaded = registration.load(name)
             self.assertEqual(original["nodes"], loaded["nodes"])
 
+            arr_node = grf.array_read(
+                "tiledb://something/else", raw_ranges=[[1, 2], [3, 4]]
+            )
             grf.udf(
                 repr,
-                types.args(len),
+                types.args(arr_node),
                 name="ooga",
                 result_format="booga",
                 image_name="monkey",
@@ -35,6 +38,9 @@ class RegistrationTest(unittest.TestCase):
             time.sleep(1)
 
             updated_loaded = registration.load(name)
+            # The server includes a null field we don't care about
+            # in the serialization of its version.
+            del updated_loaded["nodes"][0]["array_node"]["array_uuid"]
             self.assertEqual(updated["nodes"], updated_loaded["nodes"])
 
         finally:
