@@ -4,6 +4,7 @@ import itertools
 from typing import Any, Dict, List, Tuple, TypeVar, Union
 
 import attrs
+import numpy as np
 
 _T = TypeVar("_T")
 NativeSequence = Union[Tuple[_T, ...], List[_T]]
@@ -37,6 +38,9 @@ CallArg = Any
 These values are JSON-encoded but will have all the information necessary
 to decode them contained within their data.
 """
+
+ArrayMultiIndex = Dict[str, np.ndarray]
+"""Type returned from an array query."""
 
 
 @attrs.define(frozen=True, slots=True)

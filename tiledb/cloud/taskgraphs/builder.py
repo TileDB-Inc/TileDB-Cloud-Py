@@ -14,8 +14,6 @@ from typing import (
     Union,
 )
 
-import numpy as np
-
 from tiledb.cloud import utils
 from tiledb.cloud._common import ordered
 from tiledb.cloud._common import visitor
@@ -32,8 +30,6 @@ ValOrNodeSeq = Union[
     types.NativeSequence[ValOrNode[_T]],
 ]
 """Either a Node that yields a sequence or a sequence that may contain nodes."""
-ArrayMultiIndex = Dict[str, np.ndarray]
-"""Type returned from an array query."""
 
 _NOTHING = object()
 """Sentinel object used when we need to distinguish "unset" from "None"."""
@@ -68,7 +64,7 @@ class TaskGraphBuilder:
         raw_ranges: Optional[ValOrNodeSeq[Any]] = None,
         buffers: Optional[ValOrNodeSeq[str]] = None,
         name: Optional[str] = None,
-    ) -> "Node[ArrayMultiIndex]":
+    ) -> "Node[types.ArrayMultiIndex]":
         """Creates a Node that will read data from a TileDB array.
 
         This Node is not executed immediately; instead, it is used in the same
@@ -307,7 +303,7 @@ class Node(_codec.TDBJSONEncodable, Generic[_T]):
             id_to_use = uuid.uuid4()
 
 
-class _ArrayNode(Node[ArrayMultiIndex]):
+class _ArrayNode(Node[types.ArrayMultiIndex]):
     """A virutal node representing a query against a TileDB array.
 
     When used as a parameter to a downstream Node, this will instruct the server
