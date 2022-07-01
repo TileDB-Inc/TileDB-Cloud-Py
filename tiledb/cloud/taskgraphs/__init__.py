@@ -29,6 +29,7 @@ Builder = builder.TaskGraphBuilder
 InvalidStateError = client_executor.InvalidStateError
 Status = executor.Status
 args = types.args
+ArrayMultiIndex = types.ArrayMultiIndex
 
 register = registration.register
 update = registration.update
