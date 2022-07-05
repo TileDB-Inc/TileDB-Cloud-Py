@@ -42,11 +42,13 @@ class ArrayNode(_base.Node[_base.ET, _T]):
             uri = replacer.visit(uri)
             ranges = replacer.visit(ranges)
             buffers = replacer.visit(buffers)
+        # Fix needed to work around deserialization problems on the server side.
+        # TODO: remove this.
+        ranges["ranges"] = ranges.get("ranges") or []
         self._details = dict(
             parameter_id=self._parameter_id,
             uri=uri,
-            # TODO: Eliminate the `or []` once we fix the server.
-            ranges={"ranges": (ranges or [])},
+            ranges=ranges,
             buffers=buffers,
         )
 
