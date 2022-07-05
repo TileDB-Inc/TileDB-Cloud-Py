@@ -1,6 +1,6 @@
 import numbers
 import random
-from typing import Callable, Union
+from typing import Any, Callable, Optional, Union
 
 from tiledb.cloud import utils
 from tiledb.cloud.array import ArrayList
@@ -33,22 +33,29 @@ class DelayedBase(Node):
             )
         self.timeout = timeout
 
-    def compute(self, namespace=None):
+    def compute(
+        self, namespace: Optional[str] = None, name: Optional[str] = None
+    ) -> Any:
         """
-        Execute function for node
-        :param namespace: optional namespace to use for task
+        Starts execution of all Delayed tasks associated with this node.
+
+        :param namespace: The namespace to execute tasks under, if different
+            than the user's default.
+        :param name: An optional name to identify the task graph in logs.
         :return: results
         """
         if self.dag is None:
-            self.__set_all_parent_nodes_same_dag(DAG(namespace=namespace))
+            self.__set_all_parent_nodes_same_dag(DAG(namespace=namespace, name=name))
+        else:
+            if namespace is not None:
+                self.dag.namespace = namespace
+            if name is not None:
+                self.dag.name = name
 
-        if namespace is not None:
-            self.dag.namespace = namespace
+        assert self.dag
 
         self.dag.compute()
-        self.dag.wait(self.timeout)
-
-        return self.result()
+        return self.result(self.timeout)
 
     def __set_all_parent_nodes_same_dag(self, dag):
         # If this node already has the day we have reached a base case

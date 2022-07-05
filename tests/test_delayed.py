@@ -105,8 +105,10 @@ class DelayedFailureTest(unittest.TestCase):
         # Add timeout so we don't wait forever in CI
         node2.set_timeout(30)
 
-        with self.assertRaises(TypeError):
+        with self.assertRaises(futures.CancelledError):
             node2.compute()
+        with self.assertRaises(TypeError):
+            node2.dag.wait(1)
 
         self.assertEqual(node.status, Status.FAILED)
         self.assertEqual(
