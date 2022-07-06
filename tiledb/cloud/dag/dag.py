@@ -139,10 +139,6 @@ class Node(futures.FutureLike[_T]):
     def name(self, to: Optional[str]) -> None:
         self._name = to
 
-    @property
-    def error(self) -> Optional[Exception]:
-        return self._lifecycle_exception or self._exception
-
     def _find_deps(self):
         """Finds Nodes this depends on and adds them to our dependency list."""
         parents = _find_parent_nodes((self.args, self.kwargs))
@@ -207,7 +203,7 @@ class Node(futures.FutureLike[_T]):
     def result(self, timeout: Optional[float] = None) -> _T:
         with self._lifecycle_condition:
             self._wait(timeout)
-            to_raise = self._lifecycle_exception or self._exception
+            to_raise = self._error()
             if to_raise:
                 raise to_raise
             result = self._result
@@ -226,21 +222,14 @@ class Node(futures.FutureLike[_T]):
             self._cb_list.append(fn)
             if not self._done():
                 return
-        fn(self)
+        try:
+            fn(self)
+        except Exception:
+            pass
 
     # Bonus public methods.
 
     finished = done  # Alias.
-
-    def ready_to_compute(self) -> bool:
-        """
-        Is the node ready to execute? Are all dependencies completed?
-        :return: True if node is able to be run
-        """
-        if self.status is not Status.NOT_STARTED:
-            return False
-
-        return all(node.finished() for node in self.parents.values())
 
     @property
     def future(self) -> futures.FutureLike[_T]:
@@ -251,6 +240,10 @@ class Node(futures.FutureLike[_T]):
     def status(self) -> st.Status:
         with self._lifecycle_condition:
             return self._status
+
+    @property
+    def error(self) -> Optional[Exception]:
+        return self._error()
 
     def retry(self) -> bool:
         if not self.dag:
@@ -287,6 +280,9 @@ class Node(futures.FutureLike[_T]):
             self._wait(timeout)
 
     # Things for internal use and use by the DAG.
+
+    def _error(self) -> Optional[Exception]:
+        return self._lifecycle_exception or self._exception
 
     def _reset_internal(self) -> bool:
         """Prepares this Node to be retried if it failed."""
@@ -662,9 +658,9 @@ class DAG:
             st.Status.COMPLETED,
         )
 
-    def done(self):
+    def done(self) -> bool:
         with self._lifecycle_condition:
-            return self._done
+            return self._done()
 
     def add_node_obj(self, node):
         """
@@ -840,8 +836,6 @@ class DAG:
 
             if node.status is st.Status.COMPLETED:
                 self.completed_nodes[node.id] = node
-                for child in node.children.values():
-                    self._maybe_exec(child)
                 if node.local_mode:
                     to_report = models.ArrayTaskStatus.COMPLETED
             elif node.status is Status.CANCELLED:
