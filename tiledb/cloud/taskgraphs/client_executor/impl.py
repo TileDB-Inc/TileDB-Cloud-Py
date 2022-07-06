@@ -8,11 +8,11 @@ import threading
 import traceback
 import uuid
 import warnings
-from concurrent import futures
 from typing import Any, Callable, Dict, Optional, Type, TypeVar
 
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
+from tiledb.cloud._common import futures
 from tiledb.cloud._common import ordered
 from tiledb.cloud.taskgraphs import executor
 from tiledb.cloud.taskgraphs.client_executor import _base
@@ -21,16 +21,7 @@ from tiledb.cloud.taskgraphs.client_executor import input_node
 from tiledb.cloud.taskgraphs.client_executor import sql_node
 from tiledb.cloud.taskgraphs.client_executor import udf_node
 
-# Define InvalidStateError if it hasn't been defined yet.
-if hasattr(futures, "InvalidStateError"):
-    InvalidStateError = futures.InvalidStateError  # type: ignore[attr-defined]
-
-else:
-
-    class InvalidStateError(futures._base.Error):  # type: ignore[attr-defined,no-redef]
-        """The operation is not allowed in this state."""
-
-
+InvalidStateError = futures.InvalidStateError
 Status = _base.Status
 _T = TypeVar("_T")
 Node = _base.Node["LocalExecutor", _T]

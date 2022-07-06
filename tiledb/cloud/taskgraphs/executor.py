@@ -5,20 +5,9 @@ import enum
 import logging
 import threading
 import uuid
-from concurrent import futures
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Generic,
-    Iterable,
-    List,
-    Optional,
-    Tuple,
-    TypeVar,
-    Union,
-)
+from typing import Any, Callable, Dict, Generic, List, Optional, Tuple, TypeVar, Union
 
+from tiledb.cloud._common import futures
 from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import depgraph
 
@@ -195,7 +184,7 @@ _T = TypeVar("_T")
 _Self = TypeVar("_Self", bound="Node")
 
 
-class Node(Generic[_ET, _T], metaclass=abc.ABCMeta):
+class Node(futures.FutureLike[_T], Generic[_ET, _T], metaclass=abc.ABCMeta):
     """An abstract type specifying the operations on a Node of a task graph.
 
     Executor implementations will return instances of implementations of these
@@ -368,22 +357,3 @@ class Node(Generic[_ET, _T], metaclass=abc.ABCMeta):
             Status.FAILED,
             Status.PARENT_FAILED,
         )
-
-
-def do_callbacks(node: _T, cbs: Iterable[Callable[[_T], None]]) -> None:
-    """Actually performs the callbacks when a Node completes.
-
-    This should be called by the Node implementation exactly once for each time
-    that the node "completes" (e.g. fails or succeeds on retry).
-    """
-
-    # With retries, it's possible for a node to fail, start calling callbacks,
-    # then get set to a retry state such that it's no longer "done", without
-    # any way for a caller to know what the original result was.
-    # TODO: Figure out a way around this.
-
-    for fn in cbs:
-        try:
-            fn(node)
-        except Exception:
-            _log.exception("%r callback %r failed", node, fn)
