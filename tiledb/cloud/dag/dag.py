@@ -7,7 +7,6 @@ import threading
 import time
 import uuid
 import warnings
-from concurrent import futures
 from typing import (
     Any,
     Callable,
@@ -32,6 +31,7 @@ from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud import udf
 from tiledb.cloud import utils
+from tiledb.cloud._common import futures
 from tiledb.cloud._common import visitor
 from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params

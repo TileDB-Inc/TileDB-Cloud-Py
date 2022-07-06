@@ -3,7 +3,6 @@
 import abc
 import threading
 import uuid
-from concurrent import futures
 from typing import Any, Callable, Generic, Optional, TypeVar, Union
 
 import attrs
@@ -12,6 +11,7 @@ import urllib3
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error as tce
+from tiledb.cloud._common import futures
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import stored_params
 

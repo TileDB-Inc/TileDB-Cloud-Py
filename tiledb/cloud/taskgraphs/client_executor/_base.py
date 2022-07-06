@@ -4,11 +4,11 @@ import abc
 import enum
 import threading
 import uuid
-from concurrent import futures
 from typing import Any, Callable, Dict, Iterable, Optional, TypeVar
 
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
+from tiledb.cloud._common import futures
 from tiledb.cloud.taskgraphs import executor
 
 Status = executor.Status
@@ -102,7 +102,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
             self.owner._enqueue_done_node(self)
             cbs = self._callbacks()
         if cancelled:
-            executor.do_callbacks(self, cbs)
+            futures.execute_callbacks(self, cbs)
         return cancelled
 
     def wait(self, timeout: Optional[float] = None) -> None:
@@ -171,7 +171,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
                 self.owner._enqueue_done_node(self)
                 cbs = self._callbacks()
         finally:
-            executor.do_callbacks(self, cbs)
+            futures.execute_callbacks(self, cbs)
 
     #
     # Lifecycle-management internals.
@@ -229,7 +229,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
             self.owner._enqueue_done_node(self)
             cbs = self._callbacks()
 
-        executor.do_callbacks(self, cbs)
+        futures.execute_callbacks(self, cbs)
 
     def _parent_failed_error(self) -> executor.ParentFailedError:
         """Returns the PFE that should be associated with this Node.
