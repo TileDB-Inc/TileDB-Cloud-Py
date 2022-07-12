@@ -22,6 +22,9 @@ from tiledb.cloud.client import organizations
 from tiledb.cloud.client import user_profile
 from tiledb.cloud.file import create_file
 from tiledb.cloud.file import export_file
+from tiledb.cloud.group import delete_group
+from tiledb.cloud.group import delete_group_recursively
+from tiledb.cloud.group import get_group
 from tiledb.cloud.notebook import download_notebook_contents
 from tiledb.cloud.notebook import download_notebook_to_file
 from tiledb.cloud.notebook import rename_notebook
