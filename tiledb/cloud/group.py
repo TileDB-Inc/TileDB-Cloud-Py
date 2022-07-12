@@ -1,11 +1,11 @@
 from typing import Dict, List, Optional, Tuple
 
 import tiledb.cloud.array
-import tiledb.cloud.client as cloud_client
 import tiledb.cloud.rest_api as rest_api
 import tiledb.cloud.rest_api.models as models
 import tiledb.cloud.tiledb_cloud_error as tiledb_cloud_error
 import tiledb.cloud.utils
+from tiledb.cloud import client as cloud_client
 
 
 def get_group(uri: str) -> models.group_info.GroupInfo:
