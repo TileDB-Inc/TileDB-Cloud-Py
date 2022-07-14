@@ -38,3 +38,8 @@ def register_udf(func: Callable, func_name: Optional[str] = None) -> Iterator[st
 def random_name(name: str) -> str:
     suffix = "".join(random.choices(string.ascii_letters, k=10))
     return f"zzz_unittest_{name}_{suffix}"
+
+
+def is_unittest_user() -> bool:
+    """Used to skip tests that depend upon the state of the unittest user."""
+    return client.default_user().username == "unittest"
