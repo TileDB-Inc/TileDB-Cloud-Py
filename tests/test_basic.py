@@ -10,6 +10,7 @@ import tiledb.cloud
 from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import tasks
+from tiledb.cloud import testonly
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud._common import json_safe
 
@@ -19,10 +20,12 @@ class BasicTests(unittest.TestCase):
         self.assertIsNotNone(array.info("tiledb://TileDB-Inc/quickstart_sparse"))
 
     def test_list_shared_with(self):
+        self.needsUnittestUser()
         with self.assertRaises(tiledb_cloud_error.TileDBCloudError):
             array.list_shared_with("tiledb://TileDB-Inc/quickstart_sparse"),
 
     def test_array_activity(self):
+        self.needsUnittestUser()
         with self.assertRaises(tiledb_cloud_error.TileDBCloudError):
             array.array_activity("tiledb://TileDB-Inc/quickstart_sparse")
 
@@ -33,6 +36,7 @@ class BasicTests(unittest.TestCase):
         self.assertIsNotNone(client.list_arrays().arrays)
 
     def test_list_shared_arrays(self):
+        self.needsUnittestUser()
         self.assertIsNone(client.list_shared_arrays().arrays)
 
     def test_list_public_arrays(self):
@@ -270,6 +274,11 @@ class BasicTests(unittest.TestCase):
 
         tbl = tiledb.cloud.udf.exec(test, result_format="arrow")
         self.assertIsInstance(tbl, pyarrow.Table)
+
+    def needsUnittestUser(self):
+        """Skips the test unless it is run as the ``unittest`` user."""
+        if not testonly.is_unittest_user():
+            self.skipTest("May fail with non-unittest users.")
 
 
 class RangesTest(unittest.TestCase):
