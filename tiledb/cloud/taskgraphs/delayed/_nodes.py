@@ -3,7 +3,7 @@
 Unlike the UDF node, these nodes are "static" once created.
 """
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Iterable, Optional
 
 from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import types
@@ -112,3 +112,87 @@ class Array(_graph.Node[types.ArrayMultiIndex]):
                 name=self._name,
             )
         return grf.array_read(uri, **kwargs)
+
+
+class SQL(_graph.Node):
+    """A Node that executes a SQL query and returns the results."""
+
+    def __init__(
+        self,
+        owner: _graph.DelayedGraph,
+        query: str,
+        parameters: _graph.ValOrNodeSeq,
+        kwargs: Dict[str, Any],
+        has_node_args: bool = False,
+    ):
+        """Initializer. Users should not manually call this."""
+        super().__init__(owner)
+        self._query = query
+        self._parameters = parameters
+        """The parameters to pass to the query.
+
+        This is the only argument that may contain Nodes as input.
+        """
+        self._kwargs = kwargs
+        """Other kwargs to pass to ``grf.sql()``. May not contain Nodes."""
+        self._has_node_args = has_node_args
+
+    @classmethod
+    def create(
+        cls,
+        query: str,
+        *,
+        init_commands: Iterable[str] = _graph.NOTHING,
+        parameters: _graph.ValOrNodeSeq = _graph.NOTHING,
+        result_format: str = _graph.NOTHING,
+        name: Optional[str] = _graph.NOTHING,
+    ) -> "SQL":
+        """Creates a delayed TileDB Serverless SQL query.
+
+        Allows you to specify a SQL query to be run in TileDB Cloud.
+
+        For more details about the parameters, see
+        :meth:`builder.TaskGraphBuilder.sql`.
+
+        :param query: The SQL query to execute. This must be a static string.
+        :param init_commands: A sequence of commands to execute before the
+            main SQL query whose results you want is executed.
+        :param parameters: The parameters to subsitute into ``?``s in ``query``.
+            These may be provided as either direct values or as the output
+            of upstream Nodes.
+        :param result_format: The format to return results in, either
+            ``arrow`` (the default) or ``json``.
+        :param name: An optional name for the node. If provided, it must be
+            unique within the graph.
+        """
+        merger = _graph.Merger()
+        merger.visit(parameters)
+        owner = merger.merge_visited()
+        node = cls(
+            owner,
+            query,
+            parameters,
+            kwargs=dict(
+                init_commands=init_commands,
+                result_format=result_format,
+                name=name,
+            ),
+            has_node_args=merger.has_nodes,
+        )
+        owner._add(node, parents=merger.unexecuted_nodes)
+        return node
+
+    def _to_builder_node_impl(self, grf: builder.TaskGraphBuilder) -> builder.Node:
+        if self._has_node_args:
+            bnr = _graph.BuilderNodeReplacer(self._owner)
+            parameters = bnr.visit(self._parameters)
+        else:
+            parameters = self._parameters
+
+        return grf.sql(
+            self._query,
+            **_graph.filter_kwargs(
+                parameters=parameters,
+                **self._kwargs,
+            ),
+        )

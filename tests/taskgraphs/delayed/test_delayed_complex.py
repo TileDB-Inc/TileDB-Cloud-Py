@@ -7,6 +7,7 @@ import tiledb.cloud
 from tiledb.cloud import testonly
 from tiledb.cloud.taskgraphs.delayed import Delayed
 from tiledb.cloud.taskgraphs.delayed import DelayedArray
+from tiledb.cloud.taskgraphs.delayed import DelayedSQL
 
 SPARSE = "tiledb://TileDB-Inc/quickstart_sparse"
 DENSE = "tiledb://TileDB-Inc/quickstart_dense"
@@ -65,3 +66,16 @@ class ArraysTest(unittest.TestCase):
             node = Delayed(sum_a_name)(DelayedArray(SPARSE, raw_ranges=((), ())))
 
             self.assertEqual(np.sum(orig["a"]), node.compute(30))
+
+
+class SQLTest(unittest.TestCase):
+    def test_basic(self):
+        sum_de = DelayedSQL(f"select sum(a) as a from `{DENSE}`")
+
+        count_sp = DelayedSQL(f"select count(a) as n from `{SPARSE}`")
+
+        result = Delayed("sum dense = {sd}, count sparse = {cs}".format)(
+            sd=Delayed(np.sum)(sum_de), cs=Delayed(np.sum)(count_sp)
+        )
+
+        self.assertEqual("sum dense = 136, count sparse = 3", result.compute(30))

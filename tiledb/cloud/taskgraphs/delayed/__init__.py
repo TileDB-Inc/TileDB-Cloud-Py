@@ -20,8 +20,11 @@ udf = _udf.DelayedFunction.create
 Delayed = udf
 array = _nodes.Array.create
 DelayedArray = array
+sql = _nodes.SQL.create
+DelayedSQL = sql
 
 __all__ = (
     "Delayed",
     "DelayedArray",
+    "DelayedSQL",
 )

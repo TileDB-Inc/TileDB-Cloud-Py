@@ -144,9 +144,9 @@ class TaskGraphBuilder:
     def sql(
         self,
         query: str,
+        *,
         init_commands: Iterable[str] = (),
         parameters: ValOrNodeSeq = (),
-        *,
         result_format: str = "arrow",
         name: Optional[str] = None,
     ) -> "Node":
