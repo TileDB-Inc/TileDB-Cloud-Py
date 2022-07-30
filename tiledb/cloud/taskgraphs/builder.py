@@ -62,9 +62,9 @@ class TaskGraphBuilder:
         self,
         uri: ValOrNode[str],
         *,
-        # TODO: Support query layout.
         raw_ranges: Optional[ValOrNodeSeq[Any]] = None,
         buffers: Optional[ValOrNodeSeq[str]] = None,
+        layout: Optional[types.LayoutOrStr] = None,
         name: Optional[str] = None,
     ) -> "Node[types.ArrayMultiIndex]":
         """Creates a Node that will read data from a TileDB array.
@@ -93,7 +93,16 @@ class TaskGraphBuilder:
 
         :param name: An optional name for this Node.
         """
-        return self._add_node(_ArrayNode(uri, raw_ranges, buffers, name=name))
+        real_layout = types.Layout.parse(layout)
+        return self._add_node(
+            _ArrayNode(
+                uri,
+                raw_ranges=raw_ranges,
+                buffers=buffers,
+                layout=real_layout,
+                name=name,
+            )
+        )
 
     def input(
         self,
@@ -340,8 +349,10 @@ class _ArrayNode(Node[types.ArrayMultiIndex]):
     def __init__(
         self,
         uri: ValOrNode[str],
+        *,
         raw_ranges: Optional[ValOrNodeSeq[Any]],
         buffers: Optional[ValOrNodeSeq[str]],
+        layout: Optional[types.Layout],
         name: Optional[str],
     ):
         """Initializes an ``_ArrayNode``.
@@ -372,6 +383,7 @@ class _ArrayNode(Node[types.ArrayMultiIndex]):
         self.uri = jsoner.visit(uri)
         self.raw_ranges = jsoner.visit(raw_ranges)
         self.buffers = jsoner.visit(buffers)
+        self.layout = layout and layout.to_json()
 
         super().__init__(name, jsoner.seen_nodes, fallback_name=f"Query {uri}")
 
@@ -379,7 +391,10 @@ class _ArrayNode(Node[types.ArrayMultiIndex]):
         ret = super().to_registration_json(existing_names)
         node_data = dict(
             uri=self.uri,
-            ranges={"ranges": self.raw_ranges},
+            ranges={
+                "ranges": self.raw_ranges,
+                "layout": self.layout,
+            },
         )
         if self.buffers is not None:
             node_data["buffers"] = self.buffers

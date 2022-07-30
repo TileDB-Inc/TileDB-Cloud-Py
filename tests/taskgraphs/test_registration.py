@@ -25,7 +25,9 @@ class RegistrationTest(unittest.TestCase):
             self.assertEqual(original["nodes"], loaded["nodes"])
 
             arr_node = grf.array_read(
-                "tiledb://something/else", raw_ranges=[[1, 2], [3, 4]]
+                "tiledb://something/else",
+                raw_ranges=[[1, 2], [3, 4]],
+                layout="c",
             )
             grf.udf(
                 repr,

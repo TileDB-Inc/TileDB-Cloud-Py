@@ -1,7 +1,8 @@
 """User-facing types used in task graphs."""
 
+import enum
 import itertools
-from typing import Any, Dict, List, Tuple, TypeVar, Union
+from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 import attrs
 import numpy as np
@@ -41,6 +42,38 @@ to decode them contained within their data.
 
 ArrayMultiIndex = Dict[str, np.ndarray]
 """Type returned from an array query."""
+
+
+class Layout(enum.Enum):
+    """The layout of a TileDB query."""
+
+    ROW_MAJOR = "R"
+    COL_MAJOR = "C"
+    GLOBAL_ORDER = "G"
+    UNORDERED = "U"
+
+    @classmethod
+    def parse(cls, val: Optional["LayoutOrStr"]) -> Optional["Layout"]:
+        if not val:  # Specifically so we support "" as a null layout.
+            return None
+        if isinstance(val, Layout):
+            return val
+        upval = val.upper()
+        try:
+            return cls(upval)
+        except ValueError:
+            pass
+        upval = upval.replace("-", "_")
+        try:
+            return cls[upval]
+        except KeyError:
+            raise ValueError(f"{val!r} is not a valid layout")
+
+    def to_json(self) -> str:
+        return self.name.lower().replace("_", "-")
+
+
+LayoutOrStr = Union[Layout, str]
 
 
 @attrs.define(frozen=True, slots=True)

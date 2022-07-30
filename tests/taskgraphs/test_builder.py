@@ -284,7 +284,7 @@ class TestBuilder(unittest.TestCase):
                 },
                 {
                     "array_node": {
-                        "ranges": {"ranges": [[1, 1, 2, 4], []]},
+                        "ranges": {"layout": None, "ranges": [[1, 1, 2, 4], []]},
                         "uri": {
                             "__tdbudf__": "node_output",
                             "client_node_id": "0badc0de-dead-beef-cafe-000000000000",
