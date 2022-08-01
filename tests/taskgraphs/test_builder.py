@@ -281,7 +281,6 @@ class TestBuilder(unittest.TestCase):
                 },
                 {
                     "array_node": {
-                        "parameter_id": "0badc0de-dead-beef-cafe-000000000001",
                         "ranges": {"ranges": [[1, 1, 2, 4], []]},
                         "uri": {
                             "__tdbudf__": "node_output",

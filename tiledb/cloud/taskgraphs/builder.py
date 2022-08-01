@@ -352,7 +352,6 @@ class _ArrayNode(Node[types.ArrayMultiIndex]):
     def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
         ret = super().to_registration_json(existing_names)
         node_data = dict(
-            parameter_id=str(self.id),
             uri=self.uri,
             ranges={"ranges": self.raw_ranges},
         )
