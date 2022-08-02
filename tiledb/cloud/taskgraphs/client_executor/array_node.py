@@ -24,8 +24,6 @@ class ArrayNode(_base.Node[_base.ET, _T]):
     ):
         super().__init__(uid, owner, name)
         self._array_data = json_data["array_node"]
-        array_data = json_data["array_node"]
-        self._parameter_id = array_data["parameter_id"]
         self._details: Optional[Dict[str, Any]] = None
 
     def _exec_impl(
@@ -46,7 +44,7 @@ class ArrayNode(_base.Node[_base.ET, _T]):
         # TODO: remove this.
         ranges["ranges"] = ranges.get("ranges") or []
         self._details = dict(
-            parameter_id=self._parameter_id,
+            parameter_id=str(self.id),
             uri=uri,
             ranges=ranges,
             buffers=buffers,
