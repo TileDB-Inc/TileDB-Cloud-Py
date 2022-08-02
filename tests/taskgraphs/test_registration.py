@@ -29,12 +29,20 @@ class RegistrationTest(unittest.TestCase):
                 raw_ranges=[[1, 2], [3, 4]],
                 layout="c",
             )
-            grf.udf(
+            repr_node = grf.udf(
                 repr,
                 types.args(arr_node),
                 name="ooga",
                 result_format="booga",
                 image_name="monkey",
+            )
+            grf.udf(
+                len,
+                types.args(repr_node),
+                name="hee",
+                result_format="haw",
+                image_name="cowboy",
+                local=True,
             )
             updated = grf._tdb_to_json()
             registration.update(grf)

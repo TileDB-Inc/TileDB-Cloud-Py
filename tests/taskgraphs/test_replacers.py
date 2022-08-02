@@ -5,6 +5,7 @@ from typing import Optional
 import attrs
 
 from tiledb.cloud._common import ordered
+from tiledb.cloud.taskgraphs import types
 from tiledb.cloud.taskgraphs.client_executor import _base
 from tiledb.cloud.taskgraphs.client_executor import _replacers
 
@@ -204,3 +205,62 @@ class _TestNode:
 
     def task_id(self):
         return self._task_id
+
+
+class ParseJSONArgsTest(unittest.TestCase):
+    def test_happy(self):
+        cases = (
+            (
+                "nothing",  # testcase name
+                [],  # Input List[TGUDFArgument]
+                types.args(),  # Expected (args, kwargs)
+            ),
+            (
+                "just args",
+                [{"value": 1}, {"value": {"test": 2}}],
+                types.args(1, {"test": 2}),
+            ),
+            (
+                "just kwargs",
+                [
+                    {"name": "hello", "value": "goodbye"},
+                    {"name": "yes", "value": None},
+                    {"name": "", "value": {}},
+                    {"name": "no_value"},
+                ],
+                types.Arguments(
+                    (), {"hello": "goodbye", "yes": None, "": {}, "no_value": None}
+                ),
+            ),
+            (
+                "all together",
+                [{"value": 1}, {"value": 2}, {}, {"name": "a", "value": "b"}],
+                types.args(1, 2, None, a="b"),
+            ),
+        )
+        for name, inval, expected in cases:
+            with self.subTest(name):
+                actual = _replacers.parse_json_args(inval)
+                self.assertEqual(expected, actual)
+
+    def test_bad_json(self):
+        with self.assertRaises(ValueError):
+            _replacers.parse_json_args("bogus")
+
+    def test_value_errors(self):
+        cases = (
+            ("wrong", "a list of TGUDFArgument dicts"),
+            ([{"value": "good"}, "wrong"], "a TGUDFArgument dict"),
+            (
+                [{"name": "wrong", "value": 1}, {"value": 2}],
+                "must appear before",
+            ),
+            (
+                [{"name": "bad", "value": 1}, {"name": "bad", "value": 2}],
+                "already been used",
+            ),
+        )
+        for input, expected in cases:
+            with self.subTest(expected):
+                with self.assertRaisesRegex(ValueError, expected):
+                    _replacers.parse_json_args(input)

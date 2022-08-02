@@ -1,4 +1,6 @@
 import operator
+import os.path
+import tempfile
 import time
 import unittest
 
@@ -78,6 +80,20 @@ class FunctionsTest(unittest.TestCase):
         self.assertEqual(node_4.result(), 8)
         self.assertEqual(node_5.result(), 8)
         self.assertEqual(node_6.result(), 24)
+
+    def test_local(self):
+        def touch(file):
+            open(file, "w").close()
+            return file
+
+        d_touch = delayed.udf(touch, local=True)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            fn = os.path.join(tmpdir, "testfile")
+
+            node = d_touch(fn)
+            self.assertEqual(fn, node.compute(5))
+            self.assertTrue(os.path.exists(fn))
 
     def test_register(self):
         d_repr = delayed.udf(repr)

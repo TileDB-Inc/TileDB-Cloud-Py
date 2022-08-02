@@ -130,6 +130,7 @@ class TestBuilder(unittest.TestCase):
                 "{it!r} has a length of {ln}".format,
                 types.args(it=start, ln=length),
                 name="result",
+                local=True,
             )
             expected = {
                 "name": "my cool task graph",
@@ -188,6 +189,7 @@ class TestBuilder(unittest.TestCase):
                             "environment": {
                                 "language": "python",
                                 "language_version": utils.PYTHON_VERSION,
+                                "run_client_side": True,
                             },
                             "executable_code": "gASVQwAAAAAAAACMCGJ1aWx0aW5zlIwHZ2V0YXR0cpSTlIwbe2l0IXJ9IGhhcyBhIGxlbmd0aCBvZiB7bG59lIwGZm9ybWF0lIaUUpQu",
                             "result_format": "python_pickle",
@@ -249,6 +251,7 @@ class TestBuilder(unittest.TestCase):
                     sql_node,
                 ),
                 name="output",
+                local=True,
             )
 
             grf.udf(
@@ -442,6 +445,7 @@ class TestBuilder(unittest.TestCase):
                         "environment": {
                             "language": "python",
                             "language_version": utils.PYTHON_VERSION,
+                            "run_client_side": True,
                         },
                         "executable_code": "gASVTgAAAAAAAACMCGJ1aWx0aW5zlIwHZ2V0YXR0cpSTlIwmYXJyYXkgeyFyfSBnYXZlIHJlc3VsdCB7fTsgc3FsIGdhdmUge32UjAZmb3JtYXSUhpRSlC4=",
                         "result_format": "python_pickle",

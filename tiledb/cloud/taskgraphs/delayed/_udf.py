@@ -34,6 +34,7 @@ class DelayedFunction(Generic[_T]):
         __fn: utils.Funcable[_T],
         *,
         result_format: Optional[str] = _NOTHING,
+        local: bool = _NOTHING,
         image_name: Optional[str] = _NOTHING,
         timeout: Union[datetime.timedelta, int, None] = _NOTHING,
         resource_class: Optional[str] = _NOTHING,
@@ -56,6 +57,8 @@ class DelayedFunction(Generic[_T]):
         :param __fn: The function to call. This may be a Python callable or
             the name of a registered UDF.
         :param result_format: The format to return results in.
+        :param local: If set to True, will execute the function on the local
+            machine rather than in TileDB Cloud.
         :param image_name: If specified, will execute the UDF within
             the specified image rather than the default image for its language.
         :param timeout: If specified, the length of time after which the UDF
@@ -79,6 +82,7 @@ class DelayedFunction(Generic[_T]):
         # them in sync.
         raw_kwargs = dict(
             result_format=result_format,
+            local=local,
             image_name=image_name,
             timeout=timeout,
             resource_class=resource_class,

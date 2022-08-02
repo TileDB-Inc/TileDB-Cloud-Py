@@ -133,6 +133,7 @@ class TaskGraphBuilder:
         resource_class: Optional[str] = None,
         namespace: Optional[str] = None,
         name: Optional[str] = None,
+        local: bool = False,
     ) -> "Node[_T]":
         """Creates a Node which executes a UDF.
 
@@ -157,6 +158,8 @@ class TaskGraphBuilder:
         :param namespace: If specified, the non-default namespace that the UDF
             will be executed under. This will also be the namespace used for
             reading any array nodes used in this UDF's input.
+        :param local: If True, will attempt to run the UDF on the client
+            machine. If this is not possible, the UDF will fail.
         """
         # NOTE: When adding parameters here, also update delayed/_udf.py.
         return self._add_node(
@@ -170,6 +173,7 @@ class TaskGraphBuilder:
                 resource_class=resource_class,
                 namespace=namespace,
                 name=name,
+                local=local,
             )
         )
 
@@ -497,14 +501,22 @@ class _UDFNode(Node[_T]):
         resource_class: Optional[str],
         namespace: Optional[str],
         name: Optional[str],
+        local: bool,
     ):
         """Initializes this UDF node.
 
         See :meth:`TaskGraphBuilder.udf` for details.
         """
         utils.check_funcable(func=func)
+        if isinstance(func, str):
+            if local:
+                raise ValueError("Registered UDFs may only be executed server-side.")
         jsoner = _ParameterEscaper()
         self.args = jsoner.arguments_to_json(args)
+        if local and any(isinstance(node, _ArrayNode) for node in jsoner.seen_nodes):
+            raise ValueError(
+                "UDFs that take array data as input must be run server-side."
+            )
         super().__init__(
             name,
             jsoner.seen_nodes,
@@ -519,6 +531,7 @@ class _UDFNode(Node[_T]):
         self.timeout = timeout
         self.resource_class = resource_class
         self.namespace = namespace
+        self.local = local
 
     def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
         ret = super().to_registration_json(existing_names)
@@ -531,10 +544,14 @@ class _UDFNode(Node[_T]):
         if isinstance(self.func, str):
             udf_node["registered_udf_name"] = self.func
         else:
+            # For locally-created functions, we need to save our Python version,
+            # so that the server knows what version to execute it under.
             env_dict.update(
                 language="python",
                 language_version=utils.PYTHON_VERSION,
             )
+            if self.local:
+                env_dict["run_client_side"] = True
             udf_node["executable_code"] = _codec.b64_str(_codec.pickle(self.func))
             if self.include_source:
                 source = utils.getsourcelines(self.func)
