@@ -13,6 +13,9 @@ class DummyNode(_graph.Node):
         new_owner._add(new, parents=mgr.unexecuted_nodes)
         return new
 
+    def _to_builder_node_impl(self, _):
+        raise NotImplementedError()
+
 
 class TestBuild(unittest.TestCase):
     def test_merge(self):
