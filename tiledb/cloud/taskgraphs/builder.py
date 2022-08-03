@@ -31,7 +31,7 @@ ValOrNodeSeq = Union[
 ]
 """Either a Node that yields a sequence or a sequence that may contain nodes."""
 
-_NOTHING = object()
+_NOTHING: Any = object()
 """Sentinel object used when we need to distinguish "unset" from "None"."""
 
 
@@ -96,7 +96,7 @@ class TaskGraphBuilder:
     def input(
         self,
         name: str,
-        default_value: _T = _NOTHING,  # type:ignore[assignment]
+        default_value: _T = _NOTHING,
     ) -> "Node[_T]":
         """Creates a Node that can be used as an input to the graph.
 
@@ -128,6 +128,7 @@ class TaskGraphBuilder:
         :param image_name: If specified, will execute the UDF within
             the specified image rather than the default image for its language.
         """
+        # NOTE: When adding parameters here, also update delayed/_udf.py.
         return self._add_node(
             _UDFNode(
                 func,
