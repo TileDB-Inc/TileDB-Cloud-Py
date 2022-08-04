@@ -1,5 +1,5 @@
 import abc
-from typing import Any, Callable, Iterable, List, Optional, TypeVar, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, TypeVar, Union
 
 from tiledb.cloud import taskgraphs
 from tiledb.cloud._common import futures
@@ -385,3 +385,30 @@ class BuilderNodeReplacer(visitor.ReplacingVisitor):
             # we need to extract its value.
             return visitor.Replacement(arg.result())
         return None
+
+
+NOTHING: Any = object()
+"""Sentinel value to distinguish an unset parameter from None."""
+
+
+def filter_kwargs(**kwargs: _T) -> Dict[str, _T]:
+    """Returns a dict of the kwargs, but without any NOTHINGs.
+
+    This is useful to provided argument information in a function signature
+    without having to copy over all the defaults::
+
+        def func(*, source="from", sink="to"):
+            ...
+
+        def wrapped_func(*, source=NOTHING, sink=NOTHING):
+            return lambda: func(**filter_kwargs(
+                source=source,
+                sink=sink,
+            ))
+    """
+    return filter_dict(kwargs)
+
+
+def filter_dict(arg_dict: Dict[str, _T]) -> Dict[str, _T]:
+    """:func:`filter_kwargs`, but it takes its inputs as a dict."""
+    return {k: v for k, v in arg_dict.items() if v is not NOTHING}

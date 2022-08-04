@@ -9,9 +9,6 @@ from tiledb.cloud.taskgraphs.delayed import _graph
 
 _T = TypeVar("_T")
 
-_NOTHING: Any = object()
-"""Sentinel value to distinguish an unset parameter from None."""
-
 
 class DelayedFunction(Generic[_T]):
     """The wrapper around a function that makes it delayed-callable."""
@@ -30,9 +27,9 @@ class DelayedFunction(Generic[_T]):
         cls,
         __fn: utils.Funcable[_T],
         *,
-        result_format: Optional[str] = _NOTHING,
-        image_name: Optional[str] = _NOTHING,
-        name: Optional[str] = _NOTHING,
+        result_format: Optional[str] = _graph.NOTHING,
+        image_name: Optional[str] = _graph.NOTHING,
+        name: Optional[str] = _graph.NOTHING,
     ) -> "DelayedFunction[_T]":
         """Wraps the given function to later call it in a delayed task graph.
 
@@ -64,13 +61,14 @@ class DelayedFunction(Generic[_T]):
         # so that the default values of the named arguments to
         # `TaskGraphBuilder.udf` are used if unset rather than having to keep
         # them in sync.
-        raw_kwargs = dict(
-            result_format=result_format,
-            image_name=image_name,
-            name=name,
+        return cls(
+            __fn,
+            dict(
+                result_format=result_format,
+                image_name=image_name,
+                name=name,
+            ),
         )
-        node_kwargs = {k: v for k, v in raw_kwargs.items() if v is not _NOTHING}
-        return cls(__fn, node_kwargs)
 
     def set(self, **updates: Any) -> "DelayedFunction[_T]":
         """Returns a new DelayedFunction with the given argument updates.
@@ -148,7 +146,9 @@ class DelayedCall(_graph.Node[_T]):
             arguments = types.Arguments(args, kwargs)
         else:
             arguments = types.Arguments(self._args, self._kwargs)
-        return grf.udf(self._fn._fn, arguments, **self._fn._node_args)
+        return grf.udf(
+            self._fn._fn, arguments, **_graph.filter_dict(self._fn._node_args)
+        )
 
     def __call__(self, *args, **kwargs) -> NoReturn:
         del args, kwargs
