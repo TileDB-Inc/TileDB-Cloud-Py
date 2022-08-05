@@ -1,4 +1,5 @@
 import abc
+import warnings
 from typing import Any, Callable, Iterable, List, Optional, TypeVar, Union
 
 from tiledb.cloud import taskgraphs
@@ -8,6 +9,7 @@ from tiledb.cloud._common import visitor
 from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import depgraph
 from tiledb.cloud.taskgraphs import executor
+from tiledb.cloud.taskgraphs import registration
 from tiledb.cloud.taskgraphs import types
 
 _T = TypeVar("_T")
@@ -195,6 +197,15 @@ class Node(futures.FutureLike[_T], metaclass=abc.ABCMeta):
         except futures.InvalidStateError:
             return executor.Status.WAITING
 
+    def register(self, name: str, *, namespace: Optional[str] = None) -> None:
+        """Registers the task graph that this Delayed node is part of.
+
+        :param name: The name to register the graph with. This must be
+            a bare name, with no namespace (i.e. ``my-graph``,
+            not ``me/my-graph``).
+        """
+        self._owner._register(name, namespace=namespace)
+
     # Internals.
 
     def _exec_node(self) -> _ExecNode[_T]:
@@ -241,6 +252,13 @@ class DelayedGraph:
         self._deps = depgraph.DepGraph[Node]()
         """All the Nodes in this graph and their dependencies."""
 
+        self._builder: Optional[builder.TaskGraphBuilder] = None
+        """If this graph has been built, the Builder that was used to do it.
+
+        We lazily build the graph only when it is needed: when the user
+        registers it or we start executing it.
+        """
+
         self._execution: Optional[executor.Executor] = None
         """If this graph has been started, the executor that is running it."""
 
@@ -260,12 +278,14 @@ class DelayedGraph:
             )
         if other is self:
             return
+        other._invalidate_builder()
         for node in other._deps:
             node._owner = self
             self._add(node, parents=other._deps.parents_of(node))
 
     def _add(self, n: Node, *, parents: Iterable[Node]) -> None:
         """Adds a single new Node to this graph."""
+        self._invalidate_builder()
         if self._execution:
             raise futures.InvalidStateError(
                 "Cannot add new nodes to an already-executing graph."
@@ -290,20 +310,53 @@ class DelayedGraph:
 
     def _add_dep(self, *, parent: Node, child: Node) -> None:
         """Records a dependency between parent and child node."""
+        self._invalidate_builder()
         self._deps.add_edge(parent=parent, child=child)
+
+    def _invalidate_builder(self) -> None:
+        """Deletes the current Builder for when we modify graph structure.
+
+        We don't want spooky action at a distance (modifying a graph locally
+        unexpectedly updating the registered instance). There's also no good
+        outcome if somebody merges together two previously-registered
+        sub-graphs (e.g. `node_a.register()`; `node_b.register()`;
+        `some_udf(a, b)`).
+        """
+        if not self._builder:
+            return
+        warnings.warn(
+            UserWarning(
+                "Modifying a Delayed graph that has already been registered"
+                " will not update the registered version of the graph."
+            )
+        )
+        self._builder = None
+        for node in self._deps:
+            node._builder_node = None
+
+    def _build(self, name: Optional[str] = None) -> builder.TaskGraphBuilder:
+        """Transforms this graph into its TaskGraphBuilder (if needed)."""
+        if not self._builder:
+            bld = builder.TaskGraphBuilder(name)
+            for node in self._deps:
+                builder_node = node._to_builder_node(bld)
+                # Include parent–child relationships that are not specified
+                # by the params.
+                for parent in self._deps.parents_of(node):
+                    built_parent = parent._builder_node
+                    bld.add_dep(parent=built_parent, child=builder_node)
+            self._builder = bld
+        return self._builder
+
+    def _register(self, name: str, *, namespace: Optional[str] = None) -> None:
+        bld = self._build(name)
+        registration.register(bld, name, namespace=namespace)
 
     def _start(self, name: Optional[str] = None) -> None:
         """Starts execution of this graph (if not yet started)."""
         if self._execution:
             return
-        bld = builder.TaskGraphBuilder(name)
-        for node in self._deps:
-            builder_node = node._to_builder_node(bld)
-            # Include parent–child relationships that are not specified
-            # by the params.
-            for parent in self._deps.parents_of(node):
-                built_parent = parent._builder_node
-                bld.add_dep(parent=built_parent, child=builder_node)
+        bld = self._build(name)
         self._execution = taskgraphs.execute(bld)
         # Ensure that all the ``done_callback``s that were registered before
         # starting the graph are executed.
