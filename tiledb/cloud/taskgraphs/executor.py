@@ -36,11 +36,15 @@ class Status(enum.Enum):
     cancellation.
     """
 
+    def friendly_name(self) -> str:
+        return self.name.replace("_", " ").lower()
+
 
 GraphStructure = Union[Dict[str, Any], builder.TaskGraphBuilder]
 """The structure of a task graph, as the JSON serialization or a Builder."""
 _N = TypeVar("_N", bound="Node")
 """The specific type of Node that an executor uses."""
+_ExSelf = TypeVar("_ExSelf", bound="Executor")
 
 
 class ParentFailedError(futures.CancelledError, Generic[_N]):
@@ -73,6 +77,9 @@ class Executor(Generic[_N], metaclass=abc.ABCMeta):
         json_nodes = graph_json["nodes"]
         for node_json in json_nodes:
             self._add_node(node_json)
+
+        self._update_callbacks_lock = threading.Lock()
+        self._update_callbacks: List[Callable[[_ExSelf], None]] = []
 
     #
     # Public API.
@@ -196,6 +203,24 @@ class Executor(Generic[_N], metaclass=abc.ABCMeta):
         If log submission failed (or the graph was not yet submitted), None.
         """
 
+    # Visualization.
+
+    def visualize(self) -> Any:
+        """Returns a visualization of this graph for a Jupyter notebook."""
+        from tiledb.cloud.taskgraphs import visualization
+
+        return visualization.visualize(self)
+
+    def add_update_callback(self: _ExSelf, callback: Callable[[_ExSelf], None]) -> None:
+        """Adds a callback that will be called when a node's state changes.
+
+        Callbacks are delivered on a best-effort basis and may be asynchronous
+        or batched depending upon the implementation. There is no guarantee
+        as to what thread the callback may come in on.
+        """
+        with self._update_callbacks_lock:
+            self._update_callbacks.append(callback)
+
     # Internals.
 
     def _nodes_with_status(self, *statuses: Status) -> Tuple[_N, ...]:
@@ -240,7 +265,7 @@ _ET = TypeVar("_ET", bound=Executor)
 """The type of the executor of a node."""
 _T = TypeVar("_T")
 """The type of the value that a Node yields."""
-_Self = TypeVar("_Self", bound="Node")
+_NSelf = TypeVar("_NSelf", bound="Node")
 
 
 class Node(futures.FutureLike[_T], Generic[_ET, _T], metaclass=abc.ABCMeta):
@@ -269,7 +294,7 @@ class Node(futures.FutureLike[_T], Generic[_ET, _T], metaclass=abc.ABCMeta):
     # TODO: Retry functionality. When we do add retry functionality, assumptions
     # around a node "finishing" exactly once will be broken.
 
-    def __init__(self: _Self, uid: uuid.UUID, owner: _ET, name: Optional[str]):
+    def __init__(self: _NSelf, uid: uuid.UUID, owner: _ET, name: Optional[str]):
         self.id = uid
         """The client-generated UUID of this node."""
         self.owner = owner
@@ -279,7 +304,7 @@ class Node(futures.FutureLike[_T], Generic[_ET, _T], metaclass=abc.ABCMeta):
 
         self._lifecycle_condition = threading.Condition(threading.Lock())
         """A lock to protect lifecycle events and callback list management."""
-        self._cb_list: List[Callable[[_Self], None]] = []
+        self._cb_list: List[Callable[[_NSelf], None]] = []
         """Callbacks that will be called when the Node completes."""
 
     # Node-specific APIs.
@@ -357,7 +382,7 @@ class Node(futures.FutureLike[_T], Generic[_ET, _T], metaclass=abc.ABCMeta):
         with self._lifecycle_condition:
             return self._done()
 
-    def add_done_callback(self: _Self, fn: Callable[[_Self], None]) -> None:
+    def add_done_callback(self: _NSelf, fn: Callable[[_NSelf], None]) -> None:
         """Adds a callback that will be called when this Node completes.
 
         While the current behavior is similar to the way ``add_done_callback``
@@ -377,7 +402,7 @@ class Node(futures.FutureLike[_T], Generic[_ET, _T], metaclass=abc.ABCMeta):
         except Exception:
             _log.exception("%r callback %r failed", self, fn)
 
-    def _callbacks(self: _Self) -> Tuple[Callable[[_Self], None], ...]:
+    def _callbacks(self: _NSelf) -> Tuple[Callable[[_NSelf], None], ...]:
         """Returns an immutable copy of the callback list.
 
         Must be called with ``_lifecycle_condition`` held.

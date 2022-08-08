@@ -206,6 +206,10 @@ class Node(futures.FutureLike[_T], metaclass=abc.ABCMeta):
         """
         self._owner._register(name, namespace=namespace)
 
+    def visualize(self) -> Any:
+        """Returns a visualization of the graph for a Jupyter notebook."""
+        return self._owner._get_execution().visualize()
+
     # Internals.
 
     def _exec_node(self) -> _ExecNode[_T]:
