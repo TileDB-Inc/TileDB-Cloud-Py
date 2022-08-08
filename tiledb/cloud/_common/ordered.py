@@ -1,6 +1,9 @@
 """Implementations of Python sets that remember their order."""
 
-from typing import AbstractSet, Iterable, Iterator, MutableSet, TypeVar
+from typing import AbstractSet as _AbstractSet
+from typing import Iterable, Iterator
+from typing import MutableSet as _MutableSet
+from typing import TypeVar
 
 _T = TypeVar("_T")
 _T_co = TypeVar("_T_co", covariant=True)
@@ -11,7 +14,7 @@ See https://peps.python.org/pep-0673/.
 """
 
 
-class FrozenSet(AbstractSet[_T_co]):
+class FrozenSet(_AbstractSet[_T_co]):
     """A frozenset that remembers the insertion order of elements.
 
     Unlike dicts, Python sets don't remember insertion order. This class
@@ -52,7 +55,7 @@ class FrozenSet(AbstractSet[_T_co]):
         return f"{type(self).__name__}(({contents}))"
 
 
-class Set(FrozenSet[_T], MutableSet[_T]):
+class Set(FrozenSet[_T], _MutableSet[_T]):
     """An :class:`_OrderedFrozenSet`, but this time it's mutable.
 
     Not guaranteed to be thread-safe.
@@ -98,3 +101,6 @@ class Set(FrozenSet[_T], MutableSet[_T]):
 
     __hash__ = None  # type: ignore[assignment]
     """This is mutable, so it's not hashable."""
+
+
+__all__ = ("FrozenSet", "Set")
