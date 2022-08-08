@@ -1,13 +1,16 @@
 import operator
+import time
 import unittest
 
 import numpy as np
 
 from tiledb.cloud import client
+from tiledb.cloud import taskgraphs
 from tiledb.cloud import testonly
 from tiledb.cloud._common import futures
 from tiledb.cloud.taskgraphs import delayed
 from tiledb.cloud.taskgraphs import executor
+from tiledb.cloud.taskgraphs import registration
 
 
 class FunctionsTest(unittest.TestCase):
@@ -75,6 +78,29 @@ class FunctionsTest(unittest.TestCase):
         self.assertEqual(node_4.result(), 8)
         self.assertEqual(node_5.result(), 8)
         self.assertEqual(node_6.result(), 24)
+
+    def test_register(self):
+        d_repr = delayed.udf(repr)
+        parent = d_repr(1)
+        middle = d_repr(parent)
+        child = d_repr.set(name="output")(middle)
+
+        grf_name = testonly.random_name("register_delayed")
+        child.register(name=grf_name)
+        try:
+            time.sleep(1)
+            exec = taskgraphs.execute(grf_name)
+            self.assertEqual('''"'1'"''', exec.node("output").result(30))
+        finally:
+            registration.delete(grf_name)
+
+        with self.assertWarnsRegex(UserWarning, "update"):
+            # Ensure that we issue a warning when the user updates.
+            last = d_repr(child)
+        owner = last._owner
+        self.assertIsNone(owner._builder)
+        for n in owner._deps:
+            self.assertIsNone(n._builder_node)
 
 
 class FailureTest(unittest.TestCase):
