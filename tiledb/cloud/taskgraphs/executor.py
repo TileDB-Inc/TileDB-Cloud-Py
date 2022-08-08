@@ -74,7 +74,9 @@ class Executor(Generic[_N], metaclass=abc.ABCMeta):
         for node_json in json_nodes:
             self._add_node(node_json)
 
+    #
     # Public API.
+    #
 
     def node(self, nid: Union[str, uuid.UUID, builder.Node]) -> _N:
         """Gets the node identified either by name, ID, or builder node.
@@ -94,6 +96,60 @@ class Executor(Generic[_N], metaclass=abc.ABCMeta):
                 f"Nodes must be accessed by name, ID, or builder node, not {type(nid)}."
             )
         return self._by_id[nid]
+
+    def nodes_by_name(self) -> Dict[str, _N]:
+        """A dictionary of all nodes, keyed by node name."""
+        return dict(self._by_name)
+
+    # Dynamic node accessors, with default implementations.
+    # Subclasses may wish to reimplement these to optimize for their own
+    # data model.
+
+    def unstarted_nodes(self) -> Tuple[_N, ...]:
+        """A snapshot of all nodes that have not yet been started.
+
+        The returned collection of nodes is not guaranteed to be fully
+        consistent, since in the process of iterating over nodes, the status of
+        some nodes may have changed.
+        """
+        return self._nodes_with_status(Status.WAITING, Status.READY)
+
+    def running_nodes(self) -> Tuple[_N, ...]:
+        """A snapshot of all nodes currently running.
+
+        The returned collection of nodes is not guaranteed to be fully
+        consistent, since in the process of iterating over nodes, the status of
+        some nodes may have changed.
+        """
+        return self._nodes_with_status(Status.RUNNING)
+
+    def successful_nodes(self) -> Tuple[_N, ...]:
+        """A snapshot of all nodes that have completed successfully.
+
+        The returned collection of nodes is not guaranteed to be fully
+        consistent, since in the process of iterating over nodes, the status of
+        some nodes may have changed.
+        """
+        return self._nodes_with_status(Status.SUCCEEDED)
+
+    def failed_nodes(self) -> Tuple[_N, ...]:
+        """A snapshot of all nodes that have failed.
+
+        The returned collection of nodes is not guaranteed to be fully
+        consistent, since in the process of iterating over nodes, the status of
+        some nodes may have changed.
+        """
+        return self._nodes_with_status(Status.FAILED)
+
+    def cancelled_nodes(self) -> Tuple[_N, ...]:
+        """A snapshot of all nodes that have been cancelled.
+
+        This includes both nodes that were manually cancelled, and nodes that
+        are not executed because their parents failed.
+        """
+        return self._nodes_with_status(Status.CANCELLED, Status.PARENT_FAILED)
+
+    # Lifecycle management.
 
     @abc.abstractmethod
     def execute(self, **inputs: Any) -> None:
@@ -141,6 +197,9 @@ class Executor(Generic[_N], metaclass=abc.ABCMeta):
         """
 
     # Internals.
+
+    def _nodes_with_status(self, *statuses: Status) -> Tuple[_N, ...]:
+        return tuple(n for n in self._by_name.values() if n.status in statuses)
 
     def _add_node(self, node_json: Dict[str, Any]) -> None:
         """Internal function to add a Node object to common data structures.
