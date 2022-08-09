@@ -27,6 +27,10 @@ class IClientExecutor(executor.Executor["Node"], metaclass=abc.ABCMeta):
     def _enqueue_done_node(self, node: "Node") -> None:
         raise NotImplementedError()
 
+    @abc.abstractclassmethod
+    def _notify_node_status_change(self) -> None:
+        raise NotImplementedError()
+
 
 ET = TypeVar("ET", bound=IClientExecutor)
 _T = TypeVar("_T")
@@ -208,6 +212,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
             return
         self._status = status
         self._lifecycle_condition.notify_all()
+        self.owner._notify_node_status_change()
 
     def _set_parent_failed(
         self,

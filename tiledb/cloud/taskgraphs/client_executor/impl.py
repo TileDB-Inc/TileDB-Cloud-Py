@@ -111,6 +111,11 @@ class LocalExecutor(_base.IClientExecutor):
         keep it around to ensure that users don't block forever on failed tasks.
         """
 
+        self._has_status_updates = False
+        """True when a Node has status updates since the last callback."""
+        self._update_callback_thread: Optional[threading.Thread] = None
+        """If present, the thread that is dispatching update callbacks."""
+
     @property
     def status(self) -> Status:
         with self._done_condition:
@@ -369,6 +374,34 @@ class LocalExecutor(_base.IClientExecutor):
             traceback.print_exc()
             raise
         ft.set_result(None)
+
+    def _notify_node_status_change(self) -> None:
+        """Called when a Node's status changes.
+
+        THE NODE CALLS THIS WHILE ITS LOCK IS HELD. This function must not do
+        any major work of its own; instead it should dispatch to another thread.
+        """
+        with self._update_callbacks_lock:
+            if not self._update_callbacks:
+                return
+            self._has_new_node_statuses = True
+            if not self._update_callback_thread:
+                self._update_callback_thread = threading.Thread(
+                    name=f"{self._prefix}-update-callbacks",
+                    target=self._call_update_callbacks,
+                )
+                self._update_callback_thread.start()
+
+    def _call_update_callbacks(self) -> None:
+        while True:
+            with self._update_callbacks_lock:
+                if not self._has_new_node_statuses:
+                    # If there are no updates, then quit.
+                    self._update_callback_thread = None
+                    return
+                self._has_new_node_statuses = False
+                cbs = tuple(self._update_callbacks)
+            futures.execute_callbacks(self, cbs)
 
     #
     # Logging
