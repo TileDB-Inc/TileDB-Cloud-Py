@@ -7,6 +7,7 @@ import tiledb.cloud
 from tiledb.cloud import testonly
 from tiledb.cloud.taskgraphs.delayed import Delayed
 from tiledb.cloud.taskgraphs.delayed import DelayedArray
+from tiledb.cloud.taskgraphs.delayed import DelayedArrayUDF
 
 SPARSE = "tiledb://TileDB-Inc/quickstart_sparse"
 DENSE = "tiledb://TileDB-Inc/quickstart_dense"
@@ -17,11 +18,14 @@ class ArraysTest(unittest.TestCase):
         with tiledb.open(SPARSE, ctx=tiledb.cloud.Ctx()) as arr:
             orig = arr[:]
 
-        node = Delayed(lambda x: np.sum(x["a"]), name="node")(
-            DelayedArray(SPARSE, raw_ranges=((), ())),
-        )
+        node = DelayedArrayUDF(
+            SPARSE,
+            lambda x, y: np.sum(x["a"]) + y,
+            raw_ranges=((), ()),
+            name="node",
+        )(5)
 
-        self.assertEqual(node.compute(30), np.sum(orig["a"]))
+        self.assertEqual(node.compute(30), np.sum(orig["a"]) + 5)
 
     def test_multi_sum(self):
         # TileDB array indices are [start:end) based, but ranges passed to

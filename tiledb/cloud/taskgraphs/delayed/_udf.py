@@ -1,11 +1,13 @@
 """Classes that implement delayed UDFs."""
 
-from typing import Any, Dict, Generic, NoReturn, Optional, Tuple, TypeVar
+import functools
+from typing import Any, Callable, Dict, Generic, NoReturn, Optional, Tuple, TypeVar
 
 from tiledb.cloud import utils
 from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import types
 from tiledb.cloud.taskgraphs.delayed import _graph
+from tiledb.cloud.taskgraphs.delayed import _nodes
 
 _T = TypeVar("_T")
 
@@ -156,3 +158,41 @@ class DelayedCall(_graph.Node[_T]):
 
     def __repr__(self) -> str:
         return f"<{self._fn}(...) {id(self):x}>"
+
+
+def array_udf(
+    uri: _graph.ValOrNode[str],
+    func: utils.Funcable[_T],
+    *,
+    raw_ranges: Optional[_graph.ValOrNodeSeq] = _graph.NOTHING,
+    buffers: Optional[_graph.ValOrNodeSeq[str]] = _graph.NOTHING,
+    **delayed_func_kwargs,
+) -> Callable[..., DelayedCall]:
+    """Shortcut to build a UDF whose first parameter is a TileDB Array.
+
+    This is a combination of the ``Delayed`` and ``DelayedArray`` function.
+    When you call it, you get a delayed callable that is equivalent to a
+    :class:`DelayedFunction` with its first parameter pre-populated as a TileDB
+    Array::
+
+        d_arr_udf = DelayedArrayUDF(
+            "tiledb://some/array",
+            my_func,
+            raw_ranges=[[0, 10], []],
+            buffers=["x", "y", "height"],
+            image_name="example-image",
+        )
+        output = d_arr_udf("topological", colors=["orange", "purple"])
+        # The UDF that is executed will be:
+        #   my_func(some_array, "topological", colors=["orange", "purple"])
+
+    For a detailed description of the parameters to this function, see
+    :meth:`_nodes.Array.create` and :meth:`DelayedFunction.create`.
+    """
+    arr_node = _nodes.Array.create(
+        uri,
+        raw_ranges=raw_ranges,
+        buffers=buffers,
+    )
+    fn = DelayedFunction.create(func, **delayed_func_kwargs)
+    return functools.partial(fn, arr_node)

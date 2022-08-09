@@ -20,8 +20,10 @@ udf = _udf.DelayedFunction.create
 Delayed = udf
 array = _nodes.Array.create
 DelayedArray = array
+DelayedArrayUDF = _udf.array_udf
 
 __all__ = (
     "Delayed",
     "DelayedArray",
+    "DelayedArrayUDF",
 )
