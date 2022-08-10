@@ -9,6 +9,7 @@ from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import client_executor
 from tiledb.cloud.taskgraphs import executor
 from tiledb.cloud.taskgraphs import types
+from tiledb.cloud.taskgraphs.client_executor import array_node
 
 
 class ClientExecutorTestUDFs(unittest.TestCase):
@@ -90,7 +91,7 @@ class ClientExecutorTestArrays(unittest.TestCase):
         grf = builder.TaskGraphBuilder()
         arr = grf.array_read(
             "tiledb://TileDB-Inc/quickstart_dense",
-            raw_ranges=[[1, 1, 2, 4], []],
+            ranges=[[1, [2, 4]], None],
         )
         grf.udf(lambda x: int(numpy.sum(x["a"])), types.args(arr), name="stringify")
 
@@ -105,7 +106,7 @@ class ClientExecutorTestArrays(unittest.TestCase):
         grf = builder.TaskGraphBuilder()
         dense = grf.array_read(
             "tiledb://TileDB-Inc/quickstart_dense",
-            raw_ranges=[[1, 4], []],
+            ranges=[slice(1, 4), []],
         )
         sparse = grf.array_read(
             "tiledb://TileDB-Inc/quickstart_sparse",
@@ -129,18 +130,18 @@ class ClientExecutorTestArrays(unittest.TestCase):
 
         arr = grf.array_read(
             uri,
-            raw_ranges=[ones, [1, 4]],
+            ranges=[[ones], [slice(1, 4)]],
             buffers=grf.udf(lambda: ["a"]),
         )
         summed = grf.udf(lambda x: int(numpy.sum(x["a"])), types.args(arr))
         join = grf.udf(
-            "{name}[{ones}, [1, 4]]['a'] -> {sum}".format,
+            "{name}[[{ones}], [1:4]]['a'] -> {sum}".format,
             types.args(name=uri, ones=ones, sum=summed),
         )
         exec = client_executor.LocalExecutor(grf)
         exec.execute()
         self.assertEqual(
-            "tiledb://TileDB-Inc/quickstart_dense[[1, 1], [1, 4]]['a'] -> 10",
+            "tiledb://TileDB-Inc/quickstart_dense[[[1, 1]], [1:4]]['a'] -> 10",
             exec.node(join).result(30),
         )
         exec.wait(5)
@@ -314,3 +315,73 @@ class ClientExecutorTestInputs(unittest.TestCase):
             exec.node(result).result(30),
         )
         exec.wait(5)
+
+
+class RangeCanonicalizerTest(unittest.TestCase):
+    def test_canonicalize_ranges(self):
+        cases = [
+            ([1], ((1, 1),)),
+            ([1, 2], ((1, 1), (2, 2))),
+            ([[1, 2], 3], ((1, 1, 2, 2), (3, 3))),
+            ([(1, 2), 3], ((1, 1, 2, 2), (3, 3))),
+            ([slice(1, 2), 3], ((1, 2), (3, 3))),
+            ([1, [(1, 2)]], ((1, 1), (1, 2))),
+            ([1, [slice(1, 2)]], ((1, 1), (1, 2))),
+            ([[1, slice(2, 3)], [(1, 2), 4]], ((1, 1, 2, 3), (1, 2, 4, 4))),
+            ([None, [(1, 2), 4]], ((), (1, 2, 4, 4))),
+            ([(), [1, (2, 4), 6]], ((), (1, 1, 2, 4, 6, 6))),
+            ([[1, 2, 3], [(1, 2), 4]], ((1, 1, 2, 2, 3, 3), (1, 2, 4, 4))),
+            ([[[1], slice(2, 4)], 9], ((1, 1, 2, 4), (9, 9))),
+            (
+                [
+                    [
+                        (
+                            numpy.datetime64("2012-02-02", "D"),
+                            numpy.datetime64("2020-12-31", "D"),
+                        ),
+                        numpy.datetime64("2040-06-06", "D"),
+                    ],
+                    [
+                        (
+                            numpy.datetime64("2012-02-02", "ns"),
+                            numpy.datetime64("2020-12-31", "ns"),
+                        )
+                    ],
+                ],
+                (
+                    (15372, 18627, 25724, 25724),
+                    (1328140800000000000, 1609372800000000000),
+                ),
+            ),
+            (
+                [
+                    [
+                        (
+                            numpy.timedelta64("2012", "Y"),
+                            numpy.timedelta64("2020", "Y"),
+                        ),
+                        numpy.timedelta64("6", "D"),
+                    ],
+                    slice(
+                        numpy.timedelta64(1000000000 * 60 * 24, "ns"),
+                        numpy.timedelta64(1000000000 * 60 * 24 * 5, "ns"),
+                    ),
+                ],
+                ((2012, 2020, 6, 6), (1440000000000, 7200000000000)),
+            ),
+        ]
+
+        for inval, expected in cases:
+            with self.subTest(inval):
+                self.assertEqual(expected, array_node._canonicalize_ranges(inval))
+
+    def test_canonicalize_ranges_bad(self):
+        cases = [
+            [[[1, 2, 3]]],
+            [[slice(0)]],
+            [[b"hertz donut"]],
+        ]
+        for c in cases:
+            with self.subTest(c):
+                with self.assertRaises(Exception):
+                    array_node._canonicalize_ranges(c)

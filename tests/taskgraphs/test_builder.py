@@ -214,7 +214,7 @@ class TestBuilder(unittest.TestCase):
             array_uri = grf.input("array_uri", "tiledb://TileDB-Inc/quickstart_dense")
             array_query = grf.array_read(
                 array_uri,
-                raw_ranges=[[1, 1, 2, 4], []],
+                ranges=[[1, slice(2, 4)], []],
                 name="read an array",
             )
 
@@ -281,7 +281,12 @@ class TestBuilder(unittest.TestCase):
                 },
                 {
                     "array_node": {
-                        "ranges": {"ranges": [[1, 1, 2, 4], []]},
+                        "ranges": {
+                            "friendly_ranges": [
+                                [1, {"__tdbudf__": "__slice__", "start": 2, "stop": 4}],
+                                [],
+                            ]
+                        },
                         "uri": {
                             "__tdbudf__": "node_output",
                             "client_node_id": "0badc0de-dead-beef-cafe-000000000000",

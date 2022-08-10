@@ -61,6 +61,7 @@ class TaskGraphBuilder:
         uri: ValOrNode[str],
         *,
         # TODO: Support query layout.
+        ranges: Optional[ValOrNodeSeq[Any]] = None,
         raw_ranges: Optional[ValOrNodeSeq[Any]] = None,
         buffers: Optional[ValOrNodeSeq[str]] = None,
         name: Optional[str] = None,
@@ -76,6 +77,15 @@ class TaskGraphBuilder:
             May be provided either as the URI itself, or as the output
             of an upstream node.
 
+        :param ranges: The ranges to query against, in a user-friendlier format.
+            For each dimension, ranges may be specified as:
+
+            - A single scalar value or a Python slice.
+            - A sequence (list or tuple) of scalar values, slices,
+              or pairs of scalar values in a list.
+
+            Either this or ``raw_ranges`` must be specified, but not both
+
         :param raw_ranges: The ranges to query against. This is called "raw"
             because we accept the format that is passed to the server::
 
@@ -84,6 +94,8 @@ class TaskGraphBuilder:
                     [startDim2A, endDim2A, startDim2B, endDim2B, ...],
                 ]
 
+            Either this or ``ranges`` must be specified, but not both.
+
             This may also be provided as either a value or a Node output.
 
         :param buffers: Optionally, the buffers to query against.
@@ -91,7 +103,15 @@ class TaskGraphBuilder:
 
         :param name: An optional name for this Node.
         """
-        return self._add_node(_ArrayNode(uri, raw_ranges, buffers, name=name))
+        return self._add_node(
+            _ArrayNode(
+                uri,
+                ranges=ranges,
+                raw_ranges=raw_ranges,
+                buffers=buffers,
+                name=name,
+            )
+        )
 
     def input(
         self,
@@ -315,6 +335,8 @@ class _ArrayNode(Node[types.ArrayMultiIndex]):
     def __init__(
         self,
         uri: ValOrNode[str],
+        *,
+        ranges: Optional[ValOrNodeSeq[Any]],
         raw_ranges: Optional[ValOrNodeSeq[Any]],
         buffers: Optional[ValOrNodeSeq[str]],
         name: Optional[str],
@@ -340,11 +362,12 @@ class _ArrayNode(Node[types.ArrayMultiIndex]):
 
         :param name: An optional name for this Node.
         """
-        # Currently, the format of ranges we accept here is the raw
-        # [[startA1, endA1, startA2, endA2], [startB1, endB1, ...], ...]
-        # format. TODO: Figure out how to reliably encode ranges.
+
+        if ranges and raw_ranges:
+            raise ValueError("Either ranges or raw_ranges must be provided, not both.")
         jsoner = _ParameterEscaper()
         self.uri = jsoner.visit(uri)
+        self.friendly_ranges = jsoner.visit(ranges)
         self.raw_ranges = jsoner.visit(raw_ranges)
         self.buffers = jsoner.visit(buffers)
 
@@ -354,7 +377,15 @@ class _ArrayNode(Node[types.ArrayMultiIndex]):
         ret = super().to_registration_json(existing_names)
         node_data = dict(
             uri=self.uri,
-            ranges={"ranges": self.raw_ranges},
+            ranges={
+                k: v
+                for (k, v) in (
+                    ("ranges", self.raw_ranges),
+                    ("friendly_ranges", self.friendly_ranges),
+                    # TODO: layout
+                )
+                if v is not None
+            },
         )
         if self.buffers is not None:
             node_data["buffers"] = self.buffers
