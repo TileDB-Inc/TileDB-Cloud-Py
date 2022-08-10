@@ -1,10 +1,12 @@
 import abc
 import base64
 import json
+import re
 from typing import Any, Dict, Optional, TypeVar, Union
 
 import attrs
 import cloudpickle
+import numpy as np
 import pyarrow
 import urllib3
 
@@ -18,7 +20,13 @@ TOrDict = Union[_T, Dict[str, Any]]
 _PICKLE_PROTOCOL = 4
 _ARROW_VERSION = pyarrow.MetadataVersion.V5
 SENTINEL_KEY = "__tdbudf__"
+"""General sentinel for special TileDB UDF dictionaries."""
 ESCAPE_CODE = "__escape__"
+"""Code used to indicate escaping a dictionary which has SENTINEL_KEY in it."""
+SLICE = "__slice__"
+"""Code used to indicate an encoded slice value."""
+NP_TIME = "__np_time__"
+"""Code to indicate an encoded numpy timedelta or timedelta64."""
 
 
 class TDBJSONEncodable(metaclass=abc.ABCMeta):
@@ -30,6 +38,9 @@ class TDBJSONEncodable(metaclass=abc.ABCMeta):
     def _tdb_to_json(self):
         """Converts this object to a JSON-serializable form."""
         raise NotImplementedError()
+
+
+_NP_DTYPES = re.compile(r"^(datetime64|timedelta64)\[(.+?)\]$")
 
 
 class Unescaper(visitor.ReplacingVisitor):
@@ -70,18 +81,51 @@ class Unescaper(visitor.ReplacingVisitor):
         keys and end with a call to
         ``return super()._replace_sentinel(kind, value)``.
         """
-        if kind == ESCAPE_CODE:
-            # An escaped value.
-            inner_value = value[ESCAPE_CODE]
-            return visitor.Replacement(
-                {k: self.visit(v) for (k, v) in inner_value.items()}
-            )
-        if kind == "immediate":
-            fmt = value["format"]
-            base64d = value["base64_data"]
-            data = base64.b64decode(base64d)
-            return visitor.Replacement(_LOADERS[fmt](data))
-        raise ValueError(f"Unknown sentinel type {kind!r}")
+        handlers = {
+            ESCAPE_CODE: self._handle_escape,
+            SLICE: self._handle_slice,
+            NP_TIME: self._handle_np_time,
+            "immediate": self._handle_immediate,
+        }
+        try:
+            handler = handlers[kind]
+        except KeyError:
+            raise ValueError(f"Unknown sentinel type {kind!r}") from None
+        return handler(value)
+
+    def _handle_escape(self, value: Dict[str, Any]):
+        """Handles an escaped dict which has the sentinel in it."""
+        inner_value = value[ESCAPE_CODE]
+        return visitor.Replacement({k: self.visit(v) for (k, v) in inner_value.items()})
+
+    def _handle_slice(self, value: Dict[str, Any]):
+        """Handles an encoded slice."""
+        start_stop_step = (
+            self.visit(value.get(attr)) for attr in ("start", "stop", "step")
+        )
+        return visitor.Replacement(slice(*start_stop_step))
+
+    def _handle_immediate(self, value: Dict[str, Any]):
+        """Handles an immediate value (i.e. base64'd data)."""
+        fmt = value["format"]
+        base64d = value["base64_data"]
+        data = base64.b64decode(base64d)
+        return visitor.Replacement(_LOADERS[fmt](data))
+
+    def _handle_np_time(self, value: Dict[str, Any]):
+        """Handles an encoded numpy datetime64/timedelta64."""
+        int_val = value["int"]
+        dtype = value["dtype"]
+
+        match = _NP_DTYPES.match(dtype)
+        if not match:
+            raise ValueError(f"numpy dtype value {dtype!r} is invalid")
+        typ, unit = match.groups()
+        builder = {
+            "datetime64": np.datetime64,
+            "timedelta64": np.timedelta64,
+        }[typ]
+        return visitor.Replacement(builder(int_val, unit))
 
 
 class Escaper(visitor.ReplacingVisitor):
@@ -97,6 +141,21 @@ class Escaper(visitor.ReplacingVisitor):
     def maybe_replace(self, arg) -> Optional[visitor.Replacement]:
         if isinstance(arg, TDBJSONEncodable):
             return visitor.Replacement(arg._tdb_to_json())
+        if isinstance(arg, slice):
+            output = {SENTINEL_KEY: SLICE}
+            for attr in ("start", "stop", "step"):
+                val = getattr(arg, attr)
+                if val is not None:
+                    output[attr] = self.visit(val)
+            return visitor.Replacement(output)
+        if isinstance(arg, (np.datetime64, np.timedelta64)):
+            return visitor.Replacement(
+                {
+                    SENTINEL_KEY: NP_TIME,
+                    "dtype": str(arg.dtype),
+                    "int": int(arg.astype("int64")),
+                }
+            )
         if is_jsonable_shallow(arg):
             if isinstance(arg, dict):
                 if SENTINEL_KEY in arg:
