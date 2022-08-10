@@ -2,6 +2,7 @@ import datetime
 import json
 import unittest
 
+import numpy as np
 import pyarrow
 import urllib3
 
@@ -99,6 +100,51 @@ class EscapingTest(unittest.TestCase):
                     }
                 """,
                 range(666),
+            ),
+            (
+                "some slices",
+                """
+                    [
+                        {"__tdbudf__": "__slice__", "start": "lo", "stop": "hi"},
+                        {"__tdbudf__": "__slice__", "start": 1, "stop": 2, "step": 3},
+                        {
+                            "__tdbudf__": "__slice__",
+                            "stop": {
+                                "__tdbudf__": "immediate",
+                                "format": "bytes",
+                                "base64_data": "b25seQ=="
+                            }
+                        }
+                    ]
+                """,
+                [slice("lo", "hi"), slice(1, 2, 3), slice(b"only")],
+            ),
+            (
+                "numpy",
+                """
+                    [
+                        {
+                            "__tdbudf__": "__np_time__",
+                            "int": 12345,
+                            "dtype": "timedelta64[s]"
+                        },
+                        {
+                            "__tdbudf__": "__np_time__",
+                            "int": 52,
+                            "dtype": "datetime64[Y]"
+                        },
+                        {
+                            "__tdbudf__": "__np_time__",
+                            "int": 1234567890,
+                            "dtype": "timedelta64[us]"
+                        }
+                    ]
+                """,
+                [
+                    np.timedelta64(12345, "s"),
+                    np.datetime64(52, "Y"),
+                    np.timedelta64(1234567890, "us"),
+                ],
             ),
         )
 
