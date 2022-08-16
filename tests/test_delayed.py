@@ -12,6 +12,7 @@ from tiledb.cloud.compute import DelayedArrayUDF
 from tiledb.cloud.compute import DelayedSQL
 from tiledb.cloud.compute import Status
 from tiledb.cloud.compute.delayed import DelayedMultiArrayUDF
+from tiledb.cloud.dag import dag
 
 
 class DelayedClassTest(unittest.TestCase):
@@ -106,8 +107,9 @@ class DelayedFailureTest(unittest.TestCase):
         # Add timeout so we don't wait forever in CI
         node2.set_timeout(30)
 
-        with self.assertRaises(futures.CancelledError):
+        with self.assertRaisesRegex(dag.ParentFailedError, r"operand type\(s\)") as cm:
             node2.compute()
+        self.assertEqual(node, cm.exception.node)
         with self.assertRaises(TypeError):
             node2.dag.wait(1)
 

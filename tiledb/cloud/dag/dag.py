@@ -44,6 +44,13 @@ _T = TypeVar("_T")
 _RETRY_MSG = "RETRY_WITH_PARAMS"
 
 
+class ParentFailedError(futures.CancelledError):
+    def __init__(self, cause: BaseException, node: "Node"):
+        super().__init__(f"node {node} failed: {cause}")
+        self.node = node
+        self.cause = cause
+
+
 class Node(futures.FutureLike[_T]):
     def __init__(
         self,
@@ -339,17 +346,26 @@ class Node(futures.FutureLike[_T]):
                 # We may have been cancelled between the time that we were
                 # enqueued and the time that we ran.
                 return
-            failed_parents = any(
-                p.status in {Status.CANCELLED, Status.FAILED, Status.PARENT_FAILED}
-                for p in self.parents.values()
-            )
-            if failed_parents:
-                self._lifecycle_exception = futures.CancelledError("Parent node failed")
-                self._update_status(Status.PARENT_FAILED)
+            for p in self.parents.values():
+                if p.status in (Status.CANCELLED, Status.FAILED, Status.PARENT_FAILED):
+                    # Take the first parent that failed
+                    try:
+                        exc = p.exception(0)
+                    except Exception as e:
+                        exc = e
+                    if isinstance(exc, ParentFailedError):
+                        self._lifecycle_exception = exc
+                    else:
+                        assert exc
+                        self._lifecycle_exception = ParentFailedError(exc, p)
+                    self._update_status(Status.PARENT_FAILED)
+            if self._lifecycle_exception:
                 cbs = self._callbacks()
             else:
+                cbs = None
                 self._update_status(Status.RUNNING)
-        if failed_parents:
+
+        if cbs is not None:
             futures.execute_callbacks(self, cbs)
             return
         assert self.dag
