@@ -95,6 +95,8 @@ class UDFNode(_base.Node[_base.ET, _T]):
         udf_call.image_name = env.get("image_name")
         udf_call.language = env.get("language")
         udf_call.version = env.get("language_version")
+        udf_call.timeout = env.get("timeout")
+        udf_call.resource_class = env.get("resource_class")
 
         # Executable code.
         exec_code = self._udf_data.get("executable_code")

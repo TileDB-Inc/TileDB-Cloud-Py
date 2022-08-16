@@ -116,6 +116,8 @@ class TaskGraphBuilder:
         *,
         result_format: Optional[str] = "python_pickle",
         image_name: Optional[str] = None,
+        timeout_secs: Optional[int] = None,
+        resource_class: Optional[str] = None,
         name: Optional[str] = None,
     ) -> "Node[_T]":
         """Creates a Node which executes a UDF.
@@ -127,6 +129,13 @@ class TaskGraphBuilder:
         :param result_format: The format to return results in.
         :param image_name: If specified, will execute the UDF within
             the specified image rather than the default image for its language.
+        :param timeout_secs: If specified, the number of seconds after which
+            the UDF will be terminated on the server side. If zero or unset,
+            the UDF will run until the server’s configured maximum.Unlike the
+            ``timeout`` parameter to Future-like objects, this sets a limit on
+            actual execution time, rather than just a limit on how long to wait.
+        :param resource_class: If specified, the container resource class
+            that this UDF will be executed in.
         """
         # NOTE: When adding parameters here, also update delayed/_udf.py.
         return self._add_node(
@@ -135,6 +144,8 @@ class TaskGraphBuilder:
                 args,
                 result_format=result_format,
                 image_name=image_name,
+                timeout_secs=timeout_secs,
+                resource_class=resource_class,
                 name=name,
             )
         )
@@ -447,17 +458,13 @@ class _UDFNode(Node[_T]):
         *,
         result_format: Optional[str],
         image_name: Optional[str],
+        timeout_secs: Optional[int],
+        resource_class: Optional[str],
         name: Optional[str],
     ):
         """Initializes this UDF node.
 
-        :param func: The function to call; either a Python callable or a
-            registered UDF name.
-        :param args: The arguments to pass to this function. These may contain
-            values or Nodes.
-        :param result_format: The format to return results in.
-        :param image_name: If specified, will execute the UDF within
-            the specified image rather than the default image for its language.
+        See :meth:`TaskGraphBuilder.udf` for details.
         """
         utils.check_funcable(func=func)
         jsoner = _ParameterEscaper()
@@ -470,16 +477,25 @@ class _UDFNode(Node[_T]):
         self.func = func
         self.result_format = result_format
         self.image_name = image_name
+        self.timeout_secs = timeout_secs
+        self.resource_class = resource_class
 
     def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
         ret = super().to_registration_json(existing_names)
-        udf_node = {"arguments": self.args, "environment": {}}
-        if self.image_name:
-            udf_node["environment"]["image_name"] = self.image_name
+        env_dict = {
+            k: v
+            for k, v in (
+                ("image_name", self.image_name),
+                ("timeout", self.timeout_secs),
+                ("resource_class", self.resource_class),
+            )
+            if v
+        }
+        udf_node = {"arguments": self.args}
         if isinstance(self.func, str):
             udf_node["registered_udf_name"] = self.func
         else:
-            udf_node["environment"].update(
+            env_dict.update(
                 language="python",
                 language_version=utils.PYTHON_VERSION,
             )
@@ -489,6 +505,7 @@ class _UDFNode(Node[_T]):
                 udf_node["source_text"] = source
         if self.result_format:
             udf_node["result_format"] = self.result_format
+        udf_node["environment"] = env_dict
         ret["udf_node"] = udf_node
         return ret
 
