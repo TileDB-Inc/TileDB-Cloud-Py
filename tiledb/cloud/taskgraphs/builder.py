@@ -1,6 +1,7 @@
 """The code to build task graphs for later registration and execution."""
 
 import abc
+import datetime
 import uuid
 from typing import (
     AbstractSet,
@@ -128,7 +129,7 @@ class TaskGraphBuilder:
         result_format: Optional[str] = "python_pickle",
         include_source: bool = True,
         image_name: Optional[str] = None,
-        timeout_secs: Optional[int] = None,
+        timeout: Union[datetime.timedelta, int, None] = None,
         resource_class: Optional[str] = None,
         namespace: Optional[str] = None,
         name: Optional[str] = None,
@@ -145,11 +146,12 @@ class TaskGraphBuilder:
             not have any impact on the UDF’s execution. False to omit source.
         :param image_name: If specified, will execute the UDF within
             the specified image rather than the default image for its language.
-        :param timeout_secs: If specified, the number of seconds after which
-            the UDF will be terminated on the server side. If zero or unset,
-            the UDF will run until the server’s configured maximum.Unlike the
-            ``timeout`` parameter to Future-like objects, this sets a limit on
-            actual execution time, rather than just a limit on how long to wait.
+        :param timeout: If specified, the length of time after which the UDF
+            will be terminated on the server side. If specified as a number,
+            a number of seconds. If zero or unset, the UDF will run until
+            the server’s configured maximum. Unlike the ``timeout`` parameter to
+            Future-like objects, this sets a limit on actual execution time,
+            rather than just a limit on how long to wait.
         :param resource_class: If specified, the container resource class
             that this UDF will be executed in.
         :param namespace: If specified, the non-default namespace that the UDF
@@ -164,7 +166,7 @@ class TaskGraphBuilder:
                 include_source=include_source,
                 result_format=result_format,
                 image_name=image_name,
-                timeout_secs=timeout_secs,
+                timeout=timeout,
                 resource_class=resource_class,
                 namespace=namespace,
                 name=name,
@@ -491,7 +493,7 @@ class _UDFNode(Node[_T]):
         result_format: Optional[str],
         include_source: bool,
         image_name: Optional[str],
-        timeout_secs: Optional[int],
+        timeout: Union[datetime.timedelta, int, None],
         resource_class: Optional[str],
         namespace: Optional[str],
         name: Optional[str],
@@ -512,22 +514,19 @@ class _UDFNode(Node[_T]):
         self.result_format = result_format
         self.include_source = include_source
         self.image_name = image_name
-        self.timeout_secs = timeout_secs
+        if isinstance(timeout, datetime.timedelta):
+            timeout = int(timeout.total_seconds())
+        self.timeout = timeout
         self.resource_class = resource_class
         self.namespace = namespace
 
     def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
         ret = super().to_registration_json(existing_names)
-        env_dict = {
-            k: v
-            for k, v in (
-                ("image_name", self.image_name),
-                ("timeout", self.timeout_secs),
-                ("resource_class", self.resource_class),
-                ("namespace", self.namespace),
-            )
-            if v
-        }
+        env_kvs = (
+            (n, getattr(self, n))
+            for n in ("image_name", "timeout", "resource_class", "namespace")
+        )
+        env_dict = {k: v for k, v in env_kvs if v}
         udf_node = {"arguments": self.args}
         if isinstance(self.func, str):
             udf_node["registered_udf_name"] = self.func

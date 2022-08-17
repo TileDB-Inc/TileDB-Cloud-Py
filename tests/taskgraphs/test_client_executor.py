@@ -364,7 +364,11 @@ class ClientExecutorTestInputs(unittest.TestCase):
 class ClientExecutorTestEnvironment(unittest.TestCase):
     def test_timeout(self):
         grf = builder.TaskGraphBuilder(name="test_timeout")
-        slept = grf.udf(time.sleep, types.args(15), timeout_secs=5)
+        slept = grf.udf(
+            time.sleep,
+            types.args(15),
+            timeout=datetime.timedelta(seconds=5),
+        )
         exec = client_executor.LocalExecutor(grf)
         exec.execute()
         with self.assertRaises(Exception):
