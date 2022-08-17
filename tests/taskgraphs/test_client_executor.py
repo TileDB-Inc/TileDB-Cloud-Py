@@ -1,5 +1,6 @@
 import datetime
 import operator
+import time
 import unittest
 
 import numpy
@@ -314,3 +315,33 @@ class ClientExecutorTestInputs(unittest.TestCase):
             exec.node(result).result(30),
         )
         exec.wait(5)
+
+
+class ClientExecutorTestEnvironment(unittest.TestCase):
+    def test_timeout(self):
+        grf = builder.TaskGraphBuilder(name="test_timeout")
+        slept = grf.udf(time.sleep, types.args(15), timeout_secs=5)
+        exec = client_executor.LocalExecutor(grf)
+        exec.execute()
+        with self.assertRaises(Exception):
+            exec.node(slept).result(30)
+        self.assertIs(client_executor.Status.FAILED, exec.node(slept).status)
+
+    def test_resource_class(self):
+        def big_sum():
+            # An experimentally determined value where reifying the sequence
+            # is too much for a normal-sized UDF, but fine for a large UDF.
+            # Tune (or replace with a better implementation) as needed.
+            nums = tuple(range(128 * 1024**2))
+            return sum(nums)
+
+        grf = builder.TaskGraphBuilder(name="test_resource_class")
+        small = grf.udf(big_sum)
+        big = grf.udf(big_sum, resource_class="large")
+        exec = client_executor.LocalExecutor(grf)
+        exec.execute()
+
+        with self.assertRaises(Exception):
+            exec.node(small).result(30)
+        self.assertIs(client_executor.Status.FAILED, exec.node(small).status)
+        self.assertEqual(9007199187632128, exec.node(big).result(30))
