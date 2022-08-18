@@ -1,7 +1,9 @@
 import base64
+import functools
 import inspect
 import logging
 import sys
+import threading
 import urllib
 from typing import Any, Callable, Optional, TypeVar, Union
 
@@ -112,3 +114,54 @@ def check_funcable(**kwargs) -> None:
         f"{name} argument must be a callable or the registered name of a UDF, "
         f"not {type(func)}"
     )
+
+
+_CT = TypeVar("_CT", bound=Callable)
+
+
+def ephemeral_thread(func: _CT, name: Optional[str] = None) -> _CT:
+    """Wraps the function to be called on an ephemeral (but non-daemon) thread.
+
+    Unlike a ``concurrent.futures.Executor``, this runs the things as a
+    non-daemon thread, so it's useful for things you don't want to block on,
+    but also don't want to get interrupted if the main thread exits.
+
+    Exceptions are ignored.
+    """
+
+    name = name or f"ephemeral {func_name(func)}"
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # Kick off a non-daemonic thread to report completion so that we don't
+        # block on the server call when reporting doneness to the caller,
+        # but also we don't let the process terminate while we're still
+        # reporting.
+        #
+        # ┄: blocked, ═: running, •: synchronization point, ×: termination
+        # [d] = daemon thread
+        #
+        # main:  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╒══════×
+        # us[d]: ═════════════•═╕┄┄┄┄╒══•══×   main terminates
+        # ephemeral:          ┊ ┊   ═•══╪═══════════×
+        #       start ephemeral ┊    ┊  ┊           ephemeral terminates
+        #            running.wait    ┊  ┊
+        #                  running.set  (client code) main/us sync point
+        #
+        # Without this non-daemon reporter, the Python interpreter could stop
+        # as soon as main terminates, meaning that the ephemeral call would not
+        # get the chance to run to completion.
+        started = threading.Event()
+
+        def run():
+            started.set()
+            try:
+                func(*args, **kwargs)
+            except Exception:
+                pass  # Drop it on the floor.
+
+        thread = threading.Thread(name=name, target=run, daemon=False)
+        thread.start()
+        started.wait()
+
+    return wrapper  # type: ignore[return-value]
