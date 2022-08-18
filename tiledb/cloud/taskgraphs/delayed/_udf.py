@@ -1,16 +1,16 @@
 """Classes that implement delayed UDFs."""
 
-from typing import Any, Dict, Generic, NoReturn, Optional, Tuple, TypeVar
+import functools
+import inspect
+from typing import Any, Callable, Dict, Generic, NoReturn, Optional, Tuple, TypeVar
 
 from tiledb.cloud import utils
 from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import types
 from tiledb.cloud.taskgraphs.delayed import _graph
+from tiledb.cloud.taskgraphs.delayed import _nodes
 
 _T = TypeVar("_T")
-
-_NOTHING: Any = object()
-"""Sentinel value to distinguish an unset parameter from None."""
 
 
 class DelayedFunction(Generic[_T]):
@@ -30,9 +30,9 @@ class DelayedFunction(Generic[_T]):
         cls,
         __fn: utils.Funcable[_T],
         *,
-        result_format: Optional[str] = _NOTHING,
-        image_name: Optional[str] = _NOTHING,
-        name: Optional[str] = _NOTHING,
+        result_format: Optional[str] = _graph.NOTHING,
+        image_name: Optional[str] = _graph.NOTHING,
+        name: Optional[str] = _graph.NOTHING,
     ) -> "DelayedFunction[_T]":
         """Wraps the given function to later call it in a delayed task graph.
 
@@ -64,13 +64,14 @@ class DelayedFunction(Generic[_T]):
         # so that the default values of the named arguments to
         # `TaskGraphBuilder.udf` are used if unset rather than having to keep
         # them in sync.
-        raw_kwargs = dict(
-            result_format=result_format,
-            image_name=image_name,
-            name=name,
+        return cls(
+            __fn,
+            dict(
+                result_format=result_format,
+                image_name=image_name,
+                name=name,
+            ),
         )
-        node_kwargs = {k: v for k, v in raw_kwargs.items() if v is not _NOTHING}
-        return cls(__fn, node_kwargs)
 
     def set(self, **updates: Any) -> "DelayedFunction[_T]":
         """Returns a new DelayedFunction with the given argument updates.
@@ -148,7 +149,9 @@ class DelayedCall(_graph.Node[_T]):
             arguments = types.Arguments(args, kwargs)
         else:
             arguments = types.Arguments(self._args, self._kwargs)
-        return grf.udf(self._fn._fn, arguments, **self._fn._node_args)
+        return grf.udf(
+            self._fn._fn, arguments, **_graph.filter_dict(self._fn._node_args)
+        )
 
     def __call__(self, *args, **kwargs) -> NoReturn:
         del args, kwargs
@@ -156,3 +159,104 @@ class DelayedCall(_graph.Node[_T]):
 
     def __repr__(self) -> str:
         return f"<{self._fn}(...) {id(self):x}>"
+
+
+_CT = TypeVar("_CT", bound=Callable)
+
+
+def _merge_kwargs(*sources: Callable) -> Callable[[_CT], _CT]:
+    """Gives the decorated function kwargs of the union of ``sources``.
+
+    For example::
+
+        def first(pos1, pos2, *, kw_a, kw_b, kw_c): ...
+
+        def second(*args, kw_b, kw_d): ...
+
+        @_merge_kwargs(first, second)
+        def merged(pos_x, pos_y, **kwargs): ...
+
+        # merged.__signature__ looks like:
+        # merged(pos_x, pos_y, *, kw_c, kw_a, kw_c, kw_b, kw_d)
+    """
+
+    kw_params: Dict[str, inspect.Parameter] = {}
+
+    for src in sources:
+        # Note: this might need to also check for __signature__ in the future
+        # if we plan on using it with __signature__-applied funcs.
+        sig = inspect.signature(src)
+        for name, param in sig.parameters.items():
+            if param.kind is param.KEYWORD_ONLY:
+                # Since the values of the later function override those of the
+                # earlier function, always pop the existing one for ordering.
+                kw_params.pop(name, None)
+                kw_params[name] = param
+
+    def wrap(func: _CT) -> _CT:
+        sig = inspect.signature(func)
+
+        params = {
+            name: param
+            for (name, param) in sig.parameters.items()
+            if param.kind in {param.POSITIONAL_ONLY, param.POSITIONAL_OR_KEYWORD}
+        }
+        params.update(kw_params)
+
+        func.__signature__ = inspect.Signature(  # type: ignore[attr-defined]
+            tuple(params.values()), return_annotation=sig.return_annotation
+        )
+
+        return func
+
+    return wrap
+
+
+@_merge_kwargs(_nodes.Array.create, DelayedFunction.create)
+def array_udf(
+    uri: _graph.ValOrNode[str],
+    func: utils.Funcable[_T],
+    **kwargs,
+) -> Callable[..., DelayedCall[_T]]:
+    """Shortcut to build a UDF whose first parameter is a TileDB Array.
+
+    This is a combination of the ``Delayed`` and ``DelayedArray`` function.
+    When you call it, you get a delayed callable that is equivalent to a
+    :class:`DelayedFunction` with its first parameter pre-populated as a TileDB
+    Array::
+
+        d_arr_udf = DelayedArrayUDF(
+            "tiledb://some/array",
+            my_func,
+            ranges=[[(0, 10)], []],
+            buffers=["x", "y", "height"],
+            image_name="example-image",
+        )
+        output = d_arr_udf("topological", colors=["orange", "purple"])
+        # The UDF that is executed will be:
+        #   my_func(some_array, "topological", colors=["orange", "purple"])
+
+    For a detailed description of the parameters to this function, see
+    :meth:`_nodes.Array.create` and :meth:`DelayedFunction.create`.
+    """
+
+    # Pull all the arguments that belong to DelayedFunction.create
+    # out of **kwargs.
+    df_sig = inspect.signature(DelayedFunction.create)
+    df_arg_names = (
+        name
+        for (name, param) in df_sig.parameters.items()
+        if param.kind is param.KEYWORD_ONLY
+    )
+    df_args: Dict[str, Any] = {}
+    for name in df_arg_names:
+        try:
+            df_args[name] = kwargs.pop(name)
+        except KeyError:
+            pass  # expected!
+
+    # Everything that remains in kwargs is to be passed to Array.
+
+    arr_node = _nodes.Array.create(uri, **kwargs)
+    fn = DelayedFunction.create(func, **df_args)
+    return functools.partial(fn, arr_node)

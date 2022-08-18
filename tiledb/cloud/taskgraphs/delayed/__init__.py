@@ -13,9 +13,17 @@ or::
     d_sql = DelayedSQL(...)
 """
 
+from tiledb.cloud.taskgraphs.delayed import _nodes
 from tiledb.cloud.taskgraphs.delayed import _udf
 
 udf = _udf.DelayedFunction.create
 Delayed = udf
+array = _nodes.Array.create
+DelayedArray = array
+DelayedArrayUDF = _udf.array_udf
 
-__all__ = ("Delayed",)
+__all__ = (
+    "Delayed",
+    "DelayedArray",
+    "DelayedArrayUDF",
+)
