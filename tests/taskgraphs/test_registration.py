@@ -39,9 +39,6 @@ class RegistrationTest(unittest.TestCase):
             time.sleep(1)
 
             updated_loaded = registration.load(name)
-            # The server includes a null field we don't care about
-            # in the serialization of its version.
-            del updated_loaded["nodes"][0]["array_node"]["array_uuid"]
             self.assertEqual(updated["nodes"], updated_loaded["nodes"])
 
         finally:
