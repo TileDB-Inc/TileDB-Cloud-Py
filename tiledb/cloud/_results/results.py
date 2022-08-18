@@ -43,7 +43,7 @@ class LocalResult(Result[_T], Generic[_T]):
         return lambda *args, **kwargs: cls(func(*args, **kwargs))
 
 
-_SENTINEL = object()
+_SENTINEL: Any = attrs.make_class("Sentinel", (), frozen=True, slots=True)()
 
 
 # Not frozen, but externally immutable, and callers should *treat* it like it's

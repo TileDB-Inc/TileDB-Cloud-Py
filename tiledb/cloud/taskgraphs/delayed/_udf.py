@@ -2,6 +2,8 @@
 
 from typing import Any, Dict, Generic, NoReturn, Optional, Tuple, TypeVar
 
+import attrs
+
 from tiledb.cloud import utils
 from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import types
@@ -9,7 +11,7 @@ from tiledb.cloud.taskgraphs.delayed import _graph
 
 _T = TypeVar("_T")
 
-_NOTHING: Any = object()
+_NOTHING: Any = attrs.make_class("Nothing", (), frozen=True, slots=True)()
 """Sentinel value to distinguish an unset parameter from None."""
 
 
