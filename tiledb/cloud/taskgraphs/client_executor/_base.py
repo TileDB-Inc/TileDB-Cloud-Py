@@ -6,13 +6,15 @@ import threading
 import uuid
 from typing import Any, Callable, Dict, Iterable, Optional, TypeVar
 
+import attrs
+
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud._common import futures
 from tiledb.cloud.taskgraphs import executor
 
 Status = executor.Status
-NOTHING = object()
+NOTHING = attrs.make_class("Nothing", (), frozen=True, slots=True)()
 """Sentinel value to distinguish missing values from None."""
 
 

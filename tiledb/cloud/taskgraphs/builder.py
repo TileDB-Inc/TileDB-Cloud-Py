@@ -14,6 +14,8 @@ from typing import (
     Union,
 )
 
+import attrs
+
 from tiledb.cloud import utils
 from tiledb.cloud._common import ordered
 from tiledb.cloud._common import visitor
@@ -31,7 +33,7 @@ ValOrNodeSeq = Union[
 ]
 """Either a Node that yields a sequence or a sequence that may contain nodes."""
 
-_NOTHING: Any = object()
+_NOTHING: Any = attrs.make_class("Nothing", (), frozen=True, slots=True)()
 """Sentinel object used when we need to distinguish "unset" from "None"."""
 
 
