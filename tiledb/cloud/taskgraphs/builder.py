@@ -120,6 +120,7 @@ class TaskGraphBuilder:
         image_name: Optional[str] = None,
         timeout_secs: Optional[int] = None,
         resource_class: Optional[str] = None,
+        namespace: Optional[str] = None,
         name: Optional[str] = None,
     ) -> "Node[_T]":
         """Creates a Node which executes a UDF.
@@ -138,6 +139,9 @@ class TaskGraphBuilder:
             actual execution time, rather than just a limit on how long to wait.
         :param resource_class: If specified, the container resource class
             that this UDF will be executed in.
+        :param namespace: If specified, the non-default namespace that the UDF
+            will be executed under. This will also be the namespace used for
+            reading any array nodes used in this UDF's input.
         """
         # NOTE: When adding parameters here, also update delayed/_udf.py.
         return self._add_node(
@@ -148,6 +152,7 @@ class TaskGraphBuilder:
                 image_name=image_name,
                 timeout_secs=timeout_secs,
                 resource_class=resource_class,
+                namespace=namespace,
                 name=name,
             )
         )
@@ -161,6 +166,7 @@ class TaskGraphBuilder:
         parameters: ValOrNodeSeq = (),
         *,
         result_format: str = "arrow",
+        namespace: Optional[str] = None,
         name: Optional[str] = None,
     ) -> "Node":
         """Creates a Node that executes an SQL query.
@@ -181,6 +187,7 @@ class TaskGraphBuilder:
                 init_commands,
                 parameters,
                 result_format=result_format,
+                namespace=namespace,
                 name=name,
             )
         )
@@ -418,6 +425,7 @@ class _SQLNode(Node):
         parameters: ValOrNodeSeq,
         *,
         result_format: str,
+        namespace: Optional[str],
         name: Optional[str],
     ):
         """Initializes this Node.
@@ -431,6 +439,8 @@ class _SQLNode(Node):
             either as values or as the output of earlier Nodes.
         :param result_format: The format to provide results in. Either ``json``
             or ``arrow``.
+        :param namespace: If provided, the non-default namespace to run this SQL
+            query under.
         """
         self.query = query
         self.init_commands = tuple(init_commands)
@@ -462,6 +472,7 @@ class _UDFNode(Node[_T]):
         image_name: Optional[str],
         timeout_secs: Optional[int],
         resource_class: Optional[str],
+        namespace: Optional[str],
         name: Optional[str],
     ):
         """Initializes this UDF node.
@@ -481,6 +492,7 @@ class _UDFNode(Node[_T]):
         self.image_name = image_name
         self.timeout_secs = timeout_secs
         self.resource_class = resource_class
+        self.namespace = namespace
 
     def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
         ret = super().to_registration_json(existing_names)
@@ -490,6 +502,7 @@ class _UDFNode(Node[_T]):
                 ("image_name", self.image_name),
                 ("timeout", self.timeout_secs),
                 ("resource_class", self.resource_class),
+                ("namespace", self.namespace),
             )
             if v
         }

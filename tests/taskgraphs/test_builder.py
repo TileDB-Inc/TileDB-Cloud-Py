@@ -220,7 +220,9 @@ class TestBuilder(unittest.TestCase):
 
             # a chain equivalent to `lambda x: int(numpy.sum(x["a"]))`
             get_a = grf.udf(operator.itemgetter("a"), types.args(array_query))
-            sum_it = grf.udf(numpy.sum, types.args(get_a), timeout_secs=100)
+            sum_it = grf.udf(
+                numpy.sum, types.args(get_a), timeout_secs=100, namespace="fido"
+            )
             intify = grf.udf(int, types.args(sum_it), resource_class="llama")
 
             format_it = grf.udf(
@@ -344,6 +346,7 @@ class TestBuilder(unittest.TestCase):
                         "environment": {
                             "language": "python",
                             "language_version": utils.PYTHON_VERSION,
+                            "namespace": "fido",
                             "timeout": 100,
                         },
                         "executable_code": "gASVEQAAAAAAAACMBW51bXB5lIwDc3VtlJOULg==",

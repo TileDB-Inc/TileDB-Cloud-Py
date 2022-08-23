@@ -112,7 +112,7 @@ class UDFNode(_base.Node[_base.ET, _T]):
         api = self.owner._client.udf_api
         try:
             resp: urllib3.HTTPResponse = api.submit_multi_array_udf(
-                namespace=self.owner._namespace,
+                namespace=env.get("namespace") or self.owner._namespace,
                 udf=udf_call,
                 _preload_content=False,
             )
