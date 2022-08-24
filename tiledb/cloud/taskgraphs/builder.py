@@ -117,6 +117,7 @@ class TaskGraphBuilder:
         args: types.Arguments = types.Arguments(),
         *,
         result_format: Optional[str] = "python_pickle",
+        include_source: bool = True,
         image_name: Optional[str] = None,
         timeout_secs: Optional[int] = None,
         resource_class: Optional[str] = None,
@@ -129,6 +130,9 @@ class TaskGraphBuilder:
         :param args: The arguments to pass to this function. These may contain
             values or Nodes.
         :param result_format: The format to return results in.
+        :param include_source: True (the default) to include the function source
+            in the request. This is useful for debugging and logging, but does
+            not have any impact on the UDF’s execution. False to omit source.
         :param image_name: If specified, will execute the UDF within
             the specified image rather than the default image for its language.
         :param timeout_secs: If specified, the number of seconds after which
@@ -144,6 +148,7 @@ class TaskGraphBuilder:
             _UDFNode(
                 func,
                 args,
+                include_source=include_source,
                 result_format=result_format,
                 image_name=image_name,
                 timeout_secs=timeout_secs,
@@ -459,6 +464,7 @@ class _UDFNode(Node[_T]):
         args: types.Arguments,
         *,
         result_format: Optional[str],
+        include_source: bool,
         image_name: Optional[str],
         timeout_secs: Optional[int],
         resource_class: Optional[str],
@@ -478,6 +484,7 @@ class _UDFNode(Node[_T]):
         )
         self.func = func
         self.result_format = result_format
+        self.include_source = include_source
         self.image_name = image_name
         self.timeout_secs = timeout_secs
         self.resource_class = resource_class
@@ -502,9 +509,10 @@ class _UDFNode(Node[_T]):
                 language_version=utils.PYTHON_VERSION,
             )
             udf_node["executable_code"] = _codec.b64_str(_codec.pickle(self.func))
-            source = utils.getsourcelines(self.func)
-            if source:
-                udf_node["source_text"] = source
+            if self.include_source:
+                source = utils.getsourcelines(self.func)
+                if source:
+                    udf_node["source_text"] = source
         if self.result_format:
             udf_node["result_format"] = self.result_format
         udf_node["environment"] = env_dict

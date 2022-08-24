@@ -8,6 +8,7 @@ import numpy
 
 from tiledb.cloud import testonly
 from tiledb.cloud import utils
+from tiledb.cloud.taskgraphs import _codec
 from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import depgraph
 from tiledb.cloud.taskgraphs import types
@@ -469,12 +470,16 @@ class TestBuilder(unittest.TestCase):
         grf = builder.TaskGraphBuilder()
         uuid_factory = testonly.sequential_uuids("aaaaaaaa-bbbb-cccc-dddd-000000000000")
         with mock.patch.object(uuid, "uuid4", side_effect=uuid_factory):
-            # Ensure that, despite the fact that the `len` node with a fallback
-            # name of `builtins.len` is added first, the input node with name
-            # `builtins.len` overrides it for naming purposes.
-            len_node = grf.udf(len, types.args("it"))
-            in_node = grf.input("builtins.len")
-            grf.udf(len, types.args([len_node, in_node]))
+            # Ensure that, despite the fact that the `b64_str` node with
+            # a fallback name of `....b64_str` is added first, the input node
+            # with that name overrides it for naming purposes.
+            collider_node = grf.udf(_codec.b64_str, types.args("it"))
+            in_node = grf.input("tiledb.cloud.taskgraphs._codec.b64_str")
+            grf.udf(
+                _codec.b64_str,
+                types.args([collider_node, in_node]),
+                include_source=False,
+            )
 
         expected = {
             "name": None,
@@ -482,21 +487,25 @@ class TestBuilder(unittest.TestCase):
                 {
                     "client_node_id": "aaaaaaaa-bbbb-cccc-dddd-000000000000",
                     "depends_on": [],
-                    "name": "builtins.len (00)",
+                    "name": "tiledb.cloud.taskgraphs._codec.b64_str (00)",
                     "udf_node": {
                         "arguments": [{"value": "it"}],
                         "environment": {
                             "language": "python",
                             "language_version": utils.PYTHON_VERSION,
                         },
-                        "executable_code": "gASVFAAAAAAAAACMCGJ1aWx0aW5zlIwDbGVulJOULg==",
+                        "executable_code": utils.b64_pickle(_codec.b64_str),
                         "result_format": "python_pickle",
+                        "source_text": (
+                            "def b64_str(val: bytes) -> str:\n"
+                            '    return base64.b64encode(val).decode("ascii")\n'
+                        ),
                     },
                 },
                 {
                     "client_node_id": "aaaaaaaa-bbbb-cccc-dddd-000000000001",
                     "depends_on": [],
-                    "name": "builtins.len",
+                    "name": "tiledb.cloud.taskgraphs._codec.b64_str",
                     "input_node": {},
                 },
                 {
@@ -505,7 +514,7 @@ class TestBuilder(unittest.TestCase):
                         "aaaaaaaa-bbbb-cccc-dddd-000000000000",
                         "aaaaaaaa-bbbb-cccc-dddd-000000000001",
                     ],
-                    "name": "builtins.len (02)",
+                    "name": "tiledb.cloud.taskgraphs._codec.b64_str (02)",
                     "udf_node": {
                         "arguments": [
                             {
@@ -525,8 +534,9 @@ class TestBuilder(unittest.TestCase):
                             "language": "python",
                             "language_version": utils.PYTHON_VERSION,
                         },
-                        "executable_code": "gASVFAAAAAAAAACMCGJ1aWx0aW5zlIwDbGVulJOULg==",
+                        "executable_code": utils.b64_pickle(_codec.b64_str),
                         "result_format": "python_pickle",
+                        # No source text here!
                     },
                 },
             ],
