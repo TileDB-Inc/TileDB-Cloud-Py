@@ -43,9 +43,11 @@ class SQLNode(_base.Node[_base.ET, _T]):
         else:
             parameters = raw_parameters
 
+        namespace = self._sql_data.get("namespace") or self.owner._namespace
+
         try:
             resp = self.owner._client.sql_api.run_sql(
-                namespace=self.owner._namespace,
+                namespace=namespace,
                 sql=rest_api.SQLParameters(
                     name=self.display_name,
                     query=self._sql_data["query"],
