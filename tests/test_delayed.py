@@ -1,5 +1,7 @@
 import operator
-import threading
+import os
+import shutil
+import tempfile
 import unittest
 from concurrent import futures
 
@@ -10,9 +12,9 @@ from tiledb.cloud import testonly
 from tiledb.cloud.compute import Delayed
 from tiledb.cloud.compute import DelayedArrayUDF
 from tiledb.cloud.compute import DelayedSQL
-from tiledb.cloud.compute import Status
 from tiledb.cloud.compute.delayed import DelayedMultiArrayUDF
-from tiledb.cloud.dag import dag
+from tiledb.cloud.compute.delayed import ParentFailedError
+from tiledb.cloud.taskgraphs.executor import Status
 
 
 class DelayedClassTest(unittest.TestCase):
@@ -91,7 +93,6 @@ class DelayedFailureTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             node.compute()
 
-        self.assertIsNotNone(node.dag)
         self.assertEqual(node.status, Status.FAILED)
         self.assertEqual(
             str(node.error),
@@ -107,16 +108,14 @@ class DelayedFailureTest(unittest.TestCase):
         # Add timeout so we don't wait forever in CI
         node2.set_timeout(30)
 
-        with self.assertRaisesRegex(dag.ParentFailedError, r"operand type\(s\)") as cm:
+        with self.assertRaisesRegex(ParentFailedError, r"operand type\(s\)") as cm:
             node2.compute()
         self.assertEqual(node, cm.exception.node)
-        with self.assertRaises(TypeError):
-            node2.dag.wait(1)
 
         self.assertEqual(node.status, Status.FAILED)
-        self.assertEqual(
-            str(node.error),
+        self.assertIn(
             "unsupported operand type(s) for *: 'function' and 'int'",
+            str(node.error),
         )
         with self.assertRaises(TypeError):
             node.result()
@@ -125,7 +124,6 @@ class DelayedFailureTest(unittest.TestCase):
         self.assertEqual(node2.status, Status.PARENT_FAILED)
         with self.assertRaises(futures.CancelledError):
             node2.result()
-        self.assertEqual(node2.dag.status, Status.FAILED)
 
     def test_failure_retry(self):
         n1 = Delayed(self._fail_once_func(), 5, local=True)
@@ -139,59 +137,51 @@ class DelayedFailureTest(unittest.TestCase):
         self.assertEqual(n2.status, Status.PARENT_FAILED)
         self.assertEqual(n1.status, Status.FAILED)
         n1.retry()
-        n1.dag.wait(15)
-        self.assertEqual(n2.result(0), 3125)
+        self.assertEqual(n2.result(15), 3125)
 
     def _fail_once_func(self):
-        ran = False
+        dir = tempfile.mkdtemp()
+        self.addCleanup(lambda: shutil.rmtree(dir))
 
         def fail_once(val=None):
-            nonlocal ran
-            if not ran:
-                ran = True
-                raise FloatingPointError("fails first time")
-            return val
+            try:
+                open(os.path.join(dir, "file"), "x").close()
+            except FileExistsError:
+                return val
+            raise FloatingPointError("fails first time")
 
         return fail_once
 
 
 class DelayedCancelTest(unittest.TestCase):
     def test_cancel(self):
-        in_node = threading.Barrier(2, timeout=5)
-        leave_node = threading.Barrier(2, timeout=5)
+        def wait_and_return(dur, value):
+            import time
 
-        def rendezvous(value):
-            in_node.wait()
-            leave_node.wait()
+            time.sleep(dur)
             return value
 
-        node = Delayed(rendezvous, local=True, name="multi_node")(3)
+        node = Delayed(wait_and_return, local=True, name="multi_node")(10, 3)
         node_2 = Delayed(np.mean, local=True, name="multi_node_2")([node, node])
 
         with self.assertRaises(futures.TimeoutError):
             node_2.set_timeout(1)
             node_2.compute()
 
-        in_node.wait()
-        node_2.dag.cancel()
-        leave_node.wait()
+        node_2.cancel()
 
-        node_2.dag.wait(5)
-
-        self.assertIs(node.dag, node_2.dag)
-        self.assertEqual(node.dag.status, Status.CANCELLED)
+        self.assertEqual(node_2.status, Status.CANCELLED)
 
         # Because an already-running node can't be cancelled, the sleep will
         # still run to completion.
-        self.assertEqual(node.result(), 3)
+        self.assertEqual(node.result(15), 3)
 
-        node_2.wait(1)
         self.assertEqual(node_2.status, Status.CANCELLED)
         with self.assertRaises(futures.CancelledError):
             node_2.result()
 
         node_2.retry()
-        self.assertEqual(node_2.result(1), 3)
+        self.assertEqual(node_2.result(10), 3)
 
 
 class DelayedCloudApplyTest(unittest.TestCase):
@@ -336,7 +326,6 @@ class DelayedCloudApplyTest(unittest.TestCase):
             node_exec.result(),
             numpy.mean([numpy.sum(orig["a"]), numpy.sum(orig_dense["a"])]),
         )
-        self.assertEqual(node_exec.dag.status, Status.COMPLETED)
 
     def test_apply_exec_multiple_2(self):
 
@@ -391,7 +380,7 @@ class DelayedCloudApplyTest(unittest.TestCase):
             node_exec.result(),
             numpy.mean([200, numpy.sum(orig["a"]), numpy.sum(orig_dense["a"])]),
         )
-        self.assertEqual(node_exec.status, Status.COMPLETED)
+        self.assertEqual(node_exec.status, Status.SUCCEEDED)
 
     def test_name_to_task_name(self):
 
@@ -440,4 +429,4 @@ class DelayedCloudApplyTest(unittest.TestCase):
             node_exec.result(),
             numpy.mean([200, numpy.sum(orig["a"]), numpy.sum(orig_dense["a"])]),
         )
-        self.assertEqual(node_exec.status, Status.COMPLETED)
+        self.assertEqual(node_exec.status, Status.SUCCEEDED)
