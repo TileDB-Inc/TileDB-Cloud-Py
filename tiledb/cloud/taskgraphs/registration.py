@@ -29,7 +29,7 @@ def register(
     api_client.register_registered_task_graph(
         namespace=namespace,
         name=name,
-        graph=json_safe.Value(graph._tdb_to_json()),
+        graph=json_safe.Value(graph._tdb_to_json(override_name=name)),
     )
 
 
