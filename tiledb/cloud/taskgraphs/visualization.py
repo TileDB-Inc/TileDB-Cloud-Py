@@ -77,7 +77,12 @@ def _position_nodes(graph: executor.Executor) -> Dict[str, Tuple[float, float]]:
 
 def _to_networkx(graph: executor.Executor) -> networkx.DiGraph:
     nxgraph = networkx.DiGraph()
-    nxgraph.add_nodes_from(str(n.id) for n in graph.nodes_by_name().values())
+    nxgraph.add_nodes_from(
+        (str(n.id) for n in graph.nodes_by_name().values()),
+        label="",
+        height=0.5,
+        width=0.5,
+    )
     nxgraph.add_edges_from(
         (str(e.parent.id), str(e.child.id)) for e in graph._deps.edges()
     )
