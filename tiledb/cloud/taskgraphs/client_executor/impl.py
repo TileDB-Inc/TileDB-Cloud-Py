@@ -40,6 +40,7 @@ class LocalExecutor(_base.IClientExecutor):
         self,
         graph: executor.GraphStructure,
         namespace: Optional[str] = None,
+        *,
         api_client: Optional[client.Client] = None,
         name: Optional[str] = None,
         parallel_server_tasks: int = 10,
@@ -57,8 +58,8 @@ class LocalExecutor(_base.IClientExecutor):
             run on the server simultaneously.
         """
         super().__init__(graph)
-        self.name = name
-        self._namespace = namespace or client.default_charged_namespace()
+        self._name = name
+        self._namespace = namespace
         self._event_queue: queue.Queue[Callable[[], None]] = queue.Queue()
         """Event queue used by the main loop.
 
@@ -68,10 +69,6 @@ class LocalExecutor(_base.IClientExecutor):
         self._inputs: Dict[uuid.UUID, Any] = {}
         self._client = api_client or client.client
 
-        if self.name:
-            self._prefix = f"task-graph-{self.name}"
-        else:
-            self._prefix = repr(self)
         self._event_loop_thread = threading.Thread(
             name=self._prefix + "-executor",
             target=self._run,
@@ -117,6 +114,30 @@ class LocalExecutor(_base.IClientExecutor):
         """If present, the thread that is dispatching update callbacks."""
 
     @property
+    def name(self) -> Optional[str]:
+        return self._name
+
+    @name.setter
+    def name(self, new_name: Optional[str]) -> None:
+        with self._done_condition:
+            if self._status is not Status.WAITING:
+                raise futures.InvalidStateError("cannot rename a running graph")
+            self._name = new_name
+
+    @property
+    def namespace(self) -> str:
+        return self._namespace or client.default_charged_namespace()
+
+    @namespace.setter
+    def namespace(self, new_namespace: Optional[str]) -> None:
+        with self._done_condition:
+            if self._status is not Status.WAITING:
+                raise futures.InvalidStateError(
+                    "cannot change namespace of a running graph"
+                )
+            self._namespace = new_namespace
+
+    @property
     def status(self) -> Status:
         with self._done_condition:
             return self._status
@@ -155,7 +176,7 @@ class LocalExecutor(_base.IClientExecutor):
 
         try:
             result = self._client.task_graph_logs_api.create_task_graph_log(
-                namespace=self._namespace,
+                namespace=self.namespace,
                 log=self._build_log_structure(),
             )
         except rest_api.ApiException as apix:
@@ -410,7 +431,7 @@ class LocalExecutor(_base.IClientExecutor):
     def _build_log_structure(self) -> rest_api.TaskGraphLog:
         return rest_api.TaskGraphLog(
             name=self.name,
-            namespace=self._namespace,
+            namespace=self.namespace,
             nodes=[n._to_log_metadata(self._deps.parents_of(n)) for n in self._deps],
         )
 
@@ -466,7 +487,7 @@ class LocalExecutor(_base.IClientExecutor):
             try:
                 client.client.task_graph_logs_api.update_task_graph_log(
                     id=str(self._server_graph_uuid),
-                    namespace=self._namespace,
+                    namespace=self.namespace,
                     log=rest_api.TaskGraphLog(status=api_st),
                 )
             except rest_api.ApiException as apix:
@@ -478,3 +499,7 @@ class LocalExecutor(_base.IClientExecutor):
             daemon=False,
         ).start()
         reporter_running.wait()
+
+    @property
+    def _prefix(self) -> str:
+        return f"task-graph-{self.name}" if self.name else repr(self)
