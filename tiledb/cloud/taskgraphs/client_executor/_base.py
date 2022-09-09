@@ -22,7 +22,6 @@ class IClientExecutor(executor.Executor["Node"], metaclass=abc.ABCMeta):
     """Executor sub-interface adding type information used by Nodes."""
 
     _client: client.Client
-    _namespace: str
     _server_graph_uuid: Optional[uuid.UUID]
 
     @abc.abstractmethod
@@ -31,6 +30,11 @@ class IClientExecutor(executor.Executor["Node"], metaclass=abc.ABCMeta):
 
     @abc.abstractclassmethod
     def _notify_node_status_change(self) -> None:
+        raise NotImplementedError()
+
+    @property
+    @abc.abstractmethod
+    def namespace(self) -> str:
         raise NotImplementedError()
 
 
