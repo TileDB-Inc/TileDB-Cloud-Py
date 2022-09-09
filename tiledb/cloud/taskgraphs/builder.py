@@ -51,7 +51,7 @@ class TaskGraphBuilder:
         name: Optional[str] = None,
     ):
         self.name = name
-        """A name for this graph. Read-only."""
+        """A name for this graph."""
         self._by_id: Dict[uuid.UUID, Node] = {}
         """The nodes in the graph."""
         self._by_name: Dict[str, Node] = {}
@@ -230,7 +230,7 @@ class TaskGraphBuilder:
 
         return node
 
-    def _tdb_to_json(self):
+    def _tdb_to_json(self, override_name: Optional[str] = None):
         """Converts this task graph to a registerable/executable format."""
         nodes = self._deps.topo_sorted
         # We need to guarantee that the existing node names are maintained.
@@ -241,7 +241,7 @@ class TaskGraphBuilder:
                 str(parent.id) for parent in self._deps.parents_of(n)
             ]
         return dict(
-            name=self.name,
+            name=override_name or self.name,
             nodes=node_jsons,
         )
 
