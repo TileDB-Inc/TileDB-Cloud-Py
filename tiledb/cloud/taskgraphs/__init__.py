@@ -30,6 +30,7 @@ InvalidStateError = client_executor.InvalidStateError
 ParentFailedError = executor.ParentFailedError
 Status = executor.Status
 args = types.args
+Layout = types.Layout
 ArrayMultiIndex = types.ArrayMultiIndex
 
 register = registration.register

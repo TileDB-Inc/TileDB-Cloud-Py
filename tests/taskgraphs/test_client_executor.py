@@ -122,6 +122,50 @@ class ClientExecutorTestArrays(unittest.TestCase):
         exec.wait(5)
         self.assertIs(executor.Status.SUCCEEDED, exec.status)
 
+    def test_layouts(self):
+        grf = builder.TaskGraphBuilder()
+        arrs = dict(
+            rm=grf.array_read(
+                "tiledb://TileDB-Inc/quickstart_dense",
+                raw_ranges=[[1, 4], [1, 4]],
+                layout="r",
+                name="rm",
+            ),
+            cm=grf.array_read(
+                "tiledb://TileDB-Inc/quickstart_dense",
+                raw_ranges=[[1, 4], [1, 4]],
+                layout=types.Layout.COL_MAJOR,
+                name="cm",
+            ),
+            gl=grf.array_read(
+                "tiledb://TileDB-Inc/quickstart_dense",
+                raw_ranges=[[1, 4], [1, 4]],
+                layout="global-order",
+                name="gl",
+            ),
+        )
+
+        def to_python(arr: "types.ArrayMultiIndex"):
+            return arr["a"].tolist()
+
+        pythons = {
+            name: grf.udf(to_python, types.args(arr), name=name + " node")
+            for name, arr in arrs.items()
+        }
+        merged = grf.udf(lambda **x: x, types.args(**pythons))
+
+        exec = client_executor.LocalExecutor(grf, name="test_layouts")
+        exec.execute()
+
+        self.assertEqual(
+            dict(
+                rm=[[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]],
+                cm=[[1, 5, 9, 13], [2, 6, 10, 14], [3, 7, 11, 15], [4, 8, 12, 16]],
+                gl=[[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]],
+            ),
+            exec.node(merged).result(30),
+        )
+
     def test_node_inputs(self):
         """Tests using the output of other nodes as params for an array read."""
         grf = builder.TaskGraphBuilder()
