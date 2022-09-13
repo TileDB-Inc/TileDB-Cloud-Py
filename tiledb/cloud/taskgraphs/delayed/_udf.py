@@ -1,6 +1,7 @@
 """Classes that implement delayed UDFs."""
 
-from typing import Any, Dict, Generic, NoReturn, Optional, Tuple, TypeVar
+import datetime
+from typing import Any, Dict, Generic, NoReturn, Optional, Tuple, TypeVar, Union
 
 import attrs
 
@@ -34,6 +35,8 @@ class DelayedFunction(Generic[_T]):
         *,
         result_format: Optional[str] = _NOTHING,
         image_name: Optional[str] = _NOTHING,
+        timeout: Union[datetime.timedelta, int, None] = _NOTHING,
+        resource_class: Optional[str] = _NOTHING,
         name: Optional[str] = _NOTHING,
     ) -> "DelayedFunction[_T]":
         """Wraps the given function to later call it in a delayed task graph.
@@ -55,6 +58,14 @@ class DelayedFunction(Generic[_T]):
         :param result_format: The format to return results in.
         :param image_name: If specified, will execute the UDF within
             the specified image rather than the default image for its language.
+        :param timeout: If specified, the length of time after which the UDF
+            will be terminated on the server side. If specified as a number,
+            a number of seconds. If zero or unset, the UDF will run until
+            the server’s configured maximum. Unlike the ``timeout`` parameter to
+            Future-like objects, this sets a limit on actual execution time,
+            rather than just a limit on how long to wait.
+        :param resource_class: If specified, the container resource class
+            that this UDF will be executed in.
         :param name: If specified, the name of this node within the graph.
             If provided, this must be unique.
         """
@@ -69,6 +80,8 @@ class DelayedFunction(Generic[_T]):
         raw_kwargs = dict(
             result_format=result_format,
             image_name=image_name,
+            timeout=timeout,
+            resource_class=resource_class,
             name=name,
         )
         node_kwargs = {k: v for k, v in raw_kwargs.items() if v is not _NOTHING}
