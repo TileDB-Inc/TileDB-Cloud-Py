@@ -243,6 +243,7 @@ def _create_notebook_array(
             "Please select a proper namespace (username or organization name).",
         )
 
+
     # The array will be be 1-dimensional with domain of 0 to max uint64. We
     # use a tile extent of 1024 bytes.
     dom = tiledb.Domain(
@@ -280,8 +281,9 @@ def _create_notebook_array(
                     raise tiledb_cloud_error.TileDBCloudError(
                         f"Error creating file: {array_name!r} already exists in namespace {namespace!r}."
                     )
-            # Retry other TileDB erors
-            tries -= 1
+            # Retry other TileDB errors
+            if upload_options is upload_options.FAIL:
+                tries -= 1
             if tries <= 0:
                 raise tiledb_cloud_error.check_exc(e) from None
 
