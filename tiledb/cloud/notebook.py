@@ -23,16 +23,17 @@ CHARACTER_ENCODING = "utf-8"
 
 class UploadOption(enum.Enum):
     """Kind of upload option."""
+
     FAIL = enum.auto()
     OVERWRITE = enum.auto()
     AUTO_INCREMENT = enum.auto()
 
 
 def rename_notebook(
-        tiledb_uri,
-        notebook_name=None,
-        access_credentials_name=None,
-        async_req=False,
+    tiledb_uri,
+    notebook_name=None,
+    access_credentials_name=None,
+    async_req=False,
 ):
     """
     Update an array's info
@@ -61,8 +62,8 @@ def rename_notebook(
 
 
 def download_notebook_to_file(
-        tiledb_uri: str,
-        ipynb_file_name: str,
+    tiledb_uri: str,
+    ipynb_file_name: str,
 ) -> None:
     """
     Downloads a notebook file from TileDB Cloud to local disk.
@@ -123,12 +124,12 @@ def download_notebook_contents(
 # Status: As of this writing: we have implemented option 1, and we don't have
 # an overwrite/update-in-place flag.
 def upload_notebook_from_file(
-        ipynb_file_name: str,
-        namespace: str,
-        array_name: str,
-        storage_path: Optional[str],
-        storage_credential_name: Optional[str],
-        upload_option: UploadOption = UploadOption.FAIL
+    ipynb_file_name: str,
+    namespace: str,
+    array_name: str,
+    storage_path: Optional[str],
+    storage_credential_name: Optional[str],
+    upload_option: UploadOption = UploadOption.FAIL
 ) -> str:
     """
     Uploads a local-disk notebook file to TileDB Cloud.
@@ -146,7 +147,8 @@ def upload_notebook_from_file(
 
     if upload_option is upload_option.AUTO_INCREMENT:
         raise tiledb_cloud_error.TileDBCloudError(
-            f"Error uploading file: Auto-Increment upload option is not implemented yet.")
+            f"Error uploading file: Auto-Increment upload option is not implemented yet."
+        )
 
     vfs = tiledb.VFS(tiledb.cloud.Ctx().config())
     with tiledb.FileIO(vfs, ipynb_file_name, mode="rb") as fio:
@@ -163,12 +165,12 @@ def upload_notebook_from_file(
 
 
 def upload_notebook_contents(
-        ipynb_file_contents: str,
-        storage_path: Optional[str],
-        array_name: str,
-        namespace: str,
-        storage_credential_name: Optional[str],
-        upload_option: UploadOption
+    ipynb_file_contents: str,
+    storage_path: Optional[str],
+    array_name: str,
+    namespace: str,
+    storage_credential_name: Optional[str],
+    upload_option: UploadOption
 ) -> str:
     """
     Uploads a notebook file to TileDB Cloud.
@@ -221,12 +223,12 @@ def upload_notebook_contents(
 
 
 def _create_notebook_array(
-        storage_path: str,
-        array_name: str,
-        namespace: str,
-        ctx: tiledb.Ctx,
-        *,
-        retries: int = 0,
+    storage_path: str,
+    array_name: str,
+    namespace: str,
+    ctx: tiledb.Ctx,
+    *,
+    retries: int = 0,
 ) -> Tuple[str, str]:
     """
     Creates a new array for storing a notebook file.
@@ -278,9 +280,9 @@ def _create_notebook_array(
                     f"Error creating file: {e}. Are your credentials valid?"
                 ) from e
             if "Cannot create array" in str(e) and "already exists" in str(e):
-                    raise tiledb_cloud_error.TileDBCloudError(
-                        f"Error creating file: {array_name!r} already exists in namespace {namespace!r}."
-                    )
+                raise tiledb_cloud_error.TileDBCloudError(
+                    f"Error creating file: {array_name!r} already exists in namespace {namespace!r}."
+                )
             # Retry other TileDB errors
             tries -= 1
             if tries <= 0:
@@ -288,11 +290,11 @@ def _create_notebook_array(
 
 
 def _create_notebook_array_retry_helper(
-        storage_path: str,
-        array_name: str,
-        namespace: str,
-        dom: tiledb.Domain,
-        ctx: tiledb.Ctx,
+    storage_path: str,
+    array_name: str,
+    namespace: str,
+    dom: tiledb.Domain,
+    ctx: tiledb.Ctx,
 ) -> Tuple[bool, str, str]:
     """
     See _create_notebook_array -- exists only for retry logic.
@@ -336,9 +338,9 @@ def _create_notebook_array_retry_helper(
 
 
 def _write_notebook_to_array(
-        tiledb_uri: str,
-        ipynb_file_contents: str,
-        ctx: tiledb.Ctx
+    tiledb_uri: str,
+    ipynb_file_contents: str,
+    ctx: tiledb.Ctx
 ) -> None:
     """Writes the given bytes to the array.
     :param tiledb_uri: such as "tiledb://TileDB-Inc/quickstart_dense".
@@ -360,7 +362,7 @@ def _write_notebook_to_array(
     contents_as_array = numpy.array(bytearray(ipynb_file_contents, CHARACTER_ENCODING))
 
     with tiledb.open(tiledb_uri, mode="w", ctx=ctx) as arr:
-        arr[0: len(contents_as_array)] = {"contents": contents_as_array}
+        arr[0 : len(contents_as_array)] = {"contents": contents_as_array}
         arr.meta["file_size"] = len(contents_as_array)
         arr.meta["type"] = file_type = tiledb.cloud.rest_api.models.FileType.NOTEBOOK
         arr.meta["format"] = "json"
