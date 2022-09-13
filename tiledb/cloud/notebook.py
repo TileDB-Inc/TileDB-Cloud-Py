@@ -212,7 +212,7 @@ def upload_notebook_contents(
         upload_options,
     )
 
-    _write_notebook_to_array(tiledb_uri, ipynb_file_contents, ctx, upload_options)
+    _write_notebook_to_array(tiledb_uri, ipynb_file_contents, ctx)
 
     return tiledb_uri
 
