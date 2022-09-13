@@ -168,11 +168,11 @@ def upload_notebook_contents(
         array_name: str,
         namespace: str,
         storage_credential_name: Optional[str],
-        upload_options: UploadOption
+        upload_option: UploadOption
 ) -> str:
     """
     Uploads a notebook file to TileDB Cloud.
-    :param ipnyb_file_contents: The contents of the notebook file as a string,
+    :param ipynb_file_contents: The contents of the notebook file as a string,
       nominally in JSON format.
     :param storage_path: such as "s3://acmecorp-janedoe", typically from the
       user's account settings.
@@ -180,7 +180,7 @@ def upload_notebook_contents(
     :param namespace: such as "janedoe".
     :param storage_credential_name: such as "janedoe-creds", typically from the
       user's account settings.
-    :param upload_options: such as UploadOption.FAIL (default), OVERWRITE or AUTO-INCREMENT
+    :param upload_option: such as UploadOption.FAIL (default), OVERWRITE or AUTO-INCREMENT
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
 
@@ -204,13 +204,12 @@ def upload_notebook_contents(
         {"rest.creation_access_credentials_name": storage_credential_name}
     )
 
-    if upload_options is upload_options.FAIL:
+    if upload_option is UploadOption.FAIL:
         tiledb_uri, array_name = _create_notebook_array(
             storage_path,
             array_name,
             namespace,
             ctx,
-            upload_options,
         )
     else:
         # The array should already exist
@@ -226,7 +225,6 @@ def _create_notebook_array(
         array_name: str,
         namespace: str,
         ctx: tiledb.Ctx,
-        upload_options: UploadOption,
         *,
         retries: int = 0,
 ) -> Tuple[str, str]:
@@ -237,7 +235,6 @@ def _create_notebook_array(
     :param array_name : name to be seen in the UI, such as "testing-upload"
     :param namespace: such as "janedoe".
     :param ctx: cloud context for the operation.
-    :param upload_options: upload logic fail, overwrite, auto-increment
     :return: tuple of tiledb_uri and array_name
     """
 
