@@ -204,13 +204,17 @@ def upload_notebook_contents(
         {"rest.creation_access_credentials_name": storage_credential_name}
     )
 
-    tiledb_uri, array_name = _create_notebook_array(
-        storage_path,
-        array_name,
-        namespace,
-        ctx,
-        upload_options,
-    )
+    if upload_options is upload_options.FAIL:
+        tiledb_uri, array_name = _create_notebook_array(
+            storage_path,
+            array_name,
+            namespace,
+            ctx,
+            upload_options,
+        )
+    else:
+        # The array should already exist
+        tiledb_uri = "tiledb://" + posixpath.join(namespace, array_name)
 
     _write_notebook_to_array(tiledb_uri, ipynb_file_contents, ctx)
 
@@ -277,13 +281,11 @@ def _create_notebook_array(
                     f"Error creating file: {e}. Are your credentials valid?"
                 ) from e
             if "Cannot create array" in str(e) and "already exists" in str(e):
-                if upload_options is upload_options.FAIL:
                     raise tiledb_cloud_error.TileDBCloudError(
                         f"Error creating file: {array_name!r} already exists in namespace {namespace!r}."
                     )
             # Retry other TileDB errors
-            if upload_options is upload_options.FAIL:
-                tries -= 1
+            tries -= 1
             if tries <= 0:
                 raise tiledb_cloud_error.check_exc(e) from None
 
