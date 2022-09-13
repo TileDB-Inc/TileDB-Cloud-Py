@@ -7,6 +7,7 @@ import enum
 import posixpath
 import time
 from typing import Optional, Tuple
+
 import numpy
 
 import tiledb
@@ -80,7 +81,7 @@ def download_notebook_to_file(
 
 
 def download_notebook_contents(
-        tiledb_uri: str,
+    tiledb_uri: str,
 ) -> str:
     """
     Downloads a notebook file from TileDB Cloud to contents as a string,
@@ -129,7 +130,7 @@ def upload_notebook_from_file(
     array_name: str,
     storage_path: Optional[str],
     storage_credential_name: Optional[str],
-    upload_option: UploadOption = UploadOption.FAIL
+    upload_option: UploadOption = UploadOption.FAIL,
 ) -> str:
     """
     Uploads a local-disk notebook file to TileDB Cloud.
@@ -160,7 +161,7 @@ def upload_notebook_from_file(
         array_name,
         namespace,
         storage_credential_name,
-        upload_option
+        upload_option,
     )
 
 
@@ -170,7 +171,7 @@ def upload_notebook_contents(
     array_name: str,
     namespace: str,
     storage_credential_name: Optional[str],
-    upload_option: UploadOption
+    upload_option: UploadOption,
 ) -> str:
     """
     Uploads a notebook file to TileDB Cloud.
@@ -245,7 +246,6 @@ def _create_notebook_array(
             f"{namespace!r} is not a valid folder to create notebooks. "
             "Please select a proper namespace (username or organization name).",
         )
-
 
     # The array will be be 1-dimensional with domain of 0 to max uint64. We
     # use a tile extent of 1024 bytes.
@@ -338,9 +338,7 @@ def _create_notebook_array_retry_helper(
 
 
 def _write_notebook_to_array(
-    tiledb_uri: str,
-    ipynb_file_contents: str,
-    ctx: tiledb.Ctx
+    tiledb_uri: str, ipynb_file_contents: str, ctx: tiledb.Ctx
 ) -> None:
     """Writes the given bytes to the array.
     :param tiledb_uri: such as "tiledb://TileDB-Inc/quickstart_dense".
