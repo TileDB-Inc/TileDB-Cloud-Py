@@ -211,7 +211,7 @@ def upload_notebook_contents(
         )
     else:
         # The array should already exist
-        tiledb_uri = "tiledb://" + posixpath.join(namespace, array_name)
+        tiledb_uri = f"tiledb://{posixpath.join(namespace, array_name)}"
 
     _write_notebook_to_array(tiledb_uri, ipynb_file_contents, ctx)
 
