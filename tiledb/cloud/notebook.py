@@ -22,12 +22,12 @@ RESERVED_NAMESPACES = frozenset(["cloud", "owned", "public", "shared"])
 CHARACTER_ENCODING = "utf-8"
 
 
-class UploadOption(enum.Enum):
-    """Kind of upload option."""
+class OnExists(enum.Enum):
+    """Action to take if the array already exists."""
 
     FAIL = enum.auto()
     OVERWRITE = enum.auto()
-    AUTO_INCREMENT = enum.auto()
+    # TODO: Add the AUTO_INCREMENT logic in future cycles
 
 
 def rename_notebook(
@@ -130,7 +130,7 @@ def upload_notebook_from_file(
     array_name: str,
     storage_path: Optional[str],
     storage_credential_name: Optional[str],
-    upload_option: UploadOption = UploadOption.FAIL,
+    on_exists: OnExists = OnExists.FAIL,
 ) -> str:
     """
     Uploads a local-disk notebook file to TileDB Cloud.
@@ -142,14 +142,9 @@ def upload_notebook_from_file(
       user's account settings.
     :param storage_credential_name: such as "janedoe-creds", typically from the
       user's account settings.
-    :param upload_option: such as UploadOption.FAIL (default), OVERWRITE or AUTO-INCREMENT
+    :param if_exists: such as IfExists.FAIL (default), OVERWRITE or AUTO-INCREMENT
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
-
-    if upload_option is upload_option.AUTO_INCREMENT:
-        raise tiledb_cloud_error.TileDBCloudError(
-            f"Error uploading file: Auto-Increment upload option is not implemented yet."
-        )
 
     vfs = tiledb.VFS(tiledb.cloud.Ctx().config())
     with tiledb.FileIO(vfs, ipynb_file_name, mode="rb") as fio:
@@ -161,7 +156,7 @@ def upload_notebook_from_file(
         array_name,
         namespace,
         storage_credential_name,
-        upload_option,
+        on_exists,
     )
 
 
@@ -171,7 +166,7 @@ def upload_notebook_contents(
     array_name: str,
     namespace: str,
     storage_credential_name: Optional[str],
-    upload_option: UploadOption,
+    on_exists: OnExists,
 ) -> str:
     """
     Uploads a notebook file to TileDB Cloud.
@@ -183,7 +178,7 @@ def upload_notebook_contents(
     :param namespace: such as "janedoe".
     :param storage_credential_name: such as "janedoe-creds", typically from the
       user's account settings.
-    :param upload_option: such as UploadOption.FAIL (default), OVERWRITE or AUTO-INCREMENT
+    :param on_exists: such as OnExists.FAIL (default), OVERWRITE or AUTO-INCREMENT
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
 
@@ -207,7 +202,7 @@ def upload_notebook_contents(
         {"rest.creation_access_credentials_name": storage_credential_name}
     )
 
-    if upload_option is UploadOption.FAIL:
+    if on_exists is OnExists.FAIL:
         tiledb_uri, array_name = _create_notebook_array(
             storage_path,
             array_name,
