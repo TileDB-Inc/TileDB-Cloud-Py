@@ -3,7 +3,7 @@ Python support for notebook I/O on Tiledb Cloud. All notebook JSON content
 is assumed to be encoded as UTF-8.
 
 """
-
+import enum
 import posixpath
 import time
 from typing import Optional, Tuple
@@ -20,6 +20,14 @@ from tiledb.cloud.rest_api import rest
 
 RESERVED_NAMESPACES = frozenset(["cloud", "owned", "public", "shared"])
 CHARACTER_ENCODING = "utf-8"
+
+
+class OnExists(enum.Enum):
+    """Action to take if the array already exists."""
+
+    FAIL = enum.auto()
+    OVERWRITE = enum.auto()
+    # TODO: Add the AUTO_INCREMENT logic in future cycles
 
 
 def rename_notebook(
@@ -61,7 +69,7 @@ def download_notebook_to_file(
     """
     Downloads a notebook file from TileDB Cloud to local disk.
     :param tiledb_uri: such as "tiledb://TileDB-Inc/quickstart_dense".
-    :param ipnyb_file_name: path to save to, such as "./mycopy.ipynb". Must be
+    :param ipynb_file_name: path to save to, such as "./mycopy.ipynb". Must be
       local; no S3 URI support at present.
     """
     ipynb_file_contents = download_notebook_contents(
@@ -122,6 +130,7 @@ def upload_notebook_from_file(
     array_name: str,
     storage_path: Optional[str],
     storage_credential_name: Optional[str],
+    on_exists: OnExists = OnExists.FAIL,
 ) -> str:
     """
     Uploads a local-disk notebook file to TileDB Cloud.
@@ -133,6 +142,7 @@ def upload_notebook_from_file(
       user's account settings.
     :param storage_credential_name: such as "janedoe-creds", typically from the
       user's account settings.
+    :param on_exists: such as OnExists.FAIL (default), OVERWRITE or AUTO-INCREMENT
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
 
@@ -146,6 +156,7 @@ def upload_notebook_from_file(
         array_name,
         namespace,
         storage_credential_name,
+        on_exists,
     )
 
 
@@ -155,10 +166,11 @@ def upload_notebook_contents(
     array_name: str,
     namespace: str,
     storage_credential_name: Optional[str],
+    on_exists: OnExists,
 ) -> str:
     """
     Uploads a notebook file to TileDB Cloud.
-    :param ipnyb_file_contents: The contents of the notebook file as a string,
+    :param ipynb_file_contents: The contents of the notebook file as a string,
       nominally in JSON format.
     :param storage_path: such as "s3://acmecorp-janedoe", typically from the
       user's account settings.
@@ -166,6 +178,7 @@ def upload_notebook_contents(
     :param namespace: such as "janedoe".
     :param storage_credential_name: such as "janedoe-creds", typically from the
       user's account settings.
+    :param on_exists: such as OnExists.FAIL (default), OVERWRITE or AUTO-INCREMENT
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
 
@@ -189,12 +202,16 @@ def upload_notebook_contents(
         {"rest.creation_access_credentials_name": storage_credential_name}
     )
 
-    tiledb_uri, array_name = _create_notebook_array(
-        storage_path,
-        array_name,
-        namespace,
-        ctx,
-    )
+    if on_exists is OnExists.FAIL:
+        tiledb_uri, array_name = _create_notebook_array(
+            storage_path,
+            array_name,
+            namespace,
+            ctx,
+        )
+    else:
+        # The array should already exist
+        tiledb_uri = f"tiledb://{posixpath.join(namespace, array_name)}"
 
     _write_notebook_to_array(tiledb_uri, ipynb_file_contents, ctx)
 
@@ -261,7 +278,7 @@ def _create_notebook_array(
                 raise tiledb_cloud_error.TileDBCloudError(
                     f"Error creating file: {array_name!r} already exists in namespace {namespace!r}."
                 )
-            # Retry other TileDB erors
+            # Retry other TileDB errors
             tries -= 1
             if tries <= 0:
                 raise tiledb_cloud_error.check_exc(e) from None
@@ -316,9 +333,7 @@ def _create_notebook_array_retry_helper(
 
 
 def _write_notebook_to_array(
-    tiledb_uri: str,
-    ipynb_file_contents: str,
-    ctx: tiledb.Ctx,
+    tiledb_uri: str, ipynb_file_contents: str, ctx: tiledb.Ctx
 ) -> None:
     """Writes the given bytes to the array.
     :param tiledb_uri: such as "tiledb://TileDB-Inc/quickstart_dense".
