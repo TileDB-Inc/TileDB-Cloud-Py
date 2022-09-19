@@ -69,7 +69,7 @@ def download_notebook_to_file(
     """
     Downloads a notebook file from TileDB Cloud to local disk.
     :param tiledb_uri: such as "tiledb://TileDB-Inc/quickstart_dense".
-    :param ipnyb_file_name: path to save to, such as "./mycopy.ipynb". Must be
+    :param ipynb_file_name: path to save to, such as "./mycopy.ipynb". Must be
       local; no S3 URI support at present.
     """
     ipynb_file_contents = download_notebook_contents(
@@ -142,7 +142,7 @@ def upload_notebook_from_file(
       user's account settings.
     :param storage_credential_name: such as "janedoe-creds", typically from the
       user's account settings.
-    :param if_exists: such as IfExists.FAIL (default), OVERWRITE or AUTO-INCREMENT
+    :param on_exists: such as OnExists.FAIL (default), OVERWRITE or AUTO-INCREMENT
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
 
