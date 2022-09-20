@@ -119,6 +119,10 @@ class ClientExecutorTestLocal(unittest.TestCase):
             out = grf.udf(" ".join, types.args((one, two)), local=True)
             exec = client_executor.LocalExecutor(grf)
             exec.execute()
+
+            # The touch_and_wait tasks will get stuck in their wait-loop for
+            # the file they just created to be deleted, so waiting on the task
+            # must necessarily time out.
             with self.assertRaises(futures.TimeoutError):
                 exec.node(one).result(1)
             with self.assertRaises(futures.TimeoutError):
@@ -127,10 +131,13 @@ class ClientExecutorTestLocal(unittest.TestCase):
             p_one = os.path.join(tmpdir, "one")
             p_two = os.path.join(tmpdir, "two")
 
+            # Ensure that the tasks have gotten to the point where they *did*
+            # create their files.
             while not os.path.exists(p_one):
                 time.sleep(0.01)
             while not os.path.exists(p_two):
                 time.sleep(0.01)
+            # After we remove the files, the tasks will run to completion.
             os.remove(p_one)
             os.remove(p_two)
             self.assertEqual("one two", exec.node(out).result(5))

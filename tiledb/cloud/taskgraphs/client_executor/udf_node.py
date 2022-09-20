@@ -79,8 +79,8 @@ class UDFNode(_base.Node[_base.ET, _T]):
             self._exec_local(parents)
             # TODO: Add a way that users can specify that they want to retry
             # a local UDF remotely.
-            return
-        self._exec_remote(parents)
+        else:
+            self._exec_remote(parents)
 
     def _exec_local(self, parents: Dict[uuid.UUID, _base.Node]) -> None:
         lang = self._environment.get("language")

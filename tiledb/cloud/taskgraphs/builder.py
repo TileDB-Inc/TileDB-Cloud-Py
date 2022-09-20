@@ -508,9 +508,8 @@ class _UDFNode(Node[_T]):
         See :meth:`TaskGraphBuilder.udf` for details.
         """
         utils.check_funcable(func=func)
-        if isinstance(func, str):
-            if local:
-                raise ValueError("Registered UDFs may only be executed server-side.")
+        if isinstance(func, str) and local:
+            raise ValueError("Registered UDFs may only be executed server-side.")
         jsoner = _ParameterEscaper()
         self.args = jsoner.arguments_to_json(args)
         if local and any(isinstance(node, _ArrayNode) for node in jsoner.seen_nodes):
