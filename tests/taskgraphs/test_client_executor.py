@@ -1,11 +1,13 @@
 import datetime
 import operator
+import tempfile
 import time
 import unittest
 
 import numpy
 import pyarrow
 
+from tiledb.cloud._common import futures
 from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import client_executor
 from tiledb.cloud.taskgraphs import executor
@@ -84,6 +86,69 @@ class ClientExecutorTestUDFs(unittest.TestCase):
         self.assertEqual("the value is really 0.0", exec.node(succeedchild).result(10))
         exec.wait(10)
         self.assertIs(executor.Status.FAILED, exec.status)
+
+
+class ClientExecutorTestLocal(unittest.TestCase):
+    def test_basic(self):
+        grf = builder.TaskGraphBuilder(name="test_local")
+        double = grf.udf(lambda x: 2 * x, types.args(2), local=True)
+
+        exec = client_executor.LocalExecutor(grf, name="test_local exec")
+        exec.execute()
+        double_exec = exec.node(double)
+        self.assertEqual(4, double_exec.result(30))
+        self.assertIsNone(double_exec.task_id())
+        exec.wait(10)
+
+    def test_concurrent(self):
+        import os
+        import os.path
+        import time
+
+        def touch_and_wait(dir, file):
+            full_path = os.path.join(dir, file)
+            open(full_path, "w").close()
+            while os.path.exists(full_path):
+                time.sleep(0.01)
+            return file
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            grf = builder.TaskGraphBuilder()
+            one = grf.udf(touch_and_wait, types.args(tmpdir, "one"), local=True)
+            two = grf.udf(touch_and_wait, types.args(tmpdir, "two"), local=True)
+            out = grf.udf(" ".join, types.args((one, two)), local=True)
+            exec = client_executor.LocalExecutor(grf)
+            exec.execute()
+
+            # The touch_and_wait tasks will get stuck in their wait-loop for
+            # the file they just created to be deleted, so waiting on the task
+            # must necessarily time out.
+            with self.assertRaises(futures.TimeoutError):
+                exec.node(one).result(1)
+            with self.assertRaises(futures.TimeoutError):
+                exec.node(two).result(1)
+
+            p_one = os.path.join(tmpdir, "one")
+            p_two = os.path.join(tmpdir, "two")
+
+            # Ensure that the tasks have gotten to the point where they *did*
+            # create their files.
+            while not os.path.exists(p_one):
+                time.sleep(0.01)
+            while not os.path.exists(p_two):
+                time.sleep(0.01)
+            # After we remove the files, the tasks will run to completion.
+            os.remove(p_one)
+            os.remove(p_two)
+            self.assertEqual("one two", exec.node(out).result(5))
+
+    def test_timeout(self):
+        grf = builder.TaskGraphBuilder()
+        timer = grf.udf(time.sleep, types.args(10), timeout=2, local=True)
+        exec = client_executor.LocalExecutor(grf)
+        exec.execute()
+        with self.assertRaises(TimeoutError):
+            exec.node(timer).result(5)
 
 
 class ClientExecutorTestArrays(unittest.TestCase):

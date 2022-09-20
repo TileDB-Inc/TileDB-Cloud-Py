@@ -2,7 +2,7 @@
 
 import enum
 import itertools
-from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union
 
 import attrs
 import numpy as np
@@ -84,7 +84,7 @@ class Arguments:
     :meth:``of``.
     """
 
-    args: tuple = ()
+    args: Tuple[Any, ...] = attrs.field(converter=tuple, default=())
     kwargs: Dict[str, Any] = attrs.Factory(dict)
 
     @classmethod
@@ -99,6 +99,9 @@ class Arguments:
 
         """
         return cls(args, kwargs)
+
+    def apply(self, to: Callable[..., _T]) -> _T:
+        return to(*self.args, **self.kwargs)
 
     def __repr__(self):
         """A representation of this which looks like a function call."""
