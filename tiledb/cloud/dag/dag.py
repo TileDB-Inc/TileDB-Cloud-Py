@@ -43,6 +43,9 @@ _T = TypeVar("_T")
 # stored parameters.
 _RETRY_MSG = "RETRY_WITH_PARAMS"
 
+_REPORT_TIMEOUT_SECS = 10
+"""The maximum request time when submitting non-essential log information."""
+
 
 class ParentFailedError(futures.CancelledError):
     def __init__(self, cause: BaseException, node: "Node"):
@@ -658,14 +661,15 @@ class DAG:
             api_st = _API_STATUSES[status]
         except KeyError as ke:
             raise AssertionError(f"Task graph ended in invalid state {status}") from ke
-        try:
-            client.client.task_graph_logs_api.update_task_graph_log(
-                id=str(self.server_graph_uuid),
-                namespace=self.namespace,
-                log=rest_api.TaskGraphLog(status=api_st),
-            )
-        except rest_api.ApiException as apix:
-            warnings.warn(UserWarning(f"Error reporting graph completion: {apix}"))
+        do_update = utils.ephemeral_thread(
+            client.client.task_graph_logs_api.update_task_graph_log
+        )
+        do_update(
+            id=str(self.server_graph_uuid),
+            namespace=self.namespace,
+            log=rest_api.TaskGraphLog(status=api_st),
+            _request_timeout=_REPORT_TIMEOUT_SECS,
+        )
 
     def _done(self):
         return self._status in (
@@ -895,31 +899,33 @@ class DAG:
             # Only report client-side events to the server if we've submitted
             # the structure of the graph.
             if to_report:
-                try:
-                    client.client.task_graph_logs_api.report_client_node(
-                        id=str(self.server_graph_uuid),
-                        namespace=self.namespace,
-                        report=models.TaskGraphClientNodeStatus(
-                            client_node_uuid=str(node.id),
-                            status=to_report,
-                        ),
-                    )
-                except rest_api.ApiException:
-                    pass  # If we can't report a node status, don't worry about it.
+                do_report = utils.ephemeral_thread(
+                    client.client.task_graph_logs_api.report_client_node
+                )
+                do_report(
+                    id=str(self.server_graph_uuid),
+                    namespace=self.namespace,
+                    report=models.TaskGraphClientNodeStatus(
+                        client_node_uuid=str(node.id),
+                        status=to_report,
+                    ),
+                    _request_timeout=_REPORT_TIMEOUT_SECS,
+                )
 
             if done_cbs is not None:
                 try:
                     api_st = _API_STATUSES[status]
                 except KeyError as ke:
                     raise AssertionError(f"Invalid end state {status}") from ke
-                try:
-                    client.client.task_graph_logs_api.update_task_graph_log(
-                        id=str(self.server_graph_uuid),
-                        namespace=self.namespace,
-                        log=rest_api.TaskGraphLog(status=api_st),
-                    )
-                except rest_api.ApiException:
-                    pass  # If we can't report graph status, don't worry.
+                do_update = utils.ephemeral_thread(
+                    client.client.task_graph_logs_api.update_task_graph_log
+                )
+                do_update(
+                    id=str(self.server_graph_uuid),
+                    namespace=self.namespace,
+                    log=rest_api.TaskGraphLog(status=api_st),
+                    _request_timeout=_REPORT_TIMEOUT_SECS,
+                )
 
     def _set_status(self, st: Status) -> None:
         if self._status is st:

@@ -12,6 +12,7 @@ from typing import Any, Callable, Dict, Optional, Type, TypeVar
 
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
+from tiledb.cloud import utils
 from tiledb.cloud._common import futures
 from tiledb.cloud._common import ordered
 from tiledb.cloud.taskgraphs import executor
@@ -31,6 +32,9 @@ _API_STATUSES = {
     Status.FAILED: rest_api.TaskGraphLogStatus.FAILED,
     Status.CANCELLED: rest_api.TaskGraphLogStatus.CANCELLED,
 }
+
+_REPORT_TIMEOUT_SECS = 10
+"""The maximum request time when submitting non-essential log information."""
 
 
 class LocalExecutor(_base.IClientExecutor):
@@ -453,52 +457,16 @@ class LocalExecutor(_base.IClientExecutor):
         except KeyError:
             warnings.warn(UserWarning(f"Task graph ended in invalid state {st!r}"))
 
-        # Kick off a non-daemonic thread to report completion so that we don't
-        # block on the server call when reporting doneness to the caller,
-        # but also we don't let the process terminate while we're still
-        # reporting.
-        #
-        # ┄: blocked, ═: running, •: synchronization point, ×: termination
-        # [d] = daemon thread
-        #
-        # main:  ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄╒══════×
-        # worker[d]:     ══════•══×              │      ┊
-        # event loop[d]: ┄┄┄┄┄┄╘═══════•═╕┄┄┄┄╒══•══×   main terminates
-        # reporter:            ┊       ┊ ┊   ═•══╪═══════════×
-        #         last node done       ┊ ┊    ┊  ┊           ┊
-        #                 start reporter ┊    ┊  ┊           reporter terminates
-        #            reporter_running.wait    ┊  ┊
-        #                  reporter_running.set  ┊
-        #                         self._done_event
-        #
-        # Without this non-daemon reporter, the Python interpreter could stop
-        # as soon as main terminates, meaning that the reporter might not
-        # get the chance to report graph completion to the server.
-        # With the non-daemon reporter, the interpreter remains running until
-        # the reporting thread completes.
-        #
-        # The reporter_running event is needed because otherwise it's possible
-        # for self._done_event to be set and main to terminate before the
-        # reporter thread even has time to get started.
-        reporter_running = threading.Event()
-
-        def report_completion():
-            reporter_running.set()
-            try:
-                client.client.task_graph_logs_api.update_task_graph_log(
-                    id=str(self._server_graph_uuid),
-                    namespace=self.namespace,
-                    log=rest_api.TaskGraphLog(status=api_st),
-                )
-            except rest_api.ApiException as apix:
-                warnings.warn(UserWarning(f"Error reporting graph completion: {apix}"))
-
-        threading.Thread(
-            target=report_completion,
+        do_update = utils.ephemeral_thread(
+            client.client.task_graph_logs_api.update_task_graph_log,
             name=self._prefix + "-reporter",
-            daemon=False,
-        ).start()
-        reporter_running.wait()
+        )
+        do_update(
+            id=str(self._server_graph_uuid),
+            namespace=self._namespace,
+            log=rest_api.TaskGraphLog(status=api_st),
+            _request_timeout=_REPORT_TIMEOUT_SECS,
+        )
 
     @property
     def _prefix(self) -> str:
