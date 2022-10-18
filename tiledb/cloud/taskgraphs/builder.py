@@ -97,6 +97,7 @@ class TaskGraphBuilder:
         real_layout = types.Layout.parse(layout)
         return self._add_node(
             _ArrayNode(
+                self,
                 uri,
                 raw_ranges=raw_ranges,
                 buffers=buffers,
@@ -119,7 +120,7 @@ class TaskGraphBuilder:
             If not provided, the caller is required to set this input
             when running the task graph.
         """
-        return self._add_node(_InputNode(name, default_value))
+        return self._add_node(_InputNode(self, name, default_value))
 
     def udf(
         self,
@@ -164,6 +165,7 @@ class TaskGraphBuilder:
         # NOTE: When adding parameters here, also update delayed/_udf.py.
         return self._add_node(
             _UDFNode(
+                self,
                 func,
                 args,
                 include_source=include_source,
@@ -203,6 +205,7 @@ class TaskGraphBuilder:
         """
         return self._add_node(
             _SQLNode(
+                self,
                 query,
                 init_commands,
                 parameters,
@@ -260,6 +263,7 @@ class Node(_codec.TDBJSONEncodable, Generic[_T]):
 
     def __init__(
         self,
+        owner: TaskGraphBuilder,
         name: Optional[str],
         deps: Iterable["Node"],
         *,
@@ -267,9 +271,14 @@ class Node(_codec.TDBJSONEncodable, Generic[_T]):
     ):
         self.id = uuid.uuid4()
         """A unique ID for this node."""
+        self.owner = owner
+        """The Builder this node comes from."""
         self.name = name
-        """The name of the node. If present, the node is unnamed."""
+        """The name of the node. If absent, the node is unnamed."""
         self.deps: AbstractSet[Node] = ordered.FrozenSet(deps)
+        for dp in self.deps:
+            if dp.owner is not self.owner:
+                raise ValueError(f"Node {dp} belongs to a different TaskGraphBuilder.")
         """The nodes that this node depends upon directly."""
         self._fallback_name = fallback_name or type(self).__name__
         """A string to use to generate a display name if the node is unnamed."""
@@ -354,6 +363,7 @@ class _ArrayNode(Node[types.ArrayMultiIndex]):
 
     def __init__(
         self,
+        owner: TaskGraphBuilder,
         uri: ValOrNode[str],
         *,
         raw_ranges: Optional[ValOrNodeSeq[Any]],
@@ -391,7 +401,7 @@ class _ArrayNode(Node[types.ArrayMultiIndex]):
         self.buffers = jsoner.visit(buffers)
         self.layout = layout and layout.to_json()
 
-        super().__init__(name, jsoner.seen_nodes, fallback_name=f"Query {uri}")
+        super().__init__(owner, name, jsoner.seen_nodes, fallback_name=f"Query {uri}")
 
     def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
         ret = super().to_registration_json(existing_names)
@@ -411,7 +421,7 @@ class _ArrayNode(Node[types.ArrayMultiIndex]):
 class _InputNode(Node[_T]):
     """An input Node to a task graph that can be specified at execution time."""
 
-    def __init__(self, name: str, default_value: _T):
+    def __init__(self, owner: TaskGraphBuilder, name: str, default_value: _T):
         """Initializes an input Node.
 
         :param name: The name of this input. Required, since it is used
@@ -421,7 +431,7 @@ class _InputNode(Node[_T]):
             If not provided, the caller is required to set this input
             when running the task graph.
         """
-        super().__init__(name, ())
+        super().__init__(owner, name, ())
         if default_value is _NOTHING:
             self.default_value = _NOTHING
         else:
@@ -446,6 +456,7 @@ class _SQLNode(Node):
 
     def __init__(
         self,
+        owner: TaskGraphBuilder,
         query: str,
         init_commands: Iterable[str],
         parameters: ValOrNodeSeq,
@@ -473,7 +484,7 @@ class _SQLNode(Node):
         self.result_format = result_format
         jsoner = _ParameterEscaper()
         self.parameters = jsoner.visit(parameters)
-        super().__init__(name, jsoner.seen_nodes, fallback_name="SQL query")
+        super().__init__(owner, name, jsoner.seen_nodes, fallback_name="SQL query")
 
     def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
         ret = super().to_registration_json(existing_names)
@@ -491,6 +502,7 @@ class _UDFNode(Node[_T]):
 
     def __init__(
         self,
+        owner: TaskGraphBuilder,
         func: utils.Funcable[_T],
         args: types.Arguments,
         *,
@@ -517,6 +529,7 @@ class _UDFNode(Node[_T]):
                 "UDFs that take array data as input must be run server-side."
             )
         super().__init__(
+            owner,
             name,
             jsoner.seen_nodes,
             fallback_name=utils.func_name(func),
