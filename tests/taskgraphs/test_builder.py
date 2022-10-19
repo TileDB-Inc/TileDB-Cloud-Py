@@ -54,7 +54,7 @@ class TestEscaper(unittest.TestCase):
     def test_sub_nodes(self):
         fake_id = uuid.UUID("6E767267-6F6E-6E61-6776-65796F757570")
         with mock.patch.object(uuid, "uuid4", return_value=fake_id):
-            the_node = builder._InputNode("hello", "world")
+            the_node = builder._InputNode(builder, "hello", "world")
 
         self._do_test(
             inval=["one", "two", the_node],
@@ -549,6 +549,13 @@ class TestBuilder(unittest.TestCase):
             ],
         }
         self.assertEqual(expected, grf._tdb_to_json())
+
+    def test_no_mixing(self):
+        bld_a = builder.TaskGraphBuilder()
+        node_a = bld_a.udf(lambda: None)
+        bld_b = builder.TaskGraphBuilder()
+        with self.assertRaises(ValueError):
+            bld_b.udf(lambda x: x, types.args(node_a))
 
 
 class GenerateNameTest(unittest.TestCase):
