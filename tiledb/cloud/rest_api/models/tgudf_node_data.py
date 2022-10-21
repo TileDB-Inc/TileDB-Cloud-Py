@@ -38,6 +38,7 @@ class TGUDFNodeData(object):
         "source_text": "str",
         "environment": "TGUDFEnvironment",
         "arguments": "list[TGUDFArgument]",
+        "result_format": "ResultFormat",
     }
 
     attribute_map = {
@@ -46,6 +47,7 @@ class TGUDFNodeData(object):
         "source_text": "source_text",
         "environment": "environment",
         "arguments": "arguments",
+        "result_format": "result_format",
     }
 
     def __init__(
@@ -55,6 +57,7 @@ class TGUDFNodeData(object):
         source_text=None,
         environment=None,
         arguments=None,
+        result_format=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """TGUDFNodeData - a model defined in OpenAPI"""  # noqa: E501
@@ -67,6 +70,7 @@ class TGUDFNodeData(object):
         self._source_text = None
         self._environment = None
         self._arguments = None
+        self._result_format = None
         self.discriminator = None
 
         self.registered_udf_name = registered_udf_name
@@ -77,6 +81,8 @@ class TGUDFNodeData(object):
             self.environment = environment
         if arguments is not None:
             self.arguments = arguments
+        if result_format is not None:
+            self.result_format = result_format
 
     @property
     def registered_udf_name(self):
@@ -190,6 +196,27 @@ class TGUDFNodeData(object):
         """
 
         self._arguments = arguments
+
+    @property
+    def result_format(self):
+        """Gets the result_format of this TGUDFNodeData.  # noqa: E501
+
+
+        :return: The result_format of this TGUDFNodeData.  # noqa: E501
+        :rtype: ResultFormat
+        """
+        return self._result_format
+
+    @result_format.setter
+    def result_format(self, result_format):
+        """Sets the result_format of this TGUDFNodeData.
+
+
+        :param result_format: The result_format of this TGUDFNodeData.  # noqa: E501
+        :type: ResultFormat
+        """
+
+        self._result_format = result_format
 
     def to_dict(self):
         """Returns the model properties as a dict"""

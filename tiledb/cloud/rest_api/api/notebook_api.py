@@ -18,8 +18,7 @@ import re  # noqa: F401
 import six
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import ApiTypeError  # noqa: F401
-from tiledb.cloud.rest_api.exceptions import ApiValueError
+from tiledb.cloud.rest_api.exceptions import ApiTypeError, ApiValueError  # noqa: F401
 
 
 class NotebookApi(object):

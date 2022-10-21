@@ -756,7 +756,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **arrays_browser_shared_get**
-> ArrayBrowserData arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
+> ArrayBrowserData arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, shared_to=shared_to)
 
 
 
@@ -813,9 +813,10 @@ exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching arr
 file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
 exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
 file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
+shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of where there arrays were shared to (optional)
 
     try:
-        api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
+        api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, shared_to=shared_to)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_shared_get: %s\n" % e)
@@ -870,9 +871,10 @@ exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching arr
 file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
 exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
 file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
+shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of where there arrays were shared to (optional)
 
     try:
-        api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
+        api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, shared_to=shared_to)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_shared_get: %s\n" % e)
@@ -893,6 +895,7 @@ Name | Type | Description  | Notes
  **file_type** | [**list[str]**](str.md)| file_type to search for, more than one can be included | [optional] 
  **exclude_file_type** | [**list[str]**](str.md)| file_type to exclude matching array in results, more than one can be included | [optional] 
  **file_property** | [**list[str]**](str.md)| file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included | [optional] 
+ **shared_to** | [**list[str]**](str.md)| namespaces to filter results of where there arrays were shared to | [optional] 
 
 ### Return type
 

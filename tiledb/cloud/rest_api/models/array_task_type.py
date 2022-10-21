@@ -32,8 +32,9 @@ class ArrayTaskType(object):
     UDF = "UDF"
     QUERY = "QUERY"
     GENERIC_UDF = "GENERIC_UDF"
+    CLIENT_COMPUTATION = "CLIENT_COMPUTATION"
 
-    allowable_values = [SQL, UDF, QUERY, GENERIC_UDF]  # noqa: E501
+    allowable_values = [SQL, UDF, QUERY, GENERIC_UDF, CLIENT_COMPUTATION]  # noqa: E501
 
     """
     Attributes:

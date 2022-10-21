@@ -13,6 +13,8 @@
 
 from __future__ import absolute_import
 
+# import models into model package
+from tiledb.cloud.rest_api.models.aws_access_credentials import AWSAccessCredentials
 from tiledb.cloud.rest_api.models.activity_event_type import ActivityEventType
 from tiledb.cloud.rest_api.models.array import Array
 from tiledb.cloud.rest_api.models.array_actions import ArrayActions
@@ -38,12 +40,10 @@ from tiledb.cloud.rest_api.models.array_task_log import ArrayTaskLog
 from tiledb.cloud.rest_api.models.array_task_status import ArrayTaskStatus
 from tiledb.cloud.rest_api.models.array_task_type import ArrayTaskType
 from tiledb.cloud.rest_api.models.array_type import ArrayType
+from tiledb.cloud.rest_api.models.asset_locations import AssetLocations
 from tiledb.cloud.rest_api.models.attribute import Attribute
 from tiledb.cloud.rest_api.models.attribute_buffer_header import AttributeBufferHeader
 from tiledb.cloud.rest_api.models.attribute_buffer_size import AttributeBufferSize
-
-# import models into model package
-from tiledb.cloud.rest_api.models.aws_access_credentials import AWSAccessCredentials
 from tiledb.cloud.rest_api.models.datatype import Datatype
 from tiledb.cloud.rest_api.models.dimension import Dimension
 from tiledb.cloud.rest_api.models.dimension_coordinate import DimensionCoordinate
@@ -98,9 +98,9 @@ from tiledb.cloud.rest_api.models.invitation_status import InvitationStatus
 from tiledb.cloud.rest_api.models.invitation_type import InvitationType
 from tiledb.cloud.rest_api.models.last_accessed_array import LastAccessedArray
 from tiledb.cloud.rest_api.models.layout import Layout
-from tiledb.cloud.rest_api.models.max_buffer_sizes import MaxBufferSizes
 from tiledb.cloud.rest_api.models.ml_model_favorite import MLModelFavorite
 from tiledb.cloud.rest_api.models.ml_model_favorites_data import MLModelFavoritesData
+from tiledb.cloud.rest_api.models.max_buffer_sizes import MaxBufferSizes
 from tiledb.cloud.rest_api.models.multi_array_udf import MultiArrayUDF
 from tiledb.cloud.rest_api.models.namespace_actions import NamespaceActions
 from tiledb.cloud.rest_api.models.non_empty_domain import NonEmptyDomain
@@ -134,6 +134,7 @@ from tiledb.cloud.rest_api.models.registered_task_graph_node import (
 from tiledb.cloud.rest_api.models.result_format import ResultFormat
 from tiledb.cloud.rest_api.models.sql_parameters import SQLParameters
 from tiledb.cloud.rest_api.models.sso_provider import SSOProvider
+from tiledb.cloud.rest_api.models.storage_location import StorageLocation
 from tiledb.cloud.rest_api.models.subarray import Subarray
 from tiledb.cloud.rest_api.models.subarray_partitioner import SubarrayPartitioner
 from tiledb.cloud.rest_api.models.subarray_partitioner_current import (
@@ -144,6 +145,11 @@ from tiledb.cloud.rest_api.models.subarray_partitioner_state import (
 )
 from tiledb.cloud.rest_api.models.subarray_ranges import SubarrayRanges
 from tiledb.cloud.rest_api.models.subscription import Subscription
+from tiledb.cloud.rest_api.models.tg_input_node_data import TGInputNodeData
+from tiledb.cloud.rest_api.models.tgsql_node_data import TGSQLNodeData
+from tiledb.cloud.rest_api.models.tgudf_argument import TGUDFArgument
+from tiledb.cloud.rest_api.models.tgudf_environment import TGUDFEnvironment
+from tiledb.cloud.rest_api.models.tgudf_node_data import TGUDFNodeData
 from tiledb.cloud.rest_api.models.task_graph_actions import TaskGraphActions
 from tiledb.cloud.rest_api.models.task_graph_client_node_status import (
     TaskGraphClientNodeStatus,
@@ -156,11 +162,6 @@ from tiledb.cloud.rest_api.models.task_graph_log_status import TaskGraphLogStatu
 from tiledb.cloud.rest_api.models.task_graph_logs_data import TaskGraphLogsData
 from tiledb.cloud.rest_api.models.task_graph_node_metadata import TaskGraphNodeMetadata
 from tiledb.cloud.rest_api.models.task_graph_sharing import TaskGraphSharing
-from tiledb.cloud.rest_api.models.tg_input_node_data import TGInputNodeData
-from tiledb.cloud.rest_api.models.tgsql_node_data import TGSQLNodeData
-from tiledb.cloud.rest_api.models.tgudf_argument import TGUDFArgument
-from tiledb.cloud.rest_api.models.tgudf_environment import TGUDFEnvironment
-from tiledb.cloud.rest_api.models.tgudf_node_data import TGUDFNodeData
 from tiledb.cloud.rest_api.models.tile_db_config import TileDBConfig
 from tiledb.cloud.rest_api.models.token import Token
 from tiledb.cloud.rest_api.models.token_request import TokenRequest

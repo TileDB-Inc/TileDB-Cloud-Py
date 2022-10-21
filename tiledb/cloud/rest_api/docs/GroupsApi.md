@@ -1668,7 +1668,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_shared_groups**
-> GroupBrowserData list_shared_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+> GroupBrowserData list_shared_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to)
 
 
 
@@ -1724,9 +1724,10 @@ tag = ['tag_example'] # list[str] | tag to search for, more than one can be incl
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 flat = True # bool | if true, ignores the nesting of groups and searches all of them (optional)
 parent = 'parent_example' # str | search only the children of the groups with this uuid (optional)
+shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of where there groups were shared to (optional)
 
     try:
-        api_response = api_instance.list_shared_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+        api_response = api_instance.list_shared_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->list_shared_groups: %s\n" % e)
@@ -1780,9 +1781,10 @@ tag = ['tag_example'] # list[str] | tag to search for, more than one can be incl
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 flat = True # bool | if true, ignores the nesting of groups and searches all of them (optional)
 parent = 'parent_example' # str | search only the children of the groups with this uuid (optional)
+shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of where there groups were shared to (optional)
 
     try:
-        api_response = api_instance.list_shared_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+        api_response = api_instance.list_shared_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->list_shared_groups: %s\n" % e)
@@ -1802,6 +1804,7 @@ Name | Type | Description  | Notes
  **exclude_tag** | [**list[str]**](str.md)| tags to exclude matching array in results, more than one can be included | [optional] 
  **flat** | **bool**| if true, ignores the nesting of groups and searches all of them | [optional] 
  **parent** | **str**| search only the children of the groups with this uuid | [optional] 
+ **shared_to** | [**list[str]**](str.md)| namespaces to filter results of where there groups were shared to | [optional] 
 
 ### Return type
 

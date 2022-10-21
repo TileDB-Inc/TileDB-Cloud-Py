@@ -9,10 +9,13 @@ import urllib3
 import tiledb
 from tiledb.cloud import config
 from tiledb.cloud import rest_api
+from tiledb.cloud import rest_api_v2
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud.pool_manager_wrapper import _PoolManagerWrapper
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
+from tiledb.cloud.rest_api_v2 import ApiException as GenApiException
+from tiledb.cloud.rest_api_v2 import models
 
 _T = TypeVar("_T")
 
@@ -499,6 +502,18 @@ class Client:
         self.udf_api = rest_api.UdfApi(client)
         self.user_api = rest_api.UserApi(client)
         self.groups_api = rest_api.GroupsApi(client)
+
+        client_v2 = rest_api.ApiClient(config.config)
+        client_v2.rest_client.pool_manager = _PoolManagerWrapper(
+            client_v2.rest_client.pool_manager
+        )
+
+        self.array_api = rest_api_v2.ArrayApi(client_v2)
+        self.file_api = rest_api_v2.FilesApi(client_v2)
+        self.notebook_api = rest_api_v2.GroupsApi(client_v2)
+        self.organization_api = rest_api_v2.OrganizationApi(client_v2)
+        self.sql_api = rest_api_v2.QueryApi(client_v2)
+        self.task_graph_logs_api = rest_api_v2.UserApi(client_v2)
 
     def set_disable_retries(self):
         self.retry_mode(RetryMode.DISABLED)

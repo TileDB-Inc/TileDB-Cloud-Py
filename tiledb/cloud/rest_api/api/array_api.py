@@ -18,8 +18,7 @@ import re  # noqa: F401
 import six
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import ApiTypeError  # noqa: F401
-from tiledb.cloud.rest_api.exceptions import ApiValueError
+from tiledb.cloud.rest_api.exceptions import ApiTypeError, ApiValueError  # noqa: F401
 
 
 class ArrayApi(object):
@@ -882,6 +881,7 @@ class ArrayApi(object):
         :param list[str] file_type: file_type to search for, more than one can be included
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
         :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+        :param list[str] shared_to: namespaces to filter results of where there arrays were shared to
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -917,6 +917,7 @@ class ArrayApi(object):
         :param list[str] file_type: file_type to search for, more than one can be included
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
         :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+        :param list[str] shared_to: namespaces to filter results of where there arrays were shared to
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -945,6 +946,7 @@ class ArrayApi(object):
             "file_type",
             "exclude_file_type",
             "file_property",
+            "shared_to",
         ]
         all_params.extend(
             [
@@ -1038,6 +1040,14 @@ class ArrayApi(object):
                 ("file_property", local_var_params["file_property"])
             )  # noqa: E501
             collection_formats["file_property"] = "multi"  # noqa: E501
+        if (
+            "shared_to" in local_var_params
+            and local_var_params["shared_to"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("shared_to", local_var_params["shared_to"])
+            )  # noqa: E501
+            collection_formats["shared_to"] = "multi"  # noqa: E501
 
         header_params = {}
 
