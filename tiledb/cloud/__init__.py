@@ -22,6 +22,11 @@ from tiledb.cloud.client import organizations
 from tiledb.cloud.client import user_profile
 from tiledb.cloud.file import create_file
 from tiledb.cloud.file import export_file
+from tiledb.cloud.group import group_activity
+from tiledb.cloud.group import deregister_group
+from tiledb.cloud.group import register_group
+from tiledb.cloud.group import share_group
+from tiledb.cloud.group import unshare_group
 from tiledb.cloud.notebook import download_notebook_contents
 from tiledb.cloud.notebook import download_notebook_to_file
 from tiledb.cloud.notebook import rename_notebook
@@ -58,6 +63,14 @@ __all__ = (
     "list_arrays",
     "list_public_arrays",
     "list_shared_arrays",
+    "list_groups",
+    "list_public_groups",
+    "list_shared_groups",
+    "group_activity",
+    "deregister_group",
+    "register_group",
+    "share_group",
+    "unshare_group",
     "login",
     "organization",
     "organizations",
