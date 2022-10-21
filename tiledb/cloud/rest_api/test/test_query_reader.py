@@ -70,12 +70,12 @@ class TestQueryReader(unittest.TestCase):
                                 data_bytes=56,
                             )
                         ],
-                        current=tiledb.cloud.rest_api.models.subarray_partitioner_current.SubarrayPartitioner_current(
+                        current=tiledb.cloud.rest_api.models.subarray_partitioner_current.SubarrayPartitionerCurrent(
                             start=56,
                             end=56,
                             split_multi_range=True,
                         ),
-                        state=tiledb.cloud.rest_api.models.subarray_partitioner_state.SubarrayPartitioner_state(
+                        state=tiledb.cloud.rest_api.models.subarray_partitioner_state.SubarrayPartitionerState(
                             start=56,
                             end=56,
                             single_range=[

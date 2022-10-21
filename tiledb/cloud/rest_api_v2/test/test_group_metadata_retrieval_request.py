@@ -38,7 +38,7 @@ class TestGroupMetadataRetrievalRequest(unittest.TestCase):
             return GroupMetadataRetrievalRequest(
                 config = tiledb.cloud.rest_api_v2.models.tile_db_config.TileDBConfig(
                     entries = [
-                        tiledb.cloud.rest_api_v2.models.tile_db_config_entries.TileDBConfig_entries(
+                        tiledb.cloud.rest_api_v2.models.tile_db_config_entries.TileDBConfigEntries(
                             key = '0', 
                             value = '0', )
                         ], )

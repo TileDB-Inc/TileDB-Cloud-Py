@@ -43,7 +43,7 @@ class TestAccessCredentialsData(unittest.TestCase):
                         provider_default = True, 
                         created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                         updated_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
-                        credential = tiledb.cloud.rest_api_v2.models.access_credential_credential.AccessCredential_credential(
+                        credential = tiledb.cloud.rest_api_v2.models.AccessCredentialCredential(
                             aws = tiledb.cloud.rest_api_v2.models.aws_credential.AWSCredential(
                                 access_key_id = '0', 
                                 secret_access_key = '0', 

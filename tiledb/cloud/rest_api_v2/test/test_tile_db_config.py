@@ -33,11 +33,11 @@ class TestTileDBConfig(unittest.TestCase):
             include_option is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # model = tiledb.cloud.rest_api_v2.models.tile_db_config.TileDBConfig()  # noqa: E501
+        # model = rest_api_v2.models.tile_db_config.TileDBConfig()  # noqa: E501
         if include_optional :
             return TileDBConfig(
                 entries = [
-                    tiledb.cloud.rest_api_v2.models.tile_db_config_entries.TileDBConfig_entries(
+                    rest_api_v2.models.tile_db_config_entries.TileDBConfigEntries(
                         key = '0', 
                         value = '0', )
                     ]

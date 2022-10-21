@@ -36,14 +36,18 @@ class TGUDFEnvironment(object):
         "language": "UDFLanguage",
         "language_version": "str",
         "image_name": "str",
+        "namespace": "str",
         "resource_class": "str",
+        "run_client_side": "bool",
     }
 
     attribute_map = {
         "language": "language",
         "language_version": "language_version",
         "image_name": "image_name",
+        "namespace": "namespace",
         "resource_class": "resource_class",
+        "run_client_side": "run_client_side",
     }
 
     def __init__(
@@ -51,7 +55,9 @@ class TGUDFEnvironment(object):
         language=None,
         language_version=None,
         image_name=None,
+        namespace=None,
         resource_class=None,
+        run_client_side=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """TGUDFEnvironment - a model defined in OpenAPI"""  # noqa: E501
@@ -62,7 +68,9 @@ class TGUDFEnvironment(object):
         self._language = None
         self._language_version = None
         self._image_name = None
+        self._namespace = None
         self._resource_class = None
+        self._run_client_side = None
         self.discriminator = None
 
         if language is not None:
@@ -71,8 +79,11 @@ class TGUDFEnvironment(object):
             self.language_version = language_version
         if image_name is not None:
             self.image_name = image_name
+        self.namespace = namespace
         if resource_class is not None:
             self.resource_class = resource_class
+        if run_client_side is not None:
+            self.run_client_side = run_client_side
 
     @property
     def language(self):
@@ -142,6 +153,29 @@ class TGUDFEnvironment(object):
         self._image_name = image_name
 
     @property
+    def namespace(self):
+        """Gets the namespace of this TGUDFEnvironment.  # noqa: E501
+
+        If set, the non-default namespace to execute this UDF under (and to query any Array Nodes that are used as inputs to this UDF).   # noqa: E501
+
+        :return: The namespace of this TGUDFEnvironment.  # noqa: E501
+        :rtype: str
+        """
+        return self._namespace
+
+    @namespace.setter
+    def namespace(self, namespace):
+        """Sets the namespace of this TGUDFEnvironment.
+
+        If set, the non-default namespace to execute this UDF under (and to query any Array Nodes that are used as inputs to this UDF).   # noqa: E501
+
+        :param namespace: The namespace of this TGUDFEnvironment.  # noqa: E501
+        :type: str
+        """
+
+        self._namespace = namespace
+
+    @property
     def resource_class(self):
         """Gets the resource_class of this TGUDFEnvironment.  # noqa: E501
 
@@ -163,6 +197,29 @@ class TGUDFEnvironment(object):
         """
 
         self._resource_class = resource_class
+
+    @property
+    def run_client_side(self):
+        """Gets the run_client_side of this TGUDFEnvironment.  # noqa: E501
+
+        A hint that, if possible, this function should be executed on the client side rather than on the server. Registered UDFs and functions which take arrays as inputs can never be executed client-side. If the client’s environment is incompatible, or the client does not support client-side execution, the function will be executed on the server.   # noqa: E501
+
+        :return: The run_client_side of this TGUDFEnvironment.  # noqa: E501
+        :rtype: bool
+        """
+        return self._run_client_side
+
+    @run_client_side.setter
+    def run_client_side(self, run_client_side):
+        """Sets the run_client_side of this TGUDFEnvironment.
+
+        A hint that, if possible, this function should be executed on the client side rather than on the server. Registered UDFs and functions which take arrays as inputs can never be executed client-side. If the client’s environment is incompatible, or the client does not support client-side execution, the function will be executed on the server.   # noqa: E501
+
+        :param run_client_side: The run_client_side of this TGUDFEnvironment.  # noqa: E501
+        :type: bool
+        """
+
+        self._run_client_side = run_client_side
 
     def to_dict(self):
         """Returns the model properties as a dict"""

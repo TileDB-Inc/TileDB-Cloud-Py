@@ -37,18 +37,18 @@ class TestGroupContentsRetrievalResponse(unittest.TestCase):
         if include_optional :
             return GroupContentsRetrievalResponse(
                 members = [
-                    rest_api_v2.models.group_member.GroupMember(
+                    tiledb.cloud.rest_api_v2.models.GroupMember(
                         name = '0', 
                         uri = '0', 
                         type = 'GROUP', )
                     ], 
-                metadata = rest_api_v2.models.metadata.Metadata(
+                metadata = tiledb.cloud.rest_api_v2.models.Metadata(
                     entries = [
-                        rest_api_v2.models.metadata_entry.MetadataEntry(
+                        tiledb.cloud.rest_api_v2.models.MetadataEntry(
                             key = '0', 
                             type = '0', 
                             value_num = 56, 
-                            value = rest_api_v2.models.value.value(), 
+                            value = 1, 
                             _del = True, )
                         ], )
             )

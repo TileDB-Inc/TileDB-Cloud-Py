@@ -38,11 +38,11 @@ class TestGroupCreationRequest(unittest.TestCase):
             return GroupCreationRequest(
                 config = tiledb.cloud.rest_api_v2.models.tile_db_config.TileDBConfig(
                     entries = [
-                        tiledb.cloud.rest_api_v2.models.tile_db_config_entries.TileDBConfig_entries(
+                        tiledb.cloud.rest_api_v2.models.tile_db_config_entries.TileDBConfigEntries(
                             key = '0', 
                             value = '0', )
                         ], ), 
-                group_details = tiledb.cloud.rest_api_v2.models.group_creation_request_group_details.GroupCreationRequest_group_details(
+                group_details = tiledb.cloud.rest_api_v2.models.group_creation_request_group_details.GroupCreationRequestGroupDetails(
                     description = '0', 
                     name = '0', 
                     uri = '0', 
@@ -55,7 +55,7 @@ class TestGroupCreationRequest(unittest.TestCase):
             )
         else :
             return GroupCreationRequest(
-                group_details = tiledb.cloud.rest_api_v2.models.group_creation_request_group_details.GroupCreationRequest_group_details(
+                group_details = tiledb.cloud.rest_api_v2.models.group_creation_request_group_details.GroupCreationRequestGroupDetails(
                     description = '0', 
                     name = '0', 
                     uri = '0', 

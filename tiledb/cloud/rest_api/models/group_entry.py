@@ -32,26 +32,52 @@ class GroupEntry(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"group": "GroupInfo", "array": "ArrayInfo"}
+    openapi_types = {"member_id": "str", "group": "GroupInfo", "array": "ArrayInfo"}
 
-    attribute_map = {"group": "group", "array": "array"}
+    attribute_map = {"member_id": "member_id", "group": "group", "array": "array"}
 
     def __init__(
-        self, group=None, array=None, local_vars_configuration=None
+        self, member_id=None, group=None, array=None, local_vars_configuration=None
     ):  # noqa: E501
         """GroupEntry - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
+        self._member_id = None
         self._group = None
         self._array = None
         self.discriminator = None
 
+        if member_id is not None:
+            self.member_id = member_id
         if group is not None:
             self.group = group
         if array is not None:
             self.array = array
+
+    @property
+    def member_id(self):
+        """Gets the member_id of this GroupEntry.  # noqa: E501
+
+        The unique member id for the entry  # noqa: E501
+
+        :return: The member_id of this GroupEntry.  # noqa: E501
+        :rtype: str
+        """
+        return self._member_id
+
+    @member_id.setter
+    def member_id(self, member_id):
+        """Sets the member_id of this GroupEntry.
+
+        The unique member id for the entry  # noqa: E501
+
+        :param member_id: The member_id of this GroupEntry.  # noqa: E501
+        :type: str
+        """
+
+        self._member_id = member_id
 
     @property
     def group(self):

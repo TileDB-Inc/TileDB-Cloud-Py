@@ -33,13 +33,13 @@ class TestSubarrayPartitioner(unittest.TestCase):
             include_option is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # model = tiledb.cloud.rest_api_v2.models.subarray_partitioner.SubarrayPartitioner()  # noqa: E501
+        # model = rest_api_v2.models.subarray_partitioner.SubarrayPartitioner()  # noqa: E501
         if include_optional :
             return SubarrayPartitioner(
-                subarray = tiledb.cloud.rest_api_v2.models.subarray.Subarray(
+                subarray = rest_api_v2.models.subarray.Subarray(
                     layout = 'row-major', 
                     ranges = [
-                        tiledb.cloud.rest_api_v2.models.subarray_ranges.SubarrayRanges(
+                        rest_api_v2.models.subarray_ranges.SubarrayRanges(
                             type = 'INT32', 
                             has_default_range = True, 
                             buffer = [
@@ -53,16 +53,16 @@ class TestSubarrayPartitioner(unittest.TestCase):
                                 ], )
                         ], ), 
                 budget = [
-                    tiledb.cloud.rest_api_v2.models.attribute_buffer_size.AttributeBufferSize(
+                    rest_api_v2.models.attribute_buffer_size.AttributeBufferSize(
                         attribute = '0', 
                         offset_bytes = 56, 
                         data_bytes = 56, )
                     ], 
-                current = tiledb.cloud.rest_api_v2.models.subarray_partitioner_current.SubarrayPartitioner_current(
-                    subarray = tiledb.cloud.rest_api_v2.models.subarray.Subarray(
+                current = rest_api_v2.models.subarray_partitioner_current.SubarrayPartitionerCurrent(
+                    subarray = rest_api_v2.models.subarray.Subarray(
                         layout = 'row-major', 
                         ranges = [
-                            tiledb.cloud.rest_api_v2.models.subarray_ranges.SubarrayRanges(
+                            rest_api_v2.models.subarray_ranges.SubarrayRanges(
                                 type = 'INT32', 
                                 has_default_range = True, 
                                 buffer = [
@@ -78,14 +78,14 @@ class TestSubarrayPartitioner(unittest.TestCase):
                     start = 56, 
                     end = 56, 
                     split_multi_range = True, ), 
-                state = tiledb.cloud.rest_api_v2.models.subarray_partitioner_state.SubarrayPartitioner_state(
+                state = rest_api_v2.models.subarray_partitioner_state.SubarrayPartitionerState(
                     start = 56, 
                     end = 56, 
                     single_range = [
-                        tiledb.cloud.rest_api_v2.models.subarray.Subarray(
+                        rest_api_v2.models.subarray.Subarray(
                             layout = 'row-major', 
                             ranges = [
-                                tiledb.cloud.rest_api_v2.models.subarray_ranges.SubarrayRanges(
+                                rest_api_v2.models.subarray_ranges.SubarrayRanges(
                                     type = 'INT32', 
                                     has_default_range = True, 
                                     buffer = [
@@ -100,7 +100,7 @@ class TestSubarrayPartitioner(unittest.TestCase):
                                 ], )
                         ], 
                     multi_range = [
-                        tiledb.cloud.rest_api_v2.models.subarray.Subarray()
+                        rest_api_v2.models.subarray.Subarray()
                         ], ), 
                 memory_budget = 56, 
                 memory_budget_var = 56

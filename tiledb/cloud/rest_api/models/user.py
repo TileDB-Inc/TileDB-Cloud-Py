@@ -49,7 +49,8 @@ class User(object):
         "enabled_features": "list[str]",
         "unpaid_subscription": "bool",
         "default_s3_path": "str",
-        "default_s3_path_credentials_name": "str",
+        "default_s3_path_credentials_name": "object",
+        "asset_locations": "AssetLocations",
         "default_namespace_charged": "str",
     }
 
@@ -71,6 +72,7 @@ class User(object):
         "unpaid_subscription": "unpaid_subscription",
         "default_s3_path": "default_s3_path",
         "default_s3_path_credentials_name": "default_s3_path_credentials_name",
+        "asset_locations": "asset_locations",
         "default_namespace_charged": "default_namespace_charged",
     }
 
@@ -93,6 +95,7 @@ class User(object):
         unpaid_subscription=None,
         default_s3_path=None,
         default_s3_path_credentials_name=None,
+        asset_locations=None,
         default_namespace_charged=None,
         local_vars_configuration=None,
     ):  # noqa: E501
@@ -118,6 +121,7 @@ class User(object):
         self._unpaid_subscription = None
         self._default_s3_path = None
         self._default_s3_path_credentials_name = None
+        self._asset_locations = None
         self._default_namespace_charged = None
         self.discriminator = None
 
@@ -154,6 +158,8 @@ class User(object):
             self.default_s3_path = default_s3_path
         if default_s3_path_credentials_name is not None:
             self.default_s3_path_credentials_name = default_s3_path_credentials_name
+        if asset_locations is not None:
+            self.asset_locations = asset_locations
         if default_namespace_charged is not None:
             self.default_namespace_charged = default_namespace_charged
 
@@ -550,7 +556,7 @@ class User(object):
     def default_s3_path(self):
         """Gets the default_s3_path of this User.  # noqa: E501
 
-        default S3 path to store newly created notebooks  # noqa: E501
+        The default location to store newly-created notebooks and other assets like UDFs. The name `default_s3_path` is a legacy holdover; it may refer to any supported storage location.   # noqa: E501
 
         :return: The default_s3_path of this User.  # noqa: E501
         :rtype: str
@@ -561,7 +567,7 @@ class User(object):
     def default_s3_path(self, default_s3_path):
         """Sets the default_s3_path of this User.
 
-        default S3 path to store newly created notebooks  # noqa: E501
+        The default location to store newly-created notebooks and other assets like UDFs. The name `default_s3_path` is a legacy holdover; it may refer to any supported storage location.   # noqa: E501
 
         :param default_s3_path: The default_s3_path of this User.  # noqa: E501
         :type: str
@@ -573,10 +579,10 @@ class User(object):
     def default_s3_path_credentials_name(self):
         """Gets the default_s3_path_credentials_name of this User.  # noqa: E501
 
-        Default S3 path credentials name is the credentials name to use along with default_s3_path  # noqa: E501
+        The name of the credentials used to create and access files in the `default_s3_path`, if needed.   # noqa: E501
 
         :return: The default_s3_path_credentials_name of this User.  # noqa: E501
-        :rtype: str
+        :rtype: object
         """
         return self._default_s3_path_credentials_name
 
@@ -584,13 +590,34 @@ class User(object):
     def default_s3_path_credentials_name(self, default_s3_path_credentials_name):
         """Sets the default_s3_path_credentials_name of this User.
 
-        Default S3 path credentials name is the credentials name to use along with default_s3_path  # noqa: E501
+        The name of the credentials used to create and access files in the `default_s3_path`, if needed.   # noqa: E501
 
         :param default_s3_path_credentials_name: The default_s3_path_credentials_name of this User.  # noqa: E501
-        :type: str
+        :type: object
         """
 
         self._default_s3_path_credentials_name = default_s3_path_credentials_name
+
+    @property
+    def asset_locations(self):
+        """Gets the asset_locations of this User.  # noqa: E501
+
+
+        :return: The asset_locations of this User.  # noqa: E501
+        :rtype: AssetLocations
+        """
+        return self._asset_locations
+
+    @asset_locations.setter
+    def asset_locations(self, asset_locations):
+        """Sets the asset_locations of this User.
+
+
+        :param asset_locations: The asset_locations of this User.  # noqa: E501
+        :type: AssetLocations
+        """
+
+        self._asset_locations = asset_locations
 
     @property
     def default_namespace_charged(self):

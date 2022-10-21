@@ -128,11 +128,11 @@ class TestQuery(unittest.TestCase):
                                     offset_bytes = 56, 
                                     data_bytes = 56, )
                                 ], 
-                            current = tiledb.cloud.rest_api_v2.models.subarray_partitioner_current.SubarrayPartitioner_current(
+                            current = tiledb.cloud.rest_api_v2.models.SubarrayPartitionerCurrent(
                                 start = 56, 
                                 end = 56, 
                                 split_multi_range = True, ), 
-                            state = tiledb.cloud.rest_api_v2.models.subarray_partitioner_state.SubarrayPartitioner_state(
+                            state = tiledb.cloud.rest_api_v2.models.SubarrayPartitionerState(
                                 start = 56, 
                                 end = 56, 
                                 single_range = [

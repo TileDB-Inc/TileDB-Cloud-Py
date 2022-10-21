@@ -92,7 +92,7 @@ class TestQuery(unittest.TestCase):
                                 end=56,
                                 split_multi_range=True,
                             ),
-                            state=tiledb.cloud.rest_api.models.subarray_partitioner_state.SubarrayPartitioner_state(
+                            state=tiledb.cloud.rest_api.models.subarray_partitioner_state.SubarrayPartitionerState(
                                 start=56,
                                 end=56,
                                 single_range=[
