@@ -63,6 +63,7 @@ templates_path = ["_templates"]
 exclude_patterns = [
     "_autosummary/tiledb.test*",
     "_autosummary/tiledb.cloud.rest_api.test*",
+    "_autosummary/tiledb.cloud.rest_api_v2.test*",
     "_autosummary/tiledb.version.rst",
     "_autosummary/tiledb.array*",
     "_autosummary/tiledb.core*",

@@ -28,6 +28,7 @@ from tiledb.cloud.notebook import rename_notebook
 from tiledb.cloud.notebook import upload_notebook_contents
 from tiledb.cloud.notebook import upload_notebook_from_file
 from tiledb.cloud.rest_api import models
+# from tiledb.cloud.rest_api_v2 import models
 from tiledb.cloud.tasks import last_sql_task
 from tiledb.cloud.tasks import last_udf_task
 from tiledb.cloud.tasks import task
