@@ -48,13 +48,15 @@ download_generator() {
 }
 
 generate_api() {
-  SPEC="$1"
+  RAW_SPEC="$1"
   PACKAGE_NAME="$2"
   PACKAGE_NAME_SLASHY="${PACKAGE_NAME//.//}"
 
   TARGET_PATH="$ROOT/tiledb/cloud"
 
   TEMP_PATH="$(mktemp -d /tmp/api_gen.XXXXXX)"
+
+  SPEC="$("$ROOT/generator/rewrite_urls.py" "$RAW_SPEC")"
 
   ################################################################################
   # minimize output to what we want
@@ -144,7 +146,6 @@ index 267385d..6d244a0 100644
              return obj
          elif isinstance(obj, list):
 EOF
-
 }
 
 ABSPATH="$(realpath "$1")"
