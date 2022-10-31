@@ -168,7 +168,7 @@ class NotebooksApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/{namespace}/{array}/end_timestamps",
+            "/v1/notebooks/{namespace}/{array}/end_timestamps",
             "GET",
             path_params,
             query_params,

@@ -38,6 +38,7 @@ from tiledb.cloud.rest_api.models.array_task_log import ArrayTaskLog
 from tiledb.cloud.rest_api.models.array_task_status import ArrayTaskStatus
 from tiledb.cloud.rest_api.models.array_task_type import ArrayTaskType
 from tiledb.cloud.rest_api.models.array_type import ArrayType
+from tiledb.cloud.rest_api.models.asset_locations import AssetLocations
 from tiledb.cloud.rest_api.models.attribute import Attribute
 from tiledb.cloud.rest_api.models.attribute_buffer_header import AttributeBufferHeader
 from tiledb.cloud.rest_api.models.attribute_buffer_size import AttributeBufferSize
@@ -134,6 +135,7 @@ from tiledb.cloud.rest_api.models.registered_task_graph_node import (
 from tiledb.cloud.rest_api.models.result_format import ResultFormat
 from tiledb.cloud.rest_api.models.sql_parameters import SQLParameters
 from tiledb.cloud.rest_api.models.sso_provider import SSOProvider
+from tiledb.cloud.rest_api.models.storage_location import StorageLocation
 from tiledb.cloud.rest_api.models.subarray import Subarray
 from tiledb.cloud.rest_api.models.subarray_partitioner import SubarrayPartitioner
 from tiledb.cloud.rest_api.models.subarray_partitioner_current import (

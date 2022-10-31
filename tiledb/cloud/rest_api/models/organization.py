@@ -47,6 +47,7 @@ class Organization(object):
         "unpaid_subscription": "bool",
         "default_s3_path": "str",
         "default_s3_path_credentials_name": "str",
+        "asset_locations": "AssetLocations",
         "stripe_connect": "bool",
     }
 
@@ -65,6 +66,7 @@ class Organization(object):
         "unpaid_subscription": "unpaid_subscription",
         "default_s3_path": "default_s3_path",
         "default_s3_path_credentials_name": "default_s3_path_credentials_name",
+        "asset_locations": "asset_locations",
         "stripe_connect": "stripe_connect",
     }
 
@@ -84,6 +86,7 @@ class Organization(object):
         unpaid_subscription=None,
         default_s3_path=None,
         default_s3_path_credentials_name=None,
+        asset_locations=None,
         stripe_connect=None,
         local_vars_configuration=None,
     ):  # noqa: E501
@@ -106,6 +109,7 @@ class Organization(object):
         self._unpaid_subscription = None
         self._default_s3_path = None
         self._default_s3_path_credentials_name = None
+        self._asset_locations = None
         self._stripe_connect = None
         self.discriminator = None
 
@@ -118,8 +122,7 @@ class Organization(object):
             self.created_at = created_at
         if updated_at is not None:
             self.updated_at = updated_at
-        if logo is not None:
-            self.logo = logo
+        self.logo = logo
         self.description = description
         if users is not None:
             self.users = users
@@ -135,6 +138,8 @@ class Organization(object):
             self.default_s3_path = default_s3_path
         if default_s3_path_credentials_name is not None:
             self.default_s3_path_credentials_name = default_s3_path_credentials_name
+        if asset_locations is not None:
+            self.asset_locations = asset_locations
         if stripe_connect is not None:
             self.stripe_connect = stripe_connect
 
@@ -444,7 +449,7 @@ class Organization(object):
     def default_s3_path(self):
         """Gets the default_s3_path of this Organization.  # noqa: E501
 
-        default S3 path to store newly created notebooks  # noqa: E501
+        The default location to store newly-created notebooks and other assets like UDFs. The name `default_s3_path` is a legacy holdover; it may refer to any supported storage location.   # noqa: E501
 
         :return: The default_s3_path of this Organization.  # noqa: E501
         :rtype: str
@@ -455,7 +460,7 @@ class Organization(object):
     def default_s3_path(self, default_s3_path):
         """Sets the default_s3_path of this Organization.
 
-        default S3 path to store newly created notebooks  # noqa: E501
+        The default location to store newly-created notebooks and other assets like UDFs. The name `default_s3_path` is a legacy holdover; it may refer to any supported storage location.   # noqa: E501
 
         :param default_s3_path: The default_s3_path of this Organization.  # noqa: E501
         :type: str
@@ -467,7 +472,7 @@ class Organization(object):
     def default_s3_path_credentials_name(self):
         """Gets the default_s3_path_credentials_name of this Organization.  # noqa: E501
 
-        Default S3 path credentials name is the credentials name to use along with default_s3_path  # noqa: E501
+        The name of the credentials used to create and access files in the `default_s3_path`, if needed.   # noqa: E501
 
         :return: The default_s3_path_credentials_name of this Organization.  # noqa: E501
         :rtype: str
@@ -478,13 +483,34 @@ class Organization(object):
     def default_s3_path_credentials_name(self, default_s3_path_credentials_name):
         """Sets the default_s3_path_credentials_name of this Organization.
 
-        Default S3 path credentials name is the credentials name to use along with default_s3_path  # noqa: E501
+        The name of the credentials used to create and access files in the `default_s3_path`, if needed.   # noqa: E501
 
         :param default_s3_path_credentials_name: The default_s3_path_credentials_name of this Organization.  # noqa: E501
         :type: str
         """
 
         self._default_s3_path_credentials_name = default_s3_path_credentials_name
+
+    @property
+    def asset_locations(self):
+        """Gets the asset_locations of this Organization.  # noqa: E501
+
+
+        :return: The asset_locations of this Organization.  # noqa: E501
+        :rtype: AssetLocations
+        """
+        return self._asset_locations
+
+    @asset_locations.setter
+    def asset_locations(self, asset_locations):
+        """Sets the asset_locations of this Organization.
+
+
+        :param asset_locations: The asset_locations of this Organization.  # noqa: E501
+        :type: AssetLocations
+        """
+
+        self._asset_locations = asset_locations
 
     @property
     def stripe_connect(self):

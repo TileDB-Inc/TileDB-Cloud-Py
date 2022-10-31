@@ -39,6 +39,7 @@ class TestGroupContents(unittest.TestCase):
             return GroupContents(
                 entries=[
                     tiledb.cloud.rest_api.models.group_entry.GroupEntry(
+                        member_id="0",
                         group=tiledb.cloud.rest_api.models.group_info.GroupInfo(
                             id="00000000-0000-0000-0000-000000000000",
                             namespace="user1",

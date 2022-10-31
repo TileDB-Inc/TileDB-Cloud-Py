@@ -30,8 +30,9 @@ class Querytype(object):
     """
     READ = "READ"
     WRITE = "WRITE"
+    DELETE = "DELETE"
 
-    allowable_values = [READ, WRITE]  # noqa: E501
+    allowable_values = [READ, WRITE, DELETE]  # noqa: E501
 
     """
     Attributes:

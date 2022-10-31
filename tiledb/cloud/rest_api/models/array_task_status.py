@@ -32,18 +32,20 @@ class ArrayTaskStatus(object):
     FAILED = "FAILED"
     COMPLETED = "COMPLETED"
     RUNNING = "RUNNING"
-    DENIED = "DENIED"
+    RESOURCES_UNAVAILABLE = "RESOURCES_UNAVAILABLE"
     UNKNOWN = "UNKNOWN"
     CANCELLED = "CANCELLED"
+    DENIED = "DENIED"
 
     allowable_values = [
         QUEUED,
         FAILED,
         COMPLETED,
         RUNNING,
-        DENIED,
+        RESOURCES_UNAVAILABLE,
         UNKNOWN,
         CANCELLED,
+        DENIED,
     ]  # noqa: E501
 
     """

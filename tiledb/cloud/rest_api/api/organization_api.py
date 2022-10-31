@@ -161,7 +161,7 @@ class OrganizationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws",
+            "/v1/credentials/{namespace}/aws",
             "POST",
             path_params,
             query_params,
@@ -305,7 +305,7 @@ class OrganizationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}/user",
+            "/v1/organizations/{organization}/user",
             "POST",
             path_params,
             query_params,
@@ -430,7 +430,7 @@ class OrganizationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws",
+            "/v1/credentials/{namespace}/aws",
             "GET",
             path_params,
             query_params,
@@ -569,7 +569,7 @@ class OrganizationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws/{name}",
+            "/v1/credentials/{namespace}/aws/{name}",
             "GET",
             path_params,
             query_params,
@@ -699,7 +699,7 @@ class OrganizationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/organization",
+            "/v1/organization",
             "POST",
             path_params,
             query_params,
@@ -836,7 +836,7 @@ class OrganizationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws/{name}",
+            "/v1/credentials/{namespace}/aws/{name}",
             "DELETE",
             path_params,
             query_params,
@@ -959,7 +959,7 @@ class OrganizationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}",
+            "/v1/organizations/{organization}",
             "DELETE",
             path_params,
             query_params,
@@ -1098,7 +1098,7 @@ class OrganizationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}/{username}",
+            "/v1/organizations/{organization}/{username}",
             "DELETE",
             path_params,
             query_params,
@@ -1207,7 +1207,7 @@ class OrganizationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations",
+            "/v1/organizations",
             "GET",
             path_params,
             query_params,
@@ -1330,7 +1330,7 @@ class OrganizationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}",
+            "/v1/organizations/{organization}",
             "GET",
             path_params,
             query_params,
@@ -1467,7 +1467,7 @@ class OrganizationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}/{username}",
+            "/v1/organizations/{organization}/{username}",
             "GET",
             path_params,
             query_params,
@@ -1625,7 +1625,7 @@ class OrganizationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws/{name}",
+            "/v1/credentials/{namespace}/aws/{name}",
             "PATCH",
             path_params,
             query_params,
@@ -1771,7 +1771,7 @@ class OrganizationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}",
+            "/v1/organizations/{organization}",
             "PATCH",
             path_params,
             query_params,
@@ -1929,7 +1929,7 @@ class OrganizationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}/{username}",
+            "/v1/organizations/{organization}/{username}",
             "PATCH",
             path_params,
             query_params,

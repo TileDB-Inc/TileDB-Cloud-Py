@@ -152,7 +152,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/favorites/{namespace}/{name}",
+            "/v1/arrays/favorites/{namespace}/{name}",
             "POST",
             path_params,
             query_params,
@@ -289,7 +289,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/ml_models/favorites/{namespace}/{name}",
+            "/v1/ml_models/favorites/{namespace}/{name}",
             "POST",
             path_params,
             query_params,
@@ -426,7 +426,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/favorites/{namespace}/{name}",
+            "/v1/notebooks/favorites/{namespace}/{name}",
             "POST",
             path_params,
             query_params,
@@ -561,7 +561,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udfs/favorites/{namespace}/{name}",
+            "/v1/udfs/favorites/{namespace}/{name}",
             "POST",
             path_params,
             query_params,
@@ -698,7 +698,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/favorites/{namespace}/{name}",
+            "/v1/arrays/favorites/{namespace}/{name}",
             "DELETE",
             path_params,
             query_params,
@@ -835,7 +835,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/ml_models/favorites/{namespace}/{name}",
+            "/v1/ml_models/favorites/{namespace}/{name}",
             "DELETE",
             path_params,
             query_params,
@@ -972,7 +972,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/favorites/{namespace}/{name}",
+            "/v1/notebooks/favorites/{namespace}/{name}",
             "DELETE",
             path_params,
             query_params,
@@ -1109,7 +1109,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udfs/favorites/{namespace}/{name}",
+            "/v1/udfs/favorites/{namespace}/{name}",
             "DELETE",
             path_params,
             query_params,
@@ -1246,7 +1246,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/favorites/{namespace}/{name}",
+            "/v1/arrays/favorites/{namespace}/{name}",
             "GET",
             path_params,
             query_params,
@@ -1383,7 +1383,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/ml_models/favorites/{namespace}/{name}",
+            "/v1/ml_models/favorites/{namespace}/{name}",
             "GET",
             path_params,
             query_params,
@@ -1520,7 +1520,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/favorites/{namespace}/{name}",
+            "/v1/notebooks/favorites/{namespace}/{name}",
             "GET",
             path_params,
             query_params,
@@ -1655,7 +1655,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udfs/favorites/{namespace}/{name}",
+            "/v1/udfs/favorites/{namespace}/{name}",
             "GET",
             path_params,
             query_params,
@@ -1778,7 +1778,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/favorites",
+            "/v1/arrays/favorites",
             "GET",
             path_params,
             query_params,
@@ -1887,7 +1887,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/favorites/uuids",
+            "/v1/arrays/favorites/uuids",
             "GET",
             path_params,
             query_params,
@@ -2010,7 +2010,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/ml_models/favorites",
+            "/v1/ml_models/favorites",
             "GET",
             path_params,
             query_params,
@@ -2121,7 +2121,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/ml_models/favorites/uuids",
+            "/v1/ml_models/favorites/uuids",
             "GET",
             path_params,
             query_params,
@@ -2253,7 +2253,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/favorites",
+            "/v1/notebooks/favorites",
             "GET",
             path_params,
             query_params,
@@ -2364,7 +2364,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/favorites/uuids",
+            "/v1/notebooks/favorites/uuids",
             "GET",
             path_params,
             query_params,
@@ -2487,7 +2487,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udfs/favorites",
+            "/v1/udfs/favorites",
             "GET",
             path_params,
             query_params,
@@ -2596,7 +2596,7 @@ class FavoritesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udfs/favorites/uuids",
+            "/v1/udfs/favorites/uuids",
             "GET",
             path_params,
             query_params,

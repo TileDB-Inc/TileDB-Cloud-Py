@@ -160,7 +160,7 @@ class TasksApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/sql/{namespace}",
+            "/v1/sql/{namespace}",
             "POST",
             path_params,
             query_params,
@@ -280,7 +280,7 @@ class TasksApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/task/{id}",
+            "/v1/task/{id}",
             "GET",
             path_params,
             query_params,
@@ -406,7 +406,7 @@ class TasksApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/task/{id}/result",
+            "/v1/task/{id}/result",
             "GET",
             path_params,
             query_params,
@@ -634,7 +634,7 @@ class TasksApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/tasks",
+            "/v1/tasks",
             "GET",
             path_params,
             query_params,

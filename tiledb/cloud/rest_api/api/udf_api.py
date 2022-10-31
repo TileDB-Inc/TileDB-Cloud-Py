@@ -150,7 +150,7 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udf/{namespace}/{name}",
+            "/v1/udf/{namespace}/{name}",
             "DELETE",
             path_params,
             query_params,
@@ -283,7 +283,7 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udf/{namespace}/{name}",
+            "/v1/udf/{namespace}/{name}",
             "GET",
             path_params,
             query_params,
@@ -420,7 +420,7 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udf/{namespace}/{name}/share",
+            "/v1/udf/{namespace}/{name}/share",
             "GET",
             path_params,
             query_params,
@@ -597,7 +597,7 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udf/{namespace}/{name}/copy",
+            "/v1/udf/{namespace}/{name}/copy",
             "POST",
             path_params,
             query_params,
@@ -753,7 +753,7 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udf/{namespace}/{name}",
+            "/v1/udf/{namespace}/{name}",
             "POST",
             path_params,
             query_params,
@@ -909,7 +909,7 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udf/{namespace}/{name}/share",
+            "/v1/udf/{namespace}/{name}/share",
             "PATCH",
             path_params,
             query_params,
@@ -1057,7 +1057,7 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udfs/generic/{namespace}",
+            "/v1/udfs/generic/{namespace}",
             "POST",
             path_params,
             query_params,
@@ -1207,7 +1207,7 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udfs/arrays/{namespace}",
+            "/v1/udfs/arrays/{namespace}",
             "POST",
             path_params,
             query_params,
@@ -1377,7 +1377,7 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/udf/submit",
+            "/v1/arrays/{namespace}/{array}/udf/submit",
             "POST",
             path_params,
             query_params,
@@ -1530,7 +1530,7 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udf/{namespace}/{array}/end_timestamps",
+            "/v1/udf/{namespace}/{array}/end_timestamps",
             "GET",
             path_params,
             query_params,
@@ -1686,7 +1686,7 @@ class UdfApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/udf/{namespace}/{name}",
+            "/v1/udf/{namespace}/{name}",
             "PATCH",
             path_params,
             query_params,

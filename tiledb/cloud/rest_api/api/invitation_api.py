@@ -136,7 +136,7 @@ class InvitationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/invitations/{invitation}",
+            "/v1/invitations/{invitation}",
             "POST",
             path_params,
             query_params,
@@ -275,7 +275,7 @@ class InvitationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/invitations/{invitation}/{organization}/join",
+            "/v1/invitations/{invitation}/{organization}/join",
             "DELETE",
             path_params,
             query_params,
@@ -426,7 +426,7 @@ class InvitationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/invitations/{invitation}/{namespace}/{array}/share",
+            "/v1/invitations/{invitation}/{namespace}/{array}/share",
             "DELETE",
             path_params,
             query_params,
@@ -604,7 +604,7 @@ class InvitationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/invitations",
+            "/v1/invitations",
             "GET",
             path_params,
             query_params,
@@ -748,7 +748,7 @@ class InvitationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/invitations/{organization}/join",
+            "/v1/invitations/{organization}/join",
             "POST",
             path_params,
             query_params,
@@ -906,7 +906,7 @@ class InvitationApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/invitations/{namespace}/{array}/share",
+            "/v1/invitations/{namespace}/{array}/share",
             "POST",
             path_params,
             query_params,
