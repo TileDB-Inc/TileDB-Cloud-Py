@@ -1,6 +1,8 @@
 import abc
 import base64
 import json
+import threading
+import uuid
 from typing import Any, Dict, Optional, TypeVar, Union
 
 import attrs
@@ -8,6 +10,7 @@ import cloudpickle
 import pyarrow
 import urllib3
 
+from tiledb.cloud import client
 from tiledb.cloud._common import visitor
 from tiledb.cloud._results import decoders
 from tiledb.cloud.taskgraphs import types
@@ -132,8 +135,19 @@ _LOADERS = {
 }
 
 
+class Result(TDBJSONEncodable, metaclass=abc.ABCMeta):
+    """Interface for the results of a task graph node."""
+
+    __slots__ = ()
+
+    @abc.abstractmethod
+    def decode(self) -> types.NativeValue:
+        """Decodes this Result into native Python data."""
+        raise NotImplementedError()
+
+
 @attrs.define(frozen=True, slots=False)
-class BinaryResult(TDBJSONEncodable):
+class BinaryResult(Result):
     """Container for a binary-encoded value, decoded on-demand.
 
     This is used to store results obtained from the server, such that it is not
@@ -185,6 +199,36 @@ class BinaryResult(TDBJSONEncodable):
         if isinstance(obj, pyarrow.Table):
             return cls("arrow", _arrow_to_bytes(obj))
         return cls("python_pickle", pickle(obj))
+
+
+class LazyResult(Result):
+    """Wrapper for a lazily-downloaded UDF result."""
+
+    def __init__(self, task_id: uuid.UUID):
+        self._task_id = task_id
+        """The server-side ID of the task."""
+        self._result: Optional[BinaryResult] = None
+        """The lazily-downloaded result."""
+        self._lock = threading.Lock()
+
+    def decode(self) -> types.NativeValue:
+        result = self._download()
+        return result.decode()
+
+    def _tdb_to_json(self) -> types.CallArg:
+        result = self._download()
+        return result._tdb_to_json()
+
+    def _download(self) -> BinaryResult:
+        with self._lock:
+            if not self._result:
+                api_instance = client.client.tasks_api
+                resp: urllib3.HTTPResponse = api_instance.task_id_result_get(
+                    str(self._task_id),
+                    _preload_content=False,
+                )
+                self._result = BinaryResult.from_response(resp)
+            return self._result
 
 
 def _arrow_to_bytes(tbl: pyarrow.Table) -> bytes:

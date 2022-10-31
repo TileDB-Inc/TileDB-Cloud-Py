@@ -30,7 +30,9 @@ class ArrayNode(_base.Node[_base.ET, _T]):
         self,
         parents: Dict[uuid.UUID, _base.Node],
         input_value: Any,
+        default_download_results: bool,
     ) -> None:
+        del default_download_results  # Unused.
         assert input_value is _base.NOTHING
         uri = self._array_data["uri"]
         ranges = self._array_data.get("ranges")

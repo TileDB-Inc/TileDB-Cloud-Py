@@ -51,10 +51,12 @@ class UDFNode(_base.Node[_base.ET, _T]):
         """The source text of the function, for reference only."""
         self._result_format: str = udf_data.get("result_format") or "python_pickle"
         """The format results should be returned in."""
+        self._download_results: Optional[bool] = udf_data.get("download_results")
+        """The override of the default result-downlaind behavior, if set."""
 
         self._task_id: Optional[uuid.UUID] = None
         """The server-side task ID for this node's execution."""
-        self._result: Optional[_codec.BinaryResult] = None
+        self._result: Optional[_codec.Result] = None
         """The bytes of the result, as returned from the server."""
 
     @property
@@ -71,7 +73,11 @@ class UDFNode(_base.Node[_base.ET, _T]):
         return bool(self._environment.get("run_client_side"))
 
     def _exec_impl(
-        self, parents: Dict[uuid.UUID, _base.Node], input_value: Any
+        self,
+        *,
+        parents: Dict[uuid.UUID, _base.Node],
+        input_value: Any,
+        default_download_results: bool,
     ) -> None:
         assert input_value is _base.NOTHING
 
@@ -80,7 +86,9 @@ class UDFNode(_base.Node[_base.ET, _T]):
             # TODO: Add a way that users can specify that they want to retry
             # a local UDF remotely.
         else:
-            self._exec_remote(parents)
+            self._exec_remote(
+                parents, default_download_results=default_download_results
+            )
 
     def _exec_local(self, parents: Dict[uuid.UUID, _base.Node]) -> None:
         lang = self._environment.get("language")
@@ -137,7 +145,9 @@ class UDFNode(_base.Node[_base.ET, _T]):
         self._result = result.result
         # TODO: Report local execution success to the server.
 
-    def _exec_remote(self, parents: Dict[uuid.UUID, _base.Node]) -> None:
+    def _exec_remote(
+        self, parents: Dict[uuid.UUID, _base.Node], *, default_download_results: bool
+    ) -> None:
         # Parse the arguments.
         stored_param_ids: AbstractSet[uuid.UUID]
         arrays: Sequence[Dict[str, Any]]
@@ -160,6 +170,12 @@ class UDFNode(_base.Node[_base.ET, _T]):
             stored_param_ids = frozenset()
             arrays = []
 
+        download_results = (
+            default_download_results
+            if self._download_results is None
+            else self._download_results
+        )
+
         # Set up the basics of the call.
         # The default value of everything in MultiArrayUDF is None, so values
         # that were already None are equivalent to leaving them unset.
@@ -180,6 +196,7 @@ class UDFNode(_base.Node[_base.ET, _T]):
             version=self._environment.get("language_version"),
             timeout=self._environment.get("timeout"),
             resource_class=self._environment.get("resource_class"),
+            dont_download_results=not download_results,
         )
 
         if not (self._executable_code or self._registered_udf_name):
@@ -198,8 +215,7 @@ class UDFNode(_base.Node[_base.ET, _T]):
             if "RETRY_WITH_PARAMS" not in exc.body:
                 raise
         else:
-            self._task_id = results.extract_task_id(resp)
-            self._result = _codec.BinaryResult.from_response(resp)
+            self._set_result(resp, download_results=download_results)
             return
 
         # Our first request failed with a "RETRY_WITH_PARAMS" error.
@@ -217,8 +233,16 @@ class UDFNode(_base.Node[_base.ET, _T]):
         except rest_api.ApiException as exc:
             self._task_id = results.extract_task_id(exc)
             raise
+        self._set_result(resp, download_results=download_results)
+
+    def _set_result(
+        self, resp: urllib3.HTTPResponse, *, download_results: bool
+    ) -> None:
         self._task_id = results.extract_task_id(resp)
-        self._result = _codec.BinaryResult.from_response(resp)
+        if download_results or not self._task_id:
+            self._result = _codec.BinaryResult.from_response(resp)
+        else:
+            self._result = _codec.LazyResult(self._task_id)
 
     def _result_impl(self):
         return self._result.decode()
