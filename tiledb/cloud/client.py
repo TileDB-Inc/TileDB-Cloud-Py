@@ -31,12 +31,7 @@ def Config(cfg_dict=None):
         if r in cfg_dict:
             raise ValueError(f"Unexpected config parameter '{r}' to cloud.Config")
 
-    # Remove any ending `/v1` paths
     host = config.config.host
-    if host.endswith("/v1"):
-        host = host[: -len("/v1")]
-    elif host.endswith("/v1/"):
-        host = host[: -len("/v1/")]
 
     cfg_dict["rest.server_address"] = host
     cfg = tiledb.Config(cfg_dict)
@@ -86,10 +81,6 @@ def login(
     """
     if host is None:
         host = config.default_host
-    elif host.endswith("/v1"):
-        host = host[: -len("/v1")]
-    elif host.endswith("/v1/"):
-        host = host[: -len("/v1/")]
 
     if (token is None or token == "") and (
         (username is None or username == "") and (password is None or password == "")

@@ -1,14 +1,14 @@
 # tiledb.cloud.rest_api.TaskGraphLogsApi
 
-All URIs are relative to *http://localhost/v1*
+All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create_task_graph_log**](TaskGraphLogsApi.md#create_task_graph_log) | **POST** /taskgraphs/{namespace}/log | 
-[**get_task_graph_log**](TaskGraphLogsApi.md#get_task_graph_log) | **GET** /taskgraphs/{namespace}/logs/{id} | 
-[**list_task_graph_logs**](TaskGraphLogsApi.md#list_task_graph_logs) | **GET** /taskgraphs/logs | 
-[**report_client_node**](TaskGraphLogsApi.md#report_client_node) | **POST** /taskgraphs/{namespace}/logs/{id}/report_client_node | 
-[**update_task_graph_log**](TaskGraphLogsApi.md#update_task_graph_log) | **PATCH** /taskgraphs/{namespace}/logs/{id} | 
+[**create_task_graph_log**](TaskGraphLogsApi.md#create_task_graph_log) | **POST** /v1/taskgraphs/{namespace}/log | 
+[**get_task_graph_log**](TaskGraphLogsApi.md#get_task_graph_log) | **GET** /v1/taskgraphs/{namespace}/logs/{id} | 
+[**list_task_graph_logs**](TaskGraphLogsApi.md#list_task_graph_logs) | **GET** /v1/taskgraphs/logs | 
+[**report_client_node**](TaskGraphLogsApi.md#report_client_node) | **POST** /v1/taskgraphs/{namespace}/logs/{id}/report_client_node | 
+[**update_task_graph_log**](TaskGraphLogsApi.md#update_task_graph_log) | **PATCH** /v1/taskgraphs/{namespace}/logs/{id} | 
 
 
 # **create_task_graph_log**
@@ -27,10 +27,10 @@ import time
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
-# Defining the host is optional and defaults to http://localhost/v1
+# Defining the host is optional and defaults to http://localhost
 # See configuration.py for a list of all supported configuration parameters.
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1"
+    host = "http://localhost"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -40,7 +40,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 
 # Configure API key authorization: ApiKeyAuth
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
+    host = "http://localhost",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
     }
@@ -75,10 +75,10 @@ import time
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
-# Defining the host is optional and defaults to http://localhost/v1
+# Defining the host is optional and defaults to http://localhost
 # See configuration.py for a list of all supported configuration parameters.
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1"
+    host = "http://localhost"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -88,7 +88,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 
 # Configure API key authorization: ApiKeyAuth
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
+    host = "http://localhost",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
     }
@@ -140,6 +140,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **201** | The task graph was created. The returned TaskGraphLog will include the data the client sent, with the server-defined fields added in.  |  -  |
+**502** | Bad Gateway |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -160,10 +161,10 @@ import time
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
-# Defining the host is optional and defaults to http://localhost/v1
+# Defining the host is optional and defaults to http://localhost
 # See configuration.py for a list of all supported configuration parameters.
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1"
+    host = "http://localhost"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -173,7 +174,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 
 # Configure API key authorization: ApiKeyAuth
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
+    host = "http://localhost",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
     }
@@ -208,10 +209,10 @@ import time
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
-# Defining the host is optional and defaults to http://localhost/v1
+# Defining the host is optional and defaults to http://localhost
 # See configuration.py for a list of all supported configuration parameters.
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1"
+    host = "http://localhost"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -221,7 +222,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 
 # Configure API key authorization: ApiKeyAuth
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
+    host = "http://localhost",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
     }
@@ -273,6 +274,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Information about the execution of a single task graph. |  -  |
+**502** | Bad Gateway |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -293,10 +295,10 @@ import time
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
-# Defining the host is optional and defaults to http://localhost/v1
+# Defining the host is optional and defaults to http://localhost
 # See configuration.py for a list of all supported configuration parameters.
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1"
+    host = "http://localhost"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -306,7 +308,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 
 # Configure API key authorization: ApiKeyAuth
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
+    host = "http://localhost",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
     }
@@ -346,10 +348,10 @@ import time
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
-# Defining the host is optional and defaults to http://localhost/v1
+# Defining the host is optional and defaults to http://localhost
 # See configuration.py for a list of all supported configuration parameters.
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1"
+    host = "http://localhost"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -359,7 +361,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 
 # Configure API key authorization: ApiKeyAuth
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
+    host = "http://localhost",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
     }
@@ -421,6 +423,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | The task graph logs that matched the user&#39;s query. |  -  |
+**502** | Bad Gateway |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -439,10 +442,10 @@ import time
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
-# Defining the host is optional and defaults to http://localhost/v1
+# Defining the host is optional and defaults to http://localhost
 # See configuration.py for a list of all supported configuration parameters.
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1"
+    host = "http://localhost"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -452,7 +455,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 
 # Configure API key authorization: ApiKeyAuth
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
+    host = "http://localhost",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
     }
@@ -487,10 +490,10 @@ import time
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
-# Defining the host is optional and defaults to http://localhost/v1
+# Defining the host is optional and defaults to http://localhost
 # See configuration.py for a list of all supported configuration parameters.
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1"
+    host = "http://localhost"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -500,7 +503,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 
 # Configure API key authorization: ApiKeyAuth
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
+    host = "http://localhost",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
     }
@@ -553,6 +556,7 @@ void (empty response body)
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **204** | Status reported successfully. |  -  |
+**502** | Bad Gateway |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -573,10 +577,10 @@ import time
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
-# Defining the host is optional and defaults to http://localhost/v1
+# Defining the host is optional and defaults to http://localhost
 # See configuration.py for a list of all supported configuration parameters.
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1"
+    host = "http://localhost"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -586,7 +590,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 
 # Configure API key authorization: ApiKeyAuth
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
+    host = "http://localhost",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
     }
@@ -621,10 +625,10 @@ import time
 import tiledb.cloud.rest_api
 from tiledb.cloud.rest_api.rest import ApiException
 from pprint import pprint
-# Defining the host is optional and defaults to http://localhost/v1
+# Defining the host is optional and defaults to http://localhost
 # See configuration.py for a list of all supported configuration parameters.
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1"
+    host = "http://localhost"
 )
 
 # The client must configure the authentication and authorization parameters
@@ -634,7 +638,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 
 # Configure API key authorization: ApiKeyAuth
 configuration = tiledb.cloud.rest_api.Configuration(
-    host = "http://localhost/v1",
+    host = "http://localhost",
     api_key = {
         'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
     }
@@ -687,6 +691,7 @@ void (empty response body)
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **204** | Log entry updated successfully. |  -  |
+**502** | Bad Gateway |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

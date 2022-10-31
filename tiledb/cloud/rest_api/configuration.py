@@ -92,7 +92,7 @@ class Configuration(object):
 
     def __init__(
         self,
-        host="http://localhost/v1",
+        host="http://localhost",
         api_key=None,
         api_key_prefix=None,
         username=None,
@@ -399,7 +399,7 @@ class Configuration(object):
         """
         return [
             {
-                "url": "/v1",
+                "url": "/",
                 "description": "No description provided",
             }
         ]

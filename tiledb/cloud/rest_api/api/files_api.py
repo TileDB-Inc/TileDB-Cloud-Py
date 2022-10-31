@@ -169,7 +169,7 @@ class FilesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/files/{namespace}",
+            "/v1/files/{namespace}",
             "POST",
             path_params,
             query_params,
@@ -325,7 +325,7 @@ class FilesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/files/{namespace}/{file}/export",
+            "/v1/files/{namespace}/{file}/export",
             "POST",
             path_params,
             query_params,
@@ -491,7 +491,7 @@ class FilesApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/files/{namespace}/upload",
+            "/v1/files/{namespace}/upload",
             "POST",
             path_params,
             query_params,

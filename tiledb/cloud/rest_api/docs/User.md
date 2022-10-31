@@ -19,8 +19,9 @@ Name | Type | Description | Notes
 **allowed_actions** | [**list[NamespaceActions]**](NamespaceActions.md) | list of actions user is allowed to do on this organization | [optional] 
 **enabled_features** | **list[str]** | List of extra/optional/beta features to enable for namespace | [optional] [readonly] 
 **unpaid_subscription** | **bool** | A notice that the user has an unpaid subscription | [optional] [readonly] 
-**default_s3_path** | **str** | default S3 path to store newly created notebooks | [optional] 
-**default_s3_path_credentials_name** | **str** | Default S3 path credentials name is the credentials name to use along with default_s3_path | [optional] 
+**default_s3_path** | **str** | The default location to store newly-created notebooks and other assets like UDFs. The name &#x60;default_s3_path&#x60; is a legacy holdover; it may refer to any supported storage location.  | [optional] 
+**default_s3_path_credentials_name** | [**object**](.md) | The name of the credentials used to create and access files in the &#x60;default_s3_path&#x60;, if needed.  | [optional] 
+**asset_locations** | [**AssetLocations**](AssetLocations.md) |  | [optional] 
 **default_namespace_charged** | **str** | Override the default namespace charged for actions when no namespace is specified | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

@@ -42,6 +42,8 @@ class TestNotebookStatus(unittest.TestCase):
                 cpu_usage=4000,
                 memory_usage=1073741824,
                 memory_limit=1073741824,
+                storage_usage=1073741824,
+                storage_limit=1073741824,
                 cpu_count=4000,
             )
         else:

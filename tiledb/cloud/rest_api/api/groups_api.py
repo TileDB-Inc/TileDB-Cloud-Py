@@ -167,7 +167,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}/contents",
+            "/v1/groups/{group_namespace}/{group_name}/contents",
             "POST",
             path_params,
             query_params,
@@ -299,7 +299,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/{namespace}/create",
+            "/v1/groups/{namespace}/create",
             "POST",
             path_params,
             query_params,
@@ -438,7 +438,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}",
+            "/v1/groups/{group_namespace}/{group_name}",
             "DELETE",
             path_params,
             query_params,
@@ -577,7 +577,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}",
+            "/v1/groups/{group_namespace}/{group_name}",
             "GET",
             path_params,
             query_params,
@@ -800,7 +800,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}/contents",
+            "/v1/groups/{group_namespace}/{group_name}/contents",
             "GET",
             path_params,
             query_params,
@@ -941,7 +941,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}/share",
+            "/v1/groups/{group_namespace}/{group_name}/share",
             "GET",
             path_params,
             query_params,
@@ -1052,7 +1052,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/browser/owned/filters",
+            "/v1/groups/browser/owned/filters",
             "GET",
             path_params,
             query_params,
@@ -1163,7 +1163,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/browser/public/filters",
+            "/v1/groups/browser/public/filters",
             "GET",
             path_params,
             query_params,
@@ -1274,7 +1274,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/browser/shared/filters",
+            "/v1/groups/browser/shared/filters",
             "GET",
             path_params,
             query_params,
@@ -1418,7 +1418,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}/contents/filters",
+            "/v1/groups/{group_namespace}/{group_name}/contents/filters",
             "GET",
             path_params,
             query_params,
@@ -1611,7 +1611,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/browser/owned",
+            "/v1/groups/browser/owned",
             "GET",
             path_params,
             query_params,
@@ -1804,7 +1804,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/browser/public",
+            "/v1/groups/browser/public",
             "GET",
             path_params,
             query_params,
@@ -1843,6 +1843,7 @@ class GroupsApi(object):
         :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
         :param bool flat: if true, ignores the nesting of groups and searches all of them
         :param str parent: search only the children of the groups with this uuid
+        :param list[str] shared_to: namespaces to filter results of where there groups were shared to
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1877,6 +1878,7 @@ class GroupsApi(object):
         :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
         :param bool flat: if true, ignores the nesting of groups and searches all of them
         :param str parent: search only the children of the groups with this uuid
+        :param list[str] shared_to: namespaces to filter results of where there groups were shared to
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1904,6 +1906,7 @@ class GroupsApi(object):
             "exclude_tag",
             "flat",
             "parent",
+            "shared_to",
         ]
         all_params.extend(
             [
@@ -1981,6 +1984,14 @@ class GroupsApi(object):
             "parent" in local_var_params and local_var_params["parent"] is not None
         ):  # noqa: E501
             query_params.append(("parent", local_var_params["parent"]))  # noqa: E501
+        if (
+            "shared_to" in local_var_params
+            and local_var_params["shared_to"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("shared_to", local_var_params["shared_to"])
+            )  # noqa: E501
+            collection_formats["shared_to"] = "multi"  # noqa: E501
 
         header_params = {}
 
@@ -1997,7 +2008,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/browser/shared",
+            "/v1/groups/browser/shared",
             "GET",
             path_params,
             query_params,
@@ -2143,7 +2154,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/{namespace}/{array}/register",
+            "/v1/groups/{namespace}/{array}/register",
             "POST",
             path_params,
             query_params,
@@ -2303,7 +2314,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}/share",
+            "/v1/groups/{group_namespace}/{group_name}/share",
             "PATCH",
             path_params,
             query_params,
@@ -2453,7 +2464,7 @@ class GroupsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/groups/{group_namespace}/{group_name}",
+            "/v1/groups/{group_namespace}/{group_name}",
             "PATCH",
             path_params,
             query_params,

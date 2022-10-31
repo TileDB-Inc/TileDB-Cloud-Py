@@ -196,7 +196,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/activity",
+            "/v1/arrays/{namespace}/{array}/activity",
             "GET",
             path_params,
             query_params,
@@ -408,7 +408,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/browser/owned",
+            "/v1/arrays/browser/owned",
             "GET",
             path_params,
             query_params,
@@ -519,7 +519,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/browser/owned/sidebar",
+            "/v1/arrays/browser/owned/sidebar",
             "GET",
             path_params,
             query_params,
@@ -731,7 +731,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/browser/public",
+            "/v1/arrays/browser/public",
             "GET",
             path_params,
             query_params,
@@ -842,7 +842,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/browser/public/sidebar",
+            "/v1/arrays/browser/public/sidebar",
             "GET",
             path_params,
             query_params,
@@ -882,6 +882,7 @@ class ArrayApi(object):
         :param list[str] file_type: file_type to search for, more than one can be included
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
         :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+        :param list[str] shared_to: namespaces to filter results of where there arrays were shared to
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -917,6 +918,7 @@ class ArrayApi(object):
         :param list[str] file_type: file_type to search for, more than one can be included
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
         :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+        :param list[str] shared_to: namespaces to filter results of where there arrays were shared to
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -945,6 +947,7 @@ class ArrayApi(object):
             "file_type",
             "exclude_file_type",
             "file_property",
+            "shared_to",
         ]
         all_params.extend(
             [
@@ -1038,6 +1041,14 @@ class ArrayApi(object):
                 ("file_property", local_var_params["file_property"])
             )  # noqa: E501
             collection_formats["file_property"] = "multi"  # noqa: E501
+        if (
+            "shared_to" in local_var_params
+            and local_var_params["shared_to"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("shared_to", local_var_params["shared_to"])
+            )  # noqa: E501
+            collection_formats["shared_to"] = "multi"  # noqa: E501
 
         header_params = {}
 
@@ -1054,7 +1065,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/browser/shared",
+            "/v1/arrays/browser/shared",
             "GET",
             path_params,
             query_params,
@@ -1165,7 +1176,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/browser/shared/sidebar",
+            "/v1/arrays/browser/shared/sidebar",
             "GET",
             path_params,
             query_params,
@@ -1318,7 +1329,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/end_timestamps",
+            "/v1/arrays/{namespace}/{array}/end_timestamps",
             "GET",
             path_params,
             query_params,
@@ -1476,7 +1487,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/consolidate",
+            "/v1/arrays/{namespace}/{array}/consolidate",
             "POST",
             path_params,
             query_params,
@@ -1660,7 +1671,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}",
+            "/v1/arrays/{namespace}/{array}",
             "POST",
             path_params,
             query_params,
@@ -1811,7 +1822,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}",
+            "/v1/arrays/{namespace}/{array}",
             "DELETE",
             path_params,
             query_params,
@@ -1946,7 +1957,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/deregister",
+            "/v1/arrays/{namespace}/{array}/deregister",
             "DELETE",
             path_params,
             query_params,
@@ -2094,7 +2105,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/activity/{id}",
+            "/v1/arrays/{namespace}/{array}/activity/{id}",
             "GET",
             path_params,
             query_params,
@@ -2212,7 +2223,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays",
+            "/v1/arrays",
             "GET",
             path_params,
             query_params,
@@ -2363,7 +2374,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}",
+            "/v1/arrays/{namespace}/{array}",
             "GET",
             path_params,
             query_params,
@@ -2536,7 +2547,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/max_buffer_sizes",
+            "/v1/arrays/{namespace}/{array}/max_buffer_sizes",
             "GET",
             path_params,
             query_params,
@@ -2688,7 +2699,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/metadata_json",
+            "/v1/arrays/{namespace}/{array}/metadata_json",
             "GET",
             path_params,
             query_params,
@@ -2825,7 +2836,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/metadata",
+            "/v1/arrays/{namespace}/{array}/metadata",
             "GET",
             path_params,
             query_params,
@@ -2962,7 +2973,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/array_metadata",
+            "/v1/arrays/{namespace}/{array}/array_metadata",
             "GET",
             path_params,
             query_params,
@@ -3119,7 +3130,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/non_empty_domain",
+            "/v1/arrays/{namespace}/{array}/non_empty_domain",
             "GET",
             path_params,
             query_params,
@@ -3256,7 +3267,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/non_empty_domain_json",
+            "/v1/arrays/{namespace}/{array}/non_empty_domain_json",
             "GET",
             path_params,
             query_params,
@@ -3399,7 +3410,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/sample",
+            "/v1/arrays/{namespace}/{array}/sample",
             "GET",
             path_params,
             query_params,
@@ -3536,7 +3547,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/share",
+            "/v1/arrays/{namespace}/{array}/share",
             "GET",
             path_params,
             query_params,
@@ -3659,7 +3670,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}",
+            "/v1/arrays/{namespace}",
             "GET",
             path_params,
             query_params,
@@ -3805,7 +3816,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/fragment_end_timestamp",
+            "/v1/arrays/{namespace}/{array}/fragment_end_timestamp",
             "GET",
             path_params,
             query_params,
@@ -3912,7 +3923,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/last_accessed",
+            "/v1/arrays/last_accessed",
             "GET",
             path_params,
             query_params,
@@ -4068,7 +4079,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/register",
+            "/v1/arrays/{namespace}/{array}/register",
             "POST",
             path_params,
             query_params,
@@ -4224,7 +4235,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/share",
+            "/v1/arrays/{namespace}/{array}/share",
             "PATCH",
             path_params,
             query_params,
@@ -4382,7 +4393,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/metadata",
+            "/v1/arrays/{namespace}/{array}/metadata",
             "PATCH",
             path_params,
             query_params,
@@ -4540,7 +4551,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/array_metadata",
+            "/v1/arrays/{namespace}/{array}/array_metadata",
             "POST",
             path_params,
             query_params,
@@ -4696,7 +4707,7 @@ class ArrayApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/vacuum",
+            "/v1/arrays/{namespace}/{array}/vacuum",
             "POST",
             path_params,
             query_params,

@@ -160,7 +160,7 @@ class SqlApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/sql/{namespace}",
+            "/v1/sql/{namespace}",
             "POST",
             path_params,
             query_params,

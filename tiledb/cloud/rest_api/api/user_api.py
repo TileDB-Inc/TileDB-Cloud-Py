@@ -161,7 +161,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws",
+            "/v1/credentials/{namespace}/aws",
             "POST",
             path_params,
             query_params,
@@ -305,7 +305,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}/user",
+            "/v1/organizations/{organization}/user",
             "POST",
             path_params,
             query_params,
@@ -430,7 +430,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws",
+            "/v1/credentials/{namespace}/aws",
             "GET",
             path_params,
             query_params,
@@ -569,7 +569,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws/{name}",
+            "/v1/credentials/{namespace}/aws/{name}",
             "GET",
             path_params,
             query_params,
@@ -678,7 +678,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/user/confirm_email",
+            "/v1/user/confirm_email",
             "POST",
             path_params,
             query_params,
@@ -806,7 +806,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/user",
+            "/v1/user",
             "POST",
             path_params,
             query_params,
@@ -943,7 +943,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws/{name}",
+            "/v1/credentials/{namespace}/aws/{name}",
             "DELETE",
             path_params,
             query_params,
@@ -1064,7 +1064,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/users/{username}",
+            "/v1/users/{username}",
             "DELETE",
             path_params,
             query_params,
@@ -1203,7 +1203,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}/{username}",
+            "/v1/organizations/{organization}/{username}",
             "DELETE",
             path_params,
             query_params,
@@ -1340,7 +1340,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}/{username}",
+            "/v1/organizations/{organization}/{username}",
             "GET",
             path_params,
             query_params,
@@ -1458,7 +1458,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/session",
+            "/v1/session",
             "GET",
             path_params,
             query_params,
@@ -1567,7 +1567,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/tokens/scopes",
+            "/v1/tokens/scopes",
             "GET",
             path_params,
             query_params,
@@ -1676,7 +1676,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/user",
+            "/v1/user",
             "GET",
             path_params,
             query_params,
@@ -1799,7 +1799,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/users/{username}",
+            "/v1/users/{username}",
             "GET",
             path_params,
             query_params,
@@ -1919,7 +1919,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/token",
+            "/v1/token",
             "POST",
             path_params,
             query_params,
@@ -2047,7 +2047,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/user/password_reset",
+            "/v1/user/password_reset",
             "POST",
             path_params,
             query_params,
@@ -2168,7 +2168,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/tokens/{token}",
+            "/v1/tokens/{token}",
             "DELETE",
             path_params,
             query_params,
@@ -2277,7 +2277,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/tokens",
+            "/v1/tokens",
             "GET",
             path_params,
             query_params,
@@ -2386,7 +2386,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/tokens/session",
+            "/v1/tokens/session",
             "GET",
             path_params,
             query_params,
@@ -2544,7 +2544,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/credentials/{namespace}/aws/{name}",
+            "/v1/credentials/{namespace}/aws/{name}",
             "PATCH",
             path_params,
             query_params,
@@ -2684,7 +2684,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/users/{username}",
+            "/v1/users/{username}",
             "PATCH",
             path_params,
             query_params,
@@ -2842,7 +2842,7 @@ class UserApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/organizations/{organization}/{username}",
+            "/v1/organizations/{organization}/{username}",
             "PATCH",
             path_params,
             query_params,

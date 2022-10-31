@@ -140,7 +140,7 @@ class NotebookApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/server/{namespace}/status",
+            "/v1/notebooks/server/{namespace}/status",
             "GET",
             path_params,
             query_params,
@@ -319,7 +319,7 @@ class NotebookApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/{namespace}/{array}/copy",
+            "/v1/notebooks/{namespace}/{array}/copy",
             "POST",
             path_params,
             query_params,
@@ -485,7 +485,7 @@ class NotebookApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/{namespace}/upload",
+            "/v1/notebooks/{namespace}/upload",
             "POST",
             path_params,
             query_params,
@@ -610,7 +610,7 @@ class NotebookApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/server/{namespace}",
+            "/v1/notebooks/server/{namespace}",
             "DELETE",
             path_params,
             query_params,
@@ -768,7 +768,7 @@ class NotebookApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/notebooks/{namespace}/{array}/rename",
+            "/v1/notebooks/{namespace}/{array}/rename",
             "PATCH",
             path_params,
             query_params,

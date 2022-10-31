@@ -41,6 +41,7 @@ class TestTGSQLNodeData(unittest.TestCase):
                 query="0",
                 parameters=[tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue()],
                 result_format="python_pickle",
+                namespace="0",
             )
         else:
             return TGSQLNodeData()

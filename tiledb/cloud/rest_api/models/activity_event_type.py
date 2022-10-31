@@ -33,6 +33,7 @@ class ActivityEventType(object):
     NON_EMPTY_DOMAIN = "non_empty_domain"
     QUERY_READ = "query_read"
     QUERY_WRITE = "query_write"
+    QUERY_DELETE = "query_delete"
     CREATE = "create"
     DELETE = "delete"
     REGISTER = "register"
@@ -48,6 +49,7 @@ class ActivityEventType(object):
         NON_EMPTY_DOMAIN,
         QUERY_READ,
         QUERY_WRITE,
+        QUERY_DELETE,
         CREATE,
         DELETE,
         REGISTER,

@@ -134,7 +134,7 @@ class ArrayTasksApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/tasks/sidebar",
+            "/v1/tasks/sidebar",
             "GET",
             path_params,
             query_params,

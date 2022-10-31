@@ -44,7 +44,9 @@ class TestTGUDFNodeData(unittest.TestCase):
                     language="python",
                     language_version="0",
                     image_name="0",
+                    namespace="0",
                     resource_class="0",
+                    run_client_side=True,
                 ),
                 arguments=[
                     tiledb.cloud.rest_api.models.tgudf_argument.TGUDFArgument(
@@ -52,6 +54,7 @@ class TestTGUDFNodeData(unittest.TestCase):
                         value=tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue(),
                     )
                 ],
+                result_format="python_pickle",
             )
         else:
             return TGUDFNodeData()

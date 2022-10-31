@@ -219,7 +219,7 @@ class QueryApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/query/finalize",
+            "/v1/arrays/{namespace}/{array}/query/finalize",
             "POST",
             path_params,
             query_params,
@@ -423,7 +423,7 @@ class QueryApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/query/est_result_sizes",
+            "/v1/arrays/{namespace}/{array}/query/est_result_sizes",
             "POST",
             path_params,
             query_params,
@@ -578,7 +578,7 @@ class QueryApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/query/get_file",
+            "/v1/arrays/{namespace}/{array}/query/get_file",
             "GET",
             path_params,
             query_params,
@@ -782,7 +782,7 @@ class QueryApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/query/submit",
+            "/v1/arrays/{namespace}/{array}/query/submit",
             "POST",
             path_params,
             query_params,
@@ -958,7 +958,7 @@ class QueryApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/arrays/{namespace}/{array}/query/submit_query_json",
+            "/v1/arrays/{namespace}/{array}/query/submit_query_json",
             "POST",
             path_params,
             query_params,
