@@ -72,7 +72,8 @@ generate_api() {
     -c "$TEMP_PATH/openapi_config-api" \
     -o "$TEMP_PATH" \
     -i "$SPEC" \
-    -g python
+    -g python \
+    --skip-validate-spec  # The generator doesn't like the v2 spec.
 
   # Rewrite imports and links in docs,
   # and work around https://github.com/OpenAPITools/openapi-generator/issues/10236
@@ -152,5 +153,7 @@ ABSPATH="$(realpath "$1")"
 
 download_generator
 generate_api "${ABSPATH%/}/openapi-v1.yaml" rest_api
+generate_api "${ABSPATH%/}/openapi-v2.yaml" _common.api_v2
 run_format
 apply_json_safe_patch
+cp "$ROOT/generator/openapi_overrides"/* "$ROOT/tiledb/cloud/_common/api_v2"
