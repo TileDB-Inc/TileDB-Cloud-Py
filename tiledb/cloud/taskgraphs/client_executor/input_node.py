@@ -27,11 +27,12 @@ class InputNode(_base.Node[_base.ET, _T]):
 
     def _exec_impl(
         self,
+        *,
         parents: Dict[uuid.UUID, _base.Node],
         input_value: Any,
-        server_graph_uuid: Optional[uuid.UUID] = None,
+        default_download_results: bool,
     ) -> None:
-        del server_graph_uuid  # Unused.
+        del default_download_results  # Unused.
         assert not parents, "InputNode cannot depend on anything"
         if input_value is _base.NOTHING:
             self._value_encoded = self._default_value_encoded
