@@ -231,6 +231,7 @@ class TestBuilder(unittest.TestCase):
             format_it = grf.udf(
                 "sum of {name!r} is {sum!r}".format,
                 types.args(name=array_uri, sum=intify),
+                download_results=False,
             )
 
             # Execute an SQL query with parameterized input.
@@ -239,6 +240,8 @@ class TestBuilder(unittest.TestCase):
                 "select 2 * ? as doubleit",
                 parameters=[sql_input],
                 result_format="json",
+                namespace="beans",
+                download_results=True,
             )
             # Artificially constrain `format_it` to run after `sql_node`.
             grf.add_dep(parent=sql_node, child=format_it)
@@ -302,7 +305,9 @@ class TestBuilder(unittest.TestCase):
                     "depends_on": ["0badc0de-dead-beef-cafe-000000000006"],
                     "name": "SQL query",
                     "sql_node": {
+                        "download_results": True,
                         "init_commands": (),
+                        "namespace": "beans",
                         "parameters": [
                             {
                                 "__tdbudf__": "node_output",
@@ -405,6 +410,7 @@ class TestBuilder(unittest.TestCase):
                                 },
                             },
                         ],
+                        "download_results": False,
                         "environment": {
                             "language": "python",
                             "language_version": utils.PYTHON_VERSION,

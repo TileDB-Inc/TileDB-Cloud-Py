@@ -135,6 +135,7 @@ class TaskGraphBuilder:
         namespace: Optional[str] = None,
         name: Optional[str] = None,
         local: bool = False,
+        download_results: Optional[bool] = None,
     ) -> "Node[_T]":
         """Creates a Node which executes a UDF.
 
@@ -161,6 +162,12 @@ class TaskGraphBuilder:
             reading any array nodes used in this UDF's input.
         :param local: If True, will attempt to run the UDF on the client
             machine. If this is not possible, the UDF will fail.
+        :param download_results: If ``True``, download results eagerly (i.e.,
+            immediately when the function returns). If ``False``, download
+            results lazily (i.e., only when you call ``.result()`` on
+            an execution). If unset (the default), automatically choose whether
+            to download results: eagerly if it’s a terminal node, or if it has a
+            local dependent; lazily if it’s an internal node.
         """
         # NOTE: When adding parameters here, also update delayed/_udf.py.
         return self._add_node(
@@ -176,6 +183,7 @@ class TaskGraphBuilder:
                 namespace=namespace,
                 name=name,
                 local=local,
+                download_results=download_results,
             )
         )
 
@@ -188,6 +196,8 @@ class TaskGraphBuilder:
         parameters: ValOrNodeSeq = (),
         *,
         result_format: str = "arrow",
+        resource_class: Optional[str] = None,
+        download_results: Optional[bool] = None,
         namespace: Optional[str] = None,
         name: Optional[str] = None,
     ) -> "Node":
@@ -202,6 +212,14 @@ class TaskGraphBuilder:
             either as values or as the output of earlier Nodes.
         :param result_format: The format to provide results in. Either ``json``
             or ``arrow``.
+        :param resource_class: If specified, the container resource class
+            that this UDF will be executed in.
+        :param download_results: If ``True``, download results eagerly (i.e.,
+            immediately when the function returns). If ``False``, download
+            results lazily (i.e., only when you call ``.result()`` on
+            an execution). If unset (the default), automatically choose whether
+            to download results: eagerly if it’s a terminal node, or if it has a
+            local dependent; lazily if it’s an internal node.
         """
         return self._add_node(
             _SQLNode(
@@ -210,6 +228,8 @@ class TaskGraphBuilder:
                 init_commands,
                 parameters,
                 result_format=result_format,
+                resource_class=resource_class,
+                download_results=download_results,
                 namespace=namespace,
                 name=name,
             )
@@ -462,6 +482,8 @@ class _SQLNode(Node):
         parameters: ValOrNodeSeq,
         *,
         result_format: str,
+        resource_class: Optional[str],
+        download_results: Optional[bool],
         namespace: Optional[str],
         name: Optional[str],
     ):
@@ -482,18 +504,28 @@ class _SQLNode(Node):
         self.query = query
         self.init_commands = tuple(init_commands)
         self.result_format = result_format
+        self.resource_class = resource_class
+        self.download_results = download_results
+        self.namespace = namespace
         jsoner = _ParameterEscaper()
         self.parameters = jsoner.visit(parameters)
         super().__init__(owner, name, jsoner.seen_nodes, fallback_name="SQL query")
 
     def to_registration_json(self, existing_names: Set[str]) -> Dict[str, Any]:
-        ret = super().to_registration_json(existing_names)
-        ret["sql_node"] = dict(
+        sql_node = dict(
             init_commands=self.init_commands,
             query=self.query,
             parameters=self.parameters,
             result_format=self.result_format,
         )
+        if self.namespace:
+            sql_node["namespace"] = self.namespace
+        if self.resource_class:
+            sql_node["resource_class"] = self.resource_class
+        if self.download_results is not None:
+            sql_node["download_results"] = self.download_results
+        ret = super().to_registration_json(existing_names)
+        ret["sql_node"] = sql_node
         return ret
 
 
@@ -511,6 +543,7 @@ class _UDFNode(Node[_T]):
         image_name: Optional[str],
         timeout: Union[datetime.timedelta, int, None],
         resource_class: Optional[str],
+        download_results: Optional[bool],
         namespace: Optional[str],
         name: Optional[str],
         local: bool,
@@ -542,6 +575,7 @@ class _UDFNode(Node[_T]):
             timeout = int(timeout.total_seconds())
         self.timeout = timeout
         self.resource_class = resource_class
+        self.download_results = download_results
         self.namespace = namespace
         self.local = local
 
@@ -569,6 +603,8 @@ class _UDFNode(Node[_T]):
                 source = utils.getsourcelines(self.func)
                 if source:
                     udf_node["source_text"] = source
+        if self.download_results is not None:
+            udf_node["download_results"] = self.download_results
         if self.result_format:
             udf_node["result_format"] = self.result_format
         udf_node["environment"] = env_dict

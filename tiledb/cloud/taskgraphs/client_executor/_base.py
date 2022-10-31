@@ -124,7 +124,13 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
     #
 
     @abc.abstractmethod
-    def _exec_impl(self, parents: Dict[uuid.UUID, "Node"], input_value: Any) -> None:
+    def _exec_impl(
+        self,
+        *,
+        parents: Dict[uuid.UUID, "Node"],
+        input_value: Any,
+        default_download_results: bool,
+    ) -> None:
         """The type-specific behavior of executing a Node."""
         raise NotImplementedError()
 
@@ -153,7 +159,13 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
     def _status_impl(self) -> Status:
         return self._status
 
-    def _exec(self: _Self, parents: Dict[uuid.UUID, "Node"], input_value: Any) -> None:
+    def _exec(
+        self,
+        *,
+        parents: Dict[uuid.UUID, "Node"],
+        input_value: Any,
+        default_download_results: bool,
+    ) -> None:
         """The boilerplate for the ``_exec`` implementation for local Nodes.
 
         This handles all the lifecycle management for Node execution. It should
@@ -166,7 +178,11 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
                 return
 
         try:
-            self._exec_impl(parents, input_value)
+            self._exec_impl(
+                parents=parents,
+                input_value=input_value,
+                default_download_results=default_download_results,
+            )
         except Exception as ex:
             with self._lifecycle_condition:
                 self._set_status_notify(Status.FAILED)

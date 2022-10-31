@@ -24,7 +24,7 @@ class SQLNode(_base.Node[_base.ET, _T]):
         self._sql_data = json_data["sql_node"]
         self._task_id: Optional[uuid.UUID] = None
         """The server-side task ID for this node's execution."""
-        self._result: Optional[_codec.BinaryResult] = None
+        self._result: Optional[_codec.Result] = None
         """The bytes of the result, as returned from the server."""
 
     def task_id(self, timeout: Optional[float] = None) -> Optional[uuid.UUID]:
@@ -32,7 +32,11 @@ class SQLNode(_base.Node[_base.ET, _T]):
         return self._task_id
 
     def _exec_impl(
-        self, parents: Dict[uuid.UUID, _base.Node], input_value: Any
+        self,
+        *,
+        parents: Dict[uuid.UUID, _base.Node],
+        input_value: Any,
+        default_download_results: bool,
     ) -> None:
         assert input_value is _base.NOTHING
 
@@ -44,6 +48,11 @@ class SQLNode(_base.Node[_base.ET, _T]):
             parameters = raw_parameters
 
         namespace = self._sql_data.get("namespace") or self.owner.namespace
+
+        download_override = self._sql_data.get("download_results")
+        download_results = (
+            default_download_results if download_override is None else download_override
+        )
 
         try:
             resp = self.owner._client.sql_api.run_sql(
@@ -57,6 +66,7 @@ class SQLNode(_base.Node[_base.ET, _T]):
                     store_results=True,
                     client_node_uuid=str(self.id),
                     task_graph_uuid=str(self.owner._server_graph_uuid),
+                    dont_download_results=not download_results,
                 ),
                 _preload_content=False,
             )
@@ -64,7 +74,10 @@ class SQLNode(_base.Node[_base.ET, _T]):
             self._task_id = results.extract_task_id(apix)
             raise
         self._task_id = results.extract_task_id(resp)
-        self._result = _codec.BinaryResult.from_response(resp)
+        if download_results or not self._task_id:
+            self._result = _codec.BinaryResult.from_response(resp)
+        else:
+            self._result = _codec.LazyResult(self._task_id)
 
     def _result_impl(self):
         return self._result.decode()

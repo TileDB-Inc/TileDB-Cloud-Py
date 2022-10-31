@@ -324,14 +324,31 @@ class LocalExecutor(_base.IClientExecutor):
         # typeshed because the `set` builtin does not do so.
         eligible: ordered.Set[Node] = self._unstarted_nodes & self._active_deps.roots()  # type: ignore[assignment,operator] # noqa: E501
         for node in eligible:
-            parents = {n.id: n for n in self._deps.parents_of(node)}
-            if not all(p.status is Status.SUCCEEDED for p in parents.values()):
-                continue
-            self._unstarted_nodes.discard(node)
-            self._running_nodes.add(node)
-            self._pool.submit(
-                node._exec, parents, self._inputs.get(node.id, _base.NOTHING)
+            self._maybe_start(node)
+
+    def _maybe_start(self, node: Node) -> None:
+        parents = {n.id: n for n in self._deps.parents_of(node)}
+        if not all(p.status is Status.SUCCEEDED for p in parents.values()):
+            return
+        self._unstarted_nodes.discard(node)
+        self._running_nodes.add(node)
+        self._pool.submit(
+            lambda: node._exec(
+                parents=parents,
+                input_value=self._inputs.get(node.id, _base.NOTHING),
+                default_download_results=self._should_download_results(node),
             )
+        )
+
+    def _should_download_results(self, node: Node) -> bool:
+        children = self._deps.children_of(node)
+        if not children:
+            # Always download terminal nodes by default.
+            return True
+        return any(
+            child._run_location() != rest_api.TaskGraphLogRunLocation.SERVER
+            for child in self._deps.children_of(node)
+        )
 
     def retry(self, node: Node) -> bool:
         ft: "futures.Future[bool]" = futures.Future()
