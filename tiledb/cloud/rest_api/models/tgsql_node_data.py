@@ -37,6 +37,7 @@ class TGSQLNodeData(object):
         "query": "str",
         "parameters": "list[object]",
         "result_format": "ResultFormat",
+        "namespace": "str",
     }
 
     attribute_map = {
@@ -44,6 +45,7 @@ class TGSQLNodeData(object):
         "query": "query",
         "parameters": "parameters",
         "result_format": "result_format",
+        "namespace": "namespace",
     }
 
     def __init__(
@@ -52,6 +54,7 @@ class TGSQLNodeData(object):
         query=None,
         parameters=None,
         result_format=None,
+        namespace=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """TGSQLNodeData - a model defined in OpenAPI"""  # noqa: E501
@@ -63,6 +66,7 @@ class TGSQLNodeData(object):
         self._query = None
         self._parameters = None
         self._result_format = None
+        self._namespace = None
         self.discriminator = None
 
         if init_commands is not None:
@@ -73,6 +77,7 @@ class TGSQLNodeData(object):
             self.parameters = parameters
         if result_format is not None:
             self.result_format = result_format
+        self.namespace = namespace
 
     @property
     def init_commands(self):
@@ -163,6 +168,29 @@ class TGSQLNodeData(object):
         """
 
         self._result_format = result_format
+
+    @property
+    def namespace(self):
+        """Gets the namespace of this TGSQLNodeData.  # noqa: E501
+
+        If set, the non-default namespace to execute this SQL query under.   # noqa: E501
+
+        :return: The namespace of this TGSQLNodeData.  # noqa: E501
+        :rtype: str
+        """
+        return self._namespace
+
+    @namespace.setter
+    def namespace(self, namespace):
+        """Sets the namespace of this TGSQLNodeData.
+
+        If set, the non-default namespace to execute this SQL query under.   # noqa: E501
+
+        :param namespace: The namespace of this TGSQLNodeData.  # noqa: E501
+        :type: str
+        """
+
+        self._namespace = namespace
 
     def to_dict(self):
         """Returns the model properties as a dict"""

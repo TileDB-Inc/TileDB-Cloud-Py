@@ -16,14 +16,12 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.tgudf_environment import (  # noqa: E501
-    TGUDFEnvironment,
-)
+from tiledb.cloud.rest_api.models.storage_location import StorageLocation  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestTGUDFEnvironment(unittest.TestCase):
-    """TGUDFEnvironment unit test stubs"""
+class TestStorageLocation(unittest.TestCase):
+    """StorageLocation unit test stubs"""
 
     def setUp(self):
         pass
@@ -32,25 +30,18 @@ class TestTGUDFEnvironment(unittest.TestCase):
         pass
 
     def make_instance(self, include_optional):
-        """Test TGUDFEnvironment
+        """Test StorageLocation
         include_option is a boolean, when False only required
         params are included, when True both required and
         optional params are included"""
-        # model = tiledb.cloud.rest_api.models.tgudf_environment.TGUDFEnvironment()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.storage_location.StorageLocation()  # noqa: E501
         if include_optional:
-            return TGUDFEnvironment(
-                language="python",
-                language_version="0",
-                image_name="0",
-                namespace="0",
-                resource_class="0",
-                run_client_side=True,
-            )
+            return StorageLocation(path="0", credentials_name="0")
         else:
-            return TGUDFEnvironment()
+            return StorageLocation()
 
-    def testTGUDFEnvironment(self):
-        """Test TGUDFEnvironment"""
+    def testStorageLocation(self):
+        """Test StorageLocation"""
         inst_req_only = self.make_instance(include_optional=False)
         inst_req_and_optional = self.make_instance(include_optional=True)
 

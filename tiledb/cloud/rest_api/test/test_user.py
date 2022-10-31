@@ -64,7 +64,37 @@ class TestUser(unittest.TestCase):
                 enabled_features=["0"],
                 unpaid_subscription=True,
                 default_s3_path="0",
-                default_s3_path_credentials_name="0",
+                default_s3_path_credentials_name=None,
+                asset_locations=tiledb.cloud.rest_api.models.asset_locations.AssetLocations(
+                    arrays=tiledb.cloud.rest_api.models.storage_location.StorageLocation(
+                        path="0",
+                        credentials_name="0",
+                    ),
+                    files=tiledb.cloud.rest_api.models.storage_location.StorageLocation(
+                        path="0",
+                        credentials_name="0",
+                    ),
+                    groups=tiledb.cloud.rest_api.models.storage_location.StorageLocation(
+                        path="0",
+                        credentials_name="0",
+                    ),
+                    ml_models=tiledb.cloud.rest_api.models.storage_location.StorageLocation(
+                        path="0",
+                        credentials_name="0",
+                    ),
+                    notebooks=tiledb.cloud.rest_api.models.storage_location.StorageLocation(
+                        path="0",
+                        credentials_name="0",
+                    ),
+                    task_graphs=tiledb.cloud.rest_api.models.storage_location.StorageLocation(
+                        path="0",
+                        credentials_name="0",
+                    ),
+                    udfs=tiledb.cloud.rest_api.models.storage_location.StorageLocation(
+                        path="0",
+                        credentials_name="0",
+                    ),
+                ),
                 default_namespace_charged="0",
             )
         else:

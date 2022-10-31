@@ -70,6 +70,7 @@ class TestRegisteredTaskGraph(unittest.TestCase):
                                 tiledb.cloud.rest_api.models.tg_arg_value.TGArgValue()
                             ],
                             result_format="python_pickle",
+                            namespace="0",
                         ),
                         udf_node=tiledb.cloud.rest_api.models.tgudf_node_data.TGUDFNodeData(
                             registered_udf_name="0",
@@ -79,7 +80,9 @@ class TestRegisteredTaskGraph(unittest.TestCase):
                                 language="python",
                                 language_version="0",
                                 image_name="0",
+                                namespace="0",
                                 resource_class="0",
+                                run_client_side=True,
                             ),
                             arguments=[
                                 tiledb.cloud.rest_api.models.tgudf_argument.TGUDFArgument(

@@ -26,12 +26,7 @@ def save_configuration(config_file):
     with open(config_file, "w") as f:
         global config
 
-        # Remove any ending `/v1` paths to store the base url only in the on disk config
         host = config.host
-        if host.endswith("/v1"):
-            host = host[: -len("/v1")]
-        elif host.endswith("/v1/"):
-            host = host[: -len("/v1/")]
 
         config_to_save = {
             "host": host,
@@ -83,11 +78,6 @@ def load_configuration(config_path):
             if host is None or host == "":
                 host = config_obj["host"]
 
-            if host.endswith("/v1"):
-                host = host[: -len("/v1")]
-            elif host.endswith("/v1/"):
-                host = host[: -len("/v1/")]
-
             # Don't override user env variables
             if (
                 (token is None or token == "")
@@ -120,7 +110,6 @@ def load_configuration(config_path):
 def setup_configuration(
     api_key=None, host="", username=None, password=None, verify_ssl=True
 ):
-    host = host + "/v1"
     global config
     if api_key is None:
         api_key = {}

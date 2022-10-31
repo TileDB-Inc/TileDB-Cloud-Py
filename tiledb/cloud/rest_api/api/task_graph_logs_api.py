@@ -159,7 +159,7 @@ class TaskGraphLogsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/taskgraphs/{namespace}/log",
+            "/v1/taskgraphs/{namespace}/log",
             "POST",
             path_params,
             query_params,
@@ -293,7 +293,7 @@ class TaskGraphLogsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/taskgraphs/{namespace}/logs/{id}",
+            "/v1/taskgraphs/{namespace}/logs/{id}",
             "GET",
             path_params,
             query_params,
@@ -465,7 +465,7 @@ class TaskGraphLogsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/taskgraphs/logs",
+            "/v1/taskgraphs/logs",
             "GET",
             path_params,
             query_params,
@@ -618,7 +618,7 @@ class TaskGraphLogsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/taskgraphs/{namespace}/logs/{id}/report_client_node",
+            "/v1/taskgraphs/{namespace}/logs/{id}/report_client_node",
             "POST",
             path_params,
             query_params,
@@ -773,7 +773,7 @@ class TaskGraphLogsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/taskgraphs/{namespace}/logs/{id}",
+            "/v1/taskgraphs/{namespace}/logs/{id}",
             "PATCH",
             path_params,
             query_params,

@@ -124,7 +124,7 @@ class StatsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/.stats",
+            "/v1/.stats",
             "GET",
             path_params,
             query_params,

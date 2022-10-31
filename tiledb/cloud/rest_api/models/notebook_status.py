@@ -38,6 +38,8 @@ class NotebookStatus(object):
         "cpu_usage": "int",
         "memory_usage": "int",
         "memory_limit": "int",
+        "storage_usage": "int",
+        "storage_limit": "int",
         "cpu_count": "int",
     }
 
@@ -47,6 +49,8 @@ class NotebookStatus(object):
         "cpu_usage": "cpu_usage",
         "memory_usage": "memory_usage",
         "memory_limit": "memory_limit",
+        "storage_usage": "storage_usage",
+        "storage_limit": "storage_limit",
         "cpu_count": "cpu_count",
     }
 
@@ -57,6 +61,8 @@ class NotebookStatus(object):
         cpu_usage=None,
         memory_usage=None,
         memory_limit=None,
+        storage_usage=None,
+        storage_limit=None,
         cpu_count=None,
         local_vars_configuration=None,
     ):  # noqa: E501
@@ -70,6 +76,8 @@ class NotebookStatus(object):
         self._cpu_usage = None
         self._memory_usage = None
         self._memory_limit = None
+        self._storage_usage = None
+        self._storage_limit = None
         self._cpu_count = None
         self.discriminator = None
 
@@ -83,6 +91,10 @@ class NotebookStatus(object):
             self.memory_usage = memory_usage
         if memory_limit is not None:
             self.memory_limit = memory_limit
+        if storage_usage is not None:
+            self.storage_usage = storage_usage
+        if storage_limit is not None:
+            self.storage_limit = storage_limit
         if cpu_count is not None:
             self.cpu_count = cpu_count
 
@@ -200,6 +212,52 @@ class NotebookStatus(object):
         """
 
         self._memory_limit = memory_limit
+
+    @property
+    def storage_usage(self):
+        """Gets the storage_usage of this NotebookStatus.  # noqa: E501
+
+        storage usage in bytes  # noqa: E501
+
+        :return: The storage_usage of this NotebookStatus.  # noqa: E501
+        :rtype: int
+        """
+        return self._storage_usage
+
+    @storage_usage.setter
+    def storage_usage(self, storage_usage):
+        """Sets the storage_usage of this NotebookStatus.
+
+        storage usage in bytes  # noqa: E501
+
+        :param storage_usage: The storage_usage of this NotebookStatus.  # noqa: E501
+        :type: int
+        """
+
+        self._storage_usage = storage_usage
+
+    @property
+    def storage_limit(self):
+        """Gets the storage_limit of this NotebookStatus.  # noqa: E501
+
+        storage allocated to notebook server in bytes  # noqa: E501
+
+        :return: The storage_limit of this NotebookStatus.  # noqa: E501
+        :rtype: int
+        """
+        return self._storage_limit
+
+    @storage_limit.setter
+    def storage_limit(self, storage_limit):
+        """Sets the storage_limit of this NotebookStatus.
+
+        storage allocated to notebook server in bytes  # noqa: E501
+
+        :param storage_limit: The storage_limit of this NotebookStatus.  # noqa: E501
+        :type: int
+        """
+
+        self._storage_limit = storage_limit
 
     @property
     def cpu_count(self):

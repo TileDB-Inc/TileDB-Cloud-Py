@@ -77,8 +77,7 @@ class GroupUpdate(object):
         self._license_text = None
         self.discriminator = None
 
-        if description is not None:
-            self.description = description
+        self.description = description
         if name is not None:
             self.name = name
         if logo is not None:

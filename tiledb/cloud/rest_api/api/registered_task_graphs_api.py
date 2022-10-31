@@ -152,7 +152,7 @@ class RegisteredTaskGraphsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/taskgraphs/{namespace}/registered/{name}",
+            "/v1/taskgraphs/{namespace}/registered/{name}",
             "DELETE",
             path_params,
             query_params,
@@ -289,7 +289,7 @@ class RegisteredTaskGraphsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/taskgraphs/{namespace}/registered/{name}",
+            "/v1/taskgraphs/{namespace}/registered/{name}",
             "GET",
             path_params,
             query_params,
@@ -428,7 +428,7 @@ class RegisteredTaskGraphsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/taskgraphs/{namespace}/registered/{name}/share",
+            "/v1/taskgraphs/{namespace}/registered/{name}/share",
             "GET",
             path_params,
             query_params,
@@ -576,7 +576,7 @@ class RegisteredTaskGraphsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/taskgraphs/{namespace}/registered/{name}",
+            "/v1/taskgraphs/{namespace}/registered/{name}",
             "POST",
             path_params,
             query_params,
@@ -734,7 +734,7 @@ class RegisteredTaskGraphsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/taskgraphs/{namespace}/registered/{name}/share",
+            "/v1/taskgraphs/{namespace}/registered/{name}/share",
             "PATCH",
             path_params,
             query_params,
@@ -882,7 +882,7 @@ class RegisteredTaskGraphsApi(object):
         auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
 
         return self.api_client.call_api(
-            "/taskgraphs/{namespace}/registered/{name}",
+            "/v1/taskgraphs/{namespace}/registered/{name}",
             "PATCH",
             path_params,
             query_params,
