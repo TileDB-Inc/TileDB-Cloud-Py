@@ -73,7 +73,7 @@ def exec_base(
 
     namespace = namespace or client.default_charged_namespace()
 
-    api_instance = client.client.sql_api
+    api_instance = client.build(rest_api.SqlApi)
 
     if init_commands is not None and not isinstance(init_commands, list):
         raise Exception("init_commands must be a list of query strings")
@@ -101,7 +101,7 @@ def exec_base(
 
         # If the user wishes to set a specific array name for the newly registered output array let's update the details
         if output_array_name is not None:
-            array_api = client.client.array_api
+            array_api = client.build(rest_api.ArrayApi)
             array_api.update_array_metadata(
                 namespace=namespace,
                 output_uri=output_uri,

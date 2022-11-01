@@ -4,6 +4,7 @@ from typing import Any, Dict, Optional, Tuple
 import urllib3
 
 from tiledb.cloud import client
+from tiledb.cloud import rest_api
 from tiledb.cloud._common import json_safe
 from tiledb.cloud.taskgraphs import builder
 
@@ -22,7 +23,7 @@ def register(
         namespace (i.e. ``my-graph``, not ``me/my-graph``).
     :param namespace: The namespace, if not your own, to register the graph in.
     """
-    api_client = client.client.registered_task_graphs_api
+    api_client = client.build(rest_api.RegisteredTaskGraphsApi)
     namespace = namespace or client.default_user().username
     name = name or graph.name
 
@@ -48,7 +49,7 @@ def load(
         current user's namespace.
     """
     name, namespace = _canonicalize(name_or_nsname, namespace)
-    api_client = client.client.registered_task_graphs_api
+    api_client = client.build(rest_api.RegisteredTaskGraphsApi)
 
     result: urllib3.HTTPResponse = api_client.get_registered_task_graph(
         namespace=namespace,
@@ -73,7 +74,7 @@ def update(
     :param namespace: The namespace, if not your own, where the graph will
         be updated.
     """
-    api_client = client.client.registered_task_graphs_api
+    api_client = client.build(rest_api.RegisteredTaskGraphsApi)
     namespace = namespace or client.default_user().username
     name = old_name or graph.name
     api_client.update_registered_task_graph(
@@ -96,7 +97,7 @@ def delete(name_or_nsname: str, *, namespace: Optional[str] = None) -> None:
         current user's namespace.
     """
     name, namespace = _canonicalize(name_or_nsname, namespace)
-    api_client = client.client.registered_task_graphs_api
+    api_client = client.build(rest_api.RegisteredTaskGraphsApi)
     api_client.delete_registered_task_graph(namespace, name)
 
 

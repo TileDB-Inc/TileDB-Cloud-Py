@@ -179,7 +179,9 @@ class LocalExecutor(_base.IClientExecutor):
             self._status = Status.RUNNING
 
         try:
-            result = self._client.task_graph_logs_api.create_task_graph_log(
+            result = self._client.build(
+                rest_api.TaskGraphLogsApi
+            ).create_task_graph_log(
                 namespace=self.namespace,
                 log=self._build_log_structure(),
             )
@@ -475,7 +477,7 @@ class LocalExecutor(_base.IClientExecutor):
             warnings.warn(UserWarning(f"Task graph ended in invalid state {st!r}"))
 
         do_update = utils.ephemeral_thread(
-            client.client.task_graph_logs_api.update_task_graph_log,
+            client.build(rest_api.TaskGraphLogsApi).update_task_graph_log,
             name=self._prefix + "-reporter",
         )
         do_update(

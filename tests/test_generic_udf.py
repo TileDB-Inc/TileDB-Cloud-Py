@@ -6,6 +6,7 @@ import urllib3
 import tiledb.cloud
 from tiledb.cloud import client
 from tiledb.cloud import config
+from tiledb.cloud import rest_api
 from tiledb.cloud import testonly
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import udf
@@ -97,7 +98,9 @@ class GenericUDFTest(unittest.TestCase):
                 config.user
             )
 
-            response: urllib3.HTTPResponse = client.client.udf_api.submit_generic_udf(
+            response: urllib3.HTTPResponse = client.build(
+                rest_api.UdfApi
+            ).submit_generic_udf(
                 udf=udf_req,
                 namespace=namespace,
                 _preload_content=False,

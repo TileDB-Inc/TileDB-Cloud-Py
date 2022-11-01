@@ -7,6 +7,7 @@ import cloudpickle
 
 from tiledb.cloud import array
 from tiledb.cloud import client
+from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
 from tiledb.cloud._results import decoders
@@ -76,7 +77,7 @@ def exec_base(
     if result_format_version:
         warnings.warn(DeprecationWarning("result_format_version is unused."))
 
-    api_instance = client.client.udf_api
+    api_instance = client.build(rest_api.UdfApi)
 
     namespace = namespace or client.default_charged_namespace()
 
@@ -182,7 +183,7 @@ def register_udf(
     """
 
     try:
-        api_instance = client.client.udf_api
+        api_instance = client.build(rest_api.UdfApi)
 
         namespace = namespace or client.default_user().username
 
@@ -332,7 +333,7 @@ def update_udf(
     """
 
     try:
-        api_instance = client.client.udf_api
+        api_instance = client.build(rest_api.UdfApi)
 
         namespace = namespace or client.default_user().username
 
@@ -439,7 +440,7 @@ def info(namespace=None, name=None, async_req=False):
     :return: registered udf details
     """
     try:
-        api_instance = client.client.udf_api
+        api_instance = client.build(rest_api.UdfApi)
 
         if not (
             namespace is not None
@@ -480,7 +481,7 @@ def share(name=None, namespace=None, async_req=False):
         udf_namespace = client.default_user().username
 
     try:
-        api_instance = client.client.udf_api
+        api_instance = client.build(rest_api.UdfApi)
 
         return api_instance.share_udf_info(
             udf_namespace,
@@ -513,7 +514,7 @@ def unshare(name=None, namespace=None, async_req=False):
         udf_namespace = client.default_user().username
 
     try:
-        api_instance = client.client.udf_api
+        api_instance = client.build(rest_api.UdfApi)
 
         return api_instance.share_udf_info(
             udf_namespace,
@@ -539,7 +540,7 @@ def delete(name, namespace, async_req=False):
     :return: deleted udf details
     """
     try:
-        api_instance = client.client.udf_api
+        api_instance = client.build(rest_api.UdfApi)
 
         return api_instance.delete_udf_info(
             namespace,
