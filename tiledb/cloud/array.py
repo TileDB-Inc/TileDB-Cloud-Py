@@ -231,6 +231,7 @@ def register_array(
                 uri=uri,
                 access_credentials_name=access_credentials_name,
             ),
+            async_req=async_req,
         )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
