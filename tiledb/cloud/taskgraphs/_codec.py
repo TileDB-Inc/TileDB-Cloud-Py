@@ -10,7 +10,8 @@ import cloudpickle
 import pyarrow
 import urllib3
 
-from tiledb.cloud import client
+from tiledb.cloud import client as client_mod
+from tiledb.cloud import rest_api
 from tiledb.cloud._common import visitor
 from tiledb.cloud._results import decoders
 from tiledb.cloud.taskgraphs import types
@@ -204,7 +205,8 @@ class BinaryResult(Result):
 class LazyResult(Result):
     """Wrapper for a lazily-downloaded UDF result."""
 
-    def __init__(self, task_id: uuid.UUID):
+    def __init__(self, client: client_mod.Client, task_id: uuid.UUID):
+        self._client = client
         self._task_id = task_id
         """The server-side ID of the task."""
         self._result: Optional[BinaryResult] = None
@@ -222,7 +224,7 @@ class LazyResult(Result):
     def _download(self) -> BinaryResult:
         with self._lock:
             if not self._result:
-                api_instance = client.client.tasks_api
+                api_instance = self._client.build(rest_api.TasksApi)
                 resp: urllib3.HTTPResponse = api_instance.task_id_result_get(
                     str(self._task_id),
                     _preload_content=False,

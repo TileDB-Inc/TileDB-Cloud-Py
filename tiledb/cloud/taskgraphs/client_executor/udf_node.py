@@ -203,7 +203,7 @@ class UDFNode(_base.Node[_base.ET, _T]):
             raise ValueError("Neither executable code nor UDF name set")
 
         # Actually make the call.
-        api = self.owner._client.udf_api
+        api = self.owner._client.build(rest_api.UdfApi)
         try:
             resp: urllib3.HTTPResponse = api.submit_multi_array_udf(
                 namespace=self._environment.get("namespace") or self.owner.namespace,
@@ -242,7 +242,7 @@ class UDFNode(_base.Node[_base.ET, _T]):
         if download_results or not self._task_id:
             self._result = _codec.BinaryResult.from_response(resp)
         else:
-            self._result = _codec.LazyResult(self._task_id)
+            self._result = _codec.LazyResult(self.owner._client, self._task_id)
 
     def _result_impl(self):
         return self._result.decode()

@@ -107,7 +107,7 @@ def login(
     if (token is None or token == "") and not no_session:
         config.setup_configuration(**kwargs)
         client.set_threads(threads)
-        user_api = client.user_api
+        user_api = build(rest_api.UserApi)
         session = user_api.get_session(remember_me=True)
         token = session.token
 
@@ -169,7 +169,7 @@ def list_public_arrays(
     :return: list of all array metadata you have access to that meet the filter applied
     """
 
-    api_instance = client.array_api
+    api_instance = build(rest_api.ArrayApi)
     permissions = _maybe_unwrap(permissions)
 
     try:
@@ -229,7 +229,7 @@ def list_shared_arrays(
     :return: list of all array metadata you have access to that meet the filter applied
     """
 
-    api_instance = client.array_api
+    api_instance = build(rest_api.ArrayApi)
     permissions = _maybe_unwrap(permissions)
 
     try:
@@ -289,7 +289,7 @@ def list_arrays(
     :return: list of all array metadata you have access to that meet the filter applied
     """
 
-    api_instance = client.array_api
+    api_instance = build(rest_api.ArrayApi)
     permissions = _maybe_unwrap(permissions)
 
     try:
@@ -329,7 +329,7 @@ def user_profile(async_req=False):
     :return: your user profile
     """
 
-    api_instance = client.user_api
+    api_instance = build(rest_api.UserApi)
 
     try:
         return api_instance.get_user(async_req=async_req)
@@ -344,7 +344,7 @@ def organizations(async_req=False):
     :return: list of all organizations user is part of
     """
 
-    api_instance = client.organization_api
+    api_instance = build(rest_api.OrganizationApi)
 
     try:
         return api_instance.get_all_organizations(async_req=async_req)
@@ -360,7 +360,7 @@ def organization(organization, async_req=False):
     :return: details about organization
     """
 
-    api_instance = client.organization_api
+    api_instance = build(rest_api.OrganizationApi)
 
     try:
         return api_instance.get_organization(
@@ -462,34 +462,11 @@ class Client:
         self._pool_lock = threading.Lock()
         self._set_threads(pool_threads)
         self._retry_mode(retry_mode)
-        self._init_clients()
+        self._client = self._rebuild_client()
 
-    def _init_clients(self):
-        """
-        Initialize api clients
-        """
-        # If users increase the size of the thread pool, increase the size
-        # of the connection pool to match. (The internal members of
-        # ThreadPoolExecutor are not exposed in the .pyi files, so we silence
-        # mypy's warning here.)
-        pool_size = self._thread_pool._max_workers  # type: ignore[attr-defined]
-        config.config.connection_pool_maxsize = pool_size
-        client = rest_api.ApiClient(config.config)
-        client.rest_client.pool_manager = _PoolManagerWrapper(
-            client.rest_client.pool_manager
-        )
-
-        self.array_api = rest_api.ArrayApi(client)
-        self.file_api = rest_api.FilesApi(client)
-        self.notebook_api = rest_api.NotebookApi(client)
-        self.organization_api = rest_api.OrganizationApi(client)
-        self.sql_api = rest_api.SqlApi(client)
-        self.task_graph_logs_api = rest_api.TaskGraphLogsApi(client)
-        self.registered_task_graphs_api = rest_api.RegisteredTaskGraphsApi(client)
-        self.tasks_api = rest_api.TasksApi(client)
-        self.udf_api = rest_api.UdfApi(client)
-        self.user_api = rest_api.UserApi(client)
-        self.groups_api = rest_api.GroupsApi(client)
+    def build(self, builder: Callable[[rest_api.ApiClient], _T]) -> _T:
+        """Builds an API client with the given config."""
+        return builder(self._client)
 
     def set_disable_retries(self):
         self.retry_mode(RetryMode.DISABLED)
@@ -503,16 +480,32 @@ class Client:
     def retry_mode(self, mode: RetryOrStr = RetryMode.DEFAULT) -> None:
         """Sets how we should retry requests and updates API instances."""
         self._retry_mode(mode)
-        self._init_clients()
+        self._client = self._rebuild_client()
+
+    def set_threads(self, threads: Optional[int] = None) -> None:
+        """Updates the number of threads in the async thread pool."""
+        self._set_threads(threads)
+        self._client = self._rebuild_client()
 
     def _retry_mode(self, mode: RetryOrStr) -> None:
         mode = RetryMode.maybe_from(mode)
         config.config.retries = _RETRY_CONFIGS[mode]
 
-    def set_threads(self, threads: Optional[int] = None) -> None:
-        """Updates the number of threads in the async thread pool."""
-        self._set_threads(threads)
-        self._init_clients()
+    def _rebuild_client(self):
+        """
+        Initialize api clients
+        """
+        # If users increase the size of the thread pool, increase the size
+        # of the connection pool to match. (The internal members of
+        # ThreadPoolExecutor are not exposed in the .pyi files, so we silence
+        # mypy's warning here.)
+        pool_size = self._thread_pool._max_workers  # type: ignore[attr-defined]
+        config.config.connection_pool_maxsize = pool_size
+        client = rest_api.ApiClient(config.config)
+        client.rest_client.pool_manager = _PoolManagerWrapper(
+            client.rest_client.pool_manager
+        )
+        return client
 
     def _set_threads(self, threads) -> None:
         with self._pool_lock:
@@ -534,6 +527,8 @@ class Client:
 
 
 client = Client()
+
+build = client.build
 
 
 def _maybe_unwrap(param: Union[None, str, Sequence[str]]) -> Optional[str]:
