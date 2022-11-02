@@ -5,6 +5,7 @@ from typing import Any, Callable, Iterable, Optional, Sequence, Union
 import numpy
 
 from tiledb.cloud import client
+from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
 from tiledb.cloud._common import json_safe
@@ -68,7 +69,7 @@ def info(uri, async_req=False):
     :return: metadata object
     """
     (namespace, array_name) = split_uri(uri)
-    api_instance = client.client.array_api
+    api_instance = client.build(rest_api.ArrayApi)
 
     try:
         return api_instance.get_array_metadata(
@@ -81,7 +82,7 @@ def info(uri, async_req=False):
 def list_shared_with(uri, async_req=False):
     """Return array sharing policies"""
     (namespace, array_name) = split_uri(uri)
-    api_instance = client.client.array_api
+    api_instance = client.build(rest_api.ArrayApi)
 
     try:
         return api_instance.get_array_sharing_policies(
@@ -112,7 +113,7 @@ def share_array(uri, namespace, permissions, async_req=False):
             raise Exception("Only read or write permissions are accepted")
 
     (array_namespace, array_name) = split_uri(uri)
-    api_instance = client.client.array_api
+    api_instance = client.build(rest_api.ArrayApi)
 
     try:
         return api_instance.share_array(
@@ -156,7 +157,7 @@ def update_info(
     :param str file_properties: set file properties on array
     :param async_req: return future instead of results for async support
     """
-    api_instance = client.client.array_api
+    api_instance = client.build(rest_api.ArrayApi)
     (namespace, current_array_name) = split_uri(uri)
 
     try:
@@ -185,7 +186,7 @@ def update_file_properties(uri, file_type=None, file_properties=None, async_req=
     :return:
     """
 
-    api_instance = client.client.array_api
+    api_instance = client.build(rest_api.ArrayApi)
     (namespace, current_array_name) = split_uri(uri)
 
     try:
@@ -217,7 +218,7 @@ def register_array(
     :param str access_credentials_name: optional name of access credentials to use, if left blank default for namespace will be used
     :param async_req: return future instead of results for async support
     """
-    api_instance = client.client.array_api
+    api_instance = client.build(rest_api.ArrayApi)
 
     namespace = namespace or client.default_user().username
 
@@ -248,7 +249,7 @@ def deregister_array(uri, async_req=False):
     """
     (namespace, array_name) = split_uri(uri)
 
-    api_instance = client.client.array_api
+    api_instance = client.build(rest_api.ArrayApi)
 
     try:
         return api_instance.deregister_array(
@@ -269,7 +270,7 @@ def delete_array(uri, *, async_req=False):
     """
     (namespace, array_name) = split_uri(uri)
 
-    api_instance = client.client.array_api
+    api_instance = client.build(rest_api.ArrayApi)
 
     try:
         return api_instance.delete_array(
@@ -291,7 +292,7 @@ def array_activity(uri, async_req=False):
     """
     (namespace, array_name) = split_uri(uri)
 
-    api_instance = client.client.array_api
+    api_instance = client.build(rest_api.ArrayApi)
 
     try:
         return api_instance.array_activity_log(
@@ -439,7 +440,7 @@ def apply_base(
     if result_format_version:
         warnings.warn(DeprecationWarning("result_format_version is unused."))
 
-    api_instance = client.client.udf_api
+    api_instance = client.build(rest_api.UdfApi)
 
     if name:
         warnings.warn(
@@ -612,7 +613,7 @@ def exec_multi_array_udf_base(
     if result_format_version:
         warnings.warn(DeprecationWarning("result_format_version is unused."))
 
-    api_instance = client.client.udf_api
+    api_instance = client.build(rest_api.UdfApi)
 
     namespace = namespace or client.default_charged_namespace()
 

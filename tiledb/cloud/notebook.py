@@ -16,7 +16,6 @@ from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud.rest_api import ApiException as GenApiException
-from tiledb.cloud.rest_api import rest
 
 RESERVED_NAMESPACES = frozenset(["cloud", "owned", "public", "shared"])
 CHARACTER_ENCODING = "utf-8"
@@ -44,7 +43,7 @@ def rename_notebook(
       use. If left blank. default for namespace will be used.
     :param bool async_req: return future instead of results for async support.
     """
-    api_instance = client.client.notebook_api
+    api_instance = client.build(rest_api.NotebookApi)
     (namespace, current_notebook_name) = array.split_uri(tiledb_uri)
 
     try:

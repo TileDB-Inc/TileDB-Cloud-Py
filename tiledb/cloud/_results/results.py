@@ -165,7 +165,7 @@ def _maybe_uuid(id_str: Optional[str]) -> Optional[uuid.UUID]:
 
 
 def fetch_remote(task_id: uuid.UUID, decoder: decoders.AbstractDecoder[_T]) -> _T:
-    api_instance = client.client.tasks_api
+    api_instance = client.build(rest_api.TasksApi)
     try:
         resp: urllib3.HTTPResponse = api_instance.task_id_result_get(
             str(task_id),

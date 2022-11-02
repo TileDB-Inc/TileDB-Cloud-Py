@@ -55,7 +55,7 @@ class SQLNode(_base.Node[_base.ET, _T]):
         )
 
         try:
-            resp = self.owner._client.sql_api.run_sql(
+            resp = self.owner._client.build(rest_api.SqlApi).run_sql(
                 namespace=namespace,
                 sql=rest_api.SQLParameters(
                     name=self.display_name,
@@ -77,7 +77,7 @@ class SQLNode(_base.Node[_base.ET, _T]):
         if download_results or not self._task_id:
             self._result = _codec.BinaryResult.from_response(resp)
         else:
-            self._result = _codec.LazyResult(self._task_id)
+            self._result = _codec.LazyResult(self.owner._client, self._task_id)
 
     def _result_impl(self):
         return self._result.decode()

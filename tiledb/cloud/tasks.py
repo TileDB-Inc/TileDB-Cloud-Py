@@ -6,6 +6,7 @@ import pandas as pd
 
 from tiledb.cloud import array
 from tiledb.cloud import client
+from tiledb.cloud import rest_api
 from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
@@ -26,7 +27,7 @@ def task(id, async_req=False):
     if id is None:
         raise Exception("id parameter can not be empty")
 
-    api_instance = client.client.tasks_api
+    api_instance = client.build(rest_api.TasksApi)
 
     try:
         return api_instance.task_id_get(id=id, async_req=async_req)
@@ -57,7 +58,7 @@ def tasks(
     :param async_req: return future instead of results for async support
     :return:
     """
-    api_instance = client.client.tasks_api
+    api_instance = client.build(rest_api.TasksApi)
 
     if end is not None:
         if not isinstance(end, datetime.datetime):

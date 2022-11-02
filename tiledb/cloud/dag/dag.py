@@ -585,7 +585,9 @@ class DAG:
             if not self._tried_setup:
                 log_structure = self._build_log_structure()
                 try:
-                    result = client.client.task_graph_logs_api.create_task_graph_log(
+                    result = client.build(
+                        rest_api.TaskGraphLogsApi
+                    ).create_task_graph_log(
                         namespace=self.namespace,
                         log=log_structure,
                     )
@@ -662,7 +664,7 @@ class DAG:
         except KeyError as ke:
             raise AssertionError(f"Task graph ended in invalid state {status}") from ke
         do_update = utils.ephemeral_thread(
-            client.client.task_graph_logs_api.update_task_graph_log
+            client.build(rest_api.TaskGraphLogsApi).update_task_graph_log
         )
         do_update(
             id=str(self.server_graph_uuid),
@@ -900,7 +902,7 @@ class DAG:
             # the structure of the graph.
             if to_report:
                 do_report = utils.ephemeral_thread(
-                    client.client.task_graph_logs_api.report_client_node
+                    client.build(rest_api.TaskGraphLogsApi).report_client_node
                 )
                 do_report(
                     id=str(self.server_graph_uuid),
@@ -918,7 +920,7 @@ class DAG:
                 except KeyError as ke:
                     raise AssertionError(f"Invalid end state {status}") from ke
                 do_update = utils.ephemeral_thread(
-                    client.client.task_graph_logs_api.update_task_graph_log
+                    client.build(rest_api.TaskGraphLogsApi).update_task_graph_log
                 )
                 do_update(
                     id=str(self.server_graph_uuid),
@@ -1291,7 +1293,7 @@ def list_logs(
     :param page: The page number to use, starting from 1.
     :param per_page: The number of items per page.
     """
-    return client.client.task_graph_logs_api.list_task_graph_logs(
+    return client.build(rest_api.TaskGraphLogsApi).list_task_graph_logs(
         namespace=namespace,
         created_by=created_by,
         search=search,
@@ -1329,7 +1331,7 @@ def server_logs(
 
     namespace = namespace or client.default_charged_namespace()
 
-    return client.client.task_graph_logs_api.get_task_graph_log(
+    return client.build(rest_api.TaskGraphLogsApi).get_task_graph_log(
         namespace=namespace,
         id=str(the_id),
     )

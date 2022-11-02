@@ -3,6 +3,7 @@ from typing import Optional, Tuple, Union
 import tiledb
 from tiledb.cloud import array
 from tiledb.cloud import client
+from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
@@ -27,7 +28,7 @@ def create_file(
     :return: FileCreated details, including file_uuid and output_uri
     """
     try:
-        api_instance = client.client.file_api
+        api_instance = client.build(rest_api.FilesApi)
 
         file_create = models.FileCreate(
             input_uri=input_uri,
@@ -100,7 +101,7 @@ def export_file(
     try:
         (namespace, name) = array.split_uri(uri)
 
-        api_instance = client.client.file_api
+        api_instance = client.build(rest_api.FilesApi)
 
         if output_uri.startswith("file://") or "://" not in output_uri:
             return export_file_local(
