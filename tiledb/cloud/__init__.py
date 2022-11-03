@@ -4,6 +4,7 @@ from tiledb.cloud import compute
 from tiledb.cloud import dag
 from tiledb.cloud import sql
 from tiledb.cloud import udf
+from tiledb.cloud import group
 from tiledb.cloud.array import array_activity
 from tiledb.cloud.array import deregister_array
 from tiledb.cloud.array import info
@@ -73,4 +74,5 @@ __all__ = (
     "tasks",
     "TileDBCloudError",
     "__version__",
+    "group",
 )
