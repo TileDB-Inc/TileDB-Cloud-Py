@@ -130,6 +130,8 @@ def deregister(
 
 
 def _default_ns_path_cred(namespace: Optional[str] = None) -> Tuple[str, str, str]:
+    import sys
+    print(f"looking up creds for {namespace}", file=sys.stderr)
     principal: Union[rest_api.User, rest_api.Organization]
     if namespace:
         try:
@@ -146,18 +148,27 @@ def _default_ns_path_cred(namespace: Optional[str] = None) -> Tuple[str, str, st
         namespace = principal.username
         assert namespace
 
+    print(f"principal is {namespace}", file=sys.stderr)
+
     locs: Optional[rest_api.AssetLocations] = principal.asset_locations
+    print(f"asset locations:", file=sys.stderr)
+    print(locs, file=sys.stderr)
     # Weird structure to silence mypy complaints.
     storage: Optional[rest_api.StorageLocation] = locs.groups if locs else None
 
     path: Optional[str] = None
     cred_name: Optional[str] = None
     if storage:
+        print("using info from group storage location", file=sys.stderr)
         path = storage.path
         cred_name = storage.credentials_name
 
+    print(f"path = {path!r} or {principal.default_s3_path!r} + '/groups'", file=sys.stderr)
     path = path or (principal.default_s3_path + "/groups")
+    print(f"path = {path!r}")
+    print(f"cred_name = {cred_name!r} or {principal.default_s3_path_credentials_name!r}", file=sys.stderr)
     cred_name = cred_name or principal.default_s3_path_credentials_name
+    print(f"cred_name = {cred_name!r}", file=sys.stderr)
     return namespace, path, cred_name
 
 
