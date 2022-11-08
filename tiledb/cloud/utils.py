@@ -8,6 +8,7 @@ import urllib
 from typing import Any, Callable, Optional, TypeVar, Union
 
 import cloudpickle
+import urllib3
 
 TILEDB_CLOUD_PROTOCOL = 4
 
@@ -165,3 +166,22 @@ def ephemeral_thread(func: _CT, name: Optional[str] = None) -> _CT:
         started.wait()
 
     return wrapper  # type: ignore[return-value]
+
+
+def release_connection(resp: urllib3.HTTPResponse) -> None:
+    """Release the backing connection of this HTTPResponse to the pool.
+
+    When a call is made with ``preload_content=False``, the response body is not
+    eagerly read, and because of this, urllib3 does not know that the connection
+    can be returned to the pool. This means that both (a) we may use the results
+    of a request before it has fully finished (sometimes desirable, sometimes
+    undesirable), and (b) as time goes on, we will have more and more dangling
+    sockets open but unusable.
+
+    This function drains those connections (i.e. reads the data and throws it
+    on the floor) and releases the connection back to the pool, in a blocking
+    manner (since we may wish to wait until all the contents are received).
+    Consider combining this with :func:`ephemeral_thread` for an async call.
+    """
+    resp.drain_conn()
+    resp.release_conn()

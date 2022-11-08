@@ -11,6 +11,7 @@ import urllib3
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error as tce
+from tiledb.cloud import utils
 from tiledb.cloud._common import futures
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import stored_params
@@ -173,4 +174,7 @@ def fetch_remote(task_id: uuid.UUID, decoder: decoders.AbstractDecoder[_T]) -> _
         )
     except rest_api.ApiException as exc:
         raise tce.check_exc(exc) from None
-    return decoder.decode(resp.data)
+    try:
+        return decoder.decode(resp.data)
+    finally:
+        utils.release_connection(resp)

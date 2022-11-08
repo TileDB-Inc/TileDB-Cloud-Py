@@ -5,6 +5,7 @@ import urllib3
 
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
+from tiledb.cloud import utils
 from tiledb.cloud._common import json_safe
 from tiledb.cloud.taskgraphs import builder
 
@@ -56,7 +57,10 @@ def load(
         name=name,
         _preload_content=False,
     )
-    return json.loads(result.data)
+    try:
+        return json.loads(result.data)
+    finally:
+        utils.release_connection(result)
 
 
 def update(

@@ -12,6 +12,7 @@ import urllib3
 
 from tiledb.cloud import client as client_mod
 from tiledb.cloud import rest_api
+from tiledb.cloud import utils
 from tiledb.cloud._common import visitor
 from tiledb.cloud._results import decoders
 from tiledb.cloud.taskgraphs import types
@@ -229,7 +230,10 @@ class LazyResult(Result):
                     str(self._task_id),
                     _preload_content=False,
                 )
-                self._result = BinaryResult.from_response(resp)
+                try:
+                    self._result = BinaryResult.from_response(resp)
+                finally:
+                    utils.release_connection(resp)
             return self._result
 
 
