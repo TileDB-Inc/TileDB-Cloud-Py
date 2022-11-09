@@ -1,10 +1,7 @@
 import base64
-import datetime
-import multiprocessing
 import uuid
 from typing import AbstractSet, Any, Dict, List, Optional, Sequence, TypeVar
 
-import attrs
 import cloudpickle
 import urllib3
 
@@ -13,18 +10,11 @@ from tiledb.cloud._common import json_safe
 from tiledb.cloud._common import ordered
 from tiledb.cloud._results import results
 from tiledb.cloud.taskgraphs import _codec
-from tiledb.cloud.taskgraphs import types
 from tiledb.cloud.taskgraphs.client_executor import _base
 from tiledb.cloud.taskgraphs.client_executor import _replacers
 from tiledb.cloud.taskgraphs.client_executor import array_node
 
 _T = TypeVar("_T")
-
-_DEFAULT_LOCAL_TIMEOUT = datetime.timedelta(hours=1)
-"""The default maximum amout of time we allow a local UDF to run."""
-
-
-_MP_CTX = multiprocessing.get_context("spawn")
 
 
 class UDFNode(_base.Node[_base.ET, _T]):
@@ -102,47 +92,16 @@ class UDFNode(_base.Node[_base.ET, _T]):
 
         # An Arguments whose entries are RegisteredArgs.
         registered_args_args = _replacers.parse_json_args(self._arguments)
-        upr = _replacers.UDFParamReplacer(parents, _base.ParamFormat.VALUES)
-        # An Arguments whose entries are CallArgs. These are not fully decoded
-        # to native values since we need to pass them to our worker process
-        # while still CloudPickle-encoded (since regular Pickle may not handle
-        # them correctly).
-        call_args_args = _replacers.visit_args(upr, registered_args_args)
-
-        # Use an 'or' rather than `.get("timeout", default)` since we want to
-        # use the default timeout if it is set to zero.
-        udf_timeout: Optional[int] = self._environment.get("timeout")
-        actual_timeout = udf_timeout or _DEFAULT_LOCAL_TIMEOUT.total_seconds()
-
-        # TODO: Have the executor own a process pool and execute on that.
-        q = _MP_CTX.SimpleQueue()
-        p = _MP_CTX.Process(
-            name=f"{self.display_name} worker process",
-            target=_run_udf,
-            args=(self._executable_code, call_args_args, q),
-        )
-        p.start()
+        replacer = _replacers.NodeOutputValueReplacer(parents)
         try:
-            p.join(actual_timeout)
-            p.terminate()  # No-op if the process already completed.
-            if p.exitcode != 0:
-                # The built-in TimeoutError is NOT a futures.TimeoutError
-                # and represents a different outcome.
-                raise TimeoutError(
-                    f"{self.display_name} terminated with code {p.exitcode}"
-                )
-        finally:
-            p.join(1)
-            # Python 3.6 doesn't have process.Close; sub in a no-op if needed.
-            getattr(p, "close", lambda: None)()
-        result: _RunResult = q.get()
-        if result.internal_exception:
-            roe = RemoteOnlyError(result.internal_exception)
-            raise roe from result.internal_exception
-        if result.user_exception:
-            raise result.user_exception
-        assert result.result
-        self._result = result.result
+            udf_pkl = base64.b64decode(self._executable_code)
+            udf = cloudpickle.loads(udf_pkl)
+            real_args = _replacers.visit_args(replacer, registered_args_args)
+        except Exception as e:
+            raise RemoteOnlyError(e) from e
+
+        output = real_args.apply(udf)
+        self._result = _codec.BinaryResult.of(output)
         # TODO: Report local execution success to the server.
 
     def _exec_remote(
@@ -262,38 +221,6 @@ class UDFNode(_base.Node[_base.ET, _T]):
         if self._is_local():
             return rest_api.TaskGraphLogRunLocation.CLIENT
         return rest_api.TaskGraphLogRunLocation.SERVER
-
-
-def _run_udf(
-    exec_data: str, encoded_args: types.Arguments, ret: multiprocessing.SimpleQueue
-) -> None:
-    unesc = _replacers.NodeOutputValueReplacer({})
-    try:
-        udf_pkl = base64.b64decode(exec_data)
-        udf = cloudpickle.loads(udf_pkl)
-        real_args = _replacers.visit_args(unesc, encoded_args)
-    except Exception as e:
-        ret.put(_RunResult(internal_exception=e))
-        return
-
-    try:
-        result = real_args.apply(udf)
-    except Exception as e:
-        ret.put(_RunResult(user_exception=e))
-        return
-    try:
-        bin_result = _codec.BinaryResult.of(result)
-    except Exception as e:
-        ret.put(_RunResult(internal_exception=e))
-    else:
-        ret.put(_RunResult(result=bin_result))
-
-
-@attrs.define(frozen=True, slots=True)
-class _RunResult:
-    result: Optional[_codec.BinaryResult] = None
-    internal_exception: Optional[Exception] = None
-    user_exception: Optional[Exception] = None
 
 
 class RemoteOnlyError(RuntimeError):

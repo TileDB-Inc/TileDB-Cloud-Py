@@ -142,14 +142,6 @@ class ClientExecutorTestLocal(unittest.TestCase):
             os.remove(p_two)
             self.assertEqual("one two", exec.node(out).result(5))
 
-    def test_timeout(self):
-        grf = builder.TaskGraphBuilder()
-        timer = grf.udf(time.sleep, types.args(10), timeout=2, local=True)
-        exec = client_executor.LocalExecutor(grf)
-        exec.execute()
-        with self.assertRaises(TimeoutError):
-            exec.node(timer).result(5)
-
 
 class ClientExecutorTestArrays(unittest.TestCase):
     def test_basic(self):
