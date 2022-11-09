@@ -6,6 +6,7 @@ import cloudpickle
 import urllib3
 
 from tiledb.cloud import rest_api
+from tiledb.cloud import utils
 from tiledb.cloud._common import json_safe
 from tiledb.cloud._common import ordered
 from tiledb.cloud._results import results
@@ -197,11 +198,18 @@ class UDFNode(_base.Node[_base.ET, _T]):
     def _set_result(
         self, resp: urllib3.HTTPResponse, *, download_results: bool
     ) -> None:
-        self._task_id = results.extract_task_id(resp)
-        if download_results or not self._task_id:
-            self._result = _codec.BinaryResult.from_response(resp)
-        else:
-            self._result = _codec.LazyResult(self.owner._client, self._task_id)
+        """Handles all the internals of setting result information.
+
+        This includes draining and releasing the HTTP connection.
+        """
+        try:
+            self._task_id = results.extract_task_id(resp)
+            if download_results or not self._task_id:
+                self._result = _codec.BinaryResult.from_response(resp)
+            else:
+                self._result = _codec.LazyResult(self.owner._client, self._task_id)
+        finally:
+            utils.release_connection(resp)
 
     def _result_impl(self):
         return self._result.decode()

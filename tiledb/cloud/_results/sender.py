@@ -6,6 +6,7 @@ import urllib3
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error as tce
+from tiledb.cloud import utils
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 
@@ -57,16 +58,19 @@ def send_udf_call(
             id_callback(results.extract_task_id(exc))
         raise tce.check_exc(exc) from None
 
-    task_id = results.extract_task_id(http_response)
-    if id_callback:
-        id_callback(task_id)
+    try:
+        task_id = results.extract_task_id(http_response)
+        if id_callback:
+            id_callback(task_id)
 
-    return results.RemoteResult(
-        body=http_response.data if results_downloaded else None,
-        decoder=decoder,
-        task_id=task_id,
-        results_stored=results_stored,
-    )
+        return results.RemoteResult(
+            body=http_response.data if results_downloaded else None,
+            decoder=decoder,
+            task_id=task_id,
+            results_stored=results_stored,
+        )
+    finally:
+        utils.release_connection(http_response)
 
 
 def wrap_async_base_call(

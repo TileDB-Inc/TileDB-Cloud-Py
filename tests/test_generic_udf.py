@@ -105,11 +105,14 @@ class GenericUDFTest(unittest.TestCase):
                 namespace=namespace,
                 _preload_content=False,
             )
-            self.assertEqual(200, response.status)
-            self.assertEqual(
-                rb'''"called with ('called with (1,) {}',) {'named': \"called with () {'param': 'two'}\", 'basic': 'three'}"''',  # noqa: E501
-                response.data,
-            )
+            try:
+                self.assertEqual(200, response.status)
+                self.assertEqual(
+                    rb'''"called with ('called with (1,) {}',) {'named': \"called with () {'param': 'two'}\", 'basic': 'three'}"''',  # noqa: E501
+                    response.data,
+                )
+            finally:
+                utils.release_connection(response)
 
     def test_timeout(self):
         def test():

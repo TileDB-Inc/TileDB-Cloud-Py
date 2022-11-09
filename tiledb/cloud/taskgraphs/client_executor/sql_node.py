@@ -2,6 +2,7 @@ import uuid
 from typing import Any, Dict, Optional, TypeVar
 
 from tiledb.cloud import rest_api
+from tiledb.cloud import utils
 from tiledb.cloud._results import results
 from tiledb.cloud.taskgraphs import _codec
 from tiledb.cloud.taskgraphs.client_executor import _base
@@ -73,11 +74,14 @@ class SQLNode(_base.Node[_base.ET, _T]):
         except rest_api.ApiException as apix:
             self._task_id = results.extract_task_id(apix)
             raise
-        self._task_id = results.extract_task_id(resp)
-        if download_results or not self._task_id:
-            self._result = _codec.BinaryResult.from_response(resp)
-        else:
-            self._result = _codec.LazyResult(self.owner._client, self._task_id)
+        try:
+            self._task_id = results.extract_task_id(resp)
+            if download_results or not self._task_id:
+                self._result = _codec.BinaryResult.from_response(resp)
+            else:
+                self._result = _codec.LazyResult(self.owner._client, self._task_id)
+        finally:
+            utils.release_connection(resp)
 
     def _result_impl(self):
         return self._result.decode()
