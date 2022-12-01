@@ -1,6 +1,7 @@
 import enum
 import os
 import threading
+import warnings
 from concurrent import futures
 from typing import Callable, Optional, Sequence, TypeVar, Union
 
@@ -117,9 +118,17 @@ def login(
         del kwargs["password"]
 
     config.setup_configuration(**kwargs)
-    config.save_configuration(config.default_config_file)
     config.logged_in = True
     client.set_threads(threads)
+    try:
+        config.save_configuration(config.default_config_file)
+    except IOError:
+        warnings.warn(
+            UserWarning(
+                "Could not save TileDB Cloud configuration; login will expire"
+                " when this program exits."
+            )
+        )
 
 
 def default_user() -> models.User:
