@@ -293,7 +293,7 @@ class _DelayedNode(futures.FutureLike, metaclass=abc.ABCMeta):
             del _
             return fn(self)
 
-        if self._finalized:
+        if self._finalized():
             self._exec_node().add_done_callback(proxy)
         else:
             self._pre_start_callbacks.append(proxy)
