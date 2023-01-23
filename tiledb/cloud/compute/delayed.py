@@ -27,6 +27,7 @@ from tiledb.cloud._common import futures
 from tiledb.cloud._common import ordered
 from tiledb.cloud._common import visitor
 from tiledb.cloud.taskgraphs import builder
+from tiledb.cloud.taskgraphs import batch_executor
 from tiledb.cloud.taskgraphs import client_executor
 from tiledb.cloud.taskgraphs import depgraph
 from tiledb.cloud.taskgraphs import executor
@@ -52,7 +53,7 @@ class _DelayedGraph:
     def __init__(self):
         self._deps = depgraph.DepGraph[_DelayedNode]()
         self._builder: Optional[builder.TaskGraphBuilder] = None
-        self._execution: Optional[client_executor.LocalExecutor] = None
+        self._execution: Optional[executor.Executor] = None
         self._exec_to_node: Dict[executor.Node, "_DelayedNode"] = {}
 
     def _absorb(self, other: "_DelayedGraph") -> None:
@@ -133,7 +134,10 @@ class _DelayedGraph:
         for node in self._deps:
             node._builder_node = None
 
-    def _build(self) -> Tuple[builder.TaskGraphBuilder, client_executor.LocalExecutor]:
+    def _build(
+            self,
+            batch: Optional[bool] = False,
+    ) -> Tuple[builder.TaskGraphBuilder, executor.Executor]:
         """Transforms this graph into its TaskGraphBuilder (if needed)."""
         if not self._builder:
             bld = builder.TaskGraphBuilder()
@@ -148,7 +152,10 @@ class _DelayedGraph:
                     built_parent = parent._builder_node
                     bld.add_dep(parent=built_parent, child=child_in)
             self._builder = bld
-            self._execution = client_executor.LocalExecutor(bld)
+            if batch:
+                self._execution = batch_executor.BatchExecutor(bld)
+            else:
+                self._execution = client_executor.LocalExecutor(bld)
         assert self._execution
         return self._builder, self._execution
 
@@ -165,9 +172,11 @@ class _DelayedGraph:
         *,
         name: Optional[str] = None,
         namespace: Optional[str] = None,
+        batch: Optional[bool] = False,
     ) -> None:
         """Starts execution of this graph (if not yet started)."""
-        _, exec = self._build()
+        _, exec = self._build(batch=batch)
+
         if exec.status is not executor.Status.WAITING:
             return
         if name:
@@ -238,9 +247,9 @@ class _DelayedNode(futures.FutureLike, metaclass=abc.ABCMeta):
         self.timeout = value
 
     def compute(
-        self, namespace: Optional[str] = None, name: Optional[str] = None
+        self, namespace: Optional[str] = None, name: Optional[str] = None, batch: Optional[bool] = False
     ) -> Any:
-        self._owner._start(namespace=namespace, name=name)
+        self._owner._start(namespace=namespace, name=name, batch=batch)
         return self.result(self.timeout)
 
     # Future-like methods

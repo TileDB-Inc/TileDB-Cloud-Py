@@ -13,9 +13,10 @@ this a late-stage beta. We will endeavor to maintain compatibility but cannot
 guarantee it 100%.
 """
 
-from typing import Any, Union
+from typing import Any, Union, Optional
 
 from tiledb.cloud.taskgraphs import builder
+from tiledb.cloud.taskgraphs import batch_executor
 from tiledb.cloud.taskgraphs import client_executor
 from tiledb.cloud.taskgraphs import executor
 from tiledb.cloud.taskgraphs import registration
@@ -48,6 +49,7 @@ GraphOrRegistered = Union[executor.GraphStructure, str]
 
 def execute(
     __graph: GraphOrRegistered,
+    __batch: Optional[bool] = False,
     **graph_inputs: Any,
 ) -> executor.Executor:
     """Executes this graph with default settings and the provided input values.
@@ -69,6 +71,9 @@ def execute(
     """
 
     grf = load(__graph) if isinstance(__graph, str) else __graph
-    exec = client_executor.LocalExecutor(grf)
+    if __batch:
+        exec = batch_executor.BatchExecutor(grf)
+    else:
+        exec = client_executor.LocalExecutor(grf)
     exec.execute(**graph_inputs)
     return exec
