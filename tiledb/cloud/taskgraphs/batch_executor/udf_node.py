@@ -30,9 +30,6 @@ class UDFNode(_base.Node[_base.ET, _T]):
     def result(self, timeout: Optional[float] = None) -> _T:
         with self._lifecycle_condition:
             _base.wait_for(self._lifecycle_condition, self._done, timeout)
-
-        # if self._status == Status.SUCCEEDED:
-        print(f"Getting udf results for id: {str(self._execution_id)} name {self.name}")
         try:
             return _codec.LazyResult(self._client, self._execution_id).decode()
         except rest_api.ApiException as apix:
@@ -42,7 +39,6 @@ class UDFNode(_base.Node[_base.ET, _T]):
 
 
     def exception(self, timeout: Optional[float] = None) -> Optional[Exception]:
-        print(f"Getting exception results for id: {str(self._execution_id)} name {self.name}")
         try:
             _codec.LazyResult(self._client, self._execution_id).decode()
         except rest_api.ApiException as apix:
