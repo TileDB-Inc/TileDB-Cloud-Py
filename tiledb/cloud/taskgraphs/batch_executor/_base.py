@@ -39,11 +39,11 @@ class Node(executor.Node[ET, _T], builder.Node[_T], metaclass=abc.ABCMeta):
     """
 
     def __init__(
-            self,
-            uid: uuid.UUID,
-            owner: ET,
-            name: Optional[str],
-            api_client: client.Client,
+        self,
+        uid: uuid.UUID,
+        owner: ET,
+        name: Optional[str],
+        api_client: client.Client,
     ):
         super().__init__(uid, owner, name)
         self._client = api_client
@@ -62,8 +62,7 @@ class Node(executor.Node[ET, _T], builder.Node[_T], metaclass=abc.ABCMeta):
         self._execution_id = execution_id
 
     def set_status_notify(self, status: Status) -> None:
-        """Sets the Node's status and notifies waiters.
-        """
+        """Sets the Node's status and notifies waiters."""
         with self._lifecycle_condition:
             if self._status is status:
                 return

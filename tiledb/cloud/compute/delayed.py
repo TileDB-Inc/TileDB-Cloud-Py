@@ -135,8 +135,8 @@ class _DelayedGraph:
             node._builder_node = None
 
     def _build(
-            self,
-            batch: Optional[bool] = False,
+        self,
+        batch: Optional[bool] = False,
     ) -> Tuple[builder.TaskGraphBuilder, executor.Executor]:
         """Transforms this graph into its TaskGraphBuilder (if needed)."""
         if not self._builder:
@@ -247,7 +247,10 @@ class _DelayedNode(futures.FutureLike, metaclass=abc.ABCMeta):
         self.timeout = value
 
     def compute(
-        self, namespace: Optional[str] = None, name: Optional[str] = None, batch: Optional[bool] = False
+        self,
+        namespace: Optional[str] = None,
+        name: Optional[str] = None,
+        batch: Optional[bool] = False,
     ) -> Any:
         self._owner._start(namespace=namespace, name=name, batch=batch)
         return self.result(self.timeout)

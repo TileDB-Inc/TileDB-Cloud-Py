@@ -105,7 +105,6 @@ class BatchExecutor(_base.IBatchExecutor):
         )
         self._update_status_thread.start()
 
-
     @property
     def status(self) -> Status:
         with self._done_condition:
@@ -177,10 +176,7 @@ class BatchExecutor(_base.IBatchExecutor):
             try:
                 result = self._client.build(
                     rest_api.TaskGraphLogsApi
-                ).get_task_graph_log(
-                    namespace="TileDB-Inc",
-                    id=self._server_graph_uuid
-                )
+                ).get_task_graph_log(namespace="TileDB-Inc", id=self._server_graph_uuid)
             except rest_api.ApiException as apix:
                 raise
             else:
@@ -188,14 +184,20 @@ class BatchExecutor(_base.IBatchExecutor):
                     node = self._by_name[new_node.name]
                     if not isinstance(node, input_node.InputNode):
                         if new_node.executions:
-                            node.set_execution_id(new_node.executions[len(new_node.executions)-1].id)
-                        new_node_status = _base.array_task_status_to_executor_status(new_node.status)
+                            node.set_execution_id(
+                                new_node.executions[len(new_node.executions) - 1].id
+                            )
+                        new_node_status = _base.array_task_status_to_executor_status(
+                            new_node.status
+                        )
                         if node.status != new_node_status:
                             self._has_status_updates = True
                             node.set_status_notify(new_node_status)
 
                 with self._done_condition:
-                    new_workflow_status = _base.task_graph_log_status_to_executor_status(result.status)
+                    new_workflow_status = (
+                        _base.task_graph_log_status_to_executor_status(result.status)
+                    )
                     if self._status != new_workflow_status:
                         self._has_status_updates = True
                         self._status = new_workflow_status

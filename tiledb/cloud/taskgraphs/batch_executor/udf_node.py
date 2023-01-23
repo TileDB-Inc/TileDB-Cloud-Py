@@ -37,7 +37,6 @@ class UDFNode(_base.Node[_base.ET, _T]):
             self._result_exception = apix
             raise
 
-
     def exception(self, timeout: Optional[float] = None) -> Optional[Exception]:
         try:
             _codec.LazyResult(self._client, self._execution_id).decode()
