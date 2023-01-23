@@ -216,7 +216,6 @@ class LazyResult(Result):
 
     def decode(self) -> types.NativeValue:
         result = self._download()
-        print(result)
         return result.decode()
 
     def _tdb_to_json(self) -> types.CallArg:
