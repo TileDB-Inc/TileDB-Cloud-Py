@@ -26,8 +26,8 @@ from tiledb.cloud import utils
 from tiledb.cloud._common import futures
 from tiledb.cloud._common import ordered
 from tiledb.cloud._common import visitor
-from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import batch_executor
+from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import client_executor
 from tiledb.cloud.taskgraphs import depgraph
 from tiledb.cloud.taskgraphs import executor

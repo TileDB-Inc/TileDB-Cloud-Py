@@ -1,8 +1,8 @@
 """Base types and functions for the server-side batch executor."""
 
 import abc
-import uuid
 import threading
+import uuid
 from typing import Callable, Optional, TypeVar
 
 import attrs
@@ -10,8 +10,8 @@ import attrs
 from tiledb.cloud import client
 from tiledb.cloud._common import futures
 from tiledb.cloud.rest_api import models
-from tiledb.cloud.taskgraphs import executor
 from tiledb.cloud.taskgraphs import builder
+from tiledb.cloud.taskgraphs import executor
 
 Status = executor.Status
 NOTHING = attrs.make_class("Nothing", (), frozen=True, slots=True)()

@@ -13,10 +13,10 @@ this a late-stage beta. We will endeavor to maintain compatibility but cannot
 guarantee it 100%.
 """
 
-from typing import Any, Union, Optional
+from typing import Any, Optional, Union
 
-from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import batch_executor
+from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import client_executor
 from tiledb.cloud.taskgraphs import executor
 from tiledb.cloud.taskgraphs import registration

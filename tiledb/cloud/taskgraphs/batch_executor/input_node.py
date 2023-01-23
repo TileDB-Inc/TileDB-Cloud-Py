@@ -1,5 +1,5 @@
 import uuid
-from typing import Any, Dict, Optional, TypeVar, Set
+from typing import Any, Dict, Optional, Set, TypeVar
 
 from tiledb.cloud import client
 from tiledb.cloud.taskgraphs import _codec
