@@ -33,6 +33,21 @@ class DelayedClassTest(unittest.TestCase):
         self.assertEqual(node_2.result(), 4)
         self.assertEqual(node_3.result(), 8)
 
+    def test_simple_delayed_batch_execution(self):
+
+        node_1 = Delayed(np.median, name="node_1")
+        node_1([1, 2, 3])
+        node_2 = Delayed(lambda x: x * 2, name="node_2")(node_1)
+        node_3 = Delayed(lambda x: x * 2, name="node_3")(node_2)
+
+        # Add timeout so we don't wait forever in CI
+        node_3.set_timeout(30)
+        node_3.compute(batch=True)
+
+        self.assertEqual(node_1.result(), 2)
+        self.assertEqual(node_2.result(), 4)
+        self.assertEqual(node_3.result(), 8)
+
     def test_kwargs(self):
         def string_multi(multiplier, str=None):
             return int(multiplier) * str

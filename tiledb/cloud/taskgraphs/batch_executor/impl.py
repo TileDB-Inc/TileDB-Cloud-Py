@@ -98,7 +98,6 @@ class BatchExecutor(_base.IBatchExecutor):
             node._status: Status = Status.SUCCEEDED
 
         self._graph_json = self._executor_to_json()
-        print(self.get_namespace())
         try:
             submission = self._client.build(rest_api.TaskGraphsApi).create_task_graph(
                 namespace=self.get_namespace(), graph=self._graph_json
@@ -188,11 +187,13 @@ class BatchExecutor(_base.IBatchExecutor):
             try:
                 result = self._client.build(
                     rest_api.TaskGraphLogsApi
-                ).get_task_graph_log(namespace=self.get_namespace(), id=self._server_graph_uuid)
+                ).get_task_graph_log(
+                    namespace=self.get_namespace(), id=self._server_graph_uuid
+                )
             except rest_api.ApiException as apix:
                 raise
             else:
-                # print(result)
+                print(result.status_count)
                 for new_node in result.nodes:
                     node = self._by_name[new_node.name]
                     if not isinstance(node, input_node.InputNode):
