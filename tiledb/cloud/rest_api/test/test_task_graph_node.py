@@ -16,14 +16,12 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.registered_task_graph_node import (  # noqa: E501
-    RegisteredTaskGraphNode,
-)
+from tiledb.cloud.rest_api.models.task_graph_node import TaskGraphNode  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestRegisteredTaskGraphNode(unittest.TestCase):
-    """RegisteredTaskGraphNode unit test stubs"""
+class TestTaskGraphNode(unittest.TestCase):
+    """TaskGraphNode unit test stubs"""
 
     def setUp(self):
         pass
@@ -32,13 +30,13 @@ class TestRegisteredTaskGraphNode(unittest.TestCase):
         pass
 
     def make_instance(self, include_optional):
-        """Test RegisteredTaskGraphNode
+        """Test TaskGraphNode
         include_option is a boolean, when False only required
         params are included, when True both required and
         optional params are included"""
-        # model = tiledb.cloud.rest_api.models.registered_task_graph_node.RegisteredTaskGraphNode()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.task_graph_node.TaskGraphNode()  # noqa: E501
         if include_optional:
-            return RegisteredTaskGraphNode(
+            return TaskGraphNode(
                 client_node_id="0",
                 name="0",
                 depends_on=["0"],
@@ -71,6 +69,10 @@ class TestRegisteredTaskGraphNode(unittest.TestCase):
                         image_name="0",
                         namespace="0",
                         resource_class="0",
+                        resources=tiledb.cloud.rest_api.models.tgudf_environment_resources.TGUDFEnvironment_resources(
+                            cpu="500m",
+                            memory="8Gi",
+                        ),
                         run_client_side=True,
                     ),
                     arguments=[
@@ -83,10 +85,10 @@ class TestRegisteredTaskGraphNode(unittest.TestCase):
                 ),
             )
         else:
-            return RegisteredTaskGraphNode()
+            return TaskGraphNode()
 
-    def testRegisteredTaskGraphNode(self):
-        """Test RegisteredTaskGraphNode"""
+    def testTaskGraphNode(self):
+        """Test TaskGraphNode"""
         inst_req_only = self.make_instance(include_optional=False)
         inst_req_and_optional = self.make_instance(include_optional=True)
 

@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **license_id** | **str** | SPDX license identifier. | [optional] 
 **license_text** | **str** | Full text of the license. | [optional] 
 **tags** | **list[str]** | Optional tags to classify the graph. | [optional] 
-**nodes** | [**list[RegisteredTaskGraphNode]**](RegisteredTaskGraphNode.md) | The structure of the graph, in the form of the nodes that make it up. As with &#x60;TaskGraphLog&#x60;, nodes must topologically sorted, so that any node appears after all the nodes it depends on.  | [optional] 
+**nodes** | [**list[TaskGraphNode]**](TaskGraphNode.md) | The structure of the graph, in the form of the nodes that make it up. As with &#x60;TaskGraphLog&#x60;, nodes must topologically sorted, so that any node appears after all the nodes it depends on.  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

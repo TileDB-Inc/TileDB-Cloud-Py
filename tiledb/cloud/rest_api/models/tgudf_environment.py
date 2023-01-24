@@ -38,6 +38,7 @@ class TGUDFEnvironment(object):
         "image_name": "str",
         "namespace": "str",
         "resource_class": "str",
+        "resources": "TGUDFEnvironmentResources",
         "run_client_side": "bool",
     }
 
@@ -47,6 +48,7 @@ class TGUDFEnvironment(object):
         "image_name": "image_name",
         "namespace": "namespace",
         "resource_class": "resource_class",
+        "resources": "resources",
         "run_client_side": "run_client_side",
     }
 
@@ -57,6 +59,7 @@ class TGUDFEnvironment(object):
         image_name=None,
         namespace=None,
         resource_class=None,
+        resources=None,
         run_client_side=None,
         local_vars_configuration=None,
     ):  # noqa: E501
@@ -70,6 +73,7 @@ class TGUDFEnvironment(object):
         self._image_name = None
         self._namespace = None
         self._resource_class = None
+        self._resources = None
         self._run_client_side = None
         self.discriminator = None
 
@@ -82,6 +86,8 @@ class TGUDFEnvironment(object):
         self.namespace = namespace
         if resource_class is not None:
             self.resource_class = resource_class
+        if resources is not None:
+            self.resources = resources
         if run_client_side is not None:
             self.run_client_side = run_client_side
 
@@ -197,6 +203,27 @@ class TGUDFEnvironment(object):
         """
 
         self._resource_class = resource_class
+
+    @property
+    def resources(self):
+        """Gets the resources of this TGUDFEnvironment.  # noqa: E501
+
+
+        :return: The resources of this TGUDFEnvironment.  # noqa: E501
+        :rtype: TGUDFEnvironmentResources
+        """
+        return self._resources
+
+    @resources.setter
+    def resources(self, resources):
+        """Sets the resources of this TGUDFEnvironment.
+
+
+        :param resources: The resources of this TGUDFEnvironment.  # noqa: E501
+        :type: TGUDFEnvironmentResources
+        """
+
+        self._resources = resources
 
     @property
     def run_client_side(self):

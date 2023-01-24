@@ -16,14 +16,12 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.registered_task_graph import (  # noqa: E501
-    RegisteredTaskGraph,
-)
+from tiledb.cloud.rest_api.models.task_graph import TaskGraph  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestRegisteredTaskGraph(unittest.TestCase):
-    """RegisteredTaskGraph unit test stubs"""
+class TestTaskGraph(unittest.TestCase):
+    """TaskGraph unit test stubs"""
 
     def setUp(self):
         pass
@@ -32,20 +30,20 @@ class TestRegisteredTaskGraph(unittest.TestCase):
         pass
 
     def make_instance(self, include_optional):
-        """Test RegisteredTaskGraph
+        """Test TaskGraph
         include_option is a boolean, when False only required
         params are included, when True both required and
         optional params are included"""
-        # model = tiledb.cloud.rest_api.models.registered_task_graph.RegisteredTaskGraph()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.task_graph.TaskGraph()  # noqa: E501
         if include_optional:
-            return RegisteredTaskGraph(
+            return TaskGraph(
                 uuid="0",
                 namespace="0",
+                created_by="0",
                 name="0",
-                readme="0",
-                license_id="0",
-                license_text="0",
-                tags=["0"],
+                created_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
                 nodes=[
                     tiledb.cloud.rest_api.models.task_graph_node.TaskGraphNode(
                         client_node_id="0",
@@ -99,10 +97,10 @@ class TestRegisteredTaskGraph(unittest.TestCase):
                 ],
             )
         else:
-            return RegisteredTaskGraph()
+            return TaskGraph()
 
-    def testRegisteredTaskGraph(self):
-        """Test RegisteredTaskGraph"""
+    def testTaskGraph(self):
+        """Test TaskGraph"""
         inst_req_only = self.make_instance(include_optional=False)
         inst_req_and_optional = self.make_instance(include_optional=True)
 

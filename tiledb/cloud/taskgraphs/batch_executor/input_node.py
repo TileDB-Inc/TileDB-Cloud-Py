@@ -61,6 +61,6 @@ class InputNode(_base.Node[_base.ET, _T]):
         if self._default_value_encoded is not _base.NOTHING:
             input_node["default_value"] = self._default_value_encoded
         if self._value_encoded is not _base.NOTHING:
-            input_node["value"] = self._value_encoded
+            input_node["default_value"] = self._value_encoded
         ret["input_node"] = input_node
         return ret

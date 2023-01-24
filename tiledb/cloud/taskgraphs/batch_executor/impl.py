@@ -47,8 +47,8 @@ class BatchExecutor(_base.IBatchExecutor):
         """
         self._client = api_client or client.client
         super().__init__(graph)
-        self._name = name
-        self._namespace = namespace
+        self.namespace = namespace
+        self._name = name or self._graph_json["name"]
         self._inputs: Dict[uuid.UUID, Any] = {}
 
         self._done_condition = threading.Condition(threading.Lock())
@@ -98,7 +98,17 @@ class BatchExecutor(_base.IBatchExecutor):
             node._status: Status = Status.SUCCEEDED
 
         self._graph_json = self._executor_to_json()
-        # TODO call the workflow submit API using _graph_json and set the _server_graph_uuid
+        print(self.get_namespace())
+        try:
+            submission = self._client.build(rest_api.TaskGraphsApi).create_task_graph(
+                namespace=self.get_namespace(), graph=self._graph_json
+            )
+            execution = self._client.build(rest_api.TaskGraphsApi).submit_task_graph(
+                namespace=self.get_namespace(), id=submission.uuid
+            )
+            self._server_graph_uuid = execution.uuid
+        except rest_api.ApiException as apix:
+            raise
 
         self._update_status_thread = threading.Thread(
             name=f"{self._prefix}-update-status",
@@ -132,8 +142,8 @@ class BatchExecutor(_base.IBatchExecutor):
         # TODO call workflow retry API and set the new _server_graph_uuid and restart the _update_status_thread
         pass
 
-    def namespace(self) -> str:
-        return self._namespace or client.default_charged_namespace()
+    def get_namespace(self) -> str:
+        return self.namespace or client.default_charged_namespace()
 
     def _make_node(
         self,
@@ -178,10 +188,11 @@ class BatchExecutor(_base.IBatchExecutor):
             try:
                 result = self._client.build(
                     rest_api.TaskGraphLogsApi
-                ).get_task_graph_log(namespace="TileDB-Inc", id=self._server_graph_uuid)
+                ).get_task_graph_log(namespace=self.get_namespace(), id=self._server_graph_uuid)
             except rest_api.ApiException as apix:
                 raise
             else:
+                # print(result)
                 for new_node in result.nodes:
                     node = self._by_name[new_node.name]
                     if not isinstance(node, input_node.InputNode):
