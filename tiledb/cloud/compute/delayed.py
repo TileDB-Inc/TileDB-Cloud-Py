@@ -293,7 +293,7 @@ class _DelayedNode(futures.FutureLike, metaclass=abc.ABCMeta):
             del _
             return fn(self)
 
-        if self._finalized():
+        if self._finalized:
             self._exec_node().add_done_callback(proxy)
         else:
             self._pre_start_callbacks.append(proxy)
@@ -633,8 +633,6 @@ class _DelayedArrayCommon(_DelayedNode, metaclass=abc.ABCMeta):
         merger.visit(args)
         merger.visit(kwargs)
         merger.merge_into(self._owner)
-        for other in merger.unexecuted_nodes:
-            self.depends_on(other)
         self._args += args
         self._kwargs.update(kwargs)
         self._has_node_args = self._has_node_args or merger.has_nodes

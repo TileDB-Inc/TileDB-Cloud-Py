@@ -430,25 +430,3 @@ class DelayedCloudApplyTest(unittest.TestCase):
             numpy.mean([200, numpy.sum(orig["a"]), numpy.sum(orig_dense["a"])]),
         )
         self.assertEqual(node_exec.status, Status.SUCCEEDED)
-
-    def test_array_chain(self):
-        def sum_a(arr):
-            import numpy
-
-            return int(numpy.sum(arr["a"]))
-
-        def sum_b(arr, prev):
-            import numpy
-
-            return int(numpy.sum(arr["a"])), prev
-
-        node_array_a = DelayedArrayUDF("tiledb://TileDB-inc/quickstart_dense")(
-            sum_a, [(1, 2), (1, 2)]
-        )
-        node_array_b = DelayedArrayUDF("tiledb://TileDB-inc/quickstart_dense")(
-            sum_b, [(3, 4), (3, 4)], prev=node_array_a
-        )
-
-        node_array_b.set_timeout(20)
-        result = node_array_b.compute()
-        self.assertEqual((54, 14), result)
