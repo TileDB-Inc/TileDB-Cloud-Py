@@ -46,9 +46,6 @@ class TestUser(unittest.TestCase):
                 stripe_connect=False,
                 company="TileDB",
                 logo="0",
-                last_activity_date=datetime.datetime.strptime(
-                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
-                ),
                 timezone="Europe/Athens",
                 organizations=[
                     tiledb.cloud.rest_api.models.organization_user.OrganizationUser(

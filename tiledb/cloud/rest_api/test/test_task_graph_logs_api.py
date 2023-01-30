@@ -46,6 +46,18 @@ class TestTaskGraphLogsApi(unittest.TestCase):
         """Test case for report_client_node"""
         pass
 
+    def test_resubmit_task_graph_execution(self):
+        """Test case for resubmit_task_graph_execution"""
+        pass
+
+    def test_stop_task_graph(self):
+        """Test case for stop_task_graph"""
+        pass
+
+    def test_submit_task_graph(self):
+        """Test case for submit_task_graph"""
+        pass
+
     def test_update_task_graph_log(self):
         """Test case for update_task_graph_log"""
         pass

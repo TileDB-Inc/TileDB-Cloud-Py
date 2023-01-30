@@ -13,7 +13,6 @@ Name | Type | Description | Notes
 **stripe_connect** | **bool** | Denotes that the user is able to apply pricing to arrays by means of Stripe Connect | [optional] [readonly] 
 **company** | **str** | the user&#39;s company | [optional] 
 **logo** | **str** | the user&#39;s logo | [optional] 
-**last_activity_date** | **datetime** | when the user last logged in (set by the server) | [optional] [readonly] 
 **timezone** | **str** |  | [optional] 
 **organizations** | [**list[OrganizationUser]**](OrganizationUser.md) | Array of organizations a user is part of and their roles | [optional] [readonly] 
 **allowed_actions** | [**list[NamespaceActions]**](NamespaceActions.md) | list of actions user is allowed to do on this organization | [optional] 

@@ -42,7 +42,6 @@ class User(object):
         "stripe_connect": "bool",
         "company": "str",
         "logo": "str",
-        "last_activity_date": "datetime",
         "timezone": "str",
         "organizations": "list[OrganizationUser]",
         "allowed_actions": "list[NamespaceActions]",
@@ -64,7 +63,6 @@ class User(object):
         "stripe_connect": "stripe_connect",
         "company": "company",
         "logo": "logo",
-        "last_activity_date": "last_activity_date",
         "timezone": "timezone",
         "organizations": "organizations",
         "allowed_actions": "allowed_actions",
@@ -87,7 +85,6 @@ class User(object):
         stripe_connect=None,
         company=None,
         logo=None,
-        last_activity_date=None,
         timezone=None,
         organizations=None,
         allowed_actions=None,
@@ -113,7 +110,6 @@ class User(object):
         self._stripe_connect = None
         self._company = None
         self._logo = None
-        self._last_activity_date = None
         self._timezone = None
         self._organizations = None
         self._allowed_actions = None
@@ -141,8 +137,6 @@ class User(object):
         if company is not None:
             self.company = company
         self.logo = logo
-        if last_activity_date is not None:
-            self.last_activity_date = last_activity_date
         if timezone is not None:
             self.timezone = timezone
         if organizations is not None:
@@ -414,29 +408,6 @@ class User(object):
         """
 
         self._logo = logo
-
-    @property
-    def last_activity_date(self):
-        """Gets the last_activity_date of this User.  # noqa: E501
-
-        when the user last logged in (set by the server)  # noqa: E501
-
-        :return: The last_activity_date of this User.  # noqa: E501
-        :rtype: datetime
-        """
-        return self._last_activity_date
-
-    @last_activity_date.setter
-    def last_activity_date(self, last_activity_date):
-        """Sets the last_activity_date of this User.
-
-        when the user last logged in (set by the server)  # noqa: E501
-
-        :param last_activity_date: The last_activity_date of this User.  # noqa: E501
-        :type: datetime
-        """
-
-        self._last_activity_date = last_activity_date
 
     @property
     def timezone(self):

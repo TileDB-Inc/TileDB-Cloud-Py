@@ -8,6 +8,9 @@ Method | HTTP request | Description
 [**get_task_graph_log**](TaskGraphLogsApi.md#get_task_graph_log) | **GET** /v1/taskgraphs/{namespace}/logs/{id} | 
 [**list_task_graph_logs**](TaskGraphLogsApi.md#list_task_graph_logs) | **GET** /v1/taskgraphs/logs | 
 [**report_client_node**](TaskGraphLogsApi.md#report_client_node) | **POST** /v1/taskgraphs/{namespace}/logs/{id}/report_client_node | 
+[**resubmit_task_graph_execution**](TaskGraphLogsApi.md#resubmit_task_graph_execution) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/resubmit | 
+[**stop_task_graph**](TaskGraphLogsApi.md#stop_task_graph) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/stop | 
+[**submit_task_graph**](TaskGraphLogsApi.md#submit_task_graph) | **POST** /v1/taskgraphs/{namespace}/graphs/{id}/submit | 
 [**update_task_graph_log**](TaskGraphLogsApi.md#update_task_graph_log) | **PATCH** /v1/taskgraphs/{namespace}/logs/{id} | 
 
 
@@ -556,6 +559,408 @@ void (empty response body)
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **204** | Status reported successfully. |  -  |
+**502** | Bad Gateway |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **resubmit_task_graph_execution**
+> TaskGraphLog resubmit_task_graph_execution(namespace, id)
+
+
+
+Retry a task graph in the given namespace using the associated execution id.
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.TaskGraphLogsApi(api_client)
+    namespace = 'namespace_example' # str | The namespace that owns this task graph execution.
+id = 'id_example' # str | The UUID of the task graph entry.
+
+    try:
+        api_response = api_instance.resubmit_task_graph_execution(namespace, id)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling TaskGraphLogsApi->resubmit_task_graph_execution: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.TaskGraphLogsApi(api_client)
+    namespace = 'namespace_example' # str | The namespace that owns this task graph execution.
+id = 'id_example' # str | The UUID of the task graph entry.
+
+    try:
+        api_response = api_instance.resubmit_task_graph_execution(namespace, id)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling TaskGraphLogsApi->resubmit_task_graph_execution: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **namespace** | **str**| The namespace that owns this task graph execution. | 
+ **id** | **str**| The UUID of the task graph entry. | 
+
+### Return type
+
+[**TaskGraphLog**](TaskGraphLog.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**202** | Information about the execution of a single task graph. |  -  |
+**502** | Bad Gateway |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **stop_task_graph**
+> TaskGraphLog stop_task_graph(namespace, id)
+
+
+
+Stop a task graph execution in the given namespace using the associated associated execution id.
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.TaskGraphLogsApi(api_client)
+    namespace = 'namespace_example' # str | The namespace that owns this task graph execution.
+id = 'id_example' # str | The UUID of the task graph entry.
+
+    try:
+        api_response = api_instance.stop_task_graph(namespace, id)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling TaskGraphLogsApi->stop_task_graph: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.TaskGraphLogsApi(api_client)
+    namespace = 'namespace_example' # str | The namespace that owns this task graph execution.
+id = 'id_example' # str | The UUID of the task graph entry.
+
+    try:
+        api_response = api_instance.stop_task_graph(namespace, id)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling TaskGraphLogsApi->stop_task_graph: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **namespace** | **str**| The namespace that owns this task graph execution. | 
+ **id** | **str**| The UUID of the task graph entry. | 
+
+### Return type
+
+[**TaskGraphLog**](TaskGraphLog.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**202** | Information about the execution of a single task graph. |  -  |
+**502** | Bad Gateway |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **submit_task_graph**
+> TaskGraphLog submit_task_graph(namespace, id)
+
+
+
+Submit a single task graph for execution. 
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.TaskGraphLogsApi(api_client)
+    namespace = 'namespace_example' # str | The namespace that owns this task graph.
+id = 'id_example' # str | The UUID of the task graph entry.
+
+    try:
+        api_response = api_instance.submit_task_graph(namespace, id)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling TaskGraphLogsApi->submit_task_graph: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.TaskGraphLogsApi(api_client)
+    namespace = 'namespace_example' # str | The namespace that owns this task graph.
+id = 'id_example' # str | The UUID of the task graph entry.
+
+    try:
+        api_response = api_instance.submit_task_graph(namespace, id)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling TaskGraphLogsApi->submit_task_graph: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **namespace** | **str**| The namespace that owns this task graph. | 
+ **id** | **str**| The UUID of the task graph entry. | 
+
+### Return type
+
+[**TaskGraphLog**](TaskGraphLog.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**202** | Information about the execution of a single task graph. |  -  |
 **502** | Bad Gateway |  -  |
 **0** | error response |  -  |
 

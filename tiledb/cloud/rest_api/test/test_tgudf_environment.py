@@ -44,6 +44,10 @@ class TestTGUDFEnvironment(unittest.TestCase):
                 image_name="0",
                 namespace="0",
                 resource_class="0",
+                resources=tiledb.cloud.rest_api.models.tgudf_environment_resources.TGUDFEnvironment_resources(
+                    cpu="500m",
+                    memory="8Gi",
+                ),
                 run_client_side=True,
             )
         else:

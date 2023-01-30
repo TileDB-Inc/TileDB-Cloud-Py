@@ -40,7 +40,7 @@ class RegisteredTaskGraph(object):
         "license_id": "str",
         "license_text": "str",
         "tags": "list[str]",
-        "nodes": "list[RegisteredTaskGraphNode]",
+        "nodes": "list[TaskGraphNode]",
     }
 
     attribute_map = {
@@ -264,7 +264,7 @@ class RegisteredTaskGraph(object):
         The structure of the graph, in the form of the nodes that make it up. As with `TaskGraphLog`, nodes must topologically sorted, so that any node appears after all the nodes it depends on.   # noqa: E501
 
         :return: The nodes of this RegisteredTaskGraph.  # noqa: E501
-        :rtype: list[RegisteredTaskGraphNode]
+        :rtype: list[TaskGraphNode]
         """
         return self._nodes
 
@@ -275,7 +275,7 @@ class RegisteredTaskGraph(object):
         The structure of the graph, in the form of the nodes that make it up. As with `TaskGraphLog`, nodes must topologically sorted, so that any node appears after all the nodes it depends on.   # noqa: E501
 
         :param nodes: The nodes of this RegisteredTaskGraph.  # noqa: E501
-        :type: list[RegisteredTaskGraphNode]
+        :type: list[TaskGraphNode]
         """
 
         self._nodes = nodes
