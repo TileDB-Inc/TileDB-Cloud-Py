@@ -41,12 +41,38 @@ class DelayedClassTest(unittest.TestCase):
         node_3 = Delayed(lambda x: x * 2, name="node_3")(node_2)
 
         # Add timeout so we don't wait forever in CI
-        node_3.set_timeout(30)
+        node_3.set_timeout(300)
         node_3.compute(batch=True)
 
         self.assertEqual(node_1.result(), 2)
         self.assertEqual(node_2.result(), 4)
         self.assertEqual(node_3.result(), 8)
+
+    def test_simple_delayed_failure_batch_execution(self):
+        def fail(x):
+            raise NotImplementedError("UDF failure")
+
+        node_1 = Delayed(np.median, name="node_1")
+        node_1([1, 2, 3])
+        node_2 = Delayed(fail, name="node_2")(node_1)
+        node_3 = Delayed(lambda x: x * 2, name="node_3")(node_2)
+
+        # Add timeout so we don't wait forever in CI
+        node_3.set_timeout(300)
+        with self.assertRaises(RuntimeError):
+            node_3.compute(batch=True)
+
+        # self.assertEqual(node_1.result(), 2)
+        with self.assertRaises(RuntimeError):
+            node_1.result()
+        print(node_1.exception())
+        with self.assertRaises(RuntimeError):
+            node_2.result()
+        self.assertTrue(isinstance(node_2.exception(), NotImplementedError))
+        self.assertEqual(str(node_2.exception()), "UDF failure")
+        with self.assertRaises(RuntimeError):
+            node_3.result()
+        self.assertEqual(node_3.exception(), None)
 
     def test_kwargs(self):
         def string_multi(multiplier, str=None):

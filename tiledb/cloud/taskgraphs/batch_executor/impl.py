@@ -193,6 +193,7 @@ class BatchExecutor(_base.IBatchExecutor):
             except rest_api.ApiException as apix:
                 raise
             else:
+                print(self._server_graph_uuid)
                 print(result.status_count)
                 for new_node in result.nodes:
                     node = self._by_name[new_node.name]
@@ -201,6 +202,7 @@ class BatchExecutor(_base.IBatchExecutor):
                             node.set_execution_id(
                                 new_node.executions[len(new_node.executions) - 1].id
                             )
+                        print(f"{new_node.name}: {new_node.status}")
                         new_node_status = _base.array_task_status_to_executor_status(
                             new_node.status
                         )

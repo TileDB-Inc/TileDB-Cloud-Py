@@ -1,5 +1,4 @@
 import uuid
-import warnings
 from typing import Any, Dict, Optional, Set, TypeVar
 
 from tiledb.cloud import client
@@ -30,21 +29,32 @@ class UDFNode(_base.Node[_base.ET, _T]):
     def result(self, timeout: Optional[float] = None) -> _T:
         with self._lifecycle_condition:
             _base.wait_for(self._lifecycle_condition, self._done, timeout)
+        if self._status_impl() in (
+            Status.FAILED,
+            Status.CANCELLED,
+            Status.PARENT_FAILED,
+        ):
+            raise RuntimeError("Workflow execution failed.")
         try:
             return _codec.LazyResult(self._client, self._execution_id).decode()
         except rest_api.ApiException as apix:
             self.set_status_notify(Status.FAILED)
-            self._result_exception = apix
             raise
 
     def exception(self, timeout: Optional[float] = None) -> Optional[Exception]:
+        with self._lifecycle_condition:
+            _base.wait_for(self._lifecycle_condition, self._done, timeout)
+        if self._status_impl() != Status.FAILED:
+            return None
         try:
-            _codec.LazyResult(self._client, self._execution_id).decode()
+            e = _codec.LazyResult(self._client, self._execution_id).decode()
+            if isinstance(e, Exception):
+                return e
+            else:
+                return rest_api.ApiException("Failed node result is not an Exception")
         except rest_api.ApiException as apix:
             self.set_status_notify(Status.FAILED)
-            self._result_exception = apix
-        finally:
-            return self._result_exception
+            return apix
 
     def cancel(self) -> bool:
         self.owner.cancel()

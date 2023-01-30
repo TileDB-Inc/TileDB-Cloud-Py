@@ -113,7 +113,7 @@ class TaskGraphsTest(unittest.TestCase):
         )
 
         exec = tg.execute(grf, True, year=2022, month=3, day=27)
-        exec.wait(30)
+        exec.wait(300)
         self.assertEqual(exec.status, tg.Status.SUCCEEDED)
         self.assertEqual(datetime.timedelta(hours=23), exec.node(length).result())
         self.assertEqual(

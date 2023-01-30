@@ -48,14 +48,6 @@ class Node(executor.Node[ET, _T], builder.Node[_T], metaclass=abc.ABCMeta):
         super().__init__(uid, owner, name)
         self._client = api_client
         self._status: Status = Status.WAITING
-        self._result_exception: Optional[Exception] = None
-        """An exception that was raised when executing the Node."""
-        self._lifecycle_exception: Optional[futures.CancelledError] = None
-        """An exception that was set on the node by a lifecycle event.
-
-        This is distinct from ``_result_exception`` because it will be RAISED
-        by methods like `.exception()` rather than returned.
-        """
         self._execution_id: uuid = None
 
     def set_execution_id(self, execution_id: uuid) -> None:
