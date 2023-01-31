@@ -7,17 +7,28 @@ from tiledb.cloud.array import ArrayList
 from tiledb.cloud.array import apply as array_apply
 from tiledb.cloud.array import exec_multi_array_udf
 from tiledb.cloud.dag.dag import DAG
+from tiledb.cloud.dag.dag import Mode
 from tiledb.cloud.dag.dag import Node
 from tiledb.cloud.sql import exec as sql_exec
 from tiledb.cloud.udf import exec as udf_exec
 
 
 class DelayedBase(Node):
-    def __init__(self, func, *args, name=None, dag=None, local_mode=False, **kwargs):
+    def __init__(
+        self,
+        func,
+        *args,
+        name=None,
+        dag=None,
+        local_mode=False,
+        mode=Mode.REALTIME,
+        **kwargs,
+    ):
         self.timeout = None
-        super().__init__(
-            func, *args, name=name, dag=dag, local_mode=local_mode, **kwargs
-        )
+
+        if local_mode:
+            mode = Mode.LOCAL
+        super().__init__(func, *args, name=name, dag=dag, mode=mode, **kwargs)
 
     def __call__(self, *args, **kwargs):
         self.args += args
@@ -111,16 +122,21 @@ class DelayedBase(Node):
 
 
 class Delayed(DelayedBase):
-    def __init__(self, func_exec, *args, local=False, **kwargs):
+    def __init__(self, func_exec, *args, local=False, mode=Mode.REALTIME, **kwargs):
         utils.check_funcable(func_exec=func_exec)
         self.func_exec = func_exec
 
         kwargs.setdefault("name", utils.func_name(func_exec) + _random_suffix())
 
+        if local:
+            mode = Mode.LOCAL
+
         if not local:
-            super().__init__(udf_exec, func_exec, *args, local_mode=local, **kwargs)
+            super().__init__(
+                udf_exec, func_exec, *args, local_mode=local, mode=mode, **kwargs
+            )
         elif callable(func_exec):
-            super().__init__(func_exec, *args, local_mode=local, **kwargs)
+            super().__init__(func_exec, *args, local_mode=local, mode=mode, **kwargs)
         else:
             raise TypeError(
                 "When running a function locally, it must be a callable "

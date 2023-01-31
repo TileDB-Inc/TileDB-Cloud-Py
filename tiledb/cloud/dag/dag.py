@@ -1,5 +1,6 @@
 import collections
 import datetime
+import enum
 import itertools
 import json
 import numbers
@@ -54,6 +55,14 @@ class ParentFailedError(futures.CancelledError):
         self.cause = cause
 
 
+class Mode(enum.Enum):
+    """Mode to run in"""
+
+    LOCAL = enum.auto()
+    REALTIME = enum.auto()
+    BATCH = enum.auto()
+
+
 class Node(futures.FutureLike[_T]):
     def __init__(
         self,
@@ -61,7 +70,7 @@ class Node(futures.FutureLike[_T]):
         *args: Any,
         name: Optional[str] = None,
         dag: Optional["DAG"] = None,
-        local_mode: bool = False,
+        mode: Mode = Mode.REALTIME,
         _download_results: Optional[bool] = None,
         _internal_prewrapped_func: Callable[..., "results.Result[_T]"] = None,
         _internal_accepts_stored_params: bool = True,
@@ -73,6 +82,7 @@ class Node(futures.FutureLike[_T]):
         :param args: tuple of arguments to run
         :param name: optional name of dag
         :param dag: dag this node is associated with
+        :param mode: Mode the node is to run in.
         :param _download_results: An optional boolean to override default
             result-downloading behavior. If True, will always download the
             results of the function immediately upon completion.
@@ -99,7 +109,7 @@ class Node(futures.FutureLike[_T]):
         self._cb_list: List[Callable[["Node[_T]"], None]] = []
 
         self.dag = dag
-        self.local_mode: bool = local_mode
+        self.mode: Mode = mode
 
         self._wrapped_func: Callable[..., "results.Result[_T]"]
 
@@ -119,7 +129,7 @@ class Node(futures.FutureLike[_T]):
             (
                 _internal_accepts_stored_params,
                 self._was_prewrapped,
-                not self.local_mode,
+                self.mode == Mode.REALTIME,
             )
         )
         self._download_results = _download_results
@@ -400,8 +410,8 @@ class Node(futures.FutureLike[_T]):
         # separately check whether a node is remote (i.e., it executes on the
         # server side period) and whether it is prewrapped (i.e., it is a
         # whatever_base function that supports the download_results calls etc).
-        if not self.local_mode:
-            # If it's not `local_mode`, we assume that the function is either
+        if self.mode == Mode.REALTIME:
+            # If it's `Mode.REALTIME`, we assume that the function is either
             # prewrapped or it was created with `Delayed`, so the function
             # itself is one of the `submit_xxx` (but not `_base`) functions.
             self.dag.initial_setup()
@@ -422,7 +432,7 @@ class Node(futures.FutureLike[_T]):
                     # If this is an intermediate node, download results only if
                     # there is a child node which runs locally.
                     download_results = any(
-                        child.local_mode for child in self.parents.values()
+                        child.mode == Mode.LOCAL for child in self.parents.values()
                     )
                 else:
                     # If this is a terminal node, always download results.
@@ -486,7 +496,7 @@ class Node(futures.FutureLike[_T]):
             depends_on=[str(dep) for dep in self.parents],
             run_location=(
                 rest_api.TaskGraphLogRunLocation.CLIENT
-                if self.local_mode
+                if self.mode == Mode.LOCAL
                 else rest_api.TaskGraphLogRunLocation.SERVER
             ),
         )
@@ -716,11 +726,13 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
+        mode = Mode.LOCAL if local_mode else Mode.REALTIME
+
         return self._add_raw_node(
             func_exec,
             *args,
             name=name,
-            local_mode=local_mode,
+            mode=mode,
             **kwargs,
         )
 
@@ -764,6 +776,11 @@ class DAG:
                 # If the node is unnamed, generate a name to give to it,
                 # without trampling on the user's selected name.
                 name = self._suffix_name(_fallback_name)
+
+            if "local_mode" in kwargs and kwargs["local_mode"]:
+                # Check for deprecated local_mode parameter
+                kwargs["mode"] = Mode.LOCAL
+
             node = Node(
                 *args,
                 _internal_prewrapped_func=func_exec,
@@ -790,6 +807,17 @@ class DAG:
             **kwargs,
         )
 
+    def submit_local(self, func, *args, **kwargs):
+        """
+        Submit a function that will run locally
+        :param func: function to execute
+        :param args: arguments for function execution
+        :param name: name
+        :return: Node that is created
+        """
+        kwargs.setdefault("name", utils.func_name(func))
+        return self._add_raw_node(func, *args, mode=Mode.LOCAL, **kwargs)
+
     def submit_udf(self, func, *args, **kwargs):
         """
         Submit a function that will be executed in the cloud serverlessly
@@ -798,6 +826,16 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
+
+        if "local_mode" in kwargs:
+            if kwargs.get("local_mode") or kwargs.get("mode") == Mode.LOCAL:
+                # Drop kwarg
+                kwargs.pop("local_mode", None)
+                kwargs.pop("mode", None)
+                return self.submit_local(func, *args, **kwargs)
+
+            del kwargs["local_mode"]
+
         return self._add_prewrapped_node(
             udf.exec_base,
             func,
@@ -824,17 +862,6 @@ class DAG:
             **kwargs,
         )
 
-    def submit_local(self, func, *args, **kwargs):
-        """
-        Submit a function that will run locally
-        :param func: function to execute
-        :param args: arguments for function execution
-        :param name: name
-        :return: Node that is created
-        """
-        kwargs.setdefault("name", utils.func_name(func))
-        return self._add_raw_node(func, *args, local_mode=True, **kwargs)
-
     def report_node_complete(self, node: Node):
         """
         Report a node as complete
@@ -858,7 +885,7 @@ class DAG:
 
             if node.status is st.Status.COMPLETED:
                 self.completed_nodes[node.id] = node
-                if node.local_mode:
+                if node.mode == Mode.LOCAL:
                     to_report = models.ArrayTaskStatus.COMPLETED
             elif node.status is Status.CANCELLED:
                 self.cancelled_nodes[node.id] = node

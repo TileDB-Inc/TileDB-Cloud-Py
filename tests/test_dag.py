@@ -433,7 +433,6 @@ class DAGFailureTest(unittest.TestCase):
             node2.result()
 
     def test_failure_server_nodes(self):
-
         d = dag.DAG(name="divide by zero")
         node = d.submit(lambda: 1 / 0, name="i'm gonna do it")
         child = d.submit(lambda x: f"they got {x}", node, name="what happened")
@@ -603,7 +602,6 @@ class DAGCancelTest(unittest.TestCase):
 
 class DAGCloudApplyTest(unittest.TestCase):
     def test_dag_array_apply(self):
-
         uri = "tiledb://TileDB-Inc/quickstart_sparse"
         with tiledb.open(uri, ctx=tiledb.cloud.Ctx()) as A:
             orig = A[:]
@@ -640,7 +638,6 @@ class DAGCloudApplyTest(unittest.TestCase):
         self.assertEqual(node.result(), 55)
 
     def test_dag_sql_exec(self):
-
         uri = "tiledb://TileDB-Inc/quickstart_sparse"
         with tiledb.open(uri, ctx=tiledb.cloud.Ctx()) as A:
             orig = A[:]
@@ -662,7 +659,6 @@ class DAGCloudApplyTest(unittest.TestCase):
         self.assertEqual(node.result()["a"][0], numpy.sum(orig["a"]))
 
     def test_dag_apply_exec_multiple(self):
-
         uri_sparse = "tiledb://TileDB-Inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-Inc/quickstart_dense"
         with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:
@@ -720,7 +716,6 @@ class DAGCloudApplyTest(unittest.TestCase):
         self.assertEqual(d.status, dag.Status.COMPLETED)
 
     def test_dag_apply_exec_multiple_2(self):
-
         uri_sparse = "tiledb://TileDB-Inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-Inc/quickstart_dense"
         with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:

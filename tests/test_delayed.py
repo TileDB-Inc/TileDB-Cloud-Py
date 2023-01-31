@@ -17,7 +17,6 @@ from tiledb.cloud.dag import dag
 
 class DelayedClassTest(unittest.TestCase):
     def test_simple_local_delayed(self):
-
         node_1 = Delayed(np.median, name="node_1", local=True)
         node_1([1, 2, 3])
         node_2 = Delayed(lambda x: x * 2, name="node_2", local=True)(node_1)
@@ -196,7 +195,6 @@ class DelayedCancelTest(unittest.TestCase):
 
 class DelayedCloudApplyTest(unittest.TestCase):
     def test_array_apply(self):
-
         uri = "tiledb://TileDB-inc/quickstart_sparse"
         with tiledb.open(uri, ctx=tiledb.cloud.Ctx()) as A:
             orig = A[:]
@@ -214,7 +212,6 @@ class DelayedCloudApplyTest(unittest.TestCase):
         self.assertEqual(node.result(), numpy.sum(orig["a"]))
 
     def test_multi_array_apply(self):
-
         uri_sparse = "tiledb://TileDB-inc/quickstart_sparse"
         with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:
             orig_sparse = A[:]
@@ -245,7 +242,6 @@ class DelayedCloudApplyTest(unittest.TestCase):
         )
 
     def test_array_apply_by_name(self):
-
         uri = "tiledb://TileDB-inc/quickstart_sparse"
         with tiledb.open(uri, ctx=tiledb.cloud.Ctx()) as A:
             orig = A[:]
@@ -278,7 +274,6 @@ class DelayedCloudApplyTest(unittest.TestCase):
         self.assertEqual(node.result(), 55)
 
     def test_sql_exec(self):
-
         uri = "tiledb://TileDB-inc/quickstart_sparse"
         with tiledb.open(uri, ctx=tiledb.cloud.Ctx()) as A:
             orig = A[:]
@@ -294,7 +289,6 @@ class DelayedCloudApplyTest(unittest.TestCase):
         self.assertEqual(node.result()["a"][0], numpy.sum(orig["a"]))
 
     def test_apply_exec_multiple(self):
-
         uri_sparse = "tiledb://TileDB-inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-inc/quickstart_dense"
         with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:
@@ -339,7 +333,6 @@ class DelayedCloudApplyTest(unittest.TestCase):
         self.assertEqual(node_exec.dag.status, Status.COMPLETED)
 
     def test_apply_exec_multiple_2(self):
-
         uri_sparse = "tiledb://TileDB-inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-inc/quickstart_dense"
         with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:
@@ -394,7 +387,6 @@ class DelayedCloudApplyTest(unittest.TestCase):
         self.assertEqual(node_exec.status, Status.COMPLETED)
 
     def test_name_to_task_name(self):
-
         uri_sparse = "tiledb://TileDB-inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-inc/quickstart_dense"
         with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:
