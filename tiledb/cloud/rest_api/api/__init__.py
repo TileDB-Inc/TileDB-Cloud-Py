@@ -15,6 +15,7 @@ from tiledb.cloud.rest_api.api.registered_task_graphs_api import RegisteredTaskG
 from tiledb.cloud.rest_api.api.sql_api import SqlApi
 from tiledb.cloud.rest_api.api.stats_api import StatsApi
 from tiledb.cloud.rest_api.api.task_graph_logs_api import TaskGraphLogsApi
+from tiledb.cloud.rest_api.api.task_graphs_api import TaskGraphsApi
 from tiledb.cloud.rest_api.api.tasks_api import TasksApi
 from tiledb.cloud.rest_api.api.udf_api import UdfApi
 from tiledb.cloud.rest_api.api.user_api import UserApi

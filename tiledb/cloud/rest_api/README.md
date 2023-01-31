@@ -195,7 +195,9 @@ Class | Method | HTTP request | Description
 *RegisteredTaskGraphsApi* | [**get_registered_task_graph**](docs/RegisteredTaskGraphsApi.md#get_registered_task_graph) | **GET** /v1/taskgraphs/{namespace}/registered/{name} | 
 *RegisteredTaskGraphsApi* | [**get_registered_task_graph_sharing_policies**](docs/RegisteredTaskGraphsApi.md#get_registered_task_graph_sharing_policies) | **GET** /v1/taskgraphs/{namespace}/registered/{name}/share | 
 *RegisteredTaskGraphsApi* | [**register_registered_task_graph**](docs/RegisteredTaskGraphsApi.md#register_registered_task_graph) | **POST** /v1/taskgraphs/{namespace}/registered/{name} | 
+*RegisteredTaskGraphsApi* | [**resubmit_task_graph_execution**](docs/RegisteredTaskGraphsApi.md#resubmit_task_graph_execution) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/resubmit | 
 *RegisteredTaskGraphsApi* | [**share_registered_task_graph**](docs/RegisteredTaskGraphsApi.md#share_registered_task_graph) | **PATCH** /v1/taskgraphs/{namespace}/registered/{name}/share | 
+*RegisteredTaskGraphsApi* | [**stop_task_graph**](docs/RegisteredTaskGraphsApi.md#stop_task_graph) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/stop | 
 *RegisteredTaskGraphsApi* | [**update_registered_task_graph**](docs/RegisteredTaskGraphsApi.md#update_registered_task_graph) | **PATCH** /v1/taskgraphs/{namespace}/registered/{name} | 
 *SqlApi* | [**run_sql**](docs/SqlApi.md#run_sql) | **POST** /v1/sql/{namespace} | 
 *StatsApi* | [**get_tiledb_stats**](docs/StatsApi.md#get_tiledb_stats) | **GET** /v1/.stats | 
@@ -203,7 +205,15 @@ Class | Method | HTTP request | Description
 *TaskGraphLogsApi* | [**get_task_graph_log**](docs/TaskGraphLogsApi.md#get_task_graph_log) | **GET** /v1/taskgraphs/{namespace}/logs/{id} | 
 *TaskGraphLogsApi* | [**list_task_graph_logs**](docs/TaskGraphLogsApi.md#list_task_graph_logs) | **GET** /v1/taskgraphs/logs | 
 *TaskGraphLogsApi* | [**report_client_node**](docs/TaskGraphLogsApi.md#report_client_node) | **POST** /v1/taskgraphs/{namespace}/logs/{id}/report_client_node | 
+*TaskGraphLogsApi* | [**resubmit_task_graph_execution**](docs/TaskGraphLogsApi.md#resubmit_task_graph_execution) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/resubmit | 
+*TaskGraphLogsApi* | [**stop_task_graph**](docs/TaskGraphLogsApi.md#stop_task_graph) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/stop | 
+*TaskGraphLogsApi* | [**submit_task_graph**](docs/TaskGraphLogsApi.md#submit_task_graph) | **POST** /v1/taskgraphs/{namespace}/graphs/{id}/submit | 
 *TaskGraphLogsApi* | [**update_task_graph_log**](docs/TaskGraphLogsApi.md#update_task_graph_log) | **PATCH** /v1/taskgraphs/{namespace}/logs/{id} | 
+*TaskGraphsApi* | [**create_task_graph**](docs/TaskGraphsApi.md#create_task_graph) | **POST** /v1/taskgraphs/{namespace}/graphs | 
+*TaskGraphsApi* | [**get_task_graph**](docs/TaskGraphsApi.md#get_task_graph) | **GET** /v1/taskgraphs/{namespace}/graphs/{id} | 
+*TaskGraphsApi* | [**list_task_graphs**](docs/TaskGraphsApi.md#list_task_graphs) | **GET** /v1/taskgraphs/{namespace}/graphs | 
+*TaskGraphsApi* | [**submit_task_graph**](docs/TaskGraphsApi.md#submit_task_graph) | **POST** /v1/taskgraphs/{namespace}/graphs/{id}/submit | 
+*TaskGraphsApi* | [**update_task_graph**](docs/TaskGraphsApi.md#update_task_graph) | **PATCH** /v1/taskgraphs/{namespace}/graphs/{id} | 
 *TasksApi* | [**run_sql**](docs/TasksApi.md#run_sql) | **POST** /v1/sql/{namespace} | 
 *TasksApi* | [**task_id_get**](docs/TasksApi.md#task_id_get) | **GET** /v1/task/{id} | 
 *TasksApi* | [**task_id_result_get**](docs/TasksApi.md#task_id_result_get) | **GET** /v1/task/{id}/result | 
@@ -349,7 +359,6 @@ Class | Method | HTTP request | Description
  - [Querytype](docs/Querytype.md)
  - [ReadState](docs/ReadState.md)
  - [RegisteredTaskGraph](docs/RegisteredTaskGraph.md)
- - [RegisteredTaskGraphNode](docs/RegisteredTaskGraphNode.md)
  - [ResultFormat](docs/ResultFormat.md)
  - [SQLParameters](docs/SQLParameters.md)
  - [SSOProvider](docs/SSOProvider.md)
@@ -364,15 +373,19 @@ Class | Method | HTTP request | Description
  - [TGSQLNodeData](docs/TGSQLNodeData.md)
  - [TGUDFArgument](docs/TGUDFArgument.md)
  - [TGUDFEnvironment](docs/TGUDFEnvironment.md)
+ - [TGUDFEnvironmentResources](docs/TGUDFEnvironmentResources.md)
  - [TGUDFNodeData](docs/TGUDFNodeData.md)
+ - [TaskGraph](docs/TaskGraph.md)
  - [TaskGraphActions](docs/TaskGraphActions.md)
  - [TaskGraphClientNodeStatus](docs/TaskGraphClientNodeStatus.md)
  - [TaskGraphLog](docs/TaskGraphLog.md)
  - [TaskGraphLogRunLocation](docs/TaskGraphLogRunLocation.md)
  - [TaskGraphLogStatus](docs/TaskGraphLogStatus.md)
  - [TaskGraphLogsData](docs/TaskGraphLogsData.md)
+ - [TaskGraphNode](docs/TaskGraphNode.md)
  - [TaskGraphNodeMetadata](docs/TaskGraphNodeMetadata.md)
  - [TaskGraphSharing](docs/TaskGraphSharing.md)
+ - [TaskGraphs](docs/TaskGraphs.md)
  - [TileDBConfig](docs/TileDBConfig.md)
  - [Token](docs/Token.md)
  - [TokenRequest](docs/TokenRequest.md)
