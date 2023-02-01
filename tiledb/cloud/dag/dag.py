@@ -36,7 +36,9 @@ from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params
 from tiledb.cloud.dag import status as st
 from tiledb.cloud.dag import visualization as viz
+from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.rest_api import models
+from tiledb.cloud.taskgraphs import _codec
 
 Status = st.Status  # Re-export for compabitility.
 _T = TypeVar("_T")
@@ -53,14 +55,6 @@ class ParentFailedError(futures.CancelledError):
         super().__init__(f"node {node} failed: {cause}")
         self.node = node
         self.cause = cause
-
-
-class Mode(enum.Enum):
-    """Mode to run in"""
-
-    LOCAL = enum.auto()
-    REALTIME = enum.auto()
-    BATCH = enum.auto()
 
 
 class Node(futures.FutureLike[_T]):
@@ -140,6 +134,7 @@ class Node(futures.FutureLike[_T]):
         self._has_node_args = False
         self.args: Tuple[Any, ...] = args
         self.kwargs: Dict[str, Any] = kwargs
+        self._check_resources_and_mode()
         self._find_deps()
 
     def __hash__(self):
@@ -158,6 +153,23 @@ class Node(futures.FutureLike[_T]):
     @name.setter
     def name(self, to: Optional[str]) -> None:
         self._name = to
+
+    def _check_resources_and_mode(self):
+        """
+        Check if the user has set the resource options correctly for the mode
+        """
+
+        if self.mode == Mode.BATCH:
+            if "resource_class" in self.kwargs and "resources" in self.kwargs:
+                raise tce.TileDBCloudError(
+                    "Cannot set resource_class and resources for batch mode, choose one or the other"
+                )
+
+        elif self.mode == Mode.REALTIME:
+            if "resources" in self.kwargs:
+                raise tce.TileDBCloudError(
+                    'Cannot set resources for REALTIME task graphs, please use "resource_class" to set a predefined option for "standard" or "large"'
+                )
 
     def _find_deps(self):
         """Finds Nodes this depends on and adds them to our dependency list."""
@@ -511,6 +523,7 @@ class DAG:
         update_callback: Optional[Callable[["DAG"], None]] = None,
         namespace: Optional[str] = None,
         name: Optional[str] = None,
+        mode: Mode = Mode.REALTIME,
     ):
         """
         DAG is a class for creating and managing direct acyclic graphs
@@ -521,6 +534,7 @@ class DAG:
         :param namespace: optional namespace to use for all tasks in DAG
         :param name: A human-readable name used to identify this task graph
             in logs. Does not need to be unique.
+        :param mode: Mode the DAG is to run in, valid options are Mode.REALTIME, Mode.BATCH
         """
         self.id = uuid.uuid4()
         self.nodes: Dict[uuid.UUID, Node] = {}
@@ -529,6 +543,8 @@ class DAG:
         self.namespace = namespace or client.default_charged_namespace()
         self.name = name
         self.server_graph_uuid: Optional[uuid.UUID] = None
+        self.mode: Mode = mode
+
         """The server-generated UUID of this graph, used for logging.
 
         Will be ``None`` until :meth:`initial_setup` is called. If submitting
@@ -982,13 +998,29 @@ class DAG:
         with self._lifecycle_condition:
             if self._status is not Status.NOT_STARTED:
                 return
-            roots = self._find_root_nodes()
-            if len(roots) == 0:
-                raise tce.TileDBCloudError("DAG is circular, there are no root nodes")
-            self._status = Status.RUNNING
+            if self.mode == Mode.REALTIME:
+                roots = self._find_root_nodes()
+                if len(roots) == 0:
+                    raise tce.TileDBCloudError(
+                        "DAG is circular, there are no root nodes"
+                    )
+                self._status = Status.RUNNING
 
-            for node in roots:
-                self._maybe_exec(node)
+                for node in roots:
+                    self._maybe_exec(node)
+            elif self.mode == Mode.BATCH:
+                try:
+                    self._batch_taskgraph = self._build_batch_taskgraph()
+                    api_client = client.build(rest_api.TaskGraphsApi)
+                    submission = api_client.create_task_graph(
+                        namespace=self.namespace, graph=self._batch_taskgraph
+                    )
+                    execution = api_client.submit_task_graph(
+                        namespace=self.namespace, id=submission.uuid
+                    )
+                    self._server_graph_uuid = execution.uuid
+                except rest_api.ApiException as apix:
+                    raise
 
     def _maybe_exec(self, node: Node):
         did_start = node._maybe_start(self.namespace)
@@ -1293,6 +1325,82 @@ class DAG:
             results[node.name] = node.result()
 
         return results
+
+    def _build_batch_taskgraph(self):
+        """
+        Builds the batch taskgraph model for submission
+        """
+
+        # nodes = self._deps.topo_sorted
+        # We need to guarantee that the existing node names are maintained.
+        # existing_names = set(self._by_name)
+        # node_jsons = [n.to_registration_json(existing_names) for n in nodes]
+        node_jsons = []
+        for node_uuid, node in self.nodes.items():
+
+            kwargs = {}
+            if node._was_prewrapped:
+                if callable(node.args[0]):
+                    kwargs["executable_code"] = _codec.b64_str(
+                        _codec.pickle(node.args[0])
+                    )
+                    kwargs["source_text"] = utils.getsourcelines(node.args[0])
+                if type(node.args[0]) == str:
+                    kwargs["registered_udf_name"] = node.args[0]
+
+                args = []
+                for arg in node.args:
+                    if callable(arg) or type(arg) == str:
+                        continue
+
+                    args.append(models.TGUDFArgument(value=arg))
+
+                for name, arg in node.kwargs.items():
+                    args.append(models.TGUDFArgument(name=name, value=arg))
+
+                kwargs["arguments"] = args
+
+                env_dict = {
+                    "language": models.UDFLanguage.PYTHON,
+                    "language_version": utils.PYTHON_VERSION,
+                    "run_client_side": False,
+                }
+                if "image_name" in node.kwargs:
+                    env_dict["image_name"] = node.kwargs["image_name"]
+
+                if "timeout" in node.kwargs:
+                    env_dict["timeout"] = node.kwargs["timeout"]
+
+                if "resource_class" in node.kwargs:
+                    env_dict["resource_class"] = node.kwargs["resource_class"]
+
+                if "resources" in node.kwargs:
+                    env_dict["resources"] = models.TGUDFEnvironmentResources(
+                        **node.kwargs["resources"]
+                    )
+
+                # Don't let each task set a namespace, use the DAG's namespace
+                # if "namespace" in node.kwargs:
+                #     env_dict["namespace"] = node.kwargs["namespace"]
+                env_dict["namespace"] = self.namespace
+
+                kwargs["environment"] = models.TGUDFEnvironment(**env_dict)
+                kwargs["result_format"] = node.kwargs.get(
+                    "result_format", models.ResultFormat.NATIVE
+                )
+
+            task_graph_node = models.TaskGraphNode(
+                client_node_id=str(node.id),
+                name=node.name,
+                depends_on=[str(parent.id) for parent in node.parents],
+                udf_node=models.TGUDFNodeData(**kwargs),
+            )
+
+            node_jsons.append(task_graph_node)
+        return dict(
+            name=self.name,
+            nodes=node_jsons,
+        )
 
 
 def list_logs(

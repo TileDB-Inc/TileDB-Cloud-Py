@@ -56,7 +56,12 @@ class DelayedBase(Node):
         :return: results
         """
         if self.dag is None:
-            self.__set_all_parent_nodes_same_dag(DAG(namespace=namespace, name=name))
+            mode = self.mode
+            if self.mode == Mode.LOCAL:
+                mode = Mode.REALTIME
+            self.__set_all_parent_nodes_same_dag(
+                DAG(namespace=namespace, name=name, mode=mode)
+            )
         else:
             if namespace is not None:
                 self.dag.namespace = namespace
