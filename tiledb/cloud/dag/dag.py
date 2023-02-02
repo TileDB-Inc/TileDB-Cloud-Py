@@ -797,12 +797,23 @@ class DAG:
                 # Check for deprecated local_mode parameter
                 kwargs["mode"] = Mode.LOCAL
 
+            if kwargs.get("mode") == Mode.REALTIME:
+                node = Node(
+                    *args,
+                    _internal_prewrapped_func=func_exec,
+                    dag=self,
+                    name=name,
+                    store_results=store_results,
+                    **kwargs,
+                )
+                return self._add_node_internal(node)
+
+            # Batch
             node = Node(
                 *args,
                 _internal_prewrapped_func=func_exec,
                 dag=self,
                 name=name,
-                store_results=store_results,
                 **kwargs,
             )
             return self._add_node_internal(node)
