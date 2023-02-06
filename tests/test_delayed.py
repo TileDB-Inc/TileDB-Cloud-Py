@@ -62,10 +62,7 @@ class DelayedClassTest(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             node_3.compute(batch=True)
 
-        # self.assertEqual(node_1.result(), 2)
-        with self.assertRaises(RuntimeError):
-            node_1.result()
-        print(node_1.exception())
+        self.assertEqual(node_1.result(), 2)
         with self.assertRaises(RuntimeError):
             node_2.result()
         self.assertTrue(isinstance(node_2.exception(), NotImplementedError))
