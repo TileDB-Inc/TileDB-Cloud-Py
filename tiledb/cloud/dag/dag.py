@@ -247,7 +247,6 @@ class Node(futures.FutureLike[_T]):
             assert result
             return result.decode()
 
-
         else:
             with self._lifecycle_condition:
                 self._wait(timeout)
@@ -1367,63 +1366,64 @@ class DAG:
         for node_uuid, node in self.nodes.items():
 
             kwargs = {}
-            if node._was_prewrapped:
-                if callable(node.args[0]):
-                    kwargs["executable_code"] = _codec.b64_str(
-                        _codec.pickle(node.args[0])
+            if callable(node.args[0]):
+                kwargs["executable_code"] = _codec.b64_str(_codec.pickle(node.args[0]))
+                kwargs["source_text"] = utils.getsourcelines(node.args[0])
+            if type(node.args[0]) == str:
+                kwargs["registered_udf_name"] = node.args[0]
+
+            args = []
+            i = 0
+            for arg in node.args:
+                i += 1
+                if i == 1 and callable(arg):
+                    continue
+                if isinstance(arg, Node):
+                    args.append(
+                        models.TGUDFArgument(
+                            value={
+                                "__tdbudf__": "node_output",
+                                "client_node_id": str(arg.id),
+                            }
+                        )
                     )
-                    kwargs["source_text"] = utils.getsourcelines(node.args[0])
-                if type(node.args[0]) == str:
-                    kwargs["registered_udf_name"] = node.args[0]
+                else:
+                    esc = _codec.Escaper()
+                    args.append(models.TGUDFArgument(value=esc.visit(arg)))
 
-                args = []
-                i = 0
-                for arg in node.args:
-                    i += 1
-                    if i == 1 and callable(arg):
-                        continue
-                    if isinstance(arg, Node):
-                        args.append(models.TGUDFArgument(value={
-                            "__tdbudf__": "node_output",
-                            "client_node_id": str(arg.id)
-                        }))
-                    else:
-                        esc = _codec.Escaper()
-                        args.append(models.TGUDFArgument(value=esc.visit(arg)))
+            for name, arg in node.kwargs.items():
+                args.append(models.TGUDFArgument(name=name, value=arg))
 
-                for name, arg in node.kwargs.items():
-                    args.append(models.TGUDFArgument(name=name, value=arg))
+            kwargs["arguments"] = args
 
-                kwargs["arguments"] = args
+            env_dict = {
+                "language": models.UDFLanguage.PYTHON,
+                "language_version": utils.PYTHON_VERSION,
+                "run_client_side": False,
+            }
+            if "image_name" in node.kwargs:
+                env_dict["image_name"] = node.kwargs["image_name"]
 
-                env_dict = {
-                    "language": models.UDFLanguage.PYTHON,
-                    "language_version": utils.PYTHON_VERSION,
-                    "run_client_side": False,
-                }
-                if "image_name" in node.kwargs:
-                    env_dict["image_name"] = node.kwargs["image_name"]
+            if "timeout" in node.kwargs:
+                env_dict["timeout"] = node.kwargs["timeout"]
 
-                if "timeout" in node.kwargs:
-                    env_dict["timeout"] = node.kwargs["timeout"]
+            if "resource_class" in node.kwargs:
+                env_dict["resource_class"] = node.kwargs["resource_class"]
 
-                if "resource_class" in node.kwargs:
-                    env_dict["resource_class"] = node.kwargs["resource_class"]
-
-                if "resources" in node.kwargs:
-                    env_dict["resources"] = models.TGUDFEnvironmentResources(
-                        **node.kwargs["resources"]
-                    )
-
-                # Don't let each task set a namespace, use the DAG's namespace
-                # if "namespace" in node.kwargs:
-                #     env_dict["namespace"] = node.kwargs["namespace"]
-                env_dict["namespace"] = self.namespace
-
-                kwargs["environment"] = models.TGUDFEnvironment(**env_dict)
-                kwargs["result_format"] = node.kwargs.get(
-                    "result_format", models.ResultFormat.NATIVE
+            if "resources" in node.kwargs:
+                env_dict["resources"] = models.TGUDFEnvironmentResources(
+                    **node.kwargs["resources"]
                 )
+
+            # Don't let each task set a namespace, use the DAG's namespace
+            # if "namespace" in node.kwargs:
+            #     env_dict["namespace"] = node.kwargs["namespace"]
+            env_dict["namespace"] = self.namespace
+
+            kwargs["environment"] = models.TGUDFEnvironment(**env_dict)
+            kwargs["result_format"] = node.kwargs.get(
+                "result_format", models.ResultFormat.NATIVE
+            )
 
             task_graph_node = models.TaskGraphNode(
                 client_node_id=str(node.id),
@@ -1444,9 +1444,7 @@ class DAG:
                 return
 
             try:
-                result = client.build(
-                    rest_api.TaskGraphLogsApi
-                ).get_task_graph_log(
+                result = client.build(rest_api.TaskGraphLogsApi).get_task_graph_log(
                     namespace=self.namespace, id=self._server_graph_uuid
                 )
             except rest_api.ApiException as apix:
@@ -1457,12 +1455,17 @@ class DAG:
                     new_node_status = array_task_status_to_status(new_node.status)
                     if node.status != new_node_status:
                         if new_node_status in (
-                                Status.FAILED,
-                                Status.CANCELLED,
-                                Status.COMPLETED):
+                            Status.FAILED,
+                            Status.CANCELLED,
+                            Status.COMPLETED,
+                        ):
                             if new_node.executions:
-                                execution_id = new_node.executions[len(new_node.executions) - 1].id
-                                node._lazy_result = _codec.LazyResult(client, execution_id)
+                                execution_id = new_node.executions[
+                                    len(new_node.executions) - 1
+                                ].id
+                                node._lazy_result = _codec.LazyResult(
+                                    client, execution_id
+                                )
                                 if new_node_status == Status.FAILED:
                                     e = node._lazy_result.decode()
                                     if isinstance(e, Exception):
