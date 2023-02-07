@@ -166,6 +166,8 @@ class Node(futures.FutureLike[_T]):
                 raise tce.TileDBCloudError(
                     "Cannot set resource_class and resources for batch mode, choose one or the other"
                 )
+            if "resource_class" not in self.kwargs and "resources" not in self.kwargs:
+                self.kwargs["resource_class"] = "standard"
 
         elif self.mode == Mode.REALTIME:
             if "resources" in self.kwargs:
@@ -815,15 +817,7 @@ class DAG:
                 kwargs["mode"] = Mode.LOCAL
 
             if kwargs.get("mode") == Mode.REALTIME:
-                node = Node(
-                    *args,
-                    _internal_prewrapped_func=func_exec,
-                    dag=self,
-                    name=name,
-                    store_results=store_results,
-                    **kwargs,
-                )
-                return self._add_node_internal(node)
+                kwargs["store_results"] = store_results
 
             # Batch
             node = Node(
