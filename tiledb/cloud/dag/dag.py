@@ -4,6 +4,7 @@ import enum
 import itertools
 import json
 import numbers
+import time
 import threading
 import uuid
 import warnings
@@ -98,6 +99,7 @@ class Node(futures.FutureLike[_T]):
         self._status = Status.NOT_STARTED
         self._starting = False
         self._result: Optional[results.Result[_T]] = None
+        self._lazy_result: Optional[_codec.LazyResult] = None
         self._lifecycle_exception: Optional[Exception] = None
         self._exception: Optional[Exception] = None
         self._cb_list: List[Callable[["Node[_T]"], None]] = []
@@ -233,14 +235,26 @@ class Node(futures.FutureLike[_T]):
             return self._status is Status.RUNNING
 
     def result(self, timeout: Optional[float] = None) -> _T:
-        with self._lifecycle_condition:
-            self._wait(timeout)
-            to_raise = self._error()
-            if to_raise:
-                raise to_raise
-            result = self._result
-        assert result
-        return result.get()
+        if self.dag.mode == Mode.BATCH:
+            with self._lifecycle_condition:
+                self._wait(timeout)
+                to_raise = self._error()
+                if to_raise:
+                    raise to_raise
+                result = self._lazy_result
+            assert result
+            return result.decode()
+
+
+        else:
+            with self._lifecycle_condition:
+                self._wait(timeout)
+                to_raise = self._error()
+                if to_raise:
+                    raise to_raise
+                result = self._result
+            assert result
+            return result.get()
 
     def exception(self, timeout: Optional[float] = None) -> Optional[BaseException]:
         with self._lifecycle_condition:
@@ -543,6 +557,9 @@ class DAG:
         self.namespace = namespace or client.default_charged_namespace()
         self.name = name
         self.server_graph_uuid: Optional[uuid.UUID] = None
+
+        self._update_batch_status_thread: Optional[threading.Thread] = None
+        """The thread that is updating the status of Batch execution."""
         self.mode: Mode = mode
 
         """The server-generated UUID of this graph, used for logging.
@@ -951,7 +968,7 @@ class DAG:
             futures.execute_callbacks(self, done_cbs)
 
         # ...and only when that's done, report things to the server.
-        if self.server_graph_uuid:
+        if self.mode != Mode.BATCH and self.server_graph_uuid:
             # Only report client-side events to the server if we've submitted
             # the structure of the graph.
             if to_report:
@@ -1032,6 +1049,12 @@ class DAG:
                     self._server_graph_uuid = execution.uuid
                 except rest_api.ApiException as apix:
                     raise
+                self._update_batch_status_thread = threading.Thread(
+                    name=f"dag-{self.name}-update-status",
+                    target=self._update_status,
+                    daemon=True,
+                )
+                self._update_batch_status_thread.start()
 
     def _maybe_exec(self, node: Node):
         did_start = node._maybe_start(self.namespace)
@@ -1360,11 +1383,19 @@ class DAG:
                     kwargs["registered_udf_name"] = node.args[0]
 
                 args = []
+                i = 0
                 for arg in node.args:
-                    if callable(arg) or type(arg) == str:
+                    i += 1
+                    if i == 1 and callable(arg):
                         continue
-
-                    args.append(models.TGUDFArgument(value=arg))
+                    if isinstance(arg, Node):
+                        args.append(models.TGUDFArgument(value={
+                            "__tdbudf__": "node_output",
+                            "client_node_id": str(arg.id)
+                        }))
+                    else:
+                        esc = _codec.Escaper()
+                        args.append(models.TGUDFArgument(value=esc.visit(arg)))
 
                 for name, arg in node.kwargs.items():
                     args.append(models.TGUDFArgument(name=name, value=arg))
@@ -1403,15 +1434,50 @@ class DAG:
             task_graph_node = models.TaskGraphNode(
                 client_node_id=str(node.id),
                 name=node.name,
-                depends_on=[str(parent.id) for parent in node.parents],
+                depends_on=[str(parent) for parent in node.parents],
                 udf_node=models.TGUDFNodeData(**kwargs),
             )
-
             node_jsons.append(task_graph_node)
         return dict(
             name=self.name,
             nodes=node_jsons,
         )
+
+    def _update_status(self) -> None:
+        while True:
+            time.sleep(2)
+            if self._done():
+                return
+
+            try:
+                result = client.build(
+                    rest_api.TaskGraphLogsApi
+                ).get_task_graph_log(
+                    namespace=self.namespace, id=self._server_graph_uuid
+                )
+            except rest_api.ApiException as apix:
+                raise
+            else:
+                for new_node in result.nodes:
+                    node = self.nodes_by_name[new_node.name]
+                    new_node_status = array_task_status_to_status(new_node.status)
+                    if node.status != new_node_status:
+                        if new_node_status in (
+                                Status.FAILED,
+                                Status.CANCELLED,
+                                Status.COMPLETED):
+                            if new_node.executions:
+                                execution_id = new_node.executions[len(new_node.executions) - 1].id
+                                node._lazy_result = _codec.LazyResult(client, execution_id)
+                                if new_node_status == Status.FAILED:
+                                    e = node._lazy_result.decode()
+                                    if isinstance(e, Exception):
+                                        node._exception = e
+                            else:
+                                raise RuntimeError("No executions found for done Node.")
+                            with node._lifecycle_condition:
+                                node._update_status(new_node_status)
+                            self.report_node_complete(node)
 
 
 def list_logs(
@@ -1622,3 +1688,24 @@ def _topo_sort(
         raise ValueError(f"The task graph contains a cycle involving {participating}")
     output.reverse()
     return output
+
+
+def array_task_status_to_status(status: models.ArrayTaskStatus) -> Status:
+    if status == models.ArrayTaskStatus.QUEUED:
+        return Status.NOT_STARTED
+    elif status == models.ArrayTaskStatus.FAILED:
+        return Status.FAILED
+    elif status == models.ArrayTaskStatus.COMPLETED:
+        return Status.COMPLETED
+    elif status == models.ArrayTaskStatus.RUNNING:
+        return Status.RUNNING
+    elif status == models.ArrayTaskStatus.RESOURCES_UNAVAILABLE:
+        return Status.FAILED
+    elif status == models.ArrayTaskStatus.UNKNOWN:
+        return Status.FAILED
+    elif status == models.ArrayTaskStatus.CANCELLED:
+        return Status.CANCELLED
+    elif status == models.ArrayTaskStatus.DENIED:
+        return Status.FAILED
+    else:
+        return Status.NOT_STARTED
