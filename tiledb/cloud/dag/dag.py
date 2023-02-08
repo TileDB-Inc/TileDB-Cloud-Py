@@ -107,6 +107,9 @@ class Node(futures.FutureLike[_T]):
         self.dag = dag
         self.mode: Mode = mode
 
+        self._resource_class = kwargs.pop("resource_class", None)
+        self._resources = kwargs.pop("resources", None)
+
         self._wrapped_func: Callable[..., "results.Result[_T]"]
 
         if _internal_prewrapped_func:
@@ -162,12 +165,12 @@ class Node(futures.FutureLike[_T]):
         """
 
         if self.mode == Mode.BATCH:
-            if "resource_class" in self.kwargs and "resources" in self.kwargs:
+            if self._resource_class and self._resources:
                 raise tce.TileDBCloudError(
                     "Cannot set resource_class and resources for batch mode, choose one or the other"
                 )
-            if "resource_class" not in self.kwargs and "resources" not in self.kwargs:
-                self.kwargs["resource_class"] = "standard"
+            if not self._resource_class and not self._resources:
+                self._resource_class = "standard"
 
         elif self.mode == Mode.REALTIME:
             if "resources" in self.kwargs:
@@ -1419,12 +1422,12 @@ class DAG:
             if "timeout" in node.kwargs:
                 env_dict["timeout"] = node.kwargs["timeout"]
 
-            if "resource_class" in node.kwargs:
-                env_dict["resource_class"] = node.kwargs["resource_class"]
+            if node._resource_class:
+                env_dict["resource_class"] = node._resource_class
 
-            if "resources" in node.kwargs:
+            if node._resources:
                 env_dict["resources"] = models.TGUDFEnvironmentResources(
-                    **node.kwargs["resources"]
+                    **node._resources
                 )
 
             # Don't let each task set a namespace, use the DAG's namespace
