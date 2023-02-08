@@ -157,10 +157,28 @@ class DelayedFailureTest(unittest.TestCase):
 
 class DelayedBatchModeTest(unittest.TestCase):
     def test_simple_batch_delayed(self):
-        node_1 = Delayed(np.median, name="node_1", local=False, mode=Mode.BATCH, resources={"cpu": "1", "memory": "500Mi"})
+        node_1 = Delayed(
+            np.median,
+            name="node_1",
+            local=False,
+            mode=Mode.BATCH,
+            resources={"cpu": "1", "memory": "500Mi"},
+        )
         node_1([1, 2, 3])
-        node_2 = Delayed(lambda x: x * 2, name="node_2", local=False, mode=Mode.BATCH, resources={"cpu": "1", "memory": "500Mi"})(node_1)
-        node_3 = Delayed(lambda x: x * 2, name="node_3", local=False, mode=Mode.BATCH, resources={"cpu": "1", "memory": "500Mi"})(node_2)
+        node_2 = Delayed(
+            lambda x: x * 2,
+            name="node_2",
+            local=False,
+            mode=Mode.BATCH,
+            resources={"cpu": "1", "memory": "500Mi"},
+        )(node_1)
+        node_3 = Delayed(
+            lambda x: x * 2,
+            name="node_3",
+            local=False,
+            mode=Mode.BATCH,
+            resources={"cpu": "1", "memory": "500Mi"},
+        )(node_2)
 
         # Add timeout so we don't wait forever in CI
         node_3.set_timeout(300)
@@ -171,7 +189,13 @@ class DelayedBatchModeTest(unittest.TestCase):
         self.assertEqual(node_3.result(), 8)
 
     def test_failure(self):
-        node = Delayed(lambda x: x * 2, name="node", local=False, mode=Mode.BATCH, resources={"cpu": "1", "memory": "500Mi"})(np.median)
+        node = Delayed(
+            lambda x: x * 2,
+            name="node",
+            local=False,
+            mode=Mode.BATCH,
+            resources={"cpu": "1", "memory": "500Mi"},
+        )(np.median)
         # Add timeout so we don't wait forever in CI
         node.set_timeout(300)
 

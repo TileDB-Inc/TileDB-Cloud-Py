@@ -569,13 +569,27 @@ class DAGFailureTest(unittest.TestCase):
 
 
 class DAGBatchModeTest(unittest.TestCase):
-
     def test_simple_batch_dag(self):
         d = dag.DAG(mode=Mode.BATCH)
 
-        node_1 = d.submit(np.median, [1, 2, 3], name="node_a", resources={"cpu": "1", "memory": "500Mi"})
-        node_2 = d.submit(lambda x: x * 2, node_1, name="node_b", resources={"cpu": "1", "memory": "500Mi"})
-        node_3 = d.submit(lambda x: x * 2, node_2, name="node_c", resources={"cpu": "1", "memory": "500Mi"})
+        node_1 = d.submit(
+            np.median,
+            [1, 2, 3],
+            name="node_a",
+            resources={"cpu": "1", "memory": "500Mi"},
+        )
+        node_2 = d.submit(
+            lambda x: x * 2,
+            node_1,
+            name="node_b",
+            resources={"cpu": "1", "memory": "500Mi"},
+        )
+        node_3 = d.submit(
+            lambda x: x * 2,
+            node_2,
+            name="node_c",
+            resources={"cpu": "1", "memory": "500Mi"},
+        )
 
         d.compute()
 
@@ -588,7 +602,12 @@ class DAGBatchModeTest(unittest.TestCase):
 
     def test_batch_dag_failure(self):
         d = dag.DAG(mode=Mode.BATCH)
-        node = d.submit(lambda x: x * 2, np.median, name="node", resources={"cpu": "1", "memory": "500Mi"})
+        node = d.submit(
+            lambda x: x * 2,
+            np.median,
+            name="node",
+            resources={"cpu": "1", "memory": "500Mi"},
+        )
 
         d.compute()
         with self.assertRaises(TypeError):
