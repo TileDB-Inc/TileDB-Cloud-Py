@@ -4,8 +4,8 @@ import enum
 import itertools
 import json
 import numbers
-import time
 import threading
+import time
 import uuid
 import warnings
 from typing import (
@@ -1392,7 +1392,19 @@ class DAG:
                     args.append(models.TGUDFArgument(value=esc.visit(arg)))
 
             for name, arg in node.kwargs.items():
-                args.append(models.TGUDFArgument(name=name, value=arg))
+                if isinstance(arg, Node):
+                    args.append(
+                        models.TGUDFArgument(
+                            name=name,
+                            value={
+                                "__tdbudf__": "node_output",
+                                "client_node_id": str(arg.id),
+                            },
+                        )
+                    )
+                else:
+                    esc = _codec.Escaper()
+                    args.append(models.TGUDFArgument(name=name, value=esc.visit(arg)))
 
             kwargs["arguments"] = args
 
@@ -1467,9 +1479,16 @@ class DAG:
                                     client, execution_id
                                 )
                                 if new_node_status == Status.FAILED:
-                                    e = node._lazy_result.decode()
-                                    if isinstance(e, Exception):
-                                        node._exception = e
+                                    try:
+                                        e = node._lazy_result.decode()
+                                        if isinstance(e, Exception):
+                                            node._exception = e
+                                    except rest_api.ApiException as e:
+                                        if isinstance(e, Exception):
+                                            node._exception = e
+                                    except Exception as e:
+                                        if isinstance(e, Exception):
+                                            node._exception = e
                             else:
                                 raise RuntimeError("No executions found for done Node.")
                             with node._lifecycle_condition:
