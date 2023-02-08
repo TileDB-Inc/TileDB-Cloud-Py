@@ -24,6 +24,7 @@ from tiledb.cloud._common import visitor
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params as sp
+from tiledb.cloud.dag import Mode
 from tiledb.cloud.dag import dag as dag_dag
 from tiledb.cloud.rest_api import models
 
@@ -565,6 +566,43 @@ class DAGFailureTest(unittest.TestCase):
             return val
 
         return fail_once
+
+
+class DAGBatchModeTest(unittest.TestCase):
+
+    def test_simple_batch_dag(self):
+        d = dag.DAG(mode=Mode.BATCH)
+
+        node_1 = d.submit(np.median, [1, 2, 3], name="node_a", resources={"cpu": "1", "memory": "500Mi"})
+        node_2 = d.submit(lambda x: x * 2, node_1, name="node_b", resources={"cpu": "1", "memory": "500Mi"})
+        node_3 = d.submit(lambda x: x * 2, node_2, name="node_c", resources={"cpu": "1", "memory": "500Mi"})
+
+        d.compute()
+
+        # Wait for dag to complete
+        d.wait(300)
+
+        self.assertEqual(node_1.result(), 2)
+        self.assertEqual(node_2.result(), 4)
+        self.assertEqual(node_3.result(), 8)
+
+    def test_batch_dag_failure(self):
+        d = dag.DAG(mode=Mode.BATCH)
+        node = d.submit(lambda x: x * 2, np.median, name="node", resources={"cpu": "1", "memory": "500Mi"})
+
+        d.compute()
+        with self.assertRaises(TypeError):
+            # Wait for dag to complete
+            d.wait(300)
+        self.assertEqual(d.status, dag.Status.FAILED)
+
+        self.assertEqual(node.status, dag.Status.FAILED)
+        self.assertEqual(
+            str(node.error),
+            "unsupported operand type(s) for *: 'function' and 'int'",
+        )
+        with self.assertRaises(TypeError):
+            node.result()
 
 
 class DAGCancelTest(unittest.TestCase):

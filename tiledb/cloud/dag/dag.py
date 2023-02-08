@@ -939,11 +939,12 @@ class DAG:
                 self.failed_nodes[node.id] = node
                 to_report = models.ArrayTaskStatus.FAILED
 
-            for child in node.children.values():
-                self._maybe_exec(child)
+            if self.mode != Mode.BATCH:
+                for child in node.children.values():
+                    self._maybe_exec(child)
 
             if self._status is not Status.CANCELLED:
-                if self.running_nodes:
+                if self.running_nodes or self.not_started_nodes:
                     self._set_status(Status.RUNNING)
                 elif self.failed_nodes or self.cancelled_nodes:
                     self._set_status(Status.FAILED)
@@ -1001,20 +1002,6 @@ class DAG:
             return
         self._status = st
         self._lifecycle_condition.notify_all()
-
-    def _set_status_from_task_graph_log_status(
-        self, st: models.TaskGraphLogStatus
-    ) -> None:
-        if st == models.TaskGraphLogStatus.CANCELLED:
-            return self._set_status(Status.CANCELLED)
-        elif st == models.TaskGraphLogStatus.FAILED:
-            return self._set_status(Status.FAILED)
-        elif st == models.TaskGraphLogStatus.RUNNING:
-            return self._set_status(Status.RUNNING)
-        elif st == models.TaskGraphLogStatus.SUCCEEDED:
-            return self._set_status(Status.COMPLETED)
-        elif st == models.TaskGraphLogStatus.SUBMITTED:
-            return self._set_status(Status.NOT_STARTED)
 
     def _find_root_nodes(self):
         """
@@ -1472,44 +1459,40 @@ class DAG:
             if self._done():
                 return
 
-            with self._lifecycle_condition:
-                try:
-                    result: models.TaskGraphLog = client.build(
-                        rest_api.TaskGraphLogsApi
-                    ).get_task_graph_log(
-                        namespace=self.namespace, id=self._server_graph_uuid
-                    )
-                    self._set_status_from_task_graph_log_status(result.status)
-                except rest_api.ApiException as apix:
-                    raise
-                else:
-                    for new_node in result.nodes:
-                        node = self.nodes_by_name[new_node.name]
-                        new_node_status = array_task_status_to_status(new_node.status)
-                        if node.status != new_node_status:
-                            if new_node_status in (
-                                Status.FAILED,
-                                Status.CANCELLED,
-                                Status.COMPLETED,
-                            ):
+            try:
+                result: models.TaskGraphLog = client.build(
+                    rest_api.TaskGraphLogsApi
+                ).get_task_graph_log(
+                    namespace=self.namespace, id=self._server_graph_uuid
+                )
+            except rest_api.ApiException as apix:
+                raise
+            else:
+                for new_node in result.nodes:
+                    node = self.nodes_by_name[new_node.name]
+                    new_node_status = array_task_status_to_status(new_node.status)
+                    if node.status != new_node_status:
+                        if new_node_status in (
+                            Status.FAILED,
+                            Status.CANCELLED,
+                            Status.COMPLETED,
+                        ):
+                            if new_node.executions:
+                                execution_id = new_node.executions[
+                                    len(new_node.executions) - 1
+                                ].id
+                                node._lazy_result = _codec.LazyResult(
+                                    client, execution_id
+                                )
                                 if new_node_status == Status.FAILED:
-                                    self.failed_nodes[node.id] = node
-                                    # TODO: Get better node._exception
-                                    execution_id = new_node.executions[
-                                        len(new_node.executions) - 1
-                                    ].id
-
-                                    api_client = client.build(rest_api.TasksApi)
-                                    logs = api_client.task_id_get(execution_id).logs
-
-                                    node._exception = RuntimeError("Failed: " + logs)
-                                elif new_node_status == Status.CANCELLED:
-                                    self.cancelled_nodes[node.id] = node
-                                elif new_node_status == Status.COMPLETED:
-                                    self.completed_nodes[node.id] = node
-
+                                    e = node._lazy_result.decode()
+                                    if isinstance(e, Exception):
+                                        node._exception = e
+                            else:
+                                raise RuntimeError("No executions found for done Node.")
+                            with node._lifecycle_condition:
                                 node._update_status(new_node_status)
-                                self.report_node_complete(node)
+                            self.report_node_complete(node)
 
 
 def list_logs(

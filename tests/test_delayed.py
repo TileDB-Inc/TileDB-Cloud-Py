@@ -12,6 +12,7 @@ from tiledb.cloud.compute import DelayedArrayUDF
 from tiledb.cloud.compute import DelayedSQL
 from tiledb.cloud.compute import Status
 from tiledb.cloud.compute.delayed import DelayedMultiArrayUDF
+from tiledb.cloud.dag import Mode
 from tiledb.cloud.dag import dag
 
 
@@ -152,6 +153,39 @@ class DelayedFailureTest(unittest.TestCase):
             return val
 
         return fail_once
+
+
+class DelayedBatchModeTest(unittest.TestCase):
+    def test_simple_batch_delayed(self):
+        node_1 = Delayed(np.median, name="node_1", local=False, mode=Mode.BATCH, resources={"cpu": "1", "memory": "500Mi"})
+        node_1([1, 2, 3])
+        node_2 = Delayed(lambda x: x * 2, name="node_2", local=False, mode=Mode.BATCH, resources={"cpu": "1", "memory": "500Mi"})(node_1)
+        node_3 = Delayed(lambda x: x * 2, name="node_3", local=False, mode=Mode.BATCH, resources={"cpu": "1", "memory": "500Mi"})(node_2)
+
+        # Add timeout so we don't wait forever in CI
+        node_3.set_timeout(300)
+        node_3.compute()
+
+        self.assertEqual(node_1.result(), 2)
+        self.assertEqual(node_2.result(), 4)
+        self.assertEqual(node_3.result(), 8)
+
+    def test_failure(self):
+        node = Delayed(lambda x: x * 2, name="node", local=False, mode=Mode.BATCH, resources={"cpu": "1", "memory": "500Mi"})(np.median)
+        # Add timeout so we don't wait forever in CI
+        node.set_timeout(300)
+
+        with self.assertRaises(TypeError):
+            node.compute()
+
+        self.assertIsNotNone(node.dag)
+        self.assertEqual(node.status, Status.FAILED)
+        self.assertEqual(
+            str(node.error),
+            "unsupported operand type(s) for *: 'function' and 'int'",
+        )
+        with self.assertRaises(TypeError):
+            node.result()
 
 
 class DelayedCancelTest(unittest.TestCase):
