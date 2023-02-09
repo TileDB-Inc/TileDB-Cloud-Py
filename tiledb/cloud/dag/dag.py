@@ -1377,7 +1377,6 @@ class DAG:
         # node_jsons = [n.to_registration_json(existing_names) for n in nodes]
         node_jsons = []
         for node_uuid, node in self.nodes.items():
-
             kwargs = {}
             if callable(node.args[0]):
                 kwargs["executable_code"] = _codec.b64_str(_codec.pickle(node.args[0]))
