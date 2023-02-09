@@ -240,7 +240,7 @@ class Node(futures.FutureLike[_T]):
             return self._status is Status.RUNNING
 
     def result(self, timeout: Optional[float] = None) -> _T:
-        if self.dag.mode == Mode.BATCH:
+        if self.mode == Mode.BATCH:
             with self._lifecycle_condition:
                 self._wait(timeout)
                 to_raise = self._error()
@@ -818,10 +818,19 @@ class DAG:
                 # Check for deprecated local_mode parameter
                 kwargs["mode"] = Mode.LOCAL
 
-            if kwargs.get("mode") == Mode.REALTIME:
+            if self.mode == Mode.BATCH:
+                if kwargs.get("mode") is not None and kwargs.get("mode") != Mode.BATCH:
+                    raise tce.TileDBCloudError(
+                        "BATCH mode DAG can only execute BATCH mode Nodes."
+                    )
+                kwargs["mode"] = Mode.BATCH
+            elif "local_mode" in kwargs and kwargs["local_mode"]:
+                # Check for deprecated local_mode parameter
+                kwargs["mode"] = Mode.LOCAL
+            else:
+                kwargs["mode"] = Mode.REALTIME
                 kwargs["store_results"] = store_results
 
-            # Batch
             node = Node(
                 *args,
                 _internal_prewrapped_func=func_exec,
@@ -944,10 +953,10 @@ class DAG:
                     self._maybe_exec(child)
 
             if self._status is not Status.CANCELLED:
-                if self.running_nodes or self.not_started_nodes:
-                    self._set_status(Status.RUNNING)
-                elif self.failed_nodes or self.cancelled_nodes:
+                if self.failed_nodes or self.cancelled_nodes:
                     self._set_status(Status.FAILED)
+                elif self.running_nodes or self.not_started_nodes:
+                    self._set_status(Status.RUNNING)
                 else:
                     self._set_status(Status.COMPLETED)
 
