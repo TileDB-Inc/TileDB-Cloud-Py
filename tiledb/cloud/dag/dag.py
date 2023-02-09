@@ -1493,9 +1493,13 @@ class DAG:
                                     client, execution_id
                                 )
                                 if new_node_status == Status.FAILED:
-                                    e = node._lazy_result.decode()
-                                    if isinstance(e, Exception):
+                                    try:
+                                        e = node._lazy_result.decode()
+                                        if isinstance(e, Exception):
+                                            node._exception = e
+                                    except Exception as e:
                                         node._exception = e
+
                             else:
                                 raise RuntimeError("No executions found for done Node.")
                             with node._lifecycle_condition:
