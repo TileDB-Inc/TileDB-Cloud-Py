@@ -610,7 +610,7 @@ class DAGBatchModeTest(unittest.TestCase):
         )
 
         d.compute()
-        with self.assertRaises(Exception):
+        with self.assertRaises(TypeError):
             # Wait for dag to complete
             d.wait(300)
         self.assertEqual(d.status, dag.Status.FAILED)
