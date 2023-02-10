@@ -1,9 +1,11 @@
 import collections
 import datetime
+import enum
 import itertools
 import json
 import numbers
 import threading
+import time
 import uuid
 import warnings
 from typing import (
@@ -35,7 +37,9 @@ from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params
 from tiledb.cloud.dag import status as st
 from tiledb.cloud.dag import visualization as viz
+from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.rest_api import models
+from tiledb.cloud.taskgraphs import _codec
 
 Status = st.Status  # Re-export for compabitility.
 _T = TypeVar("_T")
@@ -61,7 +65,7 @@ class Node(futures.FutureLike[_T]):
         *args: Any,
         name: Optional[str] = None,
         dag: Optional["DAG"] = None,
-        local_mode: bool = False,
+        mode: Mode = Mode.REALTIME,
         _download_results: Optional[bool] = None,
         _internal_prewrapped_func: Callable[..., "results.Result[_T]"] = None,
         _internal_accepts_stored_params: bool = True,
@@ -73,6 +77,7 @@ class Node(futures.FutureLike[_T]):
         :param args: tuple of arguments to run
         :param name: optional name of dag
         :param dag: dag this node is associated with
+        :param mode: Mode the node is to run in.
         :param _download_results: An optional boolean to override default
             result-downloading behavior. If True, will always download the
             results of the function immediately upon completion.
@@ -94,12 +99,16 @@ class Node(futures.FutureLike[_T]):
         self._status = Status.NOT_STARTED
         self._starting = False
         self._result: Optional[results.Result[_T]] = None
+        self._lazy_result: Optional[_codec.LazyResult] = None
         self._lifecycle_exception: Optional[Exception] = None
         self._exception: Optional[Exception] = None
         self._cb_list: List[Callable[["Node[_T]"], None]] = []
 
         self.dag = dag
-        self.local_mode: bool = local_mode
+        self.mode: Mode = mode
+
+        self._resource_class = kwargs.pop("resource_class", None)
+        self._resources = kwargs.pop("resources", None)
 
         self._wrapped_func: Callable[..., "results.Result[_T]"]
 
@@ -119,7 +128,7 @@ class Node(futures.FutureLike[_T]):
             (
                 _internal_accepts_stored_params,
                 self._was_prewrapped,
-                not self.local_mode,
+                self.mode == Mode.REALTIME,
             )
         )
         self._download_results = _download_results
@@ -130,6 +139,7 @@ class Node(futures.FutureLike[_T]):
         self._has_node_args = False
         self.args: Tuple[Any, ...] = args
         self.kwargs: Dict[str, Any] = kwargs
+        self._check_resources_and_mode()
         self._find_deps()
 
     def __hash__(self):
@@ -148,6 +158,25 @@ class Node(futures.FutureLike[_T]):
     @name.setter
     def name(self, to: Optional[str]) -> None:
         self._name = to
+
+    def _check_resources_and_mode(self):
+        """
+        Check if the user has set the resource options correctly for the mode
+        """
+
+        if self.mode == Mode.BATCH:
+            if self._resource_class and self._resources:
+                raise tce.TileDBCloudError(
+                    "Cannot set resource_class and resources for batch mode, choose one or the other"
+                )
+            if not self._resource_class and not self._resources:
+                self._resource_class = "standard"
+
+        elif self.mode == Mode.REALTIME:
+            if "resources" in self.kwargs:
+                raise tce.TileDBCloudError(
+                    'Cannot set resources for REALTIME task graphs, please use "resource_class" to set a predefined option for "standard" or "large"'
+                )
 
     def _find_deps(self):
         """Finds Nodes this depends on and adds them to our dependency list."""
@@ -211,14 +240,25 @@ class Node(futures.FutureLike[_T]):
             return self._status is Status.RUNNING
 
     def result(self, timeout: Optional[float] = None) -> _T:
-        with self._lifecycle_condition:
-            self._wait(timeout)
-            to_raise = self._error()
-            if to_raise:
-                raise to_raise
-            result = self._result
-        assert result
-        return result.get()
+        if self.mode == Mode.BATCH:
+            with self._lifecycle_condition:
+                self._wait(timeout)
+                to_raise = self._error()
+                if to_raise:
+                    raise to_raise
+                result = self._lazy_result
+            assert result
+            return result.decode()
+
+        else:
+            with self._lifecycle_condition:
+                self._wait(timeout)
+                to_raise = self._error()
+                if to_raise:
+                    raise to_raise
+                result = self._result
+            assert result
+            return result.get()
 
     def exception(self, timeout: Optional[float] = None) -> Optional[BaseException]:
         with self._lifecycle_condition:
@@ -400,8 +440,8 @@ class Node(futures.FutureLike[_T]):
         # separately check whether a node is remote (i.e., it executes on the
         # server side period) and whether it is prewrapped (i.e., it is a
         # whatever_base function that supports the download_results calls etc).
-        if not self.local_mode:
-            # If it's not `local_mode`, we assume that the function is either
+        if self.mode == Mode.REALTIME:
+            # If it's `Mode.REALTIME`, we assume that the function is either
             # prewrapped or it was created with `Delayed`, so the function
             # itself is one of the `submit_xxx` (but not `_base`) functions.
             self.dag.initial_setup()
@@ -422,7 +462,7 @@ class Node(futures.FutureLike[_T]):
                     # If this is an intermediate node, download results only if
                     # there is a child node which runs locally.
                     download_results = any(
-                        child.local_mode for child in self.parents.values()
+                        child.mode == Mode.LOCAL for child in self.parents.values()
                     )
                 else:
                     # If this is a terminal node, always download results.
@@ -486,7 +526,7 @@ class Node(futures.FutureLike[_T]):
             depends_on=[str(dep) for dep in self.parents],
             run_location=(
                 rest_api.TaskGraphLogRunLocation.CLIENT
-                if self.local_mode
+                if self.mode == Mode.LOCAL
                 else rest_api.TaskGraphLogRunLocation.SERVER
             ),
         )
@@ -501,6 +541,7 @@ class DAG:
         update_callback: Optional[Callable[["DAG"], None]] = None,
         namespace: Optional[str] = None,
         name: Optional[str] = None,
+        mode: Mode = Mode.REALTIME,
     ):
         """
         DAG is a class for creating and managing direct acyclic graphs
@@ -511,6 +552,7 @@ class DAG:
         :param namespace: optional namespace to use for all tasks in DAG
         :param name: A human-readable name used to identify this task graph
             in logs. Does not need to be unique.
+        :param mode: Mode the DAG is to run in, valid options are Mode.REALTIME, Mode.BATCH
         """
         self.id = uuid.uuid4()
         self.nodes: Dict[uuid.UUID, Node] = {}
@@ -519,6 +561,11 @@ class DAG:
         self.namespace = namespace or client.default_charged_namespace()
         self.name = name
         self.server_graph_uuid: Optional[uuid.UUID] = None
+
+        self._update_batch_status_thread: Optional[threading.Thread] = None
+        """The thread that is updating the status of Batch execution."""
+        self.mode: Mode = mode
+
         """The server-generated UUID of this graph, used for logging.
 
         Will be ``None`` until :meth:`initial_setup` is called. If submitting
@@ -716,11 +763,13 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
+        mode = Mode.LOCAL if local_mode else Mode.REALTIME
+
         return self._add_raw_node(
             func_exec,
             *args,
             name=name,
-            local_mode=local_mode,
+            mode=mode,
             **kwargs,
         )
 
@@ -764,12 +813,29 @@ class DAG:
                 # If the node is unnamed, generate a name to give to it,
                 # without trampling on the user's selected name.
                 name = self._suffix_name(_fallback_name)
+
+            if "local_mode" in kwargs and kwargs["local_mode"]:
+                # Check for deprecated local_mode parameter
+                kwargs["mode"] = Mode.LOCAL
+
+            if self.mode == Mode.BATCH:
+                if kwargs.get("mode") is not None and kwargs.get("mode") != Mode.BATCH:
+                    raise tce.TileDBCloudError(
+                        "BATCH mode DAG can only execute BATCH mode Nodes."
+                    )
+                kwargs["mode"] = Mode.BATCH
+            elif "local_mode" in kwargs and kwargs["local_mode"]:
+                # Check for deprecated local_mode parameter
+                kwargs["mode"] = Mode.LOCAL
+            else:
+                kwargs["mode"] = Mode.REALTIME
+                kwargs["store_results"] = store_results
+
             node = Node(
                 *args,
                 _internal_prewrapped_func=func_exec,
                 dag=self,
                 name=name,
-                store_results=store_results,
                 **kwargs,
             )
             return self._add_node_internal(node)
@@ -790,6 +856,17 @@ class DAG:
             **kwargs,
         )
 
+    def submit_local(self, func, *args, **kwargs):
+        """
+        Submit a function that will run locally
+        :param func: function to execute
+        :param args: arguments for function execution
+        :param name: name
+        :return: Node that is created
+        """
+        kwargs.setdefault("name", utils.func_name(func))
+        return self._add_raw_node(func, *args, mode=Mode.LOCAL, **kwargs)
+
     def submit_udf(self, func, *args, **kwargs):
         """
         Submit a function that will be executed in the cloud serverlessly
@@ -798,6 +875,16 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
+
+        if "local_mode" in kwargs:
+            if kwargs.get("local_mode") or kwargs.get("mode") == Mode.LOCAL:
+                # Drop kwarg
+                kwargs.pop("local_mode", None)
+                kwargs.pop("mode", None)
+                return self.submit_local(func, *args, **kwargs)
+
+            del kwargs["local_mode"]
+
         return self._add_prewrapped_node(
             udf.exec_base,
             func,
@@ -824,17 +911,6 @@ class DAG:
             **kwargs,
         )
 
-    def submit_local(self, func, *args, **kwargs):
-        """
-        Submit a function that will run locally
-        :param func: function to execute
-        :param args: arguments for function execution
-        :param name: name
-        :return: Node that is created
-        """
-        kwargs.setdefault("name", utils.func_name(func))
-        return self._add_raw_node(func, *args, local_mode=True, **kwargs)
-
     def report_node_complete(self, node: Node):
         """
         Report a node as complete
@@ -858,7 +934,7 @@ class DAG:
 
             if node.status is st.Status.COMPLETED:
                 self.completed_nodes[node.id] = node
-                if node.local_mode:
+                if node.mode == Mode.LOCAL:
                     to_report = models.ArrayTaskStatus.COMPLETED
             elif node.status is Status.CANCELLED:
                 self.cancelled_nodes[node.id] = node
@@ -872,14 +948,15 @@ class DAG:
                 self.failed_nodes[node.id] = node
                 to_report = models.ArrayTaskStatus.FAILED
 
-            for child in node.children.values():
-                self._maybe_exec(child)
+            if self.mode != Mode.BATCH:
+                for child in node.children.values():
+                    self._maybe_exec(child)
 
             if self._status is not Status.CANCELLED:
-                if self.running_nodes:
-                    self._set_status(Status.RUNNING)
-                elif self.failed_nodes or self.cancelled_nodes:
+                if self.failed_nodes or self.cancelled_nodes:
                     self._set_status(Status.FAILED)
+                elif self.running_nodes or self.not_started_nodes:
+                    self._set_status(Status.RUNNING)
                 else:
                     self._set_status(Status.COMPLETED)
 
@@ -897,7 +974,7 @@ class DAG:
             futures.execute_callbacks(self, done_cbs)
 
         # ...and only when that's done, report things to the server.
-        if self.server_graph_uuid:
+        if self.mode != Mode.BATCH and self.server_graph_uuid:
             # Only report client-side events to the server if we've submitted
             # the structure of the graph.
             if to_report:
@@ -955,13 +1032,35 @@ class DAG:
         with self._lifecycle_condition:
             if self._status is not Status.NOT_STARTED:
                 return
-            roots = self._find_root_nodes()
-            if len(roots) == 0:
-                raise tce.TileDBCloudError("DAG is circular, there are no root nodes")
-            self._status = Status.RUNNING
+            if self.mode == Mode.REALTIME:
+                roots = self._find_root_nodes()
+                if len(roots) == 0:
+                    raise tce.TileDBCloudError(
+                        "DAG is circular, there are no root nodes"
+                    )
+                self._status = Status.RUNNING
 
-            for node in roots:
-                self._maybe_exec(node)
+                for node in roots:
+                    self._maybe_exec(node)
+            elif self.mode == Mode.BATCH:
+                try:
+                    self._batch_taskgraph = self._build_batch_taskgraph()
+                    api_client = client.build(rest_api.TaskGraphsApi)
+                    submission = api_client.create_task_graph(
+                        namespace=self.namespace, graph=self._batch_taskgraph
+                    )
+                    execution = api_client.submit_task_graph(
+                        namespace=self.namespace, id=submission.uuid
+                    )
+                    self._server_graph_uuid = execution.uuid
+                except rest_api.ApiException as apix:
+                    raise
+                self._update_batch_status_thread = threading.Thread(
+                    name=f"dag-{self.name}-update-status",
+                    target=self._update_status,
+                    daemon=True,
+                )
+                self._update_batch_status_thread.start()
 
     def _maybe_exec(self, node: Node):
         did_start = node._maybe_start(self.namespace)
@@ -1267,6 +1366,146 @@ class DAG:
 
         return results
 
+    def _build_batch_taskgraph(self):
+        """
+        Builds the batch taskgraph model for submission
+        """
+
+        # nodes = self._deps.topo_sorted
+        # We need to guarantee that the existing node names are maintained.
+        # existing_names = set(self._by_name)
+        # node_jsons = [n.to_registration_json(existing_names) for n in nodes]
+        node_jsons = []
+        for node_uuid, node in self.nodes.items():
+            kwargs = {}
+            if callable(node.args[0]):
+                kwargs["executable_code"] = _codec.b64_str(_codec.pickle(node.args[0]))
+                kwargs["source_text"] = utils.getsourcelines(node.args[0])
+            if type(node.args[0]) == str:
+                kwargs["registered_udf_name"] = node.args[0]
+
+            args = []
+            i = 0
+            for arg in node.args:
+                i += 1
+                if i == 1 and callable(arg):
+                    continue
+                if isinstance(arg, Node):
+                    args.append(
+                        models.TGUDFArgument(
+                            value={
+                                "__tdbudf__": "node_output",
+                                "client_node_id": str(arg.id),
+                            }
+                        )
+                    )
+                else:
+                    esc = _codec.Escaper()
+                    args.append(models.TGUDFArgument(value=esc.visit(arg)))
+
+            for name, arg in node.kwargs.items():
+                if isinstance(arg, Node):
+                    args.append(
+                        models.TGUDFArgument(
+                            name=name,
+                            value={
+                                "__tdbudf__": "node_output",
+                                "client_node_id": str(arg.id),
+                            },
+                        )
+                    )
+                else:
+                    esc = _codec.Escaper()
+                    args.append(models.TGUDFArgument(name=name, value=esc.visit(arg)))
+
+            kwargs["arguments"] = args
+
+            env_dict = {
+                "language": models.UDFLanguage.PYTHON,
+                "language_version": utils.PYTHON_VERSION,
+                "run_client_side": False,
+            }
+            if "image_name" in node.kwargs:
+                env_dict["image_name"] = node.kwargs["image_name"]
+
+            if "timeout" in node.kwargs:
+                env_dict["timeout"] = node.kwargs["timeout"]
+
+            if node._resource_class:
+                env_dict["resource_class"] = node._resource_class
+
+            if node._resources:
+                env_dict["resources"] = models.TGUDFEnvironmentResources(
+                    **node._resources
+                )
+
+            # Don't let each task set a namespace, use the DAG's namespace
+            # if "namespace" in node.kwargs:
+            #     env_dict["namespace"] = node.kwargs["namespace"]
+            env_dict["namespace"] = self.namespace
+
+            kwargs["environment"] = models.TGUDFEnvironment(**env_dict)
+            kwargs["result_format"] = node.kwargs.get(
+                "result_format", models.ResultFormat.NATIVE
+            )
+
+            task_graph_node = models.TaskGraphNode(
+                client_node_id=str(node.id),
+                name=node.name,
+                depends_on=[str(parent) for parent in node.parents],
+                udf_node=models.TGUDFNodeData(**kwargs),
+            )
+            node_jsons.append(task_graph_node)
+        return dict(
+            name=self.name,
+            nodes=node_jsons,
+        )
+
+    def _update_status(self) -> None:
+        while True:
+            time.sleep(2)
+            if self._done():
+                return
+
+            try:
+                result: models.TaskGraphLog = client.build(
+                    rest_api.TaskGraphLogsApi
+                ).get_task_graph_log(
+                    namespace=self.namespace, id=self._server_graph_uuid
+                )
+            except rest_api.ApiException as apix:
+                raise
+            else:
+                for new_node in result.nodes:
+                    node = self.nodes_by_name[new_node.name]
+                    new_node_status = array_task_status_to_status(new_node.status)
+                    if node.status != new_node_status:
+                        if new_node_status in (
+                            Status.FAILED,
+                            Status.CANCELLED,
+                            Status.COMPLETED,
+                        ):
+                            if new_node.executions:
+                                execution_id = new_node.executions[
+                                    len(new_node.executions) - 1
+                                ].id
+                                node._lazy_result = _codec.LazyResult(
+                                    client, execution_id
+                                )
+                                if new_node_status == Status.FAILED:
+                                    try:
+                                        e = node._lazy_result.decode()
+                                        if isinstance(e, Exception):
+                                            node._exception = e
+                                    except Exception as e:
+                                        node._exception = e
+
+                            else:
+                                raise RuntimeError("No executions found for done Node.")
+                            with node._lifecycle_condition:
+                                node._update_status(new_node_status)
+                            self.report_node_complete(node)
+
 
 def list_logs(
     *,
@@ -1476,3 +1715,24 @@ def _topo_sort(
         raise ValueError(f"The task graph contains a cycle involving {participating}")
     output.reverse()
     return output
+
+
+def array_task_status_to_status(status: models.ArrayTaskStatus) -> Status:
+    if status == models.ArrayTaskStatus.QUEUED:
+        return Status.NOT_STARTED
+    elif status == models.ArrayTaskStatus.FAILED:
+        return Status.FAILED
+    elif status == models.ArrayTaskStatus.COMPLETED:
+        return Status.COMPLETED
+    elif status == models.ArrayTaskStatus.RUNNING:
+        return Status.RUNNING
+    elif status == models.ArrayTaskStatus.RESOURCES_UNAVAILABLE:
+        return Status.FAILED
+    elif status == models.ArrayTaskStatus.UNKNOWN:
+        return Status.FAILED
+    elif status == models.ArrayTaskStatus.CANCELLED:
+        return Status.CANCELLED
+    elif status == models.ArrayTaskStatus.DENIED:
+        return Status.FAILED
+    else:
+        return Status.NOT_STARTED

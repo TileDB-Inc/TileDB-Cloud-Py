@@ -260,7 +260,6 @@ class BasicTests(unittest.TestCase):
             time.sleep(10)
 
         with self.assertRaises(tiledb_cloud_error.TileDBCloudError):
-
             with tiledb.open(
                 "tiledb://TileDB-Inc/quickstart_sparse", ctx=tiledb.cloud.Ctx()
             ) as A:

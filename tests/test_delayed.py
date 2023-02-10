@@ -12,12 +12,12 @@ from tiledb.cloud.compute import DelayedArrayUDF
 from tiledb.cloud.compute import DelayedSQL
 from tiledb.cloud.compute import Status
 from tiledb.cloud.compute.delayed import DelayedMultiArrayUDF
+from tiledb.cloud.dag import Mode
 from tiledb.cloud.dag import dag
 
 
 class DelayedClassTest(unittest.TestCase):
     def test_simple_local_delayed(self):
-
         node_1 = Delayed(np.median, name="node_1", local=True)
         node_1([1, 2, 3])
         node_2 = Delayed(lambda x: x * 2, name="node_2", local=True)(node_1)
@@ -155,6 +155,63 @@ class DelayedFailureTest(unittest.TestCase):
         return fail_once
 
 
+class DelayedBatchModeTest(unittest.TestCase):
+    def test_simple_batch_delayed(self):
+        node_1 = Delayed(
+            np.median,
+            name="node_1",
+            local=False,
+            mode=Mode.BATCH,
+            resources={"cpu": "1", "memory": "500Mi"},
+        )
+        node_1([1, 2, 3])
+        node_2 = Delayed(
+            lambda x: x * 2,
+            name="node_2",
+            local=False,
+            mode=Mode.BATCH,
+            resources={"cpu": "1", "memory": "500Mi"},
+        )(node_1)
+        node_3 = Delayed(
+            lambda x: x * 2,
+            name="node_3",
+            local=False,
+            mode=Mode.BATCH,
+            resources={"cpu": "1", "memory": "500Mi"},
+        )(node_2)
+
+        # Add timeout so we don't wait forever in CI
+        node_3.set_timeout(300)
+        node_3.compute()
+
+        self.assertEqual(node_1.result(), 2)
+        self.assertEqual(node_2.result(), 4)
+        self.assertEqual(node_3.result(), 8)
+
+    def test_failure(self):
+        node = Delayed(
+            lambda x: x * 2,
+            name="node",
+            local=False,
+            mode=Mode.BATCH,
+            resources={"cpu": "1", "memory": "500Mi"},
+        )(np.median)
+        # Add timeout so we don't wait forever in CI
+        node.set_timeout(300)
+
+        with self.assertRaises(TypeError):
+            node.compute()
+
+        self.assertIsNotNone(node.dag)
+        self.assertEqual(node.status, Status.FAILED)
+        self.assertEqual(
+            str(node.error),
+            "unsupported operand type(s) for *: 'function' and 'int'",
+        )
+        with self.assertRaises(TypeError):
+            node.result()
+
+
 class DelayedCancelTest(unittest.TestCase):
     def test_cancel(self):
         in_node = threading.Barrier(2, timeout=5)
@@ -196,7 +253,6 @@ class DelayedCancelTest(unittest.TestCase):
 
 class DelayedCloudApplyTest(unittest.TestCase):
     def test_array_apply(self):
-
         uri = "tiledb://TileDB-inc/quickstart_sparse"
         with tiledb.open(uri, ctx=tiledb.cloud.Ctx()) as A:
             orig = A[:]
@@ -214,7 +270,6 @@ class DelayedCloudApplyTest(unittest.TestCase):
         self.assertEqual(node.result(), numpy.sum(orig["a"]))
 
     def test_multi_array_apply(self):
-
         uri_sparse = "tiledb://TileDB-inc/quickstart_sparse"
         with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:
             orig_sparse = A[:]
@@ -245,7 +300,6 @@ class DelayedCloudApplyTest(unittest.TestCase):
         )
 
     def test_array_apply_by_name(self):
-
         uri = "tiledb://TileDB-inc/quickstart_sparse"
         with tiledb.open(uri, ctx=tiledb.cloud.Ctx()) as A:
             orig = A[:]
@@ -278,7 +332,6 @@ class DelayedCloudApplyTest(unittest.TestCase):
         self.assertEqual(node.result(), 55)
 
     def test_sql_exec(self):
-
         uri = "tiledb://TileDB-inc/quickstart_sparse"
         with tiledb.open(uri, ctx=tiledb.cloud.Ctx()) as A:
             orig = A[:]
@@ -294,7 +347,6 @@ class DelayedCloudApplyTest(unittest.TestCase):
         self.assertEqual(node.result()["a"][0], numpy.sum(orig["a"]))
 
     def test_apply_exec_multiple(self):
-
         uri_sparse = "tiledb://TileDB-inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-inc/quickstart_dense"
         with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:
@@ -339,7 +391,6 @@ class DelayedCloudApplyTest(unittest.TestCase):
         self.assertEqual(node_exec.dag.status, Status.COMPLETED)
 
     def test_apply_exec_multiple_2(self):
-
         uri_sparse = "tiledb://TileDB-inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-inc/quickstart_dense"
         with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:
@@ -394,7 +445,6 @@ class DelayedCloudApplyTest(unittest.TestCase):
         self.assertEqual(node_exec.status, Status.COMPLETED)
 
     def test_name_to_task_name(self):
-
         uri_sparse = "tiledb://TileDB-inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-inc/quickstart_dense"
         with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:

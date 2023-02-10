@@ -24,6 +24,7 @@ from tiledb.cloud._common import visitor
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params as sp
+from tiledb.cloud.dag import Mode
 from tiledb.cloud.dag import dag as dag_dag
 from tiledb.cloud.rest_api import models
 
@@ -433,7 +434,6 @@ class DAGFailureTest(unittest.TestCase):
             node2.result()
 
     def test_failure_server_nodes(self):
-
         d = dag.DAG(name="divide by zero")
         node = d.submit(lambda: 1 / 0, name="i'm gonna do it")
         child = d.submit(lambda x: f"they got {x}", node, name="what happened")
@@ -568,6 +568,62 @@ class DAGFailureTest(unittest.TestCase):
         return fail_once
 
 
+class DAGBatchModeTest(unittest.TestCase):
+    def test_simple_batch_dag(self):
+        d = dag.DAG(mode=Mode.BATCH)
+
+        node_1 = d.submit(
+            np.median,
+            [1, 2, 3],
+            name="node_a",
+            resources={"cpu": "1", "memory": "500Mi"},
+        )
+        node_2 = d.submit(
+            lambda x: x * 2,
+            node_1,
+            name="node_b",
+            resources={"cpu": "1", "memory": "500Mi"},
+        )
+        node_3 = d.submit(
+            lambda x: x * 2,
+            node_2,
+            name="node_c",
+            resources={"cpu": "1", "memory": "500Mi"},
+        )
+
+        d.compute()
+
+        # Wait for dag to complete
+        d.wait(300)
+
+        self.assertEqual(node_1.result(), 2)
+        self.assertEqual(node_2.result(), 4)
+        self.assertEqual(node_3.result(), 8)
+
+    def test_batch_dag_failure(self):
+        d = dag.DAG(mode=Mode.BATCH)
+        node = d.submit(
+            lambda x: x * 2,
+            np.median,
+            name="node",
+            resources={"cpu": "1", "memory": "500Mi"},
+        )
+
+        d.compute()
+        with self.assertRaises(TypeError):
+            # Wait for dag to complete
+            d.wait(300)
+        self.assertEqual(d.status, dag.Status.FAILED)
+
+        self.assertEqual(node.status, dag.Status.FAILED)
+        self.assertEqual(
+            str(node.error),
+            "unsupported operand type(s) for *: 'function' and 'int'",
+        )
+        with self.assertRaises(TypeError):
+            node.result()
+
+
 class DAGCancelTest(unittest.TestCase):
     def test_dag_cancel(self):
         in_node = futures.Future()
@@ -603,7 +659,6 @@ class DAGCancelTest(unittest.TestCase):
 
 class DAGCloudApplyTest(unittest.TestCase):
     def test_dag_array_apply(self):
-
         uri = "tiledb://TileDB-Inc/quickstart_sparse"
         with tiledb.open(uri, ctx=tiledb.cloud.Ctx()) as A:
             orig = A[:]
@@ -640,7 +695,6 @@ class DAGCloudApplyTest(unittest.TestCase):
         self.assertEqual(node.result(), 55)
 
     def test_dag_sql_exec(self):
-
         uri = "tiledb://TileDB-Inc/quickstart_sparse"
         with tiledb.open(uri, ctx=tiledb.cloud.Ctx()) as A:
             orig = A[:]
@@ -662,7 +716,6 @@ class DAGCloudApplyTest(unittest.TestCase):
         self.assertEqual(node.result()["a"][0], numpy.sum(orig["a"]))
 
     def test_dag_apply_exec_multiple(self):
-
         uri_sparse = "tiledb://TileDB-Inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-Inc/quickstart_dense"
         with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:
@@ -720,7 +773,6 @@ class DAGCloudApplyTest(unittest.TestCase):
         self.assertEqual(d.status, dag.Status.COMPLETED)
 
     def test_dag_apply_exec_multiple_2(self):
-
         uri_sparse = "tiledb://TileDB-Inc/quickstart_sparse"
         uri_dense = "tiledb://TileDB-Inc/quickstart_dense"
         with tiledb.open(uri_sparse, ctx=tiledb.cloud.Ctx()) as A:
