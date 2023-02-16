@@ -2,7 +2,7 @@
 
 import posixpath
 import urllib.parse
-from typing import Iterable, Optional, Tuple, Union
+from typing import Dict, Iterable, Optional, Tuple, Union
 
 import tiledb.cloud.tiledb_cloud_error as tce
 from tiledb.cloud import client
@@ -31,21 +31,20 @@ def create(
         creating the group. If not provided, uses the namespace's default
         credential for groups.
     """
-    if not (namespace and storage_uri and credentials_name):
-        namespace, default_path, default_cred = _default_ns_path_cred(namespace)
+    if not (namespace and storage_uri):
+        namespace, default_path = _default_ns_path(namespace)
         storage_uri = storage_uri or (default_path + "/" + name)
-        credentials_name = credentials_name or default_cred
 
     groups_client = client.build(api_v2.GroupsApi)
     groups_client.create_group(
         group_namespace=namespace,
-        x_tiledb_cloud_access_credentials_name=credentials_name,
         group_creation=api_v2.GroupCreationRequest(
             group_details=api_v2.GroupCreationRequestGroupDetails(
                 name=name,
                 uri=storage_uri,
             )
         ),
+        **_cred_kwarg(credentials_name),
     )
     if parent_uri:
         _add_to(namespace=namespace, name=name, parent_uri=parent_uri)
@@ -60,9 +59,7 @@ def register(
     parent_uri: Optional[str] = None,
 ):
     """Registers a pre-existing group."""
-    if not (namespace and credentials_name):
-        namespace, _, default_cred = _default_ns_path_cred(namespace)
-        credentials_name = credentials_name or default_cred
+    namespace = namespace or _default_ns_path(namespace)[0]
 
     if not name:
         # Extract the basename from the storage URI and use it for the name.
@@ -71,7 +68,6 @@ def register(
     groups_client = client.build(api_v2.GroupsApi)
     groups_client.register_group(
         group_namespace=namespace,
-        x_tiledb_cloud_access_credentials_name=credentials_name,
         group_registration=api_v2.GroupRegistrationRequest(
             group_details=api_v2.GroupRegistrationRequestGroupDetails(
                 name=name,
@@ -80,6 +76,7 @@ def register(
                 parent=parent_uri,
             )
         ),
+        **_cred_kwarg(credentials_name),
     )
     if parent_uri:
         _add_to(namespace=namespace, name=name, parent_uri=parent_uri)
@@ -129,7 +126,7 @@ def deregister(
     groups_api.deregister_group(group_namespace=namespace, group_name=name)
 
 
-def _default_ns_path_cred(namespace: Optional[str] = None) -> Tuple[str, str, str]:
+def _default_ns_path(namespace: Optional[str] = None) -> Tuple[str, str]:
     principal: Union[rest_api.User, rest_api.Organization]
     if namespace:
         try:
@@ -150,15 +147,12 @@ def _default_ns_path_cred(namespace: Optional[str] = None) -> Tuple[str, str, st
     # Weird structure to silence mypy complaints.
     storage: Optional[rest_api.StorageLocation] = locs.groups if locs else None
 
-    path: Optional[str] = None
-    cred_name: Optional[str] = None
-    if storage:
-        path = storage.path
-        cred_name = storage.credentials_name
+    path = (storage and storage.path) or (principal.default_s3_path + "/groups")
+    return namespace, path
 
-    path = path or (principal.default_s3_path + "/groups")
-    cred_name = cred_name or principal.default_s3_path_credentials_name
-    return namespace, path, cred_name
+
+def _cred_kwarg(name: Optional[str]) -> Dict[str, str]:
+    return {"x_tiledb_cloud_access_credentials_name": name} if name else {}
 
 
 def _add_to(*, namespace: str, name: str, parent_uri: str) -> None:

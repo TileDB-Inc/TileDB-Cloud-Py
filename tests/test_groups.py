@@ -12,7 +12,7 @@ TRIES = 5
 class GroupsTest(unittest.TestCase):
     def setUp(self):
         super().setUp()
-        self.namespace, storage_path, _ = groups._default_ns_path_cred()
+        self.namespace, storage_path = groups._default_ns_path()
         self.test_path = storage_path + "/" + testonly.random_name("groups_test")
 
     def test_create_deregister(self):
