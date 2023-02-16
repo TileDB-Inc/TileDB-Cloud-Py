@@ -39,6 +39,7 @@ class TaskGraph(object):
         "name": "str",
         "created_at": "datetime",
         "nodes": "list[TaskGraphNode]",
+        "parallelism": "int",
     }
 
     attribute_map = {
@@ -48,6 +49,7 @@ class TaskGraph(object):
         "name": "name",
         "created_at": "created_at",
         "nodes": "nodes",
+        "parallelism": "parallelism",
     }
 
     def __init__(
@@ -58,6 +60,7 @@ class TaskGraph(object):
         name=None,
         created_at=None,
         nodes=None,
+        parallelism=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """TaskGraph - a model defined in OpenAPI"""  # noqa: E501
@@ -71,6 +74,7 @@ class TaskGraph(object):
         self._name = None
         self._created_at = None
         self._nodes = None
+        self._parallelism = None
         self.discriminator = None
 
         if uuid is not None:
@@ -85,6 +89,8 @@ class TaskGraph(object):
             self.created_at = created_at
         if nodes is not None:
             self.nodes = nodes
+        if parallelism is not None:
+            self.parallelism = parallelism
 
     @property
     def uuid(self):
@@ -223,6 +229,29 @@ class TaskGraph(object):
         """
 
         self._nodes = nodes
+
+    @property
+    def parallelism(self):
+        """Gets the parallelism of this TaskGraph.  # noqa: E501
+
+        Parallelism limits the max total parallel pods that can execute at the same time in a workflow.   # noqa: E501
+
+        :return: The parallelism of this TaskGraph.  # noqa: E501
+        :rtype: int
+        """
+        return self._parallelism
+
+    @parallelism.setter
+    def parallelism(self, parallelism):
+        """Sets the parallelism of this TaskGraph.
+
+        Parallelism limits the max total parallel pods that can execute at the same time in a workflow.   # noqa: E501
+
+        :param parallelism: The parallelism of this TaskGraph.  # noqa: E501
+        :type: int
+        """
+
+        self._parallelism = parallelism
 
     def to_dict(self):
         """Returns the model properties as a dict"""

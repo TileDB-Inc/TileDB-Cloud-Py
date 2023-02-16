@@ -95,6 +95,7 @@ class TestTaskGraph(unittest.TestCase):
                         ),
                     )
                 ],
+                parallelism=56,
             )
         else:
             return TaskGraph()

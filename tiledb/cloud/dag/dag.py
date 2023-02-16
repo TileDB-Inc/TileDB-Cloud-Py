@@ -561,6 +561,7 @@ class DAG:
         self.namespace = namespace or client.default_charged_namespace()
         self.name = name
         self.server_graph_uuid: Optional[uuid.UUID] = None
+        self.max_workers = max_workers
 
         self._update_batch_status_thread: Optional[threading.Thread] = None
         """The thread that is updating the status of Batch execution."""
@@ -1458,6 +1459,7 @@ class DAG:
             node_jsons.append(task_graph_node)
         return dict(
             name=self.name,
+            parallelism=self.max_workers,
             nodes=node_jsons,
         )
 
