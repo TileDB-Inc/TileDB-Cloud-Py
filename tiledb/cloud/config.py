@@ -1,5 +1,6 @@
 import json
 import os.path
+import warnings
 from pathlib import Path
 from typing import Optional
 
@@ -46,6 +47,7 @@ def save_configuration(config_file):
 
 
 def load_configuration(config_path):
+    logged_in = True
     # Look for env variables
     token = os.getenv("TILEDB_REST_TOKEN", None)
     if token is not None and token != "":
@@ -91,7 +93,10 @@ def load_configuration(config_path):
                 verify_ssl = config_obj["verify_ssl"]
 
     if (token is None or token == "") and (username is None or username == ""):
-        return "You must first login before you can run commands"
+        warnings.warn(
+            "You must first login before you can run commands. Please run tiledb.cloud.login."
+        )
+        logged_in = False
 
     if host is None or host == "":
         global default_host
@@ -104,7 +109,7 @@ def load_configuration(config_path):
         host=host,
         verify_ssl=verify_ssl,
     )
-    return True
+    return logged_in
 
 
 def setup_configuration(
