@@ -1,6 +1,5 @@
 import collections
 import datetime
-import enum
 import itertools
 import json
 import numbers
@@ -27,7 +26,6 @@ from typing import (
 from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
-from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud import udf
 from tiledb.cloud import utils
@@ -39,6 +37,7 @@ from tiledb.cloud.dag import status as st
 from tiledb.cloud.dag import visualization as viz
 from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.rest_api import models
+from tiledb.cloud.sql import _execution as _sql_exec
 from tiledb.cloud.taskgraphs import _codec
 
 Status = st.Status  # Re-export for compabitility.
@@ -905,7 +904,7 @@ class DAG:
         :return: Node that is created
         """
         return self._add_prewrapped_node(
-            sql.exec_base,
+            _sql_exec.exec_base,
             *args,
             _internal_accepts_stored_params=False,
             _fallback_name="SQL query",

@@ -8,14 +8,13 @@ import tiledb
 from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
+from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import utils
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 from tiledb.cloud._results import sender
 from tiledb.cloud.rest_api import models
-
-last_sql_task_id: Optional[str] = None
 
 
 def exec_base(
@@ -188,6 +187,5 @@ def exec_async(*args, **kwargs) -> "results.AsyncResult":
 
 
 def _maybe_set_last_task_id(task_id: Optional[uuid.UUID]):
-    global last_sql_task_id
     if task_id:
-        last_sql_task_id = str(task_id)
+        sql.last_sql_task_id = str(task_id)
