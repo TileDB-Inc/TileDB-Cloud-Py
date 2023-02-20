@@ -1404,7 +1404,9 @@ class DAG:
                     args.append(models.TGUDFArgument(value=esc.visit(arg)))
 
             for name, arg in node.kwargs.items():
-                if isinstance(arg, Node):
+                if name in ["image_name", "timeout", "result_format"]:
+                    continue
+                elif isinstance(arg, Node):
                     args.append(
                         models.TGUDFArgument(
                             name=name,
