@@ -95,6 +95,7 @@ class TestRegisteredTaskGraph(unittest.TestCase):
                                 )
                             ],
                         ),
+                        expand_node_output="0",
                     )
                 ],
             )

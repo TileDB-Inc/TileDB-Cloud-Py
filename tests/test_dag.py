@@ -623,6 +623,52 @@ class DAGBatchModeTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             node.result()
 
+    def test_dynamic_batch_dag(self):
+        d = dag.DAG(mode=Mode.BATCH, max_workers=2)
+
+        def generate_split():
+            return list(range(0, 4))
+
+        def print_result(x):
+            print(f"Result: {x}")
+            return x
+
+        split = d.submit(
+            generate_split,
+            name="split",
+            resources={"cpu": "1", "memory": "500Mi"},
+            result_format=models.ResultFormat.JSON,
+        )
+        mult_1 = d.submit_udf_stage(
+            lambda x: x * 2,
+            split,
+            expand_node_output=split,
+            name="multiply",
+            resources={"cpu": "1", "memory": "500Mi"},
+            result_format=models.ResultFormat.JSON,
+        )
+        mult_2 = d.submit_udf_stage(
+            lambda x: x * 2,
+            mult_1,
+            expand_node_output=mult_1,
+            name="multiply_2",
+            resources={"cpu": "1", "memory": "500Mi"},
+            result_format=models.ResultFormat.JSON,
+        )
+        d.submit(
+            print_result,
+            mult_2,
+            name="print",
+            resources={"cpu": "1", "memory": "500Mi"},
+            result_format=models.ResultFormat.JSON,
+        )
+
+        d.compute()
+
+        # Wait for dag to complete
+
+        d.wait(300)
+
 
 class DAGCancelTest(unittest.TestCase):
     def test_dag_cancel(self):

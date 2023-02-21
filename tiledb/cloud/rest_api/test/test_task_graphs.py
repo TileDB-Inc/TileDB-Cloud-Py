@@ -95,6 +95,7 @@ class TestTaskGraphs(unittest.TestCase):
                                         )
                                     ],
                                 ),
+                                expand_node_output="0",
                             )
                         ],
                         parallelism=56,

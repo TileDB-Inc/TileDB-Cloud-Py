@@ -83,6 +83,7 @@ class TestTaskGraphNode(unittest.TestCase):
                     ],
                     result_format="python_pickle",
                 ),
+                expand_node_output="0",
             )
         else:
             return TaskGraphNode()
