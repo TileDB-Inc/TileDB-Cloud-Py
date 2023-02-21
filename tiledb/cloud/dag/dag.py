@@ -942,27 +942,6 @@ class DAG:
             **kwargs,
         )
 
-    def report_node_status_change(self, node: Node, new_status: Status):
-        self.completed_nodes.pop(node.id, None)
-        self.failed_nodes.pop(node.id, None)
-        self.running_nodes.pop(node.id, None)
-        self.not_started_nodes.pop(node.id, None)
-        self.cancelled_nodes.pop(node.id, None)
-        with node._lifecycle_condition:
-            node._update_status(new_status)
-        if new_status is Status.COMPLETED:
-            self.completed_nodes[node.id] = node
-        elif new_status is Status.FAILED:
-            self.failed_nodes[node.id] = node
-        elif new_status is Status.PARENT_FAILED:
-            self.failed_nodes[node.id] = node
-        elif new_status is Status.RUNNING:
-            self.running_nodes[node.id] = node
-        elif new_status is Status.NOT_STARTED:
-            self.not_started_nodes[node.id] = node
-        elif new_status is Status.CANCELLED:
-            self.cancelled_nodes[node.id] = node
-
     def report_node_complete(self, node: Node):
         """
         Report a node as complete
@@ -1511,8 +1490,9 @@ class DAG:
             env_dict["namespace"] = self.namespace
 
             kwargs["environment"] = models.TGUDFEnvironment(**env_dict)
-            if "result_format" in node.kwargs:
-                kwargs["result_format"] = node.kwargs["result_format"]
+            kwargs["result_format"] = node.kwargs.get(
+                "result_format", models.ResultFormat.NATIVE
+            )
             expand_node_output = ""
             if node._expand_node_output:
                 expand_node_output = str(node._expand_node_output.id)
@@ -1555,7 +1535,6 @@ class DAG:
                                 execution.status
                             )
                     if node.status != new_node_status:
-                        self.report_node_status_change(node, new_node_status)
                         if new_node_status in (
                             Status.FAILED,
                             Status.CANCELLED,
@@ -1578,6 +1557,8 @@ class DAG:
 
                             else:
                                 raise RuntimeError("No executions found for done Node.")
+                            with node._lifecycle_condition:
+                                node._update_status(new_node_status)
                             self.report_node_complete(node)
 
 
