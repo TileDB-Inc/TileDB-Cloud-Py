@@ -1466,7 +1466,9 @@ class DAG:
                 elif isinstance(arg, Node):
                     if node._expand_node_output:
                         args.append(
-                            models.TGUDFArgument(name=name, value="{{inputs.parameters.partId}}")
+                            models.TGUDFArgument(
+                                name=name, value="{{inputs.parameters.partId}}"
+                            )
                         )
                     else:
                         args.append(
