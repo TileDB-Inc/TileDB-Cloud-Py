@@ -49,6 +49,8 @@ _RETRY_MSG = "RETRY_WITH_PARAMS"
 _REPORT_TIMEOUT_SECS = 10
 """The maximum request time when submitting non-essential log information."""
 
+_SKIP_BATCH_UDF_KWARGS = ["image_name", "timeout", "result_format"]
+
 
 class ParentFailedError(futures.CancelledError):
     def __init__(self, cause: BaseException, node: "Node"):
@@ -1404,7 +1406,9 @@ class DAG:
                     args.append(models.TGUDFArgument(value=esc.visit(arg)))
 
             for name, arg in node.kwargs.items():
-                if isinstance(arg, Node):
+                if name in _SKIP_BATCH_UDF_KWARGS:
+                    continue
+                elif isinstance(arg, Node):
                     args.append(
                         models.TGUDFArgument(
                             name=name,
