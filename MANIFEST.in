@@ -1,0 +1,10 @@
+# Because `setuptools-scm` tries to include every single file known to Git,
+# we trim that down to include only the Python files themselves and manadatory
+# package metadata.
+
+global-exclude *
+include pyproject.toml
+include MANIFEST.in
+recursive-include src *.py
+recursive-exclude src/tiledb/cloud/_common/api_v2/test *
+recursive-exclude src/tiledb/cloud/rest_api/test *
