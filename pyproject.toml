@@ -1,6 +1,7 @@
 [project]
 name = "tiledb-cloud"
 description = "TileDB Cloud platform Python client"
+readme = "./README.md"
 dynamic = ["version"]
 
 dependencies = [
