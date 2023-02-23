@@ -74,11 +74,9 @@ def export_file_local(
             # Most Python indices are [start, end), but TileDB indices are
             # [start, end], which is why we subtract 1 here.
 
-            fh = vfs.open(output_uri, "wb")
-            for part in iterable:
-                vfs.write(fh, part["contents"])
-
-            vfs.close(fh)
+            with vfs.open(output_uri, "wb") as fh:
+                for part in iterable:
+                    fh.write(part["contents"])
 
         return models.FileExported(output_uri=output_uri)
 
