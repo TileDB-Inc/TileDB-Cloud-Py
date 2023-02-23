@@ -35,7 +35,7 @@ zip-safe = false
 
 [tool.setuptools.packages.find]
 where = ["src"]
-exclude = ["tiledb"]
+# exclude = ["tiledb"]
 
 [tool.setuptools_scm]
 write_to = "src/tiledb/cloud/version.py"
