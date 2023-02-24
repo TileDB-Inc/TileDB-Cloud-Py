@@ -3,6 +3,7 @@ import tiledb
 import math
 import os
 from tiledb.cloud.utils import logger
+from functools import partial
 
 def ingest(source: Union[Sequence[str], str],
            output: str, 
@@ -51,7 +52,7 @@ def ingest(source: Union[Sequence[str], str],
     for i, work in enumerate(batch(samples, batch_size)):
         logger.info(f"Adding batch {i}")
         graph.submit(
-            ingest_tiff_udf,
+            tiledb.cloud.bioimg.ingestion.ingest_tiff_udf,
             work,
             access_key_id,
             secret_access_key,
