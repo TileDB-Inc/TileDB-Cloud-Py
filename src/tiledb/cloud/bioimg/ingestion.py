@@ -1,16 +1,18 @@
-from typing import Sequence, Union, Tuple, Mapping, Any, Optional
-import tiledb
 import math
 import os
-from tiledb.cloud.utils import logger
 from functools import partial
+from typing import Any, Mapping, Optional, Sequence, Tuple, Union
+
+import tiledb
+from tiledb.cloud.utils import logger
+
 
 def ingest(source: Union[Sequence[str], str],
            output: str, 
            config: Mapping[str, Any], 
            *,
            taskgraph_name: Optional[str] = None,
-           num_batches: Optional[int] = 1,
+           num_batches: Optional[int] = None,
            threads: Optional[int] = 8,
            resources: Optional[Mapping[str, Any]] = None,
            **kwargs):
@@ -61,7 +63,15 @@ def ingest(source: Union[Sequence[str], str],
         for ndx in range(0, length, chunks):
             yield iterable[ndx:min(ndx + chunks, length)]
    
-    batch_size = math.ceil(len(source) / num_batches)
+    # If num_batches is default create number of images nodes
+    # constraint node max_workers to 20 fully heuristic
+    if num_batches is None:
+        num_batches = len(source)
+        batch_size = 1
+        max_workers = 20
+    else:
+        batch_size = math.ceil(len(source) / num_batches)
+        max_workers = None
 
     # Get the list of all BioImg samples input/out
     samples = get_uris(source, output)
@@ -69,7 +79,8 @@ def ingest(source: Union[Sequence[str], str],
     # Build the task graph
     logger.info(f'Building graph')
     graph = tiledb.cloud.dag.DAG(name="batch-ingest-bioimg" if taskgraph_name is None else taskgraph_name,  
-                                 mode=tiledb.cloud.dag.Mode.BATCH)
+                                 mode=tiledb.cloud.dag.Mode.BATCH,
+                                 max_workers=max_workers)
 
     for i, work in enumerate(batch(samples, batch_size)):
         logger.info(f"Adding batch {i}")
@@ -88,7 +99,7 @@ def ingest(source: Union[Sequence[str], str],
     graph.wait()
 
 
-def get_uris(source: Union[Sequence[str], str], 
+def get_uris(source: Sequence[str], 
               output_dir: str,
               config: Mapping[str, Any]):
     """Match input uri/s with output destinations
@@ -114,8 +125,5 @@ def get_uris(source: Union[Sequence[str], str],
         # Folder like input
         iter_paths(vfs.ls(source))
     elif isinstance(source, Sequence):
-        # List of input uris
+        # List of input uris - single file is one element list
         iter_paths(source)
-    else:
-        # Single file input
-        return source, create_output_path(source, output_dir)
