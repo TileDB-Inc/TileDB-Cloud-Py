@@ -1,16 +1,13 @@
+from typing import Sequence, Union, Tuple, Mapping, Any, Optional
+import tiledb
 import math
 import os
-from functools import partial
-from typing import Any, Mapping, Optional, Sequence, Tuple, Union
-
-import tiledb
 from tiledb.cloud.utils import logger
-
+from functools import partial
 
 def ingest(source: Union[Sequence[str], str],
            output: str, 
-           access_key_id: str, 
-           secret_access_key: str, 
+           config: Mapping[str, Any], 
            *,
            taskgraph_name: Optional[str] = None,
            num_batches: Optional[int] = 1,
@@ -20,7 +17,7 @@ def ingest(source: Union[Sequence[str], str],
     
     """The function ingests microscopy images into TileDB arrays
 
-    :param source: uri / iterable of uris of input files e.g 
+    :param source: uri / iterable of uris of input files
     :param output: output dir for the ingested tiledb arrays
     :param access_key_id: AWS_ACCESS_KEY_ID
     :param secret_access_key: AWS_SECRET_ACCESS_KEY
@@ -31,8 +28,7 @@ def ingest(source: Union[Sequence[str], str],
     """
 
     def ingest_tiff_udf(io_uris: Sequence[Tuple], 
-                     key: str, 
-                     secret: str,
+                     config: Mapping[str, Any],
                      workers: int,
                      ):
         
@@ -46,9 +42,7 @@ def ingest(source: Union[Sequence[str], str],
 
         from tiledb.bioimg.converters.ome_tiff import OMETiffConverter
 
-        conf = tiledb.Config()
-        conf["vfs.s3.aws_access_key_id"] = key
-        conf["vfs.s3.aws_secret_access_key"] = secret
+        conf = tiledb.Config(params=config)
         vfs = tiledb.VFS(config=conf)
 
         with tiledb.scope_ctx(ctx_or_config=conf):
@@ -82,8 +76,7 @@ def ingest(source: Union[Sequence[str], str],
         graph.submit(
             ingest_tiff_udf,
             work,
-            access_key_id,
-            secret_access_key,
+            config,
             threads,
             name=f"BioImg Ingest Batch - {i}/{num_batches}",
             mode=tiledb.cloud.dag.Mode.BATCH,
@@ -96,24 +89,33 @@ def ingest(source: Union[Sequence[str], str],
 
 
 def get_uris(source: Union[Sequence[str], str], 
-              output_dir: str):
+              output_dir: str,
+              config: Mapping[str, Any]):
     """Match input uri/s with output destinations
 
     :param source: A sequence of paths or path to input 
     :param output_dir: A path to the output directory
     """
+    vfs = tiledb.VFS(config=config)
 
     def create_output_path(input_file, output_dir):
         return os.path.join(output_dir, os.path.basename(input_file) + ".tdb")
     
-    if isinstance(source, str):
-        # Single file input
-        return source, create_output_path(source, output_dir)
-    else:
-        # List of input uris
+
+    def iter_paths(sequence):
         result = []
         output_uris = []
-        for uri in source:
+        for uri in sequence:
             result.append(uri)
             output_uris.append( create_output_path(uri, output_dir))
         return tuple(zip(result, output_uris))
+
+    if vfs.is_dir(source):
+        # Folder like input
+        iter_paths(vfs.ls(source))
+    elif isinstance(source, Sequence):
+        # List of input uris
+        iter_paths(source)
+    else:
+        # Single file input
+        return source, create_output_path(source, output_dir)
