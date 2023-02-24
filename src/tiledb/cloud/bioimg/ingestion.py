@@ -52,7 +52,7 @@ def ingest(source: Union[Sequence[str], str],
     for i, work in enumerate(batch(samples, batch_size)):
         logger.info(f"Adding batch {i}")
         graph.submit(
-            tiledb.cloud.bioimg.ingestion.ingest_tiff_udf,
+            ingest_tiff_udf,
             work,
             access_key_id,
             secret_access_key,
