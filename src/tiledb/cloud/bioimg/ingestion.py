@@ -21,8 +21,7 @@ def ingest(source: Union[Sequence[str], str],
 
     :param source: uri / iterable of uris of input files
     :param output: output dir for the ingested tiledb arrays
-    :param access_key_id: AWS_ACCESS_KEY_ID
-    :param secret_access_key: AWS_SECRET_ACCESS_KEY
+    :param config: dict configuration to pass on tiledb.VFS
     :param taskgraph_name: Optional name for taskgraph, defaults to None
     :param num_batches: Number of graph nodes to spawn performs it sequentially if default, defaults to 1
     :param threads: Number of threads for node side multiprocessing, defaults to 8
@@ -37,8 +36,7 @@ def ingest(source: Union[Sequence[str], str],
         """Internal udf that ingests server side batch of bioimaging files into tiledb arrays using tiledb-bioimg API
 
         :param io_uris: Pairs of tiff input - output tdb uris
-        :param key: AWS_ACCESS_KEY_ID
-        :param secret: AWS_SECRET_ACCESS_KEY
+        :param config: dict configuration to pass on tiledb.VFS
         :param workers: Number of threads that will spawn for parallelizing ingestion
         """
 
