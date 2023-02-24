@@ -65,8 +65,6 @@ def ingest(source: Union[Sequence[str], str],
 
     res = graph.compute()
     graph.wait()
-    print(res)
-
 
 def ingest_tiff_udf(io_uris: Sequence[Tuple], 
                      key: str, 
