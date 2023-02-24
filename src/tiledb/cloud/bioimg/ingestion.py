@@ -1,9 +1,11 @@
-from typing import Sequence, Union, Tuple, Mapping, Any, Optional
-import tiledb
 import math
 import os
-from tiledb.cloud.utils import logger
 from functools import partial
+from typing import Any, Mapping, Optional, Sequence, Tuple, Union
+
+import tiledb
+from tiledb.cloud.utils import logger
+
 
 def ingest(source: Union[Sequence[str], str],
            output: str, 
@@ -28,45 +30,7 @@ def ingest(source: Union[Sequence[str], str],
     :param resources: configuration for node specs e.g. {"cpu": "8", "memory": "4Gi"} , defaults to None
     """
 
-    if isinstance(source, str):
-        # Handle only lists
-        source = [source]
-
-    # Calculate number batches - default fair split
-    
-    def batch(iterable, chunks):
-        length = len(iterable)
-        for ndx in range(0, length, chunks):
-            yield iterable[ndx:min(ndx + chunks, length)]
-   
-    batch_size = math.ceil(len(source) / num_batches)
-
-    # Get the list of all BioImg samples input/out
-    samples = get_uris(source, output)
-
-    # Build the task graph
-    logger.info(f'Building graph')
-    graph = tiledb.cloud.dag.DAG(name="batch-ingest-bioimg" if taskgraph_name is None else taskgraph_name,  
-                                 mode=tiledb.cloud.dag.Mode.BATCH)
-
-    for i, work in enumerate(batch(samples, batch_size)):
-        logger.info(f"Adding batch {i}")
-        graph.submit(
-            partial(ingest_tiff_udf,
-            work,
-            access_key_id,
-            secret_access_key,
-            threads),
-            name=f"BioImg Ingest Batch - {i}/{num_batches}",
-            mode=tiledb.cloud.dag.Mode.BATCH,
-            resources={"cpu": "8", "memory": "4Gi"} if resources is None else resources,
-            image_name="3.9-imaging-dev"
-        )
-
-    res = graph.compute()
-    graph.wait()
-
-def ingest_tiff_udf(io_uris: Sequence[Tuple], 
+    def ingest_tiff_udf(io_uris: Sequence[Tuple], 
                      key: str, 
                      secret: str,
                      workers: int,
@@ -92,6 +56,44 @@ def ingest_tiff_udf(io_uris: Sequence[Tuple],
                 with vfs.open(input) as src:
                     OMETiffConverter.to_tiledb(src, output, max_workers=workers, chunked=True)
 
+    if isinstance(source, str):
+        # Handle only lists
+        source = [source]
+
+    # Calculate number batches - default fair split
+    
+    def batch(iterable, chunks):
+        length = len(iterable)
+        for ndx in range(0, length, chunks):
+            yield iterable[ndx:min(ndx + chunks, length)]
+   
+    batch_size = math.ceil(len(source) / num_batches)
+
+    # Get the list of all BioImg samples input/out
+    samples = get_uris(source, output)
+
+    # Build the task graph
+    logger.info(f'Building graph')
+    graph = tiledb.cloud.dag.DAG(name="batch-ingest-bioimg" if taskgraph_name is None else taskgraph_name,  
+                                 mode=tiledb.cloud.dag.Mode.BATCH)
+
+    for i, work in enumerate(batch(samples, batch_size)):
+        logger.info(f"Adding batch {i}")
+        graph.submit(
+            ingest_tiff_udf,
+            work,
+            access_key_id,
+            secret_access_key,
+            threads,
+            name=f"BioImg Ingest Batch - {i}/{num_batches}",
+            mode=tiledb.cloud.dag.Mode.BATCH,
+            resources={"cpu": "8", "memory": "4Gi"} if resources is None else resources,
+            image_name="3.9-imaging-dev"
+        )
+
+    graph.compute()
+    graph.wait()
+
 
 def get_uris(source: Union[Sequence[str], str], 
               output_dir: str):
@@ -115,4 +117,3 @@ def get_uris(source: Union[Sequence[str], str],
             result.append(uri)
             output_uris.append( create_output_path(uri, output_dir))
         return tuple(zip(result, output_uris))
-    
