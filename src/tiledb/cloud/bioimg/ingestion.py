@@ -11,7 +11,7 @@ def ingest(
     source: Union[Sequence[str], str],
     output: str,
     config: Mapping[str, Any],
-    *,
+    *args: Any,
     taskgraph_name: Optional[str] = None,
     num_batches: Optional[int] = None,
     threads: Optional[int] = 8,
@@ -34,6 +34,8 @@ def ingest(
         io_uris: Sequence[Tuple],
         config: Mapping[str, Any],
         workers: int,
+        *args: Any,
+        **kwargs,
     ):
 
         """Internal udf that ingests server side batch of bioimaging files into tiledb arrays using tiledb-bioimg API
@@ -52,7 +54,7 @@ def ingest(
             for input, output in io_uris:
                 with vfs.open(input) as src:
                     OMETiffConverter.to_tiledb(
-                        src, output, max_workers=workers, chunked=True
+                        src, output, *args, max_workers=workers, chunked=True, **kwargs
                     )
 
     if isinstance(source, str):
@@ -94,10 +96,12 @@ def ingest(
             work,
             config,
             threads,
+            *args,
             name=f"BioImg Ingest Batch - {i}/{num_batches}",
             mode=tiledb.cloud.dag.Mode.BATCH,
             resources={"cpu": "8", "memory": "4Gi"} if resources is None else resources,
             image_name="3.9-imaging-dev",
+            **kwargs,
         )
 
     graph.compute()
