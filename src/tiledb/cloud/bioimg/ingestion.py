@@ -44,13 +44,12 @@ def ingest(source: Union[Sequence[str], str],
 
         from tiledb.bioimg.converters.ome_tiff import OMETiffConverter
 
-        conf = tiledb.cloud.Config()
+        conf = tiledb.Config()
         conf["vfs.s3.aws_access_key_id"] = key
         conf["vfs.s3.aws_secret_access_key"] = secret
-        ctx = tiledb.cloud.Ctx(conf)
-        vfs = tiledb.VFS(ctx)
+        vfs = tiledb.VFS(config=conf)
 
-        with tiledb.scope_ctx(ctx_or_config=ctx):
+        with tiledb.scope_ctx(ctx_or_config=conf):
             for input, output in io_uris:
                 with vfs.open(input) as src:
                     OMETiffConverter.to_tiledb(src, output, max_workers=workers, chunked=True)
