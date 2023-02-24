@@ -41,7 +41,7 @@ def ingest(source: Union[Sequence[str], str],
     batch_size = math.ceil(len(source) / num_batches)
 
     # Get the list of all BioImg samples input/out
-    samples = _get_uris(source, output)
+    samples = get_uris(source, output)
 
     # Build the task graph
     logger.info(f'Building graph')
@@ -51,7 +51,7 @@ def ingest(source: Union[Sequence[str], str],
     for i, work in enumerate(batch(samples, batch_size)):
         logger.info(f"Adding batch {i}")
         graph.submit(
-            _ingest_tiff_udf,
+            ingest_tiff_udf,
             work,
             access_key_id,
             secret_access_key,
@@ -67,7 +67,7 @@ def ingest(source: Union[Sequence[str], str],
     print(res)
 
 
-def _ingest_tiff_udf(io_uris: Sequence[Tuple], 
+def ingest_tiff_udf(io_uris: Sequence[Tuple], 
                      key: str, 
                      secret: str,
                      workers: int,
@@ -93,7 +93,7 @@ def _ingest_tiff_udf(io_uris: Sequence[Tuple],
             with vfs.open(input) as src:
                 OMETiffConverter.to_tiledb(src, output, max_workers=workers, chunked=True)
 
-def _get_uris(source: Union[Sequence[str], str], 
+def get_uris(source: Union[Sequence[str], str], 
               output_dir: str):
     """Match input uri/s with output destinations
 
