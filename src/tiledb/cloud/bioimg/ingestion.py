@@ -28,6 +28,33 @@ def ingest(source: Union[Sequence[str], str],
     :param resources: configuration for node specs e.g. {"cpu": "8", "memory": "4Gi"} , defaults to None
     """
 
+    def ingest_tiff_udf(io_uris: Sequence[Tuple], 
+                     key: str, 
+                     secret: str,
+                     workers: int,
+                     ):
+        
+        """Internal udf that ingests server side batch of bioimaging files into tiledb arrays using tiledb-bioimg API
+
+        :param io_uris: Pairs of tiff input - output tdb uris
+        :param key: AWS_ACCESS_KEY_ID
+        :param secret: AWS_SECRET_ACCESS_KEY
+        :param workers: Number of threads that will spawn for parallelizing ingestion
+        """
+
+        from tiledb.bioimg.converters.ome_tiff import OMETiffConverter
+
+        conf = tiledb.cloud.Config()
+        conf["vfs.s3.aws_access_key_id"] = key
+        conf["vfs.s3.aws_secret_access_key"] = secret
+        ctx = tiledb.cloud.Ctx(conf)
+        vfs = tiledb.VFS(ctx)
+
+        with tiledb.scope_ctx(ctx_or_config=ctx):
+            for input, output in io_uris:
+                with vfs.open(input) as src:
+                    OMETiffConverter.to_tiledb(src, output, max_workers=workers, chunked=True)
+
     if isinstance(source, str):
         # Handle only lists
         source = [source]
@@ -66,33 +93,6 @@ def ingest(source: Union[Sequence[str], str],
     res = graph.compute()
     graph.wait()
     print(res)
-
-
-def ingest_tiff_udf(io_uris: Sequence[Tuple], 
-                     key: str, 
-                     secret: str,
-                     workers: int,
-                     ):
-    """Internal udf that ingests server side batch of bioimaging files into tiledb arrays using tiledb-bioimg API
-
-    :param io_uris: Pairs of tiff input - output tdb uris
-    :param key: AWS_ACCESS_KEY_ID
-    :param secret: AWS_SECRET_ACCESS_KEY
-    :param workers: Number of threads that will spawn for parallelizing ingestion
-    """
-
-    from tiledb.bioimg.converters.ome_tiff import OMETiffConverter
-
-    conf = tiledb.cloud.Config()
-    conf["vfs.s3.aws_access_key_id"] = key
-    conf["vfs.s3.aws_secret_access_key"] = secret
-    ctx = tiledb.cloud.Ctx(conf)
-    vfs = tiledb.VFS(ctx)
-
-    with tiledb.scope_ctx(ctx_or_config=ctx):
-        for input, output in io_uris:
-            with vfs.open(input) as src:
-                OMETiffConverter.to_tiledb(src, output, max_workers=workers, chunked=True)
 
 def get_uris(source: Union[Sequence[str], str], 
               output_dir: str):
