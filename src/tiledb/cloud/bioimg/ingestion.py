@@ -17,8 +17,7 @@ def ingest(
     threads: Optional[int] = 8,
     resources: Optional[Mapping[str, Any]] = None,
     **kwargs,
-):
-
+) -> tiledb.cloud.dag.DAG:
     """The function ingests microscopy images into TileDB arrays
 
     :param source: uri / iterable of uris of input files
@@ -37,7 +36,6 @@ def ingest(
         *args: Any,
         **kwargs,
     ):
-
         """Internal udf that ingests server side batch of bioimaging files into tiledb arrays using tiledb-bioimg API
 
         :param io_uris: Pairs of tiff input - output tdb uris
@@ -79,7 +77,7 @@ def ingest(
         max_workers = None
 
     # Get the list of all BioImg samples input/out
-    samples = get_uris(source, output)
+    samples = get_uris(source, output, config)
 
     # Build the task graph
     logger.info(f"Building graph")
@@ -105,7 +103,7 @@ def ingest(
         )
 
     graph.compute()
-    graph.wait()
+    return graph
 
 
 def get_uris(source: Sequence[str], output_dir: str, config: Mapping[str, Any]):
@@ -127,9 +125,9 @@ def get_uris(source: Sequence[str], output_dir: str, config: Mapping[str, Any]):
             output_uris.append(create_output_path(uri, output_dir))
         return tuple(zip(result, output_uris))
 
-    if vfs.is_dir(source):
+    if len(source) == 1 and vfs.is_dir(source[0]):
         # Folder like input
-        iter_paths(vfs.ls(source))
+        return iter_paths(vfs.ls(source[0]))
     elif isinstance(source, Sequence):
         # List of input uris - single file is one element list
-        iter_paths(source)
+        return iter_paths(source)
