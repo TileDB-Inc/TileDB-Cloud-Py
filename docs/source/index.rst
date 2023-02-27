@@ -12,6 +12,23 @@ Welcome to TileDB-Cloud-Py's documentation!
    :recursive:
 
    tiledb.cloud
+   tiledb.cloud.array
+   tiledb.cloud.client
+   tiledb.cloud.compute
+   tiledb.cloud.config
+   tiledb.cloud.dag
+   tiledb.cloud.file
+   tiledb.cloud.groups
+   tiledb.cloud.notebook
+   tiledb.cloud.pool_manager_wrapper
+   tiledb.cloud.rest_api
+   tiledb.cloud.sql
+   tiledb.cloud.taskgraphs
+   tiledb.cloud.tasks
+   tiledb.cloud.tiledb_cloud_error
+   tiledb.cloud.udf
+   tiledb.cloud.utils
+   tiledb.cloud.version
 
 
 
@@ -22,5 +39,3 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 .. * :ref:`api/modules`
-
-

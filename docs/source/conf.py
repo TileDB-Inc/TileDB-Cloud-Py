@@ -13,10 +13,7 @@
 import os
 import sys
 
-# sys.path.insert(0, os.path.abspath('../..'))
-# print(os.path.abspath('../..'))
-sys.path.insert(0, os.path.abspath("../../tiledb"))
-print(os.path.abspath("../../tiledb"))
+sys.path.insert(0, os.path.abspath("../../src"))
 
 # -- ReadTheDocs configuration ---------------------------------------------
 
@@ -29,7 +26,7 @@ rtd_version = rtd_version if rtd_version in ["stable", "latest"] else "stable"
 # -- Project information -----------------------------------------------------
 
 project = "TileDB-Cloud-Py"
-copyright = "2020, TileDB, Inc."
+copyright = "2020–2023, TileDB, Inc."
 author = "TileDB, Inc."
 
 
@@ -45,14 +42,16 @@ extensions = [
     "sphinx.ext.autosummary",  # Create neat summary tables
 ]
 autosummary_generate = True
+autodoc_mock_imports = [
+    "networkx",
+    "tiledb.cloud.cloudarray",
+    "tiledb.cloud.testonly",
+    "tiledb.cloud.rest_api.test",
+]
 
 source_suffix = [".rst", ".md"]
 
 master_doc = "index"
-
-# apidoc_module_dir = '../..'
-# apidoc_excluded_paths = ['tests', 'tiledb/cloud/rest_api', 'setup.py', '**/test/**']
-# apidoc_separate_modules = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -60,19 +59,7 @@ templates_path = ["_templates"]
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = [
-    "_autosummary/tiledb.test*",
-    "_autosummary/tiledb.cloud.rest_api.test*",
-    "_autosummary/tiledb.version.rst",
-    "_autosummary/tiledb.array*",
-    "_autosummary/tiledb.core*",
-    "_autosummary/tiledb.dataframe*",
-    "_autosummary/tiledb.highlevel",
-    "_autosummary/tiledb.libtiledb*",
-    "_autosummary/tiledb.metadata*",
-    "_autosummary/tiledb.multirange*",
-    "_autosummary/tiledb.version.rst",
-]
+exclude_patterns = ["_autosummary/tiledb.cloud.rest_api.test.*"]
 
 
 # -- Options for HTML output -------------------------------------------------
