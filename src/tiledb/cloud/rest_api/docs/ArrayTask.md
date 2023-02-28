@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **cpu** | **int** | millicpu allocated to task | [optional] 
 **namespace** | **str** | namespace task is tied to | [optional] 
 **status** | [**ArrayTaskStatus**](ArrayTaskStatus.md) |  | [optional] 
+**status_message** | **str** | The reason the array task status is in the state | [optional] 
 **start_time** | **datetime** | Start time RFC3339 for job | [optional] 
 **finish_time** | **datetime** | Finish time RFC3339 for job | [optional] 
 **cost** | **float** | Total accumulated for task in USD, example is $0.12 | [optional] 

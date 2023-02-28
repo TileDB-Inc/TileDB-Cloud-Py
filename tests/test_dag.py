@@ -623,6 +623,28 @@ class DAGBatchModeTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             node.result()
 
+    def test_batch_dag_retries(self):
+        def random_failure():
+            import random
+
+            if random.random() > 0.5:
+                raise RuntimeError("Random error!")
+
+        d = dag.DAG(mode=Mode.BATCH)
+        node = d.submit(
+            random_failure,
+            name="node",
+            resources={"cpu": "1", "memory": "500Mi"},
+            retry_strategy=models.RetryStrategy(
+                limit=10,
+                retry_policy="Always",
+            ),
+        )
+
+        d.compute()
+        d.wait(600)
+        self.assertEqual(d.status, dag.Status.COMPLETED)
+
 
 class DAGCancelTest(unittest.TestCase):
     def test_dag_cancel(self):

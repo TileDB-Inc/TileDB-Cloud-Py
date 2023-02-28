@@ -40,6 +40,7 @@ class TaskGraphNode(object):
         "input_node": "TGInputNodeData",
         "sql_node": "TGSQLNodeData",
         "udf_node": "TGUDFNodeData",
+        "retry_strategy": "RetryStrategy",
     }
 
     attribute_map = {
@@ -50,6 +51,7 @@ class TaskGraphNode(object):
         "input_node": "input_node",
         "sql_node": "sql_node",
         "udf_node": "udf_node",
+        "retry_strategy": "retry_strategy",
     }
 
     def __init__(
@@ -61,6 +63,7 @@ class TaskGraphNode(object):
         input_node=None,
         sql_node=None,
         udf_node=None,
+        retry_strategy=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """TaskGraphNode - a model defined in OpenAPI"""  # noqa: E501
@@ -75,6 +78,7 @@ class TaskGraphNode(object):
         self._input_node = None
         self._sql_node = None
         self._udf_node = None
+        self._retry_strategy = None
         self.discriminator = None
 
         if client_node_id is not None:
@@ -87,6 +91,8 @@ class TaskGraphNode(object):
         self.input_node = input_node
         self.sql_node = sql_node
         self.udf_node = udf_node
+        if retry_strategy is not None:
+            self.retry_strategy = retry_strategy
 
     @property
     def client_node_id(self):
@@ -240,6 +246,27 @@ class TaskGraphNode(object):
         """
 
         self._udf_node = udf_node
+
+    @property
+    def retry_strategy(self):
+        """Gets the retry_strategy of this TaskGraphNode.  # noqa: E501
+
+
+        :return: The retry_strategy of this TaskGraphNode.  # noqa: E501
+        :rtype: RetryStrategy
+        """
+        return self._retry_strategy
+
+    @retry_strategy.setter
+    def retry_strategy(self, retry_strategy):
+        """Sets the retry_strategy of this TaskGraphNode.
+
+
+        :param retry_strategy: The retry_strategy of this TaskGraphNode.  # noqa: E501
+        :type: RetryStrategy
+        """
+
+        self._retry_strategy = retry_strategy
 
     def to_dict(self):
         """Returns the model properties as a dict"""

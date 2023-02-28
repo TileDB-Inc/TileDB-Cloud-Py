@@ -93,9 +93,29 @@ class TestTaskGraph(unittest.TestCase):
                                 )
                             ],
                         ),
+                        retry_strategy=tiledb.cloud.rest_api.models.retry_strategy.RetryStrategy(
+                            backoff=tiledb.cloud.rest_api.models.backoff.Backoff(
+                                duration="0",
+                                factor=56,
+                                max_duration="0",
+                            ),
+                            expression="0",
+                            limit=56,
+                            retry_policy="Always",
+                        ),
                     )
                 ],
                 parallelism=56,
+                retry_strategy=tiledb.cloud.rest_api.models.retry_strategy.RetryStrategy(
+                    backoff=tiledb.cloud.rest_api.models.backoff.Backoff(
+                        duration="0",
+                        factor=56,
+                        max_duration="0",
+                    ),
+                    expression="0",
+                    limit=56,
+                    retry_policy="Always",
+                ),
             )
         else:
             return TaskGraph()
