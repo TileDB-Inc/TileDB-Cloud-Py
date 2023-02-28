@@ -1,10 +1,13 @@
 import math
 import os
 from functools import partial
-from typing import Any, Mapping, Optional, Sequence, Tuple, Union
+from typing import Any, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
 from tiledb.cloud.utils import logger
+
+DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
+DEFAULT_IMG_NAME = "3.9-imaging-dev"
 
 
 def ingest(
@@ -97,8 +100,8 @@ def ingest(
             *args,
             name=f"BioImg Ingest Batch - {i}/{num_batches}",
             mode=tiledb.cloud.dag.Mode.BATCH,
-            resources={"cpu": "8", "memory": "4Gi"} if resources is None else resources,
-            image_name="3.9-imaging-dev",
+            resources=DEFAULT_RESOURCES if resources is None else resources,
+            image_name=DEFAULT_IMG_NAME,
             **kwargs,
         )
 
@@ -114,20 +117,16 @@ def get_uris(source: Sequence[str], output_dir: str, config: Mapping[str, Any]):
     """
     vfs = tiledb.VFS(config=config)
 
-    def create_output_path(input_file, output_dir):
+    def create_output_path(input_file, output_dir) -> str:
         return os.path.join(output_dir, os.path.basename(input_file) + ".tdb")
 
-    def iter_paths(sequence):
-        result = []
-        output_uris = []
+    def iter_paths(sequence) -> Iterator[Tuple]:
         for uri in sequence:
-            result.append(uri)
-            output_uris.append(create_output_path(uri, output_dir))
-        return tuple(zip(result, output_uris))
+            yield uri, create_output_path(uri, output_dir)
 
     if len(source) == 1 and vfs.is_dir(source[0]):
         # Folder like input
-        return iter_paths(vfs.ls(source[0]))
+        return tuple(iter_paths(vfs.ls(source[0])))
     elif isinstance(source, Sequence):
         # List of input uris - single file is one element list
-        return iter_paths(source)
+        return tuple(iter_paths(source))
