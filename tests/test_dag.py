@@ -647,7 +647,7 @@ class DAGBatchModeTest(unittest.TestCase):
             resources={"cpu": "1", "memory": "500Mi"},
             result_format=models.ResultFormat.JSON,
         )
-        mult_1 = d.submit_udf_stage(
+        median = d.submit_udf_stage(
             np.median,
             split,
             expand_node_output=split,
@@ -655,18 +655,18 @@ class DAGBatchModeTest(unittest.TestCase):
             resources={"cpu": "1", "memory": "500Mi"},
             result_format=models.ResultFormat.JSON,
         )
-        mult_2 = d.submit_udf_stage(
+        mult = d.submit_udf_stage(
             multiply,
-            mult_1,
+            median,
             2,
-            expand_node_output=mult_1,
+            expand_node_output=median,
             name="multiply",
             resources={"cpu": "1", "memory": "500Mi"},
             result_format=models.ResultFormat.JSON,
         )
-        d.submit(
+        print_node = d.submit(
             print_result,
-            mult_2,
+            mult,
             name="print",
             resources={"cpu": "1", "memory": "500Mi"},
             result_format=models.ResultFormat.JSON,
@@ -677,6 +677,7 @@ class DAGBatchModeTest(unittest.TestCase):
         # Wait for dag to complete
 
         d.wait(300)
+        self.assertEqual(print_node.result(), ["99.0", "299.0", "499.0", "699.0"])
 
     def test_batch_dag_retries(self):
         def random_failure():
