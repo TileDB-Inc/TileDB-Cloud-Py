@@ -40,6 +40,7 @@ class TaskGraph(object):
         "created_at": "datetime",
         "nodes": "list[TaskGraphNode]",
         "parallelism": "int",
+        "retry_strategy": "RetryStrategy",
     }
 
     attribute_map = {
@@ -50,6 +51,7 @@ class TaskGraph(object):
         "created_at": "created_at",
         "nodes": "nodes",
         "parallelism": "parallelism",
+        "retry_strategy": "retry_strategy",
     }
 
     def __init__(
@@ -61,6 +63,7 @@ class TaskGraph(object):
         created_at=None,
         nodes=None,
         parallelism=None,
+        retry_strategy=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """TaskGraph - a model defined in OpenAPI"""  # noqa: E501
@@ -75,6 +78,7 @@ class TaskGraph(object):
         self._created_at = None
         self._nodes = None
         self._parallelism = None
+        self._retry_strategy = None
         self.discriminator = None
 
         if uuid is not None:
@@ -91,6 +95,8 @@ class TaskGraph(object):
             self.nodes = nodes
         if parallelism is not None:
             self.parallelism = parallelism
+        if retry_strategy is not None:
+            self.retry_strategy = retry_strategy
 
     @property
     def uuid(self):
@@ -252,6 +258,27 @@ class TaskGraph(object):
         """
 
         self._parallelism = parallelism
+
+    @property
+    def retry_strategy(self):
+        """Gets the retry_strategy of this TaskGraph.  # noqa: E501
+
+
+        :return: The retry_strategy of this TaskGraph.  # noqa: E501
+        :rtype: RetryStrategy
+        """
+        return self._retry_strategy
+
+    @retry_strategy.setter
+    def retry_strategy(self, retry_strategy):
+        """Sets the retry_strategy of this TaskGraph.
+
+
+        :param retry_strategy: The retry_strategy of this TaskGraph.  # noqa: E501
+        :type: RetryStrategy
+        """
+
+        self._retry_strategy = retry_strategy
 
     def to_dict(self):
         """Returns the model properties as a dict"""

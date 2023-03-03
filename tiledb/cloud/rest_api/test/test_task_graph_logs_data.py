@@ -137,6 +137,7 @@ class TestTaskGraphLogsData(unittest.TestCase):
                                         memory=1073741824,
                                         cpu=4000,
                                         namespace="organization1",
+                                        status_message="0",
                                         start_time=datetime.datetime.strptime(
                                             "2013-10-20 19:20:30.00",
                                             "%Y-%m-%d %H:%M:%S.%f",
