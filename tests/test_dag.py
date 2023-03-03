@@ -569,7 +569,6 @@ class DAGFailureTest(unittest.TestCase):
 
 
 class DAGBatchModeTest(unittest.TestCase):
-
     def test_simple_batch_dag(self):
         d = dag.DAG(mode=Mode.BATCH)
 
@@ -628,7 +627,12 @@ class DAGBatchModeTest(unittest.TestCase):
         d = dag.DAG(mode=Mode.BATCH, max_workers=2)
 
         def generate_split():
-            return [[*range(0, 100)], [*range(100, 200)], [*range(200, 300)], [*range(300, 400)]]
+            return [
+                [*range(0, 100)],
+                [*range(100, 200)],
+                [*range(200, 300)],
+                [*range(300, 400)],
+            ]
 
         def multiply(x, y):
             return x * y
