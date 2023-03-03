@@ -7,7 +7,7 @@ Usage:
 
     update_generated.sh /path/to/TileDB-Cloud-API-Spec
 
-This will create generated API documents in [repo root]/tiledb/cloud/rest_api.
+This creates generated API documents in [repo root]/src/tiledb/cloud/rest_api.
 '
 
 if [[ "$#" -ne 1 ]]; then
@@ -52,7 +52,7 @@ generate_api() {
   PACKAGE_NAME="$2"
   PACKAGE_NAME_SLASHY="${PACKAGE_NAME//.//}"
 
-  TARGET_PATH="$ROOT/tiledb/cloud"
+  TARGET_PATH="$ROOT/src/tiledb/cloud"
 
   TEMP_PATH="$(mktemp -d /tmp/api_gen.XXXXXX)"
 
@@ -125,10 +125,10 @@ run_format() {
 # Apply an api_client patch to avoid descending into known–JSON-safe values.
 apply_json_safe_patch() {
   git apply - <<EOF
-diff --git a/tiledb/cloud/rest_api/api_client.py b/tiledb/cloud/rest_api/api_client.py
+diff --git a/src/tiledb/cloud/rest_api/api_client.py b/src/tiledb/cloud/rest_api/api_client.py
 index 267385d..6d244a0 100644
---- a/tiledb/cloud/rest_api/api_client.py
-+++ b/tiledb/cloud/rest_api/api_client.py
+--- a/src/tiledb/cloud/rest_api/api_client.py
++++ b/src/tiledb/cloud/rest_api/api_client.py
 @@ -25,6 +25,7 @@ from dateutil.parser import parse
  from six.moves.urllib.parse import quote
 
@@ -156,4 +156,4 @@ generate_api "${ABSPATH%/}/openapi-v1.yaml" rest_api
 generate_api "${ABSPATH%/}/openapi-v2.yaml" _common.api_v2
 run_format
 apply_json_safe_patch
-cp "$ROOT/generator/openapi_overrides"/* "$ROOT/tiledb/cloud/_common/api_v2"
+cp "$ROOT/generator/openapi_overrides"/* "$TARGET_PATH/_common/api_v2"

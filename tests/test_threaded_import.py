@@ -2,15 +2,16 @@ import numpy as np
 
 import tiledb
 from tiledb.tests.common import DiskTestCase
-from tiledb.tests.common import assert_subarrays_equal
 
 
 def threadtest_create_array(uri):
-    data = np.random.rand(20)
-    schema = tiledb.libtiledb.schema_like(data)
-    tiledb.Array.create(uri, schema)
-    with tiledb.open(uri, "w") as A:
-        A[:] = data
+    tiledb.Array.create(
+        uri,
+        schema=tiledb.ArraySchema(
+            domain=tiledb.Domain(tiledb.Dim(name="dim", domain=(0, 0), dtype=np.int8)),
+            attrs=[tiledb.Attr(name="attr", dtype=np.int8)],
+        ),
+    )
 
 
 def threadtest_run_workers(uri):
@@ -45,5 +46,4 @@ class TestThreadedImport(DiskTestCase):
         p2 = mpctx.Process(target=threadtest_run_workers, args=(uri,))
         p2.start()
         p2.join()
-        # fixed by https://github.com/TileDB-Inc/TileDB-Py/pull/1096
         self.assertEqual(p2.exitcode, 0)
