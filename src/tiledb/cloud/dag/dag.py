@@ -49,7 +49,7 @@ _RETRY_MSG = "RETRY_WITH_PARAMS"
 _REPORT_TIMEOUT_SECS = 10
 """The maximum request time when submitting non-essential log information."""
 
-_SKIP_BATCH_UDF_KWARGS = ["image_name", "timeout", "result_format"]
+_SKIP_BATCH_UDF_KWARGS = ["image_name", "timeout", "result_format", "retry_strategy"]
 
 
 class ParentFailedError(futures.CancelledError):
@@ -543,6 +543,7 @@ class DAG:
         namespace: Optional[str] = None,
         name: Optional[str] = None,
         mode: Mode = Mode.REALTIME,
+        retry_strategy: Optional[models.RetryStrategy] = None,
     ):
         """
         DAG is a class for creating and managing direct acyclic graphs
@@ -563,6 +564,7 @@ class DAG:
         self.name = name
         self.server_graph_uuid: Optional[uuid.UUID] = None
         self.max_workers = max_workers
+        self.retry_strategy = retry_strategy
 
         self._update_batch_status_thread: Optional[threading.Thread] = None
         """The thread that is updating the status of Batch execution."""
@@ -1453,16 +1455,22 @@ class DAG:
                 "result_format", models.ResultFormat.NATIVE
             )
 
+            retry_strategy = None
+            if "retry_strategy" in node.kwargs:
+                retry_strategy = node.kwargs["retry_strategy"]
+
             task_graph_node = models.TaskGraphNode(
                 client_node_id=str(node.id),
                 name=node.name,
                 depends_on=[str(parent) for parent in node.parents],
+                retry_strategy=retry_strategy,
                 udf_node=models.TGUDFNodeData(**kwargs),
             )
             node_jsons.append(task_graph_node)
         return dict(
             name=self.name,
             parallelism=self.max_workers,
+            retry_strategy=self.retry_strategy,
             nodes=node_jsons,
         )
 

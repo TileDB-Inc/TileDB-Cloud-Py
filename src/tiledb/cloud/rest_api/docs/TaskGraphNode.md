@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **input_node** | [**TGInputNodeData**](TGInputNodeData.md) |  | [optional] 
 **sql_node** | [**TGSQLNodeData**](TGSQLNodeData.md) |  | [optional] 
 **udf_node** | [**TGUDFNodeData**](TGUDFNodeData.md) |  | [optional] 
+**retry_strategy** | [**RetryStrategy**](RetryStrategy.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

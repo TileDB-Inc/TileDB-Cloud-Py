@@ -42,6 +42,7 @@ class ArrayTask(object):
         "cpu": "int",
         "namespace": "str",
         "status": "ArrayTaskStatus",
+        "status_message": "str",
         "start_time": "datetime",
         "finish_time": "datetime",
         "cost": "float",
@@ -72,6 +73,7 @@ class ArrayTask(object):
         "cpu": "cpu",
         "namespace": "namespace",
         "status": "status",
+        "status_message": "status_message",
         "start_time": "start_time",
         "finish_time": "finish_time",
         "cost": "cost",
@@ -103,6 +105,7 @@ class ArrayTask(object):
         cpu=None,
         namespace=None,
         status=None,
+        status_message=None,
         start_time=None,
         finish_time=None,
         cost=None,
@@ -137,6 +140,7 @@ class ArrayTask(object):
         self._cpu = None
         self._namespace = None
         self._status = None
+        self._status_message = None
         self._start_time = None
         self._finish_time = None
         self._cost = None
@@ -175,6 +179,7 @@ class ArrayTask(object):
             self.namespace = namespace
         if status is not None:
             self.status = status
+        self.status_message = status_message
         if start_time is not None:
             self.start_time = start_time
         self.finish_time = finish_time
@@ -411,6 +416,29 @@ class ArrayTask(object):
         """
 
         self._status = status
+
+    @property
+    def status_message(self):
+        """Gets the status_message of this ArrayTask.  # noqa: E501
+
+        The reason the array task status is in the state  # noqa: E501
+
+        :return: The status_message of this ArrayTask.  # noqa: E501
+        :rtype: str
+        """
+        return self._status_message
+
+    @status_message.setter
+    def status_message(self, status_message):
+        """Sets the status_message of this ArrayTask.
+
+        The reason the array task status is in the state  # noqa: E501
+
+        :param status_message: The status_message of this ArrayTask.  # noqa: E501
+        :type: str
+        """
+
+        self._status_message = status_message
 
     @property
     def start_time(self):

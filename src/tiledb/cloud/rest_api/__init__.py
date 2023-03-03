@@ -76,6 +76,7 @@ from tiledb.cloud.rest_api.models.attribute_buffer_size import AttributeBufferSi
 
 # import models into sdk package
 from tiledb.cloud.rest_api.models.aws_access_credentials import AWSAccessCredentials
+from tiledb.cloud.rest_api.models.backoff import Backoff
 from tiledb.cloud.rest_api.models.datatype import Datatype
 from tiledb.cloud.rest_api.models.dimension import Dimension
 from tiledb.cloud.rest_api.models.dimension_coordinate import DimensionCoordinate
@@ -161,6 +162,8 @@ from tiledb.cloud.rest_api.models.querytype import Querytype
 from tiledb.cloud.rest_api.models.read_state import ReadState
 from tiledb.cloud.rest_api.models.registered_task_graph import RegisteredTaskGraph
 from tiledb.cloud.rest_api.models.result_format import ResultFormat
+from tiledb.cloud.rest_api.models.retry_policy import RetryPolicy
+from tiledb.cloud.rest_api.models.retry_strategy import RetryStrategy
 from tiledb.cloud.rest_api.models.sql_parameters import SQLParameters
 from tiledb.cloud.rest_api.models.sso_provider import SSOProvider
 from tiledb.cloud.rest_api.models.storage_location import StorageLocation
