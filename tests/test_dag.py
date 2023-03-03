@@ -569,6 +569,7 @@ class DAGFailureTest(unittest.TestCase):
 
 
 class DAGBatchModeTest(unittest.TestCase):
+
     def test_simple_batch_dag(self):
         d = dag.DAG(mode=Mode.BATCH)
 
@@ -627,7 +628,10 @@ class DAGBatchModeTest(unittest.TestCase):
         d = dag.DAG(mode=Mode.BATCH, max_workers=2)
 
         def generate_split():
-            return list(range(0, 4))
+            return [[*range(0, 100)], [*range(100, 200)], [*range(200, 300)], [*range(300, 400)]]
+
+        def multiply(x, y):
+            return x * y
 
         def print_result(x):
             print(f"Result: {x}")
@@ -640,18 +644,19 @@ class DAGBatchModeTest(unittest.TestCase):
             result_format=models.ResultFormat.JSON,
         )
         mult_1 = d.submit_udf_stage(
-            lambda x: x * 2,
+            np.median,
             split,
             expand_node_output=split,
-            name="multiply",
+            name="median",
             resources={"cpu": "1", "memory": "500Mi"},
             result_format=models.ResultFormat.JSON,
         )
         mult_2 = d.submit_udf_stage(
-            lambda x: x * 2,
+            multiply,
             mult_1,
+            2,
             expand_node_output=mult_1,
-            name="multiply_2",
+            name="multiply",
             resources={"cpu": "1", "memory": "500Mi"},
             result_format=models.ResultFormat.JSON,
         )
