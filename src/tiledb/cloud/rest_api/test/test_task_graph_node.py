@@ -93,6 +93,7 @@ class TestTaskGraphNode(unittest.TestCase):
                     limit=56,
                     retry_policy="Always",
                 ),
+                deadline=56,
             )
         else:
             return TaskGraphNode()

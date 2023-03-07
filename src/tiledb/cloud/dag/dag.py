@@ -49,7 +49,13 @@ _RETRY_MSG = "RETRY_WITH_PARAMS"
 _REPORT_TIMEOUT_SECS = 10
 """The maximum request time when submitting non-essential log information."""
 
-_SKIP_BATCH_UDF_KWARGS = ["image_name", "timeout", "result_format", "retry_strategy"]
+_SKIP_BATCH_UDF_KWARGS = [
+    "image_name",
+    "timeout",
+    "result_format",
+    "retry_strategy",
+    "deadline",
+]
 
 
 class ParentFailedError(futures.CancelledError):
@@ -544,6 +550,7 @@ class DAG:
         name: Optional[str] = None,
         mode: Mode = Mode.REALTIME,
         retry_strategy: Optional[models.RetryStrategy] = None,
+        deadline: Optional[int] = None,
     ):
         """
         DAG is a class for creating and managing direct acyclic graphs
@@ -555,6 +562,8 @@ class DAG:
         :param name: A human-readable name used to identify this task graph
             in logs. Does not need to be unique.
         :param mode: Mode the DAG is to run in, valid options are Mode.REALTIME, Mode.BATCH
+        :param retry_strategy: RetryStrategy to use for the execution of the entire DAG.
+        :param deadline: Duration in seconds relative to the workflow start time which the workflow is allowed to run before it gets terminated.
         """
         self.id = uuid.uuid4()
         self.nodes: Dict[uuid.UUID, Node] = {}
@@ -565,6 +574,7 @@ class DAG:
         self.server_graph_uuid: Optional[uuid.UUID] = None
         self.max_workers = max_workers
         self.retry_strategy = retry_strategy
+        self.deadline = deadline
 
         self._update_batch_status_thread: Optional[threading.Thread] = None
         """The thread that is updating the status of Batch execution."""
@@ -1459,11 +1469,16 @@ class DAG:
             if "retry_strategy" in node.kwargs:
                 retry_strategy = node.kwargs["retry_strategy"]
 
+            deadline = None
+            if "deadline" in node.kwargs:
+                deadline = node.kwargs["deadline"]
+
             task_graph_node = models.TaskGraphNode(
                 client_node_id=str(node.id),
                 name=node.name,
                 depends_on=[str(parent) for parent in node.parents],
                 retry_strategy=retry_strategy,
+                deadline=deadline,
                 udf_node=models.TGUDFNodeData(**kwargs),
             )
             node_jsons.append(task_graph_node)
@@ -1471,6 +1486,7 @@ class DAG:
             name=self.name,
             parallelism=self.max_workers,
             retry_strategy=self.retry_strategy,
+            deadline=self.deadline,
             nodes=node_jsons,
         )
 

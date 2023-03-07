@@ -41,6 +41,7 @@ class TaskGraphNode(object):
         "sql_node": "TGSQLNodeData",
         "udf_node": "TGUDFNodeData",
         "retry_strategy": "RetryStrategy",
+        "deadline": "int",
     }
 
     attribute_map = {
@@ -52,6 +53,7 @@ class TaskGraphNode(object):
         "sql_node": "sql_node",
         "udf_node": "udf_node",
         "retry_strategy": "retry_strategy",
+        "deadline": "deadline",
     }
 
     def __init__(
@@ -64,6 +66,7 @@ class TaskGraphNode(object):
         sql_node=None,
         udf_node=None,
         retry_strategy=None,
+        deadline=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """TaskGraphNode - a model defined in OpenAPI"""  # noqa: E501
@@ -79,6 +82,7 @@ class TaskGraphNode(object):
         self._sql_node = None
         self._udf_node = None
         self._retry_strategy = None
+        self._deadline = None
         self.discriminator = None
 
         if client_node_id is not None:
@@ -93,6 +97,7 @@ class TaskGraphNode(object):
         self.udf_node = udf_node
         if retry_strategy is not None:
             self.retry_strategy = retry_strategy
+        self.deadline = deadline
 
     @property
     def client_node_id(self):
@@ -267,6 +272,29 @@ class TaskGraphNode(object):
         """
 
         self._retry_strategy = retry_strategy
+
+    @property
+    def deadline(self):
+        """Gets the deadline of this TaskGraphNode.  # noqa: E501
+
+        Duration in seconds relative to the node start time which the node is allowed to run before it gets terminated.   # noqa: E501
+
+        :return: The deadline of this TaskGraphNode.  # noqa: E501
+        :rtype: int
+        """
+        return self._deadline
+
+    @deadline.setter
+    def deadline(self, deadline):
+        """Sets the deadline of this TaskGraphNode.
+
+        Duration in seconds relative to the node start time which the node is allowed to run before it gets terminated.   # noqa: E501
+
+        :param deadline: The deadline of this TaskGraphNode.  # noqa: E501
+        :type: int
+        """
+
+        self._deadline = deadline
 
     def to_dict(self):
         """Returns the model properties as a dict"""

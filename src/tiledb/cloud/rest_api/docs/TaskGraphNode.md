@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **sql_node** | [**TGSQLNodeData**](TGSQLNodeData.md) |  | [optional] 
 **udf_node** | [**TGUDFNodeData**](TGUDFNodeData.md) |  | [optional] 
 **retry_strategy** | [**RetryStrategy**](RetryStrategy.md) |  | [optional] 
+**deadline** | **int** | Duration in seconds relative to the node start time which the node is allowed to run before it gets terminated.  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

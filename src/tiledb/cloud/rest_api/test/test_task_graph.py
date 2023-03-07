@@ -103,6 +103,7 @@ class TestTaskGraph(unittest.TestCase):
                             limit=56,
                             retry_policy="Always",
                         ),
+                        deadline=56,
                     )
                 ],
                 parallelism=56,
@@ -116,6 +117,7 @@ class TestTaskGraph(unittest.TestCase):
                     limit=56,
                     retry_policy="Always",
                 ),
+                deadline=56,
             )
         else:
             return TaskGraph()
