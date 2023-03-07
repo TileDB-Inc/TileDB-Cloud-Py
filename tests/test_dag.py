@@ -18,6 +18,7 @@ import pandas as pd
 import tiledb.cloud
 from tiledb.cloud import client
 from tiledb.cloud import dag
+from tiledb.cloud import rest_api
 from tiledb.cloud import tasks
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud._common import visitor
@@ -27,7 +28,6 @@ from tiledb.cloud._results import stored_params as sp
 from tiledb.cloud.dag import Mode
 from tiledb.cloud.dag import dag as dag_dag
 from tiledb.cloud.rest_api import models
-from tiledb.cloud import rest_api
 
 
 class DAGClassTest(unittest.TestCase):
