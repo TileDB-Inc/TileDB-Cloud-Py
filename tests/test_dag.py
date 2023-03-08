@@ -623,6 +623,62 @@ class DAGBatchModeTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             node.result()
 
+    def test_dynamic_batch_dag(self):
+        d = dag.DAG(mode=Mode.BATCH, max_workers=2)
+
+        def generate_split():
+            return [
+                [*range(0, 100)],
+                [*range(100, 200)],
+                [*range(200, 300)],
+                [*range(300, 400)],
+            ]
+
+        def multiply(x, y):
+            return x * y
+
+        def print_result(x):
+            print(f"Result: {x}")
+            return x
+
+        split = d.submit(
+            generate_split,
+            name="split",
+            resources={"cpu": "1", "memory": "500Mi"},
+            result_format=models.ResultFormat.JSON,
+        )
+        median = d.submit_udf_stage(
+            np.median,
+            split,
+            expand_node_output=split,
+            name="median",
+            resources={"cpu": "1", "memory": "500Mi"},
+            result_format=models.ResultFormat.JSON,
+        )
+        mult = d.submit_udf_stage(
+            multiply,
+            median,
+            2,
+            expand_node_output=median,
+            name="multiply",
+            resources={"cpu": "1", "memory": "500Mi"},
+            result_format=models.ResultFormat.JSON,
+        )
+        print_node = d.submit(
+            print_result,
+            mult,
+            name="print",
+            resources={"cpu": "1", "memory": "500Mi"},
+            result_format=models.ResultFormat.JSON,
+        )
+
+        d.compute()
+
+        # Wait for dag to complete
+
+        d.wait(300)
+        self.assertEqual(print_node.result(), ["99.0", "299.0", "499.0", "699.0"])
+
     def test_batch_dag_retries(self):
         def random_failure():
             import random

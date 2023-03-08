@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **sql_node** | [**TGSQLNodeData**](TGSQLNodeData.md) |  | [optional] 
 **udf_node** | [**TGUDFNodeData**](TGUDFNodeData.md) |  | [optional] 
 **retry_strategy** | [**RetryStrategy**](RetryStrategy.md) |  | [optional] 
+**expand_node_output** | **str** | Used to create dynamic tasks based on the output of another node. The other node&#39;s output must be a JSON list of values. The expansion process creates one task per item in the output list. The item is also passed as an argument to each task. The value is the client_node_uuid of the node that we want to expand.  | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
