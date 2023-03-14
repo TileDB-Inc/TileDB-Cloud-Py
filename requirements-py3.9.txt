@@ -3,10 +3,10 @@ certifi==2022.12.7
 cloudpickle==1.4.1
 numpy==1.24.2
 packaging==23.0
-pandas==1.2.5
+pandas==1.5.3
 pyarrow==11.0.0
 python-dateutil==2.8.2
 pytz==2022.7.1
 six==1.16.0
 tiledb==0.20.0
-urllib3==1.26.14
+urllib3==1.26.15
