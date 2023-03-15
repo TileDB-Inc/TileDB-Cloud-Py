@@ -41,6 +41,7 @@ class TaskGraphNode(object):
         "sql_node": "TGSQLNodeData",
         "udf_node": "TGUDFNodeData",
         "retry_strategy": "RetryStrategy",
+        "expand_node_output": "str",
         "deadline": "int",
     }
 
@@ -53,6 +54,7 @@ class TaskGraphNode(object):
         "sql_node": "sql_node",
         "udf_node": "udf_node",
         "retry_strategy": "retry_strategy",
+        "expand_node_output": "expand_node_output",
         "deadline": "deadline",
     }
 
@@ -66,6 +68,7 @@ class TaskGraphNode(object):
         sql_node=None,
         udf_node=None,
         retry_strategy=None,
+        expand_node_output=None,
         deadline=None,
         local_vars_configuration=None,
     ):  # noqa: E501
@@ -82,6 +85,7 @@ class TaskGraphNode(object):
         self._sql_node = None
         self._udf_node = None
         self._retry_strategy = None
+        self._expand_node_output = None
         self._deadline = None
         self.discriminator = None
 
@@ -97,6 +101,7 @@ class TaskGraphNode(object):
         self.udf_node = udf_node
         if retry_strategy is not None:
             self.retry_strategy = retry_strategy
+        self.expand_node_output = expand_node_output
         self.deadline = deadline
 
     @property
@@ -272,6 +277,29 @@ class TaskGraphNode(object):
         """
 
         self._retry_strategy = retry_strategy
+
+    @property
+    def expand_node_output(self):
+        """Gets the expand_node_output of this TaskGraphNode.  # noqa: E501
+
+        Used to create dynamic tasks based on the output of another node. The other node's output must be a JSON list of values. The expansion process creates one task per item in the output list. The item is also passed as an argument to each task. The value is the client_node_uuid of the node that we want to expand.   # noqa: E501
+
+        :return: The expand_node_output of this TaskGraphNode.  # noqa: E501
+        :rtype: str
+        """
+        return self._expand_node_output
+
+    @expand_node_output.setter
+    def expand_node_output(self, expand_node_output):
+        """Sets the expand_node_output of this TaskGraphNode.
+
+        Used to create dynamic tasks based on the output of another node. The other node's output must be a JSON list of values. The expansion process creates one task per item in the output list. The item is also passed as an argument to each task. The value is the client_node_uuid of the node that we want to expand.   # noqa: E501
+
+        :param expand_node_output: The expand_node_output of this TaskGraphNode.  # noqa: E501
+        :type: str
+        """
+
+        self._expand_node_output = expand_node_output
 
     @property
     def deadline(self):

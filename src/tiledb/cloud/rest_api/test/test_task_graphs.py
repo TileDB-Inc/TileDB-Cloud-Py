@@ -105,6 +105,7 @@ class TestTaskGraphs(unittest.TestCase):
                                     limit=56,
                                     retry_policy="Always",
                                 ),
+                                expand_node_output="0",
                                 deadline=56,
                             )
                         ],

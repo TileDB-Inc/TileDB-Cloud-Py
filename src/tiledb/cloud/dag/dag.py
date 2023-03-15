@@ -73,6 +73,7 @@ class Node(futures.FutureLike[_T]):
         name: Optional[str] = None,
         dag: Optional["DAG"] = None,
         mode: Mode = Mode.REALTIME,
+        expand_node_output: Optional["Node"] = None,
         _download_results: Optional[bool] = None,
         _internal_prewrapped_func: Callable[..., "results.Result[_T]"] = None,
         _internal_accepts_stored_params: bool = True,
@@ -113,6 +114,7 @@ class Node(futures.FutureLike[_T]):
 
         self.dag = dag
         self.mode: Mode = mode
+        self._expand_node_output: Optional[Node] = expand_node_output
 
         self._resource_class = kwargs.pop("resource_class", None)
         self._resources = kwargs.pop("resources", None)
@@ -820,6 +822,7 @@ class DAG:
         name=None,
         _fallback_name: Optional[str] = None,
         store_results=True,
+        expand_node_output: Optional[Node] = None,
         **kwargs,
     ):
         with self._lifecycle_condition:
@@ -850,6 +853,7 @@ class DAG:
                 _internal_prewrapped_func=func_exec,
                 dag=self,
                 name=name,
+                expand_node_output=expand_node_output,
                 **kwargs,
             )
             return self._add_node_internal(node)
@@ -908,6 +912,33 @@ class DAG:
         )
 
     submit = submit_udf
+
+    def submit_udf_stage(
+        self, func, *args, expand_node_output: Optional[Node] = None, **kwargs
+    ):
+        """
+        Submit a function that will be executed in the cloud serverlessly
+        :param func: function to execute
+        :param args: arguments for function execution
+        :param expand_node_output: the Node that we want to expand the output of. The output of the node should be a
+        JSON encoded list.
+        :param name: name
+        :return: Node that is created
+        """
+
+        if "local_mode" in kwargs or self.mode != Mode.BATCH:
+            raise tce.TileDBCloudError(
+                "Stage nodes are only supported for BATCH mode DAGs."
+            )
+
+        return self._add_prewrapped_node(
+            udf.exec_base,
+            func,
+            *args,
+            _fallback_name=utils.func_name(func),
+            expand_node_output=expand_node_output,
+            **kwargs,
+        )
 
     def submit_sql(self, *args, **kwargs):
         """
@@ -1405,14 +1436,19 @@ class DAG:
                 if i == 1 and callable(arg):
                     continue
                 if isinstance(arg, Node):
-                    args.append(
-                        models.TGUDFArgument(
-                            value={
-                                "__tdbudf__": "node_output",
-                                "client_node_id": str(arg.id),
-                            }
+                    if node._expand_node_output:
+                        args.append(
+                            models.TGUDFArgument(value="{{inputs.parameters.partId}}")
                         )
-                    )
+                    else:
+                        args.append(
+                            models.TGUDFArgument(
+                                value={
+                                    "__tdbudf__": "node_output",
+                                    "client_node_id": str(arg.id),
+                                }
+                            )
+                        )
                 else:
                     esc = _codec.Escaper()
                     args.append(models.TGUDFArgument(value=esc.visit(arg)))
@@ -1421,15 +1457,22 @@ class DAG:
                 if name in _SKIP_BATCH_UDF_KWARGS:
                     continue
                 elif isinstance(arg, Node):
-                    args.append(
-                        models.TGUDFArgument(
-                            name=name,
-                            value={
-                                "__tdbudf__": "node_output",
-                                "client_node_id": str(arg.id),
-                            },
+                    if node._expand_node_output:
+                        args.append(
+                            models.TGUDFArgument(
+                                name=name, value="{{inputs.parameters.partId}}"
+                            )
                         )
-                    )
+                    else:
+                        args.append(
+                            models.TGUDFArgument(
+                                name=name,
+                                value={
+                                    "__tdbudf__": "node_output",
+                                    "client_node_id": str(arg.id),
+                                },
+                            )
+                        )
                 else:
                     esc = _codec.Escaper()
                     args.append(models.TGUDFArgument(name=name, value=esc.visit(arg)))
@@ -1464,6 +1507,9 @@ class DAG:
             kwargs["result_format"] = node.kwargs.get(
                 "result_format", models.ResultFormat.NATIVE
             )
+            expand_node_output = ""
+            if node._expand_node_output:
+                expand_node_output = str(node._expand_node_output.id)
 
             retry_strategy = None
             if "retry_strategy" in node.kwargs:
@@ -1477,6 +1523,7 @@ class DAG:
                 client_node_id=str(node.id),
                 name=node.name,
                 depends_on=[str(parent) for parent in node.parents],
+                expand_node_output=expand_node_output,
                 retry_strategy=retry_strategy,
                 deadline=deadline,
                 udf_node=models.TGUDFNodeData(**kwargs),
@@ -1508,6 +1555,11 @@ class DAG:
                 for new_node in result.nodes:
                     node = self.nodes_by_name[new_node.name]
                     new_node_status = array_task_status_to_status(new_node.status)
+                    for execution in new_node.executions:
+                        if execution.name == node.name:
+                            new_node_status = array_task_status_to_status(
+                                execution.status
+                            )
                     if node.status != new_node_status:
                         if new_node_status in (
                             Status.FAILED,

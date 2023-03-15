@@ -4,6 +4,7 @@ from tiledb.cloud import compute
 from tiledb.cloud import dag
 from tiledb.cloud import sql
 from tiledb.cloud import udf
+from tiledb.cloud._common import pickle_compat as _pickle_compat
 from tiledb.cloud.array import array_activity
 from tiledb.cloud.array import deregister_array
 from tiledb.cloud.array import info
@@ -32,6 +33,8 @@ from tiledb.cloud.tasks import last_sql_task
 from tiledb.cloud.tasks import last_udf_task
 from tiledb.cloud.tasks import task
 from tiledb.cloud.tiledb_cloud_error import TileDBCloudError
+
+_pickle_compat.patch_pandas()
 
 try:
     from tiledb.cloud.version import version as __version__
