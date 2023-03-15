@@ -18,6 +18,7 @@ import pandas as pd
 import tiledb.cloud
 from tiledb.cloud import client
 from tiledb.cloud import dag
+from tiledb.cloud import rest_api
 from tiledb.cloud import tasks
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud._common import visitor
@@ -700,6 +701,25 @@ class DAGBatchModeTest(unittest.TestCase):
         d.compute()
         d.wait(600)
         self.assertEqual(d.status, dag.Status.COMPLETED)
+
+    def test_batch_dag_deadline(self):
+        d = dag.DAG(mode=Mode.BATCH, deadline=20)
+        d.submit(
+            time.sleep,
+            1000,
+            name="node",
+            resources={"cpu": "1", "memory": "500Mi"},
+            retry_strategy=models.RetryStrategy(
+                limit=10,
+                retry_policy="Always",
+            ),
+        )
+
+        d.compute()
+        with self.assertRaises(rest_api.ApiException):
+            # Wait for dag to complete
+            d.wait(300)
+        self.assertEqual(d.status, dag.Status.FAILED)
 
 
 class DAGCancelTest(unittest.TestCase):

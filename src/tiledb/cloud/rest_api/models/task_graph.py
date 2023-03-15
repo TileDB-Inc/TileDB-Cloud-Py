@@ -41,6 +41,7 @@ class TaskGraph(object):
         "nodes": "list[TaskGraphNode]",
         "parallelism": "int",
         "retry_strategy": "RetryStrategy",
+        "deadline": "int",
     }
 
     attribute_map = {
@@ -52,6 +53,7 @@ class TaskGraph(object):
         "nodes": "nodes",
         "parallelism": "parallelism",
         "retry_strategy": "retry_strategy",
+        "deadline": "deadline",
     }
 
     def __init__(
@@ -64,6 +66,7 @@ class TaskGraph(object):
         nodes=None,
         parallelism=None,
         retry_strategy=None,
+        deadline=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """TaskGraph - a model defined in OpenAPI"""  # noqa: E501
@@ -79,6 +82,7 @@ class TaskGraph(object):
         self._nodes = None
         self._parallelism = None
         self._retry_strategy = None
+        self._deadline = None
         self.discriminator = None
 
         if uuid is not None:
@@ -93,10 +97,10 @@ class TaskGraph(object):
             self.created_at = created_at
         if nodes is not None:
             self.nodes = nodes
-        if parallelism is not None:
-            self.parallelism = parallelism
+        self.parallelism = parallelism
         if retry_strategy is not None:
             self.retry_strategy = retry_strategy
+        self.deadline = deadline
 
     @property
     def uuid(self):
@@ -279,6 +283,29 @@ class TaskGraph(object):
         """
 
         self._retry_strategy = retry_strategy
+
+    @property
+    def deadline(self):
+        """Gets the deadline of this TaskGraph.  # noqa: E501
+
+        Duration in seconds relative to the workflow start time which the workflow is allowed to run before it gets terminated.   # noqa: E501
+
+        :return: The deadline of this TaskGraph.  # noqa: E501
+        :rtype: int
+        """
+        return self._deadline
+
+    @deadline.setter
+    def deadline(self, deadline):
+        """Sets the deadline of this TaskGraph.
+
+        Duration in seconds relative to the workflow start time which the workflow is allowed to run before it gets terminated.   # noqa: E501
+
+        :param deadline: The deadline of this TaskGraph.  # noqa: E501
+        :type: int
+        """
+
+        self._deadline = deadline
 
     def to_dict(self):
         """Returns the model properties as a dict"""

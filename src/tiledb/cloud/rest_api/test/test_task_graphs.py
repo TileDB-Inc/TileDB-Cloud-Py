@@ -106,6 +106,7 @@ class TestTaskGraphs(unittest.TestCase):
                                     retry_policy="Always",
                                 ),
                                 expand_node_output="0",
+                                deadline=56,
                             )
                         ],
                         parallelism=56,
@@ -113,6 +114,7 @@ class TestTaskGraphs(unittest.TestCase):
                             expression="0",
                             limit=56,
                         ),
+                        deadline=56,
                     )
                 ]
             )
