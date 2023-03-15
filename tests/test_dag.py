@@ -706,7 +706,7 @@ class DAGBatchModeTest(unittest.TestCase):
         d = dag.DAG(mode=Mode.BATCH, deadline=20)
         d.submit(
             time.sleep,
-            100,
+            1000,
             name="node",
             resources={"cpu": "1", "memory": "500Mi"},
             retry_strategy=models.RetryStrategy(
