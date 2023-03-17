@@ -1,3 +1,7 @@
+import importlib
+import sys
+
+import numpy
 import packaging.version as pkgver
 import pandas
 
@@ -112,3 +116,54 @@ def patch_pandas() -> None:
             return blocks.new_block(values, placement, ndim=ndim)
 
         pdinternals._unpickle_block = _new_block_trampoline
+
+    # pandas._libs.arrays is used by certain pickles that use storage
+    # backed by NumPy NDArrays.
+    try:
+        import pandas._libs.arrays as _unused_pla  # noqa: F401
+    except ImportError:
+        import pandas._libs as pdlibs
+
+        from . import _array_backed
+
+        pdlibs.arrays = _array_backed
+        sys.modules["pandas._libs.arrays"] = _array_backed
+        importlib.invalidate_caches()
+
+        if not hasattr(_array_backed.NDArrayBacked, "__setstate__"):
+            # https://github.com/pandas-dev/pandas/blob/v1.5.3/pandas/_libs/arrays.pyx#L81
+            def _patch_setstate(self, state):
+                if isinstance(state, dict):
+                    if "_data" in state:
+                        data = state.pop("_data")
+                    elif "_ndarray" in state:
+                        data = state.pop("_ndarray")
+                    else:
+                        raise ValueError  # pragma: no cover
+                    self._data = data  # CHANGED: This is now `_data`.
+                    self._dtype = state.pop("_dtype")
+
+                    for key, val in state.items():
+                        setattr(self, key, val)
+                elif isinstance(state, tuple):
+                    if len(state) != 3:
+                        if len(state) == 1 and isinstance(state[0], dict):
+                            self.__setstate__(state[0])
+                            return
+                        raise NotImplementedError(state)  # pragma: no cover
+
+                    data, dtype = state[:2]
+                    if isinstance(dtype, numpy.ndarray):
+                        dtype, data = data, dtype
+                    self._data = data  # CHANGED: This is now _data.
+                    self._dtype = dtype
+
+                    if isinstance(state[2], dict):
+                        for key, val in state[2].items():
+                            setattr(self, key, val)
+                    else:
+                        raise NotImplementedError(state)  # pragma: no cover
+                else:
+                    raise NotImplementedError(state)  # pragma: no cover
+
+            _array_backed.NDArrayBacked.__setstate__ = _patch_setstate
