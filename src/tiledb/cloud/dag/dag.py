@@ -457,6 +457,7 @@ class Node(futures.FutureLike[_T]):
             kwargs.update(
                 _server_graph_uuid=self.dag.server_graph_uuid,
                 _client_node_uuid=self.id,
+                resource_class=self._resource_class,
             )
             if self._name:
                 kwargs.setdefault("task_name", self._name)
