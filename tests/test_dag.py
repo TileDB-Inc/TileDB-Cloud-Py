@@ -386,6 +386,22 @@ class DAGClassTest(unittest.TestCase):
 
                 self.assertEqual(n2.result(), "3")
 
+    def test_resource_class(self):
+        def big_sum():
+            # An experimentally determined value where reifying the sequence
+            # is too much for a normal-sized UDF, but fine for a large UDF.
+            # Tune (or replace with a better implementation) as needed.
+            nums = tuple(range(128 * 1024**2))
+            return sum(nums)
+
+        grf = dag.DAG()
+        small = grf.submit(big_sum)
+        large = grf.submit(big_sum, resource_class="large")
+        grf.compute()
+        with self.assertRaises(Exception):
+            small.result()
+        self.assertEqual(9007199187632128, large.result(30))
+
 
 class DAGFailureTest(unittest.TestCase):
     def test_dag_failure(self):
