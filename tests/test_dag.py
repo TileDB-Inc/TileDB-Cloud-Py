@@ -676,9 +676,8 @@ class DAGBatchModeTest(unittest.TestCase):
         d.compute()
 
         # Wait for dag to complete
-
         d.wait(300)
-        self.assertEqual(print_node.result(), ["99.0", "299.0", "499.0", "699.0"])
+        self.assertEqual(print_node.result(), [99.0, 299.0, 499.0, 699.0])
 
     def test_batch_dag_retries(self):
         def random_failure():
