@@ -19,6 +19,7 @@ def ingest(
     num_batches: Optional[int] = None,
     threads: Optional[int] = 8,
     resources: Optional[Mapping[str, Any]] = None,
+    namespace: Optional[str],
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
     """The function ingests microscopy images into TileDB arrays
@@ -30,6 +31,7 @@ def ingest(
     :param num_batches: Number of graph nodes to spawn performs it sequentially if default, defaults to 1
     :param threads: Number of threads for node side multiprocessing, defaults to 8
     :param resources: configuration for node specs e.g. {"cpu": "8", "memory": "4Gi"} , defaults to None
+    :param namespace: The namespace where the DAG will run
     """
 
     def ingest_tiff_udf(
@@ -83,11 +85,15 @@ def ingest(
     samples = get_uris(source, output, config)
 
     # Build the task graph
+    dag_name = "batch-ingest-bioimg" if taskgraph_name is None else taskgraph_name
+    task_prefix = f"{dag_name}  - Batch Task"
+
     logger.info(f"Building graph")
     graph = tiledb.cloud.dag.DAG(
-        name="batch-ingest-bioimg" if taskgraph_name is None else taskgraph_name,
+        name=dag_name,
         mode=tiledb.cloud.dag.Mode.BATCH,
         max_workers=max_workers,
+        namespace=namespace,
     )
 
     for i, work in enumerate(batch(samples, batch_size)):
@@ -98,7 +104,7 @@ def ingest(
             config,
             threads,
             *args,
-            name=f"BioImg Ingest Batch - {i}/{num_batches}",
+            name=f"{task_prefix} - {i}/{num_batches}",
             mode=tiledb.cloud.dag.Mode.BATCH,
             resources=DEFAULT_RESOURCES if resources is None else resources,
             image_name=DEFAULT_IMG_NAME,
