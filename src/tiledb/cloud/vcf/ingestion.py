@@ -9,7 +9,9 @@ from typing import Any, Mapping, Optional, Sequence, Tuple, Union
 import numpy as np
 import tiledbvcf
 
-import tiledb.cloud
+import tiledb
+
+from tiledb.cloud import dag
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import create_log_array
 from tiledb.cloud.utilities import get_logger
@@ -17,32 +19,17 @@ from tiledb.cloud.utilities import run_dag
 from tiledb.cloud.utilities import set_aws_context
 from tiledb.cloud.utilities import write_log_event
 
-LOCAL_INGEST = False
-VERBOSE = False
-TRACE = False
-
-
-def local_ingest():
-    global LOCAL_INGEST
-    LOCAL_INGEST = True
-
-
-def verbose():
-    global VERBOSE
-    VERBOSE = True
-
-
-def trace():
-    global TRACE
-    TRACE = True
-
+# Test and debug hooks
+local_ingest = False
+verbose = False
+trace = False
 
 # Array names
 LOG_ARRAY = "log"
 MANIFEST_ARRAY = "manifest"
 
 # Default attributes to materialize
-DEFAULT_ATTRIBUTES = ["fmt_GT", "fmt_DP", "fmt_GQ"]
+DEFAULT_ATTRIBUTES = ("fmt_GT", "fmt_DP", "fmt_GQ")
 
 # Default values for ingestion parameters
 MANIFEST_BATCH_SIZE = 100
@@ -64,10 +51,10 @@ class Contigs(enum.Enum):
 
 
 def setup(
-    config: Union[Mapping[str, Any], None],
+    config: Optional[Mapping[str, Any]] = None,
     dataset_uri: Optional[str] = None,
     id: Optional[str] = None,
-) -> Union[logging.Logger, Tuple[logging.Logger, Profiler]]:
+) -> Tuple[logging.Logger, Optional[Profiler]]:
     """
     Set the context, return a logger instance, and optionally return a `Profiler` object.
 
@@ -79,11 +66,14 @@ def setup(
 
     set_aws_context(config)
 
-    level = logging.DEBUG if VERBOSE else logging.INFO
+    level = logging.DEBUG if verbose else logging.INFO
     logger = get_logger(__name__, level)
 
     logger.debug(
-        f"tiledb={tiledb.version()}, libtiledb={tiledb.libtiledb.version()}, tiledbvcf={tiledbvcf.version}"
+        "tiledb=%s, libtiledb=%s, tiledbvcf=%s",
+        tiledb.version(),
+        tiledb.libtiledb.version(),
+        tiledbvcf.version,
     )
 
     if id is None:
@@ -92,10 +82,10 @@ def setup(
     if dataset_uri:
         group = tiledb.Group(dataset_uri, "r")
         log_uri = group[LOG_ARRAY].uri
-        profiler = Profiler(log_uri, id, TRACE)
+        profiler = Profiler(log_uri, id, trace=trace)
         return logger, profiler
 
-    return logger
+    return logger, None
 
 
 def create_manifest(dataset_uri: str):
@@ -119,13 +109,14 @@ def create_manifest(dataset_uri: str):
     d0 = tiledb.Dim(name="sample_name", dtype="ascii", filters=ascii_fl)
     dom = tiledb.Domain(d0)
 
-    attrs = []
-    attrs += [tiledb.Attr(name="status", dtype="ascii", filters=ascii_fl)]
-    attrs += [tiledb.Attr(name="vcf_uri", dtype="ascii", filters=ascii_fl)]
-    attrs += [tiledb.Attr(name="vcf_bytes", dtype=np.uint64, filters=int_fl)]
-    attrs += [tiledb.Attr(name="index_uri", dtype="ascii", filters=ascii_fl)]
-    attrs += [tiledb.Attr(name="index_bytes", dtype=np.uint64, filters=int_fl)]
-    attrs += [tiledb.Attr(name="records", dtype=np.uint64, filters=int_fl)]
+    attrs = [
+        tiledb.Attr(name="status", dtype="ascii", filters=ascii_fl),
+        tiledb.Attr(name="vcf_uri", dtype="ascii", filters=ascii_fl),
+        tiledb.Attr(name="vcf_bytes", dtype=np.uint64, filters=int_fl),
+        tiledb.Attr(name="index_uri", dtype="ascii", filters=ascii_fl),
+        tiledb.Attr(name="index_bytes", dtype=np.uint64, filters=int_fl),
+        tiledb.Attr(name="records", dtype=np.uint64, filters=int_fl),
+    ]
 
     schema = tiledb.ArraySchema(
         domain=dom,
@@ -166,11 +157,11 @@ def create_dataset_udf(
     :return: dataset URI
     """
 
-    logger = setup(config)
+    logger = setup(config)[0]
 
     # Check if the dataset already exists
     if tiledb.object_type(dataset_uri) != "group":
-        logger.info(f"Creating dataset: '{dataset_uri}'")
+        logger.info("Creating dataset: %r", dataset_uri)
 
         # vcf_attrs overrides extra_attrs
         if vcf_attrs:
@@ -199,7 +190,7 @@ def create_dataset_udf(
 
         create_manifest(dataset_uri)
     else:
-        logger.info(f"Using existing dataset: '{dataset_uri}'.")
+        logger.info("Using existing dataset: %r", dataset_uri)
 
     return dataset_uri
 
@@ -266,13 +257,24 @@ def find_uris_udf(
     use_s3 = search_uri.startswith("s3://")
     # Run command to find URIs matching the pattern
     if use_s3:
-        cmd = f"exec aws s3 sync --dryrun --exclude '*' --include '{pattern}' {search_uri} ."
+        cmd = (
+            "exec",
+            "aws",
+            "s3",
+            "sync",
+            "--dryrun",
+            "--exclude",
+            "*",
+            "--include",
+            pattern,
+            search_uri,
+            ".",
+        )
     else:
         cmd = f"find {search_uri} -name {pattern}"
     logger.debug(cmd)
     p1 = subprocess.Popen(
         cmd,
-        shell=True,
         text=True,
         stdout=subprocess.PIPE,
     )
@@ -306,7 +308,7 @@ def find_uris_udf(
     # (dryrun) download: s3://1000genomes-dragen-v3.7.6/foo to foo
     result = []
     if res_stdout:
-        for line in res_stdout.strip().split("\n"):
+        for line in res_stdout.splitlines():
             line = line.split()[2] if use_s3 else line
             result.append(line)
 
@@ -413,7 +415,7 @@ def ingest_manifest_udf(
     :param id: profiler event id, defaults to "manifest"
     """
 
-    logger, profiler = setup(config, dataset_uri, id)
+    profiler = setup(config, dataset_uri, id)[1]
 
     group = tiledb.Group(dataset_uri)
     manifest_uri = group[MANIFEST_ARRAY].uri
@@ -525,7 +527,7 @@ def ingest_samples_udf(
     :param id: profiler event id, defaults to "samples"
     """
 
-    logger, profiler = setup(config, dataset_uri, id)
+    profiler = setup(config, dataset_uri, id)[1]
 
     profiler.write("uris", ",".join(sample_uris))
 
@@ -564,7 +566,7 @@ def consolidate_dataset_udf(
     :param id: profiler event id, defaults to "consolidate"
     """
 
-    logger, profiler = setup(config, dataset_uri, id)
+    profiler = setup(config, dataset_uri, id)[1]
 
     if type(exclude) == str:
         exclude = [exclude]
@@ -645,12 +647,12 @@ def ingest_manifest_dag(
 
     logger = get_logger()
 
-    graph = tiledb.cloud.dag.DAG(
+    graph = dag.DAG(
         name="vcf-filter-uris",
         namespace=namespace,
-        mode=tiledb.cloud.dag.Mode.REALTIME,
+        mode=dag.Mode.REALTIME,
     )
-    submit = graph.submit_local if LOCAL_INGEST else graph.submit
+    submit = graph.submit_local if local_ingest else graph.submit
 
     dataset_uri = submit(
         create_dataset_udf,
@@ -701,13 +703,13 @@ def ingest_manifest_dag(
 
     logger.info(f"Found {len(sample_uris)} new URIs.")
 
-    graph = tiledb.cloud.dag.DAG(
+    graph = dag.DAG(
         name="vcf-ingest-manifest",
         namespace=namespace,
-        mode=tiledb.cloud.dag.Mode.REALTIME,
+        mode=dag.Mode.REALTIME,
         max_workers=workers,
     )
-    submit = graph.submit_local if LOCAL_INGEST else graph.submit
+    submit = graph.submit_local if local_ingest else graph.submit
 
     # Adjust batch size to ensure at least 20 samples per worker
     batch_size = min(batch_size, len(sample_uris) // workers)
@@ -773,14 +775,14 @@ def ingest_samples_dag(
     :param resume: enable resume ingestion mode, defaults to False
     """
 
-    logger = setup(config)
+    logger = setup(config)[0]
 
-    graph = tiledb.cloud.dag.DAG(
+    graph = dag.DAG(
         name="vcf-filter-samples",
         namespace=namespace,
-        mode=tiledb.cloud.dag.Mode.REALTIME,
+        mode=dag.Mode.REALTIME,
     )
-    submit = graph.submit_local if LOCAL_INGEST else graph.submit
+    submit = graph.submit_local if local_ingest else graph.submit
 
     # Get list of sample uris that have not been ingested yet
     # TODO: handle second pass resume
@@ -812,16 +814,14 @@ def ingest_samples_dag(
         elif contigs == Contigs.OTHER:
             contig_mode = "merged"
 
-    graph = tiledb.cloud.dag.DAG(
+    graph = dag.DAG(
         name="vcf-ingest-samples",
         namespace=namespace,
-        mode=tiledb.cloud.dag.Mode.REALTIME
-        if LOCAL_INGEST
-        else tiledb.cloud.dag.Mode.BATCH,
+        mode=dag.Mode.REALTIME if local_ingest else dag.Mode.BATCH,
         max_workers=workers,
     )
 
-    submit = graph.submit_local if LOCAL_INGEST else graph.submit
+    submit = graph.submit_local if local_ingest else graph.submit
 
     # Reduce batch size if there are fewer sample URIs
     batch_size = min(batch_size, len(sample_uris))
@@ -879,9 +879,9 @@ def ingest_samples_dag(
         if consolidate:
             consolidate.depends_on(ingest)
 
-    run_dag(graph, wait=LOCAL_INGEST)
+    run_dag(graph, wait=local_ingest)
 
-    if not LOCAL_INGEST:
+    if not local_ingest:
         logger.info(
             f"Batch ingestion submitted - https://cloud.tiledb.com/activity/taskgraphs/{graph._server_graph_uuid}"
         )
@@ -945,7 +945,7 @@ def ingest(
     if sample_list_uri and (pattern or ignore):
         raise ValueError("Cannot specify `pattern` or `ignore` with `sample_list_uri`.")
 
-    logger = setup(config)
+    logger = setup(config)[0]
     logger.info(f"Ingesting VCF samples into '{dataset_uri}'.")
 
     # Add VCF URIs to the manifest

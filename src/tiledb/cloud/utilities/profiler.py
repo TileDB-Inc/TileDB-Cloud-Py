@@ -7,6 +7,7 @@ import numpy as np
 
 import tiledb
 from tiledb.cloud.utilities import max_memory_usage
+from tiledb.cloud.utilities import read_file
 
 
 def create_log_array(uri: str):
@@ -84,6 +85,7 @@ class Profiler(object):
         self,
         uri: str,
         id: str,
+        *,
         trace: bool = False,
     ):
         """
@@ -97,12 +99,27 @@ class Profiler(object):
         self.uri = uri
         self.id = id
         self.trace = trace
-        self.array = tiledb.open(uri, "w")
 
-        # Log node start time and system info
-        node_id = open("/proc/sys/kernel/random/boot_id").read().strip()
-        cmd = "uptime && free -h && uname -a && lscpu"
-        node_info = self.run_cmd(cmd)
+    def __enter__(self):
+        self.array = tiledb.open(self.uri, "w")
+
+        # Log useful system info
+        node_id = read_file("/proc/sys/kernel/random/boot_id")
+
+        commands = (
+            ("uptime"),
+            ("free", "-h"),
+            ("uname", "-a"),
+            ("lscpu"),
+        )
+
+        node_info = ""
+        for command in commands:
+            output = subprocess.run(
+                command, capture_output=True, text=True
+            ).stdout.strip()
+            node_info += output + "\n"
+
         self.write("start", node_id, node_info)
 
         # Start profiling timer
@@ -113,18 +130,11 @@ class Profiler(object):
         self.stats = ["time,cpu,mem"]
         self._timeout()
 
-    def run_cmd(self, cmd: str) -> str:
-        """
-        Run a command and return the output.
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is not None:
+            print(f"An error of type {exc_type} occurred with value {exc_value}.")
 
-        :param cmd: command to run
-        :return: stdout from the command
-        """
-
-        res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-        if res.stderr:
-            print(res.stderr)
-        return res.stdout.strip()
+        self.array.close()
 
     def write(self, op: str = "", data: str = "", extra: str = ""):
         """
@@ -160,11 +170,7 @@ class Profiler(object):
         self.write("finish", f"{t_elapsed:.3f}", extra)
         mem = max_memory_usage()
         try:
-            mem = (
-                open("/sys/fs/cgroup/memory/memory.max_usage_in_bytes")
-                .readline()
-                .strip()
-            )
+            mem = read_file("/sys/fs/cgroup/memory/memory.max_usage_in_bytes")
         except Exception:
             # If we can't read the memory usage, set it to 0
             mem = "0"
@@ -177,8 +183,8 @@ class Profiler(object):
         """
 
         try:
-            cpu = open("/sys/fs/cgroup/cpu/cpuacct.usage").readline().strip()
-            mem = open("/sys/fs/cgroup/memory/memory.usage_in_bytes").readline().strip()
+            cpu = read_file("/sys/fs/cgroup/cpu/cpuacct.usage")
+            mem = read_file("/sys/fs/cgroup/memory/memory.usage_in_bytes")
         except Exception:
             cpu = 0
             mem = 0

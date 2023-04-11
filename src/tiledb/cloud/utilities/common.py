@@ -1,8 +1,9 @@
 import configparser
 import logging
 import os
+import pathlib
 import sys
-from typing import Any, Mapping
+from typing import Any, Mapping, Optional
 
 import tiledb
 import tiledb.cloud
@@ -42,7 +43,7 @@ def read_aws_config(
     return config
 
 
-def set_aws_context(config: Mapping[str, Any] = {}):
+def set_aws_context(config: Optional[Mapping[str, Any]] = None) -> None:
     """
     Set default TileDB context and corresponding environment variables for commands
     that access S3 directly, like AWS CLI and bcftools.
@@ -122,7 +123,7 @@ def run_dag(
         graph.compute()
     except tiledb.cloud.tiledb_cloud_error.TileDBCloudError as e:
         print(f"Fatal graph error:\n{e}")
-        print_logs(graph, debug)
+        print_logs(graph, debug=debug)
         raise e
 
     if wait:
@@ -131,7 +132,7 @@ def run_dag(
             retry = False
         except tiledb.cloud.tiledb_cloud_error.TileDBCloudError as e:
             print(f"Fatal graph error:\n{e}")
-            print_logs(graph, debug)
+            print_logs(graph, debug=debug)
             # Raise exception if retry is disabled or if the error will
             # not be resolved by retrying
             if not retry or "ModuleNotFoundError" in str(e):
@@ -144,13 +145,17 @@ def run_dag(
             graph.wait()
         except tiledb.cloud.tiledb_cloud_error.TileDBCloudError as e:
             print(f"Fatal graph error:\n{e}")
-            print_logs(graph, debug)
+            print_logs(graph, debug=debug)
             raise e
 
-    print_logs(graph, debug)
+    print_logs(graph, debug=debug)
 
 
-def print_logs(graph: tiledb.cloud.dag.DAG, debug: bool = False):
+def print_logs(
+    graph: tiledb.cloud.dag.DAG,
+    *,
+    debug: bool = False,
+):
     """
     Print logs for a graph.
 
@@ -179,6 +184,17 @@ def print_logs(graph: tiledb.cloud.dag.DAG, debug: bool = False):
                 print(logs)
 
 
+def read_file(path: str) -> str:
+    """
+    Read a file and return the contents as a string.
+
+    :param path: path to the file
+    :return: file contents
+    """
+
+    pathlib.Path(path).read_text().strip()
+
+
 def max_memory_usage() -> int:
     """
     Return the maximum memory usage in bytes from the cgroup file
@@ -188,9 +204,7 @@ def max_memory_usage() -> int:
     """
 
     try:
-        result = int(
-            open("/sys/fs/cgroup/memory/memory.memsw.max_usage_in_bytes").read()
-        )
+        result = int(read_file("/sys/fs/cgroup/memory/memory.memsw.max_usage_in_bytes"))
     except Exception:
         result = 0
 
