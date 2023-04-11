@@ -8,7 +8,7 @@ import tiledb
 import tiledb.cloud
 
 
-def read_config(
+def read_aws_config(
     path: str = "~/.aws/credentials",
     section: str = "default",
 ) -> Mapping[str, Any]:
@@ -42,9 +42,10 @@ def read_config(
     return config
 
 
-def set_context(config: Mapping[str, Any] = {}):
+def set_aws_context(config: Mapping[str, Any] = {}):
     """
-    Set default TileDB context and corresponding environment variables.
+    Set default TileDB context and corresponding environment variables for commands
+    that access S3 directly, like AWS CLI and bcftools.
 
     :param config: config dictionary, defaults to {}
     """

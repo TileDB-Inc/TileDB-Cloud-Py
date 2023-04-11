@@ -14,7 +14,7 @@ from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import create_log_array
 from tiledb.cloud.utilities import get_logger
 from tiledb.cloud.utilities import run_dag
-from tiledb.cloud.utilities import set_context
+from tiledb.cloud.utilities import set_aws_context
 from tiledb.cloud.utilities import write_log_event
 
 LOCAL_INGEST = False
@@ -77,7 +77,7 @@ def setup(
     :return: logger instance, optionally a profiler object
     """
 
-    set_context(config)
+    set_aws_context(config)
 
     level = logging.DEBUG if VERBOSE else logging.INFO
     logger = get_logger(__name__, level)
