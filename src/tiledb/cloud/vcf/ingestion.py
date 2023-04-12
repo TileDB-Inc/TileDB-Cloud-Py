@@ -1,23 +1,34 @@
 import enum
-import inspect
 import logging
 import subprocess
 from collections import defaultdict
 from math import ceil
-from typing import Any, Mapping, Optional, Sequence, Tuple, Union
+from typing import Any, Mapping, Optional, Sequence, Union
 
 import numpy as np
 import tiledbvcf
 
 import tiledb
 
-from tiledb.cloud import dag
-from tiledb.cloud.utilities import Profiler
-from tiledb.cloud.utilities import create_log_array
-from tiledb.cloud.utilities import get_logger
-from tiledb.cloud.utilities import run_dag
-from tiledb.cloud.utilities import set_aws_context
-from tiledb.cloud.utilities import write_log_event
+if True:
+    # Bring code into scope for testing on TileDB Cloud
+    import importlib
+    import os
+
+    path = os.path.dirname(importlib.import_module("tiledb.cloud").__file__)
+    files = [f"{path}/utilities/profiler.py", f"{path}/utilities/common.py"]
+    for file in files:
+        with open(file) as f:
+            exec(compile(f.read(), file, "exec"))
+else:
+    from tiledb.cloud import dag
+    from tiledb.cloud.utilities import Profiler
+    from tiledb.cloud.utilities import create_log_array
+    from tiledb.cloud.utilities import get_logger
+    from tiledb.cloud.utilities import read_file
+    from tiledb.cloud.utilities import run_dag
+    from tiledb.cloud.utilities import set_aws_context
+    from tiledb.cloud.utilities import write_log_event
 
 # Test and debug hooks
 local_ingest = False
@@ -50,24 +61,25 @@ class Contigs(enum.Enum):
     OTHER = enum.auto()
 
 
-def setup(
-    config: Optional[Mapping[str, Any]] = None,
-    dataset_uri: Optional[str] = None,
-    id: Optional[str] = None,
-) -> Tuple[logging.Logger, Optional[Profiler]]:
+def setup(config: Optional[Mapping[str, Any]] = None) -> logging.Logger:
     """
-    Set the context, return a logger instance, and optionally return a `Profiler` object.
+    Set the default TileDB context, OS environment variables for AWS,
+    and return a logger instance.
 
     :param config: config dictionary, defaults to None
-    :param dataset_uri: dataset URI, defaults to None
-    :param id: profiler event id, defaults to None
-    :return: logger instance, optionally a profiler object
+    :return: logger instance
     """
+
+    try:
+        tiledb.default_ctx(config)
+    except tiledb.TileDBError:
+        # Ignore error if the default context was already set
+        pass
 
     set_aws_context(config)
 
     level = logging.DEBUG if verbose else logging.INFO
-    logger = get_logger(__name__, level)
+    logger = get_logger(level)
 
     logger.debug(
         "tiledb=%s, libtiledb=%s, tiledbvcf=%s",
@@ -76,19 +88,10 @@ def setup(
         tiledbvcf.version,
     )
 
-    if id is None:
-        id = inspect.stack()[1].function
-
-    if dataset_uri:
-        group = tiledb.Group(dataset_uri, "r")
-        log_uri = group[LOG_ARRAY].uri
-        profiler = Profiler(log_uri, id, trace=trace)
-        return logger, profiler
-
-    return logger, None
+    return logger
 
 
-def create_manifest(dataset_uri: str):
+def create_manifest(dataset_uri: str) -> None:
     """
     Create a manifest array in the dataset.
 
@@ -157,7 +160,7 @@ def create_dataset_udf(
     :return: dataset URI
     """
 
-    logger = setup(config)[0]
+    logger = setup(config)
 
     # Check if the dataset already exists
     if tiledb.object_type(dataset_uri) != "group":
@@ -212,17 +215,17 @@ def read_uris_udf(
     :return: list of URIs
     """
 
-    logger, profiler = setup(config, dataset_uri)
+    logger = setup(config)
 
-    result = []
-    vfs = tiledb.VFS()
-    for line in vfs.open(list_uri):
-        result.append(line.decode().strip())
-        if max_files and len(result) == max_files:
-            break
+    with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY):
+        result = []
+        vfs = tiledb.VFS()
+        for line in vfs.open(list_uri):
+            result.append(line.decode().strip())
+            if max_files and len(result) == max_files:
+                break
 
-    logger.info(f"Found {len(result)} VCF files.")
-    profiler.finish()
+        logger.info(f"Found {len(result)} VCF files.")
 
     return result
 
@@ -252,68 +255,68 @@ def find_uris_udf(
     :return: list of URIs
     """
 
-    logger, profiler = setup(config, dataset_uri)
+    logger = setup(config)
 
-    use_s3 = search_uri.startswith("s3://")
-    # Run command to find URIs matching the pattern
-    if use_s3:
-        cmd = (
-            "exec",
-            "aws",
-            "s3",
-            "sync",
-            "--dryrun",
-            "--exclude",
-            "*",
-            "--include",
-            pattern,
-            search_uri,
-            ".",
+    with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
+        use_s3 = search_uri.startswith("s3://")
+        # Run command to find URIs matching the pattern
+        if use_s3:
+            cmd = (
+                "aws",
+                "s3",
+                "sync",
+                "--dryrun",
+                "--exclude",
+                "*",
+                "--include",
+                pattern,
+                search_uri,
+                ".",
+            )
+        else:
+            cmd = f"find {search_uri} -name {pattern}"
+        logger.debug(cmd)
+        p1 = subprocess.Popen(
+            cmd,
+            text=True,
+            stdout=subprocess.PIPE,
         )
-    else:
-        cmd = f"find {search_uri} -name {pattern}"
-    logger.debug(cmd)
-    p1 = subprocess.Popen(
-        cmd,
-        text=True,
-        stdout=subprocess.PIPE,
-    )
 
-    # Optionally ignore URIs and limit the number returned
-    if ignore:
-        cmd = f"grep -Ev '{ignore}'"
-    else:
-        cmd = "grep ''"
-    if max_files:
-        cmd += f" -m {max_files}"
+        # Optionally ignore URIs and limit the number returned
+        if ignore:
+            cmd = f"grep -Ev '{ignore}'"
+        else:
+            cmd = "grep ''"
+        if max_files:
+            cmd += f" -m {max_files}"
 
-    logger.debug(cmd)
-    p2 = subprocess.Popen(
-        cmd,
-        shell=True,
-        text=True,
-        stdin=p1.stdout,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
+        logger.debug(cmd)
+        p2 = subprocess.Popen(
+            cmd,
+            shell=True,
+            text=True,
+            stdin=p1.stdout,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
 
-    # Wait for p2 to finish, then kill p1
-    res_stdout, res_stderr = p2.communicate()
-    p1.kill()
-    if res_stderr:
-        print(res_stderr)
+        # Wait for p2 to finish, then kill p1
+        res_stdout, res_stderr = p2.communicate()
+        p1.kill()
+        if res_stderr:
+            print(res_stderr)
 
-    # Build list of URIs from command output.
-    # Example line from s3:
-    # (dryrun) download: s3://1000genomes-dragen-v3.7.6/foo to foo
-    result = []
-    if res_stdout:
-        for line in res_stdout.splitlines():
-            line = line.split()[2] if use_s3 else line
-            result.append(line)
+        # Build list of URIs from command output.
+        # Example line from s3:
+        # (dryrun) download: s3://1000genomes-dragen-v3.7.6/foo to foo
+        result = []
+        if res_stdout:
+            for line in res_stdout.splitlines():
+                line = line.split()[2] if use_s3 else line
+                result.append(line)
 
-    logger.info(f"Found {len(result)} VCF files.")
-    profiler.finish(len(result))
+        logger.info(f"Found {len(result)} VCF files.")
+        prof.write("count", len(result))
 
     return result
 
@@ -332,22 +335,23 @@ def filter_uris_udf(
     :return: filtered sample URIs
     """
 
-    logger, profiler = setup(config, dataset_uri)
+    logger = setup(config)
 
-    # Read all sample URIs in the manifest
-    group = tiledb.Group(dataset_uri)
-    manifest_uri = group[MANIFEST_ARRAY].uri
-    with tiledb.open(manifest_uri) as A:
-        manifest_df = A.df[:]
+    with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
+        # Read all sample URIs in the manifest
+        group = tiledb.Group(dataset_uri)
+        manifest_uri = group[MANIFEST_ARRAY].uri
+        with tiledb.open(manifest_uri) as A:
+            manifest_df = A.df[:]
 
-    # Find URIs that are not in the manifest
-    sample_uris_set = set(sample_uris)
-    manifest_uris = set(manifest_df.vcf_uri)
-    result = sorted(list(sample_uris_set.difference(manifest_uris)))
+        # Find URIs that are not in the manifest
+        sample_uris_set = set(sample_uris)
+        manifest_uris = set(manifest_df.vcf_uri)
+        result = sorted(list(sample_uris_set.difference(manifest_uris)))
 
-    logger.info(f"{len(manifest_uris)} URIs in the manifest.")
-    logger.info(f"{len(result)} new URIs.")
-    profiler.finish(len(result))
+        logger.info(f"{len(manifest_uris)} URIs in the manifest.")
+        logger.info(f"{len(result)} new URIs.")
+        prof.write("count", len(result))
 
     return result
 
@@ -365,36 +369,37 @@ def filter_samples_udf(
     :return: sample URIs
     """
 
-    logger, profiler = setup(config, dataset_uri)
+    logger = setup(config)
 
-    # Read existing samples in VCF dataset
-    ds = tiledbvcf.Dataset(
-        dataset_uri,
-        cfg=tiledbvcf.ReadConfig(tiledb_config=config),
-    )
-    existing_samples = set(ds.samples())
+    with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
+        # Read existing samples in VCF dataset
+        ds = tiledbvcf.Dataset(
+            dataset_uri,
+            cfg=tiledbvcf.ReadConfig(tiledb_config=config),
+        )
+        existing_samples = set(ds.samples())
 
-    # Read all samples in the manifest with status == "ok"
-    group = tiledb.Group(dataset_uri)
-    manifest_uri = group[MANIFEST_ARRAY].uri
+        # Read all samples in the manifest with status == "ok"
+        group = tiledb.Group(dataset_uri)
+        manifest_uri = group[MANIFEST_ARRAY].uri
 
-    with tiledb.open(manifest_uri) as A:
-        manifest_df = A.query(cond="status == 'ok'").df[:]
+        with tiledb.open(manifest_uri) as A:
+            manifest_df = A.query(cond="status == 'ok'").df[:]
 
-    # Sort manifest by sample_name
-    manifest_df = manifest_df.sort_values(by=["sample_name"])
+        # Sort manifest by sample_name
+        manifest_df = manifest_df.sort_values(by=["sample_name"])
 
-    # Find samples that have not already been ingested
-    manifest_samples = set(manifest_df.sample_name)
-    new_samples = manifest_samples.difference(existing_samples)
-    manifest_df = manifest_df[manifest_df.sample_name.isin(new_samples)]
-    result = manifest_df.vcf_uri.to_list()
-    assert result == sorted(result)
+        # Find samples that have not already been ingested
+        manifest_samples = set(manifest_df.sample_name)
+        new_samples = manifest_samples.difference(existing_samples)
+        manifest_df = manifest_df[manifest_df.sample_name.isin(new_samples)]
+        result = manifest_df.vcf_uri.to_list()
+        assert result == sorted(result)
 
-    logger.info(f"{len(manifest_samples)} samples in the manifest.")
-    logger.info(f"{len(existing_samples)} samples already ingested.")
-    logger.info(f"{len(result)} new samples to ingest.")
-    profiler.finish(len(result))
+        logger.info(f"{len(manifest_samples)} samples in the manifest.")
+        logger.info(f"{len(existing_samples)} samples already ingested.")
+        logger.info(f"{len(result)} new samples to ingest.")
+        prof.write("count", len(result))
 
     return result
 
@@ -405,7 +410,7 @@ def ingest_manifest_udf(
     *,
     config: Optional[Mapping[str, Any]] = None,
     id: str = "manifest",
-):
+) -> None:
     """
     Ingest sample URIs into the manifest array.
 
@@ -415,88 +420,87 @@ def ingest_manifest_udf(
     :param id: profiler event id, defaults to "manifest"
     """
 
-    profiler = setup(config, dataset_uri, id)[1]
+    setup(config)
 
-    group = tiledb.Group(dataset_uri)
-    manifest_uri = group[MANIFEST_ARRAY].uri
+    with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
+        group = tiledb.Group(dataset_uri)
+        manifest_uri = group[MANIFEST_ARRAY].uri
 
-    vfs = tiledb.VFS()
+        vfs = tiledb.VFS()
 
-    def file_size(uri: str) -> int:
-        try:
-            return vfs.file_size(uri)
-        except Exception:
+        def file_size(uri: str) -> int:
+            try:
+                return vfs.file_size(uri)
+            except Exception:
+                return 0
+
+        def find_index(vcf: str) -> str:
+            for ext in ["tbi", "csi"]:
+                index = f"{vcf}.{ext}"
+                if vfs.is_file(index):
+                    return index
+            return ""
+
+        def get_sample_name(vcf: str) -> str:
+            # cmd = f"bcftools query -l {vcf}"
+            cmd = f"aws s3 cp --quiet {vcf_uri} - | bcftools query -l"
+            res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+            if res.stderr:
+                print(res.stderr)
+            sample = res.stdout.strip()
+
+            return sample
+
+        def get_records(vcf: str) -> int:
+            # TODO: remove when bcftools index -n works with S3
             return 0
 
-    def find_index(vcf: str) -> str:
-        for ext in ["tbi", "csi"]:
-            index = f"{vcf}.{ext}"
-            if vfs.is_file(index):
-                return index
-        return ""
+            cmd = f"bcftools index -n {vcf}"
+            res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+            if res.stderr:
+                print(res.stderr)
+                return 0
+            records = int(res.stdout)
 
-    def get_sample_name(vcf: str) -> str:
-        # cmd = f"bcftools query -l {vcf}"
-        cmd = f"aws s3 cp --quiet {vcf_uri} - | bcftools query -l"
-        res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-        if res.stderr:
-            print(res.stderr)
-        sample = res.stdout.strip()
+            return records
 
-        return sample
+        with tiledb.open(manifest_uri, "w") as A:
+            keys = []
+            values = defaultdict(list)
 
-    def get_records(vcf: str) -> int:
-        # TODO: remove when bcftools index -n works with S3
-        return 0
+            for vcf_uri in sample_uris:
+                status = "ok"
 
-        cmd = f"bcftools index -n {vcf}"
-        res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-        if res.stderr:
-            print(res.stderr)
-            return 0
-        records = int(res.stdout)
+                # Handle sample name errors
+                sample_name = get_sample_name(vcf_uri)
+                if not sample_name:
+                    status = "missing sample name"
+                elif len(sample_name.split()) > 1:
+                    status = "multiple samples (pVCF)"
+                elif sample_name in keys:
+                    status = "duplicate sample name"
 
-        return records
+                # Handle index errors
+                index_uri = find_index(vcf_uri)
+                if not index_uri:
+                    status = "missing index"
 
-    with tiledb.open(manifest_uri, "w") as A:
-        keys = []
-        values = defaultdict(list)
+                records = get_records(vcf_uri)
 
-        for vcf_uri in sample_uris:
-            status = "ok"
+                # TODO: remove False when bcftools index -n works with S3
+                if False and records == 0:
+                    status = "old index format"
 
-            # Handle sample name errors
-            sample_name = get_sample_name(vcf_uri)
-            if not sample_name:
-                status = "missing sample name"
-            elif len(sample_name.split()) > 1:
-                status = "multiple samples (pVCF)"
-            elif sample_name in keys:
-                status = "duplicate sample name"
+                keys.append(sample_name)
+                values["status"].append(status)
+                values["vcf_uri"].append(vcf_uri)
+                values["vcf_bytes"].append(str(file_size(vcf_uri)))
+                values["index_uri"].append(index_uri)
+                values["index_bytes"].append(str(file_size(index_uri)))
+                values["records"].append(str(records))
 
-            # Handle index errors
-            index_uri = find_index(vcf_uri)
-            if not index_uri:
-                status = "missing index"
-
-            records = get_records(vcf_uri)
-
-            # TODO: remove False when bcftools index -n works with S3
-            if False and records == 0:
-                status = "old index format"
-
-            keys.append(sample_name)
-            values["status"].append(status)
-            values["vcf_uri"].append(vcf_uri)
-            values["vcf_bytes"].append(str(file_size(vcf_uri)))
-            values["index_uri"].append(index_uri)
-            values["index_bytes"].append(str(file_size(index_uri)))
-            values["records"].append(str(records))
-
-        # Write to TileDB array
-        A[keys] = dict(values)
-
-    profiler.finish()
+            # Write to TileDB array
+            A[keys] = dict(values)
 
 
 def ingest_samples_udf(
@@ -511,7 +515,7 @@ def ingest_samples_udf(
     contigs_to_keep_separate: Optional[Sequence[str]] = None,
     resume: bool = False,
     id: str = "samples",
-):
+) -> None:
     """
     Ingest samples into the dataset.
 
@@ -527,25 +531,26 @@ def ingest_samples_udf(
     :param id: profiler event id, defaults to "samples"
     """
 
-    profiler = setup(config, dataset_uri, id)[1]
+    setup(config)
 
-    profiler.write("uris", ",".join(sample_uris))
+    with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id) as prof:
+        prof.write("uris", ",".join(sample_uris))
 
-    tiledbvcf.config_logging("info", "ingest.log")
-    ds = tiledbvcf.Dataset(
-        uri=dataset_uri, mode="w", cfg=tiledbvcf.ReadConfig(tiledb_config=config)
-    )
-    ds.ingest_samples(
-        sample_uris=sample_uris,
-        sample_batch_size=sample_batch_size,
-        threads=threads,
-        total_memory_budget_mb=memory_mb,
-        contig_mode=contig_mode,
-        contigs_to_keep_separate=contigs_to_keep_separate,
-        resume=resume,
-    )
+        tiledbvcf.config_logging("info", "ingest.log")
+        ds = tiledbvcf.Dataset(
+            uri=dataset_uri, mode="w", cfg=tiledbvcf.ReadConfig(tiledb_config=config)
+        )
+        ds.ingest_samples(
+            sample_uris=sample_uris,
+            sample_batch_size=sample_batch_size,
+            threads=threads,
+            total_memory_budget_mb=memory_mb,
+            contig_mode=contig_mode,
+            contigs_to_keep_separate=contigs_to_keep_separate,
+            resume=resume,
+        )
 
-    profiler.finish(open("ingest.log").read().strip())
+        prof.write("log", read_file("ingest.log"))
 
 
 def consolidate_dataset_udf(
@@ -555,7 +560,7 @@ def consolidate_dataset_udf(
     exclude: Optional[Union[Sequence[str], str]] = MANIFEST_ARRAY,
     include: Optional[Union[Sequence[str], str]] = None,
     id: str = "consolidate",
-):
+) -> None:
     """
     Consolidate arrays in the dataset.
 
@@ -566,46 +571,45 @@ def consolidate_dataset_udf(
     :param id: profiler event id, defaults to "consolidate"
     """
 
-    profiler = setup(config, dataset_uri, id)[1]
+    setup(config)
 
-    if type(exclude) == str:
-        exclude = [exclude]
+    with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
+        if type(exclude) == str:
+            exclude = [exclude]
 
-    if type(include) == str:
-        include = [include]
+        if type(include) == str:
+            include = [include]
 
-    group = tiledb.Group(dataset_uri)
+        group = tiledb.Group(dataset_uri)
 
-    for member in group:
-        uri = member.uri
-        name = member.name
+        for member in group:
+            uri = member.uri
+            name = member.name
 
-        # Skip excluded and non-included arrays
-        if (exclude and name in exclude) or (include and name not in include):
-            continue
+            # Skip excluded and non-included arrays
+            if (exclude and name in exclude) or (include and name not in include):
+                continue
 
-        # NOTE: REST currently only supports fragment_meta, commits, metadata
-        modes = ["commits", "fragment_meta", "array_meta"]
+            # NOTE: REST currently only supports fragment_meta, commits, metadata
+            modes = ["commits", "fragment_meta", "array_meta"]
 
-        # Consolidate fragments for log and manifest arrays
-        if name in [LOG_ARRAY, MANIFEST_ARRAY]:
-            modes += ["fragments"]
+            # Consolidate fragments for log and manifest arrays
+            if name in [LOG_ARRAY, MANIFEST_ARRAY]:
+                modes += ["fragments"]
 
-        for mode in modes:
-            config = tiledb.Config({"sm.consolidation.mode": mode})
-            try:
-                tiledb.consolidate(uri, config=config)
-            except Exception as e:
-                print(e)
+            for mode in modes:
+                config = tiledb.Config({"sm.consolidation.mode": mode})
+                try:
+                    tiledb.consolidate(uri, config=config)
+                except Exception as e:
+                    print(e)
 
-        for mode in modes:
-            config = tiledb.Config({"sm.vacuum.mode": mode})
-            try:
-                tiledb.vacuum(uri, config=config)
-            except Exception as e:
-                print(e)
-
-    profiler.finish()
+            for mode in modes:
+                config = tiledb.Config({"sm.vacuum.mode": mode})
+                try:
+                    tiledb.vacuum(uri, config=config)
+                except Exception as e:
+                    print(e)
 
 
 # --------------------------------------------------------------------
@@ -627,7 +631,7 @@ def ingest_manifest_dag(
     workers: int = MANIFEST_WORKERS,
     extra_attrs: Optional[Union[Sequence[str], str]] = None,
     vcf_attrs: Optional[str] = None,
-):
+) -> None:
     """
     Create a DAG to load the manifest array.
 
@@ -760,7 +764,7 @@ def ingest_samples_dag(
     batch_size: int = VCF_BATCH_SIZE,
     workers: int = VCF_WORKERS,
     resume: bool = False,
-):
+) -> None:
     """
     Create a DAG to ingest samples into the dataset.
 
@@ -775,7 +779,7 @@ def ingest_samples_dag(
     :param resume: enable resume ingestion mode, defaults to False
     """
 
-    logger = setup(config)[0]
+    logger = setup(config)
 
     graph = dag.DAG(
         name="vcf-filter-samples",
@@ -911,7 +915,7 @@ def ingest(
     vcf_batch_size: int = VCF_BATCH_SIZE,
     vcf_workers: int = VCF_WORKERS,
     vcf_threads: int = VCF_THREADS,
-):
+) -> None:
     """
     Ingest samples into a dataset.
 
@@ -945,7 +949,7 @@ def ingest(
     if sample_list_uri and (pattern or ignore):
         raise ValueError("Cannot specify `pattern` or `ignore` with `sample_list_uri`.")
 
-    logger = setup(config)[0]
+    logger = setup(config)
     logger.info(f"Ingesting VCF samples into '{dataset_uri}'.")
 
     # Add VCF URIs to the manifest

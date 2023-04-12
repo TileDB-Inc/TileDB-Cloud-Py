@@ -45,20 +45,14 @@ def read_aws_config(
 
 def set_aws_context(config: Optional[Mapping[str, Any]] = None) -> None:
     """
-    Set default TileDB context and corresponding environment variables for commands
-    that access S3 directly, like AWS CLI and bcftools.
+    Set OS environment variables for commands that access S3 directly,
+    like AWS CLI and bcftools.
 
-    :param config: config dictionary, defaults to {}
+    :param config: config dictionary, defaults to None
     """
 
     if not config:
         return
-
-    try:
-        tiledb.default_ctx(config)
-    except tiledb.TileDBError:
-        # Ignore error if the default context was already set
-        pass
 
     # Set environment variables for non-TileDB commands (AWS CLI, bcftools, etc.)
     if "vfs.s3.aws_access_key_id" in config:
@@ -67,7 +61,6 @@ def set_aws_context(config: Optional[Mapping[str, Any]] = None) -> None:
         os.environ["AWS_SECRET_ACCESS_KEY"] = config["vfs.s3.aws_secret_access_key"]
     if "vfs.s3.aws_session_token" in config:
         os.environ["AWS_SESSION_TOKEN"] = config["vfs.s3.aws_session_token"]
-
     if "vfs.s3.aws_role_arn" in config:
         os.environ["AWS_ROLE_ARN"] = config["vfs.s3.aws_role_arn"]
     if "vfs.s3.aws_external_id" in config:
@@ -76,15 +69,12 @@ def set_aws_context(config: Optional[Mapping[str, Any]] = None) -> None:
         os.environ["AWS_ROLE_SESSION_NAME"] = config["vfs.s3.aws_session_name"]
 
 
-def get_logger(
-    name: str = __name__,
-    level: int = logging.INFO,
-) -> logging.Logger:
+def get_logger(level: int = logging.INFO, name: str = __name__) -> logging.Logger:
     """
     Get a logger with a custom formatter and set the logging level.
 
+    :param level: logging level, defaults to logging.INFO
     :param name: logger name, defaults to __name__
-    :param level: logging level, defaults to logging.DEBUG
     :return: Logger object
     """
 
@@ -109,7 +99,7 @@ def run_dag(
     wait: bool = True,
     retry: bool = True,
     debug: bool = False,
-):
+) -> None:
     """
     Run a graph and optionally wait for completion and retry on errors.
 
@@ -155,7 +145,7 @@ def print_logs(
     graph: tiledb.cloud.dag.DAG,
     *,
     debug: bool = False,
-):
+) -> None:
     """
     Print logs for a graph.
 
@@ -192,7 +182,7 @@ def read_file(path: str) -> str:
     :return: file contents
     """
 
-    pathlib.Path(path).read_text().strip()
+    return pathlib.Path(path).read_text().strip()
 
 
 def max_memory_usage() -> int:

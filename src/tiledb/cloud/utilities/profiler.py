@@ -1,16 +1,30 @@
+import inspect
 import subprocess
 import threading
 import time
 from typing import Optional
 
 import numpy as np
+from typing_extensions import Self
 
 import tiledb
-from tiledb.cloud.utilities import max_memory_usage
-from tiledb.cloud.utilities import read_file
+
+if True:
+    # Bring code into scope for testing on TileDB Cloud
+    import importlib
+    import os
+
+    path = os.path.dirname(importlib.import_module("tiledb.cloud").__file__)
+    files = [f"{path}/utilities/common.py"]
+    for file in files:
+        with open(file) as f:
+            exec(compile(f.read(), file, "exec"))
+else:
+    from tiledb.cloud.utilities import max_memory_usage
+    from tiledb.cloud.utilities import read_file
 
 
-def create_log_array(uri: str):
+def create_log_array(uri: str) -> None:
     """
     Create an array to hold log events.
 
@@ -55,7 +69,7 @@ def write_log_event(
     op: Optional[str] = "",
     data: Optional[str] = "",
     extra: Optional[str] = "",
-):
+) -> None:
     """
     Write an event to the log array.
 
@@ -78,30 +92,69 @@ def write_log_event(
 
 class Profiler(object):
     """
-    A simple profiler to log start/finish events with CPU and memory usage.
+    A context manager based profiler to log events and CPU and memory usage to a TileDB array.
+
+    If the `trace` parameter is `True`, CPU and memory usage will be logged to the array
+    every `period_sec` seconds. This is useful for profiling jobs that are OOM killed.
+
+    Examples:
+
+        # Basic usage
+        with Profiler(array_uri="tiledb://array-uri..."):
+            # code to profile
+
+        # Write custom events
+        with Profiler(group_uri="tiledb://array-uri...", group_member="log") as prof:
+            # code to profile
+
+            # write custom event
+            prof.write("my-op", "my-data", "my-extra-data")
+
+            # more code to profile
+
     """
 
     def __init__(
         self,
-        uri: str,
-        id: str,
         *,
+        array_uri: Optional[str] = None,
+        group_uri: Optional[str] = None,
+        group_member: Optional[str] = None,
+        id: Optional[str] = None,
+        period_sec: int = 5,
         trace: bool = False,
     ):
         """
-        Create a profiler object.
+        Create a profiler object which logs events to a TileDB array. The array can be
+        specified by URI or by group URI and group member name.
 
-        :param uri: event log array URI
+        :param array_uri: URI of the log array, defaults to None
+        :param group_uri: URI of the group containing the log array, defaults to None
+        :param group_member: group member name of the log array, defaults to None
         :param id: profiler id, written to event id
+        :param period_sec: profiling period in seconds, defaults to 5
         :param trace: enable trace logging, defaults to False
         """
 
-        self.uri = uri
-        self.id = id
+        if array_uri is None and group_uri is None:
+            raise ValueError("array_uri or group_uri must be specified")
+        if array_uri is not None and group_uri is not None:
+            raise ValueError("array_uri and group_uri cannot both be specified")
+        if group_uri is not None and group_member is None:
+            raise ValueError("group_member must be specified group_uri")
+
+        if group_uri is not None:
+            group = tiledb.Group(group_uri)
+            self.array_uri = group[group_member].uri
+        else:
+            self.array_uri = array_uri
+
+        self.id = id or inspect.stack()[1].function
+        self.period_sec = period_sec
         self.trace = trace
 
-    def __enter__(self):
-        self.array = tiledb.open(self.uri, "w")
+    def __enter__(self) -> Self:
+        self.array = tiledb.open(self.array_uri, "w")
 
         # Log useful system info
         node_id = read_file("/proc/sys/kernel/random/boot_id")
@@ -124,19 +177,29 @@ class Profiler(object):
 
         # Start profiling timer
         self.done = False
-        self.period_sec = 5
         self.t_start = time.time()
         self.t_next = self.t_start
         self.stats = ["time,cpu,mem"]
         self._timeout()
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        if exc_type is not None:
-            print(f"An error of type {exc_type} occurred with value {exc_value}.")
+        return self
 
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
+        if exc_type is not None:
+            raise exc_type(exc_value)
+
+        # Write finish event with elapsed time
+        t_elapsed = time.time() - self.t_start
+        self.write("finish", f"{t_elapsed:.3f}")
+
+        # Stop profiling timer and write stats event with max memory usage
+        # and profiling stats
+        self.done = True
+        mem = max_memory_usage()
+        self.write("stats", mem, "\n".join(self.stats))
         self.array.close()
 
-    def write(self, op: str = "", data: str = "", extra: str = ""):
+    def write(self, op: str = "", data: str = "", extra: str = "") -> None:
         """
         Write an event to the log array.
 
@@ -147,7 +210,7 @@ class Profiler(object):
 
         t_now_ms = time.time() * 1000
 
-        if not self.uri:
+        if not self.array_uri:
             print(f"{t_now_ms},{self.id},{op},{data},{extra}")
             return
 
@@ -158,26 +221,7 @@ class Profiler(object):
             "extra": [extra],
         }
 
-    def finish(self, extra: str = ""):
-        """
-        Write finish and stats events to the log array.
-
-        :param extra: extra data for the finish event, defaults to ""
-        """
-
-        self.done = True
-        t_elapsed = time.time() - self.t_start
-        self.write("finish", f"{t_elapsed:.3f}", extra)
-        mem = max_memory_usage()
-        try:
-            mem = read_file("/sys/fs/cgroup/memory/memory.max_usage_in_bytes")
-        except Exception:
-            # If we can't read the memory usage, set it to 0
-            mem = "0"
-
-        self.write("stats", mem, "\n".join(self.stats))
-
-    def _timeout(self):
+    def _timeout(self) -> None:
         """
         Capture system stats and schedule the next timeout.
         """
