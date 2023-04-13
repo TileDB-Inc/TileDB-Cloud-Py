@@ -38,6 +38,7 @@ def exec_base(
     _download_results: bool = True,
     _server_graph_uuid: Optional[uuid.UUID] = None,
     _client_node_uuid: Optional[uuid.UUID] = None,
+    access_credentials_name: Optional[str] = None,
     **kwargs,
 ) -> "results.RemoteResult":
     """Run a user defined function, returning the result and metadata.
@@ -113,6 +114,7 @@ def exec_base(
         dont_download_results=not _download_results,
         task_graph_uuid=_server_graph_uuid and str(_server_graph_uuid),
         client_node_uuid=_client_node_uuid and str(_client_node_uuid),
+        access_credentials_name=access_credentials_name,
     )
 
     if timeout is not None:
