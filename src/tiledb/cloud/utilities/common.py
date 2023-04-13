@@ -5,8 +5,8 @@ import pathlib
 import sys
 from typing import Any, Mapping, Optional
 
-import tiledb
-import tiledb.cloud
+from tiledb.cloud import dag
+from tiledb.cloud.tiledb_cloud_error import TileDBCloudError
 
 
 def read_aws_config(
@@ -14,7 +14,7 @@ def read_aws_config(
     section: str = "default",
 ) -> Mapping[str, Any]:
     """
-    Read config values from a file.
+    Read config values from a file and return a dictionary.
 
     :param path: config file, defaults to "~/.aws/credentials"
     :param section: section to read in the config file, defaults to "default"
@@ -94,7 +94,7 @@ def get_logger(level: int = logging.INFO, name: str = __name__) -> logging.Logge
 
 
 def run_dag(
-    graph: tiledb.cloud.dag.DAG,
+    graph: dag.DAG,
     *,
     wait: bool = True,
     retry: bool = True,
@@ -111,7 +111,7 @@ def run_dag(
     """
     try:
         graph.compute()
-    except tiledb.cloud.tiledb_cloud_error.TileDBCloudError as e:
+    except TileDBCloudError as e:
         print(f"Fatal graph error:\n{e}")
         print_logs(graph, debug=debug)
         raise e
@@ -120,7 +120,7 @@ def run_dag(
         try:
             graph.wait()
             retry = False
-        except tiledb.cloud.tiledb_cloud_error.TileDBCloudError as e:
+        except TileDBCloudError as e:
             print(f"Fatal graph error:\n{e}")
             print_logs(graph, debug=debug)
             # Raise exception if retry is disabled or if the error will
@@ -133,7 +133,7 @@ def run_dag(
         graph.retry_all()
         try:
             graph.wait()
-        except tiledb.cloud.tiledb_cloud_error.TileDBCloudError as e:
+        except TileDBCloudError as e:
             print(f"Fatal graph error:\n{e}")
             print_logs(graph, debug=debug)
             raise e
@@ -142,7 +142,7 @@ def run_dag(
 
 
 def print_logs(
-    graph: tiledb.cloud.dag.DAG,
+    graph: dag.DAG,
     *,
     debug: bool = False,
 ) -> None:
@@ -152,7 +152,7 @@ def print_logs(
     :param graph: DAG object
     :param debug: print debug logs, defaults to False
     """
-    server_logs = tiledb.cloud.dag.server_logs(graph)
+    server_logs = dag.server_logs(graph)
     if not server_logs:
         # TODO: get server logs from a batch UDF
         return

@@ -9,26 +9,14 @@ import numpy as np
 import tiledbvcf
 
 import tiledb
-
-if True:
-    # Bring code into scope for testing on TileDB Cloud
-    import importlib
-    import os
-
-    path = os.path.dirname(importlib.import_module("tiledb.cloud").__file__)
-    files = [f"{path}/utilities/profiler.py", f"{path}/utilities/common.py"]
-    for file in files:
-        with open(file) as f:
-            exec(compile(f.read(), file, "exec"))
-else:
-    from tiledb.cloud import dag
-    from tiledb.cloud.utilities import Profiler
-    from tiledb.cloud.utilities import create_log_array
-    from tiledb.cloud.utilities import get_logger
-    from tiledb.cloud.utilities import read_file
-    from tiledb.cloud.utilities import run_dag
-    from tiledb.cloud.utilities import set_aws_context
-    from tiledb.cloud.utilities import write_log_event
+from tiledb.cloud import dag
+from tiledb.cloud.utilities import Profiler
+from tiledb.cloud.utilities import create_log_array
+from tiledb.cloud.utilities import get_logger
+from tiledb.cloud.utilities import read_file
+from tiledb.cloud.utilities import run_dag
+from tiledb.cloud.utilities import set_aws_context
+from tiledb.cloud.utilities import write_log_event
 
 # Test and debug hooks
 local_ingest = False
@@ -225,7 +213,7 @@ def read_uris_udf(
             if max_files and len(result) == max_files:
                 break
 
-        logger.info(f"Found {len(result)} VCF files.")
+        logger.info("Found %d VCF files.", len(result))
 
     return result
 
@@ -315,7 +303,7 @@ def find_uris_udf(
                 line = line.split()[2] if use_s3 else line
                 result.append(line)
 
-        logger.info(f"Found {len(result)} VCF files.")
+        logger.info("Found %d VCF files.", len(result))
         prof.write("count", len(result))
 
     return result
@@ -349,8 +337,8 @@ def filter_uris_udf(
         manifest_uris = set(manifest_df.vcf_uri)
         result = sorted(list(sample_uris_set.difference(manifest_uris)))
 
-        logger.info(f"{len(manifest_uris)} URIs in the manifest.")
-        logger.info(f"{len(result)} new URIs.")
+        logger.info("%d URIs in the manifest.", len(manifest_uris))
+        logger.info("%d new URIs.", len(result))
         prof.write("count", len(result))
 
     return result
@@ -396,9 +384,9 @@ def filter_samples_udf(
         result = manifest_df.vcf_uri.to_list()
         assert result == sorted(result)
 
-        logger.info(f"{len(manifest_samples)} samples in the manifest.")
-        logger.info(f"{len(existing_samples)} samples already ingested.")
-        logger.info(f"{len(result)} new samples to ingest.")
+        logger.info("%d samples in the manifest.", len(manifest_samples))
+        logger.info("%d samples already ingested.", len(existing_samples))
+        logger.info("%d new samples to ingest.", len(result))
         prof.write("count", len(result))
 
     return result
@@ -705,7 +693,7 @@ def ingest_manifest_dag(
         logger.info("All samples in the manifest have been ingested.")
         return
 
-    logger.info(f"Found {len(sample_uris)} new URIs.")
+    logger.info("Found %d new URIs.", len(sample_uris))
 
     graph = dag.DAG(
         name="vcf-ingest-manifest",
@@ -805,7 +793,7 @@ def ingest_samples_dag(
         logger.info("No new samples to ingest.")
         return
 
-    logger.info(f"Ingesting {len(sample_uris)} samples.")
+    logger.info("Ingesting %d samples.", len(sample_uris))
 
     if type(contigs) == list:
         contig_mode = "separate"
@@ -844,9 +832,9 @@ def ingest_samples_dag(
         "memory": f"{CONSOLIDATE_MEMORY_MB}Mi",
     }
 
-    logger.debug(f"partitions={num_partitions}, consolidates={num_consolidates}")
-    logger.debug(f"ingest_resources={ingest_resources}")
-    logger.debug(f"consolidate_resources={consolidate_resources}")
+    logger.debug("partitions=%d, consolidates=%d", num_partitions, num_consolidates)
+    logger.debug("ingest_resources=%s", ingest_resources)
+    logger.debug("consolidate_resources=%s", consolidate_resources)
 
     consolidate = None
     for i in range(num_partitions):
@@ -887,7 +875,8 @@ def ingest_samples_dag(
 
     if not local_ingest:
         logger.info(
-            f"Batch ingestion submitted - https://cloud.tiledb.com/activity/taskgraphs/{graph._server_graph_uuid}"
+            "Batch ingestion submitted - https://cloud.tiledb.com/activity/taskgraphs/%s",
+            graph._server_graph_uuid,
         )
 
 
@@ -950,7 +939,7 @@ def ingest(
         raise ValueError("Cannot specify `pattern` or `ignore` with `sample_list_uri`.")
 
     logger = setup(config)
-    logger.info(f"Ingesting VCF samples into '{dataset_uri}'.")
+    logger.info("Ingesting VCF samples into %r", dataset_uri)
 
     # Add VCF URIs to the manifest
     ingest_manifest_dag(

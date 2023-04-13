@@ -8,20 +8,8 @@ import numpy as np
 from typing_extensions import Self
 
 import tiledb
-
-if True:
-    # Bring code into scope for testing on TileDB Cloud
-    import importlib
-    import os
-
-    path = os.path.dirname(importlib.import_module("tiledb.cloud").__file__)
-    files = [f"{path}/utilities/common.py"]
-    for file in files:
-        with open(file) as f:
-            exec(compile(f.read(), file, "exec"))
-else:
-    from tiledb.cloud.utilities import max_memory_usage
-    from tiledb.cloud.utilities import read_file
+from tiledb.cloud.utilities import max_memory_usage
+from tiledb.cloud.utilities import read_file
 
 
 def create_log_array(uri: str) -> None:
