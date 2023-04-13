@@ -113,8 +113,8 @@ def run_dag(
         graph.compute()
     except TileDBCloudError as e:
         print(f"Fatal graph error:\n{e}")
-        print_logs(graph, debug=debug)
-        raise e
+        _print_logs(graph, debug=debug)
+        raise
 
     if wait:
         try:
@@ -122,11 +122,11 @@ def run_dag(
             retry = False
         except TileDBCloudError as e:
             print(f"Fatal graph error:\n{e}")
-            print_logs(graph, debug=debug)
+            _print_logs(graph, debug=debug)
             # Raise exception if retry is disabled or if the error will
             # not be resolved by retrying
             if not retry or "ModuleNotFoundError" in str(e):
-                raise e
+                raise
 
     if wait and retry:
         print("Retrying...")
@@ -135,13 +135,13 @@ def run_dag(
             graph.wait()
         except TileDBCloudError as e:
             print(f"Fatal graph error:\n{e}")
-            print_logs(graph, debug=debug)
-            raise e
+            _print_logs(graph, debug=debug)
+            raise
 
-    print_logs(graph, debug=debug)
+    _print_logs(graph, debug=debug)
 
 
-def print_logs(
+def _print_logs(
     graph: dag.DAG,
     *,
     debug: bool = False,

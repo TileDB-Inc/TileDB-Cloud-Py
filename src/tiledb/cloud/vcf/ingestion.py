@@ -1,6 +1,7 @@
 import enum
 import logging
 import subprocess
+import sys
 from collections import defaultdict
 from math import ceil
 from typing import Any, Mapping, Optional, Sequence, Union
@@ -173,9 +174,8 @@ def create_dataset_udf(
         # Create log array and add it to the dataset group
         log_uri = f"{dataset_uri}/{LOG_ARRAY}"
         create_log_array(log_uri)
-        group = tiledb.Group(dataset_uri, "w")
-        group.add(log_uri, name=LOG_ARRAY)
-        group.close()
+        with tiledb.Group(dataset_uri, "w") as group:
+            group.add(log_uri, name=LOG_ARRAY)
 
         write_log_event(log_uri, "create_dataset_udf", "create", data=dataset_uri)
 
@@ -249,7 +249,7 @@ def find_uris_udf(
         use_s3 = search_uri.startswith("s3://")
         # Run command to find URIs matching the pattern
         if use_s3:
-            cmd = (
+            cmd = [
                 "aws",
                 "s3",
                 "sync",
@@ -260,9 +260,10 @@ def find_uris_udf(
                 pattern,
                 search_uri,
                 ".",
-            )
+            ]
         else:
-            cmd = f"find {search_uri} -name {pattern}"
+            cmd = ["find", search_uri, "-name", pattern]
+
         logger.debug(cmd)
         p1 = subprocess.Popen(
             cmd,
@@ -272,27 +273,24 @@ def find_uris_udf(
 
         # Optionally ignore URIs and limit the number returned
         if ignore:
-            cmd = f"grep -Ev '{ignore}'"
+            cmd = ["grep", "-Ev", ignore]
         else:
-            cmd = "grep ''"
+            cmd = ["grep", "."]
         if max_files:
-            cmd += f" -m {max_files}"
+            cmd.extend(["-m", str(max_files)])
 
         logger.debug(cmd)
         p2 = subprocess.Popen(
             cmd,
-            shell=True,
             text=True,
             stdin=p1.stdout,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stderr=sys.stdout,
         )
 
         # Wait for p2 to finish, then kill p1
-        res_stdout, res_stderr = p2.communicate()
+        res_stdout = p2.communicate()[0]
         p1.kill()
-        if res_stderr:
-            print(res_stderr)
 
         # Build list of URIs from command output.
         # Example line from s3:
@@ -430,12 +428,31 @@ def ingest_manifest_udf(
             return ""
 
         def get_sample_name(vcf: str) -> str:
-            # cmd = f"bcftools query -l {vcf}"
-            cmd = f"aws s3 cp --quiet {vcf_uri} - | bcftools query -l"
-            res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-            if res.stderr:
-                print(res.stderr)
-            sample = res.stdout.strip()
+            # TODO: use this when bcftools works with S3
+            if False:
+                sample = subprocess.run(
+                    ["bcftools", "query", "-l", vcf],
+                    capture_output=True,
+                    text=True,
+                ).stdout.strip()
+
+            else:
+                aws_process = subprocess.Popen(
+                    ["aws", "s3", "cp", "--quiet", vcf_uri, "-"],
+                    stdout=subprocess.PIPE,
+                    stderr=sys.stdout,
+                )
+
+                bcftools_process = subprocess.Popen(
+                    ["bcftools", "query", "-l"],
+                    stdin=aws_process.stdout,
+                    stdout=subprocess.PIPE,
+                    stderr=sys.stdout,
+                    text=True,
+                )
+
+                sample = bcftools_process.communicate()[0].strip()
+                aws_process.kill()
 
             return sample
 
@@ -443,8 +460,8 @@ def ingest_manifest_udf(
             # TODO: remove when bcftools index -n works with S3
             return 0
 
-            cmd = f"bcftools index -n {vcf}"
-            res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+            cmd = ["bcftools", "index", "-n", vcf]
+            res = subprocess.run(cmd, capture_output=True, text=True)
             if res.stderr:
                 print(res.stderr)
                 return 0
@@ -559,15 +576,17 @@ def consolidate_dataset_udf(
     :param id: profiler event id, defaults to "consolidate"
     """
 
+    if exclude and include:
+        raise ValueError("use exclude or include, not both")
+
+    if isinstance(exclude, str):
+        exclude = [exclude]
+    if isinstance(include, str):
+        include = [include]
+
     setup(config)
 
     with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
-        if type(exclude) == str:
-            exclude = [exclude]
-
-        if type(include) == str:
-            include = [include]
-
         group = tiledb.Group(dataset_uri)
 
         for member in group:
@@ -710,6 +729,10 @@ def ingest_manifest_dag(
     num_partitions = ceil(len(sample_uris) / batch_size)
     num_consolidates = ceil(num_partitions / workers)
 
+    # This loop creates a DAG with the following structure:
+    # - Submit N ingest tasks in parallel, where N is `workers` or less if there are fewer batches
+    # - Submit a consolidate task that runs when the previous N ingest tasks complete
+    # - Repeat until all batches are ingested
     consolidate = None
     for i in range(num_partitions):
         if i % workers == 0:
@@ -836,6 +859,10 @@ def ingest_samples_dag(
     logger.debug("ingest_resources=%s", ingest_resources)
     logger.debug("consolidate_resources=%s", consolidate_resources)
 
+    # This loop creates a DAG with the following structure:
+    # - Submit N ingest tasks in parallel, where N is `workers` or less if there are fewer batches
+    # - Submit a consolidate task that runs when the previous N ingest tasks complete
+    # - Repeat until all batches are ingested
     consolidate = None
     for i in range(num_partitions):
         if i % workers == 0:

@@ -2,7 +2,7 @@ import inspect
 import subprocess
 import threading
 import time
-from typing import Optional
+from typing import Any, Optional
 
 import numpy as np
 from typing_extensions import Self
@@ -34,15 +34,15 @@ def create_log_array(uri: str) -> None:
     )
     dom = tiledb.Domain([d0])
 
-    a0 = tiledb.Attr(name="id", dtype="ascii", filters=ascii_fl)
-    a1 = tiledb.Attr(name="op", dtype="ascii", filters=ascii_fl)
-    a2 = tiledb.Attr(name="data", dtype="ascii", filters=ascii_fl)
-    a3 = tiledb.Attr(name="extra", dtype="ascii", filters=ascii_fl)
-
     schema = tiledb.ArraySchema(
         domain=dom,
         sparse=True,
-        attrs=[a0, a1, a2, a3],
+        attrs=[
+            tiledb.Attr(name="id", dtype="ascii", filters=ascii_fl),
+            tiledb.Attr(name="op", dtype="ascii", filters=ascii_fl),
+            tiledb.Attr(name="data", dtype="ascii", filters=ascii_fl),
+            tiledb.Attr(name="extra", dtype="ascii", filters=ascii_fl),
+        ],
         offsets_filters=int_fl,
         allows_duplicates=True,
     )
@@ -132,8 +132,8 @@ class Profiler(object):
             raise ValueError("group_member must be specified group_uri")
 
         if group_uri is not None:
-            group = tiledb.Group(group_uri)
-            self.array_uri = group[group_member].uri
+            with tiledb.Group(group_uri) as group:
+                self.array_uri = group[group_member].uri
         else:
             self.array_uri = array_uri
 
@@ -172,10 +172,7 @@ class Profiler(object):
 
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
-        if exc_type is not None:
-            raise exc_type(exc_value)
-
+    def __exit__(self, *_: Any) -> None:
         # Write finish event with elapsed time
         t_elapsed = time.time() - self.t_start
         self.write("finish", f"{t_elapsed:.3f}")
