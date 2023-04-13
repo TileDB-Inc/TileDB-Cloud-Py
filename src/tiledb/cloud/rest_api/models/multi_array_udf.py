@@ -37,6 +37,7 @@ class MultiArrayUDF(object):
         "language": "UDFLanguage",
         "version": "str",
         "image_name": "str",
+        "access_credentials_name": "str",
         "resource_class": "str",
         "_exec": "str",
         "exec_raw": "str",
@@ -61,6 +62,7 @@ class MultiArrayUDF(object):
         "language": "language",
         "version": "version",
         "image_name": "image_name",
+        "access_credentials_name": "access_credentials_name",
         "resource_class": "resource_class",
         "_exec": "exec",
         "exec_raw": "exec_raw",
@@ -86,6 +88,7 @@ class MultiArrayUDF(object):
         language=None,
         version=None,
         image_name=None,
+        access_credentials_name=None,
         resource_class=None,
         _exec=None,
         exec_raw=None,
@@ -114,6 +117,7 @@ class MultiArrayUDF(object):
         self._language = None
         self._version = None
         self._image_name = None
+        self._access_credentials_name = None
         self._resource_class = None
         self.__exec = None
         self._exec_raw = None
@@ -141,6 +145,8 @@ class MultiArrayUDF(object):
             self.version = version
         if image_name is not None:
             self.image_name = image_name
+        if access_credentials_name is not None:
+            self.access_credentials_name = access_credentials_name
         if resource_class is not None:
             self.resource_class = resource_class
         if _exec is not None:
@@ -264,6 +270,29 @@ class MultiArrayUDF(object):
         """
 
         self._image_name = image_name
+
+    @property
+    def access_credentials_name(self):
+        """Gets the access_credentials_name of this MultiArrayUDF.  # noqa: E501
+
+        The name of the access credentials to use. if unset, no credentials will be configured in the environment.  # noqa: E501
+
+        :return: The access_credentials_name of this MultiArrayUDF.  # noqa: E501
+        :rtype: str
+        """
+        return self._access_credentials_name
+
+    @access_credentials_name.setter
+    def access_credentials_name(self, access_credentials_name):
+        """Sets the access_credentials_name of this MultiArrayUDF.
+
+        The name of the access credentials to use. if unset, no credentials will be configured in the environment.  # noqa: E501
+
+        :param access_credentials_name: The access_credentials_name of this MultiArrayUDF.  # noqa: E501
+        :type: str
+        """
+
+        self._access_credentials_name = access_credentials_name
 
     @property
     def resource_class(self):

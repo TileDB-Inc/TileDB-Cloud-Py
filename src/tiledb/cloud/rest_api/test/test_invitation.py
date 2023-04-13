@@ -40,14 +40,18 @@ class TestInvitation(unittest.TestCase):
                 id="00000000-0000-0000-0000-000000000000",
                 invitation_type="ARRAY_SHARE",
                 owner_namespace_uuid="00000000-0000-0000-0000-000000000000",
+                inviter_uuid="00000000-0000-0000-0000-000000000000",
                 user_namespace_uuid="00000000-0000-0000-0000-000000000000",
                 organization_user_uuid="00000000-0000-0000-0000-000000000000",
                 organization_name="organization_name",
                 organization_role="owner",
+                organization_uuid="00000000-0000-0000-0000-000000000000",
                 array_uuid="00000000-0000-0000-0000-000000000000",
+                group_uuid="00000000-0000-0000-0000-000000000000",
                 array_name="array_name",
                 email="jane@doe.com",
                 actions="read,write",
+                group_actions="read,write",
                 status="PENDING",
                 created_at=datetime.datetime.strptime(
                     "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"

@@ -29,6 +29,15 @@ from tiledb.cloud._common.api_v2.models.array_activity_log import ArrayActivityL
 from tiledb.cloud._common.api_v2.models.array_activity_log_data import (
     ArrayActivityLogData,
 )
+from tiledb.cloud._common.api_v2.models.array_directory import ArrayDirectory
+from tiledb.cloud._common.api_v2.models.array_fetch import ArrayFetch
+from tiledb.cloud._common.api_v2.models.array_metadata import ArrayMetadata
+from tiledb.cloud._common.api_v2.models.array_metadata_entry import ArrayMetadataEntry
+from tiledb.cloud._common.api_v2.models.array_schema import ArraySchema
+from tiledb.cloud._common.api_v2.models.array_schema_entry import ArraySchemaEntry
+from tiledb.cloud._common.api_v2.models.array_schema_map import ArraySchemaMap
+from tiledb.cloud._common.api_v2.models.array_type import ArrayType
+from tiledb.cloud._common.api_v2.models.attribute import Attribute
 from tiledb.cloud._common.api_v2.models.attribute_buffer_header import (
     AttributeBufferHeader,
 )
@@ -40,9 +49,22 @@ from tiledb.cloud._common.api_v2.models.aws_role import AWSRole
 from tiledb.cloud._common.api_v2.models.azure_credential import AzureCredential
 from tiledb.cloud._common.api_v2.models.cloud_provider import CloudProvider
 from tiledb.cloud._common.api_v2.models.datatype import Datatype
+from tiledb.cloud._common.api_v2.models.delete_and_update_tile_location import (
+    DeleteAndUpdateTileLocation,
+)
+from tiledb.cloud._common.api_v2.models.dimension import Dimension
+from tiledb.cloud._common.api_v2.models.dimension_tile_extent import DimensionTileExtent
+from tiledb.cloud._common.api_v2.models.domain import Domain
 from tiledb.cloud._common.api_v2.models.domain_array import DomainArray
 from tiledb.cloud._common.api_v2.models.error import Error
 from tiledb.cloud._common.api_v2.models.file_uploaded import FileUploaded
+from tiledb.cloud._common.api_v2.models.filter import Filter
+from tiledb.cloud._common.api_v2.models.filter_data import FilterData
+from tiledb.cloud._common.api_v2.models.filter_pipeline import FilterPipeline
+from tiledb.cloud._common.api_v2.models.filter_type import FilterType
+from tiledb.cloud._common.api_v2.models.float_scale_config import FloatScaleConfig
+from tiledb.cloud._common.api_v2.models.fragment_metadata import FragmentMetadata
+from tiledb.cloud._common.api_v2.models.generic_tile_offsets import GenericTileOffsets
 from tiledb.cloud._common.api_v2.models.group_contents_changes_request import (
     GroupContentsChangesRequest,
 )
@@ -81,6 +103,8 @@ from tiledb.cloud._common.api_v2.models.group_registration_request_group_details
 from tiledb.cloud._common.api_v2.models.layout import Layout
 from tiledb.cloud._common.api_v2.models.metadata import Metadata
 from tiledb.cloud._common.api_v2.models.metadata_entry import MetadataEntry
+from tiledb.cloud._common.api_v2.models.non_empty_domain import NonEmptyDomain
+from tiledb.cloud._common.api_v2.models.non_empty_domain_list import NonEmptyDomainList
 from tiledb.cloud._common.api_v2.models.pagination_metadata import PaginationMetadata
 from tiledb.cloud._common.api_v2.models.query import Query
 from tiledb.cloud._common.api_v2.models.query_reader import QueryReader
@@ -100,4 +124,5 @@ from tiledb.cloud._common.api_v2.models.tile_db_config import TileDBConfig
 from tiledb.cloud._common.api_v2.models.tile_db_config_entries import (
     TileDBConfigEntries,
 )
+from tiledb.cloud._common.api_v2.models.timestamped_uri import TimestampedURI
 from tiledb.cloud._common.api_v2.models.writer import Writer

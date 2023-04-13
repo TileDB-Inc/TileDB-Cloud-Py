@@ -16,6 +16,7 @@ Method | HTTP request | Description
 [**create_array**](ArrayApi.md#create_array) | **POST** /v1/arrays/{namespace}/{array} | 
 [**delete_array**](ArrayApi.md#delete_array) | **DELETE** /v1/arrays/{namespace}/{array} | 
 [**deregister_array**](ArrayApi.md#deregister_array) | **DELETE** /v1/arrays/{namespace}/{array}/deregister | 
+[**fragment_info**](ArrayApi.md#fragment_info) | **POST** /v1/arrays/{namespace}/{array}/fragment_info | 
 [**get_activity_log_by_id**](ArrayApi.md#get_activity_log_by_id) | **GET** /v1/arrays/{namespace}/{array}/activity/{id} | 
 [**get_all_array_metadata**](ArrayApi.md#get_all_array_metadata) | **GET** /v1/arrays | 
 [**get_array**](ArrayApi.md#get_array) | **GET** /v1/arrays/{namespace}/{array} | 
@@ -88,7 +89,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 array = 'array_example' # str | name/uri of array that is url-encoded
 start = 56 # int | Start time of window of fetch logs, unix epoch in seconds (default: seven days ago) (optional)
 end = 56 # int | End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) (optional)
-event_types = 'event_types_example' # str | Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated (optional)
+event_types = 'event_types_example' # str | Refer to ActivityEventType for possible values (optional)
 task_id = 'task_id_example' # str | Array task ID To filter activity to (optional)
 has_task_id = True # bool | Excludes activity log results that do not contain an array task UUID (optional)
 
@@ -141,7 +142,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 array = 'array_example' # str | name/uri of array that is url-encoded
 start = 56 # int | Start time of window of fetch logs, unix epoch in seconds (default: seven days ago) (optional)
 end = 56 # int | End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) (optional)
-event_types = 'event_types_example' # str | Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated (optional)
+event_types = 'event_types_example' # str | Refer to ActivityEventType for possible values (optional)
 task_id = 'task_id_example' # str | Array task ID To filter activity to (optional)
 has_task_id = True # bool | Excludes activity log results that do not contain an array task UUID (optional)
 
@@ -160,7 +161,7 @@ Name | Type | Description  | Notes
  **array** | **str**| name/uri of array that is url-encoded | 
  **start** | **int**| Start time of window of fetch logs, unix epoch in seconds (default: seven days ago) | [optional] 
  **end** | **int**| End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) | [optional] 
- **event_types** | **str**| Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated | [optional] 
+ **event_types** | **str**| Refer to ActivityEventType for possible values | [optional] 
  **task_id** | **str**| Array task ID To filter activity to | [optional] 
  **has_task_id** | **bool**| Excludes activity log results that do not contain an array task UUID | [optional] 
 
@@ -348,7 +349,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **arrays_browser_owned_sidebar_get**
-> ArrayBrowserSidebar arrays_browser_owned_sidebar_get()
+> ArrayBrowserSidebar arrays_browser_owned_sidebar_get(file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
 
 
 
@@ -394,9 +395,12 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
-    
+    file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
+exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
+file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
+
     try:
-        api_response = api_instance.arrays_browser_owned_sidebar_get()
+        api_response = api_instance.arrays_browser_owned_sidebar_get(file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_owned_sidebar_get: %s\n" % e)
@@ -440,16 +444,24 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
-    
+    file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
+exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
+file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
+
     try:
-        api_response = api_instance.arrays_browser_owned_sidebar_get()
+        api_response = api_instance.arrays_browser_owned_sidebar_get(file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_owned_sidebar_get: %s\n" % e)
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **file_type** | [**list[str]**](str.md)| file_type to search for, more than one can be included | [optional] 
+ **exclude_file_type** | [**list[str]**](str.md)| file_type to exclude matching array in results, more than one can be included | [optional] 
+ **file_property** | [**list[str]**](str.md)| file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included | [optional] 
 
 ### Return type
 
@@ -635,7 +647,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **arrays_browser_public_sidebar_get**
-> ArrayBrowserSidebar arrays_browser_public_sidebar_get()
+> ArrayBrowserSidebar arrays_browser_public_sidebar_get(file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
 
 
 
@@ -681,9 +693,12 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
-    
+    file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
+exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
+file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
+
     try:
-        api_response = api_instance.arrays_browser_public_sidebar_get()
+        api_response = api_instance.arrays_browser_public_sidebar_get(file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_public_sidebar_get: %s\n" % e)
@@ -727,16 +742,24 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
-    
+    file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
+exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
+file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
+
     try:
-        api_response = api_instance.arrays_browser_public_sidebar_get()
+        api_response = api_instance.arrays_browser_public_sidebar_get(file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_public_sidebar_get: %s\n" % e)
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **file_type** | [**list[str]**](str.md)| file_type to search for, more than one can be included | [optional] 
+ **exclude_file_type** | [**list[str]**](str.md)| file_type to exclude matching array in results, more than one can be included | [optional] 
+ **file_property** | [**list[str]**](str.md)| file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included | [optional] 
 
 ### Return type
 
@@ -925,7 +948,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **arrays_browser_shared_sidebar_get**
-> ArrayBrowserSidebar arrays_browser_shared_sidebar_get()
+> ArrayBrowserSidebar arrays_browser_shared_sidebar_get(file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, shared_to=shared_to)
 
 
 
@@ -971,9 +994,13 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
-    
+    file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
+exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
+file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
+shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of where there groups were shared to (optional)
+
     try:
-        api_response = api_instance.arrays_browser_shared_sidebar_get()
+        api_response = api_instance.arrays_browser_shared_sidebar_get(file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, shared_to=shared_to)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_shared_sidebar_get: %s\n" % e)
@@ -1017,16 +1044,26 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
-    
+    file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
+exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
+file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
+shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of where there groups were shared to (optional)
+
     try:
-        api_response = api_instance.arrays_browser_shared_sidebar_get()
+        api_response = api_instance.arrays_browser_shared_sidebar_get(file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, shared_to=shared_to)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_shared_sidebar_get: %s\n" % e)
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **file_type** | [**list[str]**](str.md)| file_type to search for, more than one can be included | [optional] 
+ **exclude_file_type** | [**list[str]**](str.md)| file_type to exclude matching array in results, more than one can be included | [optional] 
+ **file_property** | [**list[str]**](str.md)| file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included | [optional] 
+ **shared_to** | [**list[str]**](str.md)| namespaces to filter results of where there groups were shared to | [optional] 
 
 ### Return type
 
@@ -1191,7 +1228,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **consolidate_array**
-> consolidate_array(namespace, array, tiledb_config)
+> consolidate_array(namespace, array, consolidate_request)
 
 
 
@@ -1239,10 +1276,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-tiledb_config = tiledb.cloud.rest_api.TileDBConfig() # TileDBConfig | tiledb configuration
+consolidate_request = tiledb.cloud.rest_api.ArrayConsolidationRequest() # ArrayConsolidationRequest | Consolidate Request
 
     try:
-        api_instance.consolidate_array(namespace, array, tiledb_config)
+        api_instance.consolidate_array(namespace, array, consolidate_request)
     except ApiException as e:
         print("Exception when calling ArrayApi->consolidate_array: %s\n" % e)
 ```
@@ -1287,10 +1324,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-tiledb_config = tiledb.cloud.rest_api.TileDBConfig() # TileDBConfig | tiledb configuration
+consolidate_request = tiledb.cloud.rest_api.ArrayConsolidationRequest() # ArrayConsolidationRequest | Consolidate Request
 
     try:
-        api_instance.consolidate_array(namespace, array, tiledb_config)
+        api_instance.consolidate_array(namespace, array, consolidate_request)
     except ApiException as e:
         print("Exception when calling ArrayApi->consolidate_array: %s\n" % e)
 ```
@@ -1301,7 +1338,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
  **array** | **str**| name/uri of array that is url-encoded | 
- **tiledb_config** | [**TileDBConfig**](TileDBConfig.md)| tiledb configuration | 
+ **consolidate_request** | [**ArrayConsolidationRequest**](ArrayConsolidationRequest.md)| Consolidate Request | 
 
 ### Return type
 
@@ -1729,6 +1766,145 @@ void (empty response body)
 |-------------|-------------|------------------|
 **204** | deregistered array successful |  -  |
 **502** | Bad Gateway |  -  |
+**0** | error response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **fragment_info**
+> FragmentInfo fragment_info(namespace, array, content_type, fragment_info_request)
+
+
+
+fetch an array's fragment info
+
+### Example
+
+* Api Key Authentication (ApiKeyAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+content_type = 'application/json' # str | Content Type of input and return mime (default to 'application/json')
+fragment_info_request = tiledb.cloud.rest_api.FragmentInfoRequest() # FragmentInfoRequest | ArraySchema being created
+
+    try:
+        api_response = api_instance.fragment_info(namespace, array, content_type, fragment_info_request)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ArrayApi->fragment_info: %s\n" % e)
+```
+
+* Basic Authentication (BasicAuth):
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+content_type = 'application/json' # str | Content Type of input and return mime (default to 'application/json')
+fragment_info_request = tiledb.cloud.rest_api.FragmentInfoRequest() # FragmentInfoRequest | ArraySchema being created
+
+    try:
+        api_response = api_instance.fragment_info(namespace, array, content_type, fragment_info_request)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ArrayApi->fragment_info: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
+ **array** | **str**| name/uri of array that is url-encoded | 
+ **content_type** | **str**| Content Type of input and return mime | [default to &#39;application/json&#39;]
+ **fragment_info_request** | [**FragmentInfoRequest**](FragmentInfoRequest.md)| ArraySchema being created | 
+
+### Return type
+
+[**FragmentInfo**](FragmentInfo.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | fragment info |  -  |
 **0** | error response |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -4171,7 +4347,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **vacuum_array**
-> vacuum_array(namespace, array, tiledb_config)
+> vacuum_array(namespace, array, vaccum_request)
 
 
 
@@ -4219,10 +4395,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-tiledb_config = tiledb.cloud.rest_api.TileDBConfig() # TileDBConfig | tiledb configuration
+vaccum_request = tiledb.cloud.rest_api.ArrayVacuumRequest() # ArrayVacuumRequest | Vaccum Request
 
     try:
-        api_instance.vacuum_array(namespace, array, tiledb_config)
+        api_instance.vacuum_array(namespace, array, vaccum_request)
     except ApiException as e:
         print("Exception when calling ArrayApi->vacuum_array: %s\n" % e)
 ```
@@ -4267,10 +4443,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
 array = 'array_example' # str | name/uri of array that is url-encoded
-tiledb_config = tiledb.cloud.rest_api.TileDBConfig() # TileDBConfig | tiledb configuration
+vaccum_request = tiledb.cloud.rest_api.ArrayVacuumRequest() # ArrayVacuumRequest | Vaccum Request
 
     try:
-        api_instance.vacuum_array(namespace, array, tiledb_config)
+        api_instance.vacuum_array(namespace, array, vaccum_request)
     except ApiException as e:
         print("Exception when calling ArrayApi->vacuum_array: %s\n" % e)
 ```
@@ -4281,7 +4457,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
  **array** | **str**| name/uri of array that is url-encoded | 
- **tiledb_config** | [**TileDBConfig**](TileDBConfig.md)| tiledb configuration | 
+ **vaccum_request** | [**ArrayVacuumRequest**](ArrayVacuumRequest.md)| Vaccum Request | 
 
 ### Return type
 

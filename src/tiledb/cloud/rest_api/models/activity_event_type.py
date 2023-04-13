@@ -42,6 +42,7 @@ class ActivityEventType(object):
     ARRAY_METADATA_GET = "array_metadata_get"
     ARRAY_METADATA_UPDATE = "array_metadata_update"
     ESTIMATED_RESULT_SIZES = "estimated_result_sizes"
+    READ_FRAGMENT_INFO = "read_fragment_info"
 
     allowable_values = [
         READ_SCHEMA,
@@ -58,6 +59,7 @@ class ActivityEventType(object):
         ARRAY_METADATA_GET,
         ARRAY_METADATA_UPDATE,
         ESTIMATED_RESULT_SIZES,
+        READ_FRAGMENT_INFO,
     ]  # noqa: E501
 
     """

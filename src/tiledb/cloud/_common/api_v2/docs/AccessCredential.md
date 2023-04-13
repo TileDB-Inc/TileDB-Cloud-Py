@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **provider_default** | **bool** | True if this is the namespace&#39;s default credential to be used when connecting to the given cloud provider. There can be at most one default for each unique provider. | [optional] 
 **created_at** | **datetime** | Time when the credential was created (rfc3339) | [optional] [readonly] 
 **updated_at** | **datetime** | Time when the credential was last updated (rfc3339) | [optional] [readonly] 
+**allowed_in_tasks** | **bool** | Is this credential allowed to be used in tasks | [optional] 
 **credential** | [**AccessCredentialCredential**](AccessCredentialCredential.md) |  | [optional] 
 **role** | [**AccessCredentialRole**](AccessCredentialRole.md) |  | [optional] 
 

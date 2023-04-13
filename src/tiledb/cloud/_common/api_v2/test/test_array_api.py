@@ -32,6 +32,10 @@ class TestArrayApi(unittest.TestCase):
         """Test case for array_activity_log"""
         pass
 
+    def test_get_array(self):
+        """Test case for get_array"""
+        pass
+
 
 if __name__ == "__main__":
     unittest.main()

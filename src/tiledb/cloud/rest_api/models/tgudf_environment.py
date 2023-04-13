@@ -36,20 +36,24 @@ class TGUDFEnvironment(object):
         "language": "UDFLanguage",
         "language_version": "str",
         "image_name": "str",
+        "access_credentials_name": "str",
         "namespace": "str",
         "resource_class": "str",
         "resources": "TGUDFEnvironmentResources",
         "run_client_side": "bool",
+        "timeout": "float",
     }
 
     attribute_map = {
         "language": "language",
         "language_version": "language_version",
         "image_name": "image_name",
+        "access_credentials_name": "access_credentials_name",
         "namespace": "namespace",
         "resource_class": "resource_class",
         "resources": "resources",
         "run_client_side": "run_client_side",
+        "timeout": "timeout",
     }
 
     def __init__(
@@ -57,10 +61,12 @@ class TGUDFEnvironment(object):
         language=None,
         language_version=None,
         image_name=None,
+        access_credentials_name=None,
         namespace=None,
         resource_class=None,
         resources=None,
         run_client_side=None,
+        timeout=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """TGUDFEnvironment - a model defined in OpenAPI"""  # noqa: E501
@@ -71,10 +77,12 @@ class TGUDFEnvironment(object):
         self._language = None
         self._language_version = None
         self._image_name = None
+        self._access_credentials_name = None
         self._namespace = None
         self._resource_class = None
         self._resources = None
         self._run_client_side = None
+        self._timeout = None
         self.discriminator = None
 
         if language is not None:
@@ -83,6 +91,8 @@ class TGUDFEnvironment(object):
             self.language_version = language_version
         if image_name is not None:
             self.image_name = image_name
+        if access_credentials_name is not None:
+            self.access_credentials_name = access_credentials_name
         self.namespace = namespace
         if resource_class is not None:
             self.resource_class = resource_class
@@ -90,6 +100,7 @@ class TGUDFEnvironment(object):
             self.resources = resources
         if run_client_side is not None:
             self.run_client_side = run_client_side
+        self.timeout = timeout
 
     @property
     def language(self):
@@ -157,6 +168,29 @@ class TGUDFEnvironment(object):
         """
 
         self._image_name = image_name
+
+    @property
+    def access_credentials_name(self):
+        """Gets the access_credentials_name of this TGUDFEnvironment.  # noqa: E501
+
+        The name of the access credentials to use. if unset, no credentials will be configured in the environment.   # noqa: E501
+
+        :return: The access_credentials_name of this TGUDFEnvironment.  # noqa: E501
+        :rtype: str
+        """
+        return self._access_credentials_name
+
+    @access_credentials_name.setter
+    def access_credentials_name(self, access_credentials_name):
+        """Sets the access_credentials_name of this TGUDFEnvironment.
+
+        The name of the access credentials to use. if unset, no credentials will be configured in the environment.   # noqa: E501
+
+        :param access_credentials_name: The access_credentials_name of this TGUDFEnvironment.  # noqa: E501
+        :type: str
+        """
+
+        self._access_credentials_name = access_credentials_name
 
     @property
     def namespace(self):
@@ -247,6 +281,29 @@ class TGUDFEnvironment(object):
         """
 
         self._run_client_side = run_client_side
+
+    @property
+    def timeout(self):
+        """Gets the timeout of this TGUDFEnvironment.  # noqa: E501
+
+        The maximum length of time this UDF is allowed to execute for before it is killed and fails. If not present (or zero), the function is allowed to run indefinitely (subject to the server’s global limits).   # noqa: E501
+
+        :return: The timeout of this TGUDFEnvironment.  # noqa: E501
+        :rtype: float
+        """
+        return self._timeout
+
+    @timeout.setter
+    def timeout(self, timeout):
+        """Sets the timeout of this TGUDFEnvironment.
+
+        The maximum length of time this UDF is allowed to execute for before it is killed and fails. If not present (or zero), the function is allowed to run indefinitely (subject to the server’s global limits).   # noqa: E501
+
+        :param timeout: The timeout of this TGUDFEnvironment.  # noqa: E501
+        :type: float
+        """
+
+        self._timeout = timeout
 
     def to_dict(self):
         """Returns the model properties as a dict"""

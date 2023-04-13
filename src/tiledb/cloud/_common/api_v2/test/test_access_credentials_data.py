@@ -50,6 +50,7 @@ class TestAccessCredentialsData(unittest.TestCase):
                         updated_at=datetime.datetime.strptime(
                             "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
                         ),
+                        allowed_in_tasks=True,
                         credential=tiledb.cloud._common.api_v2.models.access_credential_credential.AccessCredential_credential(
                             aws=tiledb.cloud._common.api_v2.models.aws_credential.AWSCredential(
                                 access_key_id="0",

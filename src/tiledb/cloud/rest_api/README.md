@@ -71,7 +71,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 array = 'array_example' # str | name/uri of array that is url-encoded
 start = 56 # int | Start time of window of fetch logs, unix epoch in seconds (default: seven days ago) (optional)
 end = 56 # int | End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) (optional)
-event_types = 'event_types_example' # str | Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated (optional)
+event_types = 'event_types_example' # str | Refer to ActivityEventType for possible values (optional)
 task_id = 'task_id_example' # str | Array task ID To filter activity to (optional)
 has_task_id = True # bool | Excludes activity log results that do not contain an array task UUID (optional)
 
@@ -101,6 +101,7 @@ Class | Method | HTTP request | Description
 *ArrayApi* | [**create_array**](docs/ArrayApi.md#create_array) | **POST** /v1/arrays/{namespace}/{array} | 
 *ArrayApi* | [**delete_array**](docs/ArrayApi.md#delete_array) | **DELETE** /v1/arrays/{namespace}/{array} | 
 *ArrayApi* | [**deregister_array**](docs/ArrayApi.md#deregister_array) | **DELETE** /v1/arrays/{namespace}/{array}/deregister | 
+*ArrayApi* | [**fragment_info**](docs/ArrayApi.md#fragment_info) | **POST** /v1/arrays/{namespace}/{array}/fragment_info | 
 *ArrayApi* | [**get_activity_log_by_id**](docs/ArrayApi.md#get_activity_log_by_id) | **GET** /v1/arrays/{namespace}/{array}/activity/{id} | 
 *ArrayApi* | [**get_all_array_metadata**](docs/ArrayApi.md#get_all_array_metadata) | **GET** /v1/arrays | 
 *ArrayApi* | [**get_array**](docs/ArrayApi.md#get_array) | **GET** /v1/arrays/{namespace}/{array} | 
@@ -163,15 +164,18 @@ Class | Method | HTTP request | Description
 *InvitationApi* | [**accept_invitation**](docs/InvitationApi.md#accept_invitation) | **POST** /v1/invitations/{invitation} | 
 *InvitationApi* | [**cancel_join_organization**](docs/InvitationApi.md#cancel_join_organization) | **DELETE** /v1/invitations/{invitation}/{organization}/join | 
 *InvitationApi* | [**cancel_share_array_by_invite**](docs/InvitationApi.md#cancel_share_array_by_invite) | **DELETE** /v1/invitations/{invitation}/{namespace}/{array}/share | 
+*InvitationApi* | [**cancel_share_group_by_invite**](docs/InvitationApi.md#cancel_share_group_by_invite) | **DELETE** /v1/invitations/group/{invitation}/{namespace}/{group_name}/share | 
 *InvitationApi* | [**fetch_invitations**](docs/InvitationApi.md#fetch_invitations) | **GET** /v1/invitations | 
 *InvitationApi* | [**join_organization**](docs/InvitationApi.md#join_organization) | **POST** /v1/invitations/{organization}/join | 
 *InvitationApi* | [**share_array_by_invite**](docs/InvitationApi.md#share_array_by_invite) | **POST** /v1/invitations/{namespace}/{array}/share | 
+*InvitationApi* | [**share_group_by_invite**](docs/InvitationApi.md#share_group_by_invite) | **POST** /v1/invitations/group/{namespace}/{group}/share | 
 *NotebookApi* | [**get_notebook_server_status**](docs/NotebookApi.md#get_notebook_server_status) | **GET** /v1/notebooks/server/{namespace}/status | 
 *NotebookApi* | [**handle_copy_notebook**](docs/NotebookApi.md#handle_copy_notebook) | **POST** /v1/notebooks/{namespace}/{array}/copy | 
 *NotebookApi* | [**handle_upload_notebook**](docs/NotebookApi.md#handle_upload_notebook) | **POST** /v1/notebooks/{namespace}/upload | 
 *NotebookApi* | [**shutdown_notebook_server**](docs/NotebookApi.md#shutdown_notebook_server) | **DELETE** /v1/notebooks/server/{namespace} | 
 *NotebookApi* | [**update_notebook_name**](docs/NotebookApi.md#update_notebook_name) | **PATCH** /v1/notebooks/{namespace}/{array}/rename | 
 *NotebooksApi* | [**notebooks_namespace_array_end_timestamps_get**](docs/NotebooksApi.md#notebooks_namespace_array_end_timestamps_get) | **GET** /v1/notebooks/{namespace}/{array}/end_timestamps | 
+*NotebooksApi* | [**notebooks_namespace_array_prune_post**](docs/NotebooksApi.md#notebooks_namespace_array_prune_post) | **POST** /v1/notebooks/{namespace}/{array}/prune | 
 *OrganizationApi* | [**add_aws_access_credentials**](docs/OrganizationApi.md#add_aws_access_credentials) | **POST** /v1/credentials/{namespace}/aws | 
 *OrganizationApi* | [**add_user_to_organization**](docs/OrganizationApi.md#add_user_to_organization) | **POST** /v1/organizations/{organization}/user | 
 *OrganizationApi* | [**check_aws_access_credentials**](docs/OrganizationApi.md#check_aws_access_credentials) | **GET** /v1/credentials/{namespace}/aws | 
@@ -261,6 +265,7 @@ Class | Method | HTTP request | Description
  - [ArrayActivityLog](docs/ArrayActivityLog.md)
  - [ArrayBrowserData](docs/ArrayBrowserData.md)
  - [ArrayBrowserSidebar](docs/ArrayBrowserSidebar.md)
+ - [ArrayConsolidationRequest](docs/ArrayConsolidationRequest.md)
  - [ArrayEndTimestampData](docs/ArrayEndTimestampData.md)
  - [ArrayFavorite](docs/ArrayFavorite.md)
  - [ArrayFavoritesData](docs/ArrayFavoritesData.md)
@@ -278,6 +283,7 @@ Class | Method | HTTP request | Description
  - [ArrayTaskStatus](docs/ArrayTaskStatus.md)
  - [ArrayTaskType](docs/ArrayTaskType.md)
  - [ArrayType](docs/ArrayType.md)
+ - [ArrayVacuumRequest](docs/ArrayVacuumRequest.md)
  - [AssetLocations](docs/AssetLocations.md)
  - [Attribute](docs/Attribute.md)
  - [AttributeBufferHeader](docs/AttributeBufferHeader.md)
@@ -302,6 +308,9 @@ Class | Method | HTTP request | Description
  - [FilterOption](docs/FilterOption.md)
  - [FilterPipeline](docs/FilterPipeline.md)
  - [FilterType](docs/FilterType.md)
+ - [FragmentInfo](docs/FragmentInfo.md)
+ - [FragmentInfoRequest](docs/FragmentInfoRequest.md)
+ - [FragmentMetadata](docs/FragmentMetadata.md)
  - [GenericUDF](docs/GenericUDF.md)
  - [GroupActions](docs/GroupActions.md)
  - [GroupBrowserData](docs/GroupBrowserData.md)
@@ -324,6 +333,7 @@ Class | Method | HTTP request | Description
  - [Invitation](docs/Invitation.md)
  - [InvitationArrayShareEmail](docs/InvitationArrayShareEmail.md)
  - [InvitationData](docs/InvitationData.md)
+ - [InvitationGroupShareEmail](docs/InvitationGroupShareEmail.md)
  - [InvitationOrganizationJoinEmail](docs/InvitationOrganizationJoinEmail.md)
  - [InvitationStatus](docs/InvitationStatus.md)
  - [InvitationType](docs/InvitationType.md)
@@ -364,6 +374,7 @@ Class | Method | HTTP request | Description
  - [RetryStrategy](docs/RetryStrategy.md)
  - [SQLParameters](docs/SQLParameters.md)
  - [SSOProvider](docs/SSOProvider.md)
+ - [SingleFragmentInfo](docs/SingleFragmentInfo.md)
  - [StorageLocation](docs/StorageLocation.md)
  - [Subarray](docs/Subarray.md)
  - [SubarrayPartitioner](docs/SubarrayPartitioner.md)
@@ -371,7 +382,9 @@ Class | Method | HTTP request | Description
  - [SubarrayPartitionerState](docs/SubarrayPartitionerState.md)
  - [SubarrayRanges](docs/SubarrayRanges.md)
  - [Subscription](docs/Subscription.md)
+ - [TGArrayNodeData](docs/TGArrayNodeData.md)
  - [TGInputNodeData](docs/TGInputNodeData.md)
+ - [TGQueryRanges](docs/TGQueryRanges.md)
  - [TGSQLNodeData](docs/TGSQLNodeData.md)
  - [TGUDFArgument](docs/TGUDFArgument.md)
  - [TGUDFEnvironment](docs/TGUDFEnvironment.md)
@@ -390,6 +403,7 @@ Class | Method | HTTP request | Description
  - [TaskGraphType](docs/TaskGraphType.md)
  - [TaskGraphs](docs/TaskGraphs.md)
  - [TileDBConfig](docs/TileDBConfig.md)
+ - [TileDBConfigEntries](docs/TileDBConfigEntries.md)
  - [Token](docs/Token.md)
  - [TokenRequest](docs/TokenRequest.md)
  - [TokenScope](docs/TokenScope.md)

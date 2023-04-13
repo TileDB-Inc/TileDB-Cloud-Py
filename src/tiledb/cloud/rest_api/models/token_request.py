@@ -32,12 +32,12 @@ class TokenRequest(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"expires": "datetime", "name": "str", "scope": "str"}
+    openapi_types = {"expires": "datetime", "name": "str", "scope": "list[TokenScope]"}
 
     attribute_map = {"expires": "expires", "name": "name", "scope": "scope"}
 
     def __init__(
-        self, expires=None, name=None, scope="*", local_vars_configuration=None
+        self, expires=None, name=None, scope=None, local_vars_configuration=None
     ):  # noqa: E501
         """TokenRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
@@ -109,7 +109,7 @@ class TokenRequest(object):
         Optional scope to limit token, defaults to all permissions, current supported values are password_reset or *  # noqa: E501
 
         :return: The scope of this TokenRequest.  # noqa: E501
-        :rtype: str
+        :rtype: list[TokenScope]
         """
         return self._scope
 
@@ -120,7 +120,7 @@ class TokenRequest(object):
         Optional scope to limit token, defaults to all permissions, current supported values are password_reset or *  # noqa: E501
 
         :param scope: The scope of this TokenRequest.  # noqa: E501
-        :type: str
+        :type: list[TokenScope]
         """
 
         self._scope = scope

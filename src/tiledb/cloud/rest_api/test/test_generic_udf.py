@@ -41,6 +41,7 @@ class TestGenericUDF(unittest.TestCase):
                 language="python",
                 version="0",
                 image_name="0",
+                access_credentials_name="0",
                 resource_class="standard",
                 _exec="0",
                 exec_raw="0",

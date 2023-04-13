@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **str** | task ID | [optional] 
 **name** | **str** | Optional task name | [optional] 
+**username** | **str** | username that executed this task | [optional] 
 **description** | **str** | Optional task description (Tasks purpose) | [optional] 
 **array_metadata** | [**ArrayInfo**](ArrayInfo.md) |  | [optional] 
 **subarray** | [**DomainArray**](DomainArray.md) |  | [optional] 
