@@ -7,7 +7,6 @@ from math import ceil
 from typing import Any, Mapping, Optional, Sequence, Union
 
 import numpy as np
-import tiledbvcf
 
 import tiledb
 from tiledb.cloud import dag
@@ -71,10 +70,9 @@ def setup(config: Optional[Mapping[str, Any]] = None) -> logging.Logger:
     logger = get_logger(level)
 
     logger.debug(
-        "tiledb=%s, libtiledb=%s, tiledbvcf=%s",
+        "tiledb=%s, libtiledb=%s",
         tiledb.version(),
         tiledb.libtiledb.version(),
-        tiledbvcf.version,
     )
 
     return logger
@@ -148,8 +146,10 @@ def create_dataset_udf(
     :param vcf_attrs: VCF with all INFO/FORMAT fields to materialize, defaults to None
     :return: dataset URI
     """
+    import tiledbvcf
 
     logger = setup(config)
+    logger.debug("tiledbvcf=%s", tiledbvcf.version)
 
     # Check if the dataset already exists
     if tiledb.object_type(dataset_uri) != "group":
@@ -354,8 +354,10 @@ def filter_samples_udf(
     :param config: config dictionary, defaults to None
     :return: sample URIs
     """
+    import tiledbvcf
 
     logger = setup(config)
+    logger.debug("tiledbvcf=%s", tiledbvcf.version)
 
     with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
         # Read existing samples in VCF dataset
@@ -462,6 +464,11 @@ def ingest_manifest_udf(
 
             cmd = ["bcftools", "index", "-n", vcf]
             res = subprocess.run(cmd, capture_output=True, text=True)
+            # If there is an error, this means there was a problem reading the
+            # index file or the index file is an old format that does not
+            # contain the required metadata. In either case, return 0 to
+            # indicate a problem with the index that needs to be addressed
+            # before ingesting the sample.
             if res.stderr:
                 print(res.stderr)
                 return 0
@@ -535,8 +542,10 @@ def ingest_samples_udf(
     :param resume: enable resume ingestion mode, defaults to False
     :param id: profiler event id, defaults to "samples"
     """
+    import tiledbvcf
 
-    setup(config)
+    logger = setup(config)
+    logger.debug("tiledbvcf=%s", tiledbvcf.version)
 
     with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id) as prof:
         prof.write("uris", ",".join(sample_uris))
