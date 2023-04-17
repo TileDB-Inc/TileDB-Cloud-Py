@@ -1098,7 +1098,7 @@ class DAG:
                     execution = api_client.submit_task_graph(
                         namespace=self.namespace, id=submission.uuid
                     )
-                    self._server_graph_uuid = execution.uuid
+                    self.server_graph_uuid = execution.uuid
                 except rest_api.ApiException as apix:
                     raise
                 self._update_batch_status_thread = threading.Thread(
@@ -1548,7 +1548,7 @@ class DAG:
                 result: models.TaskGraphLog = client.build(
                     rest_api.TaskGraphLogsApi
                 ).get_task_graph_log(
-                    namespace=self.namespace, id=self._server_graph_uuid
+                    namespace=self.namespace, id=self.server_graph_uuid
                 )
             except rest_api.ApiException as apix:
                 raise
