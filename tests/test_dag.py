@@ -14,6 +14,7 @@ from typing import Any
 import cloudpickle
 import numpy as np
 import pandas as pd
+import pytest
 
 import tiledb.cloud
 from tiledb.cloud import client
@@ -640,6 +641,7 @@ class DAGBatchModeTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             node.result()
 
+    @pytest.mark.xfail(reason="server-side issue; remove when fixed")
     def test_dynamic_batch_dag(self):
         d = dag.DAG(mode=Mode.BATCH, max_workers=2)
 
