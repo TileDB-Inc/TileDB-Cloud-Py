@@ -704,15 +704,16 @@ class DAGBatchModeTest(unittest.TestCase):
             if random.random() > 0.5:
                 raise RuntimeError("Random error!")
 
-        d = dag.DAG(mode=Mode.BATCH)
+        d = dag.DAG(
+            mode=Mode.BATCH,
+            retry_strategy=models.RetryStrategy(
+                limit=10,
+                retry_policy="Always",
+            ))
         node = d.submit(
             random_failure,
             name="node",
             resources={"cpu": "1", "memory": "500Mi"},
-            retry_strategy=models.RetryStrategy(
-                limit=10,
-                retry_policy="Always",
-            ),
         )
 
         d.compute()
