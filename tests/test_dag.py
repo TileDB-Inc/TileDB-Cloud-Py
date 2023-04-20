@@ -709,7 +709,8 @@ class DAGBatchModeTest(unittest.TestCase):
             retry_strategy=models.RetryStrategy(
                 limit=10,
                 retry_policy="Always",
-            ))
+            ),
+        )
         node = d.submit(
             random_failure,
             name="node",
