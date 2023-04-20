@@ -195,9 +195,7 @@ Class | Method | HTTP request | Description
 *RegisteredTaskGraphsApi* | [**get_registered_task_graph**](docs/RegisteredTaskGraphsApi.md#get_registered_task_graph) | **GET** /v1/taskgraphs/{namespace}/registered/{name} | 
 *RegisteredTaskGraphsApi* | [**get_registered_task_graph_sharing_policies**](docs/RegisteredTaskGraphsApi.md#get_registered_task_graph_sharing_policies) | **GET** /v1/taskgraphs/{namespace}/registered/{name}/share | 
 *RegisteredTaskGraphsApi* | [**register_registered_task_graph**](docs/RegisteredTaskGraphsApi.md#register_registered_task_graph) | **POST** /v1/taskgraphs/{namespace}/registered/{name} | 
-*RegisteredTaskGraphsApi* | [**resubmit_task_graph_execution**](docs/RegisteredTaskGraphsApi.md#resubmit_task_graph_execution) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/resubmit | 
 *RegisteredTaskGraphsApi* | [**share_registered_task_graph**](docs/RegisteredTaskGraphsApi.md#share_registered_task_graph) | **PATCH** /v1/taskgraphs/{namespace}/registered/{name}/share | 
-*RegisteredTaskGraphsApi* | [**stop_task_graph**](docs/RegisteredTaskGraphsApi.md#stop_task_graph) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/stop | 
 *RegisteredTaskGraphsApi* | [**update_registered_task_graph**](docs/RegisteredTaskGraphsApi.md#update_registered_task_graph) | **PATCH** /v1/taskgraphs/{namespace}/registered/{name} | 
 *SqlApi* | [**run_sql**](docs/SqlApi.md#run_sql) | **POST** /v1/sql/{namespace} | 
 *StatsApi* | [**get_tiledb_stats**](docs/StatsApi.md#get_tiledb_stats) | **GET** /v1/.stats | 
@@ -206,7 +204,8 @@ Class | Method | HTTP request | Description
 *TaskGraphLogsApi* | [**list_task_graph_logs**](docs/TaskGraphLogsApi.md#list_task_graph_logs) | **GET** /v1/taskgraphs/logs | 
 *TaskGraphLogsApi* | [**report_client_node**](docs/TaskGraphLogsApi.md#report_client_node) | **POST** /v1/taskgraphs/{namespace}/logs/{id}/report_client_node | 
 *TaskGraphLogsApi* | [**resubmit_task_graph_execution**](docs/TaskGraphLogsApi.md#resubmit_task_graph_execution) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/resubmit | 
-*TaskGraphLogsApi* | [**stop_task_graph**](docs/TaskGraphLogsApi.md#stop_task_graph) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/stop | 
+*TaskGraphLogsApi* | [**retry_task_graph_execution**](docs/TaskGraphLogsApi.md#retry_task_graph_execution) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/retry | 
+*TaskGraphLogsApi* | [**stop_task_graph_execution**](docs/TaskGraphLogsApi.md#stop_task_graph_execution) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/stop | 
 *TaskGraphLogsApi* | [**submit_task_graph**](docs/TaskGraphLogsApi.md#submit_task_graph) | **POST** /v1/taskgraphs/{namespace}/graphs/{id}/submit | 
 *TaskGraphLogsApi* | [**update_task_graph_log**](docs/TaskGraphLogsApi.md#update_task_graph_log) | **PATCH** /v1/taskgraphs/{namespace}/logs/{id} | 
 *TaskGraphsApi* | [**create_task_graph**](docs/TaskGraphsApi.md#create_task_graph) | **POST** /v1/taskgraphs/{namespace}/graphs | 
@@ -388,6 +387,7 @@ Class | Method | HTTP request | Description
  - [TaskGraphNode](docs/TaskGraphNode.md)
  - [TaskGraphNodeMetadata](docs/TaskGraphNodeMetadata.md)
  - [TaskGraphSharing](docs/TaskGraphSharing.md)
+ - [TaskGraphType](docs/TaskGraphType.md)
  - [TaskGraphs](docs/TaskGraphs.md)
  - [TileDBConfig](docs/TileDBConfig.md)
  - [Token](docs/Token.md)

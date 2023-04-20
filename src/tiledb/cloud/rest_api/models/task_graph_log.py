@@ -47,6 +47,8 @@ class TaskGraphLog(object):
         "execution_time": "str",
         "status_count": "dict(str, float)",
         "nodes": "list[TaskGraphNodeMetadata]",
+        "task_graph_type": "TaskGraphType",
+        "task_graph_id": "str",
     }
 
     attribute_map = {
@@ -64,6 +66,8 @@ class TaskGraphLog(object):
         "execution_time": "execution_time",
         "status_count": "status_count",
         "nodes": "nodes",
+        "task_graph_type": "task_graph_type",
+        "task_graph_id": "task_graph_id",
     }
 
     def __init__(
@@ -82,6 +86,8 @@ class TaskGraphLog(object):
         execution_time=None,
         status_count=None,
         nodes=None,
+        task_graph_type=None,
+        task_graph_id=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """TaskGraphLog - a model defined in OpenAPI"""  # noqa: E501
@@ -103,6 +109,8 @@ class TaskGraphLog(object):
         self._execution_time = None
         self._status_count = None
         self._nodes = None
+        self._task_graph_type = None
+        self._task_graph_id = None
         self.discriminator = None
 
         if uuid is not None:
@@ -128,6 +136,10 @@ class TaskGraphLog(object):
             self.status_count = status_count
         if nodes is not None:
             self.nodes = nodes
+        if task_graph_type is not None:
+            self.task_graph_type = task_graph_type
+        if task_graph_id is not None:
+            self.task_graph_id = task_graph_id
 
     @property
     def uuid(self):
@@ -448,6 +460,50 @@ class TaskGraphLog(object):
         """
 
         self._nodes = nodes
+
+    @property
+    def task_graph_type(self):
+        """Gets the task_graph_type of this TaskGraphLog.  # noqa: E501
+
+
+        :return: The task_graph_type of this TaskGraphLog.  # noqa: E501
+        :rtype: TaskGraphType
+        """
+        return self._task_graph_type
+
+    @task_graph_type.setter
+    def task_graph_type(self, task_graph_type):
+        """Sets the task_graph_type of this TaskGraphLog.
+
+
+        :param task_graph_type: The task_graph_type of this TaskGraphLog.  # noqa: E501
+        :type: TaskGraphType
+        """
+
+        self._task_graph_type = task_graph_type
+
+    @property
+    def task_graph_id(self):
+        """Gets the task_graph_id of this TaskGraphLog.  # noqa: E501
+
+        The UUID of the task graph.  # noqa: E501
+
+        :return: The task_graph_id of this TaskGraphLog.  # noqa: E501
+        :rtype: str
+        """
+        return self._task_graph_id
+
+    @task_graph_id.setter
+    def task_graph_id(self, task_graph_id):
+        """Sets the task_graph_id of this TaskGraphLog.
+
+        The UUID of the task graph.  # noqa: E501
+
+        :param task_graph_id: The task_graph_id of this TaskGraphLog.  # noqa: E501
+        :type: str
+        """
+
+        self._task_graph_id = task_graph_id
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **parallelism** | **int** | Parallelism limits the max total parallel pods that can execute at the same time in a workflow.  | [optional] 
 **retry_strategy** | [**RetryStrategy**](RetryStrategy.md) |  | [optional] 
 **deadline** | **int** | Duration in seconds relative to the workflow start time which the workflow is allowed to run before it gets terminated.  | [optional] 
+**task_graph_type** | [**TaskGraphType**](TaskGraphType.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

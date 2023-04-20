@@ -66,6 +66,7 @@ class TestTaskGraphLogsData(unittest.TestCase):
                                 name="0",
                                 depends_on=["0"],
                                 run_location="server",
+                                status_message="0",
                                 executions=[
                                     tiledb.cloud.rest_api.models.array_task.ArrayTask(
                                         id="0",
@@ -181,6 +182,8 @@ class TestTaskGraphLogsData(unittest.TestCase):
                                 ],
                             )
                         ],
+                        task_graph_type="batch",
+                        task_graph_id="0",
                     )
                 ],
                 pagination_metadata=tiledb.cloud.rest_api.models.pagination_metadata.PaginationMetadata(

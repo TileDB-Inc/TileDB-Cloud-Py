@@ -50,8 +50,12 @@ class TestTaskGraphLogsApi(unittest.TestCase):
         """Test case for resubmit_task_graph_execution"""
         pass
 
-    def test_stop_task_graph(self):
-        """Test case for stop_task_graph"""
+    def test_retry_task_graph_execution(self):
+        """Test case for retry_task_graph_execution"""
+        pass
+
+    def test_stop_task_graph_execution(self):
+        """Test case for stop_task_graph_execution"""
         pass
 
     def test_submit_task_graph(self):

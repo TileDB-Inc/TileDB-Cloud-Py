@@ -160,6 +160,7 @@ from tiledb.cloud.rest_api.models.task_graph_logs_data import TaskGraphLogsData
 from tiledb.cloud.rest_api.models.task_graph_node import TaskGraphNode
 from tiledb.cloud.rest_api.models.task_graph_node_metadata import TaskGraphNodeMetadata
 from tiledb.cloud.rest_api.models.task_graph_sharing import TaskGraphSharing
+from tiledb.cloud.rest_api.models.task_graph_type import TaskGraphType
 from tiledb.cloud.rest_api.models.task_graphs import TaskGraphs
 from tiledb.cloud.rest_api.models.tg_input_node_data import TGInputNodeData
 from tiledb.cloud.rest_api.models.tgsql_node_data import TGSQLNodeData
