@@ -143,7 +143,6 @@ class ApiClient(object):
         _request_timeout=None,
         _host=None,
     ):
-
         config = self.configuration
 
         # header parameters
