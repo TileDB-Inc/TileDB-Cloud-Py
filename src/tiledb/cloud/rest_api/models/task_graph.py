@@ -42,6 +42,7 @@ class TaskGraph(object):
         "parallelism": "int",
         "retry_strategy": "RetryStrategy",
         "deadline": "int",
+        "task_graph_type": "TaskGraphType",
     }
 
     attribute_map = {
@@ -54,6 +55,7 @@ class TaskGraph(object):
         "parallelism": "parallelism",
         "retry_strategy": "retry_strategy",
         "deadline": "deadline",
+        "task_graph_type": "task_graph_type",
     }
 
     def __init__(
@@ -67,6 +69,7 @@ class TaskGraph(object):
         parallelism=None,
         retry_strategy=None,
         deadline=None,
+        task_graph_type=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """TaskGraph - a model defined in OpenAPI"""  # noqa: E501
@@ -83,6 +86,7 @@ class TaskGraph(object):
         self._parallelism = None
         self._retry_strategy = None
         self._deadline = None
+        self._task_graph_type = None
         self.discriminator = None
 
         if uuid is not None:
@@ -101,6 +105,8 @@ class TaskGraph(object):
         if retry_strategy is not None:
             self.retry_strategy = retry_strategy
         self.deadline = deadline
+        if task_graph_type is not None:
+            self.task_graph_type = task_graph_type
 
     @property
     def uuid(self):
@@ -306,6 +312,27 @@ class TaskGraph(object):
         """
 
         self._deadline = deadline
+
+    @property
+    def task_graph_type(self):
+        """Gets the task_graph_type of this TaskGraph.  # noqa: E501
+
+
+        :return: The task_graph_type of this TaskGraph.  # noqa: E501
+        :rtype: TaskGraphType
+        """
+        return self._task_graph_type
+
+    @task_graph_type.setter
+    def task_graph_type(self, task_graph_type):
+        """Sets the task_graph_type of this TaskGraph.
+
+
+        :param task_graph_type: The task_graph_type of this TaskGraph.  # noqa: E501
+        :type: TaskGraphType
+        """
+
+        self._task_graph_type = task_graph_type
 
     def to_dict(self):
         """Returns the model properties as a dict"""

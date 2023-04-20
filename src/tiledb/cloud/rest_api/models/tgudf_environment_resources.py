@@ -32,12 +32,12 @@ class TGUDFEnvironmentResources(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"cpu": "str", "memory": "str"}
+    openapi_types = {"cpu": "str", "memory": "str", "gpu": "int"}
 
-    attribute_map = {"cpu": "cpu", "memory": "memory"}
+    attribute_map = {"cpu": "cpu", "memory": "memory", "gpu": "gpu"}
 
     def __init__(
-        self, cpu=None, memory=None, local_vars_configuration=None
+        self, cpu=None, memory=None, gpu=None, local_vars_configuration=None
     ):  # noqa: E501
         """TGUDFEnvironmentResources - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
@@ -46,12 +46,15 @@ class TGUDFEnvironmentResources(object):
 
         self._cpu = None
         self._memory = None
+        self._gpu = None
         self.discriminator = None
 
         if cpu is not None:
             self.cpu = cpu
         if memory is not None:
             self.memory = memory
+        if gpu is not None:
+            self.gpu = gpu
 
     @property
     def cpu(self):
@@ -94,6 +97,27 @@ class TGUDFEnvironmentResources(object):
         """
 
         self._memory = memory
+
+    @property
+    def gpu(self):
+        """Gets the gpu of this TGUDFEnvironmentResources.  # noqa: E501
+
+
+        :return: The gpu of this TGUDFEnvironmentResources.  # noqa: E501
+        :rtype: int
+        """
+        return self._gpu
+
+    @gpu.setter
+    def gpu(self, gpu):
+        """Sets the gpu of this TGUDFEnvironmentResources.
+
+
+        :param gpu: The gpu of this TGUDFEnvironmentResources.  # noqa: E501
+        :type: int
+        """
+
+        self._gpu = gpu
 
     def to_dict(self):
         """Returns the model properties as a dict"""

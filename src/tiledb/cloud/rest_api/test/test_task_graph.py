@@ -83,6 +83,7 @@ class TestTaskGraph(unittest.TestCase):
                                 resources=tiledb.cloud.rest_api.models.tgudf_environment_resources.TGUDFEnvironment_resources(
                                     cpu="500m",
                                     memory="8Gi",
+                                    gpu=1,
                                 ),
                                 run_client_side=True,
                             ),
@@ -119,6 +120,7 @@ class TestTaskGraph(unittest.TestCase):
                     retry_policy="Always",
                 ),
                 deadline=56,
+                task_graph_type="batch",
             )
         else:
             return TaskGraph()

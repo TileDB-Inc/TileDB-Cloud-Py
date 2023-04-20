@@ -38,6 +38,7 @@ class TaskGraphNodeMetadata(object):
         "depends_on": "list[str]",
         "run_location": "TaskGraphLogRunLocation",
         "status": "ArrayTaskStatus",
+        "status_message": "str",
         "executions": "list[ArrayTask]",
     }
 
@@ -47,6 +48,7 @@ class TaskGraphNodeMetadata(object):
         "depends_on": "depends_on",
         "run_location": "run_location",
         "status": "status",
+        "status_message": "status_message",
         "executions": "executions",
     }
 
@@ -57,6 +59,7 @@ class TaskGraphNodeMetadata(object):
         depends_on=None,
         run_location=None,
         status=None,
+        status_message=None,
         executions=None,
         local_vars_configuration=None,
     ):  # noqa: E501
@@ -70,6 +73,7 @@ class TaskGraphNodeMetadata(object):
         self._depends_on = None
         self._run_location = None
         self._status = None
+        self._status_message = None
         self._executions = None
         self.discriminator = None
 
@@ -83,6 +87,7 @@ class TaskGraphNodeMetadata(object):
             self.run_location = run_location
         if status is not None:
             self.status = status
+        self.status_message = status_message
         if executions is not None:
             self.executions = executions
 
@@ -196,6 +201,29 @@ class TaskGraphNodeMetadata(object):
         """
 
         self._status = status
+
+    @property
+    def status_message(self):
+        """Gets the status_message of this TaskGraphNodeMetadata.  # noqa: E501
+
+        The reason the array task status is in the state  # noqa: E501
+
+        :return: The status_message of this TaskGraphNodeMetadata.  # noqa: E501
+        :rtype: str
+        """
+        return self._status_message
+
+    @status_message.setter
+    def status_message(self, status_message):
+        """Sets the status_message of this TaskGraphNodeMetadata.
+
+        The reason the array task status is in the state  # noqa: E501
+
+        :param status_message: The status_message of this TaskGraphNodeMetadata.  # noqa: E501
+        :type: str
+        """
+
+        self._status_message = status_message
 
     @property
     def executions(self):

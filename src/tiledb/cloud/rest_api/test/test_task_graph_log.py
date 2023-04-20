@@ -63,6 +63,7 @@ class TestTaskGraphLog(unittest.TestCase):
                         depends_on=["0"],
                         run_location="server",
                         status="QUEUED",
+                        status_message="0",
                         executions=[
                             tiledb.cloud.rest_api.models.array_task.ArrayTask(
                                 id="0",
@@ -175,6 +176,8 @@ class TestTaskGraphLog(unittest.TestCase):
                         ],
                     )
                 ],
+                task_graph_type="batch",
+                task_graph_id="0",
             )
         else:
             return TaskGraphLog()

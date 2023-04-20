@@ -48,16 +48,8 @@ class TestRegisteredTaskGraphsApi(unittest.TestCase):
         """Test case for register_registered_task_graph"""
         pass
 
-    def test_resubmit_task_graph_execution(self):
-        """Test case for resubmit_task_graph_execution"""
-        pass
-
     def test_share_registered_task_graph(self):
         """Test case for share_registered_task_graph"""
-        pass
-
-    def test_stop_task_graph(self):
-        """Test case for stop_task_graph"""
         pass
 
     def test_update_registered_task_graph(self):

@@ -16,14 +16,12 @@ import datetime
 import unittest
 
 import tiledb.cloud.rest_api
-from tiledb.cloud.rest_api.models.tgudf_environment_resources import (  # noqa: E501
-    TGUDFEnvironmentResources,
-)
+from tiledb.cloud.rest_api.models.task_graph_type import TaskGraphType  # noqa: E501
 from tiledb.cloud.rest_api.rest import ApiException
 
 
-class TestTGUDFEnvironmentResources(unittest.TestCase):
-    """TGUDFEnvironmentResources unit test stubs"""
+class TestTaskGraphType(unittest.TestCase):
+    """TaskGraphType unit test stubs"""
 
     def setUp(self):
         pass
@@ -32,18 +30,18 @@ class TestTGUDFEnvironmentResources(unittest.TestCase):
         pass
 
     def make_instance(self, include_optional):
-        """Test TGUDFEnvironmentResources
+        """Test TaskGraphType
         include_option is a boolean, when False only required
         params are included, when True both required and
         optional params are included"""
-        # model = tiledb.cloud.rest_api.models.tgudf_environment_resources.TGUDFEnvironmentResources()  # noqa: E501
+        # model = tiledb.cloud.rest_api.models.task_graph_type.TaskGraphType()  # noqa: E501
         if include_optional:
-            return TGUDFEnvironmentResources(cpu="500m", memory="8Gi", gpu=1)
+            return TaskGraphType()
         else:
-            return TGUDFEnvironmentResources()
+            return TaskGraphType()
 
-    def testTGUDFEnvironmentResources(self):
-        """Test TGUDFEnvironmentResources"""
+    def testTaskGraphType(self):
+        """Test TaskGraphType"""
         inst_req_only = self.make_instance(include_optional=False)
         inst_req_and_optional = self.make_instance(include_optional=True)
 
