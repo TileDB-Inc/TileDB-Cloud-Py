@@ -48,7 +48,7 @@ class ArrayApi(object):
         :param str array: name/uri of array that is url-encoded (required)
         :param int start: Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
         :param int end: End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-        :param str event_types: Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
+        :param str event_types: Refer to ActivityEventType for possible values
         :param str task_id: Array task ID To filter activity to
         :param bool has_task_id: Excludes activity log results that do not contain an array task UUID
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -83,7 +83,7 @@ class ArrayApi(object):
         :param str array: name/uri of array that is url-encoded (required)
         :param int start: Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
         :param int end: End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-        :param str event_types: Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated
+        :param str event_types: Refer to ActivityEventType for possible values
         :param str task_id: Array task ID To filter activity to
         :param bool has_task_id: Excludes activity log results that do not contain an array task UUID
         :param _return_http_data_only: response data without head status code
@@ -437,6 +437,9 @@ class ArrayApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param list[str] file_type: file_type to search for, more than one can be included
+        :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
+        :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -463,6 +466,9 @@ class ArrayApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param list[str] file_type: file_type to search for, more than one can be included
+        :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
+        :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -479,7 +485,7 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = []
+        all_params = ["file_type", "exclude_file_type", "file_property"]
         all_params.extend(
             [
                 "async_req",
@@ -503,6 +509,30 @@ class ArrayApi(object):
         path_params = {}
 
         query_params = []
+        if (
+            "file_type" in local_var_params
+            and local_var_params["file_type"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("file_type", local_var_params["file_type"])
+            )  # noqa: E501
+            collection_formats["file_type"] = "multi"  # noqa: E501
+        if (
+            "exclude_file_type" in local_var_params
+            and local_var_params["exclude_file_type"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("exclude_file_type", local_var_params["exclude_file_type"])
+            )  # noqa: E501
+            collection_formats["exclude_file_type"] = "multi"  # noqa: E501
+        if (
+            "file_property" in local_var_params
+            and local_var_params["file_property"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("file_property", local_var_params["file_property"])
+            )  # noqa: E501
+            collection_formats["file_property"] = "multi"  # noqa: E501
 
         header_params = {}
 
@@ -760,6 +790,9 @@ class ArrayApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param list[str] file_type: file_type to search for, more than one can be included
+        :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
+        :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -786,6 +819,9 @@ class ArrayApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param list[str] file_type: file_type to search for, more than one can be included
+        :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
+        :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -802,7 +838,7 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = []
+        all_params = ["file_type", "exclude_file_type", "file_property"]
         all_params.extend(
             [
                 "async_req",
@@ -826,6 +862,30 @@ class ArrayApi(object):
         path_params = {}
 
         query_params = []
+        if (
+            "file_type" in local_var_params
+            and local_var_params["file_type"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("file_type", local_var_params["file_type"])
+            )  # noqa: E501
+            collection_formats["file_type"] = "multi"  # noqa: E501
+        if (
+            "exclude_file_type" in local_var_params
+            and local_var_params["exclude_file_type"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("exclude_file_type", local_var_params["exclude_file_type"])
+            )  # noqa: E501
+            collection_formats["exclude_file_type"] = "multi"  # noqa: E501
+        if (
+            "file_property" in local_var_params
+            and local_var_params["file_property"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("file_property", local_var_params["file_property"])
+            )  # noqa: E501
+            collection_formats["file_property"] = "multi"  # noqa: E501
 
         header_params = {}
 
@@ -1094,6 +1154,10 @@ class ArrayApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param list[str] file_type: file_type to search for, more than one can be included
+        :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
+        :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+        :param list[str] shared_to: namespaces to filter results of where there groups were shared to
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1120,6 +1184,10 @@ class ArrayApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param list[str] file_type: file_type to search for, more than one can be included
+        :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
+        :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+        :param list[str] shared_to: namespaces to filter results of where there groups were shared to
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1136,7 +1204,7 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = []
+        all_params = ["file_type", "exclude_file_type", "file_property", "shared_to"]
         all_params.extend(
             [
                 "async_req",
@@ -1160,6 +1228,38 @@ class ArrayApi(object):
         path_params = {}
 
         query_params = []
+        if (
+            "file_type" in local_var_params
+            and local_var_params["file_type"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("file_type", local_var_params["file_type"])
+            )  # noqa: E501
+            collection_formats["file_type"] = "multi"  # noqa: E501
+        if (
+            "exclude_file_type" in local_var_params
+            and local_var_params["exclude_file_type"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("exclude_file_type", local_var_params["exclude_file_type"])
+            )  # noqa: E501
+            collection_formats["exclude_file_type"] = "multi"  # noqa: E501
+        if (
+            "file_property" in local_var_params
+            and local_var_params["file_property"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("file_property", local_var_params["file_property"])
+            )  # noqa: E501
+            collection_formats["file_property"] = "multi"  # noqa: E501
+        if (
+            "shared_to" in local_var_params
+            and local_var_params["shared_to"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("shared_to", local_var_params["shared_to"])
+            )  # noqa: E501
+            collection_formats["shared_to"] = "multi"  # noqa: E501
 
         header_params = {}
 
@@ -1349,20 +1449,20 @@ class ArrayApi(object):
         )
 
     def consolidate_array(
-        self, namespace, array, tiledb_config, **kwargs
+        self, namespace, array, consolidate_request, **kwargs
     ):  # noqa: E501
         """consolidate_array  # noqa: E501
 
         consolidate an array at a specified URI  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.consolidate_array(namespace, array, tiledb_config, async_req=True)
+        >>> thread = api.consolidate_array(namespace, array, consolidate_request, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
-        :param TileDBConfig tiledb_config: tiledb configuration (required)
+        :param ArrayConsolidationRequest consolidate_request: Consolidate Request (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1376,24 +1476,24 @@ class ArrayApi(object):
         """
         kwargs["_return_http_data_only"] = True
         return self.consolidate_array_with_http_info(
-            namespace, array, tiledb_config, **kwargs
+            namespace, array, consolidate_request, **kwargs
         )  # noqa: E501
 
     def consolidate_array_with_http_info(
-        self, namespace, array, tiledb_config, **kwargs
+        self, namespace, array, consolidate_request, **kwargs
     ):  # noqa: E501
         """consolidate_array  # noqa: E501
 
         consolidate an array at a specified URI  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.consolidate_array_with_http_info(namespace, array, tiledb_config, async_req=True)
+        >>> thread = api.consolidate_array_with_http_info(namespace, array, consolidate_request, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
-        :param TileDBConfig tiledb_config: tiledb configuration (required)
+        :param ArrayConsolidationRequest consolidate_request: Consolidate Request (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1410,7 +1510,7 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace", "array", "tiledb_config"]
+        all_params = ["namespace", "array", "consolidate_request"]
         all_params.extend(
             [
                 "async_req",
@@ -1444,13 +1544,13 @@ class ArrayApi(object):
             raise ApiValueError(
                 "Missing the required parameter `array` when calling `consolidate_array`"
             )  # noqa: E501
-        # verify the required parameter 'tiledb_config' is set
+        # verify the required parameter 'consolidate_request' is set
         if self.api_client.client_side_validation and (
-            "tiledb_config" not in local_var_params
-            or local_var_params["tiledb_config"] is None  # noqa: E501
+            "consolidate_request" not in local_var_params
+            or local_var_params["consolidate_request"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `tiledb_config` when calling `consolidate_array`"
+                "Missing the required parameter `consolidate_request` when calling `consolidate_array`"
             )  # noqa: E501
 
         collection_formats = {}
@@ -1469,8 +1569,8 @@ class ArrayApi(object):
         local_var_files = {}
 
         body_params = None
-        if "tiledb_config" in local_var_params:
-            body_params = local_var_params["tiledb_config"]
+        if "consolidate_request" in local_var_params:
+            body_params = local_var_params["consolidate_request"]
         # HTTP header `Accept`
         header_params["Accept"] = self.api_client.select_header_accept(
             ["application/json"]
@@ -1966,6 +2066,178 @@ class ArrayApi(object):
             post_params=form_params,
             files=local_var_files,
             response_type=None,  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
+
+    def fragment_info(
+        self, namespace, array, content_type, fragment_info_request, **kwargs
+    ):  # noqa: E501
+        """fragment_info  # noqa: E501
+
+        fetch an array's fragment info  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.fragment_info(namespace, array, content_type, fragment_info_request, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str array: name/uri of array that is url-encoded (required)
+        :param str content_type: Content Type of input and return mime (required)
+        :param FragmentInfoRequest fragment_info_request: ArraySchema being created (required)
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: FragmentInfo
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs["_return_http_data_only"] = True
+        return self.fragment_info_with_http_info(
+            namespace, array, content_type, fragment_info_request, **kwargs
+        )  # noqa: E501
+
+    def fragment_info_with_http_info(
+        self, namespace, array, content_type, fragment_info_request, **kwargs
+    ):  # noqa: E501
+        """fragment_info  # noqa: E501
+
+        fetch an array's fragment info  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.fragment_info_with_http_info(namespace, array, content_type, fragment_info_request, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str array: name/uri of array that is url-encoded (required)
+        :param str content_type: Content Type of input and return mime (required)
+        :param FragmentInfoRequest fragment_info_request: ArraySchema being created (required)
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: tuple(FragmentInfo, status_code(int), headers(HTTPHeaderDict))
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = ["namespace", "array", "content_type", "fragment_info_request"]
+        all_params.extend(
+            [
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params["kwargs"]):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method fragment_info" % key
+                )
+            local_var_params[key] = val
+        del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `fragment_info`"
+            )  # noqa: E501
+        # verify the required parameter 'array' is set
+        if self.api_client.client_side_validation and (
+            "array" not in local_var_params
+            or local_var_params["array"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `fragment_info`"
+            )  # noqa: E501
+        # verify the required parameter 'content_type' is set
+        if self.api_client.client_side_validation and (
+            "content_type" not in local_var_params
+            or local_var_params["content_type"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `content_type` when calling `fragment_info`"
+            )  # noqa: E501
+        # verify the required parameter 'fragment_info_request' is set
+        if self.api_client.client_side_validation and (
+            "fragment_info_request" not in local_var_params
+            or local_var_params["fragment_info_request"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `fragment_info_request` when calling `fragment_info`"
+            )  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+        if "content_type" in local_var_params:
+            header_params["Content-Type"] = local_var_params[
+                "content_type"
+            ]  # noqa: E501
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        if "fragment_info_request" in local_var_params:
+            body_params = local_var_params["fragment_info_request"]
+        # HTTP header `Accept`
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+
+        return self.api_client.call_api(
+            "/v1/arrays/{namespace}/{array}/fragment_info",
+            "POST",
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type="FragmentInfo",  # noqa: E501
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(
@@ -4570,19 +4842,19 @@ class ArrayApi(object):
             collection_formats=collection_formats,
         )
 
-    def vacuum_array(self, namespace, array, tiledb_config, **kwargs):  # noqa: E501
+    def vacuum_array(self, namespace, array, vaccum_request, **kwargs):  # noqa: E501
         """vacuum_array  # noqa: E501
 
         vacuum an array at a specified URI  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.vacuum_array(namespace, array, tiledb_config, async_req=True)
+        >>> thread = api.vacuum_array(namespace, array, vaccum_request, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
-        :param TileDBConfig tiledb_config: tiledb configuration (required)
+        :param ArrayVacuumRequest vaccum_request: Vaccum Request (required)
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -4596,24 +4868,24 @@ class ArrayApi(object):
         """
         kwargs["_return_http_data_only"] = True
         return self.vacuum_array_with_http_info(
-            namespace, array, tiledb_config, **kwargs
+            namespace, array, vaccum_request, **kwargs
         )  # noqa: E501
 
     def vacuum_array_with_http_info(
-        self, namespace, array, tiledb_config, **kwargs
+        self, namespace, array, vaccum_request, **kwargs
     ):  # noqa: E501
         """vacuum_array  # noqa: E501
 
         vacuum an array at a specified URI  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.vacuum_array_with_http_info(namespace, array, tiledb_config, async_req=True)
+        >>> thread = api.vacuum_array_with_http_info(namespace, array, vaccum_request, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
         :param str array: name/uri of array that is url-encoded (required)
-        :param TileDBConfig tiledb_config: tiledb configuration (required)
+        :param ArrayVacuumRequest vaccum_request: Vaccum Request (required)
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -4630,7 +4902,7 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace", "array", "tiledb_config"]
+        all_params = ["namespace", "array", "vaccum_request"]
         all_params.extend(
             [
                 "async_req",
@@ -4664,13 +4936,13 @@ class ArrayApi(object):
             raise ApiValueError(
                 "Missing the required parameter `array` when calling `vacuum_array`"
             )  # noqa: E501
-        # verify the required parameter 'tiledb_config' is set
+        # verify the required parameter 'vaccum_request' is set
         if self.api_client.client_side_validation and (
-            "tiledb_config" not in local_var_params
-            or local_var_params["tiledb_config"] is None  # noqa: E501
+            "vaccum_request" not in local_var_params
+            or local_var_params["vaccum_request"] is None  # noqa: E501
         ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `tiledb_config` when calling `vacuum_array`"
+                "Missing the required parameter `vaccum_request` when calling `vacuum_array`"
             )  # noqa: E501
 
         collection_formats = {}
@@ -4689,8 +4961,8 @@ class ArrayApi(object):
         local_var_files = {}
 
         body_params = None
-        if "tiledb_config" in local_var_params:
-            body_params = local_var_params["tiledb_config"]
+        if "vaccum_request" in local_var_params:
+            body_params = local_var_params["vaccum_request"]
         # HTTP header `Accept`
         header_params["Accept"] = self.api_client.select_header_accept(
             ["application/json"]

@@ -68,6 +68,7 @@ class TestTaskGraphLog(unittest.TestCase):
                             tiledb.cloud.rest_api.models.array_task.ArrayTask(
                                 id="0",
                                 name="subarray-multiplier",
+                                username="demo",
                                 description="Return attr a1 in the subarray bounded by coordinates and multiply attr1 by 2",
                                 array_metadata=tiledb.cloud.rest_api.models.array_info.ArrayInfo(
                                     id="00000000-0000-0000-0000-000000000000",

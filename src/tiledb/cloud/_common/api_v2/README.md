@@ -71,7 +71,7 @@ with tiledb.cloud._common.api_v2.ApiClient(configuration) as api_client:
 array = 'array_example' # str | name/uri of array that is url-encoded
 start = 56 # int | Start time of window of fetch logs, unix epoch in seconds (default: seven days ago) (optional)
 end = 56 # int | End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) (optional)
-event_types = ['event_types_example'] # list[str] | Event values can be one or more of the following read, write, create, delete, register, deregister, comma separated (optional)
+event_types = ['event_types_example'] # list[str] | Refer to ActivityEventType for possible values (optional)
 task_id = 'task_id_example' # str | Array task id To filter activity to (optional)
 has_task_id = True # bool | Excludes activity log results that does not contain an array task uuid (optional)
 page = 56 # int | pagination offset (optional)
@@ -92,6 +92,7 @@ All URIs are relative to *http://localhost*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *ArrayApi* | [**array_activity_log**](docs/ArrayApi.md#array_activity_log) | **GET** /v2/arrays/{namespace}/{array}/activity | 
+*ArrayApi* | [**get_array**](docs/ArrayApi.md#get_array) | **POST** /v2/arrays/{namespace}/{array} | 
 *FilesApi* | [**handle_upload_file**](docs/FilesApi.md#handle_upload_file) | **POST** /v2/files/{namespace}/{array}/upload | 
 *GroupsApi* | [**create_group**](docs/GroupsApi.md#create_group) | **POST** /v2/groups/{group_namespace} | 
 *GroupsApi* | [**deregister_group**](docs/GroupsApi.md#deregister_group) | **DELETE** /v2/groups/{group_namespace}/{group_name} | 
@@ -126,14 +127,34 @@ Class | Method | HTTP request | Description
  - [Array](docs/Array.md)
  - [ArrayActivityLog](docs/ArrayActivityLog.md)
  - [ArrayActivityLogData](docs/ArrayActivityLogData.md)
+ - [ArrayDirectory](docs/ArrayDirectory.md)
+ - [ArrayFetch](docs/ArrayFetch.md)
+ - [ArrayMetadata](docs/ArrayMetadata.md)
+ - [ArrayMetadataEntry](docs/ArrayMetadataEntry.md)
+ - [ArraySchema](docs/ArraySchema.md)
+ - [ArraySchemaEntry](docs/ArraySchemaEntry.md)
+ - [ArraySchemaMap](docs/ArraySchemaMap.md)
+ - [ArrayType](docs/ArrayType.md)
+ - [Attribute](docs/Attribute.md)
  - [AttributeBufferHeader](docs/AttributeBufferHeader.md)
  - [AttributeBufferSize](docs/AttributeBufferSize.md)
  - [AzureCredential](docs/AzureCredential.md)
  - [CloudProvider](docs/CloudProvider.md)
  - [Datatype](docs/Datatype.md)
+ - [DeleteAndUpdateTileLocation](docs/DeleteAndUpdateTileLocation.md)
+ - [Dimension](docs/Dimension.md)
+ - [DimensionTileExtent](docs/DimensionTileExtent.md)
+ - [Domain](docs/Domain.md)
  - [DomainArray](docs/DomainArray.md)
  - [Error](docs/Error.md)
  - [FileUploaded](docs/FileUploaded.md)
+ - [Filter](docs/Filter.md)
+ - [FilterData](docs/FilterData.md)
+ - [FilterPipeline](docs/FilterPipeline.md)
+ - [FilterType](docs/FilterType.md)
+ - [FloatScaleConfig](docs/FloatScaleConfig.md)
+ - [FragmentMetadata](docs/FragmentMetadata.md)
+ - [GenericTileOffsets](docs/GenericTileOffsets.md)
  - [GroupContentsChangesRequest](docs/GroupContentsChangesRequest.md)
  - [GroupContentsChangesRequestGroupChanges](docs/GroupContentsChangesRequestGroupChanges.md)
  - [GroupContentsRetrievalRequest](docs/GroupContentsRetrievalRequest.md)
@@ -150,6 +171,8 @@ Class | Method | HTTP request | Description
  - [Layout](docs/Layout.md)
  - [Metadata](docs/Metadata.md)
  - [MetadataEntry](docs/MetadataEntry.md)
+ - [NonEmptyDomain](docs/NonEmptyDomain.md)
+ - [NonEmptyDomainList](docs/NonEmptyDomainList.md)
  - [PaginationMetadata](docs/PaginationMetadata.md)
  - [Query](docs/Query.md)
  - [QueryReader](docs/QueryReader.md)
@@ -163,6 +186,7 @@ Class | Method | HTTP request | Description
  - [SubarrayRanges](docs/SubarrayRanges.md)
  - [TileDBConfig](docs/TileDBConfig.md)
  - [TileDBConfigEntries](docs/TileDBConfigEntries.md)
+ - [TimestampedURI](docs/TimestampedURI.md)
  - [Writer](docs/Writer.md)
 
 

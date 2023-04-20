@@ -42,6 +42,10 @@ class TestInvitationApi(unittest.TestCase):
         """Test case for cancel_share_array_by_invite"""
         pass
 
+    def test_cancel_share_group_by_invite(self):
+        """Test case for cancel_share_group_by_invite"""
+        pass
+
     def test_fetch_invitations(self):
         """Test case for fetch_invitations"""
         pass
@@ -52,6 +56,10 @@ class TestInvitationApi(unittest.TestCase):
 
     def test_share_array_by_invite(self):
         """Test case for share_array_by_invite"""
+        pass
+
+    def test_share_group_by_invite(self):
+        """Test case for share_group_by_invite"""
         pass
 
 

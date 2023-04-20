@@ -32,42 +32,42 @@ class TileDBConfig(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"configs": "dict(str, str)"}
+    openapi_types = {"entries": "list[TileDBConfigEntries]"}
 
-    attribute_map = {"configs": "configs"}
+    attribute_map = {"entries": "entries"}
 
-    def __init__(self, configs=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, entries=None, local_vars_configuration=None):  # noqa: E501
         """TileDBConfig - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._configs = None
+        self._entries = None
         self.discriminator = None
 
-        if configs is not None:
-            self.configs = configs
+        if entries is not None:
+            self.entries = entries
 
     @property
-    def configs(self):
-        """Gets the configs of this TileDBConfig.  # noqa: E501
+    def entries(self):
+        """Gets the entries of this TileDBConfig.  # noqa: E501
 
 
-        :return: The configs of this TileDBConfig.  # noqa: E501
-        :rtype: dict(str, str)
+        :return: The entries of this TileDBConfig.  # noqa: E501
+        :rtype: list[TileDBConfigEntries]
         """
-        return self._configs
+        return self._entries
 
-    @configs.setter
-    def configs(self, configs):
-        """Sets the configs of this TileDBConfig.
+    @entries.setter
+    def entries(self, entries):
+        """Sets the entries of this TileDBConfig.
 
 
-        :param configs: The configs of this TileDBConfig.  # noqa: E501
-        :type: dict(str, str)
+        :param entries: The entries of this TileDBConfig.  # noqa: E501
+        :type: list[TileDBConfigEntries]
         """
 
-        self._configs = configs
+        self._entries = entries
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -76,6 +76,10 @@ class TestArrayApi(unittest.TestCase):
         """Test case for deregister_array"""
         pass
 
+    def test_fragment_info(self):
+        """Test case for fragment_info"""
+        pass
+
     def test_get_activity_log_by_id(self):
         """Test case for get_activity_log_by_id"""
         pass

@@ -37,7 +37,7 @@ class Token(object):
         "name": "str",
         "issued_at": "datetime",
         "expires_at": "datetime",
-        "scope": "str",
+        "scope": "list[TokenScope]",
     }
 
     attribute_map = {
@@ -54,7 +54,7 @@ class Token(object):
         name=None,
         issued_at=None,
         expires_at=None,
-        scope="*",
+        scope=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """Token - a model defined in OpenAPI"""  # noqa: E501
@@ -179,7 +179,7 @@ class Token(object):
         Optional scope to limit token, defaults to all permissions, current supported values are password_reset or *  # noqa: E501
 
         :return: The scope of this Token.  # noqa: E501
-        :rtype: str
+        :rtype: list[TokenScope]
         """
         return self._scope
 
@@ -190,7 +190,7 @@ class Token(object):
         Optional scope to limit token, defaults to all permissions, current supported values are password_reset or *  # noqa: E501
 
         :param scope: The scope of this Token.  # noqa: E501
-        :type: str
+        :type: list[TokenScope]
         """
 
         self._scope = scope

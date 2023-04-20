@@ -33,6 +33,8 @@ class FilePropertyName(object):
     CODE_BLOCK = "code_block"
     UDF_LANGUAGE = "udf_language"
     IS_DASHBOARD = "is_dashboard"
+    VERSION_PRUNING_LIMIT = "version_pruning_limit"
+    VERSION_PRUNING_ENABLED = "version_pruning_enabled"
 
     allowable_values = [
         IMAGE,
@@ -40,6 +42,8 @@ class FilePropertyName(object):
         CODE_BLOCK,
         UDF_LANGUAGE,
         IS_DASHBOARD,
+        VERSION_PRUNING_LIMIT,
+        VERSION_PRUNING_ENABLED,
     ]  # noqa: E501
 
     """

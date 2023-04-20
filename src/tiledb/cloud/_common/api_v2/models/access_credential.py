@@ -38,6 +38,7 @@ class AccessCredential(object):
         "provider_default": "bool",
         "created_at": "datetime",
         "updated_at": "datetime",
+        "allowed_in_tasks": "bool",
         "credential": "AccessCredentialCredential",
         "role": "AccessCredentialRole",
     }
@@ -48,6 +49,7 @@ class AccessCredential(object):
         "provider_default": "provider_default",
         "created_at": "created_at",
         "updated_at": "updated_at",
+        "allowed_in_tasks": "allowed_in_tasks",
         "credential": "credential",
         "role": "role",
     }
@@ -59,6 +61,7 @@ class AccessCredential(object):
         provider_default=None,
         created_at=None,
         updated_at=None,
+        allowed_in_tasks=None,
         credential=None,
         role=None,
         local_vars_configuration=None,
@@ -73,6 +76,7 @@ class AccessCredential(object):
         self._provider_default = None
         self._created_at = None
         self._updated_at = None
+        self._allowed_in_tasks = None
         self._credential = None
         self._role = None
         self.discriminator = None
@@ -86,6 +90,7 @@ class AccessCredential(object):
             self.created_at = created_at
         if updated_at is not None:
             self.updated_at = updated_at
+        self.allowed_in_tasks = allowed_in_tasks
         if credential is not None:
             self.credential = credential
         if role is not None:
@@ -203,6 +208,29 @@ class AccessCredential(object):
         """
 
         self._updated_at = updated_at
+
+    @property
+    def allowed_in_tasks(self):
+        """Gets the allowed_in_tasks of this AccessCredential.  # noqa: E501
+
+        Is this credential allowed to be used in tasks  # noqa: E501
+
+        :return: The allowed_in_tasks of this AccessCredential.  # noqa: E501
+        :rtype: bool
+        """
+        return self._allowed_in_tasks
+
+    @allowed_in_tasks.setter
+    def allowed_in_tasks(self, allowed_in_tasks):
+        """Sets the allowed_in_tasks of this AccessCredential.
+
+        Is this credential allowed to be used in tasks  # noqa: E501
+
+        :param allowed_in_tasks: The allowed_in_tasks of this AccessCredential.  # noqa: E501
+        :type: bool
+        """
+
+        self._allowed_in_tasks = allowed_in_tasks
 
     @property
     def credential(self):

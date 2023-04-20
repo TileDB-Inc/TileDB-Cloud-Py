@@ -19,6 +19,9 @@ from tiledb.cloud.rest_api.models.array_actions import ArrayActions
 from tiledb.cloud.rest_api.models.array_activity_log import ArrayActivityLog
 from tiledb.cloud.rest_api.models.array_browser_data import ArrayBrowserData
 from tiledb.cloud.rest_api.models.array_browser_sidebar import ArrayBrowserSidebar
+from tiledb.cloud.rest_api.models.array_consolidation_request import (
+    ArrayConsolidationRequest,
+)
 from tiledb.cloud.rest_api.models.array_end_timestamp_data import ArrayEndTimestampData
 from tiledb.cloud.rest_api.models.array_favorite import ArrayFavorite
 from tiledb.cloud.rest_api.models.array_favorites_data import ArrayFavoritesData
@@ -38,6 +41,7 @@ from tiledb.cloud.rest_api.models.array_task_log import ArrayTaskLog
 from tiledb.cloud.rest_api.models.array_task_status import ArrayTaskStatus
 from tiledb.cloud.rest_api.models.array_task_type import ArrayTaskType
 from tiledb.cloud.rest_api.models.array_type import ArrayType
+from tiledb.cloud.rest_api.models.array_vacuum_request import ArrayVacuumRequest
 from tiledb.cloud.rest_api.models.asset_locations import AssetLocations
 from tiledb.cloud.rest_api.models.attribute import Attribute
 from tiledb.cloud.rest_api.models.attribute_buffer_header import AttributeBufferHeader
@@ -65,6 +69,9 @@ from tiledb.cloud.rest_api.models.filter_data import FilterData
 from tiledb.cloud.rest_api.models.filter_option import FilterOption
 from tiledb.cloud.rest_api.models.filter_pipeline import FilterPipeline
 from tiledb.cloud.rest_api.models.filter_type import FilterType
+from tiledb.cloud.rest_api.models.fragment_info import FragmentInfo
+from tiledb.cloud.rest_api.models.fragment_info_request import FragmentInfoRequest
+from tiledb.cloud.rest_api.models.fragment_metadata import FragmentMetadata
 from tiledb.cloud.rest_api.models.generic_udf import GenericUDF
 from tiledb.cloud.rest_api.models.group_actions import GroupActions
 from tiledb.cloud.rest_api.models.group_browser_data import GroupBrowserData
@@ -93,6 +100,9 @@ from tiledb.cloud.rest_api.models.invitation_array_share_email import (
     InvitationArrayShareEmail,
 )
 from tiledb.cloud.rest_api.models.invitation_data import InvitationData
+from tiledb.cloud.rest_api.models.invitation_group_share_email import (
+    InvitationGroupShareEmail,
+)
 from tiledb.cloud.rest_api.models.invitation_organization_join_email import (
     InvitationOrganizationJoinEmail,
 )
@@ -133,6 +143,7 @@ from tiledb.cloud.rest_api.models.registered_task_graph import RegisteredTaskGra
 from tiledb.cloud.rest_api.models.result_format import ResultFormat
 from tiledb.cloud.rest_api.models.retry_policy import RetryPolicy
 from tiledb.cloud.rest_api.models.retry_strategy import RetryStrategy
+from tiledb.cloud.rest_api.models.single_fragment_info import SingleFragmentInfo
 from tiledb.cloud.rest_api.models.sql_parameters import SQLParameters
 from tiledb.cloud.rest_api.models.sso_provider import SSOProvider
 from tiledb.cloud.rest_api.models.storage_location import StorageLocation
@@ -162,7 +173,9 @@ from tiledb.cloud.rest_api.models.task_graph_node_metadata import TaskGraphNodeM
 from tiledb.cloud.rest_api.models.task_graph_sharing import TaskGraphSharing
 from tiledb.cloud.rest_api.models.task_graph_type import TaskGraphType
 from tiledb.cloud.rest_api.models.task_graphs import TaskGraphs
+from tiledb.cloud.rest_api.models.tg_array_node_data import TGArrayNodeData
 from tiledb.cloud.rest_api.models.tg_input_node_data import TGInputNodeData
+from tiledb.cloud.rest_api.models.tg_query_ranges import TGQueryRanges
 from tiledb.cloud.rest_api.models.tgsql_node_data import TGSQLNodeData
 from tiledb.cloud.rest_api.models.tgudf_argument import TGUDFArgument
 from tiledb.cloud.rest_api.models.tgudf_environment import TGUDFEnvironment
@@ -171,6 +184,7 @@ from tiledb.cloud.rest_api.models.tgudf_environment_resources import (
 )
 from tiledb.cloud.rest_api.models.tgudf_node_data import TGUDFNodeData
 from tiledb.cloud.rest_api.models.tile_db_config import TileDBConfig
+from tiledb.cloud.rest_api.models.tile_db_config_entries import TileDBConfigEntries
 from tiledb.cloud.rest_api.models.token import Token
 from tiledb.cloud.rest_api.models.token_request import TokenRequest
 from tiledb.cloud.rest_api.models.token_scope import TokenScope

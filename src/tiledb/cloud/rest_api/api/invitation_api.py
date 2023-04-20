@@ -445,6 +445,157 @@ class InvitationApi(object):
             collection_formats=collection_formats,
         )
 
+    def cancel_share_group_by_invite(
+        self, namespace, invitation, group_name, **kwargs
+    ):  # noqa: E501
+        """cancel_share_group_by_invite  # noqa: E501
+
+        Cancels group sharing invitation  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.cancel_share_group_by_invite(namespace, invitation, group_name, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace group is in (an organization name or user's username) (required)
+        :param str invitation: the ID of invitation about to be cancelled (required)
+        :param str group_name: name/uuid of group that is url-encoded (required)
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: None
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs["_return_http_data_only"] = True
+        return self.cancel_share_group_by_invite_with_http_info(
+            namespace, invitation, group_name, **kwargs
+        )  # noqa: E501
+
+    def cancel_share_group_by_invite_with_http_info(
+        self, namespace, invitation, group_name, **kwargs
+    ):  # noqa: E501
+        """cancel_share_group_by_invite  # noqa: E501
+
+        Cancels group sharing invitation  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.cancel_share_group_by_invite_with_http_info(namespace, invitation, group_name, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace group is in (an organization name or user's username) (required)
+        :param str invitation: the ID of invitation about to be cancelled (required)
+        :param str group_name: name/uuid of group that is url-encoded (required)
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: None
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = ["namespace", "invitation", "group_name"]
+        all_params.extend(
+            [
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params["kwargs"]):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method cancel_share_group_by_invite" % key
+                )
+            local_var_params[key] = val
+        del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `cancel_share_group_by_invite`"
+            )  # noqa: E501
+        # verify the required parameter 'invitation' is set
+        if self.api_client.client_side_validation and (
+            "invitation" not in local_var_params
+            or local_var_params["invitation"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `invitation` when calling `cancel_share_group_by_invite`"
+            )  # noqa: E501
+        # verify the required parameter 'group_name' is set
+        if self.api_client.client_side_validation and (
+            "group_name" not in local_var_params
+            or local_var_params["group_name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `group_name` when calling `cancel_share_group_by_invite`"
+            )  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "invitation" in local_var_params:
+            path_params["invitation"] = local_var_params["invitation"]  # noqa: E501
+        if "group_name" in local_var_params:
+            path_params["group_name"] = local_var_params["group_name"]  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+
+        return self.api_client.call_api(
+            "/v1/invitations/group/{invitation}/{namespace}/{group_name}/share",
+            "DELETE",
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type=None,  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
+
     def fetch_invitations(self, **kwargs):  # noqa: E501
         """fetch_invitations  # noqa: E501
 
@@ -457,6 +608,7 @@ class InvitationApi(object):
         :param async_req bool: execute request asynchronously
         :param str organization: name or ID of organization to filter
         :param str array: name/uri of array that is url-encoded to filter
+        :param str group: name or ID of group to filter
         :param int start: start time for tasks to filter by
         :param int end: end time for tasks to filter by
         :param int page: pagination offset
@@ -490,6 +642,7 @@ class InvitationApi(object):
         :param async_req bool: execute request asynchronously
         :param str organization: name or ID of organization to filter
         :param str array: name/uri of array that is url-encoded to filter
+        :param str group: name or ID of group to filter
         :param int start: start time for tasks to filter by
         :param int end: end time for tasks to filter by
         :param int page: pagination offset
@@ -516,6 +669,7 @@ class InvitationApi(object):
         all_params = [
             "organization",
             "array",
+            "group",
             "start",
             "end",
             "page",
@@ -558,6 +712,10 @@ class InvitationApi(object):
             "array" in local_var_params and local_var_params["array"] is not None
         ):  # noqa: E501
             query_params.append(("array", local_var_params["array"]))  # noqa: E501
+        if (
+            "group" in local_var_params and local_var_params["group"] is not None
+        ):  # noqa: E501
+            query_params.append(("group", local_var_params["group"]))  # noqa: E501
         if (
             "start" in local_var_params and local_var_params["start"] is not None
         ):  # noqa: E501
@@ -907,6 +1065,164 @@ class InvitationApi(object):
 
         return self.api_client.call_api(
             "/v1/invitations/{namespace}/{array}/share",
+            "POST",
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type=None,  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
+
+    def share_group_by_invite(
+        self, namespace, group, email_invite, **kwargs
+    ):  # noqa: E501
+        """share_group_by_invite  # noqa: E501
+
+        Sends email to multiple recipients with sharing information regarding a group  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.share_group_by_invite(namespace, group, email_invite, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace group is in (an organization name or user's username) (required)
+        :param str group: name/uri of group that is url-encoded (required)
+        :param InvitationGroupShareEmail email_invite: list of email/namespace recipients (required)
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: None
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs["_return_http_data_only"] = True
+        return self.share_group_by_invite_with_http_info(
+            namespace, group, email_invite, **kwargs
+        )  # noqa: E501
+
+    def share_group_by_invite_with_http_info(
+        self, namespace, group, email_invite, **kwargs
+    ):  # noqa: E501
+        """share_group_by_invite  # noqa: E501
+
+        Sends email to multiple recipients with sharing information regarding a group  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.share_group_by_invite_with_http_info(namespace, group, email_invite, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace group is in (an organization name or user's username) (required)
+        :param str group: name/uri of group that is url-encoded (required)
+        :param InvitationGroupShareEmail email_invite: list of email/namespace recipients (required)
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: None
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = ["namespace", "group", "email_invite"]
+        all_params.extend(
+            [
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params["kwargs"]):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method share_group_by_invite" % key
+                )
+            local_var_params[key] = val
+        del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `share_group_by_invite`"
+            )  # noqa: E501
+        # verify the required parameter 'group' is set
+        if self.api_client.client_side_validation and (
+            "group" not in local_var_params
+            or local_var_params["group"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `group` when calling `share_group_by_invite`"
+            )  # noqa: E501
+        # verify the required parameter 'email_invite' is set
+        if self.api_client.client_side_validation and (
+            "email_invite" not in local_var_params
+            or local_var_params["email_invite"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `email_invite` when calling `share_group_by_invite`"
+            )  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "group" in local_var_params:
+            path_params["group"] = local_var_params["group"]  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        if "email_invite" in local_var_params:
+            body_params = local_var_params["email_invite"]
+        # HTTP header `Accept`
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+
+        return self.api_client.call_api(
+            "/v1/invitations/group/{namespace}/{group}/share",
             "POST",
             path_params,
             query_params,

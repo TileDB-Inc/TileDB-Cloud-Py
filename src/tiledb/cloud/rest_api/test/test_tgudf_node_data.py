@@ -44,6 +44,7 @@ class TestTGUDFNodeData(unittest.TestCase):
                     language="python",
                     language_version="0",
                     image_name="0",
+                    access_credentials_name="0",
                     namespace="0",
                     resource_class="0",
                     resources=tiledb.cloud.rest_api.models.tgudf_environment_resources.TGUDFEnvironment_resources(
@@ -52,6 +53,7 @@ class TestTGUDFNodeData(unittest.TestCase):
                         gpu=1,
                     ),
                     run_client_side=True,
+                    timeout=1.337,
                 ),
                 arguments=[
                     tiledb.cloud.rest_api.models.tgudf_argument.TGUDFArgument(

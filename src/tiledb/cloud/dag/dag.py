@@ -55,6 +55,7 @@ _SKIP_BATCH_UDF_KWARGS = [
     "result_format",
     "retry_strategy",
     "deadline",
+    "access_credentials_name",
 ]
 
 
@@ -1490,6 +1491,11 @@ class DAG:
 
             if "timeout" in node.kwargs:
                 env_dict["timeout"] = node.kwargs["timeout"]
+
+            if "access_credentials_name" in node.kwargs:
+                env_dict["access_credentials_name"] = node.kwargs[
+                    "access_credentials_name"
+                ]
 
             if node._resource_class:
                 env_dict["resource_class"] = node._resource_class

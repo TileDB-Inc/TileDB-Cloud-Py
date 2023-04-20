@@ -32,6 +32,10 @@ class TestNotebooksApi(unittest.TestCase):
         """Test case for notebooks_namespace_array_end_timestamps_get"""
         pass
 
+    def test_notebooks_namespace_array_prune_post(self):
+        """Test case for notebooks_namespace_array_prune_post"""
+        pass
+
 
 if __name__ == "__main__":
     unittest.main()

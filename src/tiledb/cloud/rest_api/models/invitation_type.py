@@ -29,9 +29,10 @@ class InvitationType(object):
     allowed enum values
     """
     ARRAY_SHARE = "ARRAY_SHARE"
+    GROUP_SHARE = "GROUP_SHARE"
     JOIN_ORGANIZATION = "JOIN_ORGANIZATION"
 
-    allowable_values = [ARRAY_SHARE, JOIN_ORGANIZATION]  # noqa: E501
+    allowable_values = [ARRAY_SHARE, GROUP_SHARE, JOIN_ORGANIZATION]  # noqa: E501
 
     """
     Attributes:

@@ -35,6 +35,7 @@ class ArrayTask(object):
     openapi_types = {
         "id": "str",
         "name": "str",
+        "username": "str",
         "description": "str",
         "array_metadata": "ArrayInfo",
         "subarray": "DomainArray",
@@ -66,6 +67,7 @@ class ArrayTask(object):
     attribute_map = {
         "id": "id",
         "name": "name",
+        "username": "username",
         "description": "description",
         "array_metadata": "array_metadata",
         "subarray": "subarray",
@@ -98,6 +100,7 @@ class ArrayTask(object):
         self,
         id=None,
         name=None,
+        username=None,
         description=None,
         array_metadata=None,
         subarray=None,
@@ -133,6 +136,7 @@ class ArrayTask(object):
 
         self._id = None
         self._name = None
+        self._username = None
         self._description = None
         self._array_metadata = None
         self._subarray = None
@@ -165,6 +169,8 @@ class ArrayTask(object):
             self.id = id
         if name is not None:
             self.name = name
+        if username is not None:
+            self.username = username
         if description is not None:
             self.description = description
         if array_metadata is not None:
@@ -261,6 +267,29 @@ class ArrayTask(object):
         """
 
         self._name = name
+
+    @property
+    def username(self):
+        """Gets the username of this ArrayTask.  # noqa: E501
+
+        username that executed this task  # noqa: E501
+
+        :return: The username of this ArrayTask.  # noqa: E501
+        :rtype: str
+        """
+        return self._username
+
+    @username.setter
+    def username(self, username):
+        """Sets the username of this ArrayTask.
+
+        username that executed this task  # noqa: E501
+
+        :param username: The username of this ArrayTask.  # noqa: E501
+        :type: str
+        """
+
+        self._username = username
 
     @property
     def description(self):
