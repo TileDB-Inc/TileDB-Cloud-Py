@@ -28,8 +28,9 @@ from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud import udf
-from tiledb.cloud import utils
+from tiledb.cloud._common import functions
 from tiledb.cloud._common import futures
+from tiledb.cloud._common import utils
 from tiledb.cloud._common import visitor
 from tiledb.cloud._results import results
 from tiledb.cloud._results import stored_params
@@ -872,7 +873,7 @@ class DAG:
             array.apply_base,
             func,
             *args,
-            _fallback_name=utils.func_name(func),
+            _fallback_name=functions.full_name(func),
             **kwargs,
         )
 
@@ -884,7 +885,7 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
-        kwargs.setdefault("name", utils.func_name(func))
+        kwargs.setdefault("name", functions.full_name(func))
         return self._add_raw_node(func, *args, mode=Mode.LOCAL, **kwargs)
 
     def submit_udf(self, func, *args, **kwargs):
@@ -909,7 +910,7 @@ class DAG:
             udf.exec_base,
             func,
             *args,
-            _fallback_name=utils.func_name(func),
+            _fallback_name=functions.full_name(func),
             **kwargs,
         )
 
@@ -937,7 +938,7 @@ class DAG:
             udf.exec_base,
             func,
             *args,
-            _fallback_name=utils.func_name(func),
+            _fallback_name=functions.full_name(func),
             expand_node_output=expand_node_output,
             **kwargs,
         )
@@ -1427,7 +1428,7 @@ class DAG:
             kwargs = {}
             if callable(node.args[0]):
                 kwargs["executable_code"] = _codec.b64_str(_codec.pickle(node.args[0]))
-                kwargs["source_text"] = utils.getsourcelines(node.args[0])
+                kwargs["source_text"] = functions.getsourcelines(node.args[0])
             if type(node.args[0]) == str:
                 kwargs["registered_udf_name"] = node.args[0]
 

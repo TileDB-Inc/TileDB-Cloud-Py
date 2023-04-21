@@ -1,19 +1,17 @@
-import base64
 import importlib
 import os
 import os.path
-import pickle
 import sys
 import tempfile
 import textwrap
 import unittest
 
-from tiledb.cloud import utils
+from tiledb.cloud._common import functions
 
 
 class SourceLinesTest(unittest.TestCase):
     def test_this_function(self):
-        me = utils.getsourcelines(self.test_this_function)
+        me = functions.getsourcelines(self.test_this_function)
         self.assertIsInstance(me, str)
 
     def test_missing_function(self):
@@ -36,10 +34,10 @@ class SourceLinesTest(unittest.TestCase):
                 sys.modules.pop("bogus_module", None)
 
             os.remove(testfile)
-            self.assertIsNone(utils.getsourcelines(bogus.unimportant_function))
+            self.assertIsNone(functions.getsourcelines(bogus.unimportant_function))
 
     def test_builtin(self):
-        self.assertIsNone(utils.getsourcelines(dir))
+        self.assertIsNone(functions.getsourcelines(dir))
 
 
 class FuncableTest(unittest.TestCase):
@@ -53,7 +51,7 @@ class FuncableTest(unittest.TestCase):
             len,
             lambda: None,
             self.test_good,
-            utils.check_funcable,
+            functions.check_funcable,
             str.format,
             "".format,
             object,
@@ -62,7 +60,7 @@ class FuncableTest(unittest.TestCase):
         )
         for item in items:
             with self.subTest(item):
-                utils.check_funcable(item=item)
+                functions.check_funcable(item=item)
 
     def test_bad(self):
         items = (
@@ -73,23 +71,4 @@ class FuncableTest(unittest.TestCase):
         for item in items:
             with self.subTest(item):
                 with self.assertRaises(TypeError):
-                    utils.check_funcable(item=item)
-
-
-class PickleTest(unittest.TestCase):
-    def test_roundtrip(self):
-        cases = (
-            None,
-            ("a", 1),
-            {"some": "dict"},
-        )
-        for c in cases:
-            with self.subTest(f"roundtrip {c!r}"):
-                pickled = utils.b64_pickle(c)
-                unpickled = _b64_unpickle(pickled)
-                self.assertEqual(unpickled, c)
-
-
-def _b64_unpickle(x):
-    raw = base64.b64decode(x)
-    return pickle.loads(raw)
+                    functions.check_funcable(item=item)

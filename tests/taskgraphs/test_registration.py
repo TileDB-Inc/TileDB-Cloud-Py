@@ -4,7 +4,7 @@ import time
 import unittest
 
 from tiledb.cloud import rest_api
-from tiledb.cloud import testonly
+from tiledb.cloud._common import testonly
 from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import registration
 from tiledb.cloud.taskgraphs import types

@@ -9,7 +9,8 @@ from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
-from tiledb.cloud import utils
+from tiledb.cloud._common import functions
+from tiledb.cloud._common import utils
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 from tiledb.cloud._results import sender
@@ -123,7 +124,7 @@ def exec_base(
     if callable(user_func):
         udf_model._exec = utils.b64_pickle(user_func)
         if include_source_lines:
-            udf_model.exec_raw = utils.getsourcelines(user_func)
+            udf_model.exec_raw = functions.getsourcelines(user_func)
     else:
         udf_model.udf_info_name = user_func
 
@@ -145,7 +146,7 @@ def exec_base(
     )
 
 
-@utils.signature_of(exec_base)
+@functions.signature_of(exec_base)
 def exec(*args, **kwargs) -> Any:
     """Run a user defined function, synchronously, returning only the result.
 
@@ -154,7 +155,7 @@ def exec(*args, **kwargs) -> Any:
     return exec_base(*args, **kwargs).get()
 
 
-@utils.signature_of(exec_base)
+@functions.signature_of(exec_base)
 def exec_async(*args, **kwargs) -> Any:
     """Run a user defined function, asynchronously.
 
@@ -195,7 +196,7 @@ def register_udf(
         pickledUDF = cloudpickle.dumps(func, protocol=utils.TILEDB_CLOUD_PROTOCOL)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
-        source_lines = utils.getsourcelines(func) if include_source_lines else None
+        source_lines = functions.getsourcelines(func) if include_source_lines else None
 
         udf_model = models.UDFInfoUpdate(
             name=name,
@@ -345,7 +346,7 @@ def update_udf(
         pickledUDF = cloudpickle.dumps(func, protocol=utils.TILEDB_CLOUD_PROTOCOL)
         pickledUDF = base64.b64encode(pickledUDF).decode("ascii")
 
-        source_lines = utils.getsourcelines(func) if include_source_lines else None
+        source_lines = functions.getsourcelines(func) if include_source_lines else None
 
         update_udf_name = name
         if update_name is not None and update_name != "":

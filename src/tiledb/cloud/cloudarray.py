@@ -1,10 +1,10 @@
 from tiledb.cloud import array
-from tiledb.cloud import utils
+from tiledb.cloud._common import functions
 from tiledb.cloud._results import results
 
 
 class CloudArray(object):
-    @utils.signature_of(array.apply_async)
+    @functions.signature_of(array.apply_async)
     def apply_async(self, *args, **kwargs) -> results.AsyncResult:
         """
         Apply a user-defined function to this array, asynchronously.
@@ -14,7 +14,7 @@ class CloudArray(object):
         """
         return array.apply_async(self.uri, *args, **kwargs)  # pylint: disable=E1101
 
-    @utils.signature_of(array.apply)
+    @functions.signature_of(array.apply)
     def apply(self, *args, **kwargs):
         """
         Apply a user-defined function to this array, synchronously.

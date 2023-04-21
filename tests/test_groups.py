@@ -4,7 +4,7 @@ import unittest
 from tiledb.cloud import client
 from tiledb.cloud import groups
 from tiledb.cloud import rest_api
-from tiledb.cloud import testonly
+from tiledb.cloud._common import testonly
 
 TRIES = 5
 

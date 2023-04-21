@@ -10,7 +10,7 @@ from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error
-from tiledb.cloud import utils
+from tiledb.cloud._common import functions
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 from tiledb.cloud._results import sender
@@ -139,7 +139,7 @@ def exec_base(
     )
 
 
-@utils.signature_of(exec_base)
+@functions.signature_of(exec_base)
 def exec_and_fetch(*args, **kwargs):
     """
     Run a sql query, results are not stored
@@ -167,7 +167,7 @@ def exec_and_fetch(*args, **kwargs):
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-@utils.signature_of(exec_base)
+@functions.signature_of(exec_base)
 def exec(*args, **kwargs) -> Any:
     """Run a SQL query, synchronously.
 
@@ -176,7 +176,7 @@ def exec(*args, **kwargs) -> Any:
     return exec_base(*args, **kwargs).get()
 
 
-@utils.signature_of(exec_base)
+@functions.signature_of(exec_base)
 def exec_async(*args, **kwargs) -> "results.AsyncResult":
     """Run a SQL query, asynchronously.
 

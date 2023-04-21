@@ -4,7 +4,7 @@ from functools import partial
 from typing import Any, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
-from tiledb.cloud.utils import logger
+from tiledb.cloud._common.utils import logger
 
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"

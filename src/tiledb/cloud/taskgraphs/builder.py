@@ -17,8 +17,9 @@ from typing import (
 
 import attrs
 
-from tiledb.cloud import utils
+from tiledb.cloud._common import functions
 from tiledb.cloud._common import ordered
+from tiledb.cloud._common import utils
 from tiledb.cloud._common import visitor
 from tiledb.cloud.taskgraphs import _codec
 from tiledb.cloud.taskgraphs import depgraph
@@ -124,7 +125,7 @@ class TaskGraphBuilder:
 
     def udf(
         self,
-        func: utils.Funcable[_T],
+        func: functions.Funcable[_T],
         args: types.Arguments = types.Arguments(),
         *,
         result_format: Optional[str] = "python_pickle",
@@ -535,7 +536,7 @@ class _UDFNode(Node[_T]):
     def __init__(
         self,
         owner: TaskGraphBuilder,
-        func: utils.Funcable[_T],
+        func: functions.Funcable[_T],
         args: types.Arguments,
         *,
         result_format: Optional[str],
@@ -552,7 +553,7 @@ class _UDFNode(Node[_T]):
 
         See :meth:`TaskGraphBuilder.udf` for details.
         """
-        utils.check_funcable(func=func)
+        functions.check_funcable(func=func)
         if isinstance(func, str) and local:
             raise ValueError("Registered UDFs may only be executed server-side.")
         jsoner = _ParameterEscaper()
@@ -565,7 +566,7 @@ class _UDFNode(Node[_T]):
             owner,
             name,
             jsoner.seen_nodes,
-            fallback_name=utils.func_name(func),
+            fallback_name=functions.full_name(func),
         )
         self.func = func
         self.result_format = result_format
@@ -600,7 +601,7 @@ class _UDFNode(Node[_T]):
                 env_dict["run_client_side"] = True
             udf_node["executable_code"] = _codec.b64_str(_codec.pickle(self.func))
             if self.include_source:
-                source = utils.getsourcelines(self.func)
+                source = functions.getsourcelines(self.func)
                 if source:
                     udf_node["source_text"] = source
         if self.download_results is not None:

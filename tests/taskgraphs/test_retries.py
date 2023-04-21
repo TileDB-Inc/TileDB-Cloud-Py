@@ -4,7 +4,7 @@ from concurrent import futures
 
 import tiledb.cloud.taskgraphs as tg
 from tiledb.cloud import client
-from tiledb.cloud import testonly
+from tiledb.cloud._common import testonly
 from tiledb.cloud.taskgraphs import client_executor
 
 

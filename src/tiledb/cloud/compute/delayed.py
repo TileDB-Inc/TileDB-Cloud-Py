@@ -2,7 +2,7 @@ import numbers
 import random
 from typing import Any, Callable, Optional, Union
 
-from tiledb.cloud import utils
+from tiledb.cloud._common import functions
 from tiledb.cloud.array import ArrayList
 from tiledb.cloud.array import apply as array_apply
 from tiledb.cloud.array import exec_multi_array_udf
@@ -128,10 +128,10 @@ class DelayedBase(Node):
 
 class Delayed(DelayedBase):
     def __init__(self, func_exec, *args, local=False, mode=Mode.REALTIME, **kwargs):
-        utils.check_funcable(func_exec=func_exec)
+        functions.check_funcable(func_exec=func_exec)
         self.func_exec = func_exec
 
-        kwargs.setdefault("name", utils.func_name(func_exec) + _random_suffix())
+        kwargs.setdefault("name", functions.full_name(func_exec) + _random_suffix())
 
         if local:
             mode = Mode.LOCAL
@@ -158,10 +158,10 @@ class DelayedSQL(DelayedBase):
 
 class DelayedArrayUDF(DelayedBase):
     def __init__(self, uri, func_exec, *args, **kwargs):
-        utils.check_funcable(func_exec=func_exec)
+        functions.check_funcable(func_exec=func_exec)
         self.func_exec = func_exec
         self.uri = uri
-        kwargs.setdefault("name", utils.func_name(func_exec) + _random_suffix())
+        kwargs.setdefault("name", functions.full_name(func_exec) + _random_suffix())
 
         super().__init__(array_apply, self.uri, self.func_exec, *args, **kwargs)
 
@@ -174,10 +174,10 @@ class DelayedMultiArrayUDF(DelayedBase):
         *args,
         **kwargs,
     ):
-        utils.check_funcable(func=func)
+        functions.check_funcable(func=func)
         self.func_exec = func
         self.array_list = array_list
-        kwargs.setdefault("name", utils.func_name(func) + _random_suffix())
+        kwargs.setdefault("name", functions.full_name(func) + _random_suffix())
 
         super().__init__(
             exec_multi_array_udf, self.func_exec, self.array_list, *args, **kwargs

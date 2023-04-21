@@ -7,8 +7,9 @@ import numpy
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
-from tiledb.cloud import utils
+from tiledb.cloud._common import functions
 from tiledb.cloud._common import json_safe
+from tiledb.cloud._common import utils
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 from tiledb.cloud._results import sender
@@ -495,7 +496,7 @@ def apply_base(
     if callable(user_func):
         udf_model._exec = utils.b64_pickle(user_func)
         if include_source_lines:
-            udf_model.exec_raw = utils.getsourcelines(user_func)
+            udf_model.exec_raw = functions.getsourcelines(user_func)
     else:
         udf_model.udf_info_name = user_func
 
@@ -520,7 +521,7 @@ def apply_base(
     )
 
 
-@utils.signature_of(apply_base)
+@functions.signature_of(apply_base)
 def apply(*args, **kwargs) -> Any:
     """
     Apply a user defined function to an array, synchronously.
@@ -647,7 +648,7 @@ def exec_multi_array_udf_base(
     if callable(user_func):
         udf_model._exec = utils.b64_pickle(user_func)
         if include_source_lines:
-            udf_model.exec_raw = utils.getsourcelines(user_func)
+            udf_model.exec_raw = functions.getsourcelines(user_func)
     else:
         udf_model.udf_info_name = user_func
 
@@ -671,7 +672,7 @@ def exec_multi_array_udf_base(
     )
 
 
-@utils.signature_of(exec_multi_array_udf_base)
+@functions.signature_of(exec_multi_array_udf_base)
 def exec_multi_array_udf(*args, **kwargs) -> Any:
     """Apply a user-defined function to multiple arrays, synchronously.
 
@@ -680,7 +681,7 @@ def exec_multi_array_udf(*args, **kwargs) -> Any:
     return exec_multi_array_udf_base(*args, **kwargs).get()
 
 
-@utils.signature_of(exec_multi_array_udf_base)
+@functions.signature_of(exec_multi_array_udf_base)
 def exec_multi_array_udf_async(*args, **kwargs) -> results.AsyncResult:
     """Apply a user-defined function to multiple arrays, asynchronously.
 
