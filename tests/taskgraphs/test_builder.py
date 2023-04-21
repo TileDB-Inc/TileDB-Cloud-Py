@@ -6,8 +6,9 @@ from unittest import mock
 
 import numpy
 
-from tiledb.cloud import testonly
-from tiledb.cloud import utils
+from tiledb.cloud._common import functions
+from tiledb.cloud._common import testonly
+from tiledb.cloud._common import utils
 from tiledb.cloud.taskgraphs import _codec
 from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import depgraph
@@ -359,7 +360,7 @@ class TestBuilder(unittest.TestCase):
                             "timeout": 100,
                         },
                         "executable_code": "gASVEQAAAAAAAACMBW51bXB5lIwDc3VtlJOULg==",
-                        "source_text": utils.getsourcelines(numpy.sum),
+                        "source_text": functions.getsourcelines(numpy.sum),
                         "result_format": "python_pickle",
                     },
                 },

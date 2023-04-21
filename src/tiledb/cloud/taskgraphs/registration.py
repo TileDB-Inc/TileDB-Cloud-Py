@@ -5,8 +5,8 @@ import urllib3
 
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
-from tiledb.cloud import utils
 from tiledb.cloud._common import json_safe
+from tiledb.cloud._common import utils
 from tiledb.cloud.taskgraphs import builder
 
 

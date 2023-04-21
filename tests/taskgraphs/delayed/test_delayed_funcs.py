@@ -8,8 +8,8 @@ import numpy as np
 
 from tiledb.cloud import client
 from tiledb.cloud import taskgraphs
-from tiledb.cloud import testonly
 from tiledb.cloud._common import futures
+from tiledb.cloud._common import testonly
 from tiledb.cloud.taskgraphs import delayed
 from tiledb.cloud.taskgraphs import executor
 from tiledb.cloud.taskgraphs import registration

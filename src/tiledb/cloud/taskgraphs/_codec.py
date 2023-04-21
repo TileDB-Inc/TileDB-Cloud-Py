@@ -12,7 +12,7 @@ import urllib3
 
 from tiledb.cloud import client as client_mod
 from tiledb.cloud import rest_api
-from tiledb.cloud import utils
+from tiledb.cloud._common import utils
 from tiledb.cloud._common import visitor
 from tiledb.cloud._results import decoders
 from tiledb.cloud.taskgraphs import types

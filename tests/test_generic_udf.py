@@ -7,10 +7,10 @@ import tiledb.cloud
 from tiledb.cloud import client
 from tiledb.cloud import config
 from tiledb.cloud import rest_api
-from tiledb.cloud import testonly
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud import udf
-from tiledb.cloud import utils
+from tiledb.cloud._common import testonly
+from tiledb.cloud._common import utils
 from tiledb.cloud.rest_api import models
 
 

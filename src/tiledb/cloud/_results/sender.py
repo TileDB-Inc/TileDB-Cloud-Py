@@ -6,7 +6,7 @@ import urllib3
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error as tce
-from tiledb.cloud import utils
+from tiledb.cloud._common import utils
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 

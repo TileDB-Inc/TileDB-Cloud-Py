@@ -9,7 +9,7 @@ from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import sql
 from tiledb.cloud import tiledb_cloud_error
-from tiledb.cloud import utils
+from tiledb.cloud._common import utils
 from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 from tiledb.cloud.rest_api import ApiException as GenApiException

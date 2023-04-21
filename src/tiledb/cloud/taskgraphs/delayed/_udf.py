@@ -5,7 +5,7 @@ from typing import Any, Dict, Generic, NoReturn, Optional, Tuple, TypeVar, Union
 
 import attrs
 
-from tiledb.cloud import utils
+from tiledb.cloud._common import functions
 from tiledb.cloud.taskgraphs import builder
 from tiledb.cloud.taskgraphs import types
 from tiledb.cloud.taskgraphs.delayed import _graph
@@ -19,7 +19,7 @@ _NOTHING: Any = attrs.make_class("Nothing", (), frozen=True, slots=True)()
 class DelayedFunction(Generic[_T]):
     """The wrapper around a function that makes it delayed-callable."""
 
-    def __init__(self, fn: utils.Funcable[_T], kwargs: Dict[str, Any]):
+    def __init__(self, fn: functions.Funcable[_T], kwargs: Dict[str, Any]):
         """Initializes a new DelayedFunction.
 
         Users should never have to call this directly.
@@ -31,7 +31,7 @@ class DelayedFunction(Generic[_T]):
     @classmethod
     def create(
         cls,
-        __fn: utils.Funcable[_T],
+        __fn: functions.Funcable[_T],
         *,
         result_format: Optional[str] = _NOTHING,
         local: bool = _NOTHING,
@@ -111,7 +111,7 @@ class DelayedFunction(Generic[_T]):
         return DelayedCall._create(self, args, kwargs)
 
     def __repr__(self) -> str:
-        return f"<delayed {utils.func_name(self._fn)}>"
+        return f"<delayed {functions.full_name(self._fn)}>"
 
 
 class DelayedCall(_graph.Node[_T]):

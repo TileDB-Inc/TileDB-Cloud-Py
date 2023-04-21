@@ -2,7 +2,7 @@ import uuid
 from typing import Any, Dict, Optional, TypeVar
 
 from tiledb.cloud import rest_api
-from tiledb.cloud import utils
+from tiledb.cloud._common import utils
 from tiledb.cloud._results import results
 from tiledb.cloud.taskgraphs import _codec
 from tiledb.cloud.taskgraphs.client_executor import _base

@@ -7,8 +7,8 @@ from typing import Iterable, Optional, Tuple, Union
 import tiledb.cloud.tiledb_cloud_error as tce
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
-from tiledb.cloud import utils
 from tiledb.cloud._common import api_v2
+from tiledb.cloud._common import utils
 
 
 def create(

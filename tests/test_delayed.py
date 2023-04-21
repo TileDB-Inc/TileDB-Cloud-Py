@@ -6,7 +6,7 @@ from concurrent import futures
 import numpy as np
 
 import tiledb.cloud
-from tiledb.cloud import testonly
+from tiledb.cloud._common import testonly
 from tiledb.cloud.compute import Delayed
 from tiledb.cloud.compute import DelayedArrayUDF
 from tiledb.cloud.compute import DelayedSQL

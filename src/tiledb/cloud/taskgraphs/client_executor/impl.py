@@ -12,9 +12,9 @@ from typing import Any, Callable, Dict, Optional, Type, TypeVar
 
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
-from tiledb.cloud import utils
 from tiledb.cloud._common import futures
 from tiledb.cloud._common import ordered
+from tiledb.cloud._common import utils
 from tiledb.cloud.taskgraphs import executor
 from tiledb.cloud.taskgraphs.client_executor import _base
 from tiledb.cloud.taskgraphs.client_executor import array_node
