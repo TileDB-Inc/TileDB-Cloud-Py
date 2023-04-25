@@ -152,8 +152,9 @@ def _print_logs(
     :param graph: DAG object
     :param debug: print debug logs, defaults to False
     """
-    server_logs = dag.server_logs(graph)
-    if not server_logs:
+    try:
+        server_logs = dag.server_logs(graph)
+    except Exception:
         # TODO: get server logs from a batch UDF
         return
 

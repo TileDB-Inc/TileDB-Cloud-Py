@@ -92,7 +92,7 @@ class Profiler(object):
             # code to profile
 
         # Write custom events
-        with Profiler(group_uri="tiledb://array-uri...", group_member="log") as prof:
+        with Profiler(group_uri="tiledb://group-uri...", group_member="log") as prof:
             # code to profile
 
             # write custom event
@@ -120,7 +120,7 @@ class Profiler(object):
         :param group_uri: URI of the group containing the log array, defaults to None
         :param group_member: group member name of the log array, defaults to None
         :param id: profiler id, written to event id
-        :param period_sec: profiling period in seconds, defaults to 5
+        :param period_sec: profiling period in seconds (0 = disabled), defaults to 5
         :param trace: enable trace logging, defaults to False
         """
 
@@ -129,7 +129,7 @@ class Profiler(object):
         if array_uri is not None and group_uri is not None:
             raise ValueError("array_uri and group_uri cannot both be specified")
         if group_uri is not None and group_member is None:
-            raise ValueError("group_member must be specified group_uri")
+            raise ValueError("group_member must be specified")
 
         if group_uri is not None:
             with tiledb.Group(group_uri) as group:
@@ -163,12 +163,13 @@ class Profiler(object):
 
         self.write("start", node_id, node_info)
 
-        # Start profiling timer
-        self.done = False
         self.t_start = time.time()
-        self.t_next = self.t_start
-        self.stats = ["time,cpu,mem"]
-        self._timeout()
+        if self.period_sec:
+            # Start profiling timer
+            self.done = False
+            self.t_next = self.t_start
+            self.stats = ["time,cpu,mem"]
+            self._timeout()
 
         return self
 
@@ -181,7 +182,8 @@ class Profiler(object):
         # and profiling stats
         self.done = True
         mem = max_memory_usage()
-        self.write("stats", mem, "\n".join(self.stats))
+        extra = "\n".join(self.stats) if self.period_sec else ""
+        self.write("stats", mem, extra)
         self.array.close()
 
     def write(self, op: str = "", data: str = "", extra: str = "") -> None:
