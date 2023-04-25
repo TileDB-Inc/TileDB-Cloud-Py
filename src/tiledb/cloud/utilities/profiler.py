@@ -125,7 +125,10 @@ class Profiler(object):
         """
 
         if array_uri is None and group_uri is None:
-            raise ValueError("array_uri or group_uri must be specified")
+            self.enabled = False
+            return
+
+        self.enabled = True
         if array_uri is not None and group_uri is not None:
             raise ValueError("array_uri and group_uri cannot both be specified")
         if group_uri is not None and group_member is None:
@@ -142,6 +145,9 @@ class Profiler(object):
         self.trace = trace
 
     def __enter__(self) -> Self:
+        if not self.enabled:
+            return self
+
         self.array = tiledb.open(self.array_uri, "w")
 
         # Log useful system info
@@ -173,6 +179,9 @@ class Profiler(object):
         return self
 
     def __exit__(self, *_: Any) -> None:
+        if not self.enabled:
+            return
+
         # Write finish event with elapsed time
         t_elapsed = time.time() - self.t_start
         self.write("finish", f"{t_elapsed:.3f}")
@@ -192,6 +201,9 @@ class Profiler(object):
         :param data: event data, defaults to ""
         :param extra: event extra data, defaults to ""
         """
+
+        if not self.enabled:
+            return
 
         t_now_ms = time.time() * 1000
 
