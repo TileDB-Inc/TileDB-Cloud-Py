@@ -959,6 +959,28 @@ class DAG:
             **kwargs,
         )
 
+    def report_node_status_change(self, node: Node, new_status: Status):
+        self.completed_nodes.pop(node.id, None)
+        self.failed_nodes.pop(node.id, None)
+        self.running_nodes.pop(node.id, None)
+        self.not_started_nodes.pop(node.id, None)
+        self.cancelled_nodes.pop(node.id, None)
+        with node._lifecycle_condition:
+            node._update_status(new_status)
+
+        if new_status is Status.COMPLETED:
+            self.completed_nodes[node.id] = node
+        elif new_status is Status.FAILED:
+            self.failed_nodes[node.id] = node
+        elif new_status is Status.PARENT_FAILED:
+            self.failed_nodes[node.id] = node
+        elif new_status is Status.RUNNING:
+            self.running_nodes[node.id] = node
+        elif new_status is Status.NOT_STARTED:
+            self.not_started_nodes[node.id] = node
+        elif new_status is Status.CANCELLED:
+            self.cancelled_nodes[node.id] = node
+
     def report_node_complete(self, node: Node):
         """
         Report a node as complete
@@ -1138,26 +1160,62 @@ class DAG:
             raise exc
 
     def cancel(self):
-        with self._lifecycle_condition:
-            if self._status not in (Status.RUNNING, Status.NOT_STARTED):
-                return
-            self._set_status(Status.CANCELLED)
-            to_cancel = tuple(self.not_started_nodes.values())
+        if self.mode == Mode.BATCH:
+            try:
+                client.build(rest_api.TaskGraphLogsApi).stop_task_graph_execution(
+                    namespace=self.namespace, id=self.server_graph_uuid
+                )
+            except rest_api.ApiException as apix:
+                raise
+            with self._lifecycle_condition:
+                self._set_status(Status.CANCELLED)
+        else:
+            with self._lifecycle_condition:
+                if self._status not in (Status.RUNNING, Status.NOT_STARTED):
+                    return
+                self._set_status(Status.CANCELLED)
+                to_cancel = tuple(self.not_started_nodes.values())
 
-        for n in to_cancel:
-            n.cancel()
+            for n in to_cancel:
+                n.cancel()
 
     def retry_all(self) -> None:
         """Retries all failed and cancelled nodes."""
-        with self._lifecycle_condition:
-            # Assume that we want to un-cancel.
-            if self._status is Status.CANCELLED:
-                self._set_status(Status.RUNNING)
-            to_retry = frozenset(self.failed_nodes.values()).union(
+        if self.mode == Mode.BATCH:
+            for node in frozenset(self.failed_nodes.values()).union(
                 self.cancelled_nodes.values()
-            )
-        for n in to_retry:
-            n.retry()
+            ):
+                self.report_node_status_change(node, Status.NOT_STARTED)
+
+            if self._status is Status.CANCELLED or self._status is Status.FAILED:
+                execution = client.build(
+                    rest_api.TaskGraphLogsApi
+                ).retry_task_graph_execution(
+                    namespace=self.namespace,
+                    id=self.server_graph_uuid,
+                )
+                self.server_graph_uuid = execution.uuid
+
+            with self._lifecycle_condition:
+                self._set_status(Status.RUNNING)
+            if not self._update_batch_status_thread.is_alive():
+                self._update_batch_status_thread = threading.Thread(
+                    name=f"dag-{self.name}-update-status",
+                    target=self._update_status,
+                    daemon=True,
+                )
+                self._update_batch_status_thread.start()
+
+        else:
+            with self._lifecycle_condition:
+                # Assume that we want to un-cancel.
+                if self._status is Status.CANCELLED:
+                    self._set_status(Status.RUNNING)
+                to_retry = frozenset(self.failed_nodes.values()).union(
+                    self.cancelled_nodes.values()
+                )
+            for n in to_retry:
+                n.retry()
 
     def find_end_nodes(self):
         """
@@ -1563,12 +1621,8 @@ class DAG:
                 for new_node in result.nodes:
                     node = self.nodes_by_name[new_node.name]
                     new_node_status = array_task_status_to_status(new_node.status)
-                    for execution in new_node.executions:
-                        if execution.name == node.name:
-                            new_node_status = array_task_status_to_status(
-                                execution.status
-                            )
                     if node.status != new_node_status:
+                        self.report_node_status_change(node, new_node_status)
                         if new_node_status in (
                             Status.FAILED,
                             Status.CANCELLED,
@@ -1591,9 +1645,11 @@ class DAG:
 
                             else:
                                 raise RuntimeError("No executions found for done Node.")
-                            with node._lifecycle_condition:
-                                node._update_status(new_node_status)
                             self.report_node_complete(node)
+                new_workflow_status = task_graph_log_status_to_status(result.status)
+                if self._status != new_workflow_status:
+                    with self._lifecycle_condition:
+                        self._set_status(new_workflow_status)
 
 
 def list_logs(
@@ -1823,5 +1879,24 @@ def array_task_status_to_status(status: models.ArrayTaskStatus) -> Status:
         return Status.CANCELLED
     elif status == models.ArrayTaskStatus.DENIED:
         return Status.FAILED
+    else:
+        return Status.NOT_STARTED
+
+
+def task_graph_log_status_to_status(status: models.TaskGraphLogStatus) -> Status:
+    if status == models.TaskGraphLogStatus.SUBMITTED:
+        return Status.NOT_STARTED
+    elif status == models.TaskGraphLogStatus.RUNNING:
+        return Status.RUNNING
+    elif status == models.TaskGraphLogStatus.IDLE:
+        return Status.NOT_STARTED
+    elif status == models.TaskGraphLogStatus.ABANDONED:
+        return Status.CANCELLED
+    elif status == models.TaskGraphLogStatus.SUCCEEDED:
+        return Status.COMPLETED
+    elif status == models.TaskGraphLogStatus.FAILED:
+        return Status.FAILED
+    elif status == models.TaskGraphLogStatus.CANCELLED:
+        return Status.CANCELLED
     else:
         return Status.NOT_STARTED
