@@ -1622,7 +1622,6 @@ class DAG:
                     node = self.nodes_by_name[new_node.name]
                     new_node_status = array_task_status_to_status(new_node.status)
                     if node.status != new_node_status:
-                        self.report_node_status_change(node, new_node_status)
                         if new_node_status in (
                             Status.FAILED,
                             Status.CANCELLED,
@@ -1645,7 +1644,10 @@ class DAG:
 
                             else:
                                 raise RuntimeError("No executions found for done Node.")
+                            self.report_node_status_change(node, new_node_status)
                             self.report_node_complete(node)
+                        else:
+                            self.report_node_status_change(node, new_node_status)
                 new_workflow_status = task_graph_log_status_to_status(result.status)
                 if self._status != new_workflow_status:
                     with self._lifecycle_condition:
