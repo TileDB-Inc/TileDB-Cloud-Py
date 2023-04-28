@@ -28,7 +28,7 @@ LOG_ARRAY = "log"
 MANIFEST_ARRAY = "manifest"
 
 # Default attributes to materialize
-DEFAULT_ATTRIBUTES = ("fmt_GT", "fmt_DP", "fmt_GQ")
+DEFAULT_ATTRIBUTES = ["fmt_GT"]
 
 # Default values for ingestion parameters
 MANIFEST_BATCH_SIZE = 100
@@ -44,9 +44,19 @@ CONSOLIDATE_MEMORY_MB = 4096
 
 
 class Contigs(enum.Enum):
+    """
+    The contigs to ingest.
+
+    ALL = all contigs
+    CHROMOSOMES = all human chromosomes
+    OTHER = all contigs other than the human chromosomes
+    ALL_DISABLE_MERGE = all contigs with merging disabled, for non-human datasets
+    """
+
     ALL = enum.auto()
     CHROMOSOMES = enum.auto()
     OTHER = enum.auto()
+    ALL_DISABLE_MERGE = enum.auto()
 
 
 def setup(config: Optional[Mapping[str, Any]] = None) -> logging.Logger:
@@ -70,7 +80,8 @@ def setup(config: Optional[Mapping[str, Any]] = None) -> logging.Logger:
     logger = get_logger(level)
 
     logger.debug(
-        "tiledb=%s, libtiledb=%s",
+        "tiledb.cloud=%s, tiledb=%s, libtiledb=%s",
+        tiledb.cloud.version.version,
         tiledb.version(),
         tiledb.libtiledb.version(),
     )
@@ -382,7 +393,6 @@ def filter_samples_udf(
         new_samples = manifest_samples.difference(existing_samples)
         manifest_df = manifest_df[manifest_df.sample_name.isin(new_samples)]
         result = manifest_df.vcf_uri.to_list()
-        assert result == sorted(result)
 
         logger.info("%d samples in the manifest.", len(manifest_samples))
         logger.info("%d samples already ingested.", len(existing_samples))
@@ -488,14 +498,15 @@ def ingest_manifest_udf(
                 if not sample_name:
                     status = "missing sample name"
                 elif len(sample_name.split()) > 1:
-                    status = "multiple samples (pVCF)"
+                    status = "multiple samples"
                 elif sample_name in keys:
                     status = "duplicate sample name"
 
                 # Handle index errors
                 index_uri = find_index(vcf_uri)
                 if not index_uri:
-                    status = "missing index"
+                    status = "" if status == "ok" else status + ","
+                    status += "missing index"
 
                 records = get_records(vcf_uri)
 
@@ -525,6 +536,7 @@ def ingest_samples_udf(
     sample_batch_size: int,
     contig_mode: str = "all",
     contigs_to_keep_separate: Optional[Sequence[str]] = None,
+    contig_fragment_merging: bool = True,
     resume: bool = False,
     id: str = "samples",
 ) -> None:
@@ -539,6 +551,7 @@ def ingest_samples_udf(
     :param config: config dictionary, defaults to None
     :param contig_mode: ingestion mode, defaults to "all"
     :param contigs_to_keep_separate: list of contigs to keep separate, defaults to None
+    :param contig_fragment_merging: enable contig fragment merging, defaults to True
     :param resume: enable resume ingestion mode, defaults to False
     :param id: profiler event id, defaults to "samples"
     """
@@ -547,7 +560,9 @@ def ingest_samples_udf(
     logger = setup(config)
     logger.debug("tiledbvcf=%s", tiledbvcf.version)
 
-    with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id) as prof:
+    with Profiler(
+        group_uri=dataset_uri, group_member=LOG_ARRAY, id=id, trace=trace
+    ) as prof:
         prof.write("uris", ",".join(sample_uris))
 
         tiledbvcf.config_logging("info", "ingest.log")
@@ -561,6 +576,7 @@ def ingest_samples_udf(
             total_memory_budget_mb=memory_mb,
             contig_mode=contig_mode,
             contigs_to_keep_separate=contigs_to_keep_separate,
+            contig_fragment_merging=contig_fragment_merging,
             resume=resume,
         )
 
@@ -784,6 +800,7 @@ def ingest_samples_dag(
     batch_size: int = VCF_BATCH_SIZE,
     workers: int = VCF_WORKERS,
     resume: bool = False,
+    ingest_resources: Optional[Mapping[str, str]] = None,
 ) -> None:
     """
     Create a DAG to ingest samples into the dataset.
@@ -791,12 +808,13 @@ def ingest_samples_dag(
     :param dataset_uri: dataset URI
     :param config: config dictionary, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
-    :param contigs: contig mode (Contigs.ALL | Contigs.CHROMOSOMES | Contigs.OTHER)
+    :param contigs: contig mode (Contigs.ALL | Contigs.CHROMOSOMES | Contigs.OTHER | Contigs.ALL_DISABLE_MERGE)
         or list of contigs to ingest, defaults to Contigs.ALL
     :param threads: number of threads to use per ingestion task, defaults to VCF_THREADS
     :param batch_size: sample batch size, defaults to VCF_BATCH_SIZE
     :param workers: maximum number of parallel workers, defaults to VCF_WORKERS
     :param resume: enable resume ingestion mode, defaults to False
+    :param ingest_resources: manual override for ingest UDF resources, defaults to None
     """
 
     logger = setup(config)
@@ -833,10 +851,13 @@ def ingest_samples_dag(
     else:
         contigs_to_keep_separate = None
         contig_mode = "all"
+        contig_fragment_merging = True
         if contigs == Contigs.CHROMOSOMES:
             contig_mode = "separate"
         elif contigs == Contigs.OTHER:
             contig_mode = "merged"
+        elif contigs == Contigs.ALL_DISABLE_MERGE:
+            contig_fragment_merging = False
 
     graph = dag.DAG(
         name="vcf-ingest-samples",
@@ -858,7 +879,9 @@ def ingest_samples_dag(
     node_memory_mb = 2048 * threads
     vcf_memory_mb = 1024 * threads
 
-    ingest_resources = {"cpu": f"{threads}", "memory": f"{node_memory_mb}Mi"}
+    if ingest_resources is None:
+        ingest_resources = {"cpu": f"{threads}", "memory": f"{node_memory_mb}Mi"}
+
     consolidate_resources = {
         "cpu": f"{CONSOLIDATE_CPUS}",
         "memory": f"{CONSOLIDATE_MEMORY_MB}Mi",
@@ -895,6 +918,7 @@ def ingest_samples_dag(
             sample_batch_size=batch_size,
             contig_mode=contig_mode,
             contigs_to_keep_separate=contigs_to_keep_separate,
+            contig_fragment_merging=contig_fragment_merging,
             resume=resume,
             id=f"vcf-ingest-{i}",
             resources=ingest_resources,
@@ -940,6 +964,7 @@ def ingest(
     vcf_batch_size: int = VCF_BATCH_SIZE,
     vcf_workers: int = VCF_WORKERS,
     vcf_threads: int = VCF_THREADS,
+    ingest_resources: Optional[Mapping[str, str]] = None,
 ) -> None:
     """
     Ingest samples into a dataset.
@@ -952,7 +977,7 @@ def ingest(
     :param ignore: pattern to ignore when searching for VCF files, defaults to None
     :param sample_list_uri: URI with a list of VCF URIs, defaults to None
     :param max_files: maximum number of VCF URIs to read/find, defaults to None (no limit)
-    :param contigs: contig mode (Contigs.ALL | Contigs.CHROMOSOMES | Contigs.OTHER)
+    :param contigs: contig mode (Contigs.ALL | Contigs.CHROMOSOMES | Contigs.OTHER | Contigs.ALL_DISABLE_MERGE)
         or list of contigs to ingest, defaults to Contigs.ALL
     :param resume: enable resume ingestion mode, defaults to False
     :param extra_attrs: INFO/FORMAT fields to materialize, defaults to `repr(DEFAULT_ATTRIBUTES)`
@@ -962,6 +987,7 @@ def ingest(
     :param vcf_batch_size: batch size for VCF ingestion, defaults to VCF_BATCH_SIZE
     :param vcf_workers: number of workers for VCF ingestion, defaults to VCF_WORKERS
     :param vcf_threads: number of threads for VCF ingestion, defaults to VCF_THREADS
+    :param ingest_resources: manual override for ingest UDF resources, defaults to None
     """
 
     # Validate user input
@@ -1003,4 +1029,5 @@ def ingest(
         threads=vcf_threads,
         contigs=contigs,
         resume=resume,
+        ingest_resources=ingest_resources,
     )
