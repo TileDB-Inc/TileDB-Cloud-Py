@@ -1186,8 +1186,6 @@ class DAG:
                 client.build(rest_api.TaskGraphLogsApi).stop_task_graph_execution(
                     namespace=self.namespace, id=self.server_graph_uuid
                 )
-            except rest_api.ApiException as apix:
-                raise
             with self._lifecycle_condition:
                 self._set_status(Status.CANCELLED)
         else:
