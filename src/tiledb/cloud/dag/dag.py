@@ -1182,10 +1182,9 @@ class DAG:
 
     def cancel(self):
         if self.mode == Mode.BATCH:
-            try:
-                client.build(rest_api.TaskGraphLogsApi).stop_task_graph_execution(
-                    namespace=self.namespace, id=self.server_graph_uuid
-                )
+            client.build(rest_api.TaskGraphLogsApi).stop_task_graph_execution(
+                namespace=self.namespace, id=self.server_graph_uuid
+            )
             with self._lifecycle_condition:
                 self._set_status(Status.CANCELLED)
         else:
