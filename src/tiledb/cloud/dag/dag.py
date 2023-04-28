@@ -59,6 +59,27 @@ _SKIP_BATCH_UDF_KWARGS = [
     "access_credentials_name",
 ]
 
+_TASK_GRAPH_LOG_STATUS_TO_STATUS_MAP = {
+    models.TaskGraphLogStatus.SUBMITTED: Status.NOT_STARTED,
+    models.TaskGraphLogStatus.RUNNING: Status.RUNNING,
+    models.TaskGraphLogStatus.IDLE: Status.NOT_STARTED,
+    models.TaskGraphLogStatus.ABANDONED: Status.CANCELLED,
+    models.TaskGraphLogStatus.SUCCEEDED: Status.COMPLETED,
+    models.TaskGraphLogStatus.FAILED: Status.FAILED,
+    models.TaskGraphLogStatus.CANCELLED: Status.CANCELLED,
+}
+
+_ARRAY_TASK_STATUS_TO_STATUS_MAP = {
+    models.ArrayTaskStatus.QUEUED: Status.NOT_STARTED,
+    models.ArrayTaskStatus.FAILED: Status.FAILED,
+    models.ArrayTaskStatus.COMPLETED: Status.COMPLETED,
+    models.ArrayTaskStatus.RUNNING: Status.RUNNING,
+    models.ArrayTaskStatus.RESOURCES_UNAVAILABLE: Status.FAILED,
+    models.ArrayTaskStatus.UNKNOWN: Status.FAILED,
+    models.ArrayTaskStatus.CANCELLED: Status.CANCELLED,
+    models.ArrayTaskStatus.DENIED: Status.FAILED,
+}
+
 
 class ParentFailedError(futures.CancelledError):
     def __init__(self, cause: BaseException, node: "Node"):
@@ -1194,7 +1215,6 @@ class DAG:
                     namespace=self.namespace,
                     id=self.server_graph_uuid,
                 )
-                self.server_graph_uuid = execution.uuid
 
             with self._lifecycle_condition:
                 self._set_status(Status.RUNNING)
@@ -1865,40 +1885,8 @@ def _topo_sort(
 
 
 def array_task_status_to_status(status: models.ArrayTaskStatus) -> Status:
-    if status == models.ArrayTaskStatus.QUEUED:
-        return Status.NOT_STARTED
-    elif status == models.ArrayTaskStatus.FAILED:
-        return Status.FAILED
-    elif status == models.ArrayTaskStatus.COMPLETED:
-        return Status.COMPLETED
-    elif status == models.ArrayTaskStatus.RUNNING:
-        return Status.RUNNING
-    elif status == models.ArrayTaskStatus.RESOURCES_UNAVAILABLE:
-        return Status.FAILED
-    elif status == models.ArrayTaskStatus.UNKNOWN:
-        return Status.FAILED
-    elif status == models.ArrayTaskStatus.CANCELLED:
-        return Status.CANCELLED
-    elif status == models.ArrayTaskStatus.DENIED:
-        return Status.FAILED
-    else:
-        return Status.NOT_STARTED
+    return _ARRAY_TASK_STATUS_TO_STATUS_MAP.get(status, Status.NOT_STARTED)
 
 
 def task_graph_log_status_to_status(status: models.TaskGraphLogStatus) -> Status:
-    if status == models.TaskGraphLogStatus.SUBMITTED:
-        return Status.NOT_STARTED
-    elif status == models.TaskGraphLogStatus.RUNNING:
-        return Status.RUNNING
-    elif status == models.TaskGraphLogStatus.IDLE:
-        return Status.NOT_STARTED
-    elif status == models.TaskGraphLogStatus.ABANDONED:
-        return Status.CANCELLED
-    elif status == models.TaskGraphLogStatus.SUCCEEDED:
-        return Status.COMPLETED
-    elif status == models.TaskGraphLogStatus.FAILED:
-        return Status.FAILED
-    elif status == models.TaskGraphLogStatus.CANCELLED:
-        return Status.CANCELLED
-    else:
-        return Status.NOT_STARTED
+    return _TASK_GRAPH_LOG_STATUS_TO_STATUS_MAP.get(status, Status.NOT_STARTED)
