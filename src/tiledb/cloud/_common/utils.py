@@ -1,10 +1,11 @@
 import base64
+import datetime
 import functools
 import logging
 import sys
 import threading
 import urllib.parse
-from typing import Any, Callable, Optional, TypeVar
+from typing import Any, Callable, Optional, TypeVar, Union
 
 import cloudpickle
 import urllib3
@@ -107,3 +108,7 @@ def release_connection(resp: urllib3.HTTPResponse) -> None:
     """
     resp.drain_conn()
     resp.release_conn()
+
+
+def datetime_to_msec(t: Union[datetime.datetime, int, None]) -> Optional[int]:
+    return int(t.timestamp() * 1000) if isinstance(t, datetime.datetime) else t
