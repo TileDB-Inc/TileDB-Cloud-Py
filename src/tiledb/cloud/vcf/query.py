@@ -103,6 +103,9 @@ def vcf_query_udf(
     # Adjust inputs
     if config is None:
         config = {}
+    else:
+        config = config.copy()
+
     if isinstance(attrs, str):
         attrs = [attrs]
     if isinstance(regions, str):
@@ -186,9 +189,7 @@ def concat_tables_udf(
     logger = setup(config, verbose)
 
     with Profiler(array_uri=log_uri) as prof:
-        table = pa.concat_tables(
-            [x for x in tables if x is not None and x.num_rows > 0]
-        )
+        table = pa.concat_tables(x for x in tables if x is not None and x.num_rows > 0)
         prof.write("result", table.num_rows, table.nbytes)
 
     memory_usage_gb = max_memory_usage() / (1 << 30)
@@ -251,10 +252,10 @@ def build_read_dag(
 
     # Set number of sample partitions
     num_samples = len(samples)
-    sample_batch_size = ceil(num_samples // (max_workers // num_region_partitions))
+    sample_batch_size = ceil(num_samples * num_region_partitions / max_workers)
     sample_batch_size = min(sample_batch_size, MAX_SAMPLE_BATCH_SIZE)  # max batch size
     sample_batch_size = max(sample_batch_size, MIN_SAMPLE_BATCH_SIZE)  # min batch size
-    num_sample_partitions = max(1, num_samples // sample_batch_size)  # at least one
+    num_sample_partitions = ceil(num_samples / sample_batch_size)
 
     logger.debug("num_samples=%d", num_samples)
     logger.debug("sample_batch_size=%d", sample_batch_size)
