@@ -25,12 +25,11 @@ MAX_WORKERS = 40
 MAX_SAMPLE_BATCH_SIZE = 500
 MIN_SAMPLE_BATCH_SIZE = 20
 
-# Test and debug hooks
-verbose = False
-trace = False
 
-
-def setup(config: Optional[Mapping[str, Any]] = None) -> logging.Logger:
+def setup(
+    config: Optional[Mapping[str, Any]] = None,
+    verbose: bool = False,
+) -> logging.Logger:
     """
     Set the default TileDB context, OS environment variables for AWS,
     and return a logger instance.
@@ -79,6 +78,7 @@ def vcf_query_udf(
     af_filter: Optional[str] = None,
     log_uri: Optional[str] = None,
     log_id: str = "query",
+    verbose: bool = False,
 ) -> pa.table:
     """
     Run a query on a TileDB-VCF dataset.
@@ -95,6 +95,7 @@ def vcf_query_udf(
     :param af_filter: allele frequency filter, defaults to None
     :param log_uri: log array URI for profiling, defaults to None
     :param log_id: profiler event ID, defaults to "query"
+    :param verbose: verbose logging, defaults to False
     :return: Arrow table containing the query results
     """
     import tiledbvcf
@@ -109,7 +110,7 @@ def vcf_query_udf(
     if isinstance(samples, str):
         samples = [samples]
 
-    logger = setup(config)
+    logger = setup(config, verbose)
     logger.debug("tiledbvcf=%s", tiledbvcf.version)
 
     config["rest.use_refactored_array_open"] = True
@@ -170,6 +171,7 @@ def concat_tables_udf(
     *,
     config: Optional[Mapping[str, Any]] = None,
     log_uri: Optional[str] = None,
+    verbose: bool = False,
 ) -> pa.table:
     """
     Concatenate a list of Arrow tables.
@@ -177,10 +179,11 @@ def concat_tables_udf(
     :param tables: Arrow tables
     :param config: config dictionary, defaults to None
     :param log_uri: log URI for profiling, defaults to None
+    :param verbose: verbose logging, defaults to False
     :return: concatenated Arrow table
     """
 
-    logger = setup(config)
+    logger = setup(config, verbose)
 
     with Profiler(array_uri=log_uri) as prof:
         table = pa.concat_tables(
@@ -201,7 +204,7 @@ def concat_tables_udf(
 # --------------------------------------------------------------------
 
 
-def read(
+def build_read_dag(
     dataset_uri: str,
     *,
     config: Optional[Mapping[str, Any]] = None,
@@ -216,10 +219,10 @@ def read(
     log_uri: Optional[str] = None,
     namespace: Optional[str] = None,
     resource_class: Optional[str] = None,
-    return_dag: bool = False,
-) -> Union[pa.Table, Tuple[tiledb.cloud.dag.DAG, tiledb.cloud.dag.Node]]:
+    verbose: bool = False,
+) -> Tuple[tiledb.cloud.dag.DAG, tiledb.cloud.dag.Node]:
     """
-    Run a distributed read on a TileDB-VCF dataset.
+    Build the DAG for a distributed read on a TileDB-VCF dataset.
 
     :param dataset_uri: dataset URI
     :param config: config dictionary, defaults to None
@@ -233,11 +236,11 @@ def read(
     :param log_uri: log array URI for profiling, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
     :param resource_class: TileDB-Cloud resource class for UDFs, defaults to None
-    :param return_dag: return a DAG instead of the query results, defaults to False
-    :return: Arrow table containing the query results or a DAG if return_dag is True
+    :param verbose: verbose logging, defaults to False
+    :return: DAG and result Node
     """
 
-    logger = setup(config)
+    logger = setup(config, verbose)
 
     # Return an empty table if no samples or regions are specified.
     # This avoids reading the entire array by accident.
@@ -300,9 +303,62 @@ def read(
 
     logger.debug("tasks=%d", len(tables))
 
-    if return_dag:
-        return dag, table
+    return dag, table
 
-    run_dag(dag)
+
+def read(
+    dataset_uri: str,
+    *,
+    config: Optional[Mapping[str, Any]] = None,
+    attrs: Optional[Union[Sequence[str], str]] = None,
+    regions: Optional[Union[Sequence[str], str]] = None,
+    bed_file: Optional[str] = None,
+    num_region_partitions: int = 1,
+    max_workers: int = MAX_WORKERS,
+    samples: Optional[Union[Sequence[str], str]] = None,
+    memory_budget_mb: int = 1024,
+    af_filter: Optional[str] = None,
+    log_uri: Optional[str] = None,
+    namespace: Optional[str] = None,
+    resource_class: Optional[str] = None,
+    verbose: bool = False,
+) -> pa.Table:
+    """
+    Run a distributed read on a TileDB-VCF dataset.
+
+    :param dataset_uri: dataset URI
+    :param config: config dictionary, defaults to None
+    :param attrs: attribute names to read, defaults to None
+    :param regions: genomics regions to read, defaults to None
+    :param bed_file: URI of a BED file containing genomics regions to read, defaults to None
+    :param num_region_partitions: number of region partitions, defaults to 1
+    :param samples: sample names to read, defaults to None
+    :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
+    :param af_filter: allele frequency filter, defaults to None
+    :param log_uri: log array URI for profiling, defaults to None
+    :param namespace: TileDB-Cloud namespace, defaults to None
+    :param resource_class: TileDB-Cloud resource class for UDFs, defaults to None
+    :param verbose: verbose logging, defaults to False
+    :return: Arrow table containing the query results
+    """
+
+    dag, table = build_read_dag(
+        dataset_uri,
+        config=config,
+        attrs=attrs,
+        regions=regions,
+        bed_file=bed_file,
+        num_region_partitions=num_region_partitions,
+        max_workers=max_workers,
+        samples=samples,
+        memory_budget_mb=memory_budget_mb,
+        af_filter=af_filter,
+        log_uri=log_uri,
+        namespace=namespace,
+        resource_class=resource_class,
+        verbose=verbose,
+    )
+
+    run_dag(dag, debug=verbose)
 
     return table.result()
