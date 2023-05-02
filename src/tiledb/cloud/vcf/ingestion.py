@@ -18,10 +18,8 @@ from tiledb.cloud.utilities import run_dag
 from tiledb.cloud.utilities import set_aws_context
 from tiledb.cloud.utilities import write_log_event
 
-# Test and debug hooks
+# Testing hooks
 local_ingest = False
-verbose = False
-trace = False
 
 # Array names
 LOG_ARRAY = "log"
@@ -59,12 +57,16 @@ class Contigs(enum.Enum):
     ALL_DISABLE_MERGE = enum.auto()
 
 
-def setup(config: Optional[Mapping[str, Any]] = None) -> logging.Logger:
+def setup(
+    config: Optional[Mapping[str, Any]] = None,
+    verbose: bool = False,
+) -> logging.Logger:
     """
     Set the default TileDB context, OS environment variables for AWS,
     and return a logger instance.
 
     :param config: config dictionary, defaults to None
+    :param verbose: verbose logging, defaults to False
     :return: logger instance
     """
 
@@ -147,6 +149,7 @@ def create_dataset_udf(
     config: Optional[Mapping[str, Any]] = None,
     extra_attrs: Optional[Union[Sequence[str], str]] = None,
     vcf_attrs: Optional[str] = None,
+    verbose: bool = False,
 ) -> str:
     """
     Create a TileDB-VCF dataset.
@@ -155,11 +158,12 @@ def create_dataset_udf(
     :param config: config dictionary, defaults to None
     :param extra_attrs: INFO/FORMAT fields to materialize, defaults to None
     :param vcf_attrs: VCF with all INFO/FORMAT fields to materialize, defaults to None
+    :param verbose: verbose logging, defaults to False
     :return: dataset URI
     """
     import tiledbvcf
 
-    logger = setup(config)
+    logger = setup(config, verbose)
     logger.debug("tiledbvcf=%s", tiledbvcf.version)
 
     # Check if the dataset already exists
@@ -203,6 +207,7 @@ def read_uris_udf(
     *,
     config: Optional[Mapping[str, Any]] = None,
     max_files: Optional[int] = None,
+    verbose: bool = False,
 ) -> Sequence[str]:
     """
     Read a list of URIs from a URI.
@@ -211,10 +216,11 @@ def read_uris_udf(
     :param list_uri: URI of the list of URIs
     :param config: config dictionary, defaults to None
     :param max_files: maximum number of URIs returned, defaults to None
+    :param verbose: verbose logging, defaults to False
     :return: list of URIs
     """
 
-    logger = setup(config)
+    logger = setup(config, verbose)
 
     with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY):
         result = []
@@ -237,6 +243,7 @@ def find_uris_udf(
     pattern: Optional[str] = None,
     ignore: Optional[str] = None,
     max_files: Optional[int] = None,
+    verbose: bool = False,
 ) -> Sequence[str]:
     """
     Find URIs matching a pattern in a directory or S3 bucket using the following command:
@@ -251,10 +258,11 @@ def find_uris_udf(
     :param pattern: pattern used in the search, defaults to None
     :param ignore: exclude pattern applied to the search results, defaults to None
     :param max_files: maximum number of URIs returned, defaults to None
+    :param verbose: verbose logging, defaults to False
     :return: list of URIs
     """
 
-    logger = setup(config)
+    logger = setup(config, verbose)
 
     with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
         use_s3 = search_uri.startswith("s3://")
@@ -323,16 +331,19 @@ def filter_uris_udf(
     sample_uris: Sequence[str],
     *,
     config: Optional[Mapping[str, Any]] = None,
+    verbose: bool = False,
 ) -> Sequence[str]:
     """
     Return URIs from `sample_uris` that are not in the manifest.
 
     :param dataset_uri: dataset URI
     :param sample_uris: sample URIs
+    :param config: config dictionary, defaults to None
+    :param verbose: verbose logging, defaults to False
     :return: filtered sample URIs
     """
 
-    logger = setup(config)
+    logger = setup(config, verbose)
 
     with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
         # Read all sample URIs in the manifest
@@ -357,17 +368,19 @@ def filter_samples_udf(
     dataset_uri: str,
     *,
     config: Optional[Mapping[str, Any]] = None,
+    verbose: bool = False,
 ) -> Sequence[str]:
     """
     Return URIs for samples not already in the dataset.
 
     :param dataset_uri: dataset URI
     :param config: config dictionary, defaults to None
+    :param verbose: verbose logging, defaults to False
     :return: sample URIs
     """
     import tiledbvcf
 
-    logger = setup(config)
+    logger = setup(config, verbose)
     logger.debug("tiledbvcf=%s", tiledbvcf.version)
 
     with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
@@ -408,6 +421,7 @@ def ingest_manifest_udf(
     *,
     config: Optional[Mapping[str, Any]] = None,
     id: str = "manifest",
+    verbose: bool = False,
 ) -> None:
     """
     Ingest sample URIs into the manifest array.
@@ -416,9 +430,10 @@ def ingest_manifest_udf(
     :param sample_uris: sample URIs
     :param config: config dictionary, defaults to None
     :param id: profiler event id, defaults to "manifest"
+    :param verbose: verbose logging, defaults to False
     """
 
-    setup(config)
+    setup(config, verbose)
 
     with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
         group = tiledb.Group(dataset_uri)
@@ -539,6 +554,8 @@ def ingest_samples_udf(
     contig_fragment_merging: bool = True,
     resume: bool = False,
     id: str = "samples",
+    verbose: bool = False,
+    trace_id: Optional[str] = None,
 ) -> None:
     """
     Ingest samples into the dataset.
@@ -554,18 +571,23 @@ def ingest_samples_udf(
     :param contig_fragment_merging: enable contig fragment merging, defaults to True
     :param resume: enable resume ingestion mode, defaults to False
     :param id: profiler event id, defaults to "samples"
+    :param verbose: verbose logging, defaults to False
+    :param trace_id: trace ID for logging, defaults to None
     """
     import tiledbvcf
 
-    logger = setup(config)
+    logger = setup(config, verbose)
     logger.debug("tiledbvcf=%s", tiledbvcf.version)
+
+    trace = trace_id == id
 
     with Profiler(
         group_uri=dataset_uri, group_member=LOG_ARRAY, id=id, trace=trace
     ) as prof:
         prof.write("uris", ",".join(sample_uris))
 
-        tiledbvcf.config_logging("info", "ingest.log")
+        level = "debug" if verbose else "info"
+        tiledbvcf.config_logging(level, "ingest.log")
         ds = tiledbvcf.Dataset(
             uri=dataset_uri, mode="w", cfg=tiledbvcf.ReadConfig(tiledb_config=config)
         )
@@ -590,6 +612,7 @@ def consolidate_dataset_udf(
     exclude: Optional[Union[Sequence[str], str]] = MANIFEST_ARRAY,
     include: Optional[Union[Sequence[str], str]] = None,
     id: str = "consolidate",
+    verbose: bool = False,
 ) -> None:
     """
     Consolidate arrays in the dataset.
@@ -599,6 +622,7 @@ def consolidate_dataset_udf(
     :param exclude: group members to exclude, defaults to MANIFEST_ARRAY
     :param include: group members to include, defaults to None
     :param id: profiler event id, defaults to "consolidate"
+    :param verbose: verbose logging, defaults to False
     """
 
     if exclude and include:
@@ -609,7 +633,7 @@ def consolidate_dataset_udf(
     if isinstance(include, str):
         include = [include]
 
-    setup(config)
+    setup(config, verbose)
 
     with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
         group = tiledb.Group(dataset_uri)
@@ -625,8 +649,8 @@ def consolidate_dataset_udf(
             # NOTE: REST currently only supports fragment_meta, commits, metadata
             modes = ["commits", "fragment_meta", "array_meta"]
 
-            # Consolidate fragments for log and manifest arrays
-            if name in [LOG_ARRAY, MANIFEST_ARRAY]:
+            # Consolidate fragments for selected arrays
+            if name in [LOG_ARRAY, MANIFEST_ARRAY, "vcf_headers"]:
                 modes += ["fragments"]
 
             for mode in modes:
@@ -663,6 +687,7 @@ def ingest_manifest_dag(
     workers: int = MANIFEST_WORKERS,
     extra_attrs: Optional[Union[Sequence[str], str]] = None,
     vcf_attrs: Optional[str] = None,
+    verbose: bool = False,
 ) -> None:
     """
     Create a DAG to load the manifest array.
@@ -679,6 +704,7 @@ def ingest_manifest_dag(
     :param workers: maximum number of parallel workers, defaults to MANIFEST_WORKERS
     :param extra_attrs: INFO/FORMAT fields to materialize, defaults to None
     :param vcf_attrs: VCF with all INFO/FORMAT fields to materialize, defaults to None
+    :param verbose: verbose logging, defaults to False
     """
 
     logger = get_logger()
@@ -696,6 +722,7 @@ def ingest_manifest_dag(
         config=config,
         extra_attrs=extra_attrs,
         vcf_attrs=vcf_attrs,
+        verbose=verbose,
         name="Create VCF dataset ",
     )
 
@@ -706,6 +733,7 @@ def ingest_manifest_dag(
             sample_list_uri,
             config=config,
             max_files=max_files,
+            verbose=verbose,
             name="Read VCF URIs ",
         )
 
@@ -718,6 +746,7 @@ def ingest_manifest_dag(
             pattern=pattern,
             ignore=ignore,
             max_files=max_files,
+            verbose=verbose,
             name="Find VCF URIs ",
         )
 
@@ -726,6 +755,7 @@ def ingest_manifest_dag(
         dataset_uri,
         sample_uris,
         config=config,
+        verbose=verbose,
         name="Filter VCF URIs ",
     )
 
@@ -769,6 +799,7 @@ def ingest_manifest_dag(
                 exclude=None,
                 include=[MANIFEST_ARRAY, LOG_ARRAY],
                 id=f"manifest-consol-{i//workers}",
+                verbose=verbose,
                 name=f"Consolidate VCF Manifest {i//workers + 1}/{num_consolidates} ",
             )
 
@@ -777,6 +808,7 @@ def ingest_manifest_dag(
             dataset_uri,
             sample_uris[i * batch_size : (i + 1) * batch_size],
             config=config,
+            verbose=verbose,
             id=f"manifest-ingest-{i}",
             name=f"Ingest VCF Manifest {i+1}/{num_partitions} ",
         )
@@ -801,6 +833,8 @@ def ingest_samples_dag(
     workers: int = VCF_WORKERS,
     resume: bool = False,
     ingest_resources: Optional[Mapping[str, str]] = None,
+    verbose: bool = False,
+    trace_id: Optional[str] = None,
 ) -> None:
     """
     Create a DAG to ingest samples into the dataset.
@@ -815,9 +849,11 @@ def ingest_samples_dag(
     :param workers: maximum number of parallel workers, defaults to VCF_WORKERS
     :param resume: enable resume ingestion mode, defaults to False
     :param ingest_resources: manual override for ingest UDF resources, defaults to None
+    :param verbose: verbose logging, defaults to False
+    :param trace_id: trace ID for logging, defaults to None
     """
 
-    logger = setup(config)
+    logger = setup(config, verbose)
 
     graph = dag.DAG(
         name="vcf-filter-samples",
@@ -832,6 +868,7 @@ def ingest_samples_dag(
         filter_samples_udf,
         dataset_uri,
         config=config,
+        verbose=verbose,
         name="Filter VCF samples",
     )
 
@@ -845,13 +882,13 @@ def ingest_samples_dag(
 
     logger.info("Ingesting %d samples.", len(sample_uris))
 
+    contig_fragment_merging = True
     if type(contigs) == list:
         contig_mode = "separate"
         contigs_to_keep_separate = contigs
     else:
-        contigs_to_keep_separate = None
         contig_mode = "all"
-        contig_fragment_merging = True
+        contigs_to_keep_separate = None
         if contigs == Contigs.CHROMOSOMES:
             contig_mode = "separate"
         elif contigs == Contigs.OTHER:
@@ -904,6 +941,7 @@ def ingest_samples_dag(
                 dataset_uri,
                 config=config,
                 id=f"vcf-consol-{i//workers}",
+                verbose=verbose,
                 resources=consolidate_resources,
                 name=f"Consolidate VCF {i//workers + 1}/{num_consolidates} ",
             )
@@ -921,6 +959,8 @@ def ingest_samples_dag(
             contig_fragment_merging=contig_fragment_merging,
             resume=resume,
             id=f"vcf-ingest-{i}",
+            verbose=verbose,
+            trace_id=trace_id,
             resources=ingest_resources,
             name=f"Ingest VCF {i+1}/{num_partitions} ",
         )
@@ -965,6 +1005,8 @@ def ingest(
     vcf_workers: int = VCF_WORKERS,
     vcf_threads: int = VCF_THREADS,
     ingest_resources: Optional[Mapping[str, str]] = None,
+    verbose: bool = False,
+    trace_id: Optional[str] = None,
 ) -> None:
     """
     Ingest samples into a dataset.
@@ -988,6 +1030,8 @@ def ingest(
     :param vcf_workers: number of workers for VCF ingestion, defaults to VCF_WORKERS
     :param vcf_threads: number of threads for VCF ingestion, defaults to VCF_THREADS
     :param ingest_resources: manual override for ingest UDF resources, defaults to None
+    :param verbose: verbose logging, defaults to False
+    :param trace_id: trace ID for logging, defaults to None
     """
 
     # Validate user input
@@ -1000,7 +1044,7 @@ def ingest(
     if sample_list_uri and (pattern or ignore):
         raise ValueError("Cannot specify `pattern` or `ignore` with `sample_list_uri`.")
 
-    logger = setup(config)
+    logger = setup(config, verbose)
     logger.info("Ingesting VCF samples into %r", dataset_uri)
 
     # Add VCF URIs to the manifest
@@ -1017,6 +1061,7 @@ def ingest(
         workers=manifest_workers,
         extra_attrs=extra_attrs,
         vcf_attrs=vcf_attrs,
+        verbose=verbose,
     )
 
     # Ingest VCFs using URIs in the manifest
@@ -1030,4 +1075,6 @@ def ingest(
         contigs=contigs,
         resume=resume,
         ingest_resources=ingest_resources,
+        verbose=verbose,
+        trace_id=trace_id,
     )
