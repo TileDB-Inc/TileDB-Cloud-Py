@@ -62,7 +62,7 @@ class LocalExecutor(_base.IClientExecutor):
             run on the server simultaneously.
         """
         super().__init__(graph)
-        self._name = name
+        self._name = name or self._graph_json.get("name")
         self._namespace = namespace
         self._event_queue: queue.Queue[Callable[[], None]] = queue.Queue()
         """Event queue used by the main loop.
