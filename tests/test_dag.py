@@ -641,7 +641,6 @@ class DAGBatchModeTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             node.result()
 
-    @pytest.mark.xfail(reason="server-side issue; remove when fixed")
     def test_dynamic_batch_dag(self):
         d = dag.DAG(mode=Mode.BATCH, max_workers=2)
 
@@ -739,6 +738,48 @@ class DAGBatchModeTest(unittest.TestCase):
             # Wait for dag to complete
             d.wait(300)
         self.assertEqual(d.status, dag.Status.FAILED)
+
+    def test_batch_dag_manual_retries(self):
+        def random_failure():
+            import random
+
+            if random.random() > 0.5:
+                raise RuntimeError("Random error!")
+
+        d = dag.DAG(
+            mode=Mode.BATCH,
+        )
+        d.submit(
+            random_failure,
+            name="node",
+            resources={"cpu": "1", "memory": "500Mi"},
+        )
+
+        finished = False
+        d.compute()
+        while not finished:
+            try:
+                d.wait(600)
+            except RuntimeError:
+                d.retry_all()
+            else:
+                finished = True
+        self.assertEqual(d.status, dag.Status.COMPLETED)
+
+    def test_cancel_batch_dag(self):
+        d = dag.DAG(mode=Mode.BATCH)
+        d.submit(
+            time.sleep,
+            50,
+            name="node",
+            resources={"cpu": "1", "memory": "500Mi"},
+        )
+
+        d.compute()
+        time.sleep(20)
+        d.cancel()
+        d.wait(300)
+        self.assertEqual(d.status, dag.Status.CANCELLED)
 
 
 class DAGCancelTest(unittest.TestCase):
