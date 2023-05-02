@@ -17,7 +17,7 @@ from tiledb.cloud.taskgraphs import types
 class ClientExecutorTestUDFs(unittest.TestCase):
     def test_empty(self):
         grf = builder.TaskGraphBuilder("empty")
-        exec = client_executor.LocalExecutor(grf, name="empty")
+        exec = client_executor.LocalExecutor(grf)
         exec.execute()
         exec.wait(1)
         self.assertIs(executor.Status.SUCCEEDED, exec.status)
@@ -26,7 +26,7 @@ class ClientExecutorTestUDFs(unittest.TestCase):
         grf = builder.TaskGraphBuilder("test_one")
         len_node = grf.udf(len, types.args("some string"), result_format="json")
 
-        exec = client_executor.LocalExecutor(grf, name="test_one exec")
+        exec = client_executor.LocalExecutor(grf)
         exec.execute()
         len_exec = exec.node(len_node)
         self.assertEqual(11, len_exec.result(15))
@@ -38,7 +38,7 @@ class ClientExecutorTestUDFs(unittest.TestCase):
         first = grf.udf(lambda: 10)
         out = grf.udf("my value is {!r}".format, types.args(first))
 
-        exec = client_executor.LocalExecutor(grf, name="test_two exec")
+        exec = client_executor.LocalExecutor(grf)
         exec.execute()
         self.assertEqual("my value is 10", exec.node(out).result(15))
         self.assertEqual(10, exec.node(first).result(0))
@@ -51,7 +51,7 @@ class ClientExecutorTestUDFs(unittest.TestCase):
         reverser = grf.udf(lambda val: val[::-1], types.args(top), name="reverser")
         join = grf.udf(operator.add, types.args(top, reverser), name="together")
 
-        exec = client_executor.LocalExecutor(grf, name="test_diamond exec")
+        exec = client_executor.LocalExecutor(grf, name="test_diamond name override")
         exec.execute()
         self.assertEqual("step on  no pets", exec.node(join).result(30))
 
