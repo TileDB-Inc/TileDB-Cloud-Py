@@ -76,7 +76,7 @@ def vcf_query_udf(
     sample_partition: Optional[Tuple[int, int]] = None,
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
-    fn: Optional[Callable[[pa.Table], pa.Table]] = None,
+    transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
     log_uri: Optional[str] = None,
     log_id: str = "query",
     verbose: bool = False,
@@ -94,7 +94,7 @@ def vcf_query_udf(
     :param sample_partition: sample partition tuple (0-based indexed, num_partitions), defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
     :param af_filter: allele frequency filter, defaults to None
-    :param fn: function to apply to the result table, defaults to None
+    :param transform_result: function to apply to the result table, by default, does not transform the result
     :param log_uri: log array URI for profiling, defaults to None
     :param log_id: profiler event ID, defaults to "query"
     :param verbose: verbose logging, defaults to False
@@ -163,9 +163,9 @@ def vcf_query_udf(
         prof.write("result", table.num_rows, table.nbytes)
 
     # Apply function to the result table
-    if fn is not None:
-        with Profiler(array_uri=log_uri, id=log_id + "-fn") as prof:
-            table = fn(table)
+    if transform_result is not None:
+        with Profiler(array_uri=log_uri, id=log_id + "-tr") as prof:
+            table = transform_result(table)
             prof.write("result", table.num_rows, table.nbytes)
 
     memory_usage_gb = max_memory_usage() / (1 << 30)
@@ -225,7 +225,7 @@ def build_read_dag(
     samples: Optional[Union[Sequence[str], str]] = None,
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
-    fn: Optional[Callable[[pa.Table], pa.Table]] = None,
+    transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
     log_uri: Optional[str] = None,
     namespace: Optional[str] = None,
     resource_class: Optional[str] = None,
@@ -243,7 +243,7 @@ def build_read_dag(
     :param samples: sample names to read, defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
     :param af_filter: allele frequency filter, defaults to None
-    :param fn: function to apply to each partition, defaults to None
+    :param transform_result: function to apply to each partition, by default, does not transform the result
     :param log_uri: log array URI for profiling, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
     :param resource_class: TileDB-Cloud resource class for UDFs, defaults to None
@@ -293,7 +293,7 @@ def build_read_dag(
                     sample_partition=(sample, num_sample_partitions),
                     memory_budget_mb=memory_budget_mb,
                     af_filter=af_filter,
-                    fn=fn,
+                    transform_result=transform_result,
                     log_uri=log_uri,
                     log_id=f"query-reg{region}-sam{sample}",
                     name=f"VCF Query - Region {region+1}/{num_region_partitions}, Sample {sample+1}/{num_sample_partitions}",
@@ -330,7 +330,7 @@ def read(
     samples: Optional[Union[Sequence[str], str]] = None,
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
-    fn: Optional[Callable[[pa.Table], pa.Table]] = None,
+    transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
     log_uri: Optional[str] = None,
     namespace: Optional[str] = None,
     resource_class: Optional[str] = None,
@@ -348,7 +348,7 @@ def read(
     :param samples: sample names to read, defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
     :param af_filter: allele frequency filter, defaults to None
-    :param fn: function to apply to each partition, defaults to None
+    :param transform_result: function to apply to each partition, by default, does not transform the result
     :param log_uri: log array URI for profiling, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
     :param resource_class: TileDB-Cloud resource class for UDFs, defaults to None
@@ -367,7 +367,7 @@ def read(
         samples=samples,
         memory_budget_mb=memory_budget_mb,
         af_filter=af_filter,
-        fn=fn,
+        transform_result=transform_result,
         log_uri=log_uri,
         namespace=namespace,
         resource_class=resource_class,
