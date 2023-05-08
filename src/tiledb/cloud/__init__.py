@@ -34,6 +34,7 @@ from tiledb.cloud.tasks import last_udf_task
 from tiledb.cloud.tasks import task
 from tiledb.cloud.tiledb_cloud_error import TileDBCloudError
 
+_pickle_compat.patch_cloudpickle()
 _pickle_compat.patch_pandas()
 
 try:

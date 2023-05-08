@@ -1,9 +1,119 @@
+"""A series of hacks to allow us to read ordinarily-incompatible pickles.
+
+A complex pickle stream consists of essentially constructing a bunch of values
+and then passing those values into already-installed library functions.
+In many cases, the only reason that a pickle cannot be loaded is because the
+library function that the pickle stream refers to is not present;
+monkey-patching the function in may allow the pickle to be read.
+
+This monkey-patches a few libraries to enable read-compatibility of pickles.
+Changing the pickle-writing process would be much more difficult.
+"""
+
 import importlib
 import sys
+import types
 
+import cloudpickle.cloudpickle as cpcp
 import numpy
 import packaging.version as pkgver
 import pandas
+
+
+def patch_cloudpickle() -> None:
+    """Make older cloudpickle versions able to unpickle new function pickles."""
+
+    # Functions below are adapted from cloudpickle v2.2.1
+    # under the BSD license:
+    #
+    # Copyright (c) 2012, Regents of the University of California.
+    # Copyright (c) 2009 PiCloud, Inc.
+    #     <https://web.archive.org/web/20140626004012/http://www.picloud.com/>.
+    # All rights reserved.
+    #
+    # Redistribution and use in source and binary forms, with or without
+    # modification, are permitted provided that the following conditions
+    # are met:
+    #     * Redistributions of source code must retain the above copyright
+    #       notice, this list of conditions and the following disclaimer.
+    #     * Redistributions in binary form must reproduce the above copyright
+    #       notice, this list of conditions and the following disclaimer in the
+    #       documentation and/or other materials provided with the distribution.
+    #     * Neither the name of the University of California, Berkeley nor the
+    #       names of its contributors may be used to endorse or promote
+    #       products derived from this software without specific prior written
+    #       permission.
+    #
+    # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+    # A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+    # HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+    # SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+    # TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+    # PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+    # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+    # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+    try:
+        empty_cell_value = cpcp._empty_cell_value
+    except AttributeError:
+        # https://github.com/cloudpipe/cloudpickle/blob/v2.2.1/cloudpickle/cloudpickle.py#L692-L698
+        class _empty_cell_value:
+            """sentinel for empty closures"""
+
+            @classmethod
+            def __reduce__(cls):
+                return cls.__name__
+
+        _empty_cell_value.__module__ = cpcp.__name__
+        empty_cell_value = _empty_cell_value()
+        cpcp._empty_cell_value = empty_cell_value
+
+    try:
+        make_empty_cell = cpcp._make_empty_cell
+    except AttributeError:
+        # https://github.com/cloudpipe/cloudpickle/blob/v2.2.1/cloudpickle/cloudpickle.py#L772-L778
+        def make_empty_cell():
+            if False:
+                # trick the compiler into creating an empty cell in our lambda
+                cell = None
+                raise AssertionError("this route should not be executed")
+
+            return (lambda: cell).__closure__[0]
+
+    if not hasattr(types, "CellType"):
+        types.CellType = type(make_empty_cell())
+
+    if not hasattr(cpcp, "_make_cell"):
+        try:
+            cell_set = cpcp.cell_set
+        except AttributeError:
+            #
+            def cell_set(cell, value):
+                # We only support 3.7+.
+                cell.cell_contents = value
+
+            cpcp.cell_set = cell_set
+
+        # https://github.com/cloudpipe/cloudpickle/blob/v2.2.1/cloudpickle/cloudpickle.py#L392-L450
+        def _make_cell(value=empty_cell_value):
+            cell = make_empty_cell()
+            if value is not empty_cell_value:
+                cell_set(cell, value)
+            return cell
+
+        cpcp._make_cell = _make_cell
+
+    if not hasattr(cpcp, "_make_function"):
+
+        def _make_function(code, globals, name, argdefs, closure):
+            # Setting __builtins__ in globals is needed for nogil CPython.
+            globals["__builtins__"] = __builtins__
+            return types.FunctionType(code, globals, name, argdefs, closure)
+
+        cpcp._make_function = _make_function
 
 
 def patch_pandas() -> None:
