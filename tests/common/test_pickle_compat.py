@@ -1,5 +1,6 @@
 import pathlib
 import pickle
+import sys
 from typing import Any, Tuple
 
 import numpy as np
@@ -51,3 +52,14 @@ def test_pandas_compat(pd_ver: str, name_want: Tuple[str, Any]) -> None:
     pkl_bytes = pkl_file.read_bytes()
     got = pickle.loads(pkl_bytes)
     assert want.equals(got)
+
+
+# These are the versions of cloudpickle that introduce serialization changes.
+@pytest.mark.parametrize("cp_ver", ["1.4.1", "1.5.0", "2.1.0"])
+def test_cloudpickle_compat(cp_ver: str) -> None:
+    py_ver = ".".join(str(v) for v in sys.version_info[:2])
+    pkl_file = PICKLE_DIR / "functions" / f"func-py{py_ver}-cloudpickle{cp_ver}.pickle"
+    pkl_bytes = pkl_file.read_bytes()
+    got_func = pickle.loads(pkl_bytes)
+    val = got_func()
+    assert val == "the date is 2023-05-05 07:00"
