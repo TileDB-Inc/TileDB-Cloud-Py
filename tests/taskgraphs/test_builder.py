@@ -264,14 +264,6 @@ class TestBuilder(unittest.TestCase):
                 name="hello world",
             )
 
-        # The pickle of the `itemgetter("a")` object above changes at py3.9.
-        # Both of these represent the same thing.
-        itemgetter_pickle = (
-            "gASVIgAAAAAAAACMCG9wZXJhdG9ylIwKaXRlbWdldHRlcpSTlIwBYZSFlFIu"
-            if sys.version_info < (3, 9)
-            else "gASVIwAAAAAAAACMCG9wZXJhdG9ylIwKaXRlbWdldHRlcpSTlIwBYZSFlFKULg=="
-        )
-
         expected = {
             "name": "it's complicated",
             "nodes": [
@@ -336,7 +328,7 @@ class TestBuilder(unittest.TestCase):
                             "language": "python",
                             "language_version": utils.PYTHON_VERSION,
                         },
-                        "executable_code": itemgetter_pickle,
+                        "executable_code": "gASVIwAAAAAAAACMCG9wZXJhdG9ylIwKaXRlbWdldHRlcpSTlIwBYZSFlFKULg==",
                         "result_format": "python_pickle",
                     },
                 },

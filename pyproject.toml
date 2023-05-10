@@ -7,9 +7,9 @@ dynamic = ["version"]
 dependencies = [
   "attrs>=21.4.0",
   "certifi",
-  "cloudpickle==1.4.1",
+  "cloudpickle>=1.4.1",
   "packaging",
-  "pandas",
+  "pandas>=1.2.4,<2",
   "pyarrow>=3.0.0",
   "python-dateutil",
   "six>=1.10",
