@@ -1,20 +1,19 @@
 # tiledb.cloud.rest_api.ArrayTasksApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**get_array_tasks_sidebar**](ArrayTasksApi.md#get_array_tasks_sidebar) | **GET** /v1/tasks/sidebar | 
-
+| Method                                                                  | HTTP request              | Description |
+| ----------------------------------------------------------------------- | ------------------------- | ----------- |
+| [**get_array_tasks_sidebar**](ArrayTasksApi.md#get_array_tasks_sidebar) | **GET** /v1/tasks/sidebar |
 
 # **get_array_tasks_sidebar**
+
 > ArrayTaskBrowserSidebar get_array_tasks_sidebar(start=start, end=end)
-
-
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -62,7 +61,8 @@ end = 56 # int | Fetch tasks created before this time, unix epoch in seconds, de
         print("Exception when calling ArrayTasksApi->get_array_tasks_sidebar: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -112,10 +112,10 @@ end = 56 # int | Fetch tasks created before this time, unix epoch in seconds, de
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **start** | **int**| Fetch tasks created after this time, unix epoch in seconds, default 7 days ago | [optional] 
- **end** | **int**| Fetch tasks created before this time, unix epoch in seconds, default now | [optional] 
+| Name      | Type    | Description                                                                    | Notes      |
+| --------- | ------- | ------------------------------------------------------------------------------ | ---------- |
+| **start** | **int** | Fetch tasks created after this time, unix epoch in seconds, default 7 days ago | [optional] |
+| **end**   | **int** | Fetch tasks created before this time, unix epoch in seconds, default now       | [optional] |
 
 ### Return type
 
@@ -127,16 +127,16 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | sidebar metadata for task definitions for all arrays user has access to |  -  |
-**404** | array tasks not found |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                                             | Response headers |
+| ----------- | ----------------------------------------------------------------------- | ---------------- |
+| **200**     | sidebar metadata for task definitions for all arrays user has access to | -                |
+| **404**     | array tasks not found                                                   | -                |
+| **502**     | Bad Gateway                                                             | -                |
+| **0**       | error response                                                          | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

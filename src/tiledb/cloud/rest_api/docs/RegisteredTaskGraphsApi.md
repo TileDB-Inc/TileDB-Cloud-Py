@@ -1,27 +1,26 @@
 # tiledb.cloud.rest_api.RegisteredTaskGraphsApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**delete_registered_task_graph**](RegisteredTaskGraphsApi.md#delete_registered_task_graph) | **DELETE** /v1/taskgraphs/{namespace}/registered/{name} | 
-[**get_registered_task_graph**](RegisteredTaskGraphsApi.md#get_registered_task_graph) | **GET** /v1/taskgraphs/{namespace}/registered/{name} | 
-[**get_registered_task_graph_sharing_policies**](RegisteredTaskGraphsApi.md#get_registered_task_graph_sharing_policies) | **GET** /v1/taskgraphs/{namespace}/registered/{name}/share | 
-[**register_registered_task_graph**](RegisteredTaskGraphsApi.md#register_registered_task_graph) | **POST** /v1/taskgraphs/{namespace}/registered/{name} | 
-[**share_registered_task_graph**](RegisteredTaskGraphsApi.md#share_registered_task_graph) | **PATCH** /v1/taskgraphs/{namespace}/registered/{name}/share | 
-[**update_registered_task_graph**](RegisteredTaskGraphsApi.md#update_registered_task_graph) | **PATCH** /v1/taskgraphs/{namespace}/registered/{name} | 
-
+| Method                                                                                                                  | HTTP request                                                 | Description |
+| ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ----------- |
+| [**delete_registered_task_graph**](RegisteredTaskGraphsApi.md#delete_registered_task_graph)                             | **DELETE** /v1/taskgraphs/{namespace}/registered/{name}      |
+| [**get_registered_task_graph**](RegisteredTaskGraphsApi.md#get_registered_task_graph)                                   | **GET** /v1/taskgraphs/{namespace}/registered/{name}         |
+| [**get_registered_task_graph_sharing_policies**](RegisteredTaskGraphsApi.md#get_registered_task_graph_sharing_policies) | **GET** /v1/taskgraphs/{namespace}/registered/{name}/share   |
+| [**register_registered_task_graph**](RegisteredTaskGraphsApi.md#register_registered_task_graph)                         | **POST** /v1/taskgraphs/{namespace}/registered/{name}        |
+| [**share_registered_task_graph**](RegisteredTaskGraphsApi.md#share_registered_task_graph)                               | **PATCH** /v1/taskgraphs/{namespace}/registered/{name}/share |
+| [**update_registered_task_graph**](RegisteredTaskGraphsApi.md#update_registered_task_graph)                             | **PATCH** /v1/taskgraphs/{namespace}/registered/{name}       |
 
 # **delete_registered_task_graph**
+
 > delete_registered_task_graph(namespace, name)
 
-
-
-Delete the given registered task graph. 
+Delete the given registered task graph.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -68,7 +67,8 @@ name = 'name_example' # str | The name of the registered task graph.
         print("Exception when calling RegisteredTaskGraphsApi->delete_registered_task_graph: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -117,10 +117,10 @@ name = 'name_example' # str | The name of the registered task graph.
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns this registered UDF. | 
- **name** | **str**| The name of the registered task graph. | 
+| Name          | Type    | Description                                  | Notes |
+| ------------- | ------- | -------------------------------------------- | ----- |
+| **namespace** | **str** | The namespace that owns this registered UDF. |
+| **name**      | **str** | The name of the registered task graph.       |
 
 ### Return type
 
@@ -132,28 +132,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | Task graph successfully deleted. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                      | Response headers |
+| ----------- | -------------------------------- | ---------------- |
+| **204**     | Task graph successfully deleted. | -                |
+| **502**     | Bad Gateway                      | -                |
+| **0**       | error response                   | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_registered_task_graph**
+
 > RegisteredTaskGraph get_registered_task_graph(namespace, name)
 
-
-
-Fetch the contents of this registered task graph. 
+Fetch the contents of this registered task graph.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -201,7 +202,8 @@ name = 'name_example' # str | The name of the registered task graph.
         print("Exception when calling RegisteredTaskGraphsApi->get_registered_task_graph: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -251,10 +253,10 @@ name = 'name_example' # str | The name of the registered task graph.
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns this registered UDF. | 
- **name** | **str**| The name of the registered task graph. | 
+| Name          | Type    | Description                                  | Notes |
+| ------------- | ------- | -------------------------------------------- | ----- |
+| **namespace** | **str** | The namespace that owns this registered UDF. |
+| **name**      | **str** | The name of the registered task graph.       |
 
 ### Return type
 
@@ -266,28 +268,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | The contents of the registered task graph. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                | Response headers |
+| ----------- | ------------------------------------------ | ---------------- |
+| **200**     | The contents of the registered task graph. | -                |
+| **502**     | Bad Gateway                                | -                |
+| **0**       | error response                             | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_registered_task_graph_sharing_policies**
+
 > list[TaskGraphSharing] get_registered_task_graph_sharing_policies(namespace, name)
-
-
 
 Get sharing policies for the task graph.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -335,7 +338,8 @@ name = 'name_example' # str | The name of the task graph.
         print("Exception when calling RegisteredTaskGraphsApi->get_registered_task_graph_sharing_policies: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -385,10 +389,10 @@ name = 'name_example' # str | The name of the task graph.
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns the registered task graph. | 
- **name** | **str**| The name of the task graph. | 
+| Name          | Type    | Description                                        | Notes |
+| ------------- | ------- | -------------------------------------------------- | ----- |
+| **namespace** | **str** | The namespace that owns the registered task graph. |
+| **name**      | **str** | The name of the task graph.                        |
 
 ### Return type
 
@@ -400,29 +404,30 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | List of all specific sharing policies |  -  |
-**404** | The task graph does not exist (or the user does not have permission to view policies)  |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                                                           | Response headers |
+| ----------- | ------------------------------------------------------------------------------------- | ---------------- |
+| **200**     | List of all specific sharing policies                                                 | -                |
+| **404**     | The task graph does not exist (or the user does not have permission to view policies) | -                |
+| **502**     | Bad Gateway                                                                           | -                |
+| **0**       | error response                                                                        | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **register_registered_task_graph**
+
 > register_registered_task_graph(namespace, name, graph=graph)
 
-
-
-Register a task graph in the given namespace, with the given name. 
+Register a task graph in the given namespace, with the given name.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -470,7 +475,8 @@ graph = tiledb.cloud.rest_api.RegisteredTaskGraph() # RegisteredTaskGraph | Task
         print("Exception when calling RegisteredTaskGraphsApi->register_registered_task_graph: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -520,11 +526,11 @@ graph = tiledb.cloud.rest_api.RegisteredTaskGraph() # RegisteredTaskGraph | Task
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns this registered UDF. | 
- **name** | **str**| The name of the registered task graph. | 
- **graph** | [**RegisteredTaskGraph**](RegisteredTaskGraph.md)| Task graph to register. | [optional] 
+| Name          | Type                                              | Description                                  | Notes      |
+| ------------- | ------------------------------------------------- | -------------------------------------------- | ---------- |
+| **namespace** | **str**                                           | The namespace that owns this registered UDF. |
+| **name**      | **str**                                           | The name of the registered task graph.       |
+| **graph**     | [**RegisteredTaskGraph**](RegisteredTaskGraph.md) | Task graph to register.                      | [optional] |
 
 ### Return type
 
@@ -536,28 +542,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | Task graph registered successfully. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                         | Response headers |
+| ----------- | ----------------------------------- | ---------------- |
+| **204**     | Task graph registered successfully. | -                |
+| **502**     | Bad Gateway                         | -                |
+| **0**       | error response                      | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **share_registered_task_graph**
+
 > share_registered_task_graph(namespace, name, task_graph_sharing)
-
-
 
 Share a task graph.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -597,7 +604,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.RegisteredTaskGraphsApi(api_client)
     namespace = 'namespace_example' # str | The namespace that owns the registered task graph.
 name = 'name_example' # str | The name of the task graph.
-task_graph_sharing = tiledb.cloud.rest_api.TaskGraphSharing() # TaskGraphSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all. 
+task_graph_sharing = tiledb.cloud.rest_api.TaskGraphSharing() # TaskGraphSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all.
 
     try:
         api_instance.share_registered_task_graph(namespace, name, task_graph_sharing)
@@ -605,7 +612,8 @@ task_graph_sharing = tiledb.cloud.rest_api.TaskGraphSharing() # TaskGraphSharing
         print("Exception when calling RegisteredTaskGraphsApi->share_registered_task_graph: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -645,7 +653,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.RegisteredTaskGraphsApi(api_client)
     namespace = 'namespace_example' # str | The namespace that owns the registered task graph.
 name = 'name_example' # str | The name of the task graph.
-task_graph_sharing = tiledb.cloud.rest_api.TaskGraphSharing() # TaskGraphSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all. 
+task_graph_sharing = tiledb.cloud.rest_api.TaskGraphSharing() # TaskGraphSharing | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it's likely the UDF will not be shared with the namespace at all.
 
     try:
         api_instance.share_registered_task_graph(namespace, name, task_graph_sharing)
@@ -655,11 +663,11 @@ task_graph_sharing = tiledb.cloud.rest_api.TaskGraphSharing() # TaskGraphSharing
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns the registered task graph. | 
- **name** | **str**| The name of the task graph. | 
- **task_graph_sharing** | [**TaskGraphSharing**](TaskGraphSharing.md)| Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it&#39;s likely the UDF will not be shared with the namespace at all.  | 
+| Name                   | Type                                        | Description                                                                                                                                                                                                                                                                                                                                            | Notes |
+| ---------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----- |
+| **namespace**          | **str**                                     | The namespace that owns the registered task graph.                                                                                                                                                                                                                                                                                                     |
+| **name**               | **str**                                     | The name of the task graph.                                                                                                                                                                                                                                                                                                                            |
+| **task_graph_sharing** | [**TaskGraphSharing**](TaskGraphSharing.md) | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it&#39;s likely the UDF will not be shared with the namespace at all. |
 
 ### Return type
 
@@ -671,29 +679,30 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | UDF shared successfully |  -  |
-**404** | UDF does not exist or user does not have permissions to share UDF |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                                       | Response headers |
+| ----------- | ----------------------------------------------------------------- | ---------------- |
+| **204**     | UDF shared successfully                                           | -                |
+| **404**     | UDF does not exist or user does not have permissions to share UDF | -                |
+| **502**     | Bad Gateway                                                       | -                |
+| **0**       | error response                                                    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_registered_task_graph**
+
 > update_registered_task_graph(namespace, name, graph=graph)
 
-
-
-Update the contents of an existing registered task graph. 
+Update the contents of an existing registered task graph.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -741,7 +750,8 @@ graph = tiledb.cloud.rest_api.RegisteredTaskGraph() # RegisteredTaskGraph | The 
         print("Exception when calling RegisteredTaskGraphsApi->update_registered_task_graph: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -791,11 +801,11 @@ graph = tiledb.cloud.rest_api.RegisteredTaskGraph() # RegisteredTaskGraph | The 
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns this registered UDF. | 
- **name** | **str**| The name of the registered task graph. | 
- **graph** | [**RegisteredTaskGraph**](RegisteredTaskGraph.md)| The new contents of the task graph. | [optional] 
+| Name          | Type                                              | Description                                  | Notes      |
+| ------------- | ------------------------------------------------- | -------------------------------------------- | ---------- |
+| **namespace** | **str**                                           | The namespace that owns this registered UDF. |
+| **name**      | **str**                                           | The name of the registered task graph.       |
+| **graph**     | [**RegisteredTaskGraph**](RegisteredTaskGraph.md) | The new contents of the task graph.          | [optional] |
 
 ### Return type
 
@@ -807,15 +817,15 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | Task graph updated successfully. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                      | Response headers |
+| ----------- | -------------------------------- | ---------------- |
+| **204**     | Task graph updated successfully. | -                |
+| **502**     | Bad Gateway                      | -                |
+| **0**       | error response                   | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

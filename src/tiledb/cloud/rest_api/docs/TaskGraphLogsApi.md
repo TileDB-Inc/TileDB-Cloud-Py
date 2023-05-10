@@ -1,30 +1,29 @@
 # tiledb.cloud.rest_api.TaskGraphLogsApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**create_task_graph_log**](TaskGraphLogsApi.md#create_task_graph_log) | **POST** /v1/taskgraphs/{namespace}/log | 
-[**get_task_graph_log**](TaskGraphLogsApi.md#get_task_graph_log) | **GET** /v1/taskgraphs/{namespace}/logs/{id} | 
-[**list_task_graph_logs**](TaskGraphLogsApi.md#list_task_graph_logs) | **GET** /v1/taskgraphs/logs | 
-[**report_client_node**](TaskGraphLogsApi.md#report_client_node) | **POST** /v1/taskgraphs/{namespace}/logs/{id}/report_client_node | 
-[**resubmit_task_graph_execution**](TaskGraphLogsApi.md#resubmit_task_graph_execution) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/resubmit | 
-[**retry_task_graph_execution**](TaskGraphLogsApi.md#retry_task_graph_execution) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/retry | 
-[**stop_task_graph_execution**](TaskGraphLogsApi.md#stop_task_graph_execution) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/stop | 
-[**submit_task_graph**](TaskGraphLogsApi.md#submit_task_graph) | **POST** /v1/taskgraphs/{namespace}/graphs/{id}/submit | 
-[**update_task_graph_log**](TaskGraphLogsApi.md#update_task_graph_log) | **PATCH** /v1/taskgraphs/{namespace}/logs/{id} | 
-
+| Method                                                                                 | HTTP request                                                     | Description |
+| -------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ----------- |
+| [**create_task_graph_log**](TaskGraphLogsApi.md#create_task_graph_log)                 | **POST** /v1/taskgraphs/{namespace}/log                          |
+| [**get_task_graph_log**](TaskGraphLogsApi.md#get_task_graph_log)                       | **GET** /v1/taskgraphs/{namespace}/logs/{id}                     |
+| [**list_task_graph_logs**](TaskGraphLogsApi.md#list_task_graph_logs)                   | **GET** /v1/taskgraphs/logs                                      |
+| [**report_client_node**](TaskGraphLogsApi.md#report_client_node)                       | **POST** /v1/taskgraphs/{namespace}/logs/{id}/report_client_node |
+| [**resubmit_task_graph_execution**](TaskGraphLogsApi.md#resubmit_task_graph_execution) | **POST** /v1/taskgraphs/{namespace}/executions/{id}/resubmit     |
+| [**retry_task_graph_execution**](TaskGraphLogsApi.md#retry_task_graph_execution)       | **POST** /v1/taskgraphs/{namespace}/executions/{id}/retry        |
+| [**stop_task_graph_execution**](TaskGraphLogsApi.md#stop_task_graph_execution)         | **POST** /v1/taskgraphs/{namespace}/executions/{id}/stop         |
+| [**submit_task_graph**](TaskGraphLogsApi.md#submit_task_graph)                         | **POST** /v1/taskgraphs/{namespace}/graphs/{id}/submit           |
+| [**update_task_graph_log**](TaskGraphLogsApi.md#update_task_graph_log)                 | **PATCH** /v1/taskgraphs/{namespace}/logs/{id}                   |
 
 # **create_task_graph_log**
+
 > TaskGraphLog create_task_graph_log(namespace, log)
-
-
 
 Create a task graph log.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -63,7 +62,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.TaskGraphLogsApi(api_client)
     namespace = 'namespace_example' # str | The namespace that will own this task graph log.
-log = tiledb.cloud.rest_api.TaskGraphLog() # TaskGraphLog | 
+log = tiledb.cloud.rest_api.TaskGraphLog() # TaskGraphLog |
 
     try:
         api_response = api_instance.create_task_graph_log(namespace, log)
@@ -72,7 +71,8 @@ log = tiledb.cloud.rest_api.TaskGraphLog() # TaskGraphLog |
         print("Exception when calling TaskGraphLogsApi->create_task_graph_log: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -111,7 +111,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.TaskGraphLogsApi(api_client)
     namespace = 'namespace_example' # str | The namespace that will own this task graph log.
-log = tiledb.cloud.rest_api.TaskGraphLog() # TaskGraphLog | 
+log = tiledb.cloud.rest_api.TaskGraphLog() # TaskGraphLog |
 
     try:
         api_response = api_instance.create_task_graph_log(namespace, log)
@@ -122,10 +122,10 @@ log = tiledb.cloud.rest_api.TaskGraphLog() # TaskGraphLog |
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that will own this task graph log. | 
- **log** | [**TaskGraphLog**](TaskGraphLog.md)|  | 
+| Name          | Type                                | Description                                      | Notes |
+| ------------- | ----------------------------------- | ------------------------------------------------ | ----- |
+| **namespace** | **str**                             | The namespace that will own this task graph log. |
+| **log**       | [**TaskGraphLog**](TaskGraphLog.md) |                                                  |
 
 ### Return type
 
@@ -137,28 +137,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**201** | The task graph was created. The returned TaskGraphLog will include the data the client sent, with the server-defined fields added in.  |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                                                                                                           | Response headers |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| **201**     | The task graph was created. The returned TaskGraphLog will include the data the client sent, with the server-defined fields added in. | -                |
+| **502**     | Bad Gateway                                                                                                                           | -                |
+| **0**       | error response                                                                                                                        | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_task_graph_log**
+
 > TaskGraphLog get_task_graph_log(namespace, id)
 
-
-
-Fetch information about a single task graph execution. 
+Fetch information about a single task graph execution.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -206,7 +207,8 @@ id = 'id_example' # str | The UUID of the task graph log entry.
         print("Exception when calling TaskGraphLogsApi->get_task_graph_log: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -256,10 +258,10 @@ id = 'id_example' # str | The UUID of the task graph log entry.
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns this task graph log. | 
- **id** | **str**| The UUID of the task graph log entry. | 
+| Name          | Type    | Description                                  | Notes |
+| ------------- | ------- | -------------------------------------------- | ----- |
+| **namespace** | **str** | The namespace that owns this task graph log. |
+| **id**        | **str** | The UUID of the task graph log entry.        |
 
 ### Return type
 
@@ -271,28 +273,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Information about the execution of a single task graph. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                             | Response headers |
+| ----------- | ------------------------------------------------------- | ---------------- |
+| **200**     | Information about the execution of a single task graph. | -                |
+| **502**     | Bad Gateway                                             | -                |
+| **0**       | error response                                          | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_task_graph_logs**
+
 > TaskGraphLogsData list_task_graph_logs(namespace=namespace, created_by=created_by, search=search, start_time=start_time, end_time=end_time, page=page, per_page=per_page)
 
-
-
-Fetch the task graph logs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata. 
+Fetch the task graph logs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -345,7 +348,8 @@ per_page = 56 # int | pagination limit (optional)
         print("Exception when calling TaskGraphLogsApi->list_task_graph_logs: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -400,15 +404,15 @@ per_page = 56 # int | pagination limit (optional)
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| Include logs for this namespace. | [optional] 
- **created_by** | **str**| Include logs from only this user. | [optional] 
- **search** | **str**| search string that will look at name. | [optional] 
- **start_time** | **datetime**| Include logs created after this time. | [optional] 
- **end_time** | **datetime**| Include logs created before this time. | [optional] 
- **page** | **int**| pagination offset | [optional] 
- **per_page** | **int**| pagination limit | [optional] 
+| Name           | Type         | Description                            | Notes      |
+| -------------- | ------------ | -------------------------------------- | ---------- |
+| **namespace**  | **str**      | Include logs for this namespace.       | [optional] |
+| **created_by** | **str**      | Include logs from only this user.      | [optional] |
+| **search**     | **str**      | search string that will look at name.  | [optional] |
+| **start_time** | **datetime** | Include logs created after this time.  | [optional] |
+| **end_time**   | **datetime** | Include logs created before this time. | [optional] |
+| **page**       | **int**      | pagination offset                      | [optional] |
+| **per_page**   | **int**      | pagination limit                       | [optional] |
 
 ### Return type
 
@@ -420,26 +424,27 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | The task graph logs that matched the user&#39;s query. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                            | Response headers |
+| ----------- | ------------------------------------------------------ | ---------------- |
+| **200**     | The task graph logs that matched the user&#39;s query. | -                |
+| **502**     | Bad Gateway                                            | -                |
+| **0**       | error response                                         | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **report_client_node**
+
 > report_client_node(namespace, id, report)
-
-
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -487,7 +492,8 @@ report = tiledb.cloud.rest_api.TaskGraphClientNodeStatus() # TaskGraphClientNode
         print("Exception when calling TaskGraphLogsApi->report_client_node: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -537,11 +543,11 @@ report = tiledb.cloud.rest_api.TaskGraphClientNodeStatus() # TaskGraphClientNode
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns this task graph log. | 
- **id** | **str**| The UUID of the task graph log entry. | 
- **report** | [**TaskGraphClientNodeStatus**](TaskGraphClientNodeStatus.md)| The node status to report. | 
+| Name          | Type                                                          | Description                                  | Notes |
+| ------------- | ------------------------------------------------------------- | -------------------------------------------- | ----- |
+| **namespace** | **str**                                                       | The namespace that owns this task graph log. |
+| **id**        | **str**                                                       | The UUID of the task graph log entry.        |
+| **report**    | [**TaskGraphClientNodeStatus**](TaskGraphClientNodeStatus.md) | The node status to report.                   |
 
 ### Return type
 
@@ -553,28 +559,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | Status reported successfully. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                   | Response headers |
+| ----------- | ----------------------------- | ---------------- |
+| **204**     | Status reported successfully. | -                |
+| **502**     | Bad Gateway                   | -                |
+| **0**       | error response                | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **resubmit_task_graph_execution**
+
 > TaskGraphLog resubmit_task_graph_execution(namespace, id)
-
-
 
 Resubmits a task graph in the given namespace using the associated execution id.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -622,7 +629,8 @@ id = 'id_example' # str | The UUID of the task graph execution (TaskGraphLog).
         print("Exception when calling TaskGraphLogsApi->resubmit_task_graph_execution: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -672,10 +680,10 @@ id = 'id_example' # str | The UUID of the task graph execution (TaskGraphLog).
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns this task graph execution. | 
- **id** | **str**| The UUID of the task graph execution (TaskGraphLog). | 
+| Name          | Type    | Description                                          | Notes |
+| ------------- | ------- | ---------------------------------------------------- | ----- |
+| **namespace** | **str** | The namespace that owns this task graph execution.   |
+| **id**        | **str** | The UUID of the task graph execution (TaskGraphLog). |
 
 ### Return type
 
@@ -687,28 +695,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**202** | Information about the task graph execution. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                 | Response headers |
+| ----------- | ------------------------------------------- | ---------------- |
+| **202**     | Information about the task graph execution. | -                |
+| **502**     | Bad Gateway                                 | -                |
+| **0**       | error response                              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **retry_task_graph_execution**
+
 > TaskGraphLog retry_task_graph_execution(namespace, id)
-
-
 
 Retries failed tasks of a task graph in the given namespace using the associated execution id.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -756,7 +765,8 @@ id = 'id_example' # str | The UUID of the task graph execution (TaskGraphLog).
         print("Exception when calling TaskGraphLogsApi->retry_task_graph_execution: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -806,10 +816,10 @@ id = 'id_example' # str | The UUID of the task graph execution (TaskGraphLog).
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns this task graph execution. | 
- **id** | **str**| The UUID of the task graph execution (TaskGraphLog). | 
+| Name          | Type    | Description                                          | Notes |
+| ------------- | ------- | ---------------------------------------------------- | ----- |
+| **namespace** | **str** | The namespace that owns this task graph execution.   |
+| **id**        | **str** | The UUID of the task graph execution (TaskGraphLog). |
 
 ### Return type
 
@@ -821,28 +831,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**202** | Information about the task graph execution. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                 | Response headers |
+| ----------- | ------------------------------------------- | ---------------- |
+| **202**     | Information about the task graph execution. | -                |
+| **502**     | Bad Gateway                                 | -                |
+| **0**       | error response                              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **stop_task_graph_execution**
+
 > TaskGraphLog stop_task_graph_execution(namespace, id)
-
-
 
 Stops a task graph execution in the given namespace using the associated associated execution id.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -890,7 +901,8 @@ id = 'id_example' # str | The UUID of the task graph execution (TaskGraphLog).
         print("Exception when calling TaskGraphLogsApi->stop_task_graph_execution: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -940,10 +952,10 @@ id = 'id_example' # str | The UUID of the task graph execution (TaskGraphLog).
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns this task graph execution. | 
- **id** | **str**| The UUID of the task graph execution (TaskGraphLog). | 
+| Name          | Type    | Description                                          | Notes |
+| ------------- | ------- | ---------------------------------------------------- | ----- |
+| **namespace** | **str** | The namespace that owns this task graph execution.   |
+| **id**        | **str** | The UUID of the task graph execution (TaskGraphLog). |
 
 ### Return type
 
@@ -955,28 +967,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**202** | Information about the task graph execution. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                 | Response headers |
+| ----------- | ------------------------------------------- | ---------------- |
+| **202**     | Information about the task graph execution. | -                |
+| **502**     | Bad Gateway                                 | -                |
+| **0**       | error response                              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **submit_task_graph**
+
 > TaskGraphLog submit_task_graph(namespace, id)
 
-
-
-Submit a single task graph for execution. 
+Submit a single task graph for execution.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1024,7 +1037,8 @@ id = 'id_example' # str | The UUID of the task graph entry.
         print("Exception when calling TaskGraphLogsApi->submit_task_graph: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1074,10 +1088,10 @@ id = 'id_example' # str | The UUID of the task graph entry.
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns this task graph. | 
- **id** | **str**| The UUID of the task graph entry. | 
+| Name          | Type    | Description                              | Notes |
+| ------------- | ------- | ---------------------------------------- | ----- |
+| **namespace** | **str** | The namespace that owns this task graph. |
+| **id**        | **str** | The UUID of the task graph entry.        |
 
 ### Return type
 
@@ -1089,28 +1103,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**202** | Information about the execution of a single task graph. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                             | Response headers |
+| ----------- | ------------------------------------------------------- | ---------------- |
+| **202**     | Information about the execution of a single task graph. | -                |
+| **502**     | Bad Gateway                                             | -                |
+| **0**       | error response                                          | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_task_graph_log**
+
 > update_task_graph_log(namespace, id, log)
 
-
-
-Update information about a single task graph execution. 
+Update information about a single task graph execution.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1150,7 +1165,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.TaskGraphLogsApi(api_client)
     namespace = 'namespace_example' # str | The namespace that owns this task graph log.
 id = 'id_example' # str | The UUID of the task graph log entry.
-log = tiledb.cloud.rest_api.TaskGraphLog() # TaskGraphLog | Updates to make to the task graph log. The only manual update that a client should need to make to a task graph log is to update its completion status to `succeeded`, `failed`, or `cancelled`. 
+log = tiledb.cloud.rest_api.TaskGraphLog() # TaskGraphLog | Updates to make to the task graph log. The only manual update that a client should need to make to a task graph log is to update its completion status to `succeeded`, `failed`, or `cancelled`.
 
     try:
         api_instance.update_task_graph_log(namespace, id, log)
@@ -1158,7 +1173,8 @@ log = tiledb.cloud.rest_api.TaskGraphLog() # TaskGraphLog | Updates to make to t
         print("Exception when calling TaskGraphLogsApi->update_task_graph_log: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1198,7 +1214,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.TaskGraphLogsApi(api_client)
     namespace = 'namespace_example' # str | The namespace that owns this task graph log.
 id = 'id_example' # str | The UUID of the task graph log entry.
-log = tiledb.cloud.rest_api.TaskGraphLog() # TaskGraphLog | Updates to make to the task graph log. The only manual update that a client should need to make to a task graph log is to update its completion status to `succeeded`, `failed`, or `cancelled`. 
+log = tiledb.cloud.rest_api.TaskGraphLog() # TaskGraphLog | Updates to make to the task graph log. The only manual update that a client should need to make to a task graph log is to update its completion status to `succeeded`, `failed`, or `cancelled`.
 
     try:
         api_instance.update_task_graph_log(namespace, id, log)
@@ -1208,11 +1224,11 @@ log = tiledb.cloud.rest_api.TaskGraphLog() # TaskGraphLog | Updates to make to t
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns this task graph log. | 
- **id** | **str**| The UUID of the task graph log entry. | 
- **log** | [**TaskGraphLog**](TaskGraphLog.md)| Updates to make to the task graph log. The only manual update that a client should need to make to a task graph log is to update its completion status to &#x60;succeeded&#x60;, &#x60;failed&#x60;, or &#x60;cancelled&#x60;.  | 
+| Name          | Type                                | Description                                                                                                                                                                                                                    | Notes |
+| ------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----- |
+| **namespace** | **str**                             | The namespace that owns this task graph log.                                                                                                                                                                                   |
+| **id**        | **str**                             | The UUID of the task graph log entry.                                                                                                                                                                                          |
+| **log**       | [**TaskGraphLog**](TaskGraphLog.md) | Updates to make to the task graph log. The only manual update that a client should need to make to a task graph log is to update its completion status to &#x60;succeeded&#x60;, &#x60;failed&#x60;, or &#x60;cancelled&#x60;. |
 
 ### Return type
 
@@ -1224,15 +1240,15 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | Log entry updated successfully. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                     | Response headers |
+| ----------- | ------------------------------- | ---------------- |
+| **204**     | Log entry updated successfully. | -                |
+| **502**     | Bad Gateway                     | -                |
+| **0**       | error response                  | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

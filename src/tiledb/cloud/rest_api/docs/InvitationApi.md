@@ -1,29 +1,28 @@
 # tiledb.cloud.rest_api.InvitationApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**accept_invitation**](InvitationApi.md#accept_invitation) | **POST** /v1/invitations/{invitation} | 
-[**cancel_join_organization**](InvitationApi.md#cancel_join_organization) | **DELETE** /v1/invitations/{invitation}/{organization}/join | 
-[**cancel_share_array_by_invite**](InvitationApi.md#cancel_share_array_by_invite) | **DELETE** /v1/invitations/{invitation}/{namespace}/{array}/share | 
-[**cancel_share_group_by_invite**](InvitationApi.md#cancel_share_group_by_invite) | **DELETE** /v1/invitations/group/{invitation}/{namespace}/{group_name}/share | 
-[**fetch_invitations**](InvitationApi.md#fetch_invitations) | **GET** /v1/invitations | 
-[**join_organization**](InvitationApi.md#join_organization) | **POST** /v1/invitations/{organization}/join | 
-[**share_array_by_invite**](InvitationApi.md#share_array_by_invite) | **POST** /v1/invitations/{namespace}/{array}/share | 
-[**share_group_by_invite**](InvitationApi.md#share_group_by_invite) | **POST** /v1/invitations/group/{namespace}/{group}/share | 
-
+| Method                                                                            | HTTP request                                                                 | Description |
+| --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ----------- |
+| [**accept_invitation**](InvitationApi.md#accept_invitation)                       | **POST** /v1/invitations/{invitation}                                        |
+| [**cancel_join_organization**](InvitationApi.md#cancel_join_organization)         | **DELETE** /v1/invitations/{invitation}/{organization}/join                  |
+| [**cancel_share_array_by_invite**](InvitationApi.md#cancel_share_array_by_invite) | **DELETE** /v1/invitations/{invitation}/{namespace}/{array}/share            |
+| [**cancel_share_group_by_invite**](InvitationApi.md#cancel_share_group_by_invite) | **DELETE** /v1/invitations/group/{invitation}/{namespace}/{group_name}/share |
+| [**fetch_invitations**](InvitationApi.md#fetch_invitations)                       | **GET** /v1/invitations                                                      |
+| [**join_organization**](InvitationApi.md#join_organization)                       | **POST** /v1/invitations/{organization}/join                                 |
+| [**share_array_by_invite**](InvitationApi.md#share_array_by_invite)               | **POST** /v1/invitations/{namespace}/{array}/share                           |
+| [**share_group_by_invite**](InvitationApi.md#share_group_by_invite)               | **POST** /v1/invitations/group/{namespace}/{group}/share                     |
 
 # **accept_invitation**
+
 > accept_invitation(invitation)
-
-
 
 Accepts invitation
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -69,7 +68,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling InvitationApi->accept_invitation: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -117,9 +117,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **invitation** | **str**| the ID of invitation about to be accepted | 
+| Name           | Type    | Description                               | Notes |
+| -------------- | ------- | ----------------------------------------- | ----- |
+| **invitation** | **str** | the ID of invitation about to be accepted |
 
 ### Return type
 
@@ -131,29 +131,30 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | Invitation was accepted successfully |  -  |
-**404** | Could not find invitation identifier |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                          | Response headers |
+| ----------- | ------------------------------------ | ---------------- |
+| **204**     | Invitation was accepted successfully | -                |
+| **404**     | Could not find invitation identifier | -                |
+| **502**     | Bad Gateway                          | -                |
+| **0**       | error response                       | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **cancel_join_organization**
+
 > cancel_join_organization(invitation, organization)
-
-
 
 Cancels join organization invitation
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -200,7 +201,8 @@ organization = 'organization_example' # str | name or UUID of organization
         print("Exception when calling InvitationApi->cancel_join_organization: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -249,10 +251,10 @@ organization = 'organization_example' # str | name or UUID of organization
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **invitation** | **str**| the ID of invitation about to be cancelled | 
- **organization** | **str**| name or UUID of organization | 
+| Name             | Type    | Description                                | Notes |
+| ---------------- | ------- | ------------------------------------------ | ----- |
+| **invitation**   | **str** | the ID of invitation about to be cancelled |
+| **organization** | **str** | name or UUID of organization               |
 
 ### Return type
 
@@ -264,29 +266,30 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | Invitation cancelled successfully |  -  |
-**404** | No invitation was found to cancel |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                       | Response headers |
+| ----------- | --------------------------------- | ---------------- |
+| **204**     | Invitation cancelled successfully | -                |
+| **404**     | No invitation was found to cancel | -                |
+| **502**     | Bad Gateway                       | -                |
+| **0**       | error response                    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **cancel_share_array_by_invite**
+
 > cancel_share_array_by_invite(namespace, invitation, array)
-
-
 
 Cancels array sharing invitation
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -334,7 +337,8 @@ array = 'array_example' # str | name/uri of array that is url-encoded
         print("Exception when calling InvitationApi->cancel_share_array_by_invite: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -384,11 +388,11 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **invitation** | **str**| the ID of invitation about to be cancelled | 
- **array** | **str**| name/uri of array that is url-encoded | 
+| Name           | Type    | Description                                                         | Notes |
+| -------------- | ------- | ------------------------------------------------------------------- | ----- |
+| **namespace**  | **str** | namespace array is in (an organization name or user&#39;s username) |
+| **invitation** | **str** | the ID of invitation about to be cancelled                          |
+| **array**      | **str** | name/uri of array that is url-encoded                               |
 
 ### Return type
 
@@ -400,29 +404,30 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | Invitation cancelled successfully |  -  |
-**404** | No invitation was found to cancel |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                       | Response headers |
+| ----------- | --------------------------------- | ---------------- |
+| **204**     | Invitation cancelled successfully | -                |
+| **404**     | No invitation was found to cancel | -                |
+| **502**     | Bad Gateway                       | -                |
+| **0**       | error response                    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **cancel_share_group_by_invite**
+
 > cancel_share_group_by_invite(namespace, invitation, group_name)
-
-
 
 Cancels group sharing invitation
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -470,7 +475,8 @@ group_name = 'group_name_example' # str | name/uuid of group that is url-encoded
         print("Exception when calling InvitationApi->cancel_share_group_by_invite: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -520,11 +526,11 @@ group_name = 'group_name_example' # str | name/uuid of group that is url-encoded
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace group is in (an organization name or user&#39;s username) | 
- **invitation** | **str**| the ID of invitation about to be cancelled | 
- **group_name** | **str**| name/uuid of group that is url-encoded | 
+| Name           | Type    | Description                                                         | Notes |
+| -------------- | ------- | ------------------------------------------------------------------- | ----- |
+| **namespace**  | **str** | namespace group is in (an organization name or user&#39;s username) |
+| **invitation** | **str** | the ID of invitation about to be cancelled                          |
+| **group_name** | **str** | name/uuid of group that is url-encoded                              |
 
 ### Return type
 
@@ -536,29 +542,30 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | Invitation cancelled successfully |  -  |
-**404** | No invitation was found to cancel |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                       | Response headers |
+| ----------- | --------------------------------- | ---------------- |
+| **204**     | Invitation cancelled successfully | -                |
+| **404**     | No invitation was found to cancel | -                |
+| **502**     | Bad Gateway                       | -                |
+| **0**       | error response                    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **fetch_invitations**
+
 > InvitationData fetch_invitations(organization=organization, array=array, group=group, start=start, end=end, page=page, per_page=per_page, type=type, status=status, orderby=orderby)
-
-
 
 Fetch a list of invitations
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -614,7 +621,8 @@ orderby = 'orderby_example' # str | sort by which field valid values include tim
         print("Exception when calling InvitationApi->fetch_invitations: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -672,18 +680,18 @@ orderby = 'orderby_example' # str | sort by which field valid values include tim
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| name or ID of organization to filter | [optional] 
- **array** | **str**| name/uri of array that is url-encoded to filter | [optional] 
- **group** | **str**| name or ID of group to filter | [optional] 
- **start** | **int**| start time for tasks to filter by | [optional] 
- **end** | **int**| end time for tasks to filter by | [optional] 
- **page** | **int**| pagination offset | [optional] 
- **per_page** | **int**| pagination limit | [optional] 
- **type** | **str**| invitation type, \&quot;ARRAY_SHARE\&quot;, \&quot;JOIN_ORGANIZATION\&quot; | [optional] 
- **status** | **str**| Filter to only return \&quot;PENDING\&quot;, \&quot;ACCEPTED\&quot; | [optional] 
- **orderby** | **str**| sort by which field valid values include timestamp, array_name, organization_name | [optional] 
+| Name             | Type    | Description                                                                       | Notes      |
+| ---------------- | ------- | --------------------------------------------------------------------------------- | ---------- |
+| **organization** | **str** | name or ID of organization to filter                                              | [optional] |
+| **array**        | **str** | name/uri of array that is url-encoded to filter                                   | [optional] |
+| **group**        | **str** | name or ID of group to filter                                                     | [optional] |
+| **start**        | **int** | start time for tasks to filter by                                                 | [optional] |
+| **end**          | **int** | end time for tasks to filter by                                                   | [optional] |
+| **page**         | **int** | pagination offset                                                                 | [optional] |
+| **per_page**     | **int** | pagination limit                                                                  | [optional] |
+| **type**         | **str** | invitation type, \&quot;ARRAY_SHARE\&quot;, \&quot;JOIN_ORGANIZATION\&quot;       | [optional] |
+| **status**       | **str** | Filter to only return \&quot;PENDING\&quot;, \&quot;ACCEPTED\&quot;               | [optional] |
+| **orderby**      | **str** | sort by which field valid values include timestamp, array_name, organization_name | [optional] |
 
 ### Return type
 
@@ -695,28 +703,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | List of invitations and pagination metadata |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                 | Response headers |
+| ----------- | ------------------------------------------- | ---------------- |
+| **200**     | List of invitations and pagination metadata | -                |
+| **502**     | Bad Gateway                                 | -                |
+| **0**       | error response                              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **join_organization**
+
 > join_organization(organization, email_invite)
-
-
 
 Sends email to multiple recipients with joining information regarding an organization
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -763,7 +772,8 @@ email_invite = tiledb.cloud.rest_api.InvitationOrganizationJoinEmail() # Invitat
         print("Exception when calling InvitationApi->join_organization: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -812,10 +822,10 @@ email_invite = tiledb.cloud.rest_api.InvitationOrganizationJoinEmail() # Invitat
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| name or UUID of organization | 
- **email_invite** | [**InvitationOrganizationJoinEmail**](InvitationOrganizationJoinEmail.md)| list of email recipients | 
+| Name             | Type                                                                      | Description                  | Notes |
+| ---------------- | ------------------------------------------------------------------------- | ---------------------------- | ----- |
+| **organization** | **str**                                                                   | name or UUID of organization |
+| **email_invite** | [**InvitationOrganizationJoinEmail**](InvitationOrganizationJoinEmail.md) | list of email recipients     |
 
 ### Return type
 
@@ -827,29 +837,30 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | Email sent successfully to user for email confirmation link |  -  |
-**404** | Could not reach one or more recipients |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                                 | Response headers |
+| ----------- | ----------------------------------------------------------- | ---------------- |
+| **204**     | Email sent successfully to user for email confirmation link | -                |
+| **404**     | Could not reach one or more recipients                      | -                |
+| **502**     | Bad Gateway                                                 | -                |
+| **0**       | error response                                              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **share_array_by_invite**
+
 > share_array_by_invite(namespace, array, email_invite)
-
-
 
 Sends email to multiple recipients with sharing information regarding an array
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -897,7 +908,8 @@ email_invite = tiledb.cloud.rest_api.InvitationArrayShareEmail() # InvitationArr
         print("Exception when calling InvitationApi->share_array_by_invite: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -947,11 +959,11 @@ email_invite = tiledb.cloud.rest_api.InvitationArrayShareEmail() # InvitationArr
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **array** | **str**| name/uri of array that is url-encoded | 
- **email_invite** | [**InvitationArrayShareEmail**](InvitationArrayShareEmail.md)| list of email recipients | 
+| Name             | Type                                                          | Description                                                         | Notes |
+| ---------------- | ------------------------------------------------------------- | ------------------------------------------------------------------- | ----- |
+| **namespace**    | **str**                                                       | namespace array is in (an organization name or user&#39;s username) |
+| **array**        | **str**                                                       | name/uri of array that is url-encoded                               |
+| **email_invite** | [**InvitationArrayShareEmail**](InvitationArrayShareEmail.md) | list of email recipients                                            |
 
 ### Return type
 
@@ -963,29 +975,30 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | Email sent successfully to user for email confirmation link |  -  |
-**404** | Could not reach one or more recipients |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                                 | Response headers |
+| ----------- | ----------------------------------------------------------- | ---------------- |
+| **204**     | Email sent successfully to user for email confirmation link | -                |
+| **404**     | Could not reach one or more recipients                      | -                |
+| **502**     | Bad Gateway                                                 | -                |
+| **0**       | error response                                              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **share_group_by_invite**
+
 > share_group_by_invite(namespace, group, email_invite)
-
-
 
 Sends email to multiple recipients with sharing information regarding a group
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1033,7 +1046,8 @@ email_invite = tiledb.cloud.rest_api.InvitationGroupShareEmail() # InvitationGro
         print("Exception when calling InvitationApi->share_group_by_invite: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1083,11 +1097,11 @@ email_invite = tiledb.cloud.rest_api.InvitationGroupShareEmail() # InvitationGro
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace group is in (an organization name or user&#39;s username) | 
- **group** | **str**| name/uri of group that is url-encoded | 
- **email_invite** | [**InvitationGroupShareEmail**](InvitationGroupShareEmail.md)| list of email/namespace recipients | 
+| Name             | Type                                                          | Description                                                         | Notes |
+| ---------------- | ------------------------------------------------------------- | ------------------------------------------------------------------- | ----- |
+| **namespace**    | **str**                                                       | namespace group is in (an organization name or user&#39;s username) |
+| **group**        | **str**                                                       | name/uri of group that is url-encoded                               |
+| **email_invite** | [**InvitationGroupShareEmail**](InvitationGroupShareEmail.md) | list of email/namespace recipients                                  |
 
 ### Return type
 
@@ -1099,16 +1113,16 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | Email sent successfully to user with an email confirmation link |  -  |
-**404** | Could not reach one or more recipients |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                                     | Response headers |
+| ----------- | --------------------------------------------------------------- | ---------------- |
+| **204**     | Email sent successfully to user with an email confirmation link | -                |
+| **404**     | Could not reach one or more recipients                          | -                |
+| **502**     | Bad Gateway                                                     | -                |
+| **0**       | error response                                                  | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

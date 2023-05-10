@@ -1,24 +1,23 @@
 # tiledb.cloud.rest_api.FilesApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**handle_create_file**](FilesApi.md#handle_create_file) | **POST** /v1/files/{namespace} | 
-[**handle_export_file**](FilesApi.md#handle_export_file) | **POST** /v1/files/{namespace}/{file}/export | 
-[**handle_upload_file**](FilesApi.md#handle_upload_file) | **POST** /v1/files/{namespace}/upload | 
-
+| Method                                                   | HTTP request                                 | Description |
+| -------------------------------------------------------- | -------------------------------------------- | ----------- |
+| [**handle_create_file**](FilesApi.md#handle_create_file) | **POST** /v1/files/{namespace}               |
+| [**handle_export_file**](FilesApi.md#handle_export_file) | **POST** /v1/files/{namespace}/{file}/export |
+| [**handle_upload_file**](FilesApi.md#handle_upload_file) | **POST** /v1/files/{namespace}/upload        |
 
 # **handle_create_file**
+
 > FileCreated handle_create_file(namespace, file_create, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name)
-
-
 
 Create a tiledb file at the specified location
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -67,7 +66,8 @@ x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name
         print("Exception when calling FilesApi->handle_create_file: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -118,11 +118,11 @@ x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace of the file | 
- **file_create** | [**FileCreate**](FileCreate.md)| Input/Output information to create a new TileDB file | 
- **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
+| Name                                       | Type                            | Description                                                | Notes      |
+| ------------------------------------------ | ------------------------------- | ---------------------------------------------------------- | ---------- |
+| **namespace**                              | **str**                         | The namespace of the file                                  |
+| **file_create**                            | [**FileCreate**](FileCreate.md) | Input/Output information to create a new TileDB file       |
+| **x_tiledb_cloud_access_credentials_name** | **str**                         | Optional registered access credentials to use for creation | [optional] |
 
 ### Return type
 
@@ -134,28 +134,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**201** | File created |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description    | Response headers |
+| ----------- | -------------- | ---------------- |
+| **201**     | File created   | -                |
+| **502**     | Bad Gateway    | -                |
+| **0**       | error response | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **handle_export_file**
+
 > FileExported handle_export_file(namespace, file, file_export)
-
-
 
 Export a TileDB File back to its original file format
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -204,7 +205,8 @@ file_export = tiledb.cloud.rest_api.FileExport() # FileExport | Export configura
         print("Exception when calling FilesApi->handle_export_file: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -255,11 +257,11 @@ file_export = tiledb.cloud.rest_api.FileExport() # FileExport | Export configura
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace of the file | 
- **file** | **str**| The file identifier | 
- **file_export** | [**FileExport**](FileExport.md)| Export configuration information | 
+| Name            | Type                            | Description                      | Notes |
+| --------------- | ------------------------------- | -------------------------------- | ----- |
+| **namespace**   | **str**                         | The namespace of the file        |
+| **file**        | **str**                         | The file identifier              |
+| **file_export** | [**FileExport**](FileExport.md) | Export configuration information |
 
 ### Return type
 
@@ -271,28 +273,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**201** | File exported |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description    | Response headers |
+| ----------- | -------------- | ---------------- |
+| **201**     | File exported  | -                |
+| **502**     | Bad Gateway    | -                |
+| **0**       | error response | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **handle_upload_file**
+
 > FileUploaded handle_upload_file(namespace, input_file, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name, output_uri=output_uri, name=name)
-
-
 
 Upload a tiledb file at the specified location
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -343,7 +346,8 @@ name = 'name_example' # str | name to set for registered file (optional)
         print("Exception when calling FilesApi->handle_upload_file: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -396,13 +400,13 @@ name = 'name_example' # str | name to set for registered file (optional)
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace of the file | 
- **input_file** | **file**| the file to upload | 
- **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
- **output_uri** | **str**| output location of the TileDB File | [optional] 
- **name** | **str**| name to set for registered file | [optional] 
+| Name                                       | Type     | Description                                                | Notes      |
+| ------------------------------------------ | -------- | ---------------------------------------------------------- | ---------- |
+| **namespace**                              | **str**  | The namespace of the file                                  |
+| **input_file**                             | **file** | the file to upload                                         |
+| **x_tiledb_cloud_access_credentials_name** | **str**  | Optional registered access credentials to use for creation | [optional] |
+| **output_uri**                             | **str**  | output location of the TileDB File                         | [optional] |
+| **name**                                   | **str**  | name to set for registered file                            | [optional] |
 
 ### Return type
 
@@ -414,15 +418,15 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: multipart/form-data
- - **Accept**: application/json
+- **Content-Type**: multipart/form-data
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**201** | File uploaded |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description    | Response headers |
+| ----------- | -------------- | ---------------- |
+| **201**     | File uploaded  | -                |
+| **502**     | Bad Gateway    | -                |
+| **0**       | error response | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

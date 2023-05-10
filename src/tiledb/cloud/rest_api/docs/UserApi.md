@@ -1,43 +1,42 @@
 # tiledb.cloud.rest_api.UserApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**add_aws_access_credentials**](UserApi.md#add_aws_access_credentials) | **POST** /v1/credentials/{namespace}/aws | 
-[**add_user_to_organization**](UserApi.md#add_user_to_organization) | **POST** /v1/organizations/{organization}/user | 
-[**check_aws_access_credentials**](UserApi.md#check_aws_access_credentials) | **GET** /v1/credentials/{namespace}/aws | 
-[**check_aws_access_credentials_by_name**](UserApi.md#check_aws_access_credentials_by_name) | **GET** /v1/credentials/{namespace}/aws/{name} | 
-[**confirm_email**](UserApi.md#confirm_email) | **POST** /v1/user/confirm_email | 
-[**create_user**](UserApi.md#create_user) | **POST** /v1/user | 
-[**delete_aws_access_credentials**](UserApi.md#delete_aws_access_credentials) | **DELETE** /v1/credentials/{namespace}/aws/{name} | 
-[**delete_user**](UserApi.md#delete_user) | **DELETE** /v1/users/{username} | 
-[**delete_user_from_organization**](UserApi.md#delete_user_from_organization) | **DELETE** /v1/organizations/{organization}/{username} | 
-[**get_organization_user**](UserApi.md#get_organization_user) | **GET** /v1/organizations/{organization}/{username} | 
-[**get_session**](UserApi.md#get_session) | **GET** /v1/session | 
-[**get_token_scopes**](UserApi.md#get_token_scopes) | **GET** /v1/tokens/scopes | 
-[**get_user**](UserApi.md#get_user) | **GET** /v1/user | 
-[**get_user_with_username**](UserApi.md#get_user_with_username) | **GET** /v1/users/{username} | 
-[**request_token**](UserApi.md#request_token) | **POST** /v1/token | 
-[**reset_user_password**](UserApi.md#reset_user_password) | **POST** /v1/user/password_reset | 
-[**revoke_token**](UserApi.md#revoke_token) | **DELETE** /v1/tokens/{token} | 
-[**tokens_get**](UserApi.md#tokens_get) | **GET** /v1/tokens | 
-[**tokens_session_get**](UserApi.md#tokens_session_get) | **GET** /v1/tokens/session | 
-[**update_aws_access_credentials**](UserApi.md#update_aws_access_credentials) | **PATCH** /v1/credentials/{namespace}/aws/{name} | 
-[**update_user**](UserApi.md#update_user) | **PATCH** /v1/users/{username} | 
-[**update_user_in_organization**](UserApi.md#update_user_in_organization) | **PATCH** /v1/organizations/{organization}/{username} | 
-
+| Method                                                                                      | HTTP request                                           | Description |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+| [**add_aws_access_credentials**](UserApi.md#add_aws_access_credentials)                     | **POST** /v1/credentials/{namespace}/aws               |
+| [**add_user_to_organization**](UserApi.md#add_user_to_organization)                         | **POST** /v1/organizations/{organization}/user         |
+| [**check_aws_access_credentials**](UserApi.md#check_aws_access_credentials)                 | **GET** /v1/credentials/{namespace}/aws                |
+| [**check_aws_access_credentials_by_name**](UserApi.md#check_aws_access_credentials_by_name) | **GET** /v1/credentials/{namespace}/aws/{name}         |
+| [**confirm_email**](UserApi.md#confirm_email)                                               | **POST** /v1/user/confirm_email                        |
+| [**create_user**](UserApi.md#create_user)                                                   | **POST** /v1/user                                      |
+| [**delete_aws_access_credentials**](UserApi.md#delete_aws_access_credentials)               | **DELETE** /v1/credentials/{namespace}/aws/{name}      |
+| [**delete_user**](UserApi.md#delete_user)                                                   | **DELETE** /v1/users/{username}                        |
+| [**delete_user_from_organization**](UserApi.md#delete_user_from_organization)               | **DELETE** /v1/organizations/{organization}/{username} |
+| [**get_organization_user**](UserApi.md#get_organization_user)                               | **GET** /v1/organizations/{organization}/{username}    |
+| [**get_session**](UserApi.md#get_session)                                                   | **GET** /v1/session                                    |
+| [**get_token_scopes**](UserApi.md#get_token_scopes)                                         | **GET** /v1/tokens/scopes                              |
+| [**get_user**](UserApi.md#get_user)                                                         | **GET** /v1/user                                       |
+| [**get_user_with_username**](UserApi.md#get_user_with_username)                             | **GET** /v1/users/{username}                           |
+| [**request_token**](UserApi.md#request_token)                                               | **POST** /v1/token                                     |
+| [**reset_user_password**](UserApi.md#reset_user_password)                                   | **POST** /v1/user/password_reset                       |
+| [**revoke_token**](UserApi.md#revoke_token)                                                 | **DELETE** /v1/tokens/{token}                          |
+| [**tokens_get**](UserApi.md#tokens_get)                                                     | **GET** /v1/tokens                                     |
+| [**tokens_session_get**](UserApi.md#tokens_session_get)                                     | **GET** /v1/tokens/session                             |
+| [**update_aws_access_credentials**](UserApi.md#update_aws_access_credentials)               | **PATCH** /v1/credentials/{namespace}/aws/{name}       |
+| [**update_user**](UserApi.md#update_user)                                                   | **PATCH** /v1/users/{username}                         |
+| [**update_user_in_organization**](UserApi.md#update_user_in_organization)                   | **PATCH** /v1/organizations/{organization}/{username}  |
 
 # **add_aws_access_credentials**
+
 > add_aws_access_credentials(namespace, aws_access_credentials)
-
-
 
 Add aws keys
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -84,7 +83,8 @@ aws_access_credentials = tiledb.cloud.rest_api.AWSAccessCredentials() # AWSAcces
         print("Exception when calling UserApi->add_aws_access_credentials: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -133,10 +133,10 @@ aws_access_credentials = tiledb.cloud.rest_api.AWSAccessCredentials() # AWSAcces
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace | 
- **aws_access_credentials** | [**AWSAccessCredentials**](AWSAccessCredentials.md)| aws access credentials to store for a namespace | 
+| Name                       | Type                                                | Description                                     | Notes |
+| -------------------------- | --------------------------------------------------- | ----------------------------------------------- | ----- |
+| **namespace**              | **str**                                             | namespace                                       |
+| **aws_access_credentials** | [**AWSAccessCredentials**](AWSAccessCredentials.md) | aws access credentials to store for a namespace |
 
 ### Return type
 
@@ -148,28 +148,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | AWS keys added successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                 | Response headers |
+| ----------- | --------------------------- | ---------------- |
+| **204**     | AWS keys added successfully | -                |
+| **502**     | Bad Gateway                 | -                |
+| **0**       | error response              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **add_user_to_organization**
+
 > add_user_to_organization(organization, user)
-
-
 
 add a user to an organization
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -216,7 +217,8 @@ user = tiledb.cloud.rest_api.OrganizationUser() # OrganizationUser | user to add
         print("Exception when calling UserApi->add_user_to_organization: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -265,10 +267,10 @@ user = tiledb.cloud.rest_api.OrganizationUser() # OrganizationUser | user to add
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name | 
- **user** | [**OrganizationUser**](OrganizationUser.md)| user to add | 
+| Name             | Type                                        | Description       | Notes |
+| ---------------- | ------------------------------------------- | ----------------- | ----- |
+| **organization** | **str**                                     | organization name |
+| **user**         | [**OrganizationUser**](OrganizationUser.md) | user to add       |
 
 ### Return type
 
@@ -280,28 +282,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | user added to organization successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                             | Response headers |
+| ----------- | --------------------------------------- | ---------------- |
+| **204**     | user added to organization successfully | -                |
+| **502**     | Bad Gateway                             | -                |
+| **0**       | error response                          | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **check_aws_access_credentials**
+
 > list[AWSAccessCredentials] check_aws_access_credentials(namespace)
-
-
 
 Check if aws keys are set
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -348,7 +351,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling UserApi->check_aws_access_credentials: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -397,9 +401,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace | 
+| Name          | Type    | Description | Notes |
+| ------------- | ------- | ----------- | ----- |
+| **namespace** | **str** | namespace   |
 
 ### Return type
 
@@ -411,28 +415,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | AWS keys are set |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description      | Response headers |
+| ----------- | ---------------- | ---------------- |
+| **200**     | AWS keys are set | -                |
+| **502**     | Bad Gateway      | -                |
+| **0**       | error response   | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **check_aws_access_credentials_by_name**
+
 > AWSAccessCredentials check_aws_access_credentials_by_name(namespace, name)
-
-
 
 Check if aws keys are set by name
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -480,7 +485,8 @@ name = 'name_example' # str | name
         print("Exception when calling UserApi->check_aws_access_credentials_by_name: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -530,10 +536,10 @@ name = 'name_example' # str | name
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace | 
- **name** | **str**| name | 
+| Name          | Type    | Description | Notes |
+| ------------- | ------- | ----------- | ----- |
+| **namespace** | **str** | namespace   |
+| **name**      | **str** | name        |
 
 ### Return type
 
@@ -545,28 +551,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | AWS keys are set |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description      | Response headers |
+| ----------- | ---------------- | ---------------- |
+| **200**     | AWS keys are set | -                |
+| **502**     | Bad Gateway      | -                |
+| **0**       | error response   | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **confirm_email**
+
 > confirm_email()
-
-
 
 confirm user email
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -604,14 +611,15 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    
+
     try:
         api_instance.confirm_email()
     except ApiException as e:
         print("Exception when calling UserApi->confirm_email: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -649,7 +657,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    
+
     try:
         api_instance.confirm_email()
     except ApiException as e:
@@ -657,6 +665,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 ```
 
 ### Parameters
+
 This endpoint does not need any parameter.
 
 ### Return type
@@ -669,28 +678,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | User email confirmed successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                       | Response headers |
+| ----------- | --------------------------------- | ---------------- |
+| **204**     | User email confirmed successfully | -                |
+| **502**     | Bad Gateway                       | -                |
+| **0**       | error response                    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **create_user**
+
 > create_user(user)
-
-
 
 create a user
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -736,7 +746,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling UserApi->create_user: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -784,9 +795,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **user** | [**User**](User.md)| user to create | 
+| Name     | Type                | Description    | Notes |
+| -------- | ------------------- | -------------- | ----- |
+| **user** | [**User**](User.md) | user to create |
 
 ### Return type
 
@@ -798,28 +809,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | user created successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description               | Response headers |
+| ----------- | ------------------------- | ---------------- |
+| **204**     | user created successfully | -                |
+| **502**     | Bad Gateway               | -                |
+| **0**       | error response            | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_aws_access_credentials**
+
 > delete_aws_access_credentials(namespace, name)
-
-
 
 delete a AWS Access credentials in a namespace. This will likely cause arrays to become unreachable
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -866,7 +878,8 @@ name = 'name_example' # str | name
         print("Exception when calling UserApi->delete_aws_access_credentials: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -915,10 +928,10 @@ name = 'name_example' # str | name
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace | 
- **name** | **str**| name | 
+| Name          | Type    | Description | Notes |
+| ------------- | ------- | ----------- | ----- |
+| **namespace** | **str** | namespace   |
+| **name**      | **str** | name        |
 
 ### Return type
 
@@ -930,28 +943,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | AWS credentials deleted |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description             | Response headers |
+| ----------- | ----------------------- | ---------------- |
+| **204**     | AWS credentials deleted | -                |
+| **502**     | Bad Gateway             | -                |
+| **0**       | error response          | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_user**
+
 > delete_user(username)
-
-
 
 delete a user
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -997,7 +1011,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling UserApi->delete_user: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1045,9 +1060,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **username** | **str**| username or ID | 
+| Name         | Type    | Description    | Notes |
+| ------------ | ------- | -------------- | ----- |
+| **username** | **str** | username or ID |
 
 ### Return type
 
@@ -1059,28 +1074,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | user deleted |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description    | Response headers |
+| ----------- | -------------- | ---------------- |
+| **204**     | user deleted   | -                |
+| **502**     | Bad Gateway    | -                |
+| **0**       | error response | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_user_from_organization**
+
 > delete_user_from_organization(organization, username)
-
-
 
 delete a user from an organization
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1127,7 +1143,8 @@ username = 'username_example' # str | username to manipulate
         print("Exception when calling UserApi->delete_user_from_organization: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1176,10 +1193,10 @@ username = 'username_example' # str | username to manipulate
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name | 
- **username** | **str**| username to manipulate | 
+| Name             | Type    | Description            | Notes |
+| ---------------- | ------- | ---------------------- | ----- |
+| **organization** | **str** | organization name      |
+| **username**     | **str** | username to manipulate |
 
 ### Return type
 
@@ -1191,28 +1208,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | user delete from organization successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                | Response headers |
+| ----------- | ------------------------------------------ | ---------------- |
+| **204**     | user delete from organization successfully | -                |
+| **502**     | Bad Gateway                                | -                |
+| **0**       | error response                             | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_organization_user**
+
 > OrganizationUser get_organization_user(organization, username)
-
-
 
 get a user from an organization
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1260,7 +1278,8 @@ username = 'username_example' # str | username to manipulate
         print("Exception when calling UserApi->get_organization_user: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1310,10 +1329,10 @@ username = 'username_example' # str | username to manipulate
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name | 
- **username** | **str**| username to manipulate | 
+| Name             | Type    | Description            | Notes |
+| ---------------- | ------- | ---------------------- | ----- |
+| **organization** | **str** | organization name      |
+| **username**     | **str** | username to manipulate |
 
 ### Return type
 
@@ -1325,29 +1344,30 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | user from organization |  -  |
-**404** | User is not in organization |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                 | Response headers |
+| ----------- | --------------------------- | ---------------- |
+| **200**     | user from organization      | -                |
+| **404**     | User is not in organization | -                |
+| **502**     | Bad Gateway                 | -                |
+| **0**       | error response              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_session**
+
 > Token get_session(remember_me=remember_me)
-
-
 
 Get session token for user
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1394,7 +1414,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling UserApi->get_session: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1443,9 +1464,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **remember_me** | **str**| flag to create a token with expiration of 30 days, default is false | [optional] 
+| Name            | Type    | Description                                                         | Notes      |
+| --------------- | ------- | ------------------------------------------------------------------- | ---------- |
+| **remember_me** | **str** | flag to create a token with expiration of 30 days, default is false | [optional] |
 
 ### Return type
 
@@ -1457,28 +1478,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Session token |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description    | Response headers |
+| ----------- | -------------- | ---------------- |
+| **200**     | Session token  | -                |
+| **502**     | Bad Gateway    | -                |
+| **0**       | error response | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_token_scopes**
+
 > list[TokenScope] get_token_scopes()
-
-
 
 retrieves available token scopes for a user
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1516,7 +1538,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    
+
     try:
         api_response = api_instance.get_token_scopes()
         pprint(api_response)
@@ -1524,7 +1546,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling UserApi->get_token_scopes: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1562,7 +1585,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    
+
     try:
         api_response = api_instance.get_token_scopes()
         pprint(api_response)
@@ -1571,6 +1594,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 ```
 
 ### Parameters
+
 This endpoint does not need any parameter.
 
 ### Return type
@@ -1583,28 +1607,29 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | available token scopes |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description            | Response headers |
+| ----------- | ---------------------- | ---------------- |
+| **200**     | available token scopes | -                |
+| **502**     | Bad Gateway            | -                |
+| **0**       | error response         | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_user**
+
 > User get_user()
-
-
 
 get a user
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1642,7 +1667,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    
+
     try:
         api_response = api_instance.get_user()
         pprint(api_response)
@@ -1650,7 +1675,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling UserApi->get_user: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1688,7 +1714,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    
+
     try:
         api_response = api_instance.get_user()
         pprint(api_response)
@@ -1697,6 +1723,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 ```
 
 ### Parameters
+
 This endpoint does not need any parameter.
 
 ### Return type
@@ -1709,28 +1736,29 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | user details |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description    | Response headers |
+| ----------- | -------------- | ---------------- |
+| **200**     | user details   | -                |
+| **502**     | Bad Gateway    | -                |
+| **0**       | error response | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_user_with_username**
+
 > User get_user_with_username(username)
-
-
 
 get a user
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1777,7 +1805,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling UserApi->get_user_with_username: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1826,9 +1855,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **username** | **str**| username or ID | 
+| Name         | Type    | Description    | Notes |
+| ------------ | ------- | -------------- | ----- |
+| **username** | **str** | username or ID |
 
 ### Return type
 
@@ -1840,29 +1869,30 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | user details |  -  |
-**404** | User does not exist |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description         | Response headers |
+| ----------- | ------------------- | ---------------- |
+| **200**     | user details        | -                |
+| **404**     | User does not exist | -                |
+| **502**     | Bad Gateway         | -                |
+| **0**       | error response      | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **request_token**
+
 > Token request_token(token_request=token_request)
-
-
 
 Request an authorization token, optionally taken a TokenRequest object to set parameters on the token
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1909,7 +1939,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling UserApi->request_token: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1958,9 +1989,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **token_request** | [**TokenRequest**](TokenRequest.md)| token request object | [optional] 
+| Name              | Type                                | Description          | Notes      |
+| ----------------- | ----------------------------------- | -------------------- | ---------- |
+| **token_request** | [**TokenRequest**](TokenRequest.md) | token request object | [optional] |
 
 ### Return type
 
@@ -1972,28 +2003,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | token |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description    | Response headers |
+| ----------- | -------------- | ---------------- |
+| **200**     | token          | -                |
+| **502**     | Bad Gateway    | -                |
+| **0**       | error response | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **reset_user_password**
+
 > reset_user_password(user)
-
-
 
 reset user password
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2031,7 +2063,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    user = tiledb.cloud.rest_api.InlineObject() # InlineObject | 
+    user = tiledb.cloud.rest_api.InlineObject() # InlineObject |
 
     try:
         api_instance.reset_user_password(user)
@@ -2039,7 +2071,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling UserApi->reset_user_password: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2077,7 +2110,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    user = tiledb.cloud.rest_api.InlineObject() # InlineObject | 
+    user = tiledb.cloud.rest_api.InlineObject() # InlineObject |
 
     try:
         api_instance.reset_user_password(user)
@@ -2087,9 +2120,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **user** | [**InlineObject**](InlineObject.md)|  | 
+| Name     | Type                                | Description | Notes |
+| -------- | ----------------------------------- | ----------- | ----- |
+| **user** | [**InlineObject**](InlineObject.md) |             |
 
 ### Return type
 
@@ -2101,29 +2134,30 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | User password updated successfully |  -  |
-**404** | User not found |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                        | Response headers |
+| ----------- | ---------------------------------- | ---------------- |
+| **204**     | User password updated successfully | -                |
+| **404**     | User not found                     | -                |
+| **502**     | Bad Gateway                        | -                |
+| **0**       | error response                     | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **revoke_token**
+
 > revoke_token(token)
-
-
 
 revoke an authorization token
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2169,7 +2203,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling UserApi->revoke_token: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2217,9 +2252,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **token** | **str**| token name or token itself | 
+| Name      | Type    | Description                | Notes |
+| --------- | ------- | -------------------------- | ----- |
+| **token** | **str** | token name or token itself |
 
 ### Return type
 
@@ -2231,28 +2266,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | revokation successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description             | Response headers |
+| ----------- | ----------------------- | ---------------- |
+| **204**     | revokation successfully | -                |
+| **502**     | Bad Gateway             | -                |
+| **0**       | error response          | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **tokens_get**
+
 > list[Token] tokens_get()
-
-
 
 Fetch a list of user tokens
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2290,7 +2326,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    
+
     try:
         api_response = api_instance.tokens_get()
         pprint(api_response)
@@ -2298,7 +2334,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling UserApi->tokens_get: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2336,7 +2373,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    
+
     try:
         api_response = api_instance.tokens_get()
         pprint(api_response)
@@ -2345,6 +2382,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 ```
 
 ### Parameters
+
 This endpoint does not need any parameter.
 
 ### Return type
@@ -2357,28 +2395,29 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Array of user created non-session tokens |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                              | Response headers |
+| ----------- | ---------------------------------------- | ---------------- |
+| **200**     | Array of user created non-session tokens | -                |
+| **502**     | Bad Gateway                              | -                |
+| **0**       | error response                           | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **tokens_session_get**
+
 > list[Token] tokens_session_get()
-
-
 
 Fetch a list of user session tokens
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2416,7 +2455,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    
+
     try:
         api_response = api_instance.tokens_session_get()
         pprint(api_response)
@@ -2424,7 +2463,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling UserApi->tokens_session_get: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2462,7 +2502,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.UserApi(api_client)
-    
+
     try:
         api_response = api_instance.tokens_session_get()
         pprint(api_response)
@@ -2471,6 +2511,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 ```
 
 ### Parameters
+
 This endpoint does not need any parameter.
 
 ### Return type
@@ -2483,28 +2524,29 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Array of user created session tokens |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                          | Response headers |
+| ----------- | ------------------------------------ | ---------------- |
+| **200**     | Array of user created session tokens | -                |
+| **502**     | Bad Gateway                          | -                |
+| **0**       | error response                       | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_aws_access_credentials**
+
 > update_aws_access_credentials(namespace, name, aws_access_credentials)
-
-
 
 Update aws keys or associated buckets. This will update the key associations for each array in the namespace
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2552,7 +2594,8 @@ aws_access_credentials = tiledb.cloud.rest_api.AWSAccessCredentials() # AWSAcces
         print("Exception when calling UserApi->update_aws_access_credentials: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2602,11 +2645,11 @@ aws_access_credentials = tiledb.cloud.rest_api.AWSAccessCredentials() # AWSAcces
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace | 
- **name** | **str**| name | 
- **aws_access_credentials** | [**AWSAccessCredentials**](AWSAccessCredentials.md)| aws credentials to update | 
+| Name                       | Type                                                | Description               | Notes |
+| -------------------------- | --------------------------------------------------- | ------------------------- | ----- |
+| **namespace**              | **str**                                             | namespace                 |
+| **name**                   | **str**                                             | name                      |
+| **aws_access_credentials** | [**AWSAccessCredentials**](AWSAccessCredentials.md) | aws credentials to update |
 
 ### Return type
 
@@ -2618,28 +2661,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | AWS keys updated successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                   | Response headers |
+| ----------- | ----------------------------- | ---------------- |
+| **204**     | AWS keys updated successfully | -                |
+| **502**     | Bad Gateway                   | -                |
+| **0**       | error response                | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_user**
+
 > update_user(username, user)
-
-
 
 update a user
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2686,7 +2730,8 @@ user = tiledb.cloud.rest_api.User() # User | user details to update
         print("Exception when calling UserApi->update_user: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2735,10 +2780,10 @@ user = tiledb.cloud.rest_api.User() # User | user details to update
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **username** | **str**| username or ID | 
- **user** | [**User**](User.md)| user details to update | 
+| Name         | Type                | Description            | Notes |
+| ------------ | ------------------- | ---------------------- | ----- |
+| **username** | **str**             | username or ID         |
+| **user**     | [**User**](User.md) | user details to update |
 
 ### Return type
 
@@ -2750,28 +2795,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | user updated successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description               | Response headers |
+| ----------- | ------------------------- | ---------------- |
+| **204**     | user updated successfully | -                |
+| **502**     | Bad Gateway               | -                |
+| **0**       | error response            | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_user_in_organization**
+
 > update_user_in_organization(organization, username, user)
-
-
 
 update a user in an organization
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2819,7 +2865,8 @@ user = tiledb.cloud.rest_api.OrganizationUser() # OrganizationUser | user detail
         print("Exception when calling UserApi->update_user_in_organization: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2869,11 +2916,11 @@ user = tiledb.cloud.rest_api.OrganizationUser() # OrganizationUser | user detail
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name | 
- **username** | **str**| username to manipulate | 
- **user** | [**OrganizationUser**](OrganizationUser.md)| user details to update | 
+| Name             | Type                                        | Description            | Notes |
+| ---------------- | ------------------------------------------- | ---------------------- | ----- |
+| **organization** | **str**                                     | organization name      |
+| **username**     | **str**                                     | username to manipulate |
+| **user**         | [**OrganizationUser**](OrganizationUser.md) | user details to update |
 
 ### Return type
 
@@ -2885,15 +2932,15 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | user update in organization successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                              | Response headers |
+| ----------- | ---------------------------------------- | ---------------- |
+| **204**     | user update in organization successfully | -                |
+| **502**     | Bad Gateway                              | -                |
+| **0**       | error response                           | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

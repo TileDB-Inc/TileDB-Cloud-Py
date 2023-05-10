@@ -1,22 +1,21 @@
-# tiledb.cloud._common.api_v2.QueryApi
+# tiledb.cloud.\_common.api_v2.QueryApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**submit_query**](QueryApi.md#submit_query) | **POST** /v2/arrays/{namespace}/{array}/query/submit | 
-
+| Method                                       | HTTP request                                         | Description |
+| -------------------------------------------- | ---------------------------------------------------- | ----------- |
+| [**submit_query**](QueryApi.md#submit_query) | **POST** /v2/arrays/{namespace}/{array}/query/submit |
 
 # **submit_query**
+
 > file submit_query(namespace, array, type, content_type, query, x_payer=x_payer, open_at=open_at, read_all=read_all)
-
-
 
 send a query to run against a specified array/URI registered to a group/project
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -70,7 +69,8 @@ read_all = 'read_all_example' # str | If \"true\", resubmits incomplete queries 
         print("Exception when calling QueryApi->submit_query: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -126,16 +126,16 @@ read_all = 'read_all_example' # str | If \"true\", resubmits incomplete queries 
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **array** | **str**| name/uri of array that is url-encoded | 
- **type** | **str**| type of query | 
- **content_type** | **str**| Content Type of input and return mime | [default to &#39;application/json&#39;]
- **query** | [**Query**](Query.md)| query to run | 
- **x_payer** | **str**| Name of organization or user who should be charged for this request | [optional] 
- **open_at** | **int**| open_at for array in unix epoch | [optional] 
- **read_all** | **str**| If \&quot;true\&quot;, resubmits incomplete queries until the query has completed. Defaults to \&quot;false\&quot;. | [optional] 
+| Name             | Type                  | Description                                                                                                         | Notes                                   |
+| ---------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| **namespace**    | **str**               | namespace array is in (an organization name or user&#39;s username)                                                 |
+| **array**        | **str**               | name/uri of array that is url-encoded                                                                               |
+| **type**         | **str**               | type of query                                                                                                       |
+| **content_type** | **str**               | Content Type of input and return mime                                                                               | [default to &#39;application/json&#39;] |
+| **query**        | [**Query**](Query.md) | query to run                                                                                                        |
+| **x_payer**      | **str**               | Name of organization or user who should be charged for this request                                                 | [optional]                              |
+| **open_at**      | **int**               | open_at for array in unix epoch                                                                                     | [optional]                              |
+| **read_all**     | **str**               | If \&quot;true\&quot;, resubmits incomplete queries until the query has completed. Defaults to \&quot;false\&quot;. | [optional]                              |
 
 ### Return type
 
@@ -147,16 +147,16 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, application/capnp
- - **Accept**: application/json, application/capnp
+- **Content-Type**: application/json, application/capnp
+- **Accept**: application/json, application/capnp
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | query completed and results are returned in query object |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br>  |
-**204** | query completed successfully with no return |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                              | Response headers                                                  |
+| ----------- | -------------------------------------------------------- | ----------------------------------------------------------------- |
+| **200**     | query completed and results are returned in query object | \* X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br> |
+| **204**     | query completed successfully with no return              | -                                                                 |
+| **502**     | Bad Gateway                                              | -                                                                 |
+| **0**       | error response                                           | -                                                                 |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
