@@ -66,6 +66,8 @@ __all__ = (
     "organization",
     "organizations",
     "user_profile",
+    "create_file",
+    "export_file",
     "rename_notebook",
     "upload_notebook_from_file",
     "upload_notebook_contents",
@@ -74,7 +76,6 @@ __all__ = (
     "last_sql_task",
     "last_udf_task",
     "task",
-    "tasks",
     "TileDBCloudError",
     "__version__",
 )
