@@ -1,22 +1,21 @@
-# tiledb.cloud._common.api_v2.NotebooksApi
+# tiledb.cloud.\_common.api_v2.NotebooksApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**handle_upload_notebook**](NotebooksApi.md#handle_upload_notebook) | **POST** /v2/notebooks/{namespace}/{array}/upload | 
-
+| Method                                                               | HTTP request                                      | Description |
+| -------------------------------------------------------------------- | ------------------------------------------------- | ----------- |
+| [**handle_upload_notebook**](NotebooksApi.md#handle_upload_notebook) | **POST** /v2/notebooks/{namespace}/{array}/upload |
 
 # **handle_upload_notebook**
+
 > NotebookUploaded handle_upload_notebook(namespace, array, filesize, notebook, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name, name=name)
-
-
 
 Upload a notebook at the specified location and wrap it in TileDB Array
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -68,7 +67,8 @@ name = 'name_example' # str | name of the TileDB array to create, if missing {ar
         print("Exception when calling NotebooksApi->handle_upload_notebook: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -122,14 +122,14 @@ name = 'name_example' # str | name of the TileDB array to create, if missing {ar
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace of the notebook | 
- **array** | **str**| name/uri of array that is url-encoded | 
- **filesize** | **int**| size of the notebook to upload in bytes | 
- **notebook** | **file**| notebook to upload | 
- **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
- **name** | **str**| name of the TileDB array to create, if missing {array} is used | [optional] 
+| Name                                       | Type     | Description                                                    | Notes      |
+| ------------------------------------------ | -------- | -------------------------------------------------------------- | ---------- |
+| **namespace**                              | **str**  | The namespace of the notebook                                  |
+| **array**                                  | **str**  | name/uri of array that is url-encoded                          |
+| **filesize**                               | **int**  | size of the notebook to upload in bytes                        |
+| **notebook**                               | **file** | notebook to upload                                             |
+| **x_tiledb_cloud_access_credentials_name** | **str**  | Optional registered access credentials to use for creation     | [optional] |
+| **name**                                   | **str**  | name of the TileDB array to create, if missing {array} is used | [optional] |
 
 ### Return type
 
@@ -141,15 +141,15 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/octet-stream
- - **Accept**: application/json
+- **Content-Type**: application/octet-stream
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**201** | Notebook uploaded |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description       | Response headers |
+| ----------- | ----------------- | ---------------- |
+| **201**     | Notebook uploaded | -                |
+| **502**     | Bad Gateway       | -                |
+| **0**       | error response    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

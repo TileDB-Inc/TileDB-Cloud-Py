@@ -1,26 +1,25 @@
 # tiledb.cloud.rest_api.QueryApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**finalize_query**](QueryApi.md#finalize_query) | **POST** /v1/arrays/{namespace}/{array}/query/finalize | 
-[**get_est_result_sizes**](QueryApi.md#get_est_result_sizes) | **POST** /v1/arrays/{namespace}/{array}/query/est_result_sizes | 
-[**get_file**](QueryApi.md#get_file) | **GET** /v1/arrays/{namespace}/{array}/query/get_file | 
-[**submit_query**](QueryApi.md#submit_query) | **POST** /v1/arrays/{namespace}/{array}/query/submit | 
-[**submit_query_json**](QueryApi.md#submit_query_json) | **POST** /v1/arrays/{namespace}/{array}/query/submit_query_json | 
-
+| Method                                                       | HTTP request                                                    | Description |
+| ------------------------------------------------------------ | --------------------------------------------------------------- | ----------- |
+| [**finalize_query**](QueryApi.md#finalize_query)             | **POST** /v1/arrays/{namespace}/{array}/query/finalize          |
+| [**get_est_result_sizes**](QueryApi.md#get_est_result_sizes) | **POST** /v1/arrays/{namespace}/{array}/query/est_result_sizes  |
+| [**get_file**](QueryApi.md#get_file)                         | **GET** /v1/arrays/{namespace}/{array}/query/get_file           |
+| [**submit_query**](QueryApi.md#submit_query)                 | **POST** /v1/arrays/{namespace}/{array}/query/submit            |
+| [**submit_query_json**](QueryApi.md#submit_query_json)       | **POST** /v1/arrays/{namespace}/{array}/query/submit_query_json |
 
 # **finalize_query**
+
 > Query finalize_query(namespace, array, type, content_type, query, x_payer=x_payer, open_at=open_at)
-
-
 
 send a query to run against a specified array/URI registered to a group/project
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -73,7 +72,8 @@ open_at = 56 # int | open_at for array in unix epoch (optional)
         print("Exception when calling QueryApi->finalize_query: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -128,15 +128,15 @@ open_at = 56 # int | open_at for array in unix epoch (optional)
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **array** | **str**| name/uri of array that is url-encoded | 
- **type** | **str**| type of query | 
- **content_type** | **str**| Content Type of input and return mime | [default to &#39;application/json&#39;]
- **query** | [**Query**](Query.md)| query to run | 
- **x_payer** | **str**| Name of organization or user who should be charged for this request | [optional] 
- **open_at** | **int**| open_at for array in unix epoch | [optional] 
+| Name             | Type                  | Description                                                         | Notes                                   |
+| ---------------- | --------------------- | ------------------------------------------------------------------- | --------------------------------------- |
+| **namespace**    | **str**               | namespace array is in (an organization name or user&#39;s username) |
+| **array**        | **str**               | name/uri of array that is url-encoded                               |
+| **type**         | **str**               | type of query                                                       |
+| **content_type** | **str**               | Content Type of input and return mime                               | [default to &#39;application/json&#39;] |
+| **query**        | [**Query**](Query.md) | query to run                                                        |
+| **x_payer**      | **str**               | Name of organization or user who should be charged for this request | [optional]                              |
+| **open_at**      | **int**               | open_at for array in unix epoch                                     | [optional]                              |
 
 ### Return type
 
@@ -148,29 +148,30 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, application/capnp
- - **Accept**: application/json, application/capnp
+- **Content-Type**: application/json, application/capnp
+- **Accept**: application/json, application/capnp
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | query completed and results are returned in query object |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br>  |
-**204** | query completed successfully with no return |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                              | Response headers                                                  |
+| ----------- | -------------------------------------------------------- | ----------------------------------------------------------------- |
+| **200**     | query completed and results are returned in query object | \* X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br> |
+| **204**     | query completed successfully with no return              | -                                                                 |
+| **502**     | Bad Gateway                                              | -                                                                 |
+| **0**       | error response                                           | -                                                                 |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_est_result_sizes**
+
 > Query get_est_result_sizes(namespace, array, type, content_type, query, x_payer=x_payer, open_at=open_at)
-
-
 
 send a query to run against a specified array/URI registered to a group/project
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -223,7 +224,8 @@ open_at = 56 # int | open_at for array in unix epoch (optional)
         print("Exception when calling QueryApi->get_est_result_sizes: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -278,15 +280,15 @@ open_at = 56 # int | open_at for array in unix epoch (optional)
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **array** | **str**| name/uri of array that is url-encoded | 
- **type** | **str**| type of query | 
- **content_type** | **str**| Content Type of input and return mime | [default to &#39;application/json&#39;]
- **query** | [**Query**](Query.md)| query to run | 
- **x_payer** | **str**| Name of organization or user who should be charged for this request | [optional] 
- **open_at** | **int**| open_at for array in unix epoch | [optional] 
+| Name             | Type                  | Description                                                         | Notes                                   |
+| ---------------- | --------------------- | ------------------------------------------------------------------- | --------------------------------------- |
+| **namespace**    | **str**               | namespace array is in (an organization name or user&#39;s username) |
+| **array**        | **str**               | name/uri of array that is url-encoded                               |
+| **type**         | **str**               | type of query                                                       |
+| **content_type** | **str**               | Content Type of input and return mime                               | [default to &#39;application/json&#39;] |
+| **query**        | [**Query**](Query.md) | query to run                                                        |
+| **x_payer**      | **str**               | Name of organization or user who should be charged for this request | [optional]                              |
+| **open_at**      | **int**               | open_at for array in unix epoch                                     | [optional]                              |
 
 ### Return type
 
@@ -298,29 +300,30 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, application/capnp
- - **Accept**: application/json, application/capnp
+- **Content-Type**: application/json, application/capnp
+- **Accept**: application/json, application/capnp
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | query est result size computed and results are returned in query object |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just computed query result size <br>  |
-**204** | query completed successfully with no return |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                                             | Response headers                                                             |
+| ----------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **200**     | query est result size computed and results are returned in query object | \* X-TILEDB-CLOUD-TASK-ID - Task ID for just computed query result size <br> |
+| **204**     | query completed successfully with no return                             | -                                                                            |
+| **502**     | Bad Gateway                                                             | -                                                                            |
+| **0**       | error response                                                          | -                                                                            |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_file**
+
 > file get_file(namespace, array, content_type, x_payer=x_payer)
-
-
 
 send a query to run against a specified array/URI registered to a group/project, returns file bytes
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -370,7 +373,8 @@ x_payer = 'x_payer_example' # str | Name of organization or user who should be c
         print("Exception when calling QueryApi->get_file: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -422,12 +426,12 @@ x_payer = 'x_payer_example' # str | Name of organization or user who should be c
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **array** | **str**| name/uri of array that is url-encoded | 
- **content_type** | **str**| Content Type of input and return mime | [default to &#39;application/json&#39;]
- **x_payer** | **str**| Name of organization or user who should be charged for this request | [optional] 
+| Name             | Type    | Description                                                         | Notes                                   |
+| ---------------- | ------- | ------------------------------------------------------------------- | --------------------------------------- |
+| **namespace**    | **str** | namespace array is in (an organization name or user&#39;s username) |
+| **array**        | **str** | name/uri of array that is url-encoded                               |
+| **content_type** | **str** | Content Type of input and return mime                               | [default to &#39;application/json&#39;] |
+| **x_payer**      | **str** | Name of organization or user who should be charged for this request | [optional]                              |
 
 ### Return type
 
@@ -439,28 +443,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/x-ipynb+json
+- **Content-Type**: Not defined
+- **Accept**: application/x-ipynb+json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | query completed and result bytes are returned |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br>  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                   | Response headers                                                  |
+| ----------- | --------------------------------------------- | ----------------------------------------------------------------- |
+| **200**     | query completed and result bytes are returned | \* X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br> |
+| **502**     | Bad Gateway                                   | -                                                                 |
+| **0**       | error response                                | -                                                                 |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **submit_query**
+
 > Query submit_query(namespace, array, type, content_type, query, x_payer=x_payer, open_at=open_at)
-
-
 
 send a query to run against a specified array/URI registered to a group/project
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -513,7 +518,8 @@ open_at = 56 # int | open_at for array in unix epoch (optional)
         print("Exception when calling QueryApi->submit_query: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -568,15 +574,15 @@ open_at = 56 # int | open_at for array in unix epoch (optional)
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **array** | **str**| name/uri of array that is url-encoded | 
- **type** | **str**| type of query | 
- **content_type** | **str**| Content Type of input and return mime | [default to &#39;application/json&#39;]
- **query** | [**Query**](Query.md)| query to run | 
- **x_payer** | **str**| Name of organization or user who should be charged for this request | [optional] 
- **open_at** | **int**| open_at for array in unix epoch | [optional] 
+| Name             | Type                  | Description                                                         | Notes                                   |
+| ---------------- | --------------------- | ------------------------------------------------------------------- | --------------------------------------- |
+| **namespace**    | **str**               | namespace array is in (an organization name or user&#39;s username) |
+| **array**        | **str**               | name/uri of array that is url-encoded                               |
+| **type**         | **str**               | type of query                                                       |
+| **content_type** | **str**               | Content Type of input and return mime                               | [default to &#39;application/json&#39;] |
+| **query**        | [**Query**](Query.md) | query to run                                                        |
+| **x_payer**      | **str**               | Name of organization or user who should be charged for this request | [optional]                              |
+| **open_at**      | **int**               | open_at for array in unix epoch                                     | [optional]                              |
 
 ### Return type
 
@@ -588,29 +594,30 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, application/capnp
- - **Accept**: application/json, application/capnp
+- **Content-Type**: application/json, application/capnp
+- **Accept**: application/json, application/capnp
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | query completed and results are returned in query object |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br>  |
-**204** | query completed successfully with no return |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                              | Response headers                                                  |
+| ----------- | -------------------------------------------------------- | ----------------------------------------------------------------- |
+| **200**     | query completed and results are returned in query object | \* X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br> |
+| **204**     | query completed successfully with no return              | -                                                                 |
+| **502**     | Bad Gateway                                              | -                                                                 |
+| **0**       | error response                                           | -                                                                 |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **submit_query_json**
+
 > object submit_query_json(namespace, array, content_type, query_json, x_payer=x_payer)
-
-
 
 send a query to run against a specified array/URI registered to a group/project, returns JSON results
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -661,7 +668,8 @@ x_payer = 'x_payer_example' # str | Name of organization or user who should be c
         print("Exception when calling QueryApi->submit_query_json: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -714,13 +722,13 @@ x_payer = 'x_payer_example' # str | Name of organization or user who should be c
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **array** | **str**| name/uri of array that is url-encoded | 
- **content_type** | **str**| Content Type of input and return mime | [default to &#39;application/json&#39;]
- **query_json** | [**QueryJson**](QueryJson.md)| query to run | 
- **x_payer** | **str**| Name of organization or user who should be charged for this request | [optional] 
+| Name             | Type                          | Description                                                         | Notes                                   |
+| ---------------- | ----------------------------- | ------------------------------------------------------------------- | --------------------------------------- |
+| **namespace**    | **str**                       | namespace array is in (an organization name or user&#39;s username) |
+| **array**        | **str**                       | name/uri of array that is url-encoded                               |
+| **content_type** | **str**                       | Content Type of input and return mime                               | [default to &#39;application/json&#39;] |
+| **query_json**   | [**QueryJson**](QueryJson.md) | query to run                                                        |
+| **x_payer**      | **str**                       | Name of organization or user who should be charged for this request | [optional]                              |
 
 ### Return type
 
@@ -732,15 +740,15 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | query completed and results are returned in JSON format |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br>  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                             | Response headers                                                  |
+| ----------- | ------------------------------------------------------- | ----------------------------------------------------------------- |
+| **200**     | query completed and results are returned in JSON format | \* X-TILEDB-CLOUD-TASK-ID - Task ID for just completed query <br> |
+| **502**     | Bad Gateway                                             | -                                                                 |
+| **0**       | error response                                          | -                                                                 |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

@@ -1,23 +1,22 @@
-# tiledb.cloud._common.api_v2.ArrayApi
+# tiledb.cloud.\_common.api_v2.ArrayApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**array_activity_log**](ArrayApi.md#array_activity_log) | **GET** /v2/arrays/{namespace}/{array}/activity | 
-[**get_array**](ArrayApi.md#get_array) | **POST** /v2/arrays/{namespace}/{array} | 
-
+| Method                                                   | HTTP request                                    | Description |
+| -------------------------------------------------------- | ----------------------------------------------- | ----------- |
+| [**array_activity_log**](ArrayApi.md#array_activity_log) | **GET** /v2/arrays/{namespace}/{array}/activity |
+| [**get_array**](ArrayApi.md#get_array)                   | **POST** /v2/arrays/{namespace}/{array}         |
 
 # **array_activity_log**
+
 > ArrayActivityLogData array_activity_log(namespace, array, start=start, end=end, event_types=event_types, task_id=task_id, has_task_id=has_task_id, page=page, per_page=per_page)
-
-
 
 get array activity logs
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -72,7 +71,8 @@ per_page = 56 # int | pagination limit (optional)
         print("Exception when calling ArrayApi->array_activity_log: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -129,17 +129,17 @@ per_page = 56 # int | pagination limit (optional)
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **array** | **str**| name/uri of array that is url-encoded | 
- **start** | **int**| Start time of window of fetch logs, unix epoch in seconds (default: seven days ago) | [optional] 
- **end** | **int**| End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) | [optional] 
- **event_types** | [**list[str]**](str.md)| Refer to ActivityEventType for possible values | [optional] 
- **task_id** | **str**| Array task id To filter activity to | [optional] 
- **has_task_id** | **bool**| Excludes activity log results that does not contain an array task uuid | [optional] 
- **page** | **int**| pagination offset | [optional] 
- **per_page** | **int**| pagination limit | [optional] 
+| Name            | Type                    | Description                                                                              | Notes      |
+| --------------- | ----------------------- | ---------------------------------------------------------------------------------------- | ---------- |
+| **namespace**   | **str**                 | namespace array is in (an organization name or user&#39;s username)                      |
+| **array**       | **str**                 | name/uri of array that is url-encoded                                                    |
+| **start**       | **int**                 | Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)      | [optional] |
+| **end**         | **int**                 | End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp) | [optional] |
+| **event_types** | [**list[str]**](str.md) | Refer to ActivityEventType for possible values                                           | [optional] |
+| **task_id**     | **str**                 | Array task id To filter activity to                                                      | [optional] |
+| **has_task_id** | **bool**                | Excludes activity log results that does not contain an array task uuid                   | [optional] |
+| **page**        | **int**                 | pagination offset                                                                        | [optional] |
+| **per_page**    | **int**                 | pagination limit                                                                         | [optional] |
 
 ### Return type
 
@@ -151,28 +151,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | log of array activity |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description           | Response headers |
+| ----------- | --------------------- | ---------------- |
+| **200**     | log of array activity | -                |
+| **502**     | Bad Gateway           | -                |
+| **0**       | error response        | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_array**
+
 > Array get_array(namespace, array, content_type, array_fetch)
-
-
 
 Get a array at a specified URI registered to a group/project
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -222,7 +223,8 @@ array_fetch = tiledb.cloud._common.api_v2.ArrayFetch() # ArrayFetch | Details fo
         print("Exception when calling ArrayApi->get_array: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -274,12 +276,12 @@ array_fetch = tiledb.cloud._common.api_v2.ArrayFetch() # ArrayFetch | Details fo
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **array** | **str**| name/uri of array that is url-encoded | 
- **content_type** | **str**| Content Type of input and return mime | [default to &#39;application/json&#39;]
- **array_fetch** | [**ArrayFetch**](ArrayFetch.md)| Details for array being fetched | 
+| Name             | Type                            | Description                                                         | Notes                                   |
+| ---------------- | ------------------------------- | ------------------------------------------------------------------- | --------------------------------------- |
+| **namespace**    | **str**                         | namespace array is in (an organization name or user&#39;s username) |
+| **array**        | **str**                         | name/uri of array that is url-encoded                               |
+| **content_type** | **str**                         | Content Type of input and return mime                               | [default to &#39;application/json&#39;] |
+| **array_fetch**  | [**ArrayFetch**](ArrayFetch.md) | Details for array being fetched                                     |
 
 ### Return type
 
@@ -291,15 +293,15 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Array opened successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description               | Response headers |
+| ----------- | ------------------------- | ---------------- |
+| **200**     | Array opened successfully | -                |
+| **502**     | Bad Gateway               | -                |
+| **0**       | error response            | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

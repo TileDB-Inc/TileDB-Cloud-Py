@@ -1,26 +1,25 @@
 # tiledb.cloud.rest_api.TaskGraphsApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**create_task_graph**](TaskGraphsApi.md#create_task_graph) | **POST** /v1/taskgraphs/{namespace}/graphs | 
-[**get_task_graph**](TaskGraphsApi.md#get_task_graph) | **GET** /v1/taskgraphs/{namespace}/graphs/{id} | 
-[**list_task_graphs**](TaskGraphsApi.md#list_task_graphs) | **GET** /v1/taskgraphs/{namespace}/graphs | 
-[**submit_task_graph**](TaskGraphsApi.md#submit_task_graph) | **POST** /v1/taskgraphs/{namespace}/graphs/{id}/submit | 
-[**update_task_graph**](TaskGraphsApi.md#update_task_graph) | **PATCH** /v1/taskgraphs/{namespace}/graphs/{id} | 
-
+| Method                                                      | HTTP request                                           | Description |
+| ----------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+| [**create_task_graph**](TaskGraphsApi.md#create_task_graph) | **POST** /v1/taskgraphs/{namespace}/graphs             |
+| [**get_task_graph**](TaskGraphsApi.md#get_task_graph)       | **GET** /v1/taskgraphs/{namespace}/graphs/{id}         |
+| [**list_task_graphs**](TaskGraphsApi.md#list_task_graphs)   | **GET** /v1/taskgraphs/{namespace}/graphs              |
+| [**submit_task_graph**](TaskGraphsApi.md#submit_task_graph) | **POST** /v1/taskgraphs/{namespace}/graphs/{id}/submit |
+| [**update_task_graph**](TaskGraphsApi.md#update_task_graph) | **PATCH** /v1/taskgraphs/{namespace}/graphs/{id}       |
 
 # **create_task_graph**
+
 > TaskGraph create_task_graph(namespace, graph)
 
-
-
-Create a single task graph for execution. 
+Create a single task graph for execution.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -68,7 +67,8 @@ graph = tiledb.cloud.rest_api.TaskGraph() # TaskGraph | Create the task graph.
         print("Exception when calling TaskGraphsApi->create_task_graph: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -118,10 +118,10 @@ graph = tiledb.cloud.rest_api.TaskGraph() # TaskGraph | Create the task graph.
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| Include graphs for this namespace. | 
- **graph** | [**TaskGraph**](TaskGraph.md)| Create the task graph. | 
+| Name          | Type                          | Description                        | Notes |
+| ------------- | ----------------------------- | ---------------------------------- | ----- |
+| **namespace** | **str**                       | Include graphs for this namespace. |
+| **graph**     | [**TaskGraph**](TaskGraph.md) | Create the task graph.             |
 
 ### Return type
 
@@ -133,28 +133,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**201** | Task graph created successfully. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                      | Response headers |
+| ----------- | -------------------------------- | ---------------- |
+| **201**     | Task graph created successfully. | -                |
+| **502**     | Bad Gateway                      | -                |
+| **0**       | error response                   | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_task_graph**
+
 > TaskGraph get_task_graph(namespace, id)
 
-
-
-Fetch information about a single task graph. 
+Fetch information about a single task graph.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -202,7 +203,8 @@ id = 'id_example' # str | The UUID of the task graph entry.
         print("Exception when calling TaskGraphsApi->get_task_graph: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -252,10 +254,10 @@ id = 'id_example' # str | The UUID of the task graph entry.
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns this task graph. | 
- **id** | **str**| The UUID of the task graph entry. | 
+| Name          | Type    | Description                              | Notes |
+| ------------- | ------- | ---------------------------------------- | ----- |
+| **namespace** | **str** | The namespace that owns this task graph. |
+| **id**        | **str** | The UUID of the task graph entry.        |
 
 ### Return type
 
@@ -267,28 +269,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Information about the single task graph. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                              | Response headers |
+| ----------- | ---------------------------------------- | ---------------- |
+| **200**     | Information about the single task graph. | -                |
+| **502**     | Bad Gateway                              | -                |
+| **0**       | error response                           | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_task_graphs**
+
 > TaskGraphs list_task_graphs(namespace)
 
-
-
-Fetch the task graphs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata. 
+Fetch the task graphs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -335,7 +338,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling TaskGraphsApi->list_task_graphs: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -384,9 +388,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| Namespace for graphs | 
+| Name          | Type    | Description          | Notes |
+| ------------- | ------- | -------------------- | ----- |
+| **namespace** | **str** | Namespace for graphs |
 
 ### Return type
 
@@ -398,28 +402,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | The task graphs that matched the user&#39;s query. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                        | Response headers |
+| ----------- | -------------------------------------------------- | ---------------- |
+| **200**     | The task graphs that matched the user&#39;s query. | -                |
+| **502**     | Bad Gateway                                        | -                |
+| **0**       | error response                                     | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **submit_task_graph**
+
 > TaskGraphLog submit_task_graph(namespace, id)
 
-
-
-Submit a single task graph for execution. 
+Submit a single task graph for execution.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -467,7 +472,8 @@ id = 'id_example' # str | The UUID of the task graph entry.
         print("Exception when calling TaskGraphsApi->submit_task_graph: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -517,10 +523,10 @@ id = 'id_example' # str | The UUID of the task graph entry.
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns this task graph. | 
- **id** | **str**| The UUID of the task graph entry. | 
+| Name          | Type    | Description                              | Notes |
+| ------------- | ------- | ---------------------------------------- | ----- |
+| **namespace** | **str** | The namespace that owns this task graph. |
+| **id**        | **str** | The UUID of the task graph entry.        |
 
 ### Return type
 
@@ -532,28 +538,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**202** | Information about the execution of a single task graph. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                             | Response headers |
+| ----------- | ------------------------------------------------------- | ---------------- |
+| **202**     | Information about the execution of a single task graph. | -                |
+| **502**     | Bad Gateway                                             | -                |
+| **0**       | error response                                          | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_task_graph**
+
 > update_task_graph(namespace, id, graph)
 
-
-
-Update information about a single task graph execution. 
+Update information about a single task graph execution.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -601,7 +608,8 @@ graph = tiledb.cloud.rest_api.TaskGraph() # TaskGraph | Updates to make to the t
         print("Exception when calling TaskGraphsApi->update_task_graph: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -651,11 +659,11 @@ graph = tiledb.cloud.rest_api.TaskGraph() # TaskGraph | Updates to make to the t
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| The namespace that owns this task graph. | 
- **id** | **str**| The UUID of the task graph entry. | 
- **graph** | [**TaskGraph**](TaskGraph.md)| Updates to make to the task graph. | 
+| Name          | Type                          | Description                              | Notes |
+| ------------- | ----------------------------- | ---------------------------------------- | ----- |
+| **namespace** | **str**                       | The namespace that owns this task graph. |
+| **id**        | **str**                       | The UUID of the task graph entry.        |
+| **graph**     | [**TaskGraph**](TaskGraph.md) | Updates to make to the task graph.       |
 
 ### Return type
 
@@ -667,15 +675,15 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | Task graph created successfully. |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                      | Response headers |
+| ----------- | -------------------------------- | ---------------- |
+| **204**     | Task graph created successfully. | -                |
+| **502**     | Bad Gateway                      | -                |
+| **0**       | error response                   | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

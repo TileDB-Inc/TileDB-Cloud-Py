@@ -1,23 +1,22 @@
 # tiledb.cloud.rest_api.NotebooksApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**notebooks_namespace_array_end_timestamps_get**](NotebooksApi.md#notebooks_namespace_array_end_timestamps_get) | **GET** /v1/notebooks/{namespace}/{array}/end_timestamps | 
-[**notebooks_namespace_array_prune_post**](NotebooksApi.md#notebooks_namespace_array_prune_post) | **POST** /v1/notebooks/{namespace}/{array}/prune | 
-
+| Method                                                                                                           | HTTP request                                             | Description |
+| ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ----------- |
+| [**notebooks_namespace_array_end_timestamps_get**](NotebooksApi.md#notebooks_namespace_array_end_timestamps_get) | **GET** /v1/notebooks/{namespace}/{array}/end_timestamps |
+| [**notebooks_namespace_array_prune_post**](NotebooksApi.md#notebooks_namespace_array_prune_post)                 | **POST** /v1/notebooks/{namespace}/{array}/prune         |
 
 # **notebooks_namespace_array_end_timestamps_get**
+
 > ArrayEndTimestampData notebooks_namespace_array_end_timestamps_get(namespace, array, page=page, per_page=per_page)
-
-
 
 retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -67,7 +66,8 @@ per_page = 56 # int | pagination limit (optional)
         print("Exception when calling NotebooksApi->notebooks_namespace_array_end_timestamps_get: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -119,12 +119,12 @@ per_page = 56 # int | pagination limit (optional)
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **array** | **str**| name/uri of array that is url-encoded | 
- **page** | **int**| pagination offset | [optional] 
- **per_page** | **int**| pagination limit | [optional] 
+| Name          | Type    | Description                                                         | Notes      |
+| ------------- | ------- | ------------------------------------------------------------------- | ---------- |
+| **namespace** | **str** | namespace array is in (an organization name or user&#39;s username) |
+| **array**     | **str** | name/uri of array that is url-encoded                               |
+| **page**      | **int** | pagination offset                                                   | [optional] |
+| **per_page**  | **int** | pagination limit                                                    | [optional] |
 
 ### Return type
 
@@ -136,28 +136,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | list of timestamps in milliseconds, paginated |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                   | Response headers |
+| ----------- | --------------------------------------------- | ---------------- |
+| **200**     | list of timestamps in milliseconds, paginated | -                |
+| **502**     | Bad Gateway                                   | -                |
+| **0**       | error response                                | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **notebooks_namespace_array_prune_post**
+
 > notebooks_namespace_array_prune_post(namespace, array, keep_versions=keep_versions)
-
-
 
 prune fragments of the notebook
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -205,7 +206,8 @@ keep_versions = 56 # int | The number of most recents fragment to preserve (opti
         print("Exception when calling NotebooksApi->notebooks_namespace_array_prune_post: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -255,11 +257,11 @@ keep_versions = 56 # int | The number of most recents fragment to preserve (opti
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **array** | **str**| name/uri of array that is url-encoded | 
- **keep_versions** | **int**| The number of most recents fragment to preserve | [optional] 
+| Name              | Type    | Description                                                         | Notes      |
+| ----------------- | ------- | ------------------------------------------------------------------- | ---------- |
+| **namespace**     | **str** | namespace array is in (an organization name or user&#39;s username) |
+| **array**         | **str** | name/uri of array that is url-encoded                               |
+| **keep_versions** | **int** | The number of most recents fragment to preserve                     | [optional] |
 
 ### Return type
 
@@ -271,15 +273,15 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | notebook pruned |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description     | Response headers |
+| ----------- | --------------- | ---------------- |
+| **204**     | notebook pruned | -                |
+| **502**     | Bad Gateway     | -                |
+| **0**       | error response  | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

@@ -1,29 +1,28 @@
-# tiledb.cloud._common.api_v2.GroupsApi
+# tiledb.cloud.\_common.api_v2.GroupsApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**create_group**](GroupsApi.md#create_group) | **POST** /v2/groups/{group_namespace} | 
-[**deregister_group**](GroupsApi.md#deregister_group) | **DELETE** /v2/groups/{group_namespace}/{group_name} | 
-[**get_group_metadata**](GroupsApi.md#get_group_metadata) | **POST** /v2/groups/{group_namespace}/{group_name}/metadata | 
-[**groups_group_namespace_group_name_options**](GroupsApi.md#groups_group_namespace_group_name_options) | **OPTIONS** /v2/groups/{group_namespace}/{group_name} | 
-[**register_group**](GroupsApi.md#register_group) | **PUT** /v2/groups/{group_namespace} | 
-[**retrieve_group**](GroupsApi.md#retrieve_group) | **POST** /v2/groups/{group_namespace}/{group_name} | 
-[**update_group_contents**](GroupsApi.md#update_group_contents) | **PATCH** /v2/groups/{group_namespace}/{group_name} | 
-[**update_group_metadata**](GroupsApi.md#update_group_metadata) | **PUT** /v2/groups/{group_namespace}/{group_name}/metadata | 
-
+| Method                                                                                                  | HTTP request                                                | Description |
+| ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- | ----------- |
+| [**create_group**](GroupsApi.md#create_group)                                                           | **POST** /v2/groups/{group_namespace}                       |
+| [**deregister_group**](GroupsApi.md#deregister_group)                                                   | **DELETE** /v2/groups/{group_namespace}/{group_name}        |
+| [**get_group_metadata**](GroupsApi.md#get_group_metadata)                                               | **POST** /v2/groups/{group_namespace}/{group_name}/metadata |
+| [**groups_group_namespace_group_name_options**](GroupsApi.md#groups_group_namespace_group_name_options) | **OPTIONS** /v2/groups/{group_namespace}/{group_name}       |
+| [**register_group**](GroupsApi.md#register_group)                                                       | **PUT** /v2/groups/{group_namespace}                        |
+| [**retrieve_group**](GroupsApi.md#retrieve_group)                                                       | **POST** /v2/groups/{group_namespace}/{group_name}          |
+| [**update_group_contents**](GroupsApi.md#update_group_contents)                                         | **PATCH** /v2/groups/{group_namespace}/{group_name}         |
+| [**update_group_metadata**](GroupsApi.md#update_group_metadata)                                         | **PUT** /v2/groups/{group_namespace}/{group_name}/metadata  |
 
 # **create_group**
+
 > create_group(group_namespace, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name, group_creation=group_creation)
-
-
 
 Creates an empty group
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -71,7 +70,8 @@ group_creation = tiledb.cloud._common.api_v2.GroupCreationRequest() # GroupCreat
         print("Exception when calling GroupsApi->create_group: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -121,11 +121,11 @@ group_creation = tiledb.cloud._common.api_v2.GroupCreationRequest() # GroupCreat
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **group_namespace** | **str**| The namespace of the group | 
- **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
- **group_creation** | [**GroupCreationRequest**](GroupCreationRequest.md)|  | [optional] 
+| Name                                       | Type                                                | Description                                                | Notes      |
+| ------------------------------------------ | --------------------------------------------------- | ---------------------------------------------------------- | ---------- |
+| **group_namespace**                        | **str**                                             | The namespace of the group                                 |
+| **x_tiledb_cloud_access_credentials_name** | **str**                                             | Optional registered access credentials to use for creation | [optional] |
+| **group_creation**                         | [**GroupCreationRequest**](GroupCreationRequest.md) |                                                            | [optional] |
 
 ### Return type
 
@@ -137,28 +137,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**201** | group created successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                | Response headers |
+| ----------- | -------------------------- | ---------------- |
+| **201**     | group created successfully | -                |
+| **502**     | Bad Gateway                | -                |
+| **0**       | error response             | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **deregister_group**
+
 > deregister_group(group_namespace, group_name, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name)
-
-
 
 Deregisters a group
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -206,7 +207,8 @@ x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name
         print("Exception when calling GroupsApi->deregister_group: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -256,11 +258,11 @@ x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **group_namespace** | **str**| The namespace of the group | 
- **group_name** | **str**| The unique name or id of the group | 
- **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
+| Name                                       | Type    | Description                                                | Notes      |
+| ------------------------------------------ | ------- | ---------------------------------------------------------- | ---------- |
+| **group_namespace**                        | **str** | The namespace of the group                                 |
+| **group_name**                             | **str** | The unique name or id of the group                         |
+| **x_tiledb_cloud_access_credentials_name** | **str** | Optional registered access credentials to use for creation | [optional] |
 
 ### Return type
 
@@ -272,28 +274,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | group deregistered successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                     | Response headers |
+| ----------- | ------------------------------- | ---------------- |
+| **200**     | group deregistered successfully | -                |
+| **502**     | Bad Gateway                     | -                |
+| **0**       | error response                  | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_group_metadata**
+
 > Metadata get_group_metadata(group_namespace, group_name, metadata_retrieval=metadata_retrieval)
-
-
 
 get metadata on a group using the requested config
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -342,7 +345,8 @@ metadata_retrieval = tiledb.cloud._common.api_v2.GroupMetadataRetrievalRequest()
         print("Exception when calling GroupsApi->get_group_metadata: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -393,11 +397,11 @@ metadata_retrieval = tiledb.cloud._common.api_v2.GroupMetadataRetrievalRequest()
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **group_namespace** | **str**| The namespace of the group | 
- **group_name** | **str**| The unique name or id of the group | 
- **metadata_retrieval** | [**GroupMetadataRetrievalRequest**](GroupMetadataRetrievalRequest.md)|  | [optional] 
+| Name                   | Type                                                                  | Description                        | Notes      |
+| ---------------------- | --------------------------------------------------------------------- | ---------------------------------- | ---------- |
+| **group_namespace**    | **str**                                                               | The namespace of the group         |
+| **group_name**         | **str**                                                               | The unique name or id of the group |
+| **metadata_retrieval** | [**GroupMetadataRetrievalRequest**](GroupMetadataRetrievalRequest.md) |                                    | [optional] |
 
 ### Return type
 
@@ -409,28 +413,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | retrieve metadata for a group |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                   | Response headers |
+| ----------- | ----------------------------- | ---------------- |
+| **200**     | retrieve metadata for a group | -                |
+| **502**     | Bad Gateway                   | -                |
+| **0**       | error response                | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **groups_group_namespace_group_name_options**
+
 > groups_group_namespace_group_name_options(group_namespace, group_name, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name)
-
-
 
 can be used to check if the resource exists
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -478,7 +483,8 @@ x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name
         print("Exception when calling GroupsApi->groups_group_namespace_group_name_options: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -528,11 +534,11 @@ x_tiledb_cloud_access_credentials_name = 'x_tiledb_cloud_access_credentials_name
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **group_namespace** | **str**| The namespace of the group | 
- **group_name** | **str**| The unique name or id of the group | 
- **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
+| Name                                       | Type    | Description                                                | Notes      |
+| ------------------------------------------ | ------- | ---------------------------------------------------------- | ---------- |
+| **group_namespace**                        | **str** | The namespace of the group                                 |
+| **group_name**                             | **str** | The unique name or id of the group                         |
+| **x_tiledb_cloud_access_credentials_name** | **str** | Optional registered access credentials to use for creation | [optional] |
 
 ### Return type
 
@@ -544,29 +550,30 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | the resource exists |  -  |
-**404** | the resource does not exist |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                 | Response headers |
+| ----------- | --------------------------- | ---------------- |
+| **204**     | the resource exists         | -                |
+| **404**     | the resource does not exist | -                |
+| **502**     | Bad Gateway                 | -                |
+| **0**       | error response              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **register_group**
+
 > register_group(group_namespace, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name, group_registration=group_registration)
-
-
 
 Registers an already existing group
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -614,7 +621,8 @@ group_registration = tiledb.cloud._common.api_v2.GroupRegistrationRequest() # Gr
         print("Exception when calling GroupsApi->register_group: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -664,11 +672,11 @@ group_registration = tiledb.cloud._common.api_v2.GroupRegistrationRequest() # Gr
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **group_namespace** | **str**| The namespace of the group | 
- **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
- **group_registration** | [**GroupRegistrationRequest**](GroupRegistrationRequest.md)|  | [optional] 
+| Name                                       | Type                                                        | Description                                                | Notes      |
+| ------------------------------------------ | ----------------------------------------------------------- | ---------------------------------------------------------- | ---------- |
+| **group_namespace**                        | **str**                                                     | The namespace of the group                                 |
+| **x_tiledb_cloud_access_credentials_name** | **str**                                                     | Optional registered access credentials to use for creation | [optional] |
+| **group_registration**                     | [**GroupRegistrationRequest**](GroupRegistrationRequest.md) |                                                            | [optional] |
 
 ### Return type
 
@@ -680,28 +688,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**201** | group created successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                | Response headers |
+| ----------- | -------------------------- | ---------------- |
+| **201**     | group created successfully | -                |
+| **502**     | Bad Gateway                | -                |
+| **0**       | error response             | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **retrieve_group**
+
 > GroupContentsRetrievalResponse retrieve_group(group_namespace, group_name, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name, group_retrieval=group_retrieval)
-
-
 
 Retrieves the contents of a group
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -751,7 +760,8 @@ group_retrieval = tiledb.cloud._common.api_v2.GroupContentsRetrievalRequest() # 
         print("Exception when calling GroupsApi->retrieve_group: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -803,12 +813,12 @@ group_retrieval = tiledb.cloud._common.api_v2.GroupContentsRetrievalRequest() # 
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **group_namespace** | **str**| The namespace of the group | 
- **group_name** | **str**| The unique name or id of the group | 
- **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
- **group_retrieval** | [**GroupContentsRetrievalRequest**](GroupContentsRetrievalRequest.md)|  | [optional] 
+| Name                                       | Type                                                                  | Description                                                | Notes      |
+| ------------------------------------------ | --------------------------------------------------------------------- | ---------------------------------------------------------- | ---------- |
+| **group_namespace**                        | **str**                                                               | The namespace of the group                                 |
+| **group_name**                             | **str**                                                               | The unique name or id of the group                         |
+| **x_tiledb_cloud_access_credentials_name** | **str**                                                               | Optional registered access credentials to use for creation | [optional] |
+| **group_retrieval**                        | [**GroupContentsRetrievalRequest**](GroupContentsRetrievalRequest.md) |                                                            | [optional] |
 
 ### Return type
 
@@ -820,28 +830,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | group created successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                | Response headers |
+| ----------- | -------------------------- | ---------------- |
+| **200**     | group created successfully | -                |
+| **502**     | Bad Gateway                | -                |
+| **0**       | error response             | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_group_contents**
+
 > update_group_contents(group_namespace, group_name, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name, group_update_contents=group_update_contents)
-
-
 
 Change the contents of the group
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -890,7 +901,8 @@ group_update_contents = tiledb.cloud._common.api_v2.GroupContentsChangesRequest(
         print("Exception when calling GroupsApi->update_group_contents: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -941,12 +953,12 @@ group_update_contents = tiledb.cloud._common.api_v2.GroupContentsChangesRequest(
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **group_namespace** | **str**| The namespace of the group | 
- **group_name** | **str**| The unique name or id of the group | 
- **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
- **group_update_contents** | [**GroupContentsChangesRequest**](GroupContentsChangesRequest.md)|  | [optional] 
+| Name                                       | Type                                                              | Description                                                | Notes      |
+| ------------------------------------------ | ----------------------------------------------------------------- | ---------------------------------------------------------- | ---------- |
+| **group_namespace**                        | **str**                                                           | The namespace of the group                                 |
+| **group_name**                             | **str**                                                           | The unique name or id of the group                         |
+| **x_tiledb_cloud_access_credentials_name** | **str**                                                           | Optional registered access credentials to use for creation | [optional] |
+| **group_update_contents**                  | [**GroupContentsChangesRequest**](GroupContentsChangesRequest.md) |                                                            | [optional] |
 
 ### Return type
 
@@ -958,28 +970,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | attributes changed successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                     | Response headers |
+| ----------- | ------------------------------- | ---------------- |
+| **204**     | attributes changed successfully | -                |
+| **502**     | Bad Gateway                     | -                |
+| **0**       | error response                  | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_group_metadata**
+
 > update_group_metadata(group_namespace, group_name, metadata_updating=metadata_updating)
-
-
 
 update metadata on a group
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1027,7 +1040,8 @@ metadata_updating = tiledb.cloud._common.api_v2.GroupMetadataUpdateRequest() # G
         print("Exception when calling GroupsApi->update_group_metadata: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1077,11 +1091,11 @@ metadata_updating = tiledb.cloud._common.api_v2.GroupMetadataUpdateRequest() # G
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **group_namespace** | **str**| The namespace of the group | 
- **group_name** | **str**| The unique name or id of the group | 
- **metadata_updating** | [**GroupMetadataUpdateRequest**](GroupMetadataUpdateRequest.md)|  | [optional] 
+| Name                  | Type                                                            | Description                        | Notes      |
+| --------------------- | --------------------------------------------------------------- | ---------------------------------- | ---------- |
+| **group_namespace**   | **str**                                                         | The namespace of the group         |
+| **group_name**        | **str**                                                         | The unique name or id of the group |
+| **metadata_updating** | [**GroupMetadataUpdateRequest**](GroupMetadataUpdateRequest.md) |                                    | [optional] |
 
 ### Return type
 
@@ -1093,15 +1107,15 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | group metadata updated successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                         | Response headers |
+| ----------- | ----------------------------------- | ---------------- |
+| **200**     | group metadata updated successfully | -                |
+| **502**     | Bad Gateway                         | -                |
+| **0**       | error response                      | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

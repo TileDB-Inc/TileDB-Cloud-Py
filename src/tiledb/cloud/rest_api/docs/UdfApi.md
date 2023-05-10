@@ -1,32 +1,31 @@
 # tiledb.cloud.rest_api.UdfApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**delete_udf_info**](UdfApi.md#delete_udf_info) | **DELETE** /v1/udf/{namespace}/{name} | 
-[**get_udf_info**](UdfApi.md#get_udf_info) | **GET** /v1/udf/{namespace}/{name} | 
-[**get_udf_info_sharing_policies**](UdfApi.md#get_udf_info_sharing_policies) | **GET** /v1/udf/{namespace}/{name}/share | 
-[**handle_copy_udf**](UdfApi.md#handle_copy_udf) | **POST** /v1/udf/{namespace}/{name}/copy | 
-[**register_udf_info**](UdfApi.md#register_udf_info) | **POST** /v1/udf/{namespace}/{name} | 
-[**share_udf_info**](UdfApi.md#share_udf_info) | **PATCH** /v1/udf/{namespace}/{name}/share | 
-[**submit_generic_udf**](UdfApi.md#submit_generic_udf) | **POST** /v1/udfs/generic/{namespace} | 
-[**submit_multi_array_udf**](UdfApi.md#submit_multi_array_udf) | **POST** /v1/udfs/arrays/{namespace} | 
-[**submit_udf**](UdfApi.md#submit_udf) | **POST** /v1/arrays/{namespace}/{array}/udf/submit | 
-[**udf_namespace_array_end_timestamps_get**](UdfApi.md#udf_namespace_array_end_timestamps_get) | **GET** /v1/udf/{namespace}/{array}/end_timestamps | 
-[**update_udf_info**](UdfApi.md#update_udf_info) | **PATCH** /v1/udf/{namespace}/{name} | 
-
+| Method                                                                                         | HTTP request                                       | Description |
+| ---------------------------------------------------------------------------------------------- | -------------------------------------------------- | ----------- |
+| [**delete_udf_info**](UdfApi.md#delete_udf_info)                                               | **DELETE** /v1/udf/{namespace}/{name}              |
+| [**get_udf_info**](UdfApi.md#get_udf_info)                                                     | **GET** /v1/udf/{namespace}/{name}                 |
+| [**get_udf_info_sharing_policies**](UdfApi.md#get_udf_info_sharing_policies)                   | **GET** /v1/udf/{namespace}/{name}/share           |
+| [**handle_copy_udf**](UdfApi.md#handle_copy_udf)                                               | **POST** /v1/udf/{namespace}/{name}/copy           |
+| [**register_udf_info**](UdfApi.md#register_udf_info)                                           | **POST** /v1/udf/{namespace}/{name}                |
+| [**share_udf_info**](UdfApi.md#share_udf_info)                                                 | **PATCH** /v1/udf/{namespace}/{name}/share         |
+| [**submit_generic_udf**](UdfApi.md#submit_generic_udf)                                         | **POST** /v1/udfs/generic/{namespace}              |
+| [**submit_multi_array_udf**](UdfApi.md#submit_multi_array_udf)                                 | **POST** /v1/udfs/arrays/{namespace}               |
+| [**submit_udf**](UdfApi.md#submit_udf)                                                         | **POST** /v1/arrays/{namespace}/{array}/udf/submit |
+| [**udf_namespace_array_end_timestamps_get**](UdfApi.md#udf_namespace_array_end_timestamps_get) | **GET** /v1/udf/{namespace}/{array}/end_timestamps |
+| [**update_udf_info**](UdfApi.md#update_udf_info)                                               | **PATCH** /v1/udf/{namespace}/{name}               |
 
 # **delete_udf_info**
+
 > delete_udf_info(namespace, name)
-
-
 
 delete a registered UDF -- this will remove all sharing and can not be undone
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -73,7 +72,8 @@ name = 'name_example' # str | name to register UDF under
         print("Exception when calling UdfApi->delete_udf_info: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -122,10 +122,10 @@ name = 'name_example' # str | name to register UDF under
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **name** | **str**| name to register UDF under | 
+| Name          | Type    | Description                                                         | Notes |
+| ------------- | ------- | ------------------------------------------------------------------- | ----- |
+| **namespace** | **str** | namespace array is in (an organization name or user&#39;s username) |
+| **name**      | **str** | name to register UDF under                                          |
 
 ### Return type
 
@@ -137,28 +137,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | UDF deleted successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description              | Response headers |
+| ----------- | ------------------------ | ---------------- |
+| **204**     | UDF deleted successfully | -                |
+| **502**     | Bad Gateway              | -                |
+| **0**       | error response           | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_udf_info**
+
 > UDFInfo get_udf_info(namespace, name)
-
-
 
 get a specific UDF in the given namespace
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -206,7 +207,8 @@ name = 'name_example' # str | name to register UDF under
         print("Exception when calling UdfApi->get_udf_info: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -256,10 +258,10 @@ name = 'name_example' # str | name to register UDF under
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **name** | **str**| name to register UDF under | 
+| Name          | Type    | Description                                                         | Notes |
+| ------------- | ------- | ------------------------------------------------------------------- | ----- |
+| **namespace** | **str** | namespace array is in (an organization name or user&#39;s username) |
+| **name**      | **str** | name to register UDF under                                          |
 
 ### Return type
 
@@ -271,29 +273,30 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | UDFInfo was retrieved successfully |  -  |
-**404** | UDF not found |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                        | Response headers |
+| ----------- | ---------------------------------- | ---------------- |
+| **200**     | UDFInfo was retrieved successfully | -                |
+| **404**     | UDF not found                      | -                |
+| **502**     | Bad Gateway                        | -                |
+| **0**       | error response                     | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_udf_info_sharing_policies**
+
 > list[UDFSharing] get_udf_info_sharing_policies(namespace, name)
-
-
 
 Get all sharing details of the UDF
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -341,7 +344,8 @@ name = 'name_example' # str | name of UDFInfo
         print("Exception when calling UdfApi->get_udf_info_sharing_policies: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -391,10 +395,10 @@ name = 'name_example' # str | name of UDFInfo
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **name** | **str**| name of UDFInfo | 
+| Name          | Type    | Description                                                         | Notes |
+| ------------- | ------- | ------------------------------------------------------------------- | ----- |
+| **namespace** | **str** | namespace array is in (an organization name or user&#39;s username) |
+| **name**      | **str** | name of UDFInfo                                                     |
 
 ### Return type
 
@@ -406,29 +410,30 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | List of all specific sharing policies |  -  |
-**404** | UDF does not exist or user does not have permissions to view array-sharing policies |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                                                         | Response headers |
+| ----------- | ----------------------------------------------------------------------------------- | ---------------- |
+| **200**     | List of all specific sharing policies                                               | -                |
+| **404**     | UDF does not exist or user does not have permissions to view array-sharing policies | -                |
+| **502**     | Bad Gateway                                                                         | -                |
+| **0**       | error response                                                                      | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **handle_copy_udf**
+
 > UDFCopied handle_copy_udf(namespace, name, udf_copy, x_tiledb_cloud_access_credentials_name=x_tiledb_cloud_access_credentials_name, end_timestamp=end_timestamp)
-
-
 
 Copy a tiledb udf at the specified location
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -479,7 +484,8 @@ end_timestamp = 56 # int | Milliseconds since Unix epoch (optional)
         print("Exception when calling UdfApi->handle_copy_udf: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -532,13 +538,13 @@ end_timestamp = 56 # int | Milliseconds since Unix epoch (optional)
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **name** | **str**| name of UDFInfo | 
- **udf_copy** | [**UDFCopy**](UDFCopy.md)| Input/Output information to copy a UDF | 
- **x_tiledb_cloud_access_credentials_name** | **str**| Optional registered access credentials to use for creation | [optional] 
- **end_timestamp** | **int**| Milliseconds since Unix epoch | [optional] 
+| Name                                       | Type                      | Description                                                         | Notes      |
+| ------------------------------------------ | ------------------------- | ------------------------------------------------------------------- | ---------- |
+| **namespace**                              | **str**                   | namespace array is in (an organization name or user&#39;s username) |
+| **name**                                   | **str**                   | name of UDFInfo                                                     |
+| **udf_copy**                               | [**UDFCopy**](UDFCopy.md) | Input/Output information to copy a UDF                              |
+| **x_tiledb_cloud_access_credentials_name** | **str**                   | Optional registered access credentials to use for creation          | [optional] |
+| **end_timestamp**                          | **int**                   | Milliseconds since Unix epoch                                       | [optional] |
 
 ### Return type
 
@@ -550,28 +556,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**201** | UDF copied |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description    | Response headers |
+| ----------- | -------------- | ---------------- |
+| **201**     | UDF copied     | -                |
+| **502**     | Bad Gateway    | -                |
+| **0**       | error response | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **register_udf_info**
+
 > register_udf_info(namespace, name, udf)
-
-
 
 register a UDF in the given namespace
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -619,7 +626,8 @@ udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | UDF to register
         print("Exception when calling UdfApi->register_udf_info: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -669,11 +677,11 @@ udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | UDF to register
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **name** | **str**| name to register UDF under | 
- **udf** | [**UDFInfoUpdate**](UDFInfoUpdate.md)| UDF to register | 
+| Name          | Type                                  | Description                                                         | Notes |
+| ------------- | ------------------------------------- | ------------------------------------------------------------------- | ----- |
+| **namespace** | **str**                               | namespace array is in (an organization name or user&#39;s username) |
+| **name**      | **str**                               | name to register UDF under                                          |
+| **udf**       | [**UDFInfoUpdate**](UDFInfoUpdate.md) | UDF to register                                                     |
 
 ### Return type
 
@@ -685,28 +693,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | UDF registered successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                 | Response headers |
+| ----------- | --------------------------- | ---------------- |
+| **204**     | UDF registered successfully | -                |
+| **502**     | Bad Gateway                 | -                |
+| **0**       | error response              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **share_udf_info**
+
 > share_udf_info(namespace, name, udf_sharing)
-
-
 
 Share a UDF with a user
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -754,7 +763,8 @@ udf_sharing = tiledb.cloud.rest_api.UDFSharing() # UDFSharing | Namespace and li
         print("Exception when calling UdfApi->share_udf_info: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -804,11 +814,11 @@ udf_sharing = tiledb.cloud.rest_api.UDFSharing() # UDFSharing | Namespace and li
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **name** | **str**| name of UDFInfo | 
- **udf_sharing** | [**UDFSharing**](UDFSharing.md)| Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it&#39;s likely the UDF will not be shared with the namespace at all. | 
+| Name            | Type                            | Description                                                                                                                                                                                                                                                                                                                                            | Notes |
+| --------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----- |
+| **namespace**   | **str**                         | namespace array is in (an organization name or user&#39;s username)                                                                                                                                                                                                                                                                                    |
+| **name**        | **str**                         | name of UDFInfo                                                                                                                                                                                                                                                                                                                                        |
+| **udf_sharing** | [**UDFSharing**](UDFSharing.md) | Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it&#39;s likely the UDF will not be shared with the namespace at all. |
 
 ### Return type
 
@@ -820,29 +830,30 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | UDF shared successfully |  -  |
-**404** | UDF does not exist or user does not have permissions to share UDF |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                                       | Response headers |
+| ----------- | ----------------------------------------------------------------- | ---------------- |
+| **204**     | UDF shared successfully                                           | -                |
+| **404**     | UDF does not exist or user does not have permissions to share UDF | -                |
+| **502**     | Bad Gateway                                                       | -                |
+| **0**       | error response                                                    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **submit_generic_udf**
+
 > file submit_generic_udf(namespace, udf, accept_encoding=accept_encoding)
-
-
 
 submit a generic UDF in the given namespace
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -891,7 +902,8 @@ accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
         print("Exception when calling UdfApi->submit_generic_udf: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -942,11 +954,11 @@ accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **udf** | [**GenericUDF**](GenericUDF.md)| UDF to run | 
- **accept_encoding** | **str**| Encoding to use | [optional] 
+| Name                | Type                            | Description                                                         | Notes      |
+| ------------------- | ------------------------------- | ------------------------------------------------------------------- | ---------- |
+| **namespace**       | **str**                         | namespace array is in (an organization name or user&#39;s username) |
+| **udf**             | [**GenericUDF**](GenericUDF.md) | UDF to run                                                          |
+| **accept_encoding** | **str**                         | Encoding to use                                                     | [optional] |
 
 ### Return type
 
@@ -958,28 +970,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/octet-stream
+- **Content-Type**: application/json
+- **Accept**: application/octet-stream
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | UDF completed and the UDF-type specific result is returned |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed request <br>  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just request if task was started <br>  |
+
+| Status code | Description                                                | Response headers                                                              |
+| ----------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| **200**     | UDF completed and the UDF-type specific result is returned | \* X-TILEDB-CLOUD-TASK-ID - Task ID for just completed request <br>           |
+| **502**     | Bad Gateway                                                | -                                                                             |
+| **0**       | error response                                             | \* X-TILEDB-CLOUD-TASK-ID - Task ID for just request if task was started <br> |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **submit_multi_array_udf**
+
 > file submit_multi_array_udf(namespace, udf, accept_encoding=accept_encoding)
-
-
 
 submit a multi-array UDF in the given namespace
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1028,7 +1041,8 @@ accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
         print("Exception when calling UdfApi->submit_multi_array_udf: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1079,11 +1093,11 @@ accept_encoding = 'accept_encoding_example' # str | Encoding to use (optional)
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **udf** | [**MultiArrayUDF**](MultiArrayUDF.md)| UDF to run | 
- **accept_encoding** | **str**| Encoding to use | [optional] 
+| Name                | Type                                  | Description                                                         | Notes      |
+| ------------------- | ------------------------------------- | ------------------------------------------------------------------- | ---------- |
+| **namespace**       | **str**                               | namespace array is in (an organization name or user&#39;s username) |
+| **udf**             | [**MultiArrayUDF**](MultiArrayUDF.md) | UDF to run                                                          |
+| **accept_encoding** | **str**                               | Encoding to use                                                     | [optional] |
 
 ### Return type
 
@@ -1095,28 +1109,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/octet-stream
+- **Content-Type**: application/json
+- **Accept**: application/octet-stream
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | UDF completed and the UDF-type specific result is returned |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed request <br>  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just request if task was started <br>  |
+
+| Status code | Description                                                | Response headers                                                              |
+| ----------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| **200**     | UDF completed and the UDF-type specific result is returned | \* X-TILEDB-CLOUD-TASK-ID - Task ID for just completed request <br>           |
+| **502**     | Bad Gateway                                                | -                                                                             |
+| **0**       | error response                                             | \* X-TILEDB-CLOUD-TASK-ID - Task ID for just request if task was started <br> |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **submit_udf**
+
 > file submit_udf(namespace, array, udf, x_payer=x_payer, accept_encoding=accept_encoding, v2=v2)
-
-
 
 send a UDF to run against a specified array/URI registered to a group/project
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1168,7 +1183,8 @@ v2 = 'v2_example' # str | flag to indicate if v2 array UDFs should be used, curr
         print("Exception when calling UdfApi->submit_udf: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1222,14 +1238,14 @@ v2 = 'v2_example' # str | flag to indicate if v2 array UDFs should be used, curr
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **array** | **str**| name/uri of array that is url-encoded | 
- **udf** | [**MultiArrayUDF**](MultiArrayUDF.md)| UDF to run | 
- **x_payer** | **str**| Name of organization or user who should be charged for this request | [optional] 
- **accept_encoding** | **str**| Encoding to use | [optional] 
- **v2** | **str**| flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs. | [optional] 
+| Name                | Type                                  | Description                                                                                                               | Notes      |
+| ------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| **namespace**       | **str**                               | namespace array is in (an organization name or user&#39;s username)                                                       |
+| **array**           | **str**                               | name/uri of array that is url-encoded                                                                                     |
+| **udf**             | [**MultiArrayUDF**](MultiArrayUDF.md) | UDF to run                                                                                                                |
+| **x_payer**         | **str**                               | Name of organization or user who should be charged for this request                                                       | [optional] |
+| **accept_encoding** | **str**                               | Encoding to use                                                                                                           | [optional] |
+| **v2**              | **str**                               | flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs. | [optional] |
 
 ### Return type
 
@@ -1241,28 +1257,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/octet-stream
+- **Content-Type**: application/json
+- **Accept**: application/octet-stream
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | UDF completed and the UDF-type specific result is returned |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just completed request <br>  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  * X-TILEDB-CLOUD-TASK-ID - Task ID for just request if task was started <br>  |
+
+| Status code | Description                                                | Response headers                                                              |
+| ----------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| **200**     | UDF completed and the UDF-type specific result is returned | \* X-TILEDB-CLOUD-TASK-ID - Task ID for just completed request <br>           |
+| **502**     | Bad Gateway                                                | -                                                                             |
+| **0**       | error response                                             | \* X-TILEDB-CLOUD-TASK-ID - Task ID for just request if task was started <br> |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **udf_namespace_array_end_timestamps_get**
+
 > ArrayEndTimestampData udf_namespace_array_end_timestamps_get(namespace, array, page=page, per_page=per_page)
-
-
 
 retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1312,7 +1329,8 @@ per_page = 56 # int | pagination limit (optional)
         print("Exception when calling UdfApi->udf_namespace_array_end_timestamps_get: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1364,12 +1382,12 @@ per_page = 56 # int | pagination limit (optional)
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **array** | **str**| name/uri of array that is url-encoded | 
- **page** | **int**| pagination offset | [optional] 
- **per_page** | **int**| pagination limit | [optional] 
+| Name          | Type    | Description                                                         | Notes      |
+| ------------- | ------- | ------------------------------------------------------------------- | ---------- |
+| **namespace** | **str** | namespace array is in (an organization name or user&#39;s username) |
+| **array**     | **str** | name/uri of array that is url-encoded                               |
+| **page**      | **int** | pagination offset                                                   | [optional] |
+| **per_page**  | **int** | pagination limit                                                    | [optional] |
 
 ### Return type
 
@@ -1381,28 +1399,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | list of timestamps in milliseconds, paginated |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                   | Response headers |
+| ----------- | --------------------------------------------- | ---------------- |
+| **200**     | list of timestamps in milliseconds, paginated | -                |
+| **502**     | Bad Gateway                                   | -                |
+| **0**       | error response                                | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_udf_info**
+
 > update_udf_info(namespace, name, udf)
-
-
 
 update an existing registered UDF in the given namespace
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1450,7 +1469,8 @@ udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | UDF to update
         print("Exception when calling UdfApi->update_udf_info: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1500,11 +1520,11 @@ udf = tiledb.cloud.rest_api.UDFInfoUpdate() # UDFInfoUpdate | UDF to update
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace array is in (an organization name or user&#39;s username) | 
- **name** | **str**| name to register UDF under | 
- **udf** | [**UDFInfoUpdate**](UDFInfoUpdate.md)| UDF to update | 
+| Name          | Type                                  | Description                                                         | Notes |
+| ------------- | ------------------------------------- | ------------------------------------------------------------------- | ----- |
+| **namespace** | **str**                               | namespace array is in (an organization name or user&#39;s username) |
+| **name**      | **str**                               | name to register UDF under                                          |
+| **udf**       | [**UDFInfoUpdate**](UDFInfoUpdate.md) | UDF to update                                                       |
 
 ### Return type
 
@@ -1516,15 +1536,15 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | UDF updated successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description              | Response headers |
+| ----------- | ------------------------ | ---------------- |
+| **204**     | UDF updated successfully | -                |
+| **502**     | Bad Gateway              | -                |
+| **0**       | error response           | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

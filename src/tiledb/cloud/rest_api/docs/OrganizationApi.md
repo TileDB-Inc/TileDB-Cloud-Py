@@ -1,41 +1,40 @@
 # tiledb.cloud.rest_api.OrganizationApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**add_aws_access_credentials**](OrganizationApi.md#add_aws_access_credentials) | **POST** /v1/credentials/{namespace}/aws | 
-[**add_user_to_organization**](OrganizationApi.md#add_user_to_organization) | **POST** /v1/organizations/{organization}/user | 
-[**check_aws_access_credentials**](OrganizationApi.md#check_aws_access_credentials) | **GET** /v1/credentials/{namespace}/aws | 
-[**check_aws_access_credentials_by_name**](OrganizationApi.md#check_aws_access_credentials_by_name) | **GET** /v1/credentials/{namespace}/aws/{name} | 
-[**check_sso_domain**](OrganizationApi.md#check_sso_domain) | **POST** /v1/organizations/{organization}/sso_domains/{uuid}/run_check | 
-[**create_organization**](OrganizationApi.md#create_organization) | **POST** /v1/organization | 
-[**create_sso_domain**](OrganizationApi.md#create_sso_domain) | **POST** /v1/organizations/{organization}/sso_domain | 
-[**delete_aws_access_credentials**](OrganizationApi.md#delete_aws_access_credentials) | **DELETE** /v1/credentials/{namespace}/aws/{name} | 
-[**delete_organization**](OrganizationApi.md#delete_organization) | **DELETE** /v1/organizations/{organization} | 
-[**delete_sso_domain**](OrganizationApi.md#delete_sso_domain) | **DELETE** /v1/organizations/{organization}/sso_domains/{uuid} | 
-[**delete_user_from_organization**](OrganizationApi.md#delete_user_from_organization) | **DELETE** /v1/organizations/{organization}/{username} | 
-[**get_all_organizations**](OrganizationApi.md#get_all_organizations) | **GET** /v1/organizations | 
-[**get_organization**](OrganizationApi.md#get_organization) | **GET** /v1/organizations/{organization} | 
-[**get_organization_user**](OrganizationApi.md#get_organization_user) | **GET** /v1/organizations/{organization}/{username} | 
-[**get_sso_domain**](OrganizationApi.md#get_sso_domain) | **GET** /v1/organizations/{organization}/sso_domains/{uuid} | 
-[**get_sso_domains**](OrganizationApi.md#get_sso_domains) | **GET** /v1/organizations/{organization}/sso_domains | 
-[**update_aws_access_credentials**](OrganizationApi.md#update_aws_access_credentials) | **PATCH** /v1/credentials/{namespace}/aws/{name} | 
-[**update_organization**](OrganizationApi.md#update_organization) | **PATCH** /v1/organizations/{organization} | 
-[**update_sso_domain**](OrganizationApi.md#update_sso_domain) | **PATCH** /v1/organizations/{organization}/sso_domains/{uuid} | 
-[**update_user_in_organization**](OrganizationApi.md#update_user_in_organization) | **PATCH** /v1/organizations/{organization}/{username} | 
-
+| Method                                                                                              | HTTP request                                                           | Description |
+| --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------- |
+| [**add_aws_access_credentials**](OrganizationApi.md#add_aws_access_credentials)                     | **POST** /v1/credentials/{namespace}/aws                               |
+| [**add_user_to_organization**](OrganizationApi.md#add_user_to_organization)                         | **POST** /v1/organizations/{organization}/user                         |
+| [**check_aws_access_credentials**](OrganizationApi.md#check_aws_access_credentials)                 | **GET** /v1/credentials/{namespace}/aws                                |
+| [**check_aws_access_credentials_by_name**](OrganizationApi.md#check_aws_access_credentials_by_name) | **GET** /v1/credentials/{namespace}/aws/{name}                         |
+| [**check_sso_domain**](OrganizationApi.md#check_sso_domain)                                         | **POST** /v1/organizations/{organization}/sso_domains/{uuid}/run_check |
+| [**create_organization**](OrganizationApi.md#create_organization)                                   | **POST** /v1/organization                                              |
+| [**create_sso_domain**](OrganizationApi.md#create_sso_domain)                                       | **POST** /v1/organizations/{organization}/sso_domain                   |
+| [**delete_aws_access_credentials**](OrganizationApi.md#delete_aws_access_credentials)               | **DELETE** /v1/credentials/{namespace}/aws/{name}                      |
+| [**delete_organization**](OrganizationApi.md#delete_organization)                                   | **DELETE** /v1/organizations/{organization}                            |
+| [**delete_sso_domain**](OrganizationApi.md#delete_sso_domain)                                       | **DELETE** /v1/organizations/{organization}/sso_domains/{uuid}         |
+| [**delete_user_from_organization**](OrganizationApi.md#delete_user_from_organization)               | **DELETE** /v1/organizations/{organization}/{username}                 |
+| [**get_all_organizations**](OrganizationApi.md#get_all_organizations)                               | **GET** /v1/organizations                                              |
+| [**get_organization**](OrganizationApi.md#get_organization)                                         | **GET** /v1/organizations/{organization}                               |
+| [**get_organization_user**](OrganizationApi.md#get_organization_user)                               | **GET** /v1/organizations/{organization}/{username}                    |
+| [**get_sso_domain**](OrganizationApi.md#get_sso_domain)                                             | **GET** /v1/organizations/{organization}/sso_domains/{uuid}            |
+| [**get_sso_domains**](OrganizationApi.md#get_sso_domains)                                           | **GET** /v1/organizations/{organization}/sso_domains                   |
+| [**update_aws_access_credentials**](OrganizationApi.md#update_aws_access_credentials)               | **PATCH** /v1/credentials/{namespace}/aws/{name}                       |
+| [**update_organization**](OrganizationApi.md#update_organization)                                   | **PATCH** /v1/organizations/{organization}                             |
+| [**update_sso_domain**](OrganizationApi.md#update_sso_domain)                                       | **PATCH** /v1/organizations/{organization}/sso_domains/{uuid}          |
+| [**update_user_in_organization**](OrganizationApi.md#update_user_in_organization)                   | **PATCH** /v1/organizations/{organization}/{username}                  |
 
 # **add_aws_access_credentials**
+
 > add_aws_access_credentials(namespace, aws_access_credentials)
-
-
 
 Add aws keys
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -82,7 +81,8 @@ aws_access_credentials = tiledb.cloud.rest_api.AWSAccessCredentials() # AWSAcces
         print("Exception when calling OrganizationApi->add_aws_access_credentials: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -131,10 +131,10 @@ aws_access_credentials = tiledb.cloud.rest_api.AWSAccessCredentials() # AWSAcces
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace | 
- **aws_access_credentials** | [**AWSAccessCredentials**](AWSAccessCredentials.md)| aws access credentials to store for a namespace | 
+| Name                       | Type                                                | Description                                     | Notes |
+| -------------------------- | --------------------------------------------------- | ----------------------------------------------- | ----- |
+| **namespace**              | **str**                                             | namespace                                       |
+| **aws_access_credentials** | [**AWSAccessCredentials**](AWSAccessCredentials.md) | aws access credentials to store for a namespace |
 
 ### Return type
 
@@ -146,28 +146,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | AWS keys added successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                 | Response headers |
+| ----------- | --------------------------- | ---------------- |
+| **204**     | AWS keys added successfully | -                |
+| **502**     | Bad Gateway                 | -                |
+| **0**       | error response              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **add_user_to_organization**
+
 > add_user_to_organization(organization, user)
-
-
 
 add a user to an organization
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -214,7 +215,8 @@ user = tiledb.cloud.rest_api.OrganizationUser() # OrganizationUser | user to add
         print("Exception when calling OrganizationApi->add_user_to_organization: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -263,10 +265,10 @@ user = tiledb.cloud.rest_api.OrganizationUser() # OrganizationUser | user to add
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name | 
- **user** | [**OrganizationUser**](OrganizationUser.md)| user to add | 
+| Name             | Type                                        | Description       | Notes |
+| ---------------- | ------------------------------------------- | ----------------- | ----- |
+| **organization** | **str**                                     | organization name |
+| **user**         | [**OrganizationUser**](OrganizationUser.md) | user to add       |
 
 ### Return type
 
@@ -278,28 +280,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | user added to organization successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                             | Response headers |
+| ----------- | --------------------------------------- | ---------------- |
+| **204**     | user added to organization successfully | -                |
+| **502**     | Bad Gateway                             | -                |
+| **0**       | error response                          | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **check_aws_access_credentials**
+
 > list[AWSAccessCredentials] check_aws_access_credentials(namespace)
-
-
 
 Check if aws keys are set
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -346,7 +349,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling OrganizationApi->check_aws_access_credentials: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -395,9 +399,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace | 
+| Name          | Type    | Description | Notes |
+| ------------- | ------- | ----------- | ----- |
+| **namespace** | **str** | namespace   |
 
 ### Return type
 
@@ -409,28 +413,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | AWS keys are set |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description      | Response headers |
+| ----------- | ---------------- | ---------------- |
+| **200**     | AWS keys are set | -                |
+| **502**     | Bad Gateway      | -                |
+| **0**       | error response   | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **check_aws_access_credentials_by_name**
+
 > AWSAccessCredentials check_aws_access_credentials_by_name(namespace, name)
-
-
 
 Check if aws keys are set by name
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -478,7 +483,8 @@ name = 'name_example' # str | name
         print("Exception when calling OrganizationApi->check_aws_access_credentials_by_name: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -528,10 +534,10 @@ name = 'name_example' # str | name
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace | 
- **name** | **str**| name | 
+| Name          | Type    | Description | Notes |
+| ------------- | ------- | ----------- | ----- |
+| **namespace** | **str** | namespace   |
+| **name**      | **str** | name        |
 
 ### Return type
 
@@ -543,28 +549,29 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | AWS keys are set |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description      | Response headers |
+| ----------- | ---------------- | ---------------- |
+| **200**     | AWS keys are set | -                |
+| **502**     | Bad Gateway      | -                |
+| **0**       | error response   | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **check_sso_domain**
+
 > DomainCheckResult check_sso_domain(organization, uuid)
 
-
-
-Immediately verify ownership of the specified SSO domain ownership claim. 
+Immediately verify ownership of the specified SSO domain ownership claim.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -612,7 +619,8 @@ uuid = 'uuid_example' # str | configuration ID
         print("Exception when calling OrganizationApi->check_sso_domain: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -662,10 +670,10 @@ uuid = 'uuid_example' # str | configuration ID
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name | 
- **uuid** | **str**| configuration ID | 
+| Name             | Type    | Description       | Notes |
+| ---------------- | ------- | ----------------- | ----- |
+| **organization** | **str** | organization name |
+| **uuid**         | **str** | configuration ID  |
 
 ### Return type
 
@@ -677,27 +685,28 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | The check executed. Detailed results are available in the response.  |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                                         | Response headers |
+| ----------- | ------------------------------------------------------------------- | ---------------- |
+| **200**     | The check executed. Detailed results are available in the response. | -                |
+| **0**       | error response                                                      | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **create_organization**
+
 > create_organization(organization)
-
-
 
 create a organization, the user creating will be listed as owner
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -743,7 +752,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling OrganizationApi->create_organization: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -791,9 +801,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | [**Organization**](Organization.md)| organization to create | 
+| Name             | Type                                | Description            | Notes |
+| ---------------- | ----------------------------------- | ---------------------- | ----- |
+| **organization** | [**Organization**](Organization.md) | organization to create |
 
 ### Return type
 
@@ -805,28 +815,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | organization created successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                       | Response headers |
+| ----------- | --------------------------------- | ---------------- |
+| **204**     | organization created successfully | -                |
+| **502**     | Bad Gateway                       | -                |
+| **0**       | error response                    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **create_sso_domain**
+
 > SSODomainConfig create_sso_domain(organization, config)
 
-
-
-Create a new SSO connection that connects this organization to this domain. 
+Create a new SSO connection that connects this organization to this domain.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -874,7 +885,8 @@ config = tiledb.cloud.rest_api.SSODomainConfig() # SSODomainConfig | The SSO con
         print("Exception when calling OrganizationApi->create_sso_domain: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -924,10 +936,10 @@ config = tiledb.cloud.rest_api.SSODomainConfig() # SSODomainConfig | The SSO con
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name | 
- **config** | [**SSODomainConfig**](SSODomainConfig.md)| The SSO connection to create. | 
+| Name             | Type                                      | Description                   | Notes |
+| ---------------- | ----------------------------------------- | ----------------------------- | ----- |
+| **organization** | **str**                                   | organization name             |
+| **config**       | [**SSODomainConfig**](SSODomainConfig.md) | The SSO connection to create. |
 
 ### Return type
 
@@ -939,27 +951,28 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Claim created successfully. |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                 | Response headers |
+| ----------- | --------------------------- | ---------------- |
+| **200**     | Claim created successfully. | -                |
+| **0**       | error response              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_aws_access_credentials**
+
 > delete_aws_access_credentials(namespace, name)
-
-
 
 delete a AWS Access credentials in a namespace. This will likely cause arrays to become unreachable
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1006,7 +1019,8 @@ name = 'name_example' # str | name
         print("Exception when calling OrganizationApi->delete_aws_access_credentials: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1055,10 +1069,10 @@ name = 'name_example' # str | name
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace | 
- **name** | **str**| name | 
+| Name          | Type    | Description | Notes |
+| ------------- | ------- | ----------- | ----- |
+| **namespace** | **str** | namespace   |
+| **name**      | **str** | name        |
 
 ### Return type
 
@@ -1070,28 +1084,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | AWS credentials deleted |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description             | Response headers |
+| ----------- | ----------------------- | ---------------- |
+| **204**     | AWS credentials deleted | -                |
+| **502**     | Bad Gateway             | -                |
+| **0**       | error response          | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_organization**
+
 > delete_organization(organization)
-
-
 
 delete a organization
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1137,7 +1152,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling OrganizationApi->delete_organization: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1185,9 +1201,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name or ID | 
+| Name             | Type    | Description             | Notes |
+| ---------------- | ------- | ----------------------- | ----- |
+| **organization** | **str** | organization name or ID |
 
 ### Return type
 
@@ -1199,28 +1215,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | organization deleted |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description          | Response headers |
+| ----------- | -------------------- | ---------------- |
+| **204**     | organization deleted | -                |
+| **502**     | Bad Gateway          | -                |
+| **0**       | error response       | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_sso_domain**
+
 > delete_sso_domain(organization, uuid)
-
-
 
 Deletes the configuration for the given SSO connection.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1267,7 +1284,8 @@ uuid = 'uuid_example' # str | configuration ID
         print("Exception when calling OrganizationApi->delete_sso_domain: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1316,10 +1334,10 @@ uuid = 'uuid_example' # str | configuration ID
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name | 
- **uuid** | **str**| configuration ID | 
+| Name             | Type    | Description       | Notes |
+| ---------------- | ------- | ----------------- | ----- |
+| **organization** | **str** | organization name |
+| **uuid**         | **str** | configuration ID  |
 
 ### Return type
 
@@ -1331,27 +1349,28 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | Deletion successful. |  -  |
-**0** | error response |  -  |
+
+| Status code | Description          | Response headers |
+| ----------- | -------------------- | ---------------- |
+| **204**     | Deletion successful. | -                |
+| **0**       | error response       | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **delete_user_from_organization**
+
 > delete_user_from_organization(organization, username)
-
-
 
 delete a user from an organization
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1398,7 +1417,8 @@ username = 'username_example' # str | username to manipulate
         print("Exception when calling OrganizationApi->delete_user_from_organization: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1447,10 +1467,10 @@ username = 'username_example' # str | username to manipulate
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name | 
- **username** | **str**| username to manipulate | 
+| Name             | Type    | Description            | Notes |
+| ---------------- | ------- | ---------------------- | ----- |
+| **organization** | **str** | organization name      |
+| **username**     | **str** | username to manipulate |
 
 ### Return type
 
@@ -1462,28 +1482,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | user delete from organization successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                | Response headers |
+| ----------- | ------------------------------------------ | ---------------- |
+| **204**     | user delete from organization successfully | -                |
+| **502**     | Bad Gateway                                | -                |
+| **0**       | error response                             | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_all_organizations**
+
 > list[Organization] get_all_organizations()
-
-
 
 get all organizations that the user is member of
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1521,7 +1542,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
-    
+
     try:
         api_response = api_instance.get_all_organizations()
         pprint(api_response)
@@ -1529,7 +1550,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling OrganizationApi->get_all_organizations: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1567,7 +1589,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
-    
+
     try:
         api_response = api_instance.get_all_organizations()
         pprint(api_response)
@@ -1576,6 +1598,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 ```
 
 ### Parameters
+
 This endpoint does not need any parameter.
 
 ### Return type
@@ -1588,30 +1611,31 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | array of organizations the user is member of |  -  |
-**400** | Error finding organizations |  -  |
-**500** | Request user not found, or has empty context |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                  | Response headers |
+| ----------- | -------------------------------------------- | ---------------- |
+| **200**     | array of organizations the user is member of | -                |
+| **400**     | Error finding organizations                  | -                |
+| **500**     | Request user not found, or has empty context | -                |
+| **502**     | Bad Gateway                                  | -                |
+| **0**       | error response                               | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_organization**
+
 > Organization get_organization(organization)
-
-
 
 get a organization
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1658,7 +1682,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling OrganizationApi->get_organization: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1707,9 +1732,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name or ID | 
+| Name             | Type    | Description             | Notes |
+| ---------------- | ------- | ----------------------- | ----- |
+| **organization** | **str** | organization name or ID |
 
 ### Return type
 
@@ -1721,29 +1746,30 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | organization details |  -  |
-**404** | Organization does not exist |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                 | Response headers |
+| ----------- | --------------------------- | ---------------- |
+| **200**     | organization details        | -                |
+| **404**     | Organization does not exist | -                |
+| **502**     | Bad Gateway                 | -                |
+| **0**       | error response              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_organization_user**
+
 > OrganizationUser get_organization_user(organization, username)
-
-
 
 get a user from an organization
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1791,7 +1817,8 @@ username = 'username_example' # str | username to manipulate
         print("Exception when calling OrganizationApi->get_organization_user: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1841,10 +1868,10 @@ username = 'username_example' # str | username to manipulate
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name | 
- **username** | **str**| username to manipulate | 
+| Name             | Type    | Description            | Notes |
+| ---------------- | ------- | ---------------------- | ----- |
+| **organization** | **str** | organization name      |
+| **username**     | **str** | username to manipulate |
 
 ### Return type
 
@@ -1856,29 +1883,30 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | user from organization |  -  |
-**404** | User is not in organization |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                 | Response headers |
+| ----------- | --------------------------- | ---------------- |
+| **200**     | user from organization      | -                |
+| **404**     | User is not in organization | -                |
+| **502**     | Bad Gateway                 | -                |
+| **0**       | error response              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_sso_domain**
+
 > SSODomainConfig get_sso_domain(organization, uuid)
-
-
 
 Gets details about the given SSO domain connection.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1926,7 +1954,8 @@ uuid = 'uuid_example' # str | configuration ID
         print("Exception when calling OrganizationApi->get_sso_domain: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -1976,10 +2005,10 @@ uuid = 'uuid_example' # str | configuration ID
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name | 
- **uuid** | **str**| configuration ID | 
+| Name             | Type    | Description       | Notes |
+| ---------------- | ------- | ----------------- | ----- |
+| **organization** | **str** | organization name |
+| **uuid**         | **str** | configuration ID  |
 
 ### Return type
 
@@ -1991,27 +2020,28 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | The details about this domain connection. |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                               | Response headers |
+| ----------- | ----------------------------------------- | ---------------- |
+| **200**     | The details about this domain connection. | -                |
+| **0**       | error response                            | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_sso_domains**
+
 > SSODomainConfigResponse get_sso_domains(organization)
 
-
-
-Lists all the SSO connections associated with the given organization. 
+Lists all the SSO connections associated with the given organization.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2058,7 +2088,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling OrganizationApi->get_sso_domains: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2107,9 +2138,9 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name | 
+| Name             | Type    | Description       | Notes |
+| ---------------- | ------- | ----------------- | ----- |
+| **organization** | **str** | organization name |
 
 ### Return type
 
@@ -2121,27 +2152,28 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | The SSO domains associated with the org. |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                              | Response headers |
+| ----------- | ---------------------------------------- | ---------------- |
+| **200**     | The SSO domains associated with the org. | -                |
+| **0**       | error response                           | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_aws_access_credentials**
+
 > update_aws_access_credentials(namespace, name, aws_access_credentials)
-
-
 
 Update aws keys or associated buckets. This will update the key associations for each array in the namespace
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2189,7 +2221,8 @@ aws_access_credentials = tiledb.cloud.rest_api.AWSAccessCredentials() # AWSAcces
         print("Exception when calling OrganizationApi->update_aws_access_credentials: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2239,11 +2272,11 @@ aws_access_credentials = tiledb.cloud.rest_api.AWSAccessCredentials() # AWSAcces
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **namespace** | **str**| namespace | 
- **name** | **str**| name | 
- **aws_access_credentials** | [**AWSAccessCredentials**](AWSAccessCredentials.md)| aws credentials to update | 
+| Name                       | Type                                                | Description               | Notes |
+| -------------------------- | --------------------------------------------------- | ------------------------- | ----- |
+| **namespace**              | **str**                                             | namespace                 |
+| **name**                   | **str**                                             | name                      |
+| **aws_access_credentials** | [**AWSAccessCredentials**](AWSAccessCredentials.md) | aws credentials to update |
 
 ### Return type
 
@@ -2255,28 +2288,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | AWS keys updated successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                   | Response headers |
+| ----------- | ----------------------------- | ---------------- |
+| **204**     | AWS keys updated successfully | -                |
+| **502**     | Bad Gateway                   | -                |
+| **0**       | error response                | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_organization**
+
 > update_organization(organization, organization_details)
-
-
 
 update a organization
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2323,7 +2357,8 @@ organization_details = tiledb.cloud.rest_api.Organization() # Organization | org
         print("Exception when calling OrganizationApi->update_organization: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2372,10 +2407,10 @@ organization_details = tiledb.cloud.rest_api.Organization() # Organization | org
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name or ID | 
- **organization_details** | [**Organization**](Organization.md)| organization details to update | 
+| Name                     | Type                                | Description                    | Notes |
+| ------------------------ | ----------------------------------- | ------------------------------ | ----- |
+| **organization**         | **str**                             | organization name or ID        |
+| **organization_details** | [**Organization**](Organization.md) | organization details to update |
 
 ### Return type
 
@@ -2387,28 +2422,29 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | organization updated successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                       | Response headers |
+| ----------- | --------------------------------- | ---------------- |
+| **204**     | organization updated successfully | -                |
+| **502**     | Bad Gateway                       | -                |
+| **0**       | error response                    | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_sso_domain**
+
 > SSODomainConfig update_sso_domain(organization, uuid, config)
-
-
 
 Updates the configuration for the given SSO connection.
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2457,7 +2493,8 @@ config = tiledb.cloud.rest_api.SSODomainConfig() # SSODomainConfig | The changes
         print("Exception when calling OrganizationApi->update_sso_domain: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2508,11 +2545,11 @@ config = tiledb.cloud.rest_api.SSODomainConfig() # SSODomainConfig | The changes
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name | 
- **uuid** | **str**| configuration ID | 
- **config** | [**SSODomainConfig**](SSODomainConfig.md)| The changes to make to the configuration. | 
+| Name             | Type                                      | Description                               | Notes |
+| ---------------- | ----------------------------------------- | ----------------------------------------- | ----- |
+| **organization** | **str**                                   | organization name                         |
+| **uuid**         | **str**                                   | configuration ID                          |
+| **config**       | [**SSODomainConfig**](SSODomainConfig.md) | The changes to make to the configuration. |
 
 ### Return type
 
@@ -2524,27 +2561,28 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | The updated details about the SSO connection. |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                                   | Response headers |
+| ----------- | --------------------------------------------- | ---------------- |
+| **200**     | The updated details about the SSO connection. | -                |
+| **0**       | error response                                | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_user_in_organization**
+
 > update_user_in_organization(organization, username, user)
-
-
 
 update a user in an organization
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2592,7 +2630,8 @@ user = tiledb.cloud.rest_api.OrganizationUser() # OrganizationUser | user detail
         print("Exception when calling OrganizationApi->update_user_in_organization: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -2642,11 +2681,11 @@ user = tiledb.cloud.rest_api.OrganizationUser() # OrganizationUser | user detail
 
 ### Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **organization** | **str**| organization name | 
- **username** | **str**| username to manipulate | 
- **user** | [**OrganizationUser**](OrganizationUser.md)| user details to update | 
+| Name             | Type                                        | Description            | Notes |
+| ---------------- | ------------------------------------------- | ---------------------- | ----- |
+| **organization** | **str**                                     | organization name      |
+| **username**     | **str**                                     | username to manipulate |
+| **user**         | [**OrganizationUser**](OrganizationUser.md) | user details to update |
 
 ### Return type
 
@@ -2658,15 +2697,15 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**204** | user update in organization successfully |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description                              | Response headers |
+| ----------- | ---------------------------------------- | ---------------- |
+| **204**     | user update in organization successfully | -                |
+| **502**     | Bad Gateway                              | -                |
+| **0**       | error response                           | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-

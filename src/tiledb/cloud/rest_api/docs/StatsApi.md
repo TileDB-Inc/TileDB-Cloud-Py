@@ -1,22 +1,21 @@
 # tiledb.cloud.rest_api.StatsApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to _http://localhost_
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**get_tiledb_stats**](StatsApi.md#get_tiledb_stats) | **GET** /v1/.stats | 
-
+| Method                                               | HTTP request       | Description |
+| ---------------------------------------------------- | ------------------ | ----------- |
+| [**get_tiledb_stats**](StatsApi.md#get_tiledb_stats) | **GET** /v1/.stats |
 
 # **get_tiledb_stats**
+
 > InlineResponse200 get_tiledb_stats()
-
-
 
 Fetch libtiledb stat
 
 ### Example
 
-* Api Key Authentication (ApiKeyAuth):
+- Api Key Authentication (ApiKeyAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -54,7 +53,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.StatsApi(api_client)
-    
+
     try:
         api_response = api_instance.get_tiledb_stats()
         pprint(api_response)
@@ -62,7 +61,8 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
         print("Exception when calling StatsApi->get_tiledb_stats: %s\n" % e)
 ```
 
-* Basic Authentication (BasicAuth):
+- Basic Authentication (BasicAuth):
+
 ```python
 from __future__ import print_function
 import time
@@ -100,7 +100,7 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.StatsApi(api_client)
-    
+
     try:
         api_response = api_instance.get_tiledb_stats()
         pprint(api_response)
@@ -109,6 +109,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 ```
 
 ### Parameters
+
 This endpoint does not need any parameter.
 
 ### Return type
@@ -121,15 +122,15 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | stats |  -  |
-**502** | Bad Gateway |  -  |
-**0** | error response |  -  |
+
+| Status code | Description    | Response headers |
+| ----------- | -------------- | ---------------- |
+| **200**     | stats          | -                |
+| **502**     | Bad Gateway    | -                |
+| **0**       | error response | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
