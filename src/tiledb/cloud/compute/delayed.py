@@ -88,9 +88,11 @@ class DelayedBase(Node):
     def visualize(self, notebook=True, auto_update=True, force_plotly=False):
         """
         Build and render a tree diagram of the DAG.
-        :param notebook: Is the visualization inside a jupyter notebook? If so we'll use a widget
+        :param notebook: Is the visualization inside a jupyter notebook?
+            If so we'll use a widget
         :param auto_update: Should the diagram be auto updated with each status change
-        :param force_plotly: Force the use of plotly graphs instead of TileDB Plot Widget
+        :param force_plotly: Force the use of plotly graphs instead of
+            TileDB Plot Widget
         :return: returns plotly figure
         """
         if self.dag is None:

@@ -20,7 +20,7 @@ def run_python_function(__name, *args, **kwargs):
     Arguments and kwargs are passed directly to the function.
 
     .. __: https://setuptools.pypa.io/en/latest/userguide/entry_point.html#entry-points-syntax
-    """
+    """  # noqa: E501
 
     def _find_object(name: str):
         mod_name, sep, member_name = name.partition(":")

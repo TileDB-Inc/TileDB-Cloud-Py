@@ -246,7 +246,7 @@ def find_uris_udf(
     verbose: bool = False,
 ) -> Sequence[str]:
     """
-    Find URIs matching a pattern in a directory or S3 bucket using the following command:
+    Find URIs matching a pattern in a directory or S3 bucket using this command:
 
         find <search_uri> -name <pattern> | grep -Ev <ignore> -m <max_files>
 
@@ -785,7 +785,8 @@ def ingest_manifest_dag(
     num_consolidates = ceil(num_partitions / workers)
 
     # This loop creates a DAG with the following structure:
-    # - Submit N ingest tasks in parallel, where N is `workers` or less if there are fewer batches
+    # - Submit N ingest tasks in parallel, where N is `workers` or less if there
+    #   are fewer batches
     # - Submit a consolidate task that runs when the previous N ingest tasks complete
     # - Repeat until all batches are ingested
     consolidate = None
@@ -842,7 +843,8 @@ def ingest_samples_dag(
     :param dataset_uri: dataset URI
     :param config: config dictionary, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
-    :param contigs: contig mode (Contigs.ALL | Contigs.CHROMOSOMES | Contigs.OTHER | Contigs.ALL_DISABLE_MERGE)
+    :param contigs: contig mode
+        (Contigs.ALL | Contigs.CHROMOSOMES | Contigs.OTHER | Contigs.ALL_DISABLE_MERGE)
         or list of contigs to ingest, defaults to Contigs.ALL
     :param threads: number of threads to use per ingestion task, defaults to VCF_THREADS
     :param batch_size: sample batch size, defaults to VCF_BATCH_SIZE
@@ -929,7 +931,8 @@ def ingest_samples_dag(
     logger.debug("consolidate_resources=%s", consolidate_resources)
 
     # This loop creates a DAG with the following structure:
-    # - Submit N ingest tasks in parallel, where N is `workers` or less if there are fewer batches
+    # - Submit N ingest tasks in parallel, where N is `workers` or less
+    #   if there are fewer batches
     # - Submit a consolidate task that runs when the previous N ingest tasks complete
     # - Repeat until all batches are ingested
     consolidate = None
@@ -975,7 +978,8 @@ def ingest_samples_dag(
 
     if not local_ingest:
         logger.info(
-            "Batch ingestion submitted - https://cloud.tiledb.com/activity/taskgraphs/%s",
+            "Batch ingestion submitted -"
+            " https://cloud.tiledb.com/activity/taskgraphs/%s",
             graph.server_graph_uuid,
         )
 
@@ -1018,14 +1022,20 @@ def ingest(
     :param pattern: pattern to match when searching for VCF files, defaults to None
     :param ignore: pattern to ignore when searching for VCF files, defaults to None
     :param sample_list_uri: URI with a list of VCF URIs, defaults to None
-    :param max_files: maximum number of VCF URIs to read/find, defaults to None (no limit)
-    :param contigs: contig mode (Contigs.ALL | Contigs.CHROMOSOMES | Contigs.OTHER | Contigs.ALL_DISABLE_MERGE)
+    :param max_files: maximum number of VCF URIs to read/find,
+        defaults to None (no limit)
+    :param contigs: contig mode
+        (Contigs.ALL | Contigs.CHROMOSOMES | Contigs.OTHER | Contigs.ALL_DISABLE_MERGE)
         or list of contigs to ingest, defaults to Contigs.ALL
     :param resume: enable resume ingestion mode, defaults to False
-    :param extra_attrs: INFO/FORMAT fields to materialize, defaults to `repr(DEFAULT_ATTRIBUTES)`
-    :param vcf_attrs: VCF with all INFO/FORMAT fields to materialize, defaults to None
-    :param manifest_batch_size: batch size for manifest ingestion, defaults to MANIFEST_BATCH_SIZE
-    :param manifest_workers: number of workers for manifest ingestion, defaults to MANIFEST_WORKERS
+    :param extra_attrs: INFO/FORMAT fields to materialize,
+        defaults to `repr(DEFAULT_ATTRIBUTES)`
+    :param vcf_attrs: VCF with all INFO/FORMAT fields to materialize,
+        defaults to None
+    :param manifest_batch_size: batch size for manifest ingestion,
+        defaults to MANIFEST_BATCH_SIZE
+    :param manifest_workers: number of workers for manifest ingestion,
+        defaults to MANIFEST_WORKERS
     :param vcf_batch_size: batch size for VCF ingestion, defaults to VCF_BATCH_SIZE
     :param vcf_workers: number of workers for VCF ingestion, defaults to VCF_WORKERS
     :param vcf_threads: number of threads for VCF ingestion, defaults to VCF_THREADS

@@ -27,9 +27,11 @@ def ingest(
     :param output: output dir for the ingested tiledb arrays
     :param config: dict configuration to pass on tiledb.VFS
     :param taskgraph_name: Optional name for taskgraph, defaults to None
-    :param num_batches: Number of graph nodes to spawn performs it sequentially if default, defaults to 1
+    :param num_batches: Number of graph nodes to spawn.
+        Performs it sequentially if default, defaults to 1
     :param threads: Number of threads for node side multiprocessing, defaults to 8
-    :param resources: configuration for node specs e.g. {"cpu": "8", "memory": "4Gi"} , defaults to None
+    :param resources: configuration for node specs e.g. {"cpu": "8", "memory": "4Gi"},
+        defaults to None
     :param namespace: The namespace where the DAG will run
     """
 
@@ -40,7 +42,8 @@ def ingest(
         *args: Any,
         **kwargs,
     ):
-        """Internal udf that ingests server side batch of bioimaging files into tiledb arrays using tiledb-bioimg API
+        """Internal udf that ingests server side batch of bioimaging files
+        into tiledb arrays using tiledb-bioimg API
 
         :param io_uris: Pairs of tiff input - output tdb uris
         :param config: dict configuration to pass on tiledb.VFS

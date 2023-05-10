@@ -53,7 +53,8 @@ def Config(cfg_dict=None):
 
 def Ctx(config=None):
     """
-    Builds a TileDB Context that has the tiledb config parameters for tiledb cloud set from stored login
+    Builds a TileDB Context that has the tiledb config parameters
+    for tiledb cloud set from stored login
     :return: tiledb.Ctx
     """
     return tiledb.Ctx(Config(config))
@@ -76,7 +77,8 @@ def login(
     :param password: password for login
     :param host: host to login to
     :param verify_ssl: Enable strict SSL verification
-    :param no_session: don't create a session token on login, store instead username/password
+    :param no_session: don't create a session token on login,
+        store instead username/password
     :param threads: number of threads to enable for concurrent requests
     :return:
     """
@@ -381,9 +383,11 @@ def organization(organization, async_req=False):
 
 def find_organization_or_user_for_default_charges(user):
     """
-    Takes a user model and finds either the first non public organization or the user itself
+    Takes a user model and finds either the first non public organization
+        or the user itself
     :param user:
-    :return: namespace name to charge by default (organization or user if not part of any organization)
+    :return: namespace name to charge by default
+        (organization or user if not part of any organization)
     """
 
     namespace_to_charge = user.username

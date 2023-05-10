@@ -211,15 +211,17 @@ class DAGClassTest(unittest.TestCase):
 
         node_1 = d.add_node(np.median, [1, 2, 3])
         node_1.name = "multi_node_1"
-        def l(x):
+
+        def double(x):
             return x * 2
-        node_2 = d.add_node(l, node_1)
+
+        node_2 = d.add_node(double, node_1)
         node_2.name = "multi_node_2"
-        node_3 = d.add_node(l, node_2)
+        node_3 = d.add_node(double, node_2)
         node_3.name = "multi_node_3"
-        node_4 = d.add_node(l, node_2)
+        node_4 = d.add_node(double, node_2)
         node_4.name = "multi_node_4"
-        node_5 = d.add_node(l, node_2)
+        node_5 = d.add_node(double, node_2)
         node_5.name = "multi_node_5"
 
         node_6 = d.add_node(lambda *x: np.sum(x), node_3, node_4, node_5)
@@ -294,15 +296,17 @@ class DAGClassTest(unittest.TestCase):
 
         node_1 = d.add_node(np.median, [1, 2, 3])
         node_1.name = "multi_node_1"
-        def l(x):
+
+        def double(x):
             return x * 2
-        node_2 = d.add_node(l, node_1)
+
+        node_2 = d.add_node(double, node_1)
         node_2.name = "multi_node_2"
-        node_3 = d.add_node(l, node_2)
+        node_3 = d.add_node(double, node_2)
         node_3.name = "multi_node_3"
-        node_4 = d.add_node(l, node_2)
+        node_4 = d.add_node(double, node_2)
         node_4.name = "multi_node_4"
-        node_5 = d.add_node(l, node_2)
+        node_5 = d.add_node(double, node_2)
         node_5.name = "multi_node_5"
 
         node_6 = d.add_node(lambda *x: np.sum(x), node_3, node_4, node_5)
