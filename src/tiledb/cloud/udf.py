@@ -180,7 +180,8 @@ def register_udf(
     :param namespace: namespace to register in
     :param image_name: optional image name
     :param type: type of udf, generic or single_array
-    :param include_source_lines: disables sending sources lines of function along with udf
+    :param include_source_lines: disables sending sources lines of function
+        along with udf
     :param async_req: return future instead of results for async support
     :return:
     """
@@ -233,7 +234,8 @@ def register_generic_udf(
     :param name: name of udf to register
     :param namespace: namespace to register in
     :param image_name: optional image name
-    :param include_source_lines: disables sending sources lines of function along with udf
+    :param include_source_lines: disables sending sources lines of function
+        along with udf
     :param async_req: return future instead of results for async support
     :return:
     """
@@ -262,7 +264,8 @@ def register_single_array_udf(
     :param name: name of udf to register
     :param namespace: namespace to register in
     :param image_name: optional image name
-    :param include_source_lines: disables sending sources lines of function along with udf
+    :param include_source_lines: disables sending sources lines of function
+        along with udf
     :param async_req: return future instead of results for async support
     :return:
     """
@@ -291,7 +294,8 @@ def register_multi_array_udf(
     :param name: name of udf to register
     :param namespace: namespace to register in
     :param image_name: optional image name
-    :param include_source_lines: disables sending sources lines of function along with udf
+    :param include_source_lines: disables sending sources lines of function
+        along with udf
     :param async_req: return future instead of results for async support
     :return:
     """
@@ -324,13 +328,15 @@ def update_udf(
     :param func: function to update register
     :param name: name of udf to register
     :param namespace: namespace to register in
-    :param update_name: new name for udf - physical folder will not be renamed, just the registered array name
+    :param update_name: new name for udf - physical folder will not be renamed,
+        just the registered array name
     :param image_name: optional image name
     :param type: type of udf, generic or single_array
     :param license_id: license id for udf according to https://spdx.org/licenses/
     :param license_text: text of license for udf
     :param readme: readme of udf
-    :param include_source_lines: disables sending sources lines of function along with udf
+    :param include_source_lines: disables sending sources lines of function
+        along with udf
     :param async_req: return future instead of results for async support
     :return:
     """
@@ -390,7 +396,8 @@ def update_generic_udf(
     :param name: name of udf to register
     :param namespace: namespace to register in
     :param image_name: optional image name
-    :param include_source_lines: disables sending sources lines of function along with udf
+    :param include_source_lines: disables sending sources lines of function
+        along with udf
     :param async_req: return future instead of results for async support
     :return:
     """
@@ -419,7 +426,8 @@ def update_single_array_udf(
     :param name: name of udf to register
     :param namespace: namespace to register in
     :param image_name: optional image name
-    :param include_source_lines: disables sending sources lines of function along with udf
+    :param include_source_lines: disables sending sources lines of function
+        along with udf
     :param async_req: return future instead of results for async support
     :return:
     """

@@ -221,7 +221,10 @@ class BasicTests(unittest.TestCase):
             self.assertEqual(
                 int(
                     tiledb.cloud.sql.exec_async(
-                        "select sum(a) as sum from `tiledb://TileDB-Inc/quickstart_sparse`",
+                        """
+                            select sum(a) as sum
+                            from `tiledb://TileDB-Inc/quickstart_sparse`
+                        """,
                         task_name=task_name,
                     ).get()["sum"]
                 ),
@@ -235,7 +238,11 @@ class BasicTests(unittest.TestCase):
             self.assertEqual(
                 int(
                     tiledb.cloud.sql.exec_async(
-                        "select sum(a) as sum from `tiledb://TileDB-Inc/quickstart_sparse` WHERE (`rows`, `cols`) in ((1,1), (2,4))"
+                        """
+                        select sum(a) as sum
+                        from `tiledb://TileDB-Inc/quickstart_sparse`
+                        WHERE (`rows`, `cols`) in ((1,1), (2,4))
+                        """
                     ).get()["sum"]
                 ),
                 numpy.sum(orig["a"]),

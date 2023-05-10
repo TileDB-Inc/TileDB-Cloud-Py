@@ -88,13 +88,17 @@ def vcf_query_udf(
     :param config: config dictionary, defaults to None
     :param attrs: attribute names to read, defaults to None
     :param regions: genomics regions to read, defaults to None
-    :param bed_file: URI of a BED file containing genomics regions to read, defaults to None
+    :param bed_file: URI of a BED file containing genomics regions to read,
+        defaults to None
     :param samples: sample names to read, defaults to None
-    :param region_partition: region partition tuple (0-based indexed, num_partitions), defaults to None
-    :param sample_partition: sample partition tuple (0-based indexed, num_partitions), defaults to None
+    :param region_partition: region partition tuple (0-based indexed, num_partitions),
+        defaults to None
+    :param sample_partition: sample partition tuple (0-based indexed, num_partitions),
+        defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
     :param af_filter: allele frequency filter, defaults to None
-    :param transform_result: function to apply to the result table, by default, does not transform the result
+    :param transform_result: function to apply to the result table;
+        by default, does not transform the result
     :param log_uri: log array URI for profiling, defaults to None
     :param log_id: profiler event ID, defaults to "query"
     :param verbose: verbose logging, defaults to False
@@ -238,12 +242,14 @@ def build_read_dag(
     :param config: config dictionary, defaults to None
     :param attrs: attribute names to read, defaults to None
     :param regions: genomics regions to read, defaults to None
-    :param bed_file: URI of a BED file containing genomics regions to read, defaults to None
+    :param bed_file: URI of a BED file containing genomics regions to read,
+        defaults to None
     :param num_region_partitions: number of region partitions, defaults to 1
     :param samples: sample names to read, defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
     :param af_filter: allele frequency filter, defaults to None
-    :param transform_result: function to apply to each partition, by default, does not transform the result
+    :param transform_result: function to apply to each partition;
+        by default, does not transform the result
     :param log_uri: log array URI for profiling, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
     :param resource_class: TileDB-Cloud resource class for UDFs, defaults to None
@@ -296,7 +302,8 @@ def build_read_dag(
                     transform_result=transform_result,
                     log_uri=log_uri,
                     log_id=f"query-reg{region}-sam{sample}",
-                    name=f"VCF Query - Region {region+1}/{num_region_partitions}, Sample {sample+1}/{num_sample_partitions}",
+                    name=f"VCF Query - Region {region+1}/{num_region_partitions},"
+                    " Sample {sample+1}/{num_sample_partitions}",
                     resource_class=resource_class,
                     result_format=tiledb.cloud.UDFResultType.ARROW,
                 )
@@ -343,12 +350,14 @@ def read(
     :param config: config dictionary, defaults to None
     :param attrs: attribute names to read, defaults to None
     :param regions: genomics regions to read, defaults to None
-    :param bed_file: URI of a BED file containing genomics regions to read, defaults to None
+    :param bed_file: URI of a BED file containing genomics regions to read,
+        defaults to None
     :param num_region_partitions: number of region partitions, defaults to 1
     :param samples: sample names to read, defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
     :param af_filter: allele frequency filter, defaults to None
-    :param transform_result: function to apply to each partition, by default, does not transform the result
+    :param transform_result: function to apply to each partition;
+        by default, does not transform the result
     :param log_uri: log array URI for profiling, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
     :param resource_class: TileDB-Cloud resource class for UDFs, defaults to None

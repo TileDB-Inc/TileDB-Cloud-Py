@@ -50,9 +50,11 @@ def tasks(
     Fetch all tasks a user has access too
     :param str namespace: optional filter by namespace
     :param str array: optional limit tasks to specific array
-    :param datetime start: optional start time for listing of tasks, defaults to 7 days ago
+    :param datetime start: optional start time for listing of tasks,
+        defaults to 7 days ago
     :param datetime end: optional end time for listing of tasks defaults to now
-    :param str status: optional filter on status can be one of ['FAILED', 'RUNNING', 'COMPLETED']
+    :param str status: optional filter on status can be one of
+        ['FAILED', 'RUNNING', 'COMPLETED']
     :param int page: optional page for pagenating results
     :param int per_page: optional records to return per page
     :param async_req: return future instead of results for async support

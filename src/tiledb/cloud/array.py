@@ -149,10 +149,12 @@ def update_info(
 ):
     """
     Update an array's info
-    :param str namespace: optional username or organization array should be registered under. If unset will default to the user
+    :param str namespace: The username or organization that owns the array.
+        If unset, will use the logged-in user.
     :param str array_name: name of array to rename to
     :param str description: optional description
-    :param str access_credentials_name: optional name of access credentials to use, if left blank default for namespace will be used
+    :param str access_credentials_name: The access credentials to use when
+        accessing the backing array. Leave unset to not change.
     :param list tags: to update to
     :param str file_type: array represents give file type
     :param str file_properties: set file properties on array
@@ -180,7 +182,8 @@ def update_info(
 
 def update_file_properties(uri, file_type=None, file_properties=None, async_req=False):
     """
-    Update an Array to indicate its a file and has given properties. Any properties set are returned with the array info
+    Update an Array to indicate its a file and has given properties.
+    Any properties set are returned with the array info.
     :param str uri: uri of array to update
     :param str file_type: file type to set
     :param dict file_properties: dictionary of properties to set
@@ -213,10 +216,12 @@ def register_array(
 ):
     """
     Register this array with the tiledb cloud service
-    :param str namespace: optional username or organization array should be registered under. If unset will default to the user
+    :param str namespace: The user or organization to register the array under.
+        If unset will default to the user
     :param str array_name: name of array
     :param str description: optional description
-    :param str access_credentials_name: optional name of access credentials to use, if left blank default for namespace will be used
+    :param str access_credentials_name: optional name of access credentials to use,
+        if left blank default for namespace will be used
     :param async_req: return future instead of results for async support
     """
     api_instance = client.build(rest_api.ArrayApi)
@@ -241,8 +246,9 @@ def register_array(
 
 def deregister_array(uri, async_req=False):
     """
-    Deregister the from the tiledb cloud service. This does not physically delete the array, it will remain
-    in your bucket. All access to the array and cloud metadata will be removed.
+    Deregister the from the tiledb cloud service.
+    This does not physically delete the array, it will remain in your bucket.
+    All access to the array and cloud metadata will be removed.
 
     :param async_req: return future instead of results for async support
 
@@ -262,7 +268,9 @@ def deregister_array(uri, async_req=False):
 
 def delete_array(uri, *, async_req=False):
     """
-    Deregister the array from the tiledb cloud service, then deletes physical array from disk.
+    Deregister the array from the tiledb cloud service,
+    then deletes physical array from disk.
+
     All access to the array and cloud metadata will be removed.
 
     :param async_req: return future instead of results for async support
@@ -435,7 +443,7 @@ def apply_base(
     >>> # Open the array then run the UDF
     >>> tiledb.cloud.array.apply_base("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"]).result
     2.0
-    """
+    """  # noqa: E501
     del v2  # unused
 
     if result_format_version:
@@ -537,7 +545,7 @@ def apply(*args, **kwargs) -> Any:
     >>> # Open the array then run the UDF
     >>> tiledb.cloud.array.apply("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"])
     2.0
-    """
+    """  # noqa: E501
     return apply_base(*args, **kwargs).get()
 
 
@@ -608,7 +616,7 @@ def exec_multi_array_udf_base(
     >>> namespace = "namespace"
     >>> res = array.exec_multi_array_udf(median, array_list, namespace)
     >>> print("Median Multi UDF:\n{}\n".format(res))
-    """
+    """  # noqa: E501
     if layout:
         warnings.warn(DeprecationWarning("layout is unused."))
     if result_format_version:

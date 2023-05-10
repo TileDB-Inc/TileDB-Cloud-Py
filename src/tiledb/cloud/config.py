@@ -94,7 +94,8 @@ def load_configuration(config_path):
 
     if (token is None or token == "") and (username is None or username == ""):
         warnings.warn(
-            "You must first login before you can run commands. Please run tiledb.cloud.login."
+            "You must first login before you can run commands."
+            " Please run tiledb.cloud.login."
         )
         logged_in = False
 

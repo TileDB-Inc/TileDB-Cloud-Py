@@ -199,7 +199,8 @@ class Node(futures.FutureLike[_T]):
         if self.mode == Mode.BATCH:
             if self._resource_class and self._resources:
                 raise tce.TileDBCloudError(
-                    "Cannot set resource_class and resources for batch mode, choose one or the other"
+                    "Cannot set resource_class and resources for batch mode,"
+                    " choose one or the other"
                 )
             if not self._resource_class and not self._resources:
                 self._resource_class = "standard"
@@ -207,7 +208,9 @@ class Node(futures.FutureLike[_T]):
         elif self.mode == Mode.REALTIME:
             if "resources" in self.kwargs:
                 raise tce.TileDBCloudError(
-                    'Cannot set resources for REALTIME task graphs, please use "resource_class" to set a predefined option for "standard" or "large"'
+                    "Cannot set resources for REALTIME task graphs,"
+                    ' please use "resource_class" to set a predefined option'
+                    ' for "standard" or "large"'
                 )
 
     def _find_deps(self):
@@ -233,8 +236,8 @@ class Node(futures.FutureLike[_T]):
 
     def depends_on(self, node: "Node"):
         """
-        Create dependency chain for node, useful when there is a dependency that does not rely directly on passing
-        results from one to another
+        Create dependency chain for node, useful when there is a dependency
+        that does not rely directly on passing results from one to another
         :param node: node to mark as a dependency of this node
         :return:
         """
@@ -581,15 +584,20 @@ class DAG:
         """
         DAG is a class for creating and managing direct acyclic graphs
         :param max_workers: how many workers should be used to execute the dag
-        :param use_processes: if true will use processes instead of threads, defaults to threads
-        :param done_callback: optional call back function to register for when dag is completed. Function will be passed reference to this dag
-        :param update_callback: optional call back function to register for when dag status is updated. Function will be passed reference to this dag
+        :param use_processes: if true will use processes instead of threads,
+            defaults to threads
+        :param done_callback: optional call back function to register for
+            when dag is completed. Function will be passed reference to this dag
+        :param update_callback: optional call back function to register for
+            when dag status is updated. Function will be passed reference to this dag
         :param namespace: optional namespace to use for all tasks in DAG
         :param name: A human-readable name used to identify this task graph
             in logs. Does not need to be unique.
-        :param mode: Mode the DAG is to run in, valid options are Mode.REALTIME, Mode.BATCH
+        :param mode: Mode the DAG is to run in, valid options are
+            Mode.REALTIME, Mode.BATCH
         :param retry_strategy: RetryStrategy to use for the execution of the entire DAG.
-        :param deadline: Duration in seconds relative to the workflow start time which the workflow is allowed to run before it gets terminated.
+        :param deadline: Duration in seconds relative to the workflow start time
+            which the workflow is allowed to run before it gets terminated.
         """
         self.id = uuid.uuid4()
         self.nodes: Dict[uuid.UUID, Node] = {}
@@ -699,7 +707,8 @@ class DAG:
     def add_update_callback(self, func):
         """
         Add a callback for when DAG status is updated
-        :param func: Function to call when DAG status is updated. The function will be passed reference to this dag
+        :param func: Function to call when DAG status is updated.
+            The function will be passed reference to this dag
         :return:
         """
         if not callable(func):
@@ -711,7 +720,8 @@ class DAG:
     def add_done_callback(self, func):
         """
         Add a callback for when DAG is completed
-        :param func: Function to call when DAG status is updated. The function will be passed reference to this dag
+        :param func: Function to call when DAG status is updated.
+            The function will be passed reference to this dag
         :return:
         """
         if not callable(func):
@@ -944,8 +954,8 @@ class DAG:
         Submit a function that will be executed in the cloud serverlessly
         :param func: function to execute
         :param args: arguments for function execution
-        :param expand_node_output: the Node that we want to expand the output of. The output of the node should be a
-        JSON encoded list.
+        :param expand_node_output: the Node that we want to expand the output of.
+            The output of the node should be a JSON encoded list.
         :param name: name
         :return: Node that is created
         """
@@ -1206,9 +1216,7 @@ class DAG:
                 self.report_node_status_change(node, Status.NOT_STARTED)
 
             if self._status is Status.CANCELLED or self._status is Status.FAILED:
-                client.build(
-                    rest_api.TaskGraphLogsApi
-                ).retry_task_graph_execution(
+                client.build(rest_api.TaskGraphLogsApi).retry_task_graph_execution(
                     namespace=self.namespace,
                     id=self.server_graph_uuid,
                 )
@@ -1311,9 +1319,11 @@ class DAG:
     def visualize(self, notebook=True, auto_update=True, force_plotly=False):
         """
         Build and render a tree diagram of the DAG.
-        :param notebook: Is the visualization inside a jupyter notebook? If so we'll use a widget
+        :param notebook: Is the visualization inside a jupyter notebook?
+            If so we'll use a widget
         :param auto_update: Should the diagram be auto updated with each status change
-        :param force_plotly: Force the use of plotly graphs instead of TileDB Plot Widget
+        :param force_plotly: Force the use of plotly graphs instead of
+            TileDB Plot Widget
         :return: returns figure
         """
         if not notebook or force_plotly:
@@ -1356,7 +1366,8 @@ class DAG:
     def _visualize_plotly(self, notebook=True, auto_update=True):
         """
 
-        :param notebook: Is the visualization inside a jupyter notebook? If so we'll use a widget
+        :param notebook: Is the visualization inside a jupyter notebook?
+            If so we'll use a widget
         :param auto_update: Should the diagram be auto updated with each status change
         :return: figure
         """
@@ -1386,8 +1397,10 @@ class DAG:
             mode="lines",
         )
 
-        # Build node x,y and also build a mapping of the graph market numbers to actual node objects so we can fetch status
-        # The graph ends up with each market on a list, so we need to map from this list's order to actual nodes so we can look things up
+        # Build node x,y and also build a mapping of the graph market numbers
+        # to actual node objects so we can fetch status.
+        # The graph ends up with each marker on a list, so we need to map
+        # from this list's order to actual nodes so we can look things up.
         node_x = []
         node_y = []
         nodes = []

@@ -80,7 +80,8 @@ def write_log_event(
 
 class Profiler(object):
     """
-    A context manager based profiler to log events and CPU and memory usage to a TileDB array.
+    A context manager–based profiler to log events and CPU and memory usage
+    to a TileDB array.
 
     If the `trace` parameter is `True`, CPU and memory usage will be logged to the array
     every `period_sec` seconds. This is useful for profiling jobs that are OOM killed.

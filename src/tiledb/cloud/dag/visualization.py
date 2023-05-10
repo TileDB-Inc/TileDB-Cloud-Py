@@ -118,7 +118,8 @@ def hierarchy_pos(
       just for the descendants of this node.
     - if the tree is undirected and not given, then a random choice will be used.
 
-    **width** horizontal space allocated for this branch - avoids overlap with other branches
+    **width** horizontal space allocated for this branch -
+        avoids overlap with other branches
 
     **vert_gap** gap between levels of hierarchy
 
@@ -127,7 +128,7 @@ def hierarchy_pos(
     **leaf_vs_root_factor**
 
     xcenter: horizontal location of root
-    """
+    """  # noqa: E501
     import networkx as nx
 
     if not nx.is_tree(G):
@@ -232,7 +233,6 @@ def hierarchy_pos(
             + (1 - leaf_vs_root_factor) * rootpos[node][0],
             leafpos[node][1],
         )
-    #    pos = {node:(leaf_vs_root_factor*x1+(1-leaf_vs_root_factor)*x2, y1) for ((x1,y1), (x2,y2)) in (leafpos[node], rootpos[node]) for node in rootpos}
     xmax = max(x for x, y in pos.values())
     for node in pos:
         pos[node] = (pos[node][0] * width / xmax, pos[node][1])
@@ -241,16 +241,18 @@ def hierarchy_pos(
 
 def build_visualization_positions(network):
     """
-    Builds the positional spacing of all nodes(markers) based on either pydot if available or falling back
-    to a python computation
+    Builds the positional spacing of all nodes(markers) based on either pydot
+    if available or falling back to a python computation
     :param network:
     :return: position array
     """
     try:
-        # First try to use pydot and dot, as it produces the most aesthetically pleasing trees
+        # First try to use pydot and dot, as it produces
+        # the most aesthetically pleasing trees
         from networkx.drawing.nx_pydot import pydot_layout
 
         return pydot_layout(network, prog="dot")
-    except:
-        # Fall back to python function so we don't have to require users to install graphviz
+    except Exception:
+        # Fall back to python function so we don't have to require users
+        # to install graphviz
         return hierarchy_pos(network, width=2.0, leaf_vs_root_factor=1.0)

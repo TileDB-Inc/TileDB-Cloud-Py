@@ -39,14 +39,20 @@ def exec_base(
     """Run a Serverless SQL query, returning both the result and metadata.
 
     :param str query: query to run
-    :param str output_uri: optional array to store results to, must be a tiledb:// registered array
-    :param tiledb.ArraySchema output_schema: optional schema for creating output array if it does not exist
+    :param str output_uri: optional array to store results to,
+        must be a tiledb:// registered array
+    :param tiledb.ArraySchema output_schema: optional schema
+        for creating output array if it does not exist
     :param str namespace: optional namespace to charge the query to
-    :param str task_name: optional name to assign the task for logging and audit purposes
-    :param str output_array_name: optional array name to set if creating new output array
-    :param bool raw_results: optional flag to return raw json bytes of results instead of converting to pandas dataframe
+    :param str task_name: optional name to assign the task for logging and
+        audit purposes
+    :param str output_array_name: optional array name to set if creating new
+        output array
+    :param bool raw_results: optional flag to return raw json bytes of results
+        instead of converting to pandas dataframe
     :param string http_compressor: optional http compression method to use
-    :param list init_commands: optional list of sql queries or commands to run before main query
+    :param list init_commands: optional list of sql queries or commands to run
+        before main query
     :param list parameters: optional list of sql parameters for use in query
     :param UDFResultType result_format: result serialization format
     :param str result_format_version: Deprecated and ignored.
@@ -92,13 +98,14 @@ def exec_base(
                 res = tiledb.ArraySchema.load(output_uri, ctx=client.Ctx())
                 if res is not None:
                     break
-            except:
+            except Exception:
                 pass
 
             # Sleep for 250ms to avoid dosing the server
             time.sleep(0.25)
 
-        # If the user wishes to set a specific array name for the newly registered output array let's update the details
+        # If the user wishes to set a specific array name for
+        # the newly registered output array let's update the details
         if output_array_name is not None:
             array_api = client.build(rest_api.ArrayApi)
             array_api.update_array_metadata(

@@ -107,12 +107,11 @@ class Cursor:
             new_index = value
         else:
             raise ProgrammingError(
-                f"Invalid mode '{mode}'. Please choose between 'relative' and 'absolute'."
+                f"Invalid mode {mode!r}. Please choose 'relative' or 'absolute'."
             )
 
-        if not 0 <= new_index < len(self._results) - 1:
-            raise IndexError(
-                f"Row index {new_index} is out of bounds (0 to {len(self._results) - 1})."
-            )
+        upper = len(self._results) - 1
+        if not 0 <= new_index < upper:
+            raise IndexError(f"Row index {new_index} is out of bounds (0 to {upper}).")
 
         self._row_index = new_index

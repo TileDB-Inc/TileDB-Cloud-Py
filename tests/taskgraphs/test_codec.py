@@ -72,7 +72,7 @@ class EscapingTest(unittest.TestCase):
                         }
                       }
                     }
-                """,
+                """,  # noqa: E501
                 {
                     "c": "d",
                     "__tdbudf__": {
@@ -97,7 +97,7 @@ class EscapingTest(unittest.TestCase):
                       "format": "python_pickle",
                       "base64_data": "gASVIQAAAAAAAACMCGJ1aWx0aW5zlIwFcmFuZ2WUk5RLAE2aAksBh5RSlC4="
                     }
-                """,
+                """,  # noqa: E501
                 range(666),
             ),
         )

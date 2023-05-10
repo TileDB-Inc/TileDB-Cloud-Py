@@ -49,12 +49,14 @@ class DelayedClassTest(unittest.TestCase):
 
     def test_multi_dependencies(self):
         node_1 = Delayed(np.median, name="multi_node_1", local=True)([1, 2, 3])
-        def l(x):
+
+        def double(x):
             return x * 2
-        node_2 = Delayed(l, local=True, name="multi_node_2")(node_1)
-        node_3 = Delayed(l, local=True, name="multi_node_3")(node_2)
-        node_4 = Delayed(l, local=True, name="multi_node_4")(node_2)
-        node_5 = Delayed(l, local=True, name="multi_node_5")(node_2)
+
+        node_2 = Delayed(double, local=True, name="multi_node_2")(node_1)
+        node_3 = Delayed(double, local=True, name="multi_node_3")(node_2)
+        node_4 = Delayed(double, local=True, name="multi_node_4")(node_2)
+        node_5 = Delayed(double, local=True, name="multi_node_5")(node_2)
 
         node_6 = Delayed(lambda *x: np.sum(x), local=True, name="multi_node_6")(
             node_3, node_4, node_5
