@@ -75,6 +75,9 @@ generate_api() {
     -g python \
     --skip-validate-spec  # The generator doesn't like the v2 spec.
 
+  # Remove useless generated "test" files.
+  rm -r -- "${TEMP_PATH}/${TEMP_PACKAGE_NAME}/test"
+
   # Rewrite imports and links in docs,
   # and work around https://github.com/OpenAPITools/openapi-generator/issues/10236
   find "${TEMP_PATH}" \

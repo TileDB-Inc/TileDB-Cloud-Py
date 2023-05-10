@@ -970,6 +970,7 @@ class GroupsApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param str namespace: namespace
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -996,6 +997,7 @@ class GroupsApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param str namespace: namespace
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1012,7 +1014,7 @@ class GroupsApi(object):
 
         local_var_params = locals()
 
-        all_params = []
+        all_params = ["namespace"]
         all_params.extend(
             [
                 "async_req",
@@ -1036,6 +1038,13 @@ class GroupsApi(object):
         path_params = {}
 
         query_params = []
+        if (
+            "namespace" in local_var_params
+            and local_var_params["namespace"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("namespace", local_var_params["namespace"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -1192,6 +1201,7 @@ class GroupsApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param str namespace: namespace
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1218,6 +1228,7 @@ class GroupsApi(object):
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
+        :param str namespace: namespace
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1234,7 +1245,7 @@ class GroupsApi(object):
 
         local_var_params = locals()
 
-        all_params = []
+        all_params = ["namespace"]
         all_params.extend(
             [
                 "async_req",
@@ -1258,6 +1269,13 @@ class GroupsApi(object):
         path_params = {}
 
         query_params = []
+        if (
+            "namespace" in local_var_params
+            and local_var_params["namespace"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("namespace", local_var_params["namespace"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -1449,6 +1467,7 @@ class GroupsApi(object):
         :param async_req bool: execute request asynchronously
         :param int page: pagination offset
         :param int per_page: pagination limit
+        :param str group_type: filter by a specific group type
         :param str search: search string that will look at name, namespace or description fields
         :param str namespace: namespace
         :param str orderby: sort by which field valid values include last_accessed, size, name
@@ -1483,6 +1502,7 @@ class GroupsApi(object):
         :param async_req bool: execute request asynchronously
         :param int page: pagination offset
         :param int per_page: pagination limit
+        :param str group_type: filter by a specific group type
         :param str search: search string that will look at name, namespace or description fields
         :param str namespace: namespace
         :param str orderby: sort by which field valid values include last_accessed, size, name
@@ -1510,6 +1530,7 @@ class GroupsApi(object):
         all_params = [
             "page",
             "per_page",
+            "group_type",
             "search",
             "namespace",
             "orderby",
@@ -1551,6 +1572,13 @@ class GroupsApi(object):
         ):  # noqa: E501
             query_params.append(
                 ("per_page", local_var_params["per_page"])
+            )  # noqa: E501
+        if (
+            "group_type" in local_var_params
+            and local_var_params["group_type"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("group_type", local_var_params["group_type"])
             )  # noqa: E501
         if (
             "search" in local_var_params and local_var_params["search"] is not None
@@ -1642,6 +1670,7 @@ class GroupsApi(object):
         :param async_req bool: execute request asynchronously
         :param int page: pagination offset
         :param int per_page: pagination limit
+        :param str group_type: filter by a specific group type
         :param str search: search string that will look at name, namespace or description fields
         :param str namespace: namespace
         :param str orderby: sort by which field valid values include last_accessed, size, name
@@ -1676,6 +1705,7 @@ class GroupsApi(object):
         :param async_req bool: execute request asynchronously
         :param int page: pagination offset
         :param int per_page: pagination limit
+        :param str group_type: filter by a specific group type
         :param str search: search string that will look at name, namespace or description fields
         :param str namespace: namespace
         :param str orderby: sort by which field valid values include last_accessed, size, name
@@ -1703,6 +1733,7 @@ class GroupsApi(object):
         all_params = [
             "page",
             "per_page",
+            "group_type",
             "search",
             "namespace",
             "orderby",
@@ -1744,6 +1775,13 @@ class GroupsApi(object):
         ):  # noqa: E501
             query_params.append(
                 ("per_page", local_var_params["per_page"])
+            )  # noqa: E501
+        if (
+            "group_type" in local_var_params
+            and local_var_params["group_type"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("group_type", local_var_params["group_type"])
             )  # noqa: E501
         if (
             "search" in local_var_params and local_var_params["search"] is not None
@@ -1835,6 +1873,7 @@ class GroupsApi(object):
         :param async_req bool: execute request asynchronously
         :param int page: pagination offset
         :param int per_page: pagination limit
+        :param str group_type: filter by a specific group type
         :param str search: search string that will look at name, namespace or description fields
         :param str namespace: namespace
         :param str orderby: sort by which field valid values include last_accessed, size, name
@@ -1870,6 +1909,7 @@ class GroupsApi(object):
         :param async_req bool: execute request asynchronously
         :param int page: pagination offset
         :param int per_page: pagination limit
+        :param str group_type: filter by a specific group type
         :param str search: search string that will look at name, namespace or description fields
         :param str namespace: namespace
         :param str orderby: sort by which field valid values include last_accessed, size, name
@@ -1898,6 +1938,7 @@ class GroupsApi(object):
         all_params = [
             "page",
             "per_page",
+            "group_type",
             "search",
             "namespace",
             "orderby",
@@ -1940,6 +1981,13 @@ class GroupsApi(object):
         ):  # noqa: E501
             query_params.append(
                 ("per_page", local_var_params["per_page"])
+            )  # noqa: E501
+        if (
+            "group_type" in local_var_params
+            and local_var_params["group_type"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("group_type", local_var_params["group_type"])
             )  # noqa: E501
         if (
             "search" in local_var_params and local_var_params["search"] is not None

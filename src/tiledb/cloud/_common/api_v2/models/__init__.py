@@ -105,6 +105,7 @@ from tiledb.cloud._common.api_v2.models.metadata import Metadata
 from tiledb.cloud._common.api_v2.models.metadata_entry import MetadataEntry
 from tiledb.cloud._common.api_v2.models.non_empty_domain import NonEmptyDomain
 from tiledb.cloud._common.api_v2.models.non_empty_domain_list import NonEmptyDomainList
+from tiledb.cloud._common.api_v2.models.notebook_uploaded import NotebookUploaded
 from tiledb.cloud._common.api_v2.models.pagination_metadata import PaginationMetadata
 from tiledb.cloud._common.api_v2.models.query import Query
 from tiledb.cloud._common.api_v2.models.query_reader import QueryReader

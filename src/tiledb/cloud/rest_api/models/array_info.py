@@ -47,7 +47,7 @@ class ArrayInfo(object):
         "subscriptions": "list[Subscription]",
         "logo": "str",
         "access_credentials_name": "str",
-        "type": "str",
+        "type": "ArrayType",
         "share_count": "float",
         "public_share": "bool",
         "namespace_subscribed": "bool",
@@ -515,10 +515,9 @@ class ArrayInfo(object):
     def type(self):
         """Gets the type of this ArrayInfo.  # noqa: E501
 
-        Array type (dense, key-value, sparse)  # noqa: E501
 
         :return: The type of this ArrayInfo.  # noqa: E501
-        :rtype: str
+        :rtype: ArrayType
         """
         return self._type
 
@@ -526,10 +525,9 @@ class ArrayInfo(object):
     def type(self, type):
         """Sets the type of this ArrayInfo.
 
-        Array type (dense, key-value, sparse)  # noqa: E501
 
         :param type: The type of this ArrayInfo.  # noqa: E501
-        :type: str
+        :type: ArrayType
         """
 
         self._type = type

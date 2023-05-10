@@ -1,11 +1,10 @@
-# GroupBrowserFilterData
+# SSODomainConfigResponse
 
-Object with data to fill browser filter
+The response to a request for the list of domain claims associated with a particular organization. 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**namespaces** | **list[str]** | list of all unique namespaces to display | [optional] 
-**group_types** | [**list[GroupType]**](GroupType.md) | list of all available group types to display | [optional] 
+**domain_configs** | [**list[SSODomainConfig]**](SSODomainConfig.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

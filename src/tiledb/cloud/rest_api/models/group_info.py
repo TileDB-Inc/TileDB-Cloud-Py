@@ -44,6 +44,7 @@ class GroupInfo(object):
         "size": "float",
         "last_accessed": "datetime",
         "allowed_actions": "list[GroupActions]",
+        "group_type": "GroupType",
         "logo": "str",
         "access_credentials_name": "str",
         "share_count": "float",
@@ -65,6 +66,7 @@ class GroupInfo(object):
         "size": "size",
         "last_accessed": "last_accessed",
         "allowed_actions": "allowed_actions",
+        "group_type": "group_type",
         "logo": "logo",
         "access_credentials_name": "access_credentials_name",
         "share_count": "share_count",
@@ -87,6 +89,7 @@ class GroupInfo(object):
         size=None,
         last_accessed=None,
         allowed_actions=None,
+        group_type=None,
         logo=None,
         access_credentials_name=None,
         share_count=None,
@@ -112,6 +115,7 @@ class GroupInfo(object):
         self._size = None
         self._last_accessed = None
         self._allowed_actions = None
+        self._group_type = None
         self._logo = None
         self._access_credentials_name = None
         self._share_count = None
@@ -142,6 +146,8 @@ class GroupInfo(object):
             self.last_accessed = last_accessed
         if allowed_actions is not None:
             self.allowed_actions = allowed_actions
+        if group_type is not None:
+            self.group_type = group_type
         if logo is not None:
             self.logo = logo
         if access_credentials_name is not None:
@@ -409,6 +415,27 @@ class GroupInfo(object):
         """
 
         self._allowed_actions = allowed_actions
+
+    @property
+    def group_type(self):
+        """Gets the group_type of this GroupInfo.  # noqa: E501
+
+
+        :return: The group_type of this GroupInfo.  # noqa: E501
+        :rtype: GroupType
+        """
+        return self._group_type
+
+    @group_type.setter
+    def group_type(self, group_type):
+        """Sets the group_type of this GroupInfo.
+
+
+        :param group_type: The group_type of this GroupInfo.  # noqa: E501
+        :type: GroupType
+        """
+
+        self._group_type = group_type
 
     @property
     def logo(self):
