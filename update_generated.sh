@@ -112,16 +112,19 @@ generate_api() {
 }
 
 run_format() {
-  for command in isort black; do
-    if ! [[ -x "$(command -v "${command}")" ]]; then
-      echo "${command} is not installed." >&2
-      echo 'Before sending a review request, run:' >&2
-      echo "  $ pip install ${command}" >&2
-      echo "  $ ${command} ${ROOT}" >&2
-      echo 'to ensure your files are correctly formatted.' >&2
-    else
-      "${command}" "${ROOT}"
-    fi
+  cd "$ROOT"
+  # Both of these return 0 even when they do reformatting.
+  for command in 'ruff --fix -e .' 'pre-commit run --all'; do
+    # Intentionally not in quotes, to run each string as a command line.
+    if $command; then continue; fi
+    # This part only runs if $command failed.
+    progname="${command%% *}"
+    echo "${progname} is not installed." >&2
+    echo 'Before sending a review request, run:' >&2
+    echo "  $ pip install ${progname}" >&2
+    echo "  $ cd ${ROOT}" >&2
+    echo "  $ ${command}" >&2
+    echo 'to ensure your files are correctly formatted.' >&2
   done
 }
 
