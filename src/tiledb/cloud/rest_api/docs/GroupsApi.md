@@ -852,7 +852,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **groups_browser_owned_filters_get**
-> GroupBrowserFilterData groups_browser_owned_filters_get()
+> GroupBrowserFilterData groups_browser_owned_filters_get(namespace=namespace)
 
 
 
@@ -898,9 +898,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.GroupsApi(api_client)
-    
+    namespace = 'namespace_example' # str | namespace (optional)
+
     try:
-        api_response = api_instance.groups_browser_owned_filters_get()
+        api_response = api_instance.groups_browser_owned_filters_get(namespace=namespace)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->groups_browser_owned_filters_get: %s\n" % e)
@@ -944,16 +945,20 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.GroupsApi(api_client)
-    
+    namespace = 'namespace_example' # str | namespace (optional)
+
     try:
-        api_response = api_instance.groups_browser_owned_filters_get()
+        api_response = api_instance.groups_browser_owned_filters_get(namespace=namespace)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->groups_browser_owned_filters_get: %s\n" % e)
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **namespace** | **str**| namespace | [optional] 
 
 ### Return type
 
@@ -1104,7 +1109,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **groups_browser_shared_filters_get**
-> GroupBrowserFilterData groups_browser_shared_filters_get()
+> GroupBrowserFilterData groups_browser_shared_filters_get(namespace=namespace)
 
 
 
@@ -1150,9 +1155,10 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.GroupsApi(api_client)
-    
+    namespace = 'namespace_example' # str | namespace (optional)
+
     try:
-        api_response = api_instance.groups_browser_shared_filters_get()
+        api_response = api_instance.groups_browser_shared_filters_get(namespace=namespace)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->groups_browser_shared_filters_get: %s\n" % e)
@@ -1196,16 +1202,20 @@ configuration = tiledb.cloud.rest_api.Configuration(
 with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.GroupsApi(api_client)
-    
+    namespace = 'namespace_example' # str | namespace (optional)
+
     try:
-        api_response = api_instance.groups_browser_shared_filters_get()
+        api_response = api_instance.groups_browser_shared_filters_get(namespace=namespace)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->groups_browser_shared_filters_get: %s\n" % e)
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **namespace** | **str**| namespace | [optional] 
 
 ### Return type
 
@@ -1364,7 +1374,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_owned_groups**
-> GroupBrowserData list_owned_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+> GroupBrowserData list_owned_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
 
 
 
@@ -1412,6 +1422,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.GroupsApi(api_client)
     page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
+group_type = 'group_type_example' # str | filter by a specific group type (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
@@ -1422,7 +1433,7 @@ flat = True # bool | if true, ignores the nesting of groups and searches all of 
 parent = 'parent_example' # str | search only the children of the groups with this uuid (optional)
 
     try:
-        api_response = api_instance.list_owned_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+        api_response = api_instance.list_owned_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->list_owned_groups: %s\n" % e)
@@ -1468,6 +1479,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.GroupsApi(api_client)
     page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
+group_type = 'group_type_example' # str | filter by a specific group type (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
@@ -1478,7 +1490,7 @@ flat = True # bool | if true, ignores the nesting of groups and searches all of 
 parent = 'parent_example' # str | search only the children of the groups with this uuid (optional)
 
     try:
-        api_response = api_instance.list_owned_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+        api_response = api_instance.list_owned_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->list_owned_groups: %s\n" % e)
@@ -1490,6 +1502,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **page** | **int**| pagination offset | [optional] 
  **per_page** | **int**| pagination limit | [optional] 
+ **group_type** | **str**| filter by a specific group type | [optional] 
  **search** | **str**| search string that will look at name, namespace or description fields | [optional] 
  **namespace** | **str**| namespace | [optional] 
  **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 
@@ -1522,7 +1535,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_public_groups**
-> GroupBrowserData list_public_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+> GroupBrowserData list_public_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
 
 
 
@@ -1570,6 +1583,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.GroupsApi(api_client)
     page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
+group_type = 'group_type_example' # str | filter by a specific group type (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
@@ -1580,7 +1594,7 @@ flat = True # bool | if true, ignores the nesting of groups and searches all of 
 parent = 'parent_example' # str | search only the children of the groups with this uuid (optional)
 
     try:
-        api_response = api_instance.list_public_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+        api_response = api_instance.list_public_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->list_public_groups: %s\n" % e)
@@ -1626,6 +1640,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.GroupsApi(api_client)
     page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
+group_type = 'group_type_example' # str | filter by a specific group type (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
@@ -1636,7 +1651,7 @@ flat = True # bool | if true, ignores the nesting of groups and searches all of 
 parent = 'parent_example' # str | search only the children of the groups with this uuid (optional)
 
     try:
-        api_response = api_instance.list_public_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+        api_response = api_instance.list_public_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->list_public_groups: %s\n" % e)
@@ -1648,6 +1663,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **page** | **int**| pagination offset | [optional] 
  **per_page** | **int**| pagination limit | [optional] 
+ **group_type** | **str**| filter by a specific group type | [optional] 
  **search** | **str**| search string that will look at name, namespace or description fields | [optional] 
  **namespace** | **str**| namespace | [optional] 
  **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 
@@ -1680,7 +1696,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_shared_groups**
-> GroupBrowserData list_shared_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to)
+> GroupBrowserData list_shared_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to)
 
 
 
@@ -1728,6 +1744,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.GroupsApi(api_client)
     page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
+group_type = 'group_type_example' # str | filter by a specific group type (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
@@ -1739,7 +1756,7 @@ parent = 'parent_example' # str | search only the children of the groups with th
 shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of where there groups were shared to (optional)
 
     try:
-        api_response = api_instance.list_shared_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to)
+        api_response = api_instance.list_shared_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->list_shared_groups: %s\n" % e)
@@ -1785,6 +1802,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.GroupsApi(api_client)
     page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
+group_type = 'group_type_example' # str | filter by a specific group type (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 namespace = 'namespace_example' # str | namespace (optional)
 orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
@@ -1796,7 +1814,7 @@ parent = 'parent_example' # str | search only the children of the groups with th
 shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of where there groups were shared to (optional)
 
     try:
-        api_response = api_instance.list_shared_groups(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to)
+        api_response = api_instance.list_shared_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->list_shared_groups: %s\n" % e)
@@ -1808,6 +1826,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **page** | **int**| pagination offset | [optional] 
  **per_page** | **int**| pagination limit | [optional] 
+ **group_type** | **str**| filter by a specific group type | [optional] 
  **search** | **str**| search string that will look at name, namespace or description fields | [optional] 
  **namespace** | **str**| namespace | [optional] 
  **orderby** | **str**| sort by which field valid values include last_accessed, size, name | [optional] 

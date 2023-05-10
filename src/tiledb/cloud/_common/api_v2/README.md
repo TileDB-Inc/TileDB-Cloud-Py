@@ -102,6 +102,7 @@ Class | Method | HTTP request | Description
 *GroupsApi* | [**retrieve_group**](docs/GroupsApi.md#retrieve_group) | **POST** /v2/groups/{group_namespace}/{group_name} | 
 *GroupsApi* | [**update_group_contents**](docs/GroupsApi.md#update_group_contents) | **PATCH** /v2/groups/{group_namespace}/{group_name} | 
 *GroupsApi* | [**update_group_metadata**](docs/GroupsApi.md#update_group_metadata) | **PUT** /v2/groups/{group_namespace}/{group_name}/metadata | 
+*NotebooksApi* | [**handle_upload_notebook**](docs/NotebooksApi.md#handle_upload_notebook) | **POST** /v2/notebooks/{namespace}/{array}/upload | 
 *OrganizationApi* | [**add_credential**](docs/OrganizationApi.md#add_credential) | **POST** /v2/credentials/{namespace} | 
 *OrganizationApi* | [**delete_credential**](docs/OrganizationApi.md#delete_credential) | **DELETE** /v2/credentials/{namespace}/{name} | 
 *OrganizationApi* | [**get_credential**](docs/OrganizationApi.md#get_credential) | **GET** /v2/credentials/{namespace}/{name} | 
@@ -173,6 +174,7 @@ Class | Method | HTTP request | Description
  - [MetadataEntry](docs/MetadataEntry.md)
  - [NonEmptyDomain](docs/NonEmptyDomain.md)
  - [NonEmptyDomainList](docs/NonEmptyDomainList.md)
+ - [NotebookUploaded](docs/NotebookUploaded.md)
  - [PaginationMetadata](docs/PaginationMetadata.md)
  - [Query](docs/Query.md)
  - [QueryReader](docs/QueryReader.md)

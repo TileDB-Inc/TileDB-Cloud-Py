@@ -18,7 +18,7 @@ Name | Type | Description | Notes
 **subscriptions** | [**list[Subscription]**](Subscription.md) | list of subscriptions created for this array | [optional] 
 **logo** | **str** | logo (base64 encoded) for the array. Optional | [optional] 
 **access_credentials_name** | **str** | the name of the access credentials to use. if unset, the default credentials will be used | [optional] 
-**type** | **str** | Array type (dense, key-value, sparse) | [optional] 
+**type** | [**ArrayType**](ArrayType.md) |  | [optional] 
 **share_count** | **float** | number of unique namespaces this array is shared with | [optional] 
 **public_share** | **bool** | Suggests if the array was shared to public by owner | [optional] 
 **namespace_subscribed** | **bool** | Depends on the namespace asking, denotes the existence of subscription of namespace to this array | [optional] [readonly] 

@@ -180,15 +180,21 @@ Class | Method | HTTP request | Description
 *OrganizationApi* | [**add_user_to_organization**](docs/OrganizationApi.md#add_user_to_organization) | **POST** /v1/organizations/{organization}/user | 
 *OrganizationApi* | [**check_aws_access_credentials**](docs/OrganizationApi.md#check_aws_access_credentials) | **GET** /v1/credentials/{namespace}/aws | 
 *OrganizationApi* | [**check_aws_access_credentials_by_name**](docs/OrganizationApi.md#check_aws_access_credentials_by_name) | **GET** /v1/credentials/{namespace}/aws/{name} | 
+*OrganizationApi* | [**check_sso_domain**](docs/OrganizationApi.md#check_sso_domain) | **POST** /v1/organizations/{organization}/sso_domains/{uuid}/run_check | 
 *OrganizationApi* | [**create_organization**](docs/OrganizationApi.md#create_organization) | **POST** /v1/organization | 
+*OrganizationApi* | [**create_sso_domain**](docs/OrganizationApi.md#create_sso_domain) | **POST** /v1/organizations/{organization}/sso_domain | 
 *OrganizationApi* | [**delete_aws_access_credentials**](docs/OrganizationApi.md#delete_aws_access_credentials) | **DELETE** /v1/credentials/{namespace}/aws/{name} | 
 *OrganizationApi* | [**delete_organization**](docs/OrganizationApi.md#delete_organization) | **DELETE** /v1/organizations/{organization} | 
+*OrganizationApi* | [**delete_sso_domain**](docs/OrganizationApi.md#delete_sso_domain) | **DELETE** /v1/organizations/{organization}/sso_domains/{uuid} | 
 *OrganizationApi* | [**delete_user_from_organization**](docs/OrganizationApi.md#delete_user_from_organization) | **DELETE** /v1/organizations/{organization}/{username} | 
 *OrganizationApi* | [**get_all_organizations**](docs/OrganizationApi.md#get_all_organizations) | **GET** /v1/organizations | 
 *OrganizationApi* | [**get_organization**](docs/OrganizationApi.md#get_organization) | **GET** /v1/organizations/{organization} | 
 *OrganizationApi* | [**get_organization_user**](docs/OrganizationApi.md#get_organization_user) | **GET** /v1/organizations/{organization}/{username} | 
+*OrganizationApi* | [**get_sso_domain**](docs/OrganizationApi.md#get_sso_domain) | **GET** /v1/organizations/{organization}/sso_domains/{uuid} | 
+*OrganizationApi* | [**get_sso_domains**](docs/OrganizationApi.md#get_sso_domains) | **GET** /v1/organizations/{organization}/sso_domains | 
 *OrganizationApi* | [**update_aws_access_credentials**](docs/OrganizationApi.md#update_aws_access_credentials) | **PATCH** /v1/credentials/{namespace}/aws/{name} | 
 *OrganizationApi* | [**update_organization**](docs/OrganizationApi.md#update_organization) | **PATCH** /v1/organizations/{organization} | 
+*OrganizationApi* | [**update_sso_domain**](docs/OrganizationApi.md#update_sso_domain) | **PATCH** /v1/organizations/{organization}/sso_domains/{uuid} | 
 *OrganizationApi* | [**update_user_in_organization**](docs/OrganizationApi.md#update_user_in_organization) | **PATCH** /v1/organizations/{organization}/{username} | 
 *QueryApi* | [**finalize_query**](docs/QueryApi.md#finalize_query) | **POST** /v1/arrays/{namespace}/{array}/query/finalize | 
 *QueryApi* | [**get_est_result_sizes**](docs/QueryApi.md#get_est_result_sizes) | **POST** /v1/arrays/{namespace}/{array}/query/est_result_sizes | 
@@ -295,6 +301,9 @@ Class | Method | HTTP request | Description
  - [DimensionTileExtent](docs/DimensionTileExtent.md)
  - [Domain](docs/Domain.md)
  - [DomainArray](docs/DomainArray.md)
+ - [DomainCheckResult](docs/DomainCheckResult.md)
+ - [DomainCheckStatus](docs/DomainCheckStatus.md)
+ - [DomainVerificationStatus](docs/DomainVerificationStatus.md)
  - [Error](docs/Error.md)
  - [FileCreate](docs/FileCreate.md)
  - [FileCreated](docs/FileCreated.md)
@@ -327,6 +336,8 @@ Class | Method | HTTP request | Description
  - [GroupRegister](docs/GroupRegister.md)
  - [GroupSharing](docs/GroupSharing.md)
  - [GroupSharingRequest](docs/GroupSharingRequest.md)
+ - [GroupType](docs/GroupType.md)
+ - [GroupTypeMetadataKey](docs/GroupTypeMetadataKey.md)
  - [GroupUpdate](docs/GroupUpdate.md)
  - [InlineObject](docs/InlineObject.md)
  - [InlineResponse200](docs/InlineResponse200.md)
@@ -373,6 +384,9 @@ Class | Method | HTTP request | Description
  - [RetryPolicy](docs/RetryPolicy.md)
  - [RetryStrategy](docs/RetryStrategy.md)
  - [SQLParameters](docs/SQLParameters.md)
+ - [SSODomainConfig](docs/SSODomainConfig.md)
+ - [SSODomainConfigResponse](docs/SSODomainConfigResponse.md)
+ - [SSODomainSetup](docs/SSODomainSetup.md)
  - [SSOProvider](docs/SSOProvider.md)
  - [SingleFragmentInfo](docs/SingleFragmentInfo.md)
  - [StorageLocation](docs/StorageLocation.md)

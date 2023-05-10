@@ -20,6 +20,7 @@ __version__ = "1.0.0"
 from tiledb.cloud._common.api_v2.api.array_api import ArrayApi
 from tiledb.cloud._common.api_v2.api.files_api import FilesApi
 from tiledb.cloud._common.api_v2.api.groups_api import GroupsApi
+from tiledb.cloud._common.api_v2.api.notebooks_api import NotebooksApi
 from tiledb.cloud._common.api_v2.api.organization_api import OrganizationApi
 from tiledb.cloud._common.api_v2.api.query_api import QueryApi
 from tiledb.cloud._common.api_v2.api.user_api import UserApi
@@ -124,6 +125,7 @@ from tiledb.cloud._common.api_v2.models.metadata import Metadata
 from tiledb.cloud._common.api_v2.models.metadata_entry import MetadataEntry
 from tiledb.cloud._common.api_v2.models.non_empty_domain import NonEmptyDomain
 from tiledb.cloud._common.api_v2.models.non_empty_domain_list import NonEmptyDomainList
+from tiledb.cloud._common.api_v2.models.notebook_uploaded import NotebookUploaded
 from tiledb.cloud._common.api_v2.models.pagination_metadata import PaginationMetadata
 from tiledb.cloud._common.api_v2.models.query import Query
 from tiledb.cloud._common.api_v2.models.query_reader import QueryReader

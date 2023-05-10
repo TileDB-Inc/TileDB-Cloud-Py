@@ -227,7 +227,7 @@ class TaskGraph(object):
     def nodes(self):
         """Gets the nodes of this TaskGraph.  # noqa: E501
 
-        The structure of the graph. This is provided by the client when first setting up the task graph.  This must be topographically sorted; that is, each node must appear after all nodes that it depends upon.   # noqa: E501
+        The structure of the graph. This is provided by the client when first setting up the task graph. This must be topographically sorted; that is, each node must appear after all nodes that it depends upon.   # noqa: E501
 
         :return: The nodes of this TaskGraph.  # noqa: E501
         :rtype: list[TaskGraphNode]
@@ -238,7 +238,7 @@ class TaskGraph(object):
     def nodes(self, nodes):
         """Sets the nodes of this TaskGraph.
 
-        The structure of the graph. This is provided by the client when first setting up the task graph.  This must be topographically sorted; that is, each node must appear after all nodes that it depends upon.   # noqa: E501
+        The structure of the graph. This is provided by the client when first setting up the task graph. This must be topographically sorted; that is, each node must appear after all nodes that it depends upon.   # noqa: E501
 
         :param nodes: The nodes of this TaskGraph.  # noqa: E501
         :type: list[TaskGraphNode]

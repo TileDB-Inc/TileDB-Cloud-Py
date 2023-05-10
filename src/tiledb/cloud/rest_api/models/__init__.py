@@ -56,6 +56,11 @@ from tiledb.cloud.rest_api.models.dimension_coordinate import DimensionCoordinat
 from tiledb.cloud.rest_api.models.dimension_tile_extent import DimensionTileExtent
 from tiledb.cloud.rest_api.models.domain import Domain
 from tiledb.cloud.rest_api.models.domain_array import DomainArray
+from tiledb.cloud.rest_api.models.domain_check_result import DomainCheckResult
+from tiledb.cloud.rest_api.models.domain_check_status import DomainCheckStatus
+from tiledb.cloud.rest_api.models.domain_verification_status import (
+    DomainVerificationStatus,
+)
 from tiledb.cloud.rest_api.models.error import Error
 from tiledb.cloud.rest_api.models.file_create import FileCreate
 from tiledb.cloud.rest_api.models.file_created import FileCreated
@@ -92,6 +97,8 @@ from tiledb.cloud.rest_api.models.group_member_type import GroupMemberType
 from tiledb.cloud.rest_api.models.group_register import GroupRegister
 from tiledb.cloud.rest_api.models.group_sharing import GroupSharing
 from tiledb.cloud.rest_api.models.group_sharing_request import GroupSharingRequest
+from tiledb.cloud.rest_api.models.group_type import GroupType
+from tiledb.cloud.rest_api.models.group_type_metadata_key import GroupTypeMetadataKey
 from tiledb.cloud.rest_api.models.group_update import GroupUpdate
 from tiledb.cloud.rest_api.models.inline_object import InlineObject
 from tiledb.cloud.rest_api.models.inline_response200 import InlineResponse200
@@ -145,6 +152,11 @@ from tiledb.cloud.rest_api.models.retry_policy import RetryPolicy
 from tiledb.cloud.rest_api.models.retry_strategy import RetryStrategy
 from tiledb.cloud.rest_api.models.single_fragment_info import SingleFragmentInfo
 from tiledb.cloud.rest_api.models.sql_parameters import SQLParameters
+from tiledb.cloud.rest_api.models.sso_domain_config import SSODomainConfig
+from tiledb.cloud.rest_api.models.sso_domain_config_response import (
+    SSODomainConfigResponse,
+)
+from tiledb.cloud.rest_api.models.sso_domain_setup import SSODomainSetup
 from tiledb.cloud.rest_api.models.sso_provider import SSOProvider
 from tiledb.cloud.rest_api.models.storage_location import StorageLocation
 from tiledb.cloud.rest_api.models.subarray import Subarray
