@@ -1,7 +1,6 @@
 import math
 import os
-from functools import partial
-from typing import Any, Iterator, Mapping, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
 from tiledb.cloud._common.utils import logger
@@ -113,6 +112,12 @@ def ingest(
 
     graph.compute()
     return graph
+
+
+def ingest_udf(*args: Any, **kwargs: Any) -> Dict[str, str]:
+    """Ingestor wrapper function that can be used as a UDF."""
+    grf = ingest(*args, **kwargs)
+    return {"status": "started", "graph_id": str(grf.server_graph_uuid)}
 
 
 def get_uris(source: Sequence[str], output_dir: str, config: Mapping[str, Any]):
