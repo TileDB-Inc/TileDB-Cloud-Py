@@ -1144,7 +1144,7 @@ class DAG:
                         namespace=self.namespace, id=submission.uuid
                     )
                     self.server_graph_uuid = execution.uuid
-                except rest_api.ApiException as apix:
+                except rest_api.ApiException:
                     raise
                 self._update_batch_status_thread = threading.Thread(
                     name=f"dag-{self.name}-update-status",
@@ -1206,7 +1206,7 @@ class DAG:
                 self.report_node_status_change(node, Status.NOT_STARTED)
 
             if self._status is Status.CANCELLED or self._status is Status.FAILED:
-                execution = client.build(
+                client.build(
                     rest_api.TaskGraphLogsApi
                 ).retry_task_graph_execution(
                     namespace=self.namespace,
@@ -1632,7 +1632,7 @@ class DAG:
                 ).get_task_graph_log(
                     namespace=self.namespace, id=self.server_graph_uuid
                 )
-            except rest_api.ApiException as apix:
+            except rest_api.ApiException:
                 raise
             else:
                 for new_node in result.nodes:

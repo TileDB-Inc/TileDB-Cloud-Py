@@ -14,7 +14,6 @@ from typing import Any
 import cloudpickle
 import numpy as np
 import pandas as pd
-import pytest
 
 import tiledb.cloud
 from tiledb.cloud import client
@@ -212,7 +211,8 @@ class DAGClassTest(unittest.TestCase):
 
         node_1 = d.add_node(np.median, [1, 2, 3])
         node_1.name = "multi_node_1"
-        l = lambda x: x * 2
+        def l(x):
+            return x * 2
         node_2 = d.add_node(l, node_1)
         node_2.name = "multi_node_2"
         node_3 = d.add_node(l, node_2)
@@ -294,7 +294,8 @@ class DAGClassTest(unittest.TestCase):
 
         node_1 = d.add_node(np.median, [1, 2, 3])
         node_1.name = "multi_node_1"
-        l = lambda x: x * 2
+        def l(x):
+            return x * 2
         node_2 = d.add_node(l, node_1)
         node_2.name = "multi_node_2"
         node_3 = d.add_node(l, node_2)
@@ -710,7 +711,7 @@ class DAGBatchModeTest(unittest.TestCase):
                 retry_policy="Always",
             ),
         )
-        node = d.submit(
+        d.submit(
             random_failure,
             name="node",
             resources={"cpu": "1", "memory": "500Mi"},

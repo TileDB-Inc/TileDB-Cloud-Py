@@ -1,4 +1,3 @@
-from tiledb.cloud.sql.db_api_exceptions import NotSupportedError
 from tiledb.cloud.sql.tiledb_cursor import Cursor
 
 
