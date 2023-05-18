@@ -1,5 +1,4 @@
 import operator
-import sys
 import unittest
 import uuid
 from unittest import mock

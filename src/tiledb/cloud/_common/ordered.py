@@ -1,9 +1,8 @@
 """Implementations of Python sets that remember their order."""
 
 from typing import AbstractSet as _AbstractSet
-from typing import Iterable, Iterator
+from typing import Iterable, Iterator, TypeVar
 from typing import MutableSet as _MutableSet
-from typing import TypeVar
 
 _T = TypeVar("_T")
 _T_co = TypeVar("_T_co", covariant=True)

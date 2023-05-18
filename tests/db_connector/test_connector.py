@@ -1,4 +1,3 @@
-import os
 import unittest
 
 from tiledb.cloud.sql.tiledb_connection import TileDBConnection

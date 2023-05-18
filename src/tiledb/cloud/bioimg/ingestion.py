@@ -87,7 +87,7 @@ def ingest(
     dag_name = "batch-ingest-bioimg" if taskgraph_name is None else taskgraph_name
     task_prefix = f"{dag_name}  - Batch Task"
 
-    logger.info(f"Building graph")
+    logger.info("Building graph")
     graph = tiledb.cloud.dag.DAG(
         name=dag_name,
         mode=tiledb.cloud.dag.Mode.BATCH,
