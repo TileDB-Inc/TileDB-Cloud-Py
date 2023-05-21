@@ -1878,6 +1878,7 @@ def _topo_sort(
     output.reverse()
     return output
 
+
 def _topo_sort_nodes(
     by_uuid: Dict[uuid.UUID, Node],
 ) -> Sequence[Node]:
@@ -1891,8 +1892,7 @@ def _topo_sort_nodes(
         for dep_id in node.parents:
             if dep_id not in by_uuid:
                 raise ValueError(
-                    f"Node {node.id!r} depends upon"
-                    f" non-existent node {dep_id!r}"
+                    f"Node {node.id!r} depends upon" f" non-existent node {dep_id!r}"
                 )
             in_degrees[dep_id] += 1
     output: List[Node] = []
@@ -1914,6 +1914,7 @@ def _topo_sort_nodes(
         raise ValueError(f"The task graph contains a cycle involving {participating}")
     output.reverse()
     return output
+
 
 def array_task_status_to_status(status: models.ArrayTaskStatus) -> Status:
     return _ARRAY_TASK_STATUS_TO_STATUS_MAP.get(status, Status.NOT_STARTED)
