@@ -1494,12 +1494,10 @@ class DAG:
         Builds the batch taskgraph model for submission
         """
 
-        # nodes = self._deps.topo_sorted
         # We need to guarantee that the existing node names are maintained.
-        # existing_names = set(self._by_name)
-        # node_jsons = [n.to_registration_json(existing_names) for n in nodes]
+        topo_sorted_nodes = _topo_sort_nodes(self.nodes)
         node_jsons = []
-        for node_uuid, node in self.nodes.items():
+        for node in topo_sorted_nodes:
             kwargs = {}
             if callable(node.args[0]):
                 kwargs["executable_code"] = _codec.b64_str(_codec.pickle(node.args[0]))
@@ -1880,6 +1878,42 @@ def _topo_sort(
     output.reverse()
     return output
 
+def _topo_sort_nodes(
+    by_uuid: Dict[uuid.UUID, Node],
+) -> Sequence[Node]:
+    """Topologically sorts the list of nodes."""
+    in_degrees: Counter[str] = collections.Counter()
+    # We reverse the input list so that when we reverse the output,
+    # it's in an order kind of close to what we were given.
+    for node in reversed(by_uuid.values()):
+        # Ensure that we have an entry in the counter even for root nodes.
+        in_degrees[node.id] += 0
+        for dep_id in node.parents:
+            if dep_id not in by_uuid:
+                raise ValueError(
+                    f"Node {node.id!r} depends upon"
+                    f" non-existent node {dep_id!r}"
+                )
+            in_degrees[dep_id] += 1
+    output: List[Node] = []
+    queue: Deque[str] = collections.deque()
+    for uid, degree in in_degrees.items():
+        if degree == 0:
+            queue.append(uid)
+
+    while queue:
+        nid = queue.popleft()
+        node = by_uuid[nid]
+        for dep_id in node.parents:
+            in_degrees[dep_id] -= 1
+            if in_degrees[dep_id] == 0:
+                queue.append(dep_id)
+        output.append(node)
+    if sum(in_degrees.values()):
+        participating = [uid for (uid, deg) in in_degrees.items() if deg]
+        raise ValueError(f"The task graph contains a cycle involving {participating}")
+    output.reverse()
+    return output
 
 def array_task_status_to_status(status: models.ArrayTaskStatus) -> Status:
     return _ARRAY_TASK_STATUS_TO_STATUS_MAP.get(status, Status.NOT_STARTED)
