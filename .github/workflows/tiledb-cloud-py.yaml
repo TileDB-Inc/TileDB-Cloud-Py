@@ -138,9 +138,9 @@ jobs:
 
       - name: Build wheel
         run: |
-          pip install --upgrade pip wheel setuptools setuptools-scm
+          pip install --upgrade pip build wheel setuptools setuptools-scm
           pip install -r requirements-py3.7.txt
-          python setup.py bdist_wheel -d dist
+          python -m build
 
       - name: Publish to PyPI
         if: ${{ github.event_name == 'release' }}
@@ -152,9 +152,9 @@ jobs:
       - name: Publish to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          repository_url: https://test.pypi.org/legacy/
+          repository-url: https://test.pypi.org/legacy/
           user: __token__
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
           # It's OK if this fails due to an already-existing file,
           # if the test publish was run more than once for a revision.
-          skip_existing: true
+          skip-existing: true
