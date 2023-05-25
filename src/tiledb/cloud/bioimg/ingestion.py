@@ -1,8 +1,9 @@
-import math
 import os
-from typing import Any, Dict, Iterator, Mapping, Optional, Sequence, Tuple, Union
+import posixpath
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
+from tiledb.cloud import dag
 from tiledb.cloud._common.utils import logger
 
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
@@ -20,7 +21,7 @@ def ingest(
     resources: Optional[Mapping[str, Any]] = None,
     namespace: Optional[str],
     **kwargs,
-) -> tiledb.cloud.dag.DAG:
+) -> dag.DAG:
     """The function ingests microscopy images into TileDB arrays
 
     :param source: uri / iterable of uris of input files
@@ -34,9 +35,37 @@ def ingest(
         defaults to None
     :param namespace: The namespace where the DAG will run
     """
+    source_list = [source] if isinstance(source, str) else list(source)
+    max_workers = None if num_batches else 20  # Default picked heuristically.
+
+    def build_io_uris() -> List[Tuple[str, str]]:
+        """Match input uri/s with output destinations
+
+        :param source: A sequence of paths or path to input
+        :param output_dir: A path to the output directory
+        """
+        vfs = tiledb.VFS(config=config)
+        my_source_list = source_list
+        if len(my_source_list) == 1 and vfs.is_dir(my_source_list[0]):
+            # Folder like input
+            my_source_list = vfs.ls(my_source_list[0])
+        return [
+            (uri, os.path.join(output, posixpath.basename(uri)))
+            for uri in my_source_list
+        ]
+
+    def build_input_batches():
+        """Groups input URIs into batches."""
+        uri_pairs = build_io_uris()
+        # If the user didn't specify a number of batches, run every import
+        # as its own task.
+        my_num_batches = num_batches or len(uri_pairs)
+        # If they specified too many batches, don't create empty tasks.
+        my_num_batches = min(len(uri_pairs), my_num_batches)
+        return [uri_pairs[n::my_num_batches] for n in range(my_num_batches)]
 
     def ingest_tiff_udf(
-        io_uris: Sequence[Tuple],
+        io_uris: Sequence[Tuple[str, str]],
         config: Mapping[str, Any],
         workers: int,
         *args: Any,
@@ -62,57 +91,37 @@ def ingest(
                         src, output, *args, max_workers=workers, chunked=True, **kwargs
                     )
 
-    if isinstance(source, str):
-        # Handle only lists
-        source = [source]
-
     # Calculate number batches - default fair split
 
-    def batch(iterable, chunks):
-        length = len(iterable)
-        for ndx in range(0, length, chunks):
-            yield iterable[ndx : min(ndx + chunks, length)]
-
-    # If num_batches is default create number of images nodes
-    # constraint node max_workers to 20 fully heuristic
-    if num_batches is None:
-        num_batches = len(source)
-        batch_size = 1
-        max_workers = 20
-    else:
-        batch_size = math.ceil(len(source) / num_batches)
-        max_workers = None
-
-    # Get the list of all BioImg samples input/out
-    samples = get_uris(source, output, config)
-
     # Build the task graph
-    dag_name = "batch-ingest-bioimg" if taskgraph_name is None else taskgraph_name
-    task_prefix = f"{dag_name}  - Batch Task"
+    dag_name = taskgraph_name or "batch-ingest-bioimg"
 
     logger.info("Building graph")
-    graph = tiledb.cloud.dag.DAG(
+    graph = dag.DAG(
         name=dag_name,
-        mode=tiledb.cloud.dag.Mode.BATCH,
+        mode=dag.Mode.BATCH,
         max_workers=max_workers,
         namespace=namespace,
     )
-
-    for i, work in enumerate(batch(samples, batch_size)):
-        logger.info(f"Adding batch {i}")
-        graph.submit(
-            ingest_tiff_udf,
-            work,
-            config,
-            threads,
-            *args,
-            name=f"{task_prefix} - {i}/{num_batches}",
-            mode=tiledb.cloud.dag.Mode.BATCH,
-            resources=DEFAULT_RESOURCES if resources is None else resources,
-            image_name=DEFAULT_IMG_NAME,
-            **kwargs,
-        )
-
+    # The lister doesn't need many resources.
+    input_list_node = graph.submit(
+        build_input_batches,
+        access_credentials_name=kwargs.get("access_credentials_name"),
+        name=f"{dag_name} input collector",
+        result_format="json",
+    )
+    graph.submit(
+        ingest_tiff_udf,
+        input_list_node,
+        config,
+        threads,
+        *args,
+        name=f"{dag_name} ingestor",
+        expand_node_output=input_list_node,
+        resources=DEFAULT_RESOURCES if resources is None else resources,
+        image_name=DEFAULT_IMG_NAME,
+        **kwargs,
+    )
     graph.compute()
     return graph
 
@@ -121,26 +130,3 @@ def ingest_udf(*args: Any, **kwargs: Any) -> Dict[str, str]:
     """Ingestor wrapper function that can be used as a UDF."""
     grf = ingest(*args, **kwargs)
     return {"status": "started", "graph_id": str(grf.server_graph_uuid)}
-
-
-def get_uris(source: Sequence[str], output_dir: str, config: Mapping[str, Any]):
-    """Match input uri/s with output destinations
-
-    :param source: A sequence of paths or path to input
-    :param output_dir: A path to the output directory
-    """
-    vfs = tiledb.VFS(config=config)
-
-    def create_output_path(input_file, output_dir) -> str:
-        return os.path.join(output_dir, os.path.basename(input_file) + ".tdb")
-
-    def iter_paths(sequence) -> Iterator[Tuple]:
-        for uri in sequence:
-            yield uri, create_output_path(uri, output_dir)
-
-    if len(source) == 1 and vfs.is_dir(source[0]):
-        # Folder like input
-        return tuple(iter_paths(vfs.ls(source[0])))
-    elif isinstance(source, Sequence):
-        # List of input uris - single file is one element list
-        return tuple(iter_paths(source))
