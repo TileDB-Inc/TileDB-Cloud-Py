@@ -48,6 +48,7 @@ def ingest(
         :param io_uris: Pairs of tiff input - output tdb uris
         :param config: dict configuration to pass on tiledb.VFS
         :param workers: Number of threads that will spawn for parallelizing ingestion
+        :param access_credentials_name: The registered access key to REST server.
         """
 
         from tiledb.bioimg.converters.ome_tiff import OMETiffConverter
@@ -82,6 +83,12 @@ def ingest(
     else:
         batch_size = math.ceil(len(source) / num_batches)
         max_workers = None
+
+    # Allow access_credential_name to be passed as a kwarg
+    # Prioritize kwarg (if exists) over config
+    kwarg_cred_name = kwargs.get("access_credentials_name", None)
+    if kwarg_cred_name:
+        config["rest.creation_access_credentials_name"] = kwarg_cred_name
 
     # Get the list of all BioImg samples input/out
     samples = get_uris(source, output, config)
