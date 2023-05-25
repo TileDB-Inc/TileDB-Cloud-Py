@@ -1,9 +1,15 @@
+import base64
 import os
 import posixpath
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple, Union
 
+import cloudpickle
+
 import tiledb
+from tiledb.cloud import client
 from tiledb.cloud import dag
+from tiledb.cloud import rest_api
+from tiledb.cloud._common import functions
 from tiledb.cloud._common.utils import logger
 
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
@@ -129,3 +135,53 @@ def ingest_udf(*args: Any, **kwargs: Any) -> Dict[str, str]:
     """Ingestor wrapper function that can be used as a UDF."""
     grf = ingest(*args, **kwargs)
     return {"status": "started", "graph_id": str(grf.server_graph_uuid)}
+
+
+### TEST ONLY STUFF DOWN HERE ###
+
+# Test only: rebind `ingest` name so it is pickled by value in `ingest_udf`.
+ingest = functions.to_register_by_value(ingest)
+
+
+def xxx_test_ingestion(
+    *,
+    source: str,
+    source_credentials_name: Optional[str] = None,
+    destination: str,
+    destination_credentials_name: Optional[str] = None,
+    minimum_level: int = 0,
+) -> object:
+    me = client.default_charged_namespace()
+    config: Dict[str, object] = {}
+    if destination_credentials_name:
+        config["rest.creation_access_credentials_name"] = destination_credentials_name
+    args_json = [
+        dict(name="source", value=source),
+        dict(name="access_credentials_name", value=source_credentials_name),
+        dict(name="output", value=destination),
+        dict(name="level_min", value=minimum_level),
+        dict(name="config", value=config),
+        dict(name="namespace", value=me),
+    ]
+    if destination_credentials_name:
+        args_json.append(
+            dict(
+                name="destination_credentials_name", value=destination_credentials_name
+            ),
+        )
+    request = dict(
+        exec=base64.b64encode(
+            cloudpickle.dumps(functions.to_register_by_value(ingest_udf))
+        ).decode("utf-8"),
+        exec_raw="test version of ingest function",
+        arguments_json=args_json,
+        language="python",
+        version="3.9",
+    )
+    api_instance = client.build(rest_api.UdfApi)
+    a_filename_for_some_reason = api_instance.submit_generic_udf(
+        namespace=me,
+        udf=request,
+    )
+    with open(a_filename_for_some_reason) as a_file_for_some_reason:
+        return a_file_for_some_reason.read()
