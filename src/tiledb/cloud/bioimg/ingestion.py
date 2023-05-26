@@ -44,7 +44,7 @@ def ingest(
         :param source: A sequence of paths or path to input
         :param output_dir: A path to the output directory
         """
-        vfs = tiledb.VFS(config=config)
+        vfs = tiledb.VFS()
         my_source_list = source_list
         if len(my_source_list) == 1 and vfs.is_dir(my_source_list[0]):
             # Folder like input
@@ -81,12 +81,11 @@ def ingest(
 
         from tiledb.bioimg.converters.ome_tiff import OMETiffConverter
 
-        conf = tiledb.Config(params=config)
-        vfs = tiledb.VFS(config=conf)
-
-        with tiledb.scope_ctx(ctx_or_config=conf):
-            for input, output in io_uris:
-                with vfs.open(input) as src:
+        write_context = tiledb.Ctx(config)
+        vfs = tiledb.VFS()
+        for input, output in io_uris:
+            with vfs.open(input) as src:
+                with tiledb.scope_ctx(write_context):
                     OMETiffConverter.to_tiledb(
                         src, output, *args, max_workers=workers, chunked=True, **kwargs
                     )
