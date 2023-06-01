@@ -61,10 +61,6 @@ class ParamFormat(enum.Enum):
     """
 
 
-_Self = TypeVar("_Self", bound="Node")
-"""Type for self-annotations where needed"""
-
-
 class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
     """Base class for Nodes to be executed locally.
 
