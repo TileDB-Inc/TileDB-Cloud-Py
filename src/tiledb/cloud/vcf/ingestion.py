@@ -979,7 +979,8 @@ def ingest_samples_dag(
     if not local_ingest:
         logger.info(
             "Batch ingestion submitted -"
-            " https://cloud.tiledb.com/activity/taskgraphs/%s",
+            " https://cloud.tiledb.com/activity/taskgraphs/%s/%s",
+            graph.namespace,
             graph.server_graph_uuid,
         )
 
