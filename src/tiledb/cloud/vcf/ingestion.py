@@ -688,6 +688,7 @@ def ingest_manifest_dag(
     extra_attrs: Optional[Union[Sequence[str], str]] = None,
     vcf_attrs: Optional[str] = None,
     verbose: bool = False,
+    access_credential_name: Optional[str],
 ) -> None:
     """
     Create a DAG to load the manifest array.
@@ -705,6 +706,7 @@ def ingest_manifest_dag(
     :param extra_attrs: INFO/FORMAT fields to materialize, defaults to None
     :param vcf_attrs: VCF with all INFO/FORMAT fields to materialize, defaults to None
     :param verbose: verbose logging, defaults to False
+    :param access_credential_name: name of role in TileDB Cloud to use in tasks
     """
 
     logger = get_logger()
@@ -712,7 +714,7 @@ def ingest_manifest_dag(
     graph = dag.DAG(
         name="vcf-filter-uris",
         namespace=namespace,
-        mode=dag.Mode.REALTIME,
+        mode=dag.Mode.BATCH,
     )
     submit = graph.submit_local if local_ingest else graph.submit
 
@@ -724,6 +726,7 @@ def ingest_manifest_dag(
         vcf_attrs=vcf_attrs,
         verbose=verbose,
         name="Create VCF dataset ",
+        access_credential_name=access_credential_name
     )
 
     if sample_list_uri:
@@ -735,6 +738,7 @@ def ingest_manifest_dag(
             max_files=max_files,
             verbose=verbose,
             name="Read VCF URIs ",
+            access_credential_name=access_credential_name,
         )
 
     if search_uri:
@@ -748,6 +752,7 @@ def ingest_manifest_dag(
             max_files=max_files,
             verbose=verbose,
             name="Find VCF URIs ",
+            access_credential_name=access_credential_name,
         )
 
     sample_uris = submit(
@@ -757,6 +762,7 @@ def ingest_manifest_dag(
         config=config,
         verbose=verbose,
         name="Filter VCF URIs ",
+        access_credential_name=access_credential_name,
     )
 
     run_dag(graph)
@@ -772,7 +778,7 @@ def ingest_manifest_dag(
     graph = dag.DAG(
         name="vcf-ingest-manifest",
         namespace=namespace,
-        mode=dag.Mode.REALTIME,
+        mode=dag.Mode.BATCH,
         max_workers=workers,
     )
     submit = graph.submit_local if local_ingest else graph.submit
@@ -802,6 +808,7 @@ def ingest_manifest_dag(
                 id=f"manifest-consol-{i//workers}",
                 verbose=verbose,
                 name=f"Consolidate VCF Manifest {i//workers + 1}/{num_consolidates} ",
+                access_credential_name=access_credential_name,
             )
 
         ingest = submit(
@@ -812,6 +819,7 @@ def ingest_manifest_dag(
             verbose=verbose,
             id=f"manifest-ingest-{i}",
             name=f"Ingest VCF Manifest {i+1}/{num_partitions} ",
+            access_credential_name=access_credential_name,
         )
         if prev_consolidate:
             ingest.depends_on(prev_consolidate)
@@ -836,6 +844,7 @@ def ingest_samples_dag(
     ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     trace_id: Optional[str] = None,
+    access_credential_name: Optional[str],
 ) -> None:
     """
     Create a DAG to ingest samples into the dataset.
@@ -853,6 +862,7 @@ def ingest_samples_dag(
     :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
     :param trace_id: trace ID for logging, defaults to None
+    :param access_credential_name: name of role in TileDB Cloud to use in tasks
     """
 
     logger = setup(config, verbose)
@@ -860,7 +870,7 @@ def ingest_samples_dag(
     graph = dag.DAG(
         name="vcf-filter-samples",
         namespace=namespace,
-        mode=dag.Mode.REALTIME,
+        mode=dag.Mode.BATCH,
     )
     submit = graph.submit_local if local_ingest else graph.submit
 
@@ -872,6 +882,7 @@ def ingest_samples_dag(
         config=config,
         verbose=verbose,
         name="Filter VCF samples",
+        access_credential_name=access_credential_name,
     )
 
     run_dag(graph)
@@ -947,6 +958,7 @@ def ingest_samples_dag(
                 verbose=verbose,
                 resources=consolidate_resources,
                 name=f"Consolidate VCF {i//workers + 1}/{num_consolidates} ",
+                access_credential_name=access_credential_name,
             )
 
         ingest = submit(
@@ -966,6 +978,7 @@ def ingest_samples_dag(
             trace_id=trace_id,
             resources=ingest_resources,
             name=f"Ingest VCF {i+1}/{num_partitions} ",
+            access_credential_name=access_credential_name,
         )
 
         if prev_consolidate:
@@ -1011,6 +1024,7 @@ def ingest(
     ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     trace_id: Optional[str] = None,
+    access_credential_name: Optional[str],
 ) -> None:
     """
     Ingest samples into a dataset.
@@ -1072,6 +1086,7 @@ def ingest(
         extra_attrs=extra_attrs,
         vcf_attrs=vcf_attrs,
         verbose=verbose,
+        access_credential_name=access_credential_name,
     )
 
     # Ingest VCFs using URIs in the manifest
@@ -1087,4 +1102,5 @@ def ingest(
         ingest_resources=ingest_resources,
         verbose=verbose,
         trace_id=trace_id,
+        access_credential_name=access_credential_name,
     )
