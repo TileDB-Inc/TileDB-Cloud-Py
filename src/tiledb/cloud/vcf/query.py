@@ -303,7 +303,7 @@ def build_read_dag(
                     log_uri=log_uri,
                     log_id=f"query-reg{region}-sam{sample}",
                     name=f"VCF Query - Region {region+1}/{num_region_partitions},"
-                    " Sample {sample+1}/{num_sample_partitions}",
+                    f" Sample {sample+1}/{num_sample_partitions}",
                     resource_class=resource_class,
                     result_format=tiledb.cloud.UDFResultType.ARROW,
                 )
