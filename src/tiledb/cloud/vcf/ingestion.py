@@ -836,7 +836,7 @@ def ingest_samples_dag(
     ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     trace_id: Optional[str] = None,
-) -> None:
+) -> dag.DAG:
     """
     Create a DAG to ingest samples into the dataset.
 
@@ -853,6 +853,7 @@ def ingest_samples_dag(
     :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
     :param trace_id: trace ID for logging, defaults to None
+    :return: sample ingestion DAG for visualization
     """
 
     logger = setup(config, verbose)
@@ -984,6 +985,8 @@ def ingest_samples_dag(
             graph.server_graph_uuid,
         )
 
+    return graph
+
 
 # --------------------------------------------------------------------
 # User functions
@@ -1012,7 +1015,7 @@ def ingest(
     ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     trace_id: Optional[str] = None,
-) -> None:
+) -> dag.DAG:
     """
     Ingest samples into a dataset.
 
@@ -1043,6 +1046,7 @@ def ingest(
     :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
     :param trace_id: trace ID for logging, defaults to None
+    :return: sample ingestion DAG for visualization
     """
 
     # Validate user input
@@ -1076,7 +1080,7 @@ def ingest(
     )
 
     # Ingest VCFs using URIs in the manifest
-    ingest_samples_dag(
+    return ingest_samples_dag(
         dataset_uri,
         config=config,
         namespace=namespace,
