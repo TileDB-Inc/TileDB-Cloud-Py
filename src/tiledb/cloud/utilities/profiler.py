@@ -61,6 +61,9 @@ def write_log_event(
     """
     Write an event to the log array.
 
+    When writing large amounts of data, store the data in the `extra` parameter
+    to improve query performance when the `extra` data is not needed.
+
     :param uri: array URI
     :param id: event id
     :param op: event operation, defaults to ""
@@ -199,6 +202,9 @@ class Profiler(object):
     def write(self, op: str = "", data: str = "", extra: str = "") -> None:
         """
         Write an event to the log array.
+
+        When writing large amounts of data, store the data in the `extra` parameter
+        to improve query performance when the `extra` data is not needed.
 
         :param op: event op, defaults to ""
         :param data: event data, defaults to ""

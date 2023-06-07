@@ -1,15 +1,18 @@
 import enum
 import logging
+from multiprocessing.pool import ThreadPool
+
 import subprocess
 import sys
 from collections import defaultdict
 from math import ceil
-from typing import Any, Mapping, Optional, Sequence, Union
+from typing import Any, Mapping, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
 import tiledb
 from tiledb.cloud import dag
+from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import create_log_array
 from tiledb.cloud.utilities import get_logger
@@ -17,6 +20,31 @@ from tiledb.cloud.utilities import read_file
 from tiledb.cloud.utilities import run_dag
 from tiledb.cloud.utilities import set_aws_context
 from tiledb.cloud.utilities import write_log_event
+
+if True:
+    # Bring code into scope for testing on TileDB Cloud
+    import importlib, os
+
+    path = os.path.dirname(importlib.import_module("tiledb.cloud").__file__)
+    files = [f"{path}/vcf/utils.py", f"{path}/utilities/_common.py"]
+    for file in files:
+        with open(file) as f:
+            exec(compile(f.read(), file, "exec"))
+else:
+    from tiledb.cloud.utilities import Profiler
+    from tiledb.cloud.utilities import create_log_array
+    from tiledb.cloud.utilities import get_logger
+    from tiledb.cloud.utilities import read_file
+    from tiledb.cloud.utilities import run_dag
+    from tiledb.cloud.utilities import set_aws_context
+    from tiledb.cloud.utilities import write_log_event
+    from .utils import (
+        create_index_file,
+        find_index,
+        get_sample_name,
+        get_record_count,
+        is_bgzipped,
+    )
 
 # Testing hooks
 local_ingest = False
@@ -29,16 +57,24 @@ MANIFEST_ARRAY = "manifest"
 DEFAULT_ATTRIBUTES = ["fmt_GT"]
 
 # Default values for ingestion parameters
-MANIFEST_BATCH_SIZE = 100
-MANIFEST_WORKERS = 20
+MANIFEST_BATCH_SIZE = 200
+MANIFEST_WORKERS = 40
 VCF_BATCH_SIZE = 10
 VCF_WORKERS = 40
 VCF_THREADS = 8
-VCF_HEADER_MB = 25  # memory per sample per thread
+VCF_HEADER_MB = 50  # memory per sample per thread
 
 # Consolidation task resources
-CONSOLIDATE_CPUS = 4
-CONSOLIDATE_MEMORY_MB = 4096
+CONSOLIDATE_RESOURCES = {
+    "cpu": "4",
+    "memory": "16Gi",
+}
+
+# Load manifest task resources
+MANIFEST_RESOURCES = {
+    "cpu": "1",
+    "memory": "1Gi",
+}
 
 
 class Contigs(enum.Enum):
@@ -149,6 +185,7 @@ def create_dataset_udf(
     config: Optional[Mapping[str, Any]] = None,
     extra_attrs: Optional[Union[Sequence[str], str]] = None,
     vcf_attrs: Optional[str] = None,
+    anchor_gap: Optional[int] = None,
     verbose: bool = False,
 ) -> str:
     """
@@ -158,6 +195,7 @@ def create_dataset_udf(
     :param config: config dictionary, defaults to None
     :param extra_attrs: INFO/FORMAT fields to materialize, defaults to None
     :param vcf_attrs: VCF with all INFO/FORMAT fields to materialize, defaults to None
+    :param anchor_gap: anchor gap for VCF dataset, defaults to None
     :param verbose: verbose logging, defaults to False
     :return: dataset URI
     """
@@ -184,6 +222,7 @@ def create_dataset_udf(
             enable_variant_stats=True,
             extra_attrs=extra_attrs,
             vcf_attrs=vcf_attrs,
+            anchor_gap=anchor_gap,
         )
 
         # Create log array and add it to the dataset group
@@ -396,7 +435,9 @@ def filter_samples_udf(
         manifest_uri = group[MANIFEST_ARRAY].uri
 
         with tiledb.open(manifest_uri) as A:
-            manifest_df = A.query(cond="status == 'ok'").df[:]
+            manifest_df = A.query(
+                cond="status == 'ok' or status == 'missing index'"
+            ).df[:]
 
         # Sort manifest by sample_name
         manifest_df = manifest_df.sort_values(by=["sample_name"])
@@ -447,60 +488,6 @@ def ingest_manifest_udf(
             except Exception:
                 return 0
 
-        def find_index(vcf: str) -> str:
-            for ext in ["tbi", "csi"]:
-                index = f"{vcf}.{ext}"
-                if vfs.is_file(index):
-                    return index
-            return ""
-
-        def get_sample_name(vcf: str) -> str:
-            # TODO: use this when bcftools works with S3
-            if False:
-                sample = subprocess.run(
-                    ["bcftools", "query", "-l", vcf],
-                    capture_output=True,
-                    text=True,
-                ).stdout.strip()
-
-            else:
-                aws_process = subprocess.Popen(
-                    ["aws", "s3", "cp", "--quiet", vcf_uri, "-"],
-                    stdout=subprocess.PIPE,
-                    stderr=sys.stdout,
-                )
-
-                bcftools_process = subprocess.Popen(
-                    ["bcftools", "query", "-l"],
-                    stdin=aws_process.stdout,
-                    stdout=subprocess.PIPE,
-                    stderr=sys.stdout,
-                    text=True,
-                )
-
-                sample = bcftools_process.communicate()[0].strip()
-                aws_process.kill()
-
-            return sample
-
-        def get_records(vcf: str) -> int:
-            # TODO: remove when bcftools index -n works with S3
-            return 0
-
-            cmd = ["bcftools", "index", "-n", vcf]
-            res = subprocess.run(cmd, capture_output=True, text=True)
-            # If there is an error, this means there was a problem reading the
-            # index file or the index file is an old format that does not
-            # contain the required metadata. In either case, return 0 to
-            # indicate a problem with the index that needs to be addressed
-            # before ingesting the sample.
-            if res.stderr:
-                print(res.stderr)
-                return 0
-            records = int(res.stdout)
-
-            return records
-
         with tiledb.open(manifest_uri, "w") as A:
             keys = []
             values = defaultdict(list)
@@ -508,26 +495,33 @@ def ingest_manifest_udf(
             for vcf_uri in sample_uris:
                 status = "ok"
 
-                # Handle sample name errors
+                # Check for sample name issues
                 sample_name = get_sample_name(vcf_uri)
                 if not sample_name:
                     status = "missing sample name"
                 elif len(sample_name.split()) > 1:
                     status = "multiple samples"
                 elif sample_name in keys:
+                    # TODO: check for duplicate sample names across all ingest_manifest_udf calls
                     status = "duplicate sample name"
+                    # Generate a unique sample name for the manifest
+                    sample_name_base = sample_name
+                    i = 0
+                    while sample_name in keys:
+                        sample_name = f"{sample_name_base}-dup{i}"
+                        i += 1
 
-                # Handle index errors
+                # Check for index issues
                 index_uri = find_index(vcf_uri)
                 if not index_uri:
                     status = "" if status == "ok" else status + ","
                     status += "missing index"
-
-                records = get_records(vcf_uri)
-
-                # TODO: remove False when bcftools index -n works with S3
-                if False and records == 0:
-                    status = "old index format"
+                    records = 0
+                else:
+                    records = get_record_count(vcf_uri, index_uri)
+                    if records == 0:
+                        status = "" if status == "ok" else status + ","
+                        status += "bad index"
 
                 keys.append(sample_name)
                 values["status"].append(status)
@@ -552,7 +546,7 @@ def ingest_samples_udf(
     contig_mode: str = "all",
     contigs_to_keep_separate: Optional[Sequence[str]] = None,
     contig_fragment_merging: bool = True,
-    resume: bool = False,
+    resume: bool = True,
     id: str = "samples",
     verbose: bool = False,
     trace_id: Optional[str] = None,
@@ -569,7 +563,7 @@ def ingest_samples_udf(
     :param contig_mode: ingestion mode, defaults to "all"
     :param contigs_to_keep_separate: list of contigs to keep separate, defaults to None
     :param contig_fragment_merging: enable contig fragment merging, defaults to True
-    :param resume: enable resume ingestion mode, defaults to False
+    :param resume: enable resume ingestion mode, defaults to True
     :param id: profiler event id, defaults to "samples"
     :param verbose: verbose logging, defaults to False
     :param trace_id: trace ID for logging, defaults to None
@@ -584,7 +578,26 @@ def ingest_samples_udf(
     with Profiler(
         group_uri=dataset_uri, group_member=LOG_ARRAY, id=id, trace=trace
     ) as prof:
-        prof.write("uris", ",".join(sample_uris))
+        prof.write("uris", str(len(sample_uris)), ",".join(sample_uris))
+
+        # Handle missing index
+        def create_index_file_worker(uri: str) -> None:
+            if not find_index(uri):
+                logger.debug(f"indexing %r", uri)
+                create_index_file(uri)
+
+        with ThreadPool(threads) as pool:
+            pool.map(create_index_file_worker, sample_uris)
+
+        # TODO: Handle un-bgzipped files
+        if False:
+            new_sample_uris = []
+            for uri in sample_uris:
+                if not is_bgzipped(uri):
+                    logger.debug("bgzipping and indexing %r", uri)
+                    uri = bgzip_and_index(uri)
+                new_sample_uris.append(uri)
+            sample_uris = new_sample_uris
 
         level = "debug" if verbose else "info"
         tiledbvcf.config_logging(level, "ingest.log")
@@ -602,7 +615,7 @@ def ingest_samples_udf(
             resume=resume,
         )
 
-        prof.write("log", read_file("ingest.log"))
+        prof.write("log", extra=read_file("ingest.log"))
 
 
 def consolidate_dataset_udf(
@@ -687,7 +700,9 @@ def ingest_manifest_dag(
     workers: int = MANIFEST_WORKERS,
     extra_attrs: Optional[Union[Sequence[str], str]] = None,
     vcf_attrs: Optional[str] = None,
+    anchor_gap: Optional[int] = None,
     verbose: bool = False,
+    access_credentials_name: Optional[str] = None,
 ) -> None:
     """
     Create a DAG to load the manifest array.
@@ -704,43 +719,55 @@ def ingest_manifest_dag(
     :param workers: maximum number of parallel workers, defaults to MANIFEST_WORKERS
     :param extra_attrs: INFO/FORMAT fields to materialize, defaults to None
     :param vcf_attrs: VCF with all INFO/FORMAT fields to materialize, defaults to None
+    :param anchor_gap: anchor gap for VCF dataset, defaults to None
     :param verbose: verbose logging, defaults to False
+    :param access_credentials_name: name of role in TileDB Cloud to use in tasks
     """
 
     logger = get_logger()
 
+    dag_mode = dag.Mode.BATCH if access_credentials_name else dag.Mode.REALTIME
+    kwargs = (
+        {"access_credentials_name": access_credentials_name}
+        if access_credentials_name
+        else {}
+    )
+
     graph = dag.DAG(
         name="vcf-filter-uris",
         namespace=namespace,
-        mode=dag.Mode.REALTIME,
+        mode=dag_mode,
     )
     submit = graph.submit_local if local_ingest else graph.submit
 
-    dataset_uri = submit(
+    dataset_uri_result = submit(
         create_dataset_udf,
         dataset_uri,
         config=config,
         extra_attrs=extra_attrs,
         vcf_attrs=vcf_attrs,
+        anchor_gap=anchor_gap,
         verbose=verbose,
         name="Create VCF dataset ",
+        **kwargs,
     )
 
     if sample_list_uri:
         sample_uris = submit(
             read_uris_udf,
-            dataset_uri,
+            dataset_uri_result,
             sample_list_uri,
             config=config,
             max_files=max_files,
             verbose=verbose,
             name="Read VCF URIs ",
+            **kwargs,
         )
 
     if search_uri:
         sample_uris = submit(
             find_uris_udf,
-            dataset_uri,
+            dataset_uri_result,
             search_uri,
             config=config,
             pattern=pattern,
@@ -748,15 +775,17 @@ def ingest_manifest_dag(
             max_files=max_files,
             verbose=verbose,
             name="Find VCF URIs ",
+            **kwargs,
         )
 
     sample_uris = submit(
         filter_uris_udf,
-        dataset_uri,
+        dataset_uri_result,
         sample_uris,
         config=config,
         verbose=verbose,
         name="Filter VCF URIs ",
+        **kwargs,
     )
 
     run_dag(graph)
@@ -764,15 +793,15 @@ def ingest_manifest_dag(
     sample_uris = sample_uris.result()
 
     if not sample_uris:
-        logger.info("All samples in the manifest have been ingested.")
+        logger.info("All samples found are already in the manifest.")
         return
 
     logger.info("Found %d new URIs.", len(sample_uris))
 
     graph = dag.DAG(
-        name="vcf-ingest-manifest",
+        name="vcf-populate-manifest",
         namespace=namespace,
-        mode=dag.Mode.REALTIME,
+        mode=dag_mode,
         max_workers=workers,
     )
     submit = graph.submit_local if local_ingest else graph.submit
@@ -801,7 +830,9 @@ def ingest_manifest_dag(
                 include=[MANIFEST_ARRAY, LOG_ARRAY],
                 id=f"manifest-consol-{i//workers}",
                 verbose=verbose,
+                resources=CONSOLIDATE_RESOURCES,
                 name=f"Consolidate VCF Manifest {i//workers + 1}/{num_consolidates} ",
+                **kwargs,
             )
 
         ingest = submit(
@@ -811,7 +842,9 @@ def ingest_manifest_dag(
             config=config,
             verbose=verbose,
             id=f"manifest-ingest-{i}",
+            resources=MANIFEST_RESOURCES,
             name=f"Ingest VCF Manifest {i+1}/{num_partitions} ",
+            **kwargs,
         )
         if prev_consolidate:
             ingest.depends_on(prev_consolidate)
@@ -832,10 +865,12 @@ def ingest_samples_dag(
     threads: int = VCF_THREADS,
     batch_size: int = VCF_BATCH_SIZE,
     workers: int = VCF_WORKERS,
-    resume: bool = False,
+    max_samples: Optional[int] = None,
+    resume: bool = True,
     ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     trace_id: Optional[str] = None,
+    access_credentials_name: Optional[str] = None,
 ) -> dag.DAG:
     """
     Create a DAG to ingest samples into the dataset.
@@ -849,19 +884,28 @@ def ingest_samples_dag(
     :param threads: number of threads to use per ingestion task, defaults to VCF_THREADS
     :param batch_size: sample batch size, defaults to VCF_BATCH_SIZE
     :param workers: maximum number of parallel workers, defaults to VCF_WORKERS
-    :param resume: enable resume ingestion mode, defaults to False
+    :param max_samples: maximum number of samples to ingest, defaults to None (no limit)
+    :param resume: enable resume ingestion mode, defaults to True
     :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
     :param trace_id: trace ID for logging, defaults to None
+    :param access_credentials_name: name of role in TileDB Cloud to use in tasks
     :return: sample ingestion DAG for visualization
     """
 
     logger = setup(config, verbose)
 
+    dag_mode = dag.Mode.BATCH if access_credentials_name else dag.Mode.REALTIME
+    kwargs = (
+        {"access_credentials_name": access_credentials_name}
+        if access_credentials_name
+        else {}
+    )
+
     graph = dag.DAG(
         name="vcf-filter-samples",
         namespace=namespace,
-        mode=dag.Mode.REALTIME,
+        mode=dag_mode,
     )
     submit = graph.submit_local if local_ingest else graph.submit
 
@@ -873,6 +917,8 @@ def ingest_samples_dag(
         config=config,
         verbose=verbose,
         name="Filter VCF samples",
+        resource_class="large",
+        **kwargs,
     )
 
     run_dag(graph)
@@ -882,6 +928,10 @@ def ingest_samples_dag(
     if not sample_uris:
         logger.info("No new samples to ingest.")
         return
+
+    # Limit number of samples to ingest
+    if max_samples:
+        sample_uris = sample_uris[:max_samples]
 
     logger.info("Ingesting %d samples.", len(sample_uris))
 
@@ -904,8 +954,11 @@ def ingest_samples_dag(
         namespace=namespace,
         mode=dag.Mode.REALTIME if local_ingest else dag.Mode.BATCH,
         max_workers=workers,
+        retry_strategy=RetryStrategy(
+            limit=3,
+            retry_policy="Always",
+        ),
     )
-
     submit = graph.submit_local if local_ingest else graph.submit
 
     # Reduce batch size if there are fewer sample URIs
@@ -915,21 +968,16 @@ def ingest_samples_dag(
     num_consolidates = ceil(num_partitions / workers)
 
     # Calculate resources for ingest nodes
-    # TODO: update vcf_memory_mb calculation to account for htslib header memory
-    node_memory_mb = 2048 * threads
+    # 2GB per thread + VCF_HEADER_MB per sample per thread
+    node_memory_mb = threads * (2048 + batch_size * VCF_HEADER_MB)
     vcf_memory_mb = 1024 * threads
 
     if ingest_resources is None:
-        ingest_resources = {"cpu": f"{threads}", "memory": f"{node_memory_mb}Mi"}
-
-    consolidate_resources = {
-        "cpu": f"{CONSOLIDATE_CPUS}",
-        "memory": f"{CONSOLIDATE_MEMORY_MB}Mi",
-    }
+        ingest_resources = {"cpu": f"{threads + 2}", "memory": f"{node_memory_mb}Mi"}
 
     logger.debug("partitions=%d, consolidates=%d", num_partitions, num_consolidates)
     logger.debug("ingest_resources=%s", ingest_resources)
-    logger.debug("consolidate_resources=%s", consolidate_resources)
+    logger.debug("consolidate_resources=%s", CONSOLIDATE_RESOURCES)
 
     # This loop creates a DAG with the following structure:
     # - Submit N ingest tasks in parallel, where N is `workers` or less
@@ -946,8 +994,9 @@ def ingest_samples_dag(
                 config=config,
                 id=f"vcf-consol-{i//workers}",
                 verbose=verbose,
-                resources=consolidate_resources,
+                resources=CONSOLIDATE_RESOURCES,
                 name=f"Consolidate VCF {i//workers + 1}/{num_consolidates} ",
+                **kwargs,
             )
 
         ingest = submit(
@@ -967,6 +1016,7 @@ def ingest_samples_dag(
             trace_id=trace_id,
             resources=ingest_resources,
             name=f"Ingest VCF {i+1}/{num_partitions} ",
+            **kwargs,
         )
 
         if prev_consolidate:
@@ -975,6 +1025,7 @@ def ingest_samples_dag(
         if consolidate:
             consolidate.depends_on(ingest)
 
+    logger.debug("Submitting DAG")
     run_dag(graph, wait=local_ingest)
 
     if not local_ingest:
@@ -1003,10 +1054,12 @@ def ingest(
     ignore: Optional[str] = None,
     sample_list_uri: Optional[str] = None,
     max_files: Optional[int] = None,
+    max_samples: Optional[int] = None,
     contigs: Optional[Union[Sequence[str], Contigs]] = Contigs.ALL,
-    resume: bool = False,
+    resume: bool = True,
     extra_attrs: Optional[Union[Sequence[str], str]] = DEFAULT_ATTRIBUTES,
     vcf_attrs: Optional[str] = None,
+    anchor_gap: Optional[int] = None,
     manifest_batch_size: int = MANIFEST_BATCH_SIZE,
     manifest_workers: int = MANIFEST_WORKERS,
     vcf_batch_size: int = VCF_BATCH_SIZE,
@@ -1015,6 +1068,7 @@ def ingest(
     ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     trace_id: Optional[str] = None,
+    access_credentials_name: Optional[str] = None,
 ) -> dag.DAG:
     """
     Ingest samples into a dataset.
@@ -1028,14 +1082,16 @@ def ingest(
     :param sample_list_uri: URI with a list of VCF URIs, defaults to None
     :param max_files: maximum number of VCF URIs to read/find,
         defaults to None (no limit)
+    :param max_samples: maximum number of samples to ingest, defaults to None (no limit)
     :param contigs: contig mode
         (Contigs.ALL | Contigs.CHROMOSOMES | Contigs.OTHER | Contigs.ALL_DISABLE_MERGE)
         or list of contigs to ingest, defaults to Contigs.ALL
-    :param resume: enable resume ingestion mode, defaults to False
+    :param resume: enable resume ingestion mode, defaults to True
     :param extra_attrs: INFO/FORMAT fields to materialize,
         defaults to `repr(DEFAULT_ATTRIBUTES)`
     :param vcf_attrs: VCF with all INFO/FORMAT fields to materialize,
         defaults to None
+    :param anchor_gap: anchor gap for VCF dataset, defaults to None
     :param manifest_batch_size: batch size for manifest ingestion,
         defaults to MANIFEST_BATCH_SIZE
     :param manifest_workers: number of workers for manifest ingestion,
@@ -1046,6 +1102,7 @@ def ingest(
     :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
     :param trace_id: trace ID for logging, defaults to None
+    :param access_credentials_name: name of role in TileDB Cloud to use in tasks
     :return: sample ingestion DAG for visualization
     """
 
@@ -1059,8 +1116,17 @@ def ingest(
     if sample_list_uri and (pattern or ignore):
         raise ValueError("Cannot specify `pattern` or `ignore` with `sample_list_uri`.")
 
+    # Remove any trailing slashes
+    dataset_uri = dataset_uri.rstrip("/")
+
     logger = setup(config, verbose)
     logger.info("Ingesting VCF samples into %r", dataset_uri)
+
+    kwargs = (
+        {"access_credentials_name": access_credentials_name}
+        if access_credentials_name
+        else {}
+    )
 
     # Add VCF URIs to the manifest
     ingest_manifest_dag(
@@ -1076,7 +1142,9 @@ def ingest(
         workers=manifest_workers,
         extra_attrs=extra_attrs,
         vcf_attrs=vcf_attrs,
+        anchor_gap=anchor_gap,
         verbose=verbose,
+        **kwargs,
     )
 
     # Ingest VCFs using URIs in the manifest
@@ -1088,8 +1156,10 @@ def ingest(
         workers=vcf_workers,
         threads=vcf_threads,
         contigs=contigs,
+        max_samples=max_samples,
         resume=resume,
         ingest_resources=ingest_resources,
         verbose=verbose,
         trace_id=trace_id,
+        **kwargs,
     )

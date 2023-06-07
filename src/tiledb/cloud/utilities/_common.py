@@ -2,9 +2,11 @@ import configparser
 import logging
 import os
 import pathlib
+import subprocess
 import sys
-from typing import Any, Mapping, Optional
+from typing import Any, Mapping, Optional, Tuple
 
+import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud.tiledb_cloud_error import TileDBCloudError
 
@@ -138,7 +140,11 @@ def run_dag(
             _print_logs(graph, debug=debug)
             raise
 
-    _print_logs(graph, debug=debug)
+    try:
+        _print_logs(graph, debug=debug)
+    except Exception:
+        # Ignore errors in case logs are not available.
+        pass
 
 
 def _print_logs(
@@ -152,11 +158,7 @@ def _print_logs(
     :param graph: DAG object
     :param debug: print debug logs, defaults to False
     """
-    try:
-        server_logs = dag.server_logs(graph)
-    except Exception:
-        # TODO: get server logs from a batch UDF
-        return
+    server_logs = dag.server_logs(graph)
 
     for node in server_logs.nodes:
         if debug:
@@ -200,3 +202,44 @@ def max_memory_usage() -> int:
         result = 0
 
     return result
+
+
+def process_stream(
+    uri: str,
+    cmd: str,
+    read_size: int = 16 << 20,
+) -> Tuple[str, str]:
+    """
+    Process a stream of data from VFS with a subprocess.
+
+    If the file is large and the subprocess only reads a small amount of data,
+    then reduce `read_size` to improve performance.
+
+    :param uri: file URI
+    :param cmd: command to run in the subprocess
+    :param read_size: number of bytes to read per iteration, defaults to 16 MiB
+    :return: stdout and stderr from the subprocess
+    """
+
+    with tiledb.VFS().open(uri) as fp:
+        with subprocess.Popen(
+            cmd.split(),
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        ) as process:
+            while data := fp.read(read_size):
+                try:
+                    process.stdin.write(data)
+                except BrokenPipeError:
+                    # The subprocess has exited, stop reading
+                    break
+            try:
+                process.stdin.close()
+            except BrokenPipeError:
+                # Ignore broken pipe when closing stdin
+                pass
+            stdout = process.stdout.read().decode().strip()
+            stderr = process.stderr.read().decode().strip()
+
+    return stdout, stderr
