@@ -21,7 +21,7 @@ def calc_af(df) -> pandas.DataFrame:
 calculate_allele_frequency = calc_af
 
 
-def read_variant_stats(dataset_uri: str, region: str) -> pandas.DataFrame():
+def read_allele_frequency(dataset_uri: str, region: str) -> pandas.DataFrame():
     """
     Read variant status
 
