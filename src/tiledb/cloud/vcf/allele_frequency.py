@@ -12,11 +12,11 @@ def calc_af(df) -> pandas.DataFrame:
     """
     # Allele Count (AC) = sum of all AC at the same locus
     # This step consolidates ACs from all ingested batches
-    df = df.groupby(["pos", "allele"], sort=True).sum()
+    df = df.groupby(["pos", "allele"], sort=True).sum(numeric_only=True)
 
     # Allele Number (AN) = sum of AC at the same locus
     an = df.groupby(["pos"], sort=True).ac.sum().rename("an")
-    df = df.join(an, how="inner")
+    df = df.join(an, how="inner").reset_index()
 
     # Allele Frequency (AF) = AC / AN
     df["af"] = df.ac / df.an
@@ -39,11 +39,17 @@ def read_variant_stats(dataset_uri: str, region: str) -> pandas.DataFrame():
     with tiledb.Group(dataset_uri) as g:
         alleles_uri = g["variant_stats"].uri
 
-        contig = region.split(":")[0]
-        region_positions = region.split(":")[1].split("-")
+        try:
+            contig = region.split(":")[0]
+            start, end = map(int, region.split(":")[1].split("-"))
+            region_slice = slice(start, end)
+        except Exception as e:
+            raise ValueError(
+                f"Invalid region: {region}. Expected format: contig:start-end"
+            ) from e
 
         with tiledb.open(alleles_uri) as A:
             df = A.query(attrs=["ac", "allele"], dims=["pos", "contig"]).df[
-                contig, slice(region_positions[0], region_positions[1])
+                contig, region_slice
             ]
             return calc_af(df)
