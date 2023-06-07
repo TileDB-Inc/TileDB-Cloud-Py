@@ -22,7 +22,8 @@ def calc_af(df) -> pandas.DataFrame:
     df["af"] = df.ac / df.an
     return df
 
-claculate_allele_frequency = calc_af
+
+calculate_allele_frequency = calc_af
 
 
 def read_variant_stats(dataset_uri: str, region: str) -> pandas.DataFrame():
@@ -35,7 +36,7 @@ def read_variant_stats(dataset_uri: str, region: str) -> pandas.DataFrame():
     import tiledb
 
     # Get the variant stats uri
-    with tiledb.Group(uri) as g:
+    with tiledb.Group(dataset_uri) as g:
         alleles_uri = g["variant_stats"].uri
 
         contig = region.split(":")[0]
