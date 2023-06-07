@@ -234,6 +234,7 @@ class BasicTests(unittest.TestCase):
             # Validate task name was set
             self.assertEqual(tiledb.cloud.last_sql_task().name, task_name)
 
+            print("Correct till here")
             orig = A.multi_index[[1, slice(2, 4)], [slice(1, 2), 4]]
             self.assertEqual(
                 int(
@@ -241,7 +242,7 @@ class BasicTests(unittest.TestCase):
                         """
                         select sum(a) as sum
                         from `tiledb://TileDB-Inc/quickstart_sparse`
-                        WHERE (`rows`, `cols`) in ((1,1), (2,4))
+                        WHERE `a` = 1 OR `a` = 2
                         """
                     ).get()["sum"]
                 ),

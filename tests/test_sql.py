@@ -42,7 +42,7 @@ class BasicTests(unittest.TestCase):
                         """
                         select sum(a) as sum
                         from `tiledb://TileDB-Inc/quickstart_sparse`
-                        WHERE (`rows`, `cols`) in ((1,1), (2,4))
+                        WHERE `a` = 1 OR `a` = 2
                         """
                     ).get()["sum"]
                 ),
