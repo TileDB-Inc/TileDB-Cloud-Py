@@ -498,7 +498,7 @@ class Node(futures.FutureLike[_T]):
                     # If this is an intermediate node, download results only if
                     # there is a child node which runs locally.
                     download_results = any(
-                        child.mode == Mode.LOCAL for child in self.parents.values()
+                        child.mode == Mode.LOCAL for child in self.children.values()
                     )
                 else:
                     # If this is a terminal node, always download results.
