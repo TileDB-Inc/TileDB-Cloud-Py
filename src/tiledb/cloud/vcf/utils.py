@@ -67,8 +67,7 @@ def get_record_count(vcf_uri: str, index_uri: str) -> int:
     open(vcf_file, "w").close()
 
     # Make a local copy of the index file.
-    local_file = os.path.basename(index_uri)
-    # tiledb.VFS().copy_file(index_uri, local_file)
+    local_file = os.path.basename(index_uri).replace(".csi", ".tbi")
     cmd = f"cp /dev/stdin {local_file}"
     _, stderr = process_stream(index_uri, cmd)
     if stderr:
