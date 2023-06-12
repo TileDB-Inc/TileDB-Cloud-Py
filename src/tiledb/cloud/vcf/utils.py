@@ -1,6 +1,6 @@
 import os
 import subprocess
-import tempfile
+
 import tiledb
 from tiledb.cloud.utilities import process_stream
 
@@ -66,7 +66,7 @@ def get_record_count(vcf_uri: str, index_uri: str) -> int:
     vcf_file = os.path.basename(vcf_uri)
     open(vcf_file, "w").close()
 
-    # Make a local copy of the index file.
+    # Make a local copy of the index file, rename extension to avoid issue in bcftools.
     local_file = os.path.basename(index_uri).replace(".csi", ".tbi")
     cmd = f"cp /dev/stdin {local_file}"
     _, stderr = process_stream(index_uri, cmd)

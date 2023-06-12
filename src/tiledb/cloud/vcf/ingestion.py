@@ -1,12 +1,11 @@
 import enum
 import logging
-from multiprocessing.pool import ThreadPool
-
 import subprocess
 import sys
 from collections import defaultdict
 from math import ceil
-from typing import Any, Mapping, Optional, Sequence, Tuple, Union
+from multiprocessing.pool import ThreadPool
+from typing import Any, Mapping, Optional, Sequence, Union
 
 import numpy as np
 
@@ -21,30 +20,10 @@ from tiledb.cloud.utilities import run_dag
 from tiledb.cloud.utilities import set_aws_context
 from tiledb.cloud.utilities import write_log_event
 
-if True:
-    # Bring code into scope for testing on TileDB Cloud
-    import importlib, os
-
-    path = os.path.dirname(importlib.import_module("tiledb.cloud").__file__)
-    files = [f"{path}/vcf/utils.py", f"{path}/utilities/_common.py"]
-    for file in files:
-        with open(file) as f:
-            exec(compile(f.read(), file, "exec"))
-else:
-    from tiledb.cloud.utilities import Profiler
-    from tiledb.cloud.utilities import create_log_array
-    from tiledb.cloud.utilities import get_logger
-    from tiledb.cloud.utilities import read_file
-    from tiledb.cloud.utilities import run_dag
-    from tiledb.cloud.utilities import set_aws_context
-    from tiledb.cloud.utilities import write_log_event
-    from .utils import (
-        create_index_file,
-        find_index,
-        get_sample_name,
-        get_record_count,
-        is_bgzipped,
-    )
+from .utils import create_index_file
+from .utils import find_index
+from .utils import get_record_count
+from .utils import get_sample_name
 
 # Testing hooks
 local_ingest = False
@@ -502,7 +481,8 @@ def ingest_manifest_udf(
                 elif len(sample_name.split()) > 1:
                     status = "multiple samples"
                 elif sample_name in keys:
-                    # TODO: check for duplicate sample names across all ingest_manifest_udf calls
+                    # TODO: check for duplicate sample names across all
+                    # ingest_manifest_udf calls
                     status = "duplicate sample name"
                     # Generate a unique sample name for the manifest
                     sample_name_base = sample_name
@@ -583,21 +563,22 @@ def ingest_samples_udf(
         # Handle missing index
         def create_index_file_worker(uri: str) -> None:
             if not find_index(uri):
-                logger.debug(f"indexing %r", uri)
+                logger.debug("indexing %r", uri)
                 create_index_file(uri)
 
         with ThreadPool(threads) as pool:
             pool.map(create_index_file_worker, sample_uris)
 
         # TODO: Handle un-bgzipped files
-        if False:
-            new_sample_uris = []
-            for uri in sample_uris:
-                if not is_bgzipped(uri):
-                    logger.debug("bgzipping and indexing %r", uri)
-                    uri = bgzip_and_index(uri)
-                new_sample_uris.append(uri)
-            sample_uris = new_sample_uris
+        """
+        new_sample_uris = []
+        for uri in sample_uris:
+            if not is_bgzipped(uri):
+                logger.debug("bgzipping and indexing %r", uri)
+                uri = bgzip_and_index(uri)
+            new_sample_uris.append(uri)
+        sample_uris = new_sample_uris
+        """
 
         level = "debug" if verbose else "info"
         tiledbvcf.config_logging(level, "ingest.log")
