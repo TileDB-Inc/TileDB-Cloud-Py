@@ -38,7 +38,6 @@ def ingest(
     def ingest_tiff_udf(
         io_uris: Sequence[Tuple],
         config: Mapping[str, Any],
-        workers: int,
         *args: Any,
         **kwargs,
     ):
@@ -47,10 +46,22 @@ def ingest(
 
         :param io_uris: Pairs of tiff input - output tdb uris
         :param config: dict configuration to pass on tiledb.VFS
-        :param workers: Number of threads that will spawn for parallelizing ingestion
         """
 
+        from tiledb import filter as compressors
         from tiledb.bioimg.converters.ome_tiff import OMETiffConverter
+
+        compressor = kwargs.get("compressor", None)
+        if compressor:
+            compressor_type = compressor.get("type", None)
+            if compressor_type:
+                kwargs["compressor"] = vars(compressors).get(compressor_type)(
+                    **compressor.get("attrs", {})
+                )
+            else:
+                raise ValueError
+        else:
+            kwargs["compressor"] = compressor
 
         conf = tiledb.Config(params=config)
         vfs = tiledb.VFS(config=conf)
@@ -58,9 +69,7 @@ def ingest(
         with tiledb.scope_ctx(ctx_or_config=conf):
             for input, output in io_uris:
                 with vfs.open(input) as src:
-                    OMETiffConverter.to_tiledb(
-                        src, output, *args, max_workers=workers, chunked=True, **kwargs
-                    )
+                    OMETiffConverter.to_tiledb(src, output, **kwargs)
 
     if isinstance(source, str):
         # Handle only lists
@@ -87,8 +96,8 @@ def ingest(
     samples = get_uris(source, output, config)
 
     # Build the task graph
-    dag_name = "batch-ingest-bioimg" if taskgraph_name is None else taskgraph_name
-    task_prefix = f"{dag_name}  - Batch Task"
+    dag_name = "bioimg-ingestion" if taskgraph_name is None else taskgraph_name
+    task_prefix = f"{dag_name} - Task"
 
     logger.info("Building graph")
     graph = tiledb.cloud.dag.DAG(
@@ -97,6 +106,12 @@ def ingest(
         max_workers=max_workers,
         namespace=namespace,
     )
+
+    # serialize udf arguments
+    compressor = kwargs.get("compressor", None)
+    compressor_serial = serialize_filter(compressor) if compressor else None
+    if compressor_serial:
+        kwargs.pop("compressor")
 
     for i, work in enumerate(batch(samples, batch_size)):
         logger.info(f"Adding batch {i}")
@@ -110,11 +125,17 @@ def ingest(
             mode=tiledb.cloud.dag.Mode.BATCH,
             resources=DEFAULT_RESOURCES if resources is None else resources,
             image_name=DEFAULT_IMG_NAME,
+            compressor=compressor_serial,
             **kwargs,
         )
 
     graph.compute()
     return graph
+
+
+def serialize_filter(filter):
+    if isinstance(filter, tiledb.Filter):
+        return {"type": type(filter).__name__, "attrs": filter._attrs_()}
 
 
 def ingest_udf(*args: Any, **kwargs: Any) -> Dict[str, str]:
