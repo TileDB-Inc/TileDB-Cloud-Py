@@ -4,7 +4,7 @@ import os
 import pathlib
 import subprocess
 import sys
-from typing import Any, Mapping, Optional, Tuple
+from typing import Any, Mapping, Optional, Sequence, Tuple
 
 import tiledb
 from tiledb.cloud import dag
@@ -139,12 +139,7 @@ def run_dag(
             print(f"Fatal graph error:\n{e}")
             _print_logs(graph, debug=debug)
             raise
-
-    try:
-        _print_logs(graph, debug=debug)
-    except Exception:
-        # Ignore errors in case logs are not available.
-        pass
+    _print_logs(graph, debug=debug)
 
 
 def _print_logs(
@@ -158,23 +153,28 @@ def _print_logs(
     :param graph: DAG object
     :param debug: print debug logs, defaults to False
     """
-    server_logs = dag.server_logs(graph)
 
-    for node in server_logs.nodes:
-        if debug:
-            print(f"name = {node.name}")
-            print(f"status = {node.status}")
-        for i, ex in enumerate(node.executions):
-            logs = ex.logs.strip()
+    try:
+        server_logs = dag.server_logs(graph)
+
+        for node in server_logs.nodes:
             if debug:
-                print(f"  run #{i}")
-                print(f"    status = {ex.status}")
-                if ex.duration:
-                    print(f"    time = {ex.duration / 1e9:.3f} sec")
-                if logs:
+                print(f"name = {node.name}")
+                print(f"status = {node.status}")
+            for i, ex in enumerate(node.executions):
+                logs = ex.logs.strip()
+                if debug:
+                    print(f"  run #{i}")
+                    print(f"    status = {ex.status}")
+                    if ex.duration:
+                        print(f"    time = {ex.duration / 1e9:.3f} sec")
+                    if logs:
+                        print(logs)
+                elif logs and node.status == "COMPLETED":
                     print(logs)
-            elif logs and node.status == "COMPLETED":
-                print(logs)
+    except Exception:
+        # Ignore errors in case logs are not available.
+        pass
 
 
 def read_file(path: str) -> str:
@@ -206,7 +206,7 @@ def max_memory_usage() -> int:
 
 def process_stream(
     uri: str,
-    cmd: str,
+    cmd: Sequence[str],
     read_size: int = 16 << 20,
 ) -> Tuple[str, str]:
     """
@@ -223,17 +223,19 @@ def process_stream(
 
     with tiledb.VFS().open(uri) as fp:
         with subprocess.Popen(
-            cmd.split(),
+            cmd,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         ) as process:
-            while data := fp.read(read_size):
+            data = fp.read(read_size)
+            while data:
                 try:
                     process.stdin.write(data)
                 except BrokenPipeError:
                     # The subprocess has exited, stop reading
                     break
+                data = fp.read(read_size)
             try:
                 process.stdin.close()
             except BrokenPipeError:

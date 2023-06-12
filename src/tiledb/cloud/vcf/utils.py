@@ -28,7 +28,7 @@ def is_bgzipped(vcf_uri: str) -> bool:
     :return: True if the VCF file is bgzipped
     """
 
-    cmd = "file -b -"
+    cmd = ("file", "-b", "-")
     stdout, stderr = process_stream(vcf_uri, cmd, read_size=1024)
     if stderr:
         raise RuntimeError(f"Failed to check file type: {stderr}")
@@ -45,7 +45,7 @@ def get_sample_name(vcf_uri: str) -> str:
     :return: sample name
     """
 
-    cmd = "bcftools query -l"
+    cmd = ("bcftools", "query", "-l")
     stdout, stderr = process_stream(vcf_uri, cmd, read_size=1024)
     if stderr:
         raise RuntimeError(f"Failed to get sample names: {stderr}")
@@ -68,14 +68,14 @@ def get_record_count(vcf_uri: str, index_uri: str) -> int:
 
     # Make a local copy of the index file, rename extension to avoid issue in bcftools.
     local_file = os.path.basename(index_uri).replace(".csi", ".tbi")
-    cmd = f"cp /dev/stdin {local_file}"
+    cmd = ("cp", "/dev/stdin", local_file)
     _, stderr = process_stream(index_uri, cmd)
     if stderr:
         raise RuntimeError(f"Failed to create index: {stderr}")
 
     # Get the record count using bcftools
-    cmd = f"bcftools index -n {vcf_file}##idx##{local_file}"
-    res = subprocess.run(cmd.split(), capture_output=True, text=True)
+    cmd = ("bcftools", "index", "-n", f"{vcf_file}##idx##{local_file}")
+    res = subprocess.run(cmd, capture_output=True, text=True)
 
     # If there is an error, this means there was a problem reading the
     # index file or the index file is an old format that does not
@@ -99,7 +99,7 @@ def create_index_file(vcf_uri: str) -> str:
 
     index_file = f"{os.path.basename(vcf_uri)}.csi"
 
-    cmd = f"bcftools index -f -o {index_file}"
+    cmd = ("bcftools", "index", "-f", "-o", index_file)
     _, stderr = process_stream(vcf_uri, cmd, read_size=64 << 20)
     if stderr:
         raise RuntimeError(f"Failed to create index: {stderr}")
@@ -117,7 +117,7 @@ def bgzip_and_index(vcf_uri: str) -> str:
 
     bgzip_file = f"{os.path.basename(vcf_uri)}.gz"
 
-    cmd = f"bcftools view -Oz -o {bgzip_file}"
+    cmd = ("bcftools", "view", "-Oz", "-o", bgzip_file)
     _, stderr = process_stream(vcf_uri, cmd)
     if stderr:
         raise RuntimeError(f"Failed to bgzip: {stderr}")

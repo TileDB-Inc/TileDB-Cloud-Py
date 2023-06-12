@@ -570,15 +570,6 @@ def ingest_samples_udf(
             pool.map(create_index_file_worker, sample_uris)
 
         # TODO: Handle un-bgzipped files
-        """
-        new_sample_uris = []
-        for uri in sample_uris:
-            if not is_bgzipped(uri):
-                logger.debug("bgzipping and indexing %r", uri)
-                uri = bgzip_and_index(uri)
-            new_sample_uris.append(uri)
-        sample_uris = new_sample_uris
-        """
 
         level = "debug" if verbose else "info"
         tiledbvcf.config_logging(level, "ingest.log")
