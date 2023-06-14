@@ -53,7 +53,8 @@ def ingest(
 
         compressor = kwargs.get("compressor", None)
         if compressor:
-            compressor_name = compressor.get("_name", None)
+            compressor_args = dict(compressor)
+            compressor_name = compressor_args.pop("_name")
             if compressor_name:
                 compressor_args = {
                     k: None if not v else v
@@ -64,8 +65,6 @@ def ingest(
                 )
             else:
                 raise ValueError
-        else:
-            kwargs["compressor"] = compressor
 
         conf = tiledb.Config(params=config)
         vfs = tiledb.VFS(config=conf)
@@ -137,7 +136,11 @@ def ingest(
 
 def serialize_filter(filter):
     if isinstance(filter, tiledb.Filter):
-        return {"_name": type(filter).__name__, "attrs": filter._attrs_()}
+        filter_dict = filter._attrs_()
+        filter_dict["_name"] = type(filter).__name__
+        return filter_dict
+    else:
+        raise TypeError
 
 
 def ingest_udf(*args: Any, **kwargs: Any) -> Dict[str, str]:
