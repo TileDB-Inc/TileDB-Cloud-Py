@@ -48,15 +48,19 @@ def ingest(
         :param config: dict configuration to pass on tiledb.VFS
         """
 
-        from tiledb import filter as compressors
+        from tiledb import filter
         from tiledb.bioimg.converters.ome_tiff import OMETiffConverter
 
         compressor = kwargs.get("compressor", None)
         if compressor:
-            compressor_type = compressor.get("type", None)
-            if compressor_type:
-                kwargs["compressor"] = vars(compressors).get(compressor_type)(
-                    **compressor.get("attrs", {})
+            compressor_name = compressor.get("_name", None)
+            if compressor_name:
+                compressor_args = {
+                    k: None if not v else v
+                    for k, v in compressor.get("attrs", {}).items()
+                }
+                kwargs["compressor"] = vars(filter).get(compressor_name)(
+                    **compressor_args
                 )
             else:
                 raise ValueError
@@ -108,10 +112,8 @@ def ingest(
     )
 
     # serialize udf arguments
-    compressor = kwargs.get("compressor", None)
+    compressor = kwargs.pop("compressor", None)
     compressor_serial = serialize_filter(compressor) if compressor else None
-    if compressor_serial:
-        kwargs.pop("compressor")
 
     for i, work in enumerate(batch(samples, batch_size)):
         logger.info(f"Adding batch {i}")
@@ -135,7 +137,7 @@ def ingest(
 
 def serialize_filter(filter):
     if isinstance(filter, tiledb.Filter):
-        return {"type": type(filter).__name__, "attrs": filter._attrs_()}
+        return {"_name": type(filter).__name__, "attrs": filter._attrs_()}
 
 
 def ingest_udf(*args: Any, **kwargs: Any) -> Dict[str, str]:
