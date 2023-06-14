@@ -1,13 +1,15 @@
 import os
+import shutil
 import subprocess
+from typing import Optional
 
 import tiledb
 from tiledb.cloud.utilities import process_stream
 
 
-def find_index(vcf_uri: str) -> str:
+def find_index(vcf_uri: str) -> Optional[str]:
     """
-    Find the index file for a VCF file or an empty string if not found.
+    Find the index file for a VCF file or None if not found.
 
     :param vcf_uri: URI of the VCF file
     :return: URI of the index file
@@ -17,7 +19,7 @@ def find_index(vcf_uri: str) -> str:
         index = f"{vcf_uri}.{ext}"
         if tiledb.VFS().is_file(index):
             return index
-    return ""
+    return None
 
 
 def is_bgzipped(vcf_uri: str) -> bool:
@@ -52,13 +54,13 @@ def get_sample_name(vcf_uri: str) -> str:
     return ",".join(stdout.splitlines())
 
 
-def get_record_count(vcf_uri: str, index_uri: str) -> int:
+def get_record_count(vcf_uri: str, index_uri: str) -> Optional[int]:
     """
     Return the record count in a VCF file.
 
     :param vcf_uri: URI of the VCF file
     :param index_uri: URI of the VCF index file
-    :return: record count or 0 if there is an error
+    :return: record count or None if there is an error
     """
 
     # Create an empty VCF file in the current working directory
@@ -68,10 +70,9 @@ def get_record_count(vcf_uri: str, index_uri: str) -> int:
 
     # Make a local copy of the index file, rename extension to avoid issue in bcftools.
     local_file = os.path.basename(index_uri).replace(".csi", ".tbi")
-    cmd = ("cp", "/dev/stdin", local_file)
-    _, stderr = process_stream(index_uri, cmd)
-    if stderr:
-        raise RuntimeError(f"Failed to create index: {stderr}")
+    with tiledb.VFS().open(index_uri) as infile:
+        with open(local_file, "wb") as outfile:
+            shutil.copyfileobj(infile, outfile, length=16 << 20)
 
     # Get the record count using bcftools
     cmd = ("bcftools", "index", "-n", f"{vcf_file}##idx##{local_file}")
@@ -84,7 +85,7 @@ def get_record_count(vcf_uri: str, index_uri: str) -> int:
     # before ingesting the sample.
     if res.stderr:
         print(res.stderr)
-        return 0
+        return None
 
     return int(res.stdout)
 

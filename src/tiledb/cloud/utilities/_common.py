@@ -233,7 +233,8 @@ def process_stream(
                 try:
                     process.stdin.write(data)
                 except BrokenPipeError:
-                    # The subprocess has exited, stop reading
+                    # The subprocess has exited, stop reading.
+                    # This is an expected situation.
                     break
                 data = fp.read(read_size)
             try:
