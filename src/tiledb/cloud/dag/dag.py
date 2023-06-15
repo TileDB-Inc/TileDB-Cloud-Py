@@ -1646,8 +1646,10 @@ class DAG:
             except rest_api.ApiException:
                 raise
             else:
-                for new_node in result.nodes:
-                    node = self.nodes_by_name[new_node.name]
+                for new_node in result.nodes or ():
+                    assert isinstance(new_node, models.TaskGraphNodeMetadata)
+                    node_uuid = uuid.UUID(new_node.client_node_uuid)
+                    node = self.nodes[node_uuid]
                     new_node_status = array_task_status_to_status(new_node.status)
                     if node.status != new_node_status:
                         if new_node_status in (
