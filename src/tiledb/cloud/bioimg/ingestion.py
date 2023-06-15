@@ -57,8 +57,7 @@ def ingest(
             compressor_name = compressor_args.pop("_name")
             if compressor_name:
                 compressor_args = {
-                    k: None if not v else v
-                    for k, v in compressor.get("attrs", {}).items()
+                    k: None if not v else v for k, v in compressor_args.items()
                 }
                 kwargs["compressor"] = vars(filter).get(compressor_name)(
                     **compressor_args
