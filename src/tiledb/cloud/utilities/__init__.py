@@ -1,5 +1,6 @@
 from ._common import get_logger
 from ._common import max_memory_usage
+from ._common import process_stream
 from ._common import read_aws_config
 from ._common import read_file
 from ._common import run_dag
@@ -11,6 +12,7 @@ from .profiler import write_log_event
 __all__ = [
     "get_logger",
     "max_memory_usage",
+    "process_stream",
     "read_aws_config",
     "read_file",
     "run_dag",

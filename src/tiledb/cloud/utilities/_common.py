@@ -2,9 +2,11 @@ import configparser
 import logging
 import os
 import pathlib
+import subprocess
 import sys
-from typing import Any, Mapping, Optional
+from typing import Any, Mapping, Optional, Sequence, Tuple
 
+import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud.tiledb_cloud_error import TileDBCloudError
 
@@ -137,7 +139,6 @@ def run_dag(
             print(f"Fatal graph error:\n{e}")
             _print_logs(graph, debug=debug)
             raise
-
     _print_logs(graph, debug=debug)
 
 
@@ -152,27 +153,28 @@ def _print_logs(
     :param graph: DAG object
     :param debug: print debug logs, defaults to False
     """
+
     try:
         server_logs = dag.server_logs(graph)
-    except Exception:
-        # TODO: get server logs from a batch UDF
-        return
 
-    for node in server_logs.nodes:
-        if debug:
-            print(f"name = {node.name}")
-            print(f"status = {node.status}")
-        for i, ex in enumerate(node.executions):
-            logs = ex.logs.strip()
+        for node in server_logs.nodes:
             if debug:
-                print(f"  run #{i}")
-                print(f"    status = {ex.status}")
-                if ex.duration:
-                    print(f"    time = {ex.duration / 1e9:.3f} sec")
-                if logs:
+                print(f"name = {node.name}")
+                print(f"status = {node.status}")
+            for i, ex in enumerate(node.executions):
+                logs = ex.logs.strip()
+                if debug:
+                    print(f"  run #{i}")
+                    print(f"    status = {ex.status}")
+                    if ex.duration:
+                        print(f"    time = {ex.duration / 1e9:.3f} sec")
+                    if logs:
+                        print(logs)
+                elif logs and node.status == "COMPLETED":
                     print(logs)
-            elif logs and node.status == "COMPLETED":
-                print(logs)
+    except Exception:
+        # Ignore errors in case logs are not available.
+        pass
 
 
 def read_file(path: str) -> str:
@@ -200,3 +202,47 @@ def max_memory_usage() -> int:
         result = 0
 
     return result
+
+
+def process_stream(
+    uri: str,
+    cmd: Sequence[str],
+    read_size: int = 16 << 20,
+) -> Tuple[str, str]:
+    """
+    Process a stream of data from VFS with a subprocess.
+
+    If the file is large and the subprocess only reads a small amount of data,
+    then reduce `read_size` to improve performance.
+
+    :param uri: file URI
+    :param cmd: command to run in the subprocess
+    :param read_size: number of bytes to read per iteration, defaults to 16 MiB
+    :return: stdout and stderr from the subprocess
+    """
+
+    with tiledb.VFS().open(uri) as fp:
+        with subprocess.Popen(
+            cmd,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        ) as process:
+            data = fp.read(read_size)
+            while data:
+                try:
+                    process.stdin.write(data)
+                except BrokenPipeError:
+                    # The subprocess has exited, stop reading.
+                    # This is an expected situation.
+                    break
+                data = fp.read(read_size)
+            try:
+                process.stdin.close()
+            except BrokenPipeError:
+                # Ignore broken pipe when closing stdin
+                pass
+            stdout = process.stdout.read().decode().strip()
+            stderr = process.stderr.read().decode().strip()
+
+    return stdout, stderr
