@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import functools
 import logging
 from math import ceil
 from typing import Any, Callable, List, Mapping, Optional, Sequence, Tuple, Union
@@ -122,9 +123,8 @@ def vcf_query_udf(
     logger = setup(config, verbose)
     logger.debug("tiledbvcf=%s", tiledbvcf.version)
 
-    config["rest.use_refactored_array_open"] = True
-
     # TODO: evaluate TileDB config options
+    # config["rest.use_refactored_array_open"] = True
     # Avoid issue loading tile offsets for a large number of fragments
     # config["sm.mem.reader.sparse_unordered_with_dups.ratio_array_data"] = 0.4
     # config["sm.mem.reader.sparse_unordered_with_dups.ratio_coords"] = 0.4
@@ -201,7 +201,12 @@ def concat_tables_udf(
     logger = setup(config, verbose)
 
     with Profiler(array_uri=log_uri) as prof:
-        table = pa.concat_tables(x for x in tables if x is not None and x.num_rows > 0)
+        # If all tables are empty, return an empty table.
+        tables = [x for x in tables if x is not None and x.num_rows > 0]
+        if len(tables) == 0:
+            return pa.Table.from_arrays([], [])
+
+        table = pa.concat_tables(tables)
         prof.write("result", table.num_rows, table.nbytes)
 
     memory_usage_gb = max_memory_usage() / (1 << 30)
@@ -230,6 +235,7 @@ def build_read_dag(
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
     transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
+    max_sample_batch_size: int = MAX_SAMPLE_BATCH_SIZE,
     log_uri: Optional[str] = None,
     namespace: Optional[str] = None,
     resource_class: Optional[str] = None,
@@ -250,6 +256,8 @@ def build_read_dag(
     :param af_filter: allele frequency filter, defaults to None
     :param transform_result: function to apply to each partition;
         by default, does not transform the result
+    :param max_sample_batch_size: maximum number of samples to read in a single node,
+        defaults to 500
     :param log_uri: log array URI for profiling, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
     :param resource_class: TileDB-Cloud resource class for UDFs, defaults to None
@@ -269,9 +277,15 @@ def build_read_dag(
     # Set number of sample partitions
     num_samples = len(samples)
     sample_batch_size = ceil(num_samples * num_region_partitions / max_workers)
-    sample_batch_size = min(sample_batch_size, MAX_SAMPLE_BATCH_SIZE)  # max batch size
+    sample_batch_size = min(sample_batch_size, max_sample_batch_size)  # max batch size
     sample_batch_size = max(sample_batch_size, MIN_SAMPLE_BATCH_SIZE)  # min batch size
     num_sample_partitions = ceil(num_samples / sample_batch_size)
+
+    # We provide `samples` as a partial-function parameter so that we avoid
+    # looking through it to try and find parent nodes when constructing
+    # the task graph based on function parameters. This hides it in the
+    # `partial` object so that it's not treated as a regular parameter.
+    vcf_query_udf_partial = functools.partial(vcf_query_udf, samples=samples)
 
     logger.debug("num_samples=%d", num_samples)
     logger.debug("sample_batch_size=%d", sample_batch_size)
@@ -289,17 +303,17 @@ def build_read_dag(
         for sample in range(num_sample_partitions):
             tables.append(
                 dag.submit(
-                    vcf_query_udf,
+                    vcf_query_udf_partial,
                     dataset_uri,
                     config=config,
                     attrs=attrs,
                     regions=regions,
                     region_partition=(region, num_region_partitions),
-                    samples=samples,
                     sample_partition=(sample, num_sample_partitions),
                     memory_budget_mb=memory_budget_mb,
                     af_filter=af_filter,
                     transform_result=transform_result,
+                    verbose=verbose,
                     log_uri=log_uri,
                     log_id=f"query-reg{region}-sam{sample}",
                     name=f"VCF Query - Region {region+1}/{num_region_partitions},"
@@ -338,6 +352,7 @@ def read(
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
     transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
+    max_sample_batch_size: int = MAX_SAMPLE_BATCH_SIZE,
     log_uri: Optional[str] = None,
     namespace: Optional[str] = None,
     resource_class: Optional[str] = None,
@@ -358,6 +373,8 @@ def read(
     :param af_filter: allele frequency filter, defaults to None
     :param transform_result: function to apply to each partition;
         by default, does not transform the result
+    :param max_sample_batch_size: maximum number of samples to read in a single node,
+        defaults to 500
     :param log_uri: log array URI for profiling, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
     :param resource_class: TileDB-Cloud resource class for UDFs, defaults to None
@@ -377,6 +394,7 @@ def read(
         memory_budget_mb=memory_budget_mb,
         af_filter=af_filter,
         transform_result=transform_result,
+        max_sample_batch_size=max_sample_batch_size,
         log_uri=log_uri,
         namespace=namespace,
         resource_class=resource_class,
