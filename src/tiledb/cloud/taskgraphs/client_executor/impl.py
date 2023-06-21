@@ -475,6 +475,7 @@ class LocalExecutor(_base.IClientExecutor):
             api_st = _API_STATUSES[st]
         except KeyError:
             warnings.warn(UserWarning(f"Task graph ended in invalid state {st!r}"))
+            return
 
         do_update = utils.ephemeral_thread(
             client.build(rest_api.TaskGraphLogsApi).update_task_graph_log,
@@ -482,7 +483,7 @@ class LocalExecutor(_base.IClientExecutor):
         )
         do_update(
             id=str(self._server_graph_uuid),
-            namespace=self._namespace,
+            namespace=self.namespace,
             log=rest_api.TaskGraphLog(status=api_st),
             _request_timeout=_REPORT_TIMEOUT_SECS,
         )
