@@ -18,6 +18,7 @@ def ingest(
     num_batches: Optional[int] = None,
     threads: Optional[int] = 8,
     resources: Optional[Mapping[str, Any]] = None,
+    compute: bool = True,
     namespace: Optional[str],
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
@@ -129,7 +130,8 @@ def ingest(
             **kwargs,
         )
 
-    graph.compute()
+    if compute:
+        graph.compute()
     return graph
 
 
