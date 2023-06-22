@@ -18,6 +18,7 @@ def ingest(
     num_batches: Optional[int] = None,
     threads: Optional[int] = 8,
     resources: Optional[Mapping[str, Any]] = None,
+    compute: bool = True,
     namespace: Optional[str],
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
@@ -32,6 +33,8 @@ def ingest(
     :param threads: Number of threads for node side multiprocessing, defaults to 8
     :param resources: configuration for node specs e.g. {"cpu": "8", "memory": "4Gi"},
         defaults to None
+    :param compute: When True the DAG returned will be computed inside the function
+    otherwise DAG will only be returned.
     :param namespace: The namespace where the DAG will run
     """
 
@@ -129,7 +132,8 @@ def ingest(
             **kwargs,
         )
 
-    graph.compute()
+    if compute:
+        graph.compute()
     return graph
 
 
