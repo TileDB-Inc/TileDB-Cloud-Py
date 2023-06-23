@@ -19,21 +19,10 @@ from tiledb.cloud.utilities import read_file
 from tiledb.cloud.utilities import run_dag
 from tiledb.cloud.utilities import set_aws_context
 from tiledb.cloud.utilities import write_log_event
-
-if True:
-    # Bring code into scope for testing on TileDB Cloud
-    import importlib, os
-
-    path = os.path.dirname(importlib.import_module("tiledb.cloud").__file__)
-    files = [f"{path}/vcf/utils.py"]
-    for file in files:
-        with open(file) as f:
-            exec(compile(f.read(), file, "exec"))
-else:
-    from .utils import create_index_file
-    from .utils import find_index
-    from .utils import get_record_count
-    from .utils import get_sample_name
+from tiledb.cloud.vcf.utils import create_index_file
+from tiledb.cloud.vcf.utils import find_index
+from tiledb.cloud.vcf.utils import get_record_count
+from tiledb.cloud.vcf.utils import get_sample_name
 
 # Testing hooks
 local_ingest = False
