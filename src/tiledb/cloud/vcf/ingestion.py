@@ -844,7 +844,7 @@ def ingest_samples_dag(
     trace_id: Optional[str] = None,
     batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
-    build_only: bool = False,
+    compute: bool = True,
 ) -> Tuple[dag.DAG, Sequence[str]]:
     """
     Create a DAG to ingest samples into the dataset.
@@ -865,7 +865,8 @@ def ingest_samples_dag(
     :param trace_id: trace ID for logging, defaults to None
     :param batch_mode: run all DAGs in batch mode, defaults to True
     :param access_credentials_name: name of role in TileDB Cloud to use in tasks
-    :param build_only: only build the DAG, do not run the DAG, defaults to False
+    :param compute: when True the DAG will be computed before it is returned,
+        defaults to True
     :return: sample ingestion DAG and list of sample URIs ingested
     """
 
@@ -907,8 +908,6 @@ def ingest_samples_dag(
     # Limit number of samples to ingest
     if max_samples:
         sample_uris = sample_uris[:max_samples]
-
-    logger.info("Ingesting %d samples.", len(sample_uris))
 
     contig_fragment_merging = True
     if type(contigs) == list:
@@ -1000,8 +999,8 @@ def ingest_samples_dag(
         if consolidate:
             consolidate.depends_on(ingest)
 
-    if not build_only:
-        logger.debug("Submitting DAG")
+    if compute:
+        logger.info("Ingesting %d samples.", len(sample_uris))
         run_dag(graph, wait=local_ingest)
 
         if not local_ingest:
@@ -1046,7 +1045,7 @@ def ingest(
     trace_id: Optional[str] = None,
     batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
-    build_only: bool = False,
+    compute: bool = True,
 ) -> Tuple[dag.DAG, Sequence[str]]:
     """
     Ingest samples into a dataset.
@@ -1083,7 +1082,8 @@ def ingest(
     :param batch_mode: run all DAGs in batch mode, only set to False for dev or demos,
         defaults to True
     :param access_credentials_name: name of role in TileDB Cloud to use in tasks
-    :param build_only: only build the DAG, do not run the DAG, defaults to False
+    :param compute: when True the DAG will be computed before it is returned,
+        defaults to True
     :return: sample ingestion DAG and list of sample URIs ingested
     """
 
@@ -1144,7 +1144,7 @@ def ingest(
         trace_id=trace_id,
         batch_mode=batch_mode,
         access_credentials_name=access_credentials_name,
-        build_only=build_only,
+        compute=compute,
     )
 
     return dag, sample_uris
