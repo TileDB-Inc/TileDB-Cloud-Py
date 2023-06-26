@@ -56,9 +56,8 @@ def export(
         from tiledb.bioimg.converters.ome_tiff import OMETiffConverter
 
         conf = tiledb.Config(params=config)
-        with tiledb.scope_ctx(ctx_or_config=conf):
-            for input, output in io_uris:
-                OMETiffConverter.from_tiledb(input, output, **kwargs)
+        for input, output in io_uris:
+            OMETiffConverter.from_tiledb(input, output, config=conf, **kwargs)
 
     if isinstance(source, str):
         # Handle only lists
