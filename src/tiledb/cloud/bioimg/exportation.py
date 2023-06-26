@@ -65,7 +65,7 @@ def export(
         source = [source]
 
     # Get the list of all BioImg samples input/out
-    samples = get_uris(source, output, config)
+    samples = get_uris(source, output, config, "tiff")
     batch_size, max_workers = scale_calc(source, num_batches)
 
     # Build the task graph

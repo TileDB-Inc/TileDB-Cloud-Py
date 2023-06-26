@@ -5,7 +5,9 @@ from typing import Any, Iterator, Mapping, Sequence, Tuple
 import tiledb
 
 
-def get_uris(source: Sequence[str], output_dir: str, config: Mapping[str, Any]):
+def get_uris(
+    source: Sequence[str], output_dir: str, config: Mapping[str, Any], output_ext: str
+):
     """Match input uri/s with output destinations
 
     :param source: A sequence of paths or path to input
@@ -14,7 +16,7 @@ def get_uris(source: Sequence[str], output_dir: str, config: Mapping[str, Any]):
     vfs = tiledb.VFS(config=config)
 
     def create_output_path(input_file, output_dir) -> str:
-        return os.path.join(output_dir, os.path.basename(input_file) + ".tdb")
+        return os.path.join(output_dir, os.path.basename(input_file) + f".{output_ext}")
 
     def iter_paths(sequence) -> Iterator[Tuple]:
         for uri in sequence:
