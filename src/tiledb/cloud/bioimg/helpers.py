@@ -24,12 +24,13 @@ def get_uris(
 
     if len(source) == 1 and vfs.is_dir(source[0]):
         # Check if the dir is actually a tiledb group for exportation
-        if tiledb.object_type(source[0]) != "group":
-            # Folder like input
-            return tuple(iter_paths(vfs.ls(source[0])))
-        else:
-            # This is the exportation scenario
-            return source[0], create_output_path(source[0], output_dir)
+        with tiledb.scope_ctx(ctx_or_config=config):
+            if tiledb.object_type(source[0]) != "group":
+                # Folder like input
+                return tuple(iter_paths(vfs.ls(source[0])))
+            else:
+                # This is the exportation scenario
+                return ((source[0], create_output_path(source[0], output_dir)),)
     elif isinstance(source, Sequence):
         # List of input uris - single file is one element list
         return tuple(iter_paths(source))
@@ -45,7 +46,7 @@ def serialize_filter(filter):
 
 
 def batch(iterable, chunks):
-    # Iterator for prividing batches of chunks
+    # Iterator for providing batches of chunks
     length = len(iterable)
     for ndx in range(0, length, chunks):
         yield iterable[ndx : min(ndx + chunks, length)]
