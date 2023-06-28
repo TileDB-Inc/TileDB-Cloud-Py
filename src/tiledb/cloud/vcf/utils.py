@@ -68,8 +68,8 @@ def get_record_count(vcf_uri: str, index_uri: str) -> Optional[int]:
     vcf_file = os.path.basename(vcf_uri)
     open(vcf_file, "w").close()
 
-    # Make a local copy of the index file, rename extension to avoid issue in bcftools.
-    local_file = os.path.basename(index_uri).replace(".csi", ".tbi")
+    # Make a local copy of the index file
+    local_file = os.path.basename(index_uri)
     with tiledb.VFS().open(index_uri) as infile:
         with open(local_file, "wb") as outfile:
             shutil.copyfileobj(infile, outfile, length=16 << 20)
@@ -80,10 +80,10 @@ def get_record_count(vcf_uri: str, index_uri: str) -> Optional[int]:
 
     # If there is an error, this means there was a problem reading the
     # index file or the index file is an old format that does not
-    # contain the required metadata. In either case, return 0 to
+    # contain the required metadata. In either case, return None to
     # indicate a problem with the index that needs to be addressed
     # before ingesting the sample.
-    if res.stderr:
+    if res.returncode != 0:
         print(res.stderr)
         return None
 

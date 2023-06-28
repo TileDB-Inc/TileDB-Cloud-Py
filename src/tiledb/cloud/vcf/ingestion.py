@@ -498,7 +498,7 @@ def ingest_manifest_udf(
                     records = 0
                 else:
                     records = get_record_count(vcf_uri, index_uri)
-                    if records == 0:
+                    if records is None:
                         status = "" if status == "ok" else status + ","
                         status += "bad index"
 
@@ -845,7 +845,7 @@ def ingest_samples_dag(
     batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
     compute: bool = True,
-) -> Tuple[dag.DAG, Sequence[str]]:
+) -> Tuple[Optional[dag.DAG], Sequence[str]]:
     """
     Create a DAG to ingest samples into the dataset.
 
@@ -873,7 +873,7 @@ def ingest_samples_dag(
     logger = setup(config, verbose)
 
     batch_mode = batch_mode or bool(access_credentials_name)
-    dag_mode = dag.Mode.BATCH if access_credentials_name else dag.Mode.REALTIME
+    dag_mode = dag.Mode.BATCH if batch_mode else dag.Mode.REALTIME
 
     # Only pass `access_credentials_name` to `submit` when running in batch mode.
     kwargs = {"access_credentials_name": access_credentials_name} if batch_mode else {}
@@ -1046,7 +1046,7 @@ def ingest(
     batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
     compute: bool = True,
-) -> Tuple[dag.DAG, Sequence[str]]:
+) -> Tuple[Optional[dag.DAG], Sequence[str]]:
     """
     Ingest samples into a dataset.
 
