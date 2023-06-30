@@ -44,12 +44,10 @@ jobs:
         dependencies:
           - pinned
           - fresh
-        include:
-          - os: ubuntu-20.04
-            path: ~/.cache/pip
-          - os: macos-12
-            path: ~/Library/Caches/pip
-
+    env:
+      # Temporarily use an older point release of Python 3.7 on Mac OS due to
+      # https://github.com/actions/setup-python/issues/682
+      real-python-version: ${{ (matrix.os == 'macos-12' && matrix.python-version == '3.7') && '3.7.16' || matrix.python-version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -57,34 +55,9 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Cache pinned dependencies
-        if: ${{ matrix.dependencies == 'pinned' }}
-        uses: actions/cache@v3
-        with:
-          path: ${{ matrix.path }}
-          key: ${{ runner.os }}-py${{ matrix.python-version }}-pip-${{ hashFiles(format('./requirements-py{0}.txt', matrix.python-version)) }}
-          restore-keys: |
-            ${{ runner.os }}-py${{ matrix.python-version }}-pip-
-
-      # This step ensures that every month we have a new Pip cache, so that
-      # we don't have one cache sitting for months growing ever-staler.
-      - name: Get month for cache key
-        id: month
-        if: ${{ matrix.dependencies == 'fresh' }}
-        run: |
-          date +'cache-month=%Y-%m' >> "$GITHUB_ENV"
-
-      - name: Cache fresh install dependencies
-        if: ${{ matrix.dependencies == 'fresh' }}
-        uses: actions/cache@v3
-        with:
-          path: ${{ matrix.path }}
-          key: ${{ runner.os }}-py${{ matrix.python-version }}-pip-fresh-${{ env.cache-month }}
-          restore-keys: |
-            ${{ runner.os }}-py${{ matrix.python-version }}-pip-fresh-
-            ${{ runner.os }}-py${{ matrix.python-version }}-pip-
+          python-version: ${{ env.real-python-version }}
+          cache: pip
+          cache-dependency-path: requirements-${{ matrix.python-version }}.txt
 
       - name: Install prerequisites
         run: |
