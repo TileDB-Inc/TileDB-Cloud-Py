@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Retries the given command up to N times.
+# Usage:
+#   retry 5 do-some-command param1 param2
+
+ATTEMPTS="$1"
+shift
+
+while (( ATTEMPTS-- )); do
+  if "$@"; then
+    exit 0
+  fi
+done
+
+exit 1
