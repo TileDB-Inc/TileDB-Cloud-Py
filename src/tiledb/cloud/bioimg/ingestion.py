@@ -169,7 +169,7 @@ def get_uris(source: Sequence[str], output_dir: str, config: Mapping[str, Any]):
 
     if len(source) == 1 and vfs.is_dir(source[0]):
         # Folder like input
-        return tuple(iter_paths(vfs.ls(source[0])))
+        return tuple(iter_paths(vfs.ls(source[0])[1:]))
     elif isinstance(source, Sequence):
         # List of input uris - single file is one element list
         return tuple(iter_paths(source))
