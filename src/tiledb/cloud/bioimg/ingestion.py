@@ -169,6 +169,8 @@ def get_uris(source: Sequence[str], output_dir: str, config: Mapping[str, Any]):
 
     if len(source) == 1 and vfs.is_dir(source[0]):
         # Folder like input
+        if vfs.is_empty_bucket(source[0]):
+            raise ValueError("Input bucket should contain images for ingestion")
         return tuple(iter_paths(vfs.ls(source[0])[1:]))
     elif isinstance(source, Sequence):
         # List of input uris - single file is one element list
