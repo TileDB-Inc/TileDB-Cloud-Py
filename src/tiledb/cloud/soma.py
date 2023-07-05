@@ -97,6 +97,7 @@ def run_ingest_workflow(
     ingest_mode: str = "write",
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
+    access_credentials_name: Optional[str] = None,
 ) -> Dict[str, str]:
     """Starts a workflow to ingest H5AD data into SOMA.
 
@@ -114,6 +115,8 @@ def run_ingest_workflow(
     :param resources: A specification for the amount of resources to provide
         to the UDF executing the ingestion process, to override the default.
     :param namespace: An alternate namespace to run the ingestion process under.
+    :param access_credentials_name: If provided, the name of the credentials
+        to pass to the executing UDF.
     :return: A dictionary of ``{"status": "started", "graph_id": ...}``,
         with the UUID of the graph on the server side, which can be used to
         manage execution and monitor progress.
@@ -133,6 +136,7 @@ def run_ingest_workflow(
         ingest_mode=ingest_mode,
         platform_config=platform_config,
         resources=_DEFAULT_RESOURCES if resources is None else resources,
+        access_credentials_name=access_credentials_name,
     )
     grf.compute()
     return {
