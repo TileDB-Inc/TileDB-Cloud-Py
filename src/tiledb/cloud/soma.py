@@ -1,5 +1,6 @@
 import logging
-from typing import Dict, Optional
+from typing import ContextManager, Dict, Optional
+from unittest import mock
 
 import tiledb
 from tiledb.cloud import dag
@@ -7,6 +8,16 @@ from tiledb.cloud._common import functions
 
 _DEFAULT_RESOURCES = {"cpu": "8", "memory": "8Gi"}
 """Default resource size; equivalent to a "large" UDF container."""
+
+
+def _hack_patch_anndata() -> ContextManager[object]:
+    from anndata._core import file_backing
+
+    @file_backing.AnnDataFileManager.filename.setter
+    def filename(self, filename) -> None:
+        self._filename = filename
+
+    return mock.patch.object(file_backing.AnnDataFileManager, "filename", filename)
 
 
 def ingest_h5ad(
@@ -69,8 +80,9 @@ def ingest_h5ad(
     soma_ctx = tiledbsoma.SOMATileDBContext()
     if extra_tiledb_config:
         soma_ctx = soma_ctx.replace(tiledb_config=extra_tiledb_config)
-    with tiledb.VFS(ctx=soma_ctx.tiledb_ctx).open(input_uri) as input_file:
-        input_data = anndata.read_h5ad(_FSPathWrapper(input_file, input_uri), "r")
+    with tiledb.VFS().open(input_uri) as input_file:
+        with _hack_patch_anndata():
+            input_data = anndata.read_h5ad(_FSPathWrapper(input_file, input_uri), "r")
         output_uri = io.from_anndata(
             experiment_uri=output_uri,
             anndata=input_data,
