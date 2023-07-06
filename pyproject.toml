@@ -24,7 +24,17 @@ dependencies = [
 [project.optional-dependencies]
 viz-tiledb = ["networkx>=2", "pydot", "tiledb-plot-widget>=0.1.7"]
 viz-plotly = ["networkx>=2", "plotly>=4", "pydot"]
-all = ["networkx>=2", "plotly>=4", "pydot", "tiledb-plot-widget>=0.1.7"]
+soma = ["tiledbsoma"]
+# Once we decide that Pip 21.2 is widely used enough, we can simplify this to
+#     all = ["tiledbsoma[viz-plotly,viz-tiledb,soma]"]
+# since Pip 21.2 supports self-references in optional dependencies.
+all = [
+  "networkx>=2",
+  "plotly>=4",
+  "pydot",
+  "tiledb-plot-widget>=0.1.7",
+  "tiledbsoma",
+]
 
 dev = ["black", "pytest", "ruff"]
 
