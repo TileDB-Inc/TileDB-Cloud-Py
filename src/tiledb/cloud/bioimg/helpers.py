@@ -27,9 +27,13 @@ def get_uris(
         with tiledb.scope_ctx(ctx_or_config=config):
             if tiledb.object_type(source[0]) != "group":
                 # Folder like input
-                return tuple(iter_paths(vfs.ls(source[0])))
+                contents = vfs.ls(source[0])
+                if len(contents) == 1:
+                    return tuple(iter_paths(contents[1:]))
+                else:
+                    raise ValueError("Input bucket should contain images for ingestion")
             else:
-                # This is the exportation scenario
+                # This is the exportation scenario for single tdb image
                 return ((source[0], create_output_path(source[0], output_dir)),)
     elif isinstance(source, Sequence):
         # List of input uris - single file is one element list
