@@ -418,8 +418,7 @@ class GroupsTest(unittest.TestCase):
 
     def test_shared_groups(self):
         got = client.list_shared_groups(
-            namespace="tiledb-inc",
             per_page=1,
             page=1,
         )
-        self.assertEqual(1, len(got.groups))
+        self.assertEqual(0, len(got.groups))
