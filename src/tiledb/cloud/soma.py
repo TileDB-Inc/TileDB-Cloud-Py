@@ -98,6 +98,35 @@ def ingest_h5ad(
 # to refer to `ingest_h5ad` by value rather than by reference.
 _ingest_h5ad_byval = functions.to_register_by_value(ingest_h5ad)
 
+def ingest_multiple(
+    *,
+    output_uri: str,
+    input_uri: str,
+    measurement_name: str,
+    extra_tiledb_config: Optional[Dict[str, object]],
+    platform_config: Optional[Dict[str, object]],
+    ingest_mode: str,
+    pattern: Optional[str] = None,
+) -> None:
+    """Performs the actual work of ingesting H5AD data into TileDB.
+
+    :param output_uri: The output URI to write to. This will probably look like
+        ``tiledb://namespace/some://storage/uri``.
+    :param input_uri: The URI of the H5AD file(s) to read from. These are read
+        using TileDB VFS, so any path supported (and accessible) will work.  If the ``input_uri``
+        passes ``vfs.is_file``, it's ingested.  If the ``input_uri`` passes ``vfs.is_dir``, then all
+        first-level entries are ingested .  In either case, an input file is skipped if ``pattern``
+        is provided and doesn't match the input file.
+    :param measurement_name: The name of the Measurement within the Experiment
+        to store the data.
+    :param extra_tiledb_config: Extra configuration for TileDB.
+    :param platform_config: The SOMA ``platform_config`` value to pass in,
+        if any.
+    :param ingest_mode: One of the ingest modes supported by
+        ``tiledbsoma.io.read_h5ad``.
+    :param pattern: As described for ``input_uri``.
+    """
+
 
 def run_ingest_workflow(
     *,
@@ -155,3 +184,42 @@ def run_ingest_workflow(
         "status": "started",
         "graph_id": str(grf.server_graph_uuid),
     }
+
+# BIOIMG
+# def ingest(
+#     XXX source: Union[Sequence[str], str],
+#     output: str,
+#     *args: Any,
+#     threads: Optional[int] = 8,
+#     resources: Optional[Mapping[str, Any]] = None,
+#     compute: bool = True,
+#     namespace: Optional[str],
+#     **kwargs,
+# ) -> tiledb.cloud.dag.DAG:
+#     """The function ingests microscopy images into TileDB arrays
+#     :param source: uri / iterable of uris of input files
+#     :param output: output dir for the ingested tiledb arrays
+#     :param config: dict configuration to pass on tiledb.VFS
+#     :param taskgraph_name: Optional name for taskgraph, defaults to None
+#     :param num_batches: Number of graph nodes to spawn.
+#         Performs it sequentially if default, defaults to 1
+#     :param threads: Number of threads for node side multiprocessing, defaults to 8
+#     :param resources: configuration for node specs e.g. {"cpu": "8", "memory": "4Gi"},
+#         defaults to None
+#     :param compute: When True the DAG returned will be computed inside the function
+#     otherwise DAG will only be returned.
+#     :param namespace: The namespace where the DAG will run
+#     """
+
+# VCF
+#def ingest(
+#    dataset_uri: str,
+#    *,
+#    XXX search_uri: Optional[str] = None,
+#    XXX pattern: Optional[str] = None,
+#    XXX resume: bool = True,
+#    XXX verbose: bool = False,
+#    XXX trace_id: Optional[str] = None,
+#    XXX batch_mode: bool = True,
+#    XXX compute: bool = True,
+#) -> Tuple[Optional[dag.DAG], Sequence[str]]:
