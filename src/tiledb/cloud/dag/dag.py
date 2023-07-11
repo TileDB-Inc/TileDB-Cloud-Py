@@ -1522,7 +1522,11 @@ class DAG:
             i = 0
             for arg in node.args:
                 i += 1
+                # Skip if first arg is function
                 if i == 1 and callable(arg):
+                    continue
+                # Skip if first arg is registered udf name
+                if i == 1 and type(arg) == str and "registered_udf_name" in kwargs:
                     continue
                 if isinstance(arg, Node):
                     if node._expand_node_output:
