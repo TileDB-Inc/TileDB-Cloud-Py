@@ -10,6 +10,9 @@ import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud.tiledb_cloud_error import TileDBCloudError
 
+# Default value if not set in config["vfs.s3.aws_region"]
+AWS_DEFAULT_REGION = "us-east-1"
+
 
 def read_aws_config(
     path: str = "~/.aws/credentials",
@@ -69,6 +72,11 @@ def set_aws_context(config: Optional[Mapping[str, Any]] = None) -> None:
         os.environ["AWS_EXTERNAL_ID"] = config["vfs.s3.aws_external_id"]
     if "vfs.s3.aws_session_name" in config:
         os.environ["AWS_ROLE_SESSION_NAME"] = config["vfs.s3.aws_session_name"]
+
+    # Always set AWS_DEFAULT_REGION because it is required by the AWS CLI
+    os.environ["AWS_DEFAULT_REGION"] = config.get(
+        "vfs.s3.aws_region", AWS_DEFAULT_REGION
+    )
 
 
 def get_logger(level: int = logging.INFO, name: str = __name__) -> logging.Logger:
