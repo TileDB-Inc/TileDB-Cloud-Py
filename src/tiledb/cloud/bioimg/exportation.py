@@ -18,10 +18,9 @@ def export(
     *args: Any,
     taskgraph_name: Optional[str] = None,
     num_batches: Optional[int] = None,
-    threads: Optional[int] = 8,
     resources: Optional[Mapping[str, Any]] = None,
     compute: bool = True,
-    namespace: Optional[str],
+    namespace: Optional[str] = None,
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
     """The function exports microscopy images from TileDB arrays
@@ -68,7 +67,7 @@ def export(
     batch_size, max_workers = scale_calc(source, num_batches)
 
     # Build the task graph
-    dag_name = DEFAULT_DAG_NAME if taskgraph_name is None else taskgraph_name
+    dag_name = taskgraph_name or DEFAULT_DAG_NAME
     task_prefix = f"{dag_name} - Task"
 
     logger.info("Building graph")
@@ -85,7 +84,6 @@ def export(
             export_tiff_udf,
             work,
             config,
-            threads,
             *args,
             name=f"{task_prefix} - {i}/{num_batches}",
             mode=tiledb.cloud.dag.Mode.BATCH,

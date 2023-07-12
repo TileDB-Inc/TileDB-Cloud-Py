@@ -88,7 +88,7 @@ def ingest(
     batch_size, max_workers = scale_calc(source, num_batches)
 
     # Build the task graph
-    dag_name = DEFAULT_DAG_NAME if taskgraph_name is None else taskgraph_name
+    dag_name = taskgraph_name or DEFAULT_DAG_NAME
     task_prefix = f"{dag_name} - Task"
 
     logger.info("Building graph")
