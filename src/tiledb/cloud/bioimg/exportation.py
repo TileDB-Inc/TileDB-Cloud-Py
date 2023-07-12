@@ -5,30 +5,28 @@ from tiledb.cloud._common.utils import logger
 from tiledb.cloud.bioimg.helpers import batch
 from tiledb.cloud.bioimg.helpers import get_uris
 from tiledb.cloud.bioimg.helpers import scale_calc
-from tiledb.cloud.bioimg.helpers import serialize_filter
 
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
-DEFAULT_DAG_NAME = "bioimg-ingestion"
+DEFAULT_DAG_NAME = "bioimg-exportation"
 
 
-def ingest(
+def export(
     source: Union[Sequence[str], str],
     output: str,
     config: Mapping[str, Any],
     *args: Any,
     taskgraph_name: Optional[str] = None,
     num_batches: Optional[int] = None,
-    threads: Optional[int] = 8,
     resources: Optional[Mapping[str, Any]] = None,
     compute: bool = True,
-    namespace: Optional[str],
+    namespace: Optional[str] = None,
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
-    """The function ingests microscopy images into TileDB arrays
+    """The function exports microscopy images from TileDB arrays
 
     :param source: uri / iterable of uris of input files
-    :param output: output dir for the ingested tiledb arrays
+    :param output: output dir for the exported tiledb arrays
     :param config: dict configuration to pass on tiledb.VFS
     :param taskgraph_name: Optional name for taskgraph, defaults to None
     :param num_batches: Number of graph nodes to spawn.
@@ -41,50 +39,31 @@ def ingest(
     :param namespace: The namespace where the DAG will run
     """
 
-    def ingest_tiff_udf(
+    def export_tiff_udf(
         io_uris: Sequence[Tuple],
         config: Mapping[str, Any],
         *args: Any,
         **kwargs,
     ):
-        """Internal udf that ingests server side batch of bioimaging files
-        into tiledb arrays using tiledb-bioimg API
+        """Internal udf that exports server side batch of tiledb arrays
+        2Tiff biomedical images using tiledb-bioimg API
 
         :param io_uris: Pairs of tiff input - output tdb uris
         :param config: dict configuration to pass on tiledb.VFS
         """
 
-        from tiledb import filter
         from tiledb.bioimg.converters.ome_tiff import OMETiffConverter
 
-        compressor = kwargs.get("compressor", None)
-        if compressor:
-            compressor_args = dict(compressor)
-            compressor_name = compressor_args.pop("_name")
-            if compressor_name:
-                compressor_args = {
-                    k: None if not v else v for k, v in compressor_args.items()
-                }
-                kwargs["compressor"] = vars(filter).get(compressor_name)(
-                    **compressor_args
-                )
-            else:
-                raise ValueError
-
         conf = tiledb.Config(params=config)
-        vfs = tiledb.VFS(config=conf)
-
-        with tiledb.scope_ctx(ctx_or_config=conf):
-            for input, output in io_uris:
-                with vfs.open(input) as src:
-                    OMETiffConverter.to_tiledb(src, output, **kwargs)
+        for input, output in io_uris:
+            OMETiffConverter.from_tiledb(input, output, config=conf, **kwargs)
 
     if isinstance(source, str):
         # Handle only lists
         source = [source]
 
     # Get the list of all BioImg samples input/out
-    samples = get_uris(source, output, config, "tdb")
+    samples = get_uris(source, output, config, "tiff")
     batch_size, max_workers = scale_calc(source, num_batches)
 
     # Build the task graph
@@ -99,23 +78,17 @@ def ingest(
         namespace=namespace,
     )
 
-    # serialize udf arguments
-    compressor = kwargs.pop("compressor", None)
-    compressor_serial = serialize_filter(compressor) if compressor else None
-
     for i, work in enumerate(batch(samples, batch_size)):
         logger.info(f"Adding batch {i}")
         graph.submit(
-            ingest_tiff_udf,
+            export_tiff_udf,
             work,
             config,
-            threads,
             *args,
             name=f"{task_prefix} - {i}/{num_batches}",
             mode=tiledb.cloud.dag.Mode.BATCH,
             resources=DEFAULT_RESOURCES if resources is None else resources,
             image_name=DEFAULT_IMG_NAME,
-            compressor=compressor_serial,
             **kwargs,
         )
 
@@ -124,7 +97,7 @@ def ingest(
     return graph
 
 
-def ingest_udf(*args: Any, **kwargs: Any) -> Dict[str, str]:
-    """Ingestor wrapper function that can be used as a UDF."""
-    grf = ingest(*args, **kwargs)
+def export_udf(*args: Any, **kwargs: Any) -> Dict[str, str]:
+    """Exporter wrapper function that can be used as a UDF."""
+    grf = export(*args, **kwargs)
     return {"status": "started", "graph_id": str(grf.server_graph_uuid)}
