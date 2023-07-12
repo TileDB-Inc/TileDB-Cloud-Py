@@ -1,6 +1,7 @@
 import enum
 import os
 import threading
+import uuid
 import warnings
 from concurrent import futures
 from typing import Callable, Optional, Sequence, TypeVar, Union
@@ -333,6 +334,144 @@ def list_arrays(
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
+def list_groups(
+    namespace: Optional[str] = None,
+    permission: Optional[str] = None,
+    group_type: Optional[str] = None,
+    tag: Union[str, Sequence[str], None] = None,
+    exclude_tag: Union[str, Sequence[str], None] = None,
+    search: Optional[str] = None,
+    flat: bool = False,
+    parent: Union[None, str, uuid.UUID] = None,
+    page: Optional[int] = None,
+    per_page: Optional[int] = None,
+    async_req: bool = False,
+) -> object:
+    """List groups owned by a user.
+
+    :param namespace: The namespace whose owned groups should be returned.
+    :param permissions: Filter arrays for the given permission.
+    :param group_type: If provided, return only groups of the given type.
+    :param tag: If provided, include groups matching the given tags.
+    :param exclude_tag: If provided, exclude groups matching the given tags.
+    :param search: A search string.
+    :param flat: If false (the default), return only "top-level" groups (i.e.,
+        no sub-groups within other groups).
+    :param parent: If provided, only show the children of the group
+        with the given ID.
+    :param page: For pagination, which page to return (1-based).
+    :param per_page: For pagination, how many elements to return on a page.
+    :param async_req: Run this asynchronously; return a Future of results.
+    """
+    api_instance = build(rest_api.GroupsApi)
+    return api_instance.list_owned_groups(
+        namespace=namespace,
+        permissions=permission,
+        group_type=group_type,
+        tag=_maybe_wrap(tag),
+        exclude_tag=_maybe_wrap(exclude_tag),
+        search=search,
+        flat=flat,
+        parent=_uuid_to_str(parent),
+        page=page,
+        per_page=per_page,
+        async_req=async_req,
+    )
+
+
+def list_public_groups(
+    namespace: Optional[str] = None,
+    permission: Optional[str] = None,
+    group_type: Optional[str] = None,
+    tag: Union[str, Sequence[str], None] = None,
+    exclude_tag: Union[str, Sequence[str], None] = None,
+    search: Optional[str] = None,
+    flat: bool = False,
+    parent: Union[None, str, uuid.UUID] = None,
+    page: Optional[int] = None,
+    per_page: Optional[int] = None,
+    async_req: bool = False,
+) -> object:
+    """List public groups owned by a user.
+
+    :param namespace: The namespace whose owned groups should be returned.
+    :param permissions: Filter arrays for the given permission.
+    :param group_type: If provided, return only groups of the given type.
+    :param tag: If provided, include groups matching the given tags.
+    :param exclude_tag: If provided, exclude groups matching the given tags.
+    :param search: A search string.
+    :param flat: If false (the default), return only "top-level" groups (i.e.,
+        no sub-groups within other groups).
+    :param parent: If provided, only show the children of the group
+        with the given ID.
+    :param page: For pagination, which page to return (1-based).
+    :param per_page: For pagination, how many elements to return on a page.
+    :param async_req: Run this asynchronously; return a Future of results.
+    """
+    api_instance = build(rest_api.GroupsApi)
+    return api_instance.list_public_groups(
+        namespace=namespace,
+        permissions=permission,
+        group_type=group_type,
+        tag=_maybe_wrap(tag),
+        exclude_tag=_maybe_wrap(exclude_tag),
+        search=search,
+        flat=flat,
+        parent=_uuid_to_str(parent),
+        page=page,
+        per_page=per_page,
+        async_req=async_req,
+    )
+
+
+def list_shared_groups(
+    namespace: Optional[str] = None,
+    shared_to: Optional[str] = None,
+    permission: Optional[str] = None,
+    group_type: Optional[str] = None,
+    tag: Union[str, Sequence[str], None] = None,
+    exclude_tag: Union[str, Sequence[str], None] = None,
+    search: Optional[str] = None,
+    flat: bool = False,
+    parent: Union[None, str, uuid.UUID] = None,
+    page: Optional[int] = None,
+    per_page: Optional[int] = None,
+    async_req: bool = False,
+) -> object:
+    """List groups shared by/to specified namespaces.
+
+    :param namespace: The namespace whose owned groups should be returned.
+    :param shared_to: A target, to return groups shared to this namespace.
+    :param permissions: Filter arrays for the given permission.
+    :param group_type: If provided, return only groups of the given type.
+    :param tag: If provided, include groups matching the given tags.
+    :param exclude_tag: If provided, exclude groups matching the given tags.
+    :param search: A search string.
+    :param flat: If false (the default), return only "top-level" groups (i.e.,
+        no sub-groups within other groups).
+    :param parent: If provided, only show the children of the group
+        with the given ID.
+    :param page: For pagination, which page to return (1-based).
+    :param per_page: For pagination, how many elements to return on a page.
+    :param async_req: Run this asynchronously; return a Future of results.
+    """
+    api_instance = build(rest_api.GroupsApi)
+    return api_instance.list_shared_groups(
+        namespace=namespace,
+        shared_to=shared_to,
+        permissions=permission,
+        group_type=group_type,
+        tag=_maybe_wrap(tag),
+        exclude_tag=_maybe_wrap(exclude_tag),
+        search=search,
+        flat=flat,
+        parent=_uuid_to_str(parent),
+        page=page,
+        per_page=per_page,
+        async_req=async_req,
+    )
+
+
 def user_profile(async_req=False):
     """
     :param async_req: return future instead of results for async support
@@ -553,3 +692,16 @@ def _maybe_unwrap(param: Union[None, str, Sequence[str]]) -> Optional[str]:
     except IndexError:
         # If we're passed an empty sequence, treat it as no parameter.
         return None
+
+
+def _uuid_to_str(param: Union[None, str, uuid.UUID]) -> Optional[str]:
+    if isinstance(param, uuid.UUID):
+        return str(param)
+    return param
+
+
+def _maybe_wrap(param: Union[None, str, Sequence[str]]) -> Optional[Sequence[str]]:
+    """Wraps the value in a sequence if passed an individual string."""
+    if isinstance(param, str):
+        return (param,)
+    return param

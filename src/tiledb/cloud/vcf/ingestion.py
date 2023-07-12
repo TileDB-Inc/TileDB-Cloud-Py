@@ -5,7 +5,7 @@ import sys
 from collections import defaultdict
 from math import ceil
 from multiprocessing.pool import ThreadPool
-from typing import Any, Mapping, Optional, Sequence, Union
+from typing import Any, Mapping, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
@@ -19,11 +19,10 @@ from tiledb.cloud.utilities import read_file
 from tiledb.cloud.utilities import run_dag
 from tiledb.cloud.utilities import set_aws_context
 from tiledb.cloud.utilities import write_log_event
-
-from .utils import create_index_file
-from .utils import find_index
-from .utils import get_record_count
-from .utils import get_sample_name
+from tiledb.cloud.vcf.utils import create_index_file
+from tiledb.cloud.vcf.utils import find_index
+from tiledb.cloud.vcf.utils import get_record_count
+from tiledb.cloud.vcf.utils import get_sample_name
 
 # Testing hooks
 local_ingest = False
@@ -499,7 +498,7 @@ def ingest_manifest_udf(
                     records = 0
                 else:
                     records = get_record_count(vcf_uri, index_uri)
-                    if records == 0:
+                    if records is None:
                         status = "" if status == "ok" else status + ","
                         status += "bad index"
 
@@ -632,7 +631,7 @@ def consolidate_dataset_udf(
                 continue
 
             # NOTE: REST currently only supports fragment_meta, commits, metadata
-            modes = ["commits", "fragment_meta", "array_meta"]
+            modes = ["commits", "fragment_meta"]
 
             # Consolidate fragments for selected arrays
             if name in [LOG_ARRAY, MANIFEST_ARRAY, "vcf_headers"]:
@@ -674,6 +673,7 @@ def ingest_manifest_dag(
     vcf_attrs: Optional[str] = None,
     anchor_gap: Optional[int] = None,
     verbose: bool = False,
+    batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
 ) -> None:
     """
@@ -693,17 +693,17 @@ def ingest_manifest_dag(
     :param vcf_attrs: VCF with all INFO/FORMAT fields to materialize, defaults to None
     :param anchor_gap: anchor gap for VCF dataset, defaults to None
     :param verbose: verbose logging, defaults to False
+    :param batch_mode: run all DAGs in batch mode, defaults to True
     :param access_credentials_name: name of role in TileDB Cloud to use in tasks
     """
 
     logger = get_logger()
 
-    dag_mode = dag.Mode.BATCH if access_credentials_name else dag.Mode.REALTIME
-    kwargs = (
-        {"access_credentials_name": access_credentials_name}
-        if access_credentials_name
-        else {}
-    )
+    batch_mode = batch_mode or bool(access_credentials_name)
+    dag_mode = dag.Mode.BATCH if batch_mode else dag.Mode.REALTIME
+
+    # Only pass `access_credentials_name` to `submit` when running in batch mode.
+    kwargs = {"access_credentials_name": access_credentials_name} if batch_mode else {}
 
     graph = dag.DAG(
         name="vcf-filter-uris",
@@ -842,8 +842,10 @@ def ingest_samples_dag(
     ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     trace_id: Optional[str] = None,
+    batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
-) -> dag.DAG:
+    compute: bool = True,
+) -> Tuple[Optional[dag.DAG], Sequence[str]]:
     """
     Create a DAG to ingest samples into the dataset.
 
@@ -861,18 +863,20 @@ def ingest_samples_dag(
     :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
     :param trace_id: trace ID for logging, defaults to None
+    :param batch_mode: run all DAGs in batch mode, defaults to True
     :param access_credentials_name: name of role in TileDB Cloud to use in tasks
-    :return: sample ingestion DAG for visualization
+    :param compute: when True the DAG will be computed before it is returned,
+        defaults to True
+    :return: sample ingestion DAG and list of sample URIs ingested
     """
 
     logger = setup(config, verbose)
 
-    dag_mode = dag.Mode.BATCH if access_credentials_name else dag.Mode.REALTIME
-    kwargs = (
-        {"access_credentials_name": access_credentials_name}
-        if access_credentials_name
-        else {}
-    )
+    batch_mode = batch_mode or bool(access_credentials_name)
+    dag_mode = dag.Mode.BATCH if batch_mode else dag.Mode.REALTIME
+
+    # Only pass `access_credentials_name` to `submit` when running in batch mode.
+    kwargs = {"access_credentials_name": access_credentials_name} if batch_mode else {}
 
     graph = dag.DAG(
         name="vcf-filter-samples",
@@ -899,13 +903,11 @@ def ingest_samples_dag(
 
     if not sample_uris:
         logger.info("No new samples to ingest.")
-        return
+        return None, []
 
     # Limit number of samples to ingest
     if max_samples:
         sample_uris = sample_uris[:max_samples]
-
-    logger.info("Ingesting %d samples.", len(sample_uris))
 
     contig_fragment_merging = True
     if type(contigs) == list:
@@ -997,18 +999,19 @@ def ingest_samples_dag(
         if consolidate:
             consolidate.depends_on(ingest)
 
-    logger.debug("Submitting DAG")
-    run_dag(graph, wait=local_ingest)
+    if compute:
+        logger.info("Ingesting %d samples.", len(sample_uris))
+        run_dag(graph, wait=local_ingest)
 
-    if not local_ingest:
-        logger.info(
-            "Batch ingestion submitted -"
-            " https://cloud.tiledb.com/activity/taskgraphs/%s/%s",
-            graph.namespace,
-            graph.server_graph_uuid,
-        )
+        if not local_ingest:
+            logger.info(
+                "Batch ingestion submitted -"
+                " https://cloud.tiledb.com/activity/taskgraphs/%s/%s",
+                graph.namespace,
+                graph.server_graph_uuid,
+            )
 
-    return graph
+    return graph, sample_uris
 
 
 # --------------------------------------------------------------------
@@ -1040,8 +1043,10 @@ def ingest(
     ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
     trace_id: Optional[str] = None,
+    batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
-) -> dag.DAG:
+    compute: bool = True,
+) -> Tuple[Optional[dag.DAG], Sequence[str]]:
     """
     Ingest samples into a dataset.
 
@@ -1074,8 +1079,12 @@ def ingest(
     :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
     :param trace_id: trace ID for logging, defaults to None
+    :param batch_mode: run all DAGs in batch mode, only set to False for dev or demos,
+        defaults to True
     :param access_credentials_name: name of role in TileDB Cloud to use in tasks
-    :return: sample ingestion DAG for visualization
+    :param compute: when True the DAG will be computed before it is returned,
+        defaults to True
+    :return: sample ingestion DAG and list of sample URIs ingested
     """
 
     # Validate user input
@@ -1088,17 +1097,16 @@ def ingest(
     if sample_list_uri and (pattern or ignore):
         raise ValueError("Cannot specify `pattern` or `ignore` with `sample_list_uri`.")
 
+    if not batch_mode and access_credentials_name:
+        raise ValueError(
+            "Cannot specify `access_credentials_name` with `batch_mode=False`."
+        )
+
     # Remove any trailing slashes
     dataset_uri = dataset_uri.rstrip("/")
 
     logger = setup(config, verbose)
     logger.info("Ingesting VCF samples into %r", dataset_uri)
-
-    kwargs = (
-        {"access_credentials_name": access_credentials_name}
-        if access_credentials_name
-        else {}
-    )
 
     # Add VCF URIs to the manifest
     ingest_manifest_dag(
@@ -1116,11 +1124,12 @@ def ingest(
         vcf_attrs=vcf_attrs,
         anchor_gap=anchor_gap,
         verbose=verbose,
-        **kwargs,
+        batch_mode=batch_mode,
+        access_credentials_name=access_credentials_name,
     )
 
     # Ingest VCFs using URIs in the manifest
-    return ingest_samples_dag(
+    dag, sample_uris = ingest_samples_dag(
         dataset_uri,
         config=config,
         namespace=namespace,
@@ -1133,5 +1142,9 @@ def ingest(
         ingest_resources=ingest_resources,
         verbose=verbose,
         trace_id=trace_id,
-        **kwargs,
+        batch_mode=batch_mode,
+        access_credentials_name=access_credentials_name,
+        compute=compute,
     )
+
+    return dag, sample_uris

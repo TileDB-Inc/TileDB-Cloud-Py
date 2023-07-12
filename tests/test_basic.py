@@ -393,3 +393,32 @@ class RangesTest(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             parse_ranges(["idx"])
+
+
+class GroupsTest(unittest.TestCase):
+    """Extremely basic tests to verify minimal groups listing functionality."""
+
+    def test_groups(self):
+        got = client.list_groups(
+            per_page=2,
+            page=4,
+        )
+        self.assertEqual(2, len(got.groups))
+
+    def test_public_groups(self):
+        got = client.list_public_groups(
+            namespace="tiledb-inc",
+            per_page=3,
+            page=2,
+        )
+        self.assertEqual(3, len(got.groups))
+        self.assertEqual(2, got.pagination_metadata.page)
+        self.assertEqual(3, got.pagination_metadata.per_page)
+        self.assertEqual(3, len(got.groups))
+
+    def test_shared_groups(self):
+        got = client.list_shared_groups(
+            per_page=1,
+            page=1,
+        )
+        self.assertEqual(0, len(got.groups))
