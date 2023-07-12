@@ -95,7 +95,7 @@ class GenericUDFTest(unittest.TestCase):
             )
 
             namespace = client.find_organization_or_user_for_default_charges(
-                config.user
+                config.user, required_action=rest_api.NamespaceActions.RUN_JOB
             )
 
             response: urllib3.HTTPResponse = client.build(

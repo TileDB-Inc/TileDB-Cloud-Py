@@ -130,7 +130,9 @@ class LocalExecutor(_base.IClientExecutor):
 
     @property
     def namespace(self) -> str:
-        return self._namespace or client.default_charged_namespace()
+        return self._namespace or client.default_charged_namespace(
+            required_action=rest_api.NamespaceActions.RUN_JOB
+        )
 
     @namespace.setter
     def namespace(self, new_namespace: Optional[str]) -> None:
