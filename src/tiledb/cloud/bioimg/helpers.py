@@ -58,7 +58,7 @@ def batch(iterable, chunks):
         yield iterable[ndx : min(ndx + chunks, length)]
 
 
-def scale_calc(source, num_batches):
+def scale_calc(samples, num_batches):
     """Calculate scaling settings for batch_size and max_workers
 
     :param source: The source iterable containing files to be ingested/exported
@@ -67,12 +67,6 @@ def scale_calc(source, num_batches):
     """
     # If num_batches is default create number of images nodes
     # constraint node max_workers to 20 fully heuristic
-    if num_batches is None:
-        num_batches = len(source)
-        batch_size = 1
-        max_workers = 20
-    else:
-        batch_size = math.ceil(len(source) / num_batches)
-        max_workers = None
-
+    batch_size = 1 if num_batches is None else math.ceil(len(samples) / num_batches)
+    max_workers = 20 if num_batches is None else None
     return batch_size, max_workers
