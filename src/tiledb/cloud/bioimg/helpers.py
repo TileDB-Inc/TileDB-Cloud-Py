@@ -16,11 +16,13 @@ def get_uris(
     vfs = tiledb.VFS(config=config)
 
     def create_output_path(input_file, output_dir) -> str:
-        return os.path.join(output_dir, os.path.basename(input_file) + f".{output_ext}")
+        filename = os.path.splitext(os.path.basename(input_file))[0]
+        return os.path.join(output_dir, filename + f".{output_ext}")
 
     def iter_paths(sequence) -> Iterator[Tuple]:
         for uri in sequence:
-            yield uri, create_output_path(uri, output_dir)
+            if uri.endswith((".tiff", ".tif", ".tdb")):
+                yield uri, create_output_path(uri, output_dir)
 
     if len(source) == 1 and vfs.is_dir(source[0]):
         # Check if the dir is actually a tiledb group for exportation
@@ -28,8 +30,8 @@ def get_uris(
             if tiledb.object_type(source[0]) != "group":
                 # Folder like input
                 contents = vfs.ls(source[0])
-                if len(contents) == 1:
-                    return tuple(iter_paths(contents[1:]))
+                if len(contents) != 0:
+                    return tuple(iter_paths(contents))
                 else:
                     raise ValueError("Input bucket should contain images for ingestion")
             else:
@@ -56,7 +58,7 @@ def batch(iterable, chunks):
         yield iterable[ndx : min(ndx + chunks, length)]
 
 
-def scale_calc(source, num_batches):
+def scale_calc(samples, num_batches):
     """Calculate scaling settings for batch_size and max_workers
 
     :param source: The source iterable containing files to be ingested/exported
@@ -65,12 +67,6 @@ def scale_calc(source, num_batches):
     """
     # If num_batches is default create number of images nodes
     # constraint node max_workers to 20 fully heuristic
-    if num_batches is None:
-        num_batches = len(source)
-        batch_size = 1
-        max_workers = 20
-    else:
-        batch_size = math.ceil(len(source) / num_batches)
-        max_workers = None
-
+    batch_size = 1 if num_batches is None else math.ceil(len(samples) / num_batches)
+    max_workers = 20 if num_batches is None else None
     return batch_size, max_workers
