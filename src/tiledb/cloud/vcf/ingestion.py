@@ -5,7 +5,6 @@ import sys
 from collections import defaultdict
 from fnmatch import fnmatch
 from math import ceil
-from multiprocessing.pool import ThreadPool
 from typing import Any, Mapping, Optional, Sequence, Tuple, Union
 
 import numpy as np
@@ -535,7 +534,7 @@ def ingest_manifest_udf(
     :param verbose: verbose logging, defaults to False
     """
 
-    logger = get_logger_wrapper(verbose)
+    get_logger_wrapper(verbose)
 
     with tiledb.scope_ctx(config):
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
@@ -705,7 +704,7 @@ def consolidate_dataset_udf(
     if isinstance(include, str):
         include = [include]
 
-    logger = get_logger_wrapper(verbose)
+    get_logger_wrapper(verbose)
 
     with tiledb.scope_ctx(config):
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
