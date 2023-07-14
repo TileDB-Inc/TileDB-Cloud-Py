@@ -183,39 +183,40 @@ def create_dataset_udf(
     logger.debug("tiledbvcf=%s", tiledbvcf.version)
 
     # Check if the dataset already exists
-    if tiledb.object_type(dataset_uri) != "group":
-        logger.info("Creating dataset: %r", dataset_uri)
+    with tiledb.scope_ctx(config):
+        if tiledb.object_type(dataset_uri) != "group":
+            logger.info("Creating dataset: %r", dataset_uri)
 
-        # vcf_attrs overrides extra_attrs
-        if vcf_attrs:
-            extra_attrs = None
-        elif isinstance(extra_attrs, str):
-            extra_attrs = [extra_attrs]
+            # vcf_attrs overrides extra_attrs
+            if vcf_attrs:
+                extra_attrs = None
+            elif isinstance(extra_attrs, str):
+                extra_attrs = [extra_attrs]
 
-        ds = tiledbvcf.Dataset(
-            dataset_uri, mode="w", cfg=tiledbvcf.ReadConfig(tiledb_config=config)
-        )
-        ds.create_dataset(
-            enable_allele_count=True,
-            enable_variant_stats=True,
-            extra_attrs=extra_attrs,
-            vcf_attrs=vcf_attrs,
-            anchor_gap=anchor_gap,
-        )
+            ds = tiledbvcf.Dataset(
+                dataset_uri, mode="w", cfg=tiledbvcf.ReadConfig(tiledb_config=config)
+            )
+            ds.create_dataset(
+                enable_allele_count=True,
+                enable_variant_stats=True,
+                extra_attrs=extra_attrs,
+                vcf_attrs=vcf_attrs,
+                anchor_gap=anchor_gap,
+            )
 
-        # Create log array and add it to the dataset group
-        log_uri = f"{dataset_uri}/{LOG_ARRAY}"
-        create_log_array(log_uri)
-        with tiledb.Group(dataset_uri, "w") as group:
-            group.add(log_uri, name=LOG_ARRAY)
+            # Create log array and add it to the dataset group
+            log_uri = f"{dataset_uri}/{LOG_ARRAY}"
+            create_log_array(log_uri)
+            with tiledb.Group(dataset_uri, "w") as group:
+                group.add(log_uri, name=LOG_ARRAY)
 
-        write_log_event(log_uri, "create_dataset_udf", "create", data=dataset_uri)
+            write_log_event(log_uri, "create_dataset_udf", "create", data=dataset_uri)
 
-        create_manifest(dataset_uri)
-    else:
-        logger.info("Using existing dataset: %r", dataset_uri)
+            create_manifest(dataset_uri)
+        else:
+            logger.info("Using existing dataset: %r", dataset_uri)
 
-    return dataset_uri
+        return dataset_uri
 
 
 def read_uris_udf(
@@ -239,17 +240,18 @@ def read_uris_udf(
 
     logger = setup(config, verbose)
 
-    with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY):
-        result = []
-        vfs = tiledb.VFS()
-        for line in vfs.open(list_uri):
-            result.append(line.decode().strip())
-            if max_files and len(result) == max_files:
-                break
+    with tiledb.scope_ctx(config):
+        with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY):
+            result = []
+            vfs = tiledb.VFS()
+            for line in vfs.open(list_uri):
+                result.append(line.decode().strip())
+                if max_files and len(result) == max_files:
+                    break
 
-        logger.info("Found %d VCF files.", len(result))
+            logger.info("Found %d VCF files.", len(result))
 
-    return result
+        return result
 
 
 def find_uris_udf(
@@ -362,23 +364,24 @@ def filter_uris_udf(
 
     logger = setup(config, verbose)
 
-    with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
-        # Read all sample URIs in the manifest
-        group = tiledb.Group(dataset_uri)
-        manifest_uri = group[MANIFEST_ARRAY].uri
-        with tiledb.open(manifest_uri) as A:
-            manifest_df = A.df[:]
+    with tiledb.scope_ctx(config):
+        with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
+            # Read all sample URIs in the manifest
+            group = tiledb.Group(dataset_uri)
+            manifest_uri = group[MANIFEST_ARRAY].uri
+            with tiledb.open(manifest_uri) as A:
+                manifest_df = A.df[:]
 
-        # Find URIs that are not in the manifest
-        sample_uris_set = set(sample_uris)
-        manifest_uris = set(manifest_df.vcf_uri)
-        result = sorted(list(sample_uris_set.difference(manifest_uris)))
+            # Find URIs that are not in the manifest
+            sample_uris_set = set(sample_uris)
+            manifest_uris = set(manifest_df.vcf_uri)
+            result = sorted(list(sample_uris_set.difference(manifest_uris)))
 
-        logger.info("%d URIs in the manifest.", len(manifest_uris))
-        logger.info("%d new URIs.", len(result))
-        prof.write("count", len(result))
+            logger.info("%d URIs in the manifest.", len(manifest_uris))
+            logger.info("%d new URIs.", len(result))
+            prof.write("count", len(result))
 
-    return result
+        return result
 
 
 def filter_samples_udf(
@@ -400,38 +403,39 @@ def filter_samples_udf(
     logger = setup(config, verbose)
     logger.debug("tiledbvcf=%s", tiledbvcf.version)
 
-    with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
-        # Read existing samples in VCF dataset
-        ds = tiledbvcf.Dataset(
-            dataset_uri,
-            cfg=tiledbvcf.ReadConfig(tiledb_config=config),
-        )
-        existing_samples = set(ds.samples())
+    with tiledb.scope_ctx(config):
+        with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
+            # Read existing samples in VCF dataset
+            ds = tiledbvcf.Dataset(
+                dataset_uri,
+                cfg=tiledbvcf.ReadConfig(tiledb_config=config),
+            )
+            existing_samples = set(ds.samples())
 
-        # Read all samples in the manifest with status == "ok"
-        group = tiledb.Group(dataset_uri)
-        manifest_uri = group[MANIFEST_ARRAY].uri
+            # Read all samples in the manifest with status == "ok"
+            group = tiledb.Group(dataset_uri)
+            manifest_uri = group[MANIFEST_ARRAY].uri
 
-        with tiledb.open(manifest_uri) as A:
-            manifest_df = A.query(
-                cond="status == 'ok' or status == 'missing index'"
-            ).df[:]
+            with tiledb.open(manifest_uri) as A:
+                manifest_df = A.query(
+                    cond="status == 'ok' or status == 'missing index'"
+                ).df[:]
 
-        # Sort manifest by sample_name
-        manifest_df = manifest_df.sort_values(by=["sample_name"])
+            # Sort manifest by sample_name
+            manifest_df = manifest_df.sort_values(by=["sample_name"])
 
-        # Find samples that have not already been ingested
-        manifest_samples = set(manifest_df.sample_name)
-        new_samples = manifest_samples.difference(existing_samples)
-        manifest_df = manifest_df[manifest_df.sample_name.isin(new_samples)]
-        result = manifest_df.vcf_uri.to_list()
+            # Find samples that have not already been ingested
+            manifest_samples = set(manifest_df.sample_name)
+            new_samples = manifest_samples.difference(existing_samples)
+            manifest_df = manifest_df[manifest_df.sample_name.isin(new_samples)]
+            result = manifest_df.vcf_uri.to_list()
 
-        logger.info("%d samples in the manifest.", len(manifest_samples))
-        logger.info("%d samples already ingested.", len(existing_samples))
-        logger.info("%d new samples to ingest.", len(result))
-        prof.write("count", len(result))
+            logger.info("%d samples in the manifest.", len(manifest_samples))
+            logger.info("%d samples already ingested.", len(existing_samples))
+            logger.info("%d new samples to ingest.", len(result))
+            prof.write("count", len(result))
 
-    return result
+        return result
 
 
 def ingest_manifest_udf(
@@ -454,64 +458,65 @@ def ingest_manifest_udf(
 
     setup(config, verbose)
 
-    with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
-        group = tiledb.Group(dataset_uri)
-        manifest_uri = group[MANIFEST_ARRAY].uri
+    with tiledb.scope_ctx(config):
+        with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
+            group = tiledb.Group(dataset_uri)
+            manifest_uri = group[MANIFEST_ARRAY].uri
 
-        vfs = tiledb.VFS()
+            vfs = tiledb.VFS()
 
-        def file_size(uri: str) -> int:
-            try:
-                return vfs.file_size(uri)
-            except Exception:
-                return 0
+            def file_size(uri: str) -> int:
+                try:
+                    return vfs.file_size(uri)
+                except Exception:
+                    return 0
 
-        with tiledb.open(manifest_uri, "w") as A:
-            keys = []
-            values = defaultdict(list)
+            with tiledb.open(manifest_uri, "w") as A:
+                keys = []
+                values = defaultdict(list)
 
-            for vcf_uri in sample_uris:
-                status = "ok"
+                for vcf_uri in sample_uris:
+                    status = "ok"
 
-                # Check for sample name issues
-                sample_name = get_sample_name(vcf_uri)
-                if not sample_name:
-                    status = "missing sample name"
-                elif len(sample_name.split()) > 1:
-                    status = "multiple samples"
-                elif sample_name in keys:
-                    # TODO: check for duplicate sample names across all
-                    # ingest_manifest_udf calls
-                    status = "duplicate sample name"
-                    # Generate a unique sample name for the manifest
-                    sample_name_base = sample_name
-                    i = 0
-                    while sample_name in keys:
-                        sample_name = f"{sample_name_base}-dup{i}"
-                        i += 1
+                    # Check for sample name issues
+                    sample_name = get_sample_name(vcf_uri)
+                    if not sample_name:
+                        status = "missing sample name"
+                    elif len(sample_name.split()) > 1:
+                        status = "multiple samples"
+                    elif sample_name in keys:
+                        # TODO: check for duplicate sample names across all
+                        # ingest_manifest_udf calls
+                        status = "duplicate sample name"
+                        # Generate a unique sample name for the manifest
+                        sample_name_base = sample_name
+                        i = 0
+                        while sample_name in keys:
+                            sample_name = f"{sample_name_base}-dup{i}"
+                            i += 1
 
-                # Check for index issues
-                index_uri = find_index(vcf_uri)
-                if not index_uri:
-                    status = "" if status == "ok" else status + ","
-                    status += "missing index"
-                    records = 0
-                else:
-                    records = get_record_count(vcf_uri, index_uri)
-                    if records is None:
+                    # Check for index issues
+                    index_uri = find_index(vcf_uri)
+                    if not index_uri:
                         status = "" if status == "ok" else status + ","
-                        status += "bad index"
+                        status += "missing index"
+                        records = 0
+                    else:
+                        records = get_record_count(vcf_uri, index_uri)
+                        if records is None:
+                            status = "" if status == "ok" else status + ","
+                            status += "bad index"
 
-                keys.append(sample_name)
-                values["status"].append(status)
-                values["vcf_uri"].append(vcf_uri)
-                values["vcf_bytes"].append(str(file_size(vcf_uri)))
-                values["index_uri"].append(index_uri)
-                values["index_bytes"].append(str(file_size(index_uri)))
-                values["records"].append(str(records))
+                    keys.append(sample_name)
+                    values["status"].append(status)
+                    values["vcf_uri"].append(vcf_uri)
+                    values["vcf_bytes"].append(str(file_size(vcf_uri)))
+                    values["index_uri"].append(index_uri)
+                    values["index_bytes"].append(str(file_size(index_uri)))
+                    values["records"].append(str(records))
 
-            # Write to TileDB array
-            A[keys] = dict(values)
+                # Write to TileDB array
+                A[keys] = dict(values)
 
 
 def ingest_samples_udf(
@@ -554,39 +559,42 @@ def ingest_samples_udf(
 
     trace = trace_id == id
 
-    with Profiler(
-        group_uri=dataset_uri, group_member=LOG_ARRAY, id=id, trace=trace
-    ) as prof:
-        prof.write("uris", str(len(sample_uris)), ",".join(sample_uris))
+    with tiledb.scope_ctx(config):
+        with Profiler(
+            group_uri=dataset_uri, group_member=LOG_ARRAY, id=id, trace=trace
+        ) as prof:
+            prof.write("uris", str(len(sample_uris)), ",".join(sample_uris))
 
-        # Handle missing index
-        def create_index_file_worker(uri: str) -> None:
-            if not find_index(uri):
-                logger.debug("indexing %r", uri)
-                create_index_file(uri)
+            # Handle missing index
+            def create_index_file_worker(uri: str) -> None:
+                if not find_index(uri):
+                    logger.debug("indexing %r", uri)
+                    create_index_file(uri)
 
-        with ThreadPool(threads) as pool:
-            pool.map(create_index_file_worker, sample_uris)
+            with ThreadPool(threads) as pool:
+                pool.map(create_index_file_worker, sample_uris)
 
-        # TODO: Handle un-bgzipped files
+            # TODO: Handle un-bgzipped files
 
-        level = "debug" if verbose else "info"
-        tiledbvcf.config_logging(level, "ingest.log")
-        ds = tiledbvcf.Dataset(
-            uri=dataset_uri, mode="w", cfg=tiledbvcf.ReadConfig(tiledb_config=config)
-        )
-        ds.ingest_samples(
-            sample_uris=sample_uris,
-            sample_batch_size=sample_batch_size,
-            threads=threads,
-            total_memory_budget_mb=memory_mb,
-            contig_mode=contig_mode,
-            contigs_to_keep_separate=contigs_to_keep_separate,
-            contig_fragment_merging=contig_fragment_merging,
-            resume=resume,
-        )
+            level = "debug" if verbose else "info"
+            tiledbvcf.config_logging(level, "ingest.log")
+            ds = tiledbvcf.Dataset(
+                uri=dataset_uri,
+                mode="w",
+                cfg=tiledbvcf.ReadConfig(tiledb_config=config),
+            )
+            ds.ingest_samples(
+                sample_uris=sample_uris,
+                sample_batch_size=sample_batch_size,
+                threads=threads,
+                total_memory_budget_mb=memory_mb,
+                contig_mode=contig_mode,
+                contigs_to_keep_separate=contigs_to_keep_separate,
+                contig_fragment_merging=contig_fragment_merging,
+                resume=resume,
+            )
 
-        prof.write("log", extra=read_file("ingest.log"))
+            prof.write("log", extra=read_file("ingest.log"))
 
 
 def consolidate_dataset_udf(
@@ -619,37 +627,38 @@ def consolidate_dataset_udf(
 
     setup(config, verbose)
 
-    with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
-        group = tiledb.Group(dataset_uri)
+    with tiledb.scope_ctx(config):
+        with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
+            group = tiledb.Group(dataset_uri)
 
-        for member in group:
-            uri = member.uri
-            name = member.name
+            for member in group:
+                uri = member.uri
+                name = member.name
 
-            # Skip excluded and non-included arrays
-            if (exclude and name in exclude) or (include and name not in include):
-                continue
+                # Skip excluded and non-included arrays
+                if (exclude and name in exclude) or (include and name not in include):
+                    continue
 
-            # NOTE: REST currently only supports fragment_meta, commits, metadata
-            modes = ["commits", "fragment_meta"]
+                # NOTE: REST currently only supports fragment_meta, commits, metadata
+                modes = ["commits", "fragment_meta"]
 
-            # Consolidate fragments for selected arrays
-            if name in [LOG_ARRAY, MANIFEST_ARRAY, "vcf_headers"]:
-                modes += ["fragments"]
+                # Consolidate fragments for selected arrays
+                if name in [LOG_ARRAY, MANIFEST_ARRAY, "vcf_headers"]:
+                    modes += ["fragments"]
 
-            for mode in modes:
-                config = tiledb.Config({"sm.consolidation.mode": mode})
-                try:
-                    tiledb.consolidate(uri, config=config)
-                except Exception as e:
-                    print(e)
+                for mode in modes:
+                    config = tiledb.Config({"sm.consolidation.mode": mode})
+                    try:
+                        tiledb.consolidate(uri, config=config)
+                    except Exception as e:
+                        print(e)
 
-            for mode in modes:
-                config = tiledb.Config({"sm.vacuum.mode": mode})
-                try:
-                    tiledb.vacuum(uri, config=config)
-                except Exception as e:
-                    print(e)
+                for mode in modes:
+                    config = tiledb.Config({"sm.vacuum.mode": mode})
+                    try:
+                        tiledb.vacuum(uri, config=config)
+                    except Exception as e:
+                        print(e)
 
 
 # --------------------------------------------------------------------
