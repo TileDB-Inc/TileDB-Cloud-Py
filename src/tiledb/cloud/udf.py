@@ -81,7 +81,9 @@ def exec_base(
 
     api_instance = client.build(rest_api.UdfApi)
 
-    namespace = namespace or client.default_charged_namespace()
+    namespace = namespace or client.default_charged_namespace(
+        required_action=rest_api.NamespaceActions.RUN_JOB
+    )
 
     user_func: Union[str, Callable]
     if name:

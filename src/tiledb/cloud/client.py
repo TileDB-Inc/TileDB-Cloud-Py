@@ -148,9 +148,18 @@ def default_user() -> models.User:
     return config.user
 
 
-def default_charged_namespace() -> str:
-    """Returns the namespace :func:`default_user` charges to by default."""
-    return find_organization_or_user_for_default_charges(default_user())
+def default_charged_namespace(required_action: Optional[str] = None) -> str:
+    """Returns the namespace :func:`default_user` charges to by default.
+
+    If `required_action` is set then it checks amond the user
+    organizations to find the first one that support this action.
+
+    :param required_action: a namespace action, must be an enum
+        from rest_api.NamespaceActions
+    """
+    return find_organization_or_user_for_default_charges(
+        default_user(), required_action
+    )
 
 
 def list_public_arrays(
@@ -520,7 +529,10 @@ def organization(organization, async_req=False):
         raise tiledb_cloud_error.check_exc(exc) from None
 
 
-def find_organization_or_user_for_default_charges(user):
+def find_organization_or_user_for_default_charges(
+    user: models.User,
+    required_action: Optional[str] = None,
+) -> str:
     """
     Takes a user model and finds either the first non public organization
         or the user itself
@@ -529,20 +541,23 @@ def find_organization_or_user_for_default_charges(user):
         (organization or user if not part of any organization)
     """
 
-    namespace_to_charge = user.username
-
-    if (
-        user.default_namespace_charged is not None
-        and user.default_namespace_charged != ""
-    ):
+    if user.default_namespace_charged:
         return user.default_namespace_charged
 
     for org in user.organizations:
-        if org.organization_name != "public":
-            namespace_to_charge = org.organization_name
-            break
+        if org.organization_name == "public":
+            continue
+        if required_action is None or required_action in org.allowed_actions:
+            return org.organization_name
 
-    return namespace_to_charge
+    if required_action is None or required_action in user.allowed_actions:
+        return user.username
+
+    raise Exception(
+        f"user {user.username} does not belong to "
+        f"an organization supporting {required_action}. "
+        "Please check the default_namespace in the console"
+    )
 
 
 class RetryMode(enum.Enum):

@@ -603,7 +603,9 @@ class DAG:
         self.nodes: Dict[uuid.UUID, Node] = {}
         self.nodes_by_name: Dict[str, Node] = {}
 
-        self.namespace = namespace or client.default_charged_namespace()
+        self.namespace = namespace or client.default_charged_namespace(
+            required_action=rest_api.NamespaceActions.RUN_JOB
+        )
         self.name = name
         self.server_graph_uuid: Optional[uuid.UUID] = None
         self.max_workers = max_workers
@@ -1749,7 +1751,9 @@ def server_logs(
     if not the_id:
         return None
 
-    namespace = namespace or client.default_charged_namespace()
+    namespace = namespace or client.default_charged_namespace(
+        required_action=rest_api.NamespaceActions.RUN_JOB
+    )
 
     return client.build(rest_api.TaskGraphLogsApi).get_task_graph_log(
         namespace=namespace,

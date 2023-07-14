@@ -73,7 +73,9 @@ class DAGClassTest(unittest.TestCase):
             d._build_log_structure(),
             models.TaskGraphLog(
                 name="a cool dag",
-                namespace=client.default_charged_namespace(),
+                namespace=client.default_charged_namespace(
+                    required_action=rest_api.NamespaceActions.RUN_JOB
+                ),
                 nodes=[
                     models.TaskGraphNodeMetadata(
                         client_node_uuid=str(node_1.id),
@@ -146,7 +148,9 @@ class DAGClassTest(unittest.TestCase):
             d._build_log_structure(),
             models.TaskGraphLog(
                 name="a cool server dag",
-                namespace=client.default_charged_namespace(),
+                namespace=client.default_charged_namespace(
+                    required_action=rest_api.NamespaceActions.RUN_JOB
+                ),
                 nodes=[
                     models.TaskGraphNodeMetadata(
                         client_node_uuid=str(node_1.id),
@@ -245,7 +249,9 @@ class DAGClassTest(unittest.TestCase):
         self.assertEqual(
             d._build_log_structure(),
             models.TaskGraphLog(
-                namespace=client.default_charged_namespace(),
+                namespace=client.default_charged_namespace(
+                    required_action=rest_api.NamespaceActions.RUN_JOB
+                ),
                 nodes=[
                     models.TaskGraphNodeMetadata(
                         client_node_uuid=str(node_1.id),

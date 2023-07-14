@@ -76,7 +76,9 @@ def exec_base(
     if output_uri:
         array.split_uri(output_uri)
 
-    namespace = namespace or client.default_charged_namespace()
+    namespace = namespace or client.default_charged_namespace(
+        required_action=rest_api.NamespaceActions.RUN_JOB
+    )
 
     api_instance = client.build(rest_api.SqlApi)
 
