@@ -3,8 +3,8 @@ import logging
 import subprocess
 import sys
 from collections import defaultdict
+from fnmatch import fnmatch
 from math import ceil
-from multiprocessing.pool import ThreadPool
 from typing import Any, Mapping, Optional, Sequence, Tuple, Union
 
 import numpy as np
@@ -71,26 +71,15 @@ class Contigs(enum.Enum):
     ALL_DISABLE_MERGE = enum.auto()
 
 
-def setup(
-    config: Optional[Mapping[str, Any]] = None,
+def get_logger_wrapper(
     verbose: bool = False,
 ) -> logging.Logger:
     """
-    Set the default TileDB context, OS environment variables for AWS,
-    and return a logger instance.
+    Get a logger instance and log version information.
 
-    :param config: config dictionary, defaults to None
     :param verbose: verbose logging, defaults to False
     :return: logger instance
     """
-
-    try:
-        tiledb.default_ctx(config)
-    except tiledb.TileDBError:
-        # Ignore error if the default context was already set
-        pass
-
-    set_aws_context(config)
 
     level = logging.DEBUG if verbose else logging.INFO
     logger = get_logger(level)
@@ -179,7 +168,7 @@ def create_dataset_udf(
     """
     import tiledbvcf
 
-    logger = setup(config, verbose)
+    logger = get_logger_wrapper(verbose)
     logger.debug("tiledbvcf=%s", tiledbvcf.version)
 
     # Check if the dataset already exists
@@ -238,7 +227,7 @@ def read_uris_udf(
     :return: list of URIs
     """
 
-    logger = setup(config, verbose)
+    logger = get_logger_wrapper(verbose)
 
     with tiledb.scope_ctx(config):
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY):
@@ -259,90 +248,179 @@ def find_uris_udf(
     search_uri: str,
     *,
     config: Optional[Mapping[str, Any]] = None,
-    pattern: Optional[str] = None,
-    ignore: Optional[str] = None,
+    include: Optional[str] = None,
+    exclude: Optional[str] = None,
     max_files: Optional[int] = None,
     verbose: bool = False,
 ) -> Sequence[str]:
     """
-    Find URIs matching a pattern in a directory or S3 bucket using this command:
+    Find URIs matching a pattern in the `search_uri` path.
 
-        find <search_uri> -name <pattern> | grep -Ev <ignore> -m <max_files>
-
-    with an efficient implementation for S3.
+    `include` and `exclude` patterns are Unix shell style (see fnmatch module).
 
     :param dataset_uri: dataset URI
     :param search_uri: URI to search for VCF files
     :param config: config dictionary, defaults to None
-    :param pattern: pattern used in the search, defaults to None
-    :param ignore: exclude pattern applied to the search results, defaults to None
+    :param include: include pattern used in the search, defaults to None
+    :param exclude: exclude pattern applied to the search results, defaults to None
     :param max_files: maximum number of URIs returned, defaults to None
     :param verbose: verbose logging, defaults to False
     :return: list of URIs
     """
 
-    logger = setup(config, verbose)
+    logger = get_logger_wrapper(verbose)
 
-    with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
-        use_s3 = search_uri.startswith("s3://")
-        # Run command to find URIs matching the pattern
-        if use_s3:
-            cmd = [
-                "aws",
-                "s3",
-                "sync",
-                "--dryrun",
-                "--exclude",
-                "*",
-                "--include",
-                pattern,
-                search_uri,
-                ".",
-            ]
-        else:
-            cmd = ["find", search_uri, "-name", pattern]
+    with tiledb.scope_ctx(config):
+        with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
+            vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
 
-        logger.debug(cmd)
-        p1 = subprocess.Popen(
-            cmd,
-            text=True,
-            stdout=subprocess.PIPE,
-        )
+            def find(
+                uri: str,
+                *,
+                include: Optional[str] = None,
+                exclude: Optional[str] = None,
+                max_count: Optional[int] = None,
+            ):
+                logger.debug("Searching %r", uri)
+                listing = vfs.ls(uri)
+                logger.debug("  %d items", len(listing))
 
-        # Optionally ignore URIs and limit the number returned
-        if ignore:
-            cmd = ["grep", "-Ev", ignore]
-        else:
-            cmd = ["grep", "."]
-        if max_files:
-            cmd.extend(["-m", str(max_files)])
+                results = []
+                for f in listing:
+                    # Avoid infinite recursion
+                    if f == uri:
+                        continue
 
-        logger.debug(cmd)
-        p2 = subprocess.Popen(
-            cmd,
-            text=True,
-            stdin=p1.stdout,
-            stdout=subprocess.PIPE,
-            stderr=sys.stdout,
-        )
+                    if vfs.is_dir(f):
+                        next_max_count = (
+                            max_count - len(results) if max_count is not None else None
+                        )
+                        results += find(
+                            f,
+                            include=include,
+                            exclude=exclude,
+                            max_count=next_max_count,
+                        )
 
-        # Wait for p2 to finish, then kill p1
-        res_stdout = p2.communicate()[0]
-        p1.kill()
+                    else:
+                        # Skip files that do not match the include pattern or match
+                        # the exclude pattern.
+                        if include and not fnmatch(f, include):
+                            continue
+                        if exclude and fnmatch(f, exclude):
+                            continue
 
-        # Build list of URIs from command output.
-        # Example line from s3:
-        # (dryrun) download: s3://1000genomes-dragen-v3.7.6/foo to foo
-        result = []
-        if res_stdout:
-            for line in res_stdout.splitlines():
-                line = line.split()[2] if use_s3 else line
-                result.append(line)
+                        results.append(f)
+                        logger.debug("  found %r", f)
 
-        logger.info("Found %d VCF files.", len(result))
-        prof.write("count", len(result))
+                    # Stop if we have found max_count files
+                    if max_count is not None and len(results) >= max_count:
+                        results = results[:max_count]
+                        break
 
-    return result
+                return results
+
+            results = find(
+                search_uri, include=include, exclude=exclude, max_count=max_files
+            )
+
+            logger.info("Found %d VCF files.", len(results))
+            prof.write("count", len(results))
+
+            return results
+
+
+def find_uris_aws_udf(
+    dataset_uri: str,
+    search_uri: str,
+    *,
+    config: Optional[Mapping[str, Any]] = None,
+    include: Optional[str] = None,
+    exclude: Optional[str] = None,
+    max_files: Optional[int] = None,
+    verbose: bool = False,
+) -> Sequence[str]:
+    """
+    Find URIs matching a pattern in the `search_uri` path with an efficient
+    implementation for S3.
+
+    `include` and `exclude` patterns are Unix shell style (see fnmatch module).
+
+    :param dataset_uri: dataset URI
+    :param search_uri: URI to search for VCF files
+    :param config: config dictionary, defaults to None
+    :param include: include pattern used in the search, defaults to None
+    :param exclude: exclude pattern applied to the search results, defaults to None
+    :param max_files: maximum number of URIs returned, defaults to None
+    :param verbose: verbose logging, defaults to False
+    :return: list of URIs
+    """
+
+    set_aws_context(config)
+
+    logger = get_logger_wrapper(verbose)
+
+    with tiledb.scope_ctx(config):
+        with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
+            use_s3 = search_uri.startswith("s3://")
+            # Run command to find URIs matching the pattern
+            if use_s3:
+                cmd = [
+                    "aws",
+                    "s3",
+                    "sync",
+                    "--dryrun",
+                    "--exclude",
+                    "*",
+                    "--include",
+                    include,
+                    search_uri,
+                    ".",
+                ]
+            else:
+                cmd = ["find", search_uri, "-name", include]
+
+            logger.debug(cmd)
+            p1 = subprocess.Popen(
+                cmd,
+                text=True,
+                stdout=subprocess.PIPE,
+            )
+
+            # Optionally ignore URIs and limit the number returned
+            if exclude:
+                cmd = ["grep", "-Ev", exclude]
+            else:
+                cmd = ["grep", "."]
+            if max_files:
+                cmd.extend(["-m", str(max_files)])
+
+            logger.debug(cmd)
+            p2 = subprocess.Popen(
+                cmd,
+                text=True,
+                stdin=p1.stdout,
+                stdout=subprocess.PIPE,
+                stderr=sys.stdout,
+            )
+
+            # Wait for p2 to finish, then kill p1
+            res_stdout = p2.communicate()[0]
+            p1.kill()
+
+            # Build list of URIs from command output.
+            # Example line from s3:
+            # (dryrun) download: s3://1000genomes-dragen-v3.7.6/foo to foo
+            result = []
+            if res_stdout:
+                for line in res_stdout.splitlines():
+                    line = line.split()[2] if use_s3 else line
+                    result.append(line)
+
+            logger.info("Found %d VCF files.", len(result))
+            prof.write("count", len(result))
+
+        return result
 
 
 def filter_uris_udf(
@@ -362,7 +440,7 @@ def filter_uris_udf(
     :return: filtered sample URIs
     """
 
-    logger = setup(config, verbose)
+    logger = get_logger_wrapper(verbose)
 
     with tiledb.scope_ctx(config):
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
@@ -400,7 +478,7 @@ def filter_samples_udf(
     """
     import tiledbvcf
 
-    logger = setup(config, verbose)
+    logger = get_logger_wrapper(verbose)
     logger.debug("tiledbvcf=%s", tiledbvcf.version)
 
     with tiledb.scope_ctx(config):
@@ -456,7 +534,7 @@ def ingest_manifest_udf(
     :param verbose: verbose logging, defaults to False
     """
 
-    setup(config, verbose)
+    get_logger_wrapper(verbose)
 
     with tiledb.scope_ctx(config):
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
@@ -554,7 +632,7 @@ def ingest_samples_udf(
     """
     import tiledbvcf
 
-    logger = setup(config, verbose)
+    logger = get_logger_wrapper(verbose)
     logger.debug("tiledbvcf=%s", tiledbvcf.version)
 
     trace = trace_id == id
@@ -571,8 +649,9 @@ def ingest_samples_udf(
                     logger.debug("indexing %r", uri)
                     create_index_file(uri)
 
-            with ThreadPool(threads) as pool:
-                pool.map(create_index_file_worker, sample_uris)
+            # TODO: Handle un-indexed files
+            # with ThreadPool(threads) as pool:
+            #    pool.map(create_index_file_worker, sample_uris)
 
             # TODO: Handle un-bgzipped files
 
@@ -625,7 +704,7 @@ def consolidate_dataset_udf(
     if isinstance(include, str):
         include = [include]
 
-    setup(config, verbose)
+    get_logger_wrapper(verbose)
 
     with tiledb.scope_ctx(config):
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
@@ -684,6 +763,7 @@ def ingest_manifest_dag(
     verbose: bool = False,
     batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
+    aws_find_mode: bool = False,
 ) -> None:
     """
     Create a DAG to load the manifest array.
@@ -704,6 +784,7 @@ def ingest_manifest_dag(
     :param verbose: verbose logging, defaults to False
     :param batch_mode: run all DAGs in batch mode, defaults to True
     :param access_credentials_name: name of role in TileDB Cloud to use in tasks
+    :param aws_find_mode: use AWS CLI to find VCFs, defaults to False
     """
 
     logger = get_logger()
@@ -747,12 +828,12 @@ def ingest_manifest_dag(
 
     if search_uri:
         sample_uris = submit(
-            find_uris_udf,
+            find_uris_udf if not aws_find_mode else find_uris_aws_udf,
             dataset_uri_result,
             search_uri,
             config=config,
-            pattern=pattern,
-            ignore=ignore,
+            include=pattern,
+            exclude=ignore,
             max_files=max_files,
             verbose=verbose,
             name="Find VCF URIs ",
@@ -879,7 +960,7 @@ def ingest_samples_dag(
     :return: sample ingestion DAG and list of sample URIs ingested
     """
 
-    logger = setup(config, verbose)
+    logger = get_logger_wrapper(verbose)
 
     batch_mode = batch_mode or bool(access_credentials_name)
     dag_mode = dag.Mode.BATCH if batch_mode else dag.Mode.REALTIME
@@ -1055,6 +1136,7 @@ def ingest(
     batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
     compute: bool = True,
+    aws_find_mode: bool = False,
 ) -> Tuple[Optional[dag.DAG], Sequence[str]]:
     """
     Ingest samples into a dataset.
@@ -1063,8 +1145,10 @@ def ingest(
     :param config: config dictionary, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
     :param search_uri: URI to search for VCF files, defaults to None
-    :param pattern: pattern to match when searching for VCF files, defaults to None
-    :param ignore: pattern to ignore when searching for VCF files, defaults to None
+    :param pattern: Unix shell style pattern to match when searching for VCF files,
+        defaults to None
+    :param ignore: Unix shell style pattern to ignore when searching for VCF files,
+        defaults to None
     :param sample_list_uri: URI with a list of VCF URIs, defaults to None
     :param max_files: maximum number of VCF URIs to read/find,
         defaults to None (no limit)
@@ -1093,6 +1177,7 @@ def ingest(
     :param access_credentials_name: name of role in TileDB Cloud to use in tasks
     :param compute: when True the DAG will be computed before it is returned,
         defaults to True
+    :param aws_find_mode: use AWS CLI to find VCFs, defaults to False
     :return: sample ingestion DAG and list of sample URIs ingested
     """
 
@@ -1114,7 +1199,7 @@ def ingest(
     # Remove any trailing slashes
     dataset_uri = dataset_uri.rstrip("/")
 
-    logger = setup(config, verbose)
+    logger = get_logger_wrapper(verbose)
     logger.info("Ingesting VCF samples into %r", dataset_uri)
 
     # Add VCF URIs to the manifest
@@ -1135,6 +1220,7 @@ def ingest(
         verbose=verbose,
         batch_mode=batch_mode,
         access_credentials_name=access_credentials_name,
+        aws_find_mode=aws_find_mode,
     )
 
     # Ingest VCFs using URIs in the manifest
