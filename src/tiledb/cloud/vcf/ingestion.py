@@ -1,10 +1,10 @@
 import enum
-from functools import partial
 import logging
 import subprocess
 import sys
 from collections import defaultdict
 from fnmatch import fnmatch
+from functools import partial
 from math import ceil
 from multiprocessing.pool import ThreadPool
 from os.path import basename
@@ -1274,10 +1274,10 @@ def ingest_samples_dag(
             consolidate_dataset_udf,
             dataset_uri,
             config=config,
-            id=f"vcf-consol-final",
+            id="vcf-consol-final",
             verbose=verbose,
             resources=CONSOLIDATE_RESOURCES,
-            name=f"Consolidate VCF final ",
+            name="Consolidate VCF final ",
             **kwargs,
         )
 
