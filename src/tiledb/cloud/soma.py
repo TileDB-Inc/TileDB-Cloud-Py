@@ -94,11 +94,6 @@ def ingest_h5ad(
     logging.info("Successfully wrote data from %r to %r", input_uri, output_uri)
 
 
-# Until we fully get this version of tiledb.cloud deployed server-side, we want
-# to refer to `ingest_h5ad` by value rather than by reference.
-_ingest_h5ad_byval = functions.to_register_by_value(ingest_h5ad)
-
-
 def run_ingest_workflow(
     *,
     output_uri: str,
@@ -137,6 +132,8 @@ def run_ingest_workflow(
         manage execution and monitor progress.
     :param pattern: As described for ``input_uri``.
     """
+
+    vfs = tiledb.VFS()
 
     if vfs.is_file(input_uri):
         # XXX pattern-match check
@@ -177,7 +174,7 @@ def run_ingest_workflow(
 
         for entry_uri in vfs.ls(input_uri):
             # XXX pattern-match check
-            node = grf.submit(
+            node = submitter(
                 _ingest_h5ad_byval,
                 output_uri=output_uri,
                 input_uri=input_uri,
@@ -197,3 +194,8 @@ def run_ingest_workflow(
         }
 
     raise ValueError(f"input_uri {input_uri!r} is neither file nor directory")
+
+# Until we fully get this version of tiledb.cloud deployed server-side, we want
+# to refer to `ingest_h5ad` by value rather than by reference.
+_ingest_h5ad_byval = functions.to_register_by_value(ingest_h5ad)
+_run_ingest_workflow = functions.to_register_by_value(run_ingest_workflow)
