@@ -81,7 +81,7 @@ def ingest_h5ad(
     if extra_tiledb_config:
         soma_ctx = soma_ctx.replace(tiledb_config=extra_tiledb_config)
     with tiledb.VFS().open(input_uri) as input_file:
-        with _hack_patch_anndata():
+        with _hack_patch_anndata_byval():
             input_data = anndata.read_h5ad(_FSPathWrapper(input_file, input_uri), "r")
         output_uri = io.from_anndata(
             experiment_uri=output_uri,
@@ -199,3 +199,4 @@ def run_ingest_workflow(
 # to refer to `ingest_h5ad` by value rather than by reference.
 _ingest_h5ad_byval = functions.to_register_by_value(ingest_h5ad)
 _run_ingest_workflow = functions.to_register_by_value(run_ingest_workflow)
+_hack_patch_anndata_byval = functions.to_register_by_value(_hack_patch_anndata)
