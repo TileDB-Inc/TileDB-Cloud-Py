@@ -22,21 +22,10 @@ from tiledb.cloud.utilities import read_file
 from tiledb.cloud.utilities import run_dag
 from tiledb.cloud.utilities import set_aws_context
 from tiledb.cloud.utilities import write_log_event
-
-if True:
-    # Bring code into scope for testing on TileDB Cloud
-    import importlib, os
-
-    path = os.path.dirname(importlib.import_module("tiledb.cloud").__file__)
-    files = [f"{path}/vcf/utils.py"]
-    for file in files:
-        with open(file) as f:
-            exec(compile(f.read(), file, "exec"))
-else:
-    from tiledb.cloud.vcf.utils import create_index_file
-    from tiledb.cloud.vcf.utils import find_index
-    from tiledb.cloud.vcf.utils import get_record_count
-    from tiledb.cloud.vcf.utils import get_sample_name
+from tiledb.cloud.vcf.utils import create_index_file
+from tiledb.cloud.vcf.utils import find_index
+from tiledb.cloud.vcf.utils import get_record_count
+from tiledb.cloud.vcf.utils import get_sample_name
 
 # Testing hooks
 local_ingest = False
@@ -1096,7 +1085,7 @@ def ingest_samples_dag(
     batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
     compute: bool = True,
-    consolidate_stats: bool = True,
+    consolidate_stats: bool = False,
 ) -> Tuple[Optional[dag.DAG], Sequence[str]]:
     """
     Create a DAG to ingest samples into the dataset.
@@ -1119,7 +1108,7 @@ def ingest_samples_dag(
     :param access_credentials_name: name of role in TileDB Cloud to use in tasks
     :param compute: when True the DAG will be computed before it is returned,
         defaults to True
-    :param consolidate_stats: consolidate the stats arrays, defaults to True
+    :param consolidate_stats: consolidate the stats arrays, defaults to False
     :return: sample ingestion DAG and list of sample URIs ingested
     """
 
@@ -1342,7 +1331,7 @@ def ingest(
     batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
     compute: bool = True,
-    consolidate_stats: bool = True,
+    consolidate_stats: bool = False,
     aws_find_mode: bool = False,
 ) -> Tuple[Optional[dag.DAG], Sequence[str]]:
     """
@@ -1384,7 +1373,7 @@ def ingest(
     :param access_credentials_name: name of role in TileDB Cloud to use in tasks
     :param compute: when True the DAG will be computed before it is returned,
         defaults to True
-    :param consolidate_stats: consolidate the stats arrays, defaults to True
+    :param consolidate_stats: consolidate the stats arrays, defaults to False
     :param aws_find_mode: use AWS CLI to find VCFs, defaults to False
     :return: sample ingestion DAG and list of sample URIs ingested
     """
