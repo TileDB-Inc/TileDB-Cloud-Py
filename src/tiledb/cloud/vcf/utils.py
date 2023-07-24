@@ -49,9 +49,11 @@ def get_sample_name(vcf_uri: str) -> str:
 
     cmd = ("bcftools", "query", "-l")
     stdout, stderr = process_stream(vcf_uri, cmd, read_size=1024)
-    if stderr:
-        raise RuntimeError(f"Failed to get sample names: {stderr}")
-    return ",".join(stdout.splitlines())
+    # Ignore stderr if a result was returned to stdout. This avoids failing
+    # when bcftools prints a warning message to stderr.
+    if stdout:
+        return ",".join(stdout.splitlines())
+    raise RuntimeError(f"Failed to get sample names: {stderr}")
 
 
 def get_record_count(vcf_uri: str, index_uri: str) -> Optional[int]:
