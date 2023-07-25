@@ -2,6 +2,7 @@
 
 from . import compute
 from . import dag
+from . import groups
 from . import sql
 from . import udf
 from ._common import pickle_compat as _pickle_compat
@@ -51,6 +52,7 @@ UDFResultType = ResultFormat
 __all__ = (
     "compute",
     "dag",
+    "groups",
     "sql",
     "udf",
     "array_activity",
