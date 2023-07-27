@@ -579,6 +579,7 @@ class DAG:
         name: Optional[str] = None,
         mode: Mode = Mode.REALTIME,
         retry_strategy: Optional[models.RetryStrategy] = None,
+        workflow_retry_strategy: Optional[models.RetryStrategy] = None,
         deadline: Optional[int] = None,
     ):
         """
@@ -595,7 +596,8 @@ class DAG:
             in logs. Does not need to be unique.
         :param mode: Mode the DAG is to run in, valid options are
             Mode.REALTIME, Mode.BATCH
-        :param retry_strategy: RetryStrategy to use for the execution of the entire DAG.
+        :param retry_strategy: RetryStrategy to be applied on every node of the DAG.
+        :param workflow_retry_strategy: RetryStrategy to use to retry the entire DAG.
         :param deadline: Duration in seconds relative to the workflow start time
             which the workflow is allowed to run before it gets terminated.
         """
@@ -610,6 +612,7 @@ class DAG:
         self.server_graph_uuid: Optional[uuid.UUID] = None
         self.max_workers = max_workers
         self.retry_strategy = retry_strategy
+        self.workflow_retry_strategy = workflow_retry_strategy
         self.deadline = deadline
 
         self._update_batch_status_thread: Optional[threading.Thread] = None
@@ -1633,6 +1636,7 @@ class DAG:
             name=self.name,
             parallelism=self.max_workers,
             retry_strategy=self.retry_strategy,
+            workflow_retry_strategy=self.workflow_retry_strategy,
             deadline=self.deadline,
             nodes=node_jsons,
         )
