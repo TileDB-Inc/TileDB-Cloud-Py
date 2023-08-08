@@ -332,6 +332,9 @@ def find_uris_udf(
 
                 return results
 
+            # Add one trailing slash to search_uri
+            search_uri = search_uri.rstrip("/") + "/"
+
             results = find(
                 search_uri, include=include, exclude=exclude, max_count=max_files
             )
@@ -546,7 +549,7 @@ def ingest_manifest_udf(
     :param verbose: verbose logging, defaults to False
     """
 
-    get_logger_wrapper(verbose)
+    logger = get_logger_wrapper(verbose)
 
     with tiledb.scope_ctx(config):
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
@@ -569,7 +572,15 @@ def ingest_manifest_udf(
                     status = "ok"
 
                     # Check for sample name issues
-                    sample_name = get_sample_name(vcf_uri)
+                    try:
+                        sample_name = get_sample_name(vcf_uri)
+                    except Exception:
+                        logger.warning(
+                            "Skipping invalid VCF file: %r",
+                            vcf_uri,
+                        )
+                        continue
+
                     if not sample_name:
                         status = "missing sample name"
                     elif len(sample_name.split()) > 1:
@@ -605,8 +616,9 @@ def ingest_manifest_udf(
                     values["index_bytes"].append(str(file_size(index_uri)))
                     values["records"].append(str(records))
 
-                # Write to TileDB array
-                A[keys] = dict(values)
+                # Write to TileDB array, if any samples were found
+                if keys:
+                    A[keys] = dict(values)
 
 
 def ingest_samples_udf(
@@ -621,6 +633,7 @@ def ingest_samples_udf(
     contigs_to_keep_separate: Optional[Sequence[str]] = None,
     contig_fragment_merging: bool = True,
     resume: bool = True,
+    create_index: bool = True,
     id: str = "samples",
     verbose: bool = False,
     trace_id: Optional[str] = None,
@@ -638,6 +651,7 @@ def ingest_samples_udf(
     :param contigs_to_keep_separate: list of contigs to keep separate, defaults to None
     :param contig_fragment_merging: enable contig fragment merging, defaults to True
     :param resume: enable resume ingestion mode, defaults to True
+    :param create_index: force creation of a local index file, defaults to True
     :param id: profiler event id, defaults to "samples"
     :param verbose: verbose logging, defaults to False
     :param trace_id: trace ID for logging, defaults to None
@@ -655,15 +669,15 @@ def ingest_samples_udf(
         ) as prof:
             prof.write("uris", str(len(sample_uris)), ",".join(sample_uris))
 
-            # Handle missing index
             def create_index_file_worker(uri: str) -> None:
-                if not find_index(uri):
-                    logger.debug("indexing %r", uri)
-                    create_index_file(uri)
+                with tiledb.scope_ctx(config):
+                    if create_index or not find_index(uri):
+                        logger.info("indexing %r", uri)
+                        create_index_file(uri)
 
-            # TODO: Handle un-indexed files
-            # with ThreadPool(threads) as pool:
-            #    pool.map(create_index_file_worker, sample_uris)
+            # Create index files
+            with ThreadPool(threads) as pool:
+                pool.map(create_index_file_worker, sample_uris)
 
             # TODO: Handle un-bgzipped files
 
@@ -1081,6 +1095,7 @@ def ingest_samples_dag(
     resume: bool = True,
     ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
+    create_index: bool = True,
     trace_id: Optional[str] = None,
     batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
@@ -1103,6 +1118,7 @@ def ingest_samples_dag(
     :param resume: enable resume ingestion mode, defaults to True
     :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
+    :param create_index: force creation of a local index file, defaults to True
     :param trace_id: trace ID for logging, defaults to None
     :param batch_mode: run all DAGs in batch mode, defaults to True
     :param access_credentials_name: name of role in TileDB Cloud to use in tasks
@@ -1229,6 +1245,7 @@ def ingest_samples_dag(
             resume=resume,
             id=f"vcf-ingest-{i}",
             verbose=verbose,
+            create_index=create_index,
             trace_id=trace_id,
             resources=ingest_resources,
             name=f"Ingest VCF {i+1}/{num_partitions} ",
@@ -1327,6 +1344,7 @@ def ingest(
     vcf_threads: int = VCF_THREADS,
     ingest_resources: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
+    create_index: bool = True,
     trace_id: Optional[str] = None,
     batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
@@ -1367,6 +1385,7 @@ def ingest(
     :param vcf_threads: number of threads for VCF ingestion, defaults to VCF_THREADS
     :param ingest_resources: manual override for ingest UDF resources, defaults to None
     :param verbose: verbose logging, defaults to False
+    :param create_index: force creation of a local index file, defaults to True
     :param trace_id: trace ID for logging, defaults to None
     :param batch_mode: run all DAGs in batch mode, only set to False for dev or demos,
         defaults to True
@@ -1433,6 +1452,7 @@ def ingest(
         resume=resume,
         ingest_resources=ingest_resources,
         verbose=verbose,
+        create_index=create_index,
         trace_id=trace_id,
         batch_mode=batch_mode,
         access_credentials_name=access_credentials_name,
