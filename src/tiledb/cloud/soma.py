@@ -122,7 +122,7 @@ def run_ingest_workflow(
         basename is appended to the ``output_uri`` to form the entry's output URI.
         For example, if ``a.h5ad` and ``b.h5ad`` are present within ``input_uri`` of
         ``s3://bucket/h5ads/`` and ``output_uri`` is
-        `tiledb://namespace/s3://bucket/somas``, then
+        ``tiledb://namespace/s3://bucket/somas``, then
         ``tiledb://namespace/s3://bucket/somas/a`` and
         ``tiledb://namespace/s3://bucket/somas/b`` are written.
     :param measurement_name: The name of the Measurement within the Experiment
@@ -189,7 +189,7 @@ def run_ingest_workflow(
                 entry_output_uri += "/"
             entry_output_uri += base
 
-            if pattern is not None and not bool(re.match(pattern, entry_input_uri)):
+            if pattern is not None and not re.match(pattern, entry_input_uri):
                 continue
 
             node = grf.submit(
