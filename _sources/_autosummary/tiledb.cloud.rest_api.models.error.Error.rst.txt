@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.error.Error
+=========================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.error
+
+.. autoclass:: Error
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Error.__init__
+      ~Error.to_dict
+      ~Error.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Error.attribute_map
+      ~Error.code
+      ~Error.message
+      ~Error.openapi_types
+      ~Error.request_id
+   
+   

@@ -1,0 +1,6 @@
+tiledb.cloud.taskgraphs.registration.delete
+===========================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.registration
+
+.. autofunction:: delete

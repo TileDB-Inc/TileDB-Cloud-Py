@@ -1,0 +1,40 @@
+tiledb.cloud.rest\_api.models.file\_type.FileType
+=================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.file_type
+
+.. autoclass:: FileType
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FileType.__init__
+      ~FileType.to_dict
+      ~FileType.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FileType.FILE
+      ~FileType.ML_MODEL
+      ~FileType.NOTEBOOK
+      ~FileType.REGISTERED_TASK_GRAPH
+      ~FileType.USER_DEFINED_FUNCTION
+      ~FileType.allowable_values
+      ~FileType.attribute_map
+      ~FileType.openapi_types
+   
+   

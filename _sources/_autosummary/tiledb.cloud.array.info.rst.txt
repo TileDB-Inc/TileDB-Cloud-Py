@@ -1,0 +1,6 @@
+tiledb.cloud.array.info
+=======================
+
+.. currentmodule:: tiledb.cloud.array
+
+.. autofunction:: info

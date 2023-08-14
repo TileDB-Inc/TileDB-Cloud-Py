@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.udf\_subarray\_range.UDFSubarrayRange
+===================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.udf_subarray_range
+
+.. autoclass:: UDFSubarrayRange
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UDFSubarrayRange.__init__
+      ~UDFSubarrayRange.to_dict
+      ~UDFSubarrayRange.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UDFSubarrayRange.attribute_map
+      ~UDFSubarrayRange.dimension_id
+      ~UDFSubarrayRange.openapi_types
+      ~UDFSubarrayRange.range_end
+      ~UDFSubarrayRange.range_start
+   
+   

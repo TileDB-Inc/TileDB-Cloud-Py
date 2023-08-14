@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.udf\_actions.UDFActions
+=====================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.udf_actions
+
+.. autoclass:: UDFActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UDFActions.__init__
+      ~UDFActions.to_dict
+      ~UDFActions.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UDFActions.FETCH_UDF
+      ~UDFActions.SHARE_UDF
+      ~UDFActions.allowable_values
+      ~UDFActions.attribute_map
+      ~UDFActions.openapi_types
+   
+   

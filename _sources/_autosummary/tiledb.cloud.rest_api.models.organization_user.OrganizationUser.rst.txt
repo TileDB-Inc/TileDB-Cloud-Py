@@ -1,0 +1,40 @@
+tiledb.cloud.rest\_api.models.organization\_user.OrganizationUser
+=================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.organization_user
+
+.. autoclass:: OrganizationUser
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OrganizationUser.__init__
+      ~OrganizationUser.to_dict
+      ~OrganizationUser.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~OrganizationUser.allowed_actions
+      ~OrganizationUser.attribute_map
+      ~OrganizationUser.openapi_types
+      ~OrganizationUser.organization_id
+      ~OrganizationUser.organization_name
+      ~OrganizationUser.role
+      ~OrganizationUser.user_id
+      ~OrganizationUser.username
+   
+   

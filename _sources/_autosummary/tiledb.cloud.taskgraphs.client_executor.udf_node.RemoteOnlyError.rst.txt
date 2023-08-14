@@ -1,0 +1,6 @@
+tiledb.cloud.taskgraphs.client\_executor.udf\_node.RemoteOnlyError
+==================================================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.client_executor.udf_node
+
+.. autoexception:: RemoteOnlyError

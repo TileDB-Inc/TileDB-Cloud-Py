@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.api.sql\_api
+===================================
+
+.. automodule:: tiledb.cloud.rest_api.api.sql_api
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SqlApi
+   
+   
+
+   
+   
+   
+
+
+

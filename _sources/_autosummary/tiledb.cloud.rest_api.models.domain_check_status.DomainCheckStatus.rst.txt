@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.domain\_check\_status.DomainCheckStatus
+=====================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.domain_check_status
+
+.. autoclass:: DomainCheckStatus
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DomainCheckStatus.__init__
+      ~DomainCheckStatus.to_dict
+      ~DomainCheckStatus.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DomainCheckStatus.ERROR
+      ~DomainCheckStatus.FAILED
+      ~DomainCheckStatus.VERIFIED
+      ~DomainCheckStatus.allowable_values
+      ~DomainCheckStatus.attribute_map
+      ~DomainCheckStatus.openapi_types
+   
+   

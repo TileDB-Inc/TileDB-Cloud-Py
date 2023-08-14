@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.invitation\_group\_share\_email
+=============================================================
+
+.. automodule:: tiledb.cloud.rest_api.models.invitation_group_share_email
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      InvitationGroupShareEmail
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,6 @@
+tiledb.cloud.client.default\_charged\_namespace
+===============================================
+
+.. currentmodule:: tiledb.cloud.client
+
+.. autofunction:: default_charged_namespace

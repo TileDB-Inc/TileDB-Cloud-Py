@@ -1,0 +1,35 @@
+tiledb.cloud.rest\_api.models.task\_graphs.TaskGraphs
+=====================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.task_graphs
+
+.. autoclass:: TaskGraphs
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TaskGraphs.__init__
+      ~TaskGraphs.to_dict
+      ~TaskGraphs.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TaskGraphs.attribute_map
+      ~TaskGraphs.graphs
+      ~TaskGraphs.openapi_types
+   
+   

@@ -1,0 +1,42 @@
+tiledb.cloud.rest\_api.models.udf\_info.UDFInfo
+===============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.udf_info
+
+.. autoclass:: UDFInfo
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UDFInfo.__init__
+      ~UDFInfo.to_dict
+      ~UDFInfo.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UDFInfo.attribute_map
+      ~UDFInfo.id
+      ~UDFInfo.language
+      ~UDFInfo.license_id
+      ~UDFInfo.license_text
+      ~UDFInfo.name
+      ~UDFInfo.openapi_types
+      ~UDFInfo.readme
+      ~UDFInfo.tags
+      ~UDFInfo.type
+   
+   

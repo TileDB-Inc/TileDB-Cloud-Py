@@ -1,0 +1,6 @@
+tiledb.cloud.taskgraphs.builder.ValOrNodeSeq
+============================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.builder
+
+.. autodata:: ValOrNodeSeq

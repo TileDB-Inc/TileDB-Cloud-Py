@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tiledb.cloud.rest_api.models.fragment_metadata &mdash; TileDB-Cloud-Py  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tiledb.cloud.rest_api.models.fragment_metadata.FragmentMetadata" href="tiledb.cloud.rest_api.models.fragment_metadata.FragmentMetadata.html" />
+    <link rel="prev" title="tiledb.cloud.rest_api.models.fragment_info_request.FragmentInfoRequest" href="tiledb.cloud.rest_api.models.fragment_info_request.FragmentInfoRequest.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TileDB-Cloud-Py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.html">tiledb.cloud</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.array.html">tiledb.cloud.array</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.client.html">tiledb.cloud.client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.compute.html">tiledb.cloud.compute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.config.html">tiledb.cloud.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.dag.html">tiledb.cloud.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.file.html">tiledb.cloud.file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.groups.html">tiledb.cloud.groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.notebook.html">tiledb.cloud.notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.pool_manager_wrapper.html">tiledb.cloud.pool_manager_wrapper</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.api.html">tiledb.cloud.rest_api.api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.api_client.html">tiledb.cloud.rest_api.api_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.configuration.html">tiledb.cloud.rest_api.configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.exceptions.html">tiledb.cloud.rest_api.exceptions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="tiledb.cloud.rest_api.models.html">tiledb.cloud.rest_api.models</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.activity_event_type.html">tiledb.cloud.rest_api.models.activity_event_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array.html">tiledb.cloud.rest_api.models.array</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_actions.html">tiledb.cloud.rest_api.models.array_actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_activity_log.html">tiledb.cloud.rest_api.models.array_activity_log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_browser_data.html">tiledb.cloud.rest_api.models.array_browser_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_browser_sidebar.html">tiledb.cloud.rest_api.models.array_browser_sidebar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_consolidation_request.html">tiledb.cloud.rest_api.models.array_consolidation_request</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_end_timestamp_data.html">tiledb.cloud.rest_api.models.array_end_timestamp_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_favorite.html">tiledb.cloud.rest_api.models.array_favorite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_favorites_data.html">tiledb.cloud.rest_api.models.array_favorites_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_info.html">tiledb.cloud.rest_api.models.array_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_info_update.html">tiledb.cloud.rest_api.models.array_info_update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_metadata.html">tiledb.cloud.rest_api.models.array_metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_metadata_entry.html">tiledb.cloud.rest_api.models.array_metadata_entry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_sample.html">tiledb.cloud.rest_api.models.array_sample</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_schema.html">tiledb.cloud.rest_api.models.array_schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_sharing.html">tiledb.cloud.rest_api.models.array_sharing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_task.html">tiledb.cloud.rest_api.models.array_task</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_task_browser_sidebar.html">tiledb.cloud.rest_api.models.array_task_browser_sidebar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_task_data.html">tiledb.cloud.rest_api.models.array_task_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_task_log.html">tiledb.cloud.rest_api.models.array_task_log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_task_status.html">tiledb.cloud.rest_api.models.array_task_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_task_type.html">tiledb.cloud.rest_api.models.array_task_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_type.html">tiledb.cloud.rest_api.models.array_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_vacuum_request.html">tiledb.cloud.rest_api.models.array_vacuum_request</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.asset_locations.html">tiledb.cloud.rest_api.models.asset_locations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.attribute.html">tiledb.cloud.rest_api.models.attribute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.attribute_buffer_header.html">tiledb.cloud.rest_api.models.attribute_buffer_header</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.attribute_buffer_size.html">tiledb.cloud.rest_api.models.attribute_buffer_size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.aws_access_credentials.html">tiledb.cloud.rest_api.models.aws_access_credentials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.backoff.html">tiledb.cloud.rest_api.models.backoff</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.datatype.html">tiledb.cloud.rest_api.models.datatype</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.dimension.html">tiledb.cloud.rest_api.models.dimension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.dimension_coordinate.html">tiledb.cloud.rest_api.models.dimension_coordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.dimension_tile_extent.html">tiledb.cloud.rest_api.models.dimension_tile_extent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.domain.html">tiledb.cloud.rest_api.models.domain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.domain_array.html">tiledb.cloud.rest_api.models.domain_array</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.domain_check_result.html">tiledb.cloud.rest_api.models.domain_check_result</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.domain_check_status.html">tiledb.cloud.rest_api.models.domain_check_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.domain_verification_status.html">tiledb.cloud.rest_api.models.domain_verification_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.error.html">tiledb.cloud.rest_api.models.error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.file_create.html">tiledb.cloud.rest_api.models.file_create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.file_created.html">tiledb.cloud.rest_api.models.file_created</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.file_export.html">tiledb.cloud.rest_api.models.file_export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.file_exported.html">tiledb.cloud.rest_api.models.file_exported</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.file_property_name.html">tiledb.cloud.rest_api.models.file_property_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.file_type.html">tiledb.cloud.rest_api.models.file_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.file_uploaded.html">tiledb.cloud.rest_api.models.file_uploaded</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.filter.html">tiledb.cloud.rest_api.models.filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.filter_data.html">tiledb.cloud.rest_api.models.filter_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.filter_option.html">tiledb.cloud.rest_api.models.filter_option</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.filter_pipeline.html">tiledb.cloud.rest_api.models.filter_pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.filter_type.html">tiledb.cloud.rest_api.models.filter_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.fragment_info.html">tiledb.cloud.rest_api.models.fragment_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.fragment_info_request.html">tiledb.cloud.rest_api.models.fragment_info_request</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tiledb.cloud.rest_api.models.fragment_metadata</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tiledb.cloud.rest_api.models.fragment_metadata.FragmentMetadata.html">tiledb.cloud.rest_api.models.fragment_metadata.FragmentMetadata</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.generic_udf.html">tiledb.cloud.rest_api.models.generic_udf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_actions.html">tiledb.cloud.rest_api.models.group_actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_browser_data.html">tiledb.cloud.rest_api.models.group_browser_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_browser_filter_data.html">tiledb.cloud.rest_api.models.group_browser_filter_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_changes.html">tiledb.cloud.rest_api.models.group_changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_contents.html">tiledb.cloud.rest_api.models.group_contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_contents_filter_data.html">tiledb.cloud.rest_api.models.group_contents_filter_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_create.html">tiledb.cloud.rest_api.models.group_create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_entry.html">tiledb.cloud.rest_api.models.group_entry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_info.html">tiledb.cloud.rest_api.models.group_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_member.html">tiledb.cloud.rest_api.models.group_member</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_member_asset_type.html">tiledb.cloud.rest_api.models.group_member_asset_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_member_type.html">tiledb.cloud.rest_api.models.group_member_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_register.html">tiledb.cloud.rest_api.models.group_register</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_sharing.html">tiledb.cloud.rest_api.models.group_sharing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_sharing_request.html">tiledb.cloud.rest_api.models.group_sharing_request</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_type.html">tiledb.cloud.rest_api.models.group_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_type_metadata_key.html">tiledb.cloud.rest_api.models.group_type_metadata_key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_update.html">tiledb.cloud.rest_api.models.group_update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.inline_object.html">tiledb.cloud.rest_api.models.inline_object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.inline_response200.html">tiledb.cloud.rest_api.models.inline_response200</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.invitation.html">tiledb.cloud.rest_api.models.invitation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.invitation_array_share_email.html">tiledb.cloud.rest_api.models.invitation_array_share_email</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.invitation_data.html">tiledb.cloud.rest_api.models.invitation_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.invitation_group_share_email.html">tiledb.cloud.rest_api.models.invitation_group_share_email</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.invitation_organization_join_email.html">tiledb.cloud.rest_api.models.invitation_organization_join_email</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.invitation_status.html">tiledb.cloud.rest_api.models.invitation_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.invitation_type.html">tiledb.cloud.rest_api.models.invitation_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.last_accessed_array.html">tiledb.cloud.rest_api.models.last_accessed_array</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.layout.html">tiledb.cloud.rest_api.models.layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.max_buffer_sizes.html">tiledb.cloud.rest_api.models.max_buffer_sizes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.ml_model_favorite.html">tiledb.cloud.rest_api.models.ml_model_favorite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.ml_model_favorites_data.html">tiledb.cloud.rest_api.models.ml_model_favorites_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.multi_array_udf.html">tiledb.cloud.rest_api.models.multi_array_udf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.namespace_actions.html">tiledb.cloud.rest_api.models.namespace_actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.non_empty_domain.html">tiledb.cloud.rest_api.models.non_empty_domain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.notebook_copied.html">tiledb.cloud.rest_api.models.notebook_copied</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.notebook_copy.html">tiledb.cloud.rest_api.models.notebook_copy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.notebook_favorite.html">tiledb.cloud.rest_api.models.notebook_favorite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.notebook_favorites_data.html">tiledb.cloud.rest_api.models.notebook_favorites_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.notebook_status.html">tiledb.cloud.rest_api.models.notebook_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.organization.html">tiledb.cloud.rest_api.models.organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.organization_roles.html">tiledb.cloud.rest_api.models.organization_roles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.organization_user.html">tiledb.cloud.rest_api.models.organization_user</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.pagination_metadata.html">tiledb.cloud.rest_api.models.pagination_metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.pricing.html">tiledb.cloud.rest_api.models.pricing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.pricing_aggregate_usage.html">tiledb.cloud.rest_api.models.pricing_aggregate_usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.pricing_currency.html">tiledb.cloud.rest_api.models.pricing_currency</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.pricing_interval.html">tiledb.cloud.rest_api.models.pricing_interval</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.pricing_type.html">tiledb.cloud.rest_api.models.pricing_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.pricing_unit_label.html">tiledb.cloud.rest_api.models.pricing_unit_label</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.public_share_filter.html">tiledb.cloud.rest_api.models.public_share_filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.query.html">tiledb.cloud.rest_api.models.query</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.query_json.html">tiledb.cloud.rest_api.models.query_json</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.query_ranges.html">tiledb.cloud.rest_api.models.query_ranges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.query_reader.html">tiledb.cloud.rest_api.models.query_reader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.querystatus.html">tiledb.cloud.rest_api.models.querystatus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.querytype.html">tiledb.cloud.rest_api.models.querytype</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.read_state.html">tiledb.cloud.rest_api.models.read_state</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.registered_task_graph.html">tiledb.cloud.rest_api.models.registered_task_graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.result_format.html">tiledb.cloud.rest_api.models.result_format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.retry_policy.html">tiledb.cloud.rest_api.models.retry_policy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.retry_strategy.html">tiledb.cloud.rest_api.models.retry_strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.single_fragment_info.html">tiledb.cloud.rest_api.models.single_fragment_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.sql_parameters.html">tiledb.cloud.rest_api.models.sql_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.sso_domain_config.html">tiledb.cloud.rest_api.models.sso_domain_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.sso_domain_config_response.html">tiledb.cloud.rest_api.models.sso_domain_config_response</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.sso_domain_setup.html">tiledb.cloud.rest_api.models.sso_domain_setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.sso_provider.html">tiledb.cloud.rest_api.models.sso_provider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.storage_location.html">tiledb.cloud.rest_api.models.storage_location</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.subarray.html">tiledb.cloud.rest_api.models.subarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.subarray_partitioner.html">tiledb.cloud.rest_api.models.subarray_partitioner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.subarray_partitioner_current.html">tiledb.cloud.rest_api.models.subarray_partitioner_current</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.subarray_partitioner_state.html">tiledb.cloud.rest_api.models.subarray_partitioner_state</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.subarray_ranges.html">tiledb.cloud.rest_api.models.subarray_ranges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.subscription.html">tiledb.cloud.rest_api.models.subscription</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph.html">tiledb.cloud.rest_api.models.task_graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_actions.html">tiledb.cloud.rest_api.models.task_graph_actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_client_node_status.html">tiledb.cloud.rest_api.models.task_graph_client_node_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_log.html">tiledb.cloud.rest_api.models.task_graph_log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_log_run_location.html">tiledb.cloud.rest_api.models.task_graph_log_run_location</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_log_status.html">tiledb.cloud.rest_api.models.task_graph_log_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_logs_data.html">tiledb.cloud.rest_api.models.task_graph_logs_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_node.html">tiledb.cloud.rest_api.models.task_graph_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_node_metadata.html">tiledb.cloud.rest_api.models.task_graph_node_metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_sharing.html">tiledb.cloud.rest_api.models.task_graph_sharing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_type.html">tiledb.cloud.rest_api.models.task_graph_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graphs.html">tiledb.cloud.rest_api.models.task_graphs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tg_array_node_data.html">tiledb.cloud.rest_api.models.tg_array_node_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tg_input_node_data.html">tiledb.cloud.rest_api.models.tg_input_node_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tg_query_ranges.html">tiledb.cloud.rest_api.models.tg_query_ranges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tgsql_node_data.html">tiledb.cloud.rest_api.models.tgsql_node_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tgudf_argument.html">tiledb.cloud.rest_api.models.tgudf_argument</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tgudf_environment.html">tiledb.cloud.rest_api.models.tgudf_environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tgudf_environment_resources.html">tiledb.cloud.rest_api.models.tgudf_environment_resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tgudf_node_data.html">tiledb.cloud.rest_api.models.tgudf_node_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tile_db_config.html">tiledb.cloud.rest_api.models.tile_db_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tile_db_config_entries.html">tiledb.cloud.rest_api.models.tile_db_config_entries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.token.html">tiledb.cloud.rest_api.models.token</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.token_request.html">tiledb.cloud.rest_api.models.token_request</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.token_scope.html">tiledb.cloud.rest_api.models.token_scope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_actions.html">tiledb.cloud.rest_api.models.udf_actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_array_details.html">tiledb.cloud.rest_api.models.udf_array_details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_copied.html">tiledb.cloud.rest_api.models.udf_copied</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_copy.html">tiledb.cloud.rest_api.models.udf_copy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_favorite.html">tiledb.cloud.rest_api.models.udf_favorite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_favorites_data.html">tiledb.cloud.rest_api.models.udf_favorites_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_image.html">tiledb.cloud.rest_api.models.udf_image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_image_version.html">tiledb.cloud.rest_api.models.udf_image_version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_info.html">tiledb.cloud.rest_api.models.udf_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_info_update.html">tiledb.cloud.rest_api.models.udf_info_update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_language.html">tiledb.cloud.rest_api.models.udf_language</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_sharing.html">tiledb.cloud.rest_api.models.udf_sharing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_subarray.html">tiledb.cloud.rest_api.models.udf_subarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_subarray_range.html">tiledb.cloud.rest_api.models.udf_subarray_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_type.html">tiledb.cloud.rest_api.models.udf_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.user.html">tiledb.cloud.rest_api.models.user</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.writer.html">tiledb.cloud.rest_api.models.writer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.rest.html">tiledb.cloud.rest_api.rest</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.sql.html">tiledb.cloud.sql</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.taskgraphs.html">tiledb.cloud.taskgraphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tasks.html">tiledb.cloud.tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tiledb_cloud_error.html">tiledb.cloud.tiledb_cloud_error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.udf.html">tiledb.cloud.udf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.utils.html">tiledb.cloud.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.version.html">tiledb.cloud.version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TileDB-Cloud-Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.html">tiledb.cloud</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.models.html">tiledb.cloud.rest_api.models</a></li>
+      <li class="breadcrumb-item active">tiledb.cloud.rest_api.models.fragment_metadata</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/tiledb.cloud.rest_api.models.fragment_metadata.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-tiledb.cloud.rest_api.models.fragment_metadata">
+<span id="tiledb-cloud-rest-api-models-fragment-metadata"></span><h1>tiledb.cloud.rest_api.models.fragment_metadata<a class="headerlink" href="#module-tiledb.cloud.rest_api.models.fragment_metadata" title="Permalink to this heading">¶</a></h1>
+<p>TileDB Storage Platform API</p>
+<p>TileDB Storage Platform REST API  # noqa: E501</p>
+<p>The version of the OpenAPI document: 2.2.19
+Generated by: <a class="reference external" href="https://openapi-generator.tech">https://openapi-generator.tech</a></p>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="tiledb.cloud.rest_api.models.fragment_metadata.FragmentMetadata.html#tiledb.cloud.rest_api.models.fragment_metadata.FragmentMetadata" title="tiledb.cloud.rest_api.models.fragment_metadata.FragmentMetadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FragmentMetadata</span></code></a>([file_sizes, ...])</p></td>
+<td><p>NOTE: This class is auto generated by OpenAPI Generator.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tiledb.cloud.rest_api.models.fragment_info_request.FragmentInfoRequest.html" class="btn btn-neutral float-left" title="tiledb.cloud.rest_api.models.fragment_info_request.FragmentInfoRequest" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tiledb.cloud.rest_api.models.fragment_metadata.FragmentMetadata.html" class="btn btn-neutral float-right" title="tiledb.cloud.rest_api.models.fragment_metadata.FragmentMetadata" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020–2023, TileDB, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

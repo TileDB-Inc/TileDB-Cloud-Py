@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.ingestion.ingest\_manifest\_dag
+================================================
+
+.. currentmodule:: tiledb.cloud.vcf.ingestion
+
+.. autofunction:: ingest_manifest_dag

@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.api.registered\_task\_graphs\_api.RegisteredTaskGraphsApi
+================================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.registered_task_graphs_api
+
+.. autoclass:: RegisteredTaskGraphsApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RegisteredTaskGraphsApi.__init__
+      ~RegisteredTaskGraphsApi.delete_registered_task_graph
+      ~RegisteredTaskGraphsApi.delete_registered_task_graph_with_http_info
+      ~RegisteredTaskGraphsApi.get_registered_task_graph
+      ~RegisteredTaskGraphsApi.get_registered_task_graph_sharing_policies
+      ~RegisteredTaskGraphsApi.get_registered_task_graph_sharing_policies_with_http_info
+      ~RegisteredTaskGraphsApi.get_registered_task_graph_with_http_info
+      ~RegisteredTaskGraphsApi.register_registered_task_graph
+      ~RegisteredTaskGraphsApi.register_registered_task_graph_with_http_info
+      ~RegisteredTaskGraphsApi.share_registered_task_graph
+      ~RegisteredTaskGraphsApi.share_registered_task_graph_with_http_info
+      ~RegisteredTaskGraphsApi.update_registered_task_graph
+      ~RegisteredTaskGraphsApi.update_registered_task_graph_with_http_info
+   
+   
+
+   
+   
+   

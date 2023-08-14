@@ -1,0 +1,27 @@
+tiledb.cloud.rest\_api.api.stats\_api.StatsApi
+==============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.stats_api
+
+.. autoclass:: StatsApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~StatsApi.__init__
+      ~StatsApi.get_tiledb_stats
+      ~StatsApi.get_tiledb_stats_with_http_info
+   
+   
+
+   
+   
+   

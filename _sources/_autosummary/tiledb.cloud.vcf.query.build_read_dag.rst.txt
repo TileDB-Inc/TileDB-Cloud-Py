@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.query.build\_read\_dag
+=======================================
+
+.. currentmodule:: tiledb.cloud.vcf.query
+
+.. autofunction:: build_read_dag

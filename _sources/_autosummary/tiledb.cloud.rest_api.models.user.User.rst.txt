@@ -1,0 +1,52 @@
+tiledb.cloud.rest\_api.models.user.User
+=======================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.user
+
+.. autoclass:: User
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~User.__init__
+      ~User.to_dict
+      ~User.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~User.allowed_actions
+      ~User.asset_locations
+      ~User.attribute_map
+      ~User.company
+      ~User.default_namespace_charged
+      ~User.default_s3_path
+      ~User.default_s3_path_credentials_name
+      ~User.email
+      ~User.enabled_features
+      ~User.id
+      ~User.is_valid_email
+      ~User.logo
+      ~User.name
+      ~User.openapi_types
+      ~User.organizations
+      ~User.password
+      ~User.stripe_connect
+      ~User.timezone
+      ~User.unpaid_subscription
+      ~User.username
+   
+   

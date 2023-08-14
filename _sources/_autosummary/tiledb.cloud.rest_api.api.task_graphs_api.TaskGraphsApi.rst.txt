@@ -1,0 +1,35 @@
+tiledb.cloud.rest\_api.api.task\_graphs\_api.TaskGraphsApi
+==========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.task_graphs_api
+
+.. autoclass:: TaskGraphsApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TaskGraphsApi.__init__
+      ~TaskGraphsApi.create_task_graph
+      ~TaskGraphsApi.create_task_graph_with_http_info
+      ~TaskGraphsApi.get_task_graph
+      ~TaskGraphsApi.get_task_graph_with_http_info
+      ~TaskGraphsApi.list_task_graphs
+      ~TaskGraphsApi.list_task_graphs_with_http_info
+      ~TaskGraphsApi.submit_task_graph
+      ~TaskGraphsApi.submit_task_graph_with_http_info
+      ~TaskGraphsApi.update_task_graph
+      ~TaskGraphsApi.update_task_graph_with_http_info
+   
+   
+
+   
+   
+   

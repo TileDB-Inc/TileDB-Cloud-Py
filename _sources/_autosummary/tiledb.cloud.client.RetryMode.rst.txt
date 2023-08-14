@@ -1,0 +1,33 @@
+tiledb.cloud.client.RetryMode
+=============================
+
+.. currentmodule:: tiledb.cloud.client
+
+.. autoclass:: RetryMode
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RetryMode.maybe_from
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~RetryMode.DEFAULT
+      ~RetryMode.FORCEFUL
+      ~RetryMode.DISABLED
+   
+   

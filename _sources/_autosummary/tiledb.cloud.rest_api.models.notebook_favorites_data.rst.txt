@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.notebook\_favorites\_data
+=======================================================
+
+.. automodule:: tiledb.cloud.rest_api.models.notebook_favorites_data
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      NotebookFavoritesData
+   
+   
+
+   
+   
+   
+
+
+

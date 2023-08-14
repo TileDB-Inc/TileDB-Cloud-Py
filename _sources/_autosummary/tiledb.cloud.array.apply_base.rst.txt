@@ -1,0 +1,6 @@
+tiledb.cloud.array.apply\_base
+==============================
+
+.. currentmodule:: tiledb.cloud.array
+
+.. autofunction:: apply_base

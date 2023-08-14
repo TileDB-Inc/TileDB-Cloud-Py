@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tiledb.cloud.rest_api.models.array_task.ArrayTask &mdash; TileDB-Cloud-Py  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tiledb.cloud.rest_api.models.array_task_browser_sidebar" href="tiledb.cloud.rest_api.models.array_task_browser_sidebar.html" />
+    <link rel="prev" title="tiledb.cloud.rest_api.models.array_task" href="tiledb.cloud.rest_api.models.array_task.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TileDB-Cloud-Py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.html">tiledb.cloud</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.array.html">tiledb.cloud.array</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.client.html">tiledb.cloud.client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.compute.html">tiledb.cloud.compute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.config.html">tiledb.cloud.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.dag.html">tiledb.cloud.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.file.html">tiledb.cloud.file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.groups.html">tiledb.cloud.groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.notebook.html">tiledb.cloud.notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.pool_manager_wrapper.html">tiledb.cloud.pool_manager_wrapper</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.api.html">tiledb.cloud.rest_api.api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.api_client.html">tiledb.cloud.rest_api.api_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.configuration.html">tiledb.cloud.rest_api.configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.exceptions.html">tiledb.cloud.rest_api.exceptions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="tiledb.cloud.rest_api.models.html">tiledb.cloud.rest_api.models</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.activity_event_type.html">tiledb.cloud.rest_api.models.activity_event_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array.html">tiledb.cloud.rest_api.models.array</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_actions.html">tiledb.cloud.rest_api.models.array_actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_activity_log.html">tiledb.cloud.rest_api.models.array_activity_log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_browser_data.html">tiledb.cloud.rest_api.models.array_browser_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_browser_sidebar.html">tiledb.cloud.rest_api.models.array_browser_sidebar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_consolidation_request.html">tiledb.cloud.rest_api.models.array_consolidation_request</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_end_timestamp_data.html">tiledb.cloud.rest_api.models.array_end_timestamp_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_favorite.html">tiledb.cloud.rest_api.models.array_favorite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_favorites_data.html">tiledb.cloud.rest_api.models.array_favorites_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_info.html">tiledb.cloud.rest_api.models.array_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_info_update.html">tiledb.cloud.rest_api.models.array_info_update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_metadata.html">tiledb.cloud.rest_api.models.array_metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_metadata_entry.html">tiledb.cloud.rest_api.models.array_metadata_entry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_sample.html">tiledb.cloud.rest_api.models.array_sample</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_schema.html">tiledb.cloud.rest_api.models.array_schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_sharing.html">tiledb.cloud.rest_api.models.array_sharing</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_task.html">tiledb.cloud.rest_api.models.array_task</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">tiledb.cloud.rest_api.models.array_task.ArrayTask</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_task_browser_sidebar.html">tiledb.cloud.rest_api.models.array_task_browser_sidebar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_task_data.html">tiledb.cloud.rest_api.models.array_task_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_task_log.html">tiledb.cloud.rest_api.models.array_task_log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_task_status.html">tiledb.cloud.rest_api.models.array_task_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_task_type.html">tiledb.cloud.rest_api.models.array_task_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_type.html">tiledb.cloud.rest_api.models.array_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.array_vacuum_request.html">tiledb.cloud.rest_api.models.array_vacuum_request</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.asset_locations.html">tiledb.cloud.rest_api.models.asset_locations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.attribute.html">tiledb.cloud.rest_api.models.attribute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.attribute_buffer_header.html">tiledb.cloud.rest_api.models.attribute_buffer_header</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.attribute_buffer_size.html">tiledb.cloud.rest_api.models.attribute_buffer_size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.aws_access_credentials.html">tiledb.cloud.rest_api.models.aws_access_credentials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.backoff.html">tiledb.cloud.rest_api.models.backoff</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.datatype.html">tiledb.cloud.rest_api.models.datatype</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.dimension.html">tiledb.cloud.rest_api.models.dimension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.dimension_coordinate.html">tiledb.cloud.rest_api.models.dimension_coordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.dimension_tile_extent.html">tiledb.cloud.rest_api.models.dimension_tile_extent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.domain.html">tiledb.cloud.rest_api.models.domain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.domain_array.html">tiledb.cloud.rest_api.models.domain_array</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.domain_check_result.html">tiledb.cloud.rest_api.models.domain_check_result</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.domain_check_status.html">tiledb.cloud.rest_api.models.domain_check_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.domain_verification_status.html">tiledb.cloud.rest_api.models.domain_verification_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.error.html">tiledb.cloud.rest_api.models.error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.file_create.html">tiledb.cloud.rest_api.models.file_create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.file_created.html">tiledb.cloud.rest_api.models.file_created</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.file_export.html">tiledb.cloud.rest_api.models.file_export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.file_exported.html">tiledb.cloud.rest_api.models.file_exported</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.file_property_name.html">tiledb.cloud.rest_api.models.file_property_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.file_type.html">tiledb.cloud.rest_api.models.file_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.file_uploaded.html">tiledb.cloud.rest_api.models.file_uploaded</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.filter.html">tiledb.cloud.rest_api.models.filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.filter_data.html">tiledb.cloud.rest_api.models.filter_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.filter_option.html">tiledb.cloud.rest_api.models.filter_option</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.filter_pipeline.html">tiledb.cloud.rest_api.models.filter_pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.filter_type.html">tiledb.cloud.rest_api.models.filter_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.fragment_info.html">tiledb.cloud.rest_api.models.fragment_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.fragment_info_request.html">tiledb.cloud.rest_api.models.fragment_info_request</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.fragment_metadata.html">tiledb.cloud.rest_api.models.fragment_metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.generic_udf.html">tiledb.cloud.rest_api.models.generic_udf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_actions.html">tiledb.cloud.rest_api.models.group_actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_browser_data.html">tiledb.cloud.rest_api.models.group_browser_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_browser_filter_data.html">tiledb.cloud.rest_api.models.group_browser_filter_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_changes.html">tiledb.cloud.rest_api.models.group_changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_contents.html">tiledb.cloud.rest_api.models.group_contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_contents_filter_data.html">tiledb.cloud.rest_api.models.group_contents_filter_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_create.html">tiledb.cloud.rest_api.models.group_create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_entry.html">tiledb.cloud.rest_api.models.group_entry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_info.html">tiledb.cloud.rest_api.models.group_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_member.html">tiledb.cloud.rest_api.models.group_member</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_member_asset_type.html">tiledb.cloud.rest_api.models.group_member_asset_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_member_type.html">tiledb.cloud.rest_api.models.group_member_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_register.html">tiledb.cloud.rest_api.models.group_register</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_sharing.html">tiledb.cloud.rest_api.models.group_sharing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_sharing_request.html">tiledb.cloud.rest_api.models.group_sharing_request</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_type.html">tiledb.cloud.rest_api.models.group_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_type_metadata_key.html">tiledb.cloud.rest_api.models.group_type_metadata_key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.group_update.html">tiledb.cloud.rest_api.models.group_update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.inline_object.html">tiledb.cloud.rest_api.models.inline_object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.inline_response200.html">tiledb.cloud.rest_api.models.inline_response200</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.invitation.html">tiledb.cloud.rest_api.models.invitation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.invitation_array_share_email.html">tiledb.cloud.rest_api.models.invitation_array_share_email</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.invitation_data.html">tiledb.cloud.rest_api.models.invitation_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.invitation_group_share_email.html">tiledb.cloud.rest_api.models.invitation_group_share_email</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.invitation_organization_join_email.html">tiledb.cloud.rest_api.models.invitation_organization_join_email</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.invitation_status.html">tiledb.cloud.rest_api.models.invitation_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.invitation_type.html">tiledb.cloud.rest_api.models.invitation_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.last_accessed_array.html">tiledb.cloud.rest_api.models.last_accessed_array</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.layout.html">tiledb.cloud.rest_api.models.layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.max_buffer_sizes.html">tiledb.cloud.rest_api.models.max_buffer_sizes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.ml_model_favorite.html">tiledb.cloud.rest_api.models.ml_model_favorite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.ml_model_favorites_data.html">tiledb.cloud.rest_api.models.ml_model_favorites_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.multi_array_udf.html">tiledb.cloud.rest_api.models.multi_array_udf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.namespace_actions.html">tiledb.cloud.rest_api.models.namespace_actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.non_empty_domain.html">tiledb.cloud.rest_api.models.non_empty_domain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.notebook_copied.html">tiledb.cloud.rest_api.models.notebook_copied</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.notebook_copy.html">tiledb.cloud.rest_api.models.notebook_copy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.notebook_favorite.html">tiledb.cloud.rest_api.models.notebook_favorite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.notebook_favorites_data.html">tiledb.cloud.rest_api.models.notebook_favorites_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.notebook_status.html">tiledb.cloud.rest_api.models.notebook_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.organization.html">tiledb.cloud.rest_api.models.organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.organization_roles.html">tiledb.cloud.rest_api.models.organization_roles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.organization_user.html">tiledb.cloud.rest_api.models.organization_user</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.pagination_metadata.html">tiledb.cloud.rest_api.models.pagination_metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.pricing.html">tiledb.cloud.rest_api.models.pricing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.pricing_aggregate_usage.html">tiledb.cloud.rest_api.models.pricing_aggregate_usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.pricing_currency.html">tiledb.cloud.rest_api.models.pricing_currency</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.pricing_interval.html">tiledb.cloud.rest_api.models.pricing_interval</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.pricing_type.html">tiledb.cloud.rest_api.models.pricing_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.pricing_unit_label.html">tiledb.cloud.rest_api.models.pricing_unit_label</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.public_share_filter.html">tiledb.cloud.rest_api.models.public_share_filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.query.html">tiledb.cloud.rest_api.models.query</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.query_json.html">tiledb.cloud.rest_api.models.query_json</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.query_ranges.html">tiledb.cloud.rest_api.models.query_ranges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.query_reader.html">tiledb.cloud.rest_api.models.query_reader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.querystatus.html">tiledb.cloud.rest_api.models.querystatus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.querytype.html">tiledb.cloud.rest_api.models.querytype</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.read_state.html">tiledb.cloud.rest_api.models.read_state</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.registered_task_graph.html">tiledb.cloud.rest_api.models.registered_task_graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.result_format.html">tiledb.cloud.rest_api.models.result_format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.retry_policy.html">tiledb.cloud.rest_api.models.retry_policy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.retry_strategy.html">tiledb.cloud.rest_api.models.retry_strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.single_fragment_info.html">tiledb.cloud.rest_api.models.single_fragment_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.sql_parameters.html">tiledb.cloud.rest_api.models.sql_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.sso_domain_config.html">tiledb.cloud.rest_api.models.sso_domain_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.sso_domain_config_response.html">tiledb.cloud.rest_api.models.sso_domain_config_response</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.sso_domain_setup.html">tiledb.cloud.rest_api.models.sso_domain_setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.sso_provider.html">tiledb.cloud.rest_api.models.sso_provider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.storage_location.html">tiledb.cloud.rest_api.models.storage_location</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.subarray.html">tiledb.cloud.rest_api.models.subarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.subarray_partitioner.html">tiledb.cloud.rest_api.models.subarray_partitioner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.subarray_partitioner_current.html">tiledb.cloud.rest_api.models.subarray_partitioner_current</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.subarray_partitioner_state.html">tiledb.cloud.rest_api.models.subarray_partitioner_state</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.subarray_ranges.html">tiledb.cloud.rest_api.models.subarray_ranges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.subscription.html">tiledb.cloud.rest_api.models.subscription</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph.html">tiledb.cloud.rest_api.models.task_graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_actions.html">tiledb.cloud.rest_api.models.task_graph_actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_client_node_status.html">tiledb.cloud.rest_api.models.task_graph_client_node_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_log.html">tiledb.cloud.rest_api.models.task_graph_log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_log_run_location.html">tiledb.cloud.rest_api.models.task_graph_log_run_location</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_log_status.html">tiledb.cloud.rest_api.models.task_graph_log_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_logs_data.html">tiledb.cloud.rest_api.models.task_graph_logs_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_node.html">tiledb.cloud.rest_api.models.task_graph_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_node_metadata.html">tiledb.cloud.rest_api.models.task_graph_node_metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_sharing.html">tiledb.cloud.rest_api.models.task_graph_sharing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graph_type.html">tiledb.cloud.rest_api.models.task_graph_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.task_graphs.html">tiledb.cloud.rest_api.models.task_graphs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tg_array_node_data.html">tiledb.cloud.rest_api.models.tg_array_node_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tg_input_node_data.html">tiledb.cloud.rest_api.models.tg_input_node_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tg_query_ranges.html">tiledb.cloud.rest_api.models.tg_query_ranges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tgsql_node_data.html">tiledb.cloud.rest_api.models.tgsql_node_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tgudf_argument.html">tiledb.cloud.rest_api.models.tgudf_argument</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tgudf_environment.html">tiledb.cloud.rest_api.models.tgudf_environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tgudf_environment_resources.html">tiledb.cloud.rest_api.models.tgudf_environment_resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tgudf_node_data.html">tiledb.cloud.rest_api.models.tgudf_node_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tile_db_config.html">tiledb.cloud.rest_api.models.tile_db_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.tile_db_config_entries.html">tiledb.cloud.rest_api.models.tile_db_config_entries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.token.html">tiledb.cloud.rest_api.models.token</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.token_request.html">tiledb.cloud.rest_api.models.token_request</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.token_scope.html">tiledb.cloud.rest_api.models.token_scope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_actions.html">tiledb.cloud.rest_api.models.udf_actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_array_details.html">tiledb.cloud.rest_api.models.udf_array_details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_copied.html">tiledb.cloud.rest_api.models.udf_copied</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_copy.html">tiledb.cloud.rest_api.models.udf_copy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_favorite.html">tiledb.cloud.rest_api.models.udf_favorite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_favorites_data.html">tiledb.cloud.rest_api.models.udf_favorites_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_image.html">tiledb.cloud.rest_api.models.udf_image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_image_version.html">tiledb.cloud.rest_api.models.udf_image_version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_info.html">tiledb.cloud.rest_api.models.udf_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_info_update.html">tiledb.cloud.rest_api.models.udf_info_update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_language.html">tiledb.cloud.rest_api.models.udf_language</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_sharing.html">tiledb.cloud.rest_api.models.udf_sharing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_subarray.html">tiledb.cloud.rest_api.models.udf_subarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_subarray_range.html">tiledb.cloud.rest_api.models.udf_subarray_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.udf_type.html">tiledb.cloud.rest_api.models.udf_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.user.html">tiledb.cloud.rest_api.models.user</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.models.writer.html">tiledb.cloud.rest_api.models.writer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.rest.html">tiledb.cloud.rest_api.rest</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.sql.html">tiledb.cloud.sql</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.taskgraphs.html">tiledb.cloud.taskgraphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tasks.html">tiledb.cloud.tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tiledb_cloud_error.html">tiledb.cloud.tiledb_cloud_error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.udf.html">tiledb.cloud.udf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.utils.html">tiledb.cloud.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.version.html">tiledb.cloud.version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TileDB-Cloud-Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.html">tiledb.cloud</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.models.html">tiledb.cloud.rest_api.models</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.models.array_task.html">tiledb.cloud.rest_api.models.array_task</a></li>
+      <li class="breadcrumb-item active">tiledb.cloud.rest_api.models.array_task.ArrayTask</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/tiledb.cloud.rest_api.models.array_task.ArrayTask.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tiledb-cloud-rest-api-models-array-task-arraytask">
+<h1>tiledb.cloud.rest_api.models.array_task.ArrayTask<a class="headerlink" href="#tiledb-cloud-rest-api-models-array-task-arraytask" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tiledb.cloud.rest_api.models.array_task.</span></span><span class="sig-name descname"><span class="pre">ArrayTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subarray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finish_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">egress_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf_language</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_init_commands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_graph_uuid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_node_uuid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_vars_configuration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>NOTE: This class is auto generated by OpenAPI Generator.
+Ref: <a class="reference external" href="https://openapi-generator.tech">https://openapi-generator.tech</a></p>
+<p>Do not edit the class manually.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subarray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finish_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">egress_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf_language</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_init_commands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sql_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_graph_uuid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_node_uuid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_vars_configuration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>ArrayTask - a model defined in OpenAPI</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.__init__" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([id, name, username, description, ...])</p></td>
+<td><p>ArrayTask - a model defined in OpenAPI</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.to_dict" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.to_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code></a>()</p></td>
+<td><p>Returns the model properties as a dict</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.to_str" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.to_str"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_str</span></code></a>()</p></td>
+<td><p>Returns the string representation of the model</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.access_cost" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.access_cost"><code class="xref py py-obj docutils literal notranslate"><span class="pre">access_cost</span></code></a></p></td>
+<td><p>Gets the access_cost of this ArrayTask.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.activity" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.activity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">activity</span></code></a></p></td>
+<td><p>Gets the activity of this ArrayTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.array_metadata" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.array_metadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array_metadata</span></code></a></p></td>
+<td><p>Gets the array_metadata of this ArrayTask.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">attribute_map</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.client_node_uuid" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.client_node_uuid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">client_node_uuid</span></code></a></p></td>
+<td><p>Gets the client_node_uuid of this ArrayTask.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.cost" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.cost"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cost</span></code></a></p></td>
+<td><p>Gets the cost of this ArrayTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.cpu" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.cpu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cpu</span></code></a></p></td>
+<td><p>Gets the cpu of this ArrayTask.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.description" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.description"><code class="xref py py-obj docutils literal notranslate"><span class="pre">description</span></code></a></p></td>
+<td><p>Gets the description of this ArrayTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.duration" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.duration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duration</span></code></a></p></td>
+<td><p>Gets the duration of this ArrayTask.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.egress_cost" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.egress_cost"><code class="xref py py-obj docutils literal notranslate"><span class="pre">egress_cost</span></code></a></p></td>
+<td><p>Gets the egress_cost of this ArrayTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.finish_time" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.finish_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finish_time</span></code></a></p></td>
+<td><p>Gets the finish_time of this ArrayTask.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.id" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span></code></a></p></td>
+<td><p>Gets the id of this ArrayTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.logs" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.logs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logs</span></code></a></p></td>
+<td><p>Gets the logs of this ArrayTask.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.memory" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.memory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">memory</span></code></a></p></td>
+<td><p>Gets the memory of this ArrayTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.name" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
+<td><p>Gets the name of this ArrayTask.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.namespace" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.namespace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">namespace</span></code></a></p></td>
+<td><p>Gets the namespace of this ArrayTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">openapi_types</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.query_type" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.query_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">query_type</span></code></a></p></td>
+<td><p>Gets the query_type of this ArrayTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.result_format" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.result_format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">result_format</span></code></a></p></td>
+<td><p>Gets the result_format of this ArrayTask.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.sql_init_commands" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.sql_init_commands"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sql_init_commands</span></code></a></p></td>
+<td><p>Gets the sql_init_commands of this ArrayTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.sql_parameters" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.sql_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sql_parameters</span></code></a></p></td>
+<td><p>Gets the sql_parameters of this ArrayTask.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.sql_query" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.sql_query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sql_query</span></code></a></p></td>
+<td><p>Gets the sql_query of this ArrayTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.start_time" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.start_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start_time</span></code></a></p></td>
+<td><p>Gets the start_time of this ArrayTask.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.status" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.status"><code class="xref py py-obj docutils literal notranslate"><span class="pre">status</span></code></a></p></td>
+<td><p>Gets the status of this ArrayTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.status_message" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.status_message"><code class="xref py py-obj docutils literal notranslate"><span class="pre">status_message</span></code></a></p></td>
+<td><p>Gets the status_message of this ArrayTask.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.subarray" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.subarray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subarray</span></code></a></p></td>
+<td><p>Gets the subarray of this ArrayTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.task_graph_uuid" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.task_graph_uuid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">task_graph_uuid</span></code></a></p></td>
+<td><p>Gets the task_graph_uuid of this ArrayTask.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.type" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></a></p></td>
+<td><p>Gets the type of this ArrayTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.udf_code" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.udf_code"><code class="xref py py-obj docutils literal notranslate"><span class="pre">udf_code</span></code></a></p></td>
+<td><p>Gets the udf_code of this ArrayTask.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.udf_language" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.udf_language"><code class="xref py py-obj docutils literal notranslate"><span class="pre">udf_language</span></code></a></p></td>
+<td><p>Gets the udf_language of this ArrayTask.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.username" title="tiledb.cloud.rest_api.models.array_task.ArrayTask.username"><code class="xref py py-obj docutils literal notranslate"><span class="pre">username</span></code></a></p></td>
+<td><p>Gets the username of this ArrayTask.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.access_cost">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">access_cost</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.access_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the access_cost of this ArrayTask.  # noqa: E501</p>
+<p>Cost accumulated for access task in USD, example is $0.12  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The access_cost of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.activity">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">activity</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.activity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the activity of this ArrayTask.  # noqa: E501</p>
+<p>Array activity logs for task  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The activity of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[<a class="reference internal" href="tiledb.cloud.rest_api.models.array_activity_log.ArrayActivityLog.html#tiledb.cloud.rest_api.models.array_activity_log.ArrayActivityLog" title="tiledb.cloud.rest_api.models.array_activity_log.ArrayActivityLog">ArrayActivityLog</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.array_metadata">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">array_metadata</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.array_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the array_metadata of this ArrayTask.  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The array_metadata of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="tiledb.cloud.rest_api.models.array_info.ArrayInfo.html#tiledb.cloud.rest_api.models.array_info.ArrayInfo" title="tiledb.cloud.rest_api.models.array_info.ArrayInfo">ArrayInfo</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.client_node_uuid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">client_node_uuid</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.client_node_uuid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the client_node_uuid of this ArrayTask.  # noqa: E501</p>
+<p>If set, the client-defined ID of the node within this task’s graph.   # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The client_node_uuid of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.cost">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cost</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the cost of this ArrayTask.  # noqa: E501</p>
+<p>Total accumulated for task in USD, example is $0.12  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The cost of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.cpu">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cpu</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.cpu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the cpu of this ArrayTask.  # noqa: E501</p>
+<p>millicpu allocated to task  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The cpu of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.description">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the description of this ArrayTask.  # noqa: E501</p>
+<p>Optional task description (Tasks purpose)  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The description of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.duration">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">duration</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the duration of this ArrayTask.  # noqa: E501</p>
+<p>duration in nanoseconds of an array task  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The duration of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.egress_cost">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">egress_cost</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.egress_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the egress_cost of this ArrayTask.  # noqa: E501</p>
+<p>Total accumulated for egress task in USD, example is $0.12  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The egress_cost of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.finish_time">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">finish_time</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.finish_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the finish_time of this ArrayTask.  # noqa: E501</p>
+<p>Finish time RFC3339 for job  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The finish_time of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the id of this ArrayTask.  # noqa: E501</p>
+<p>task ID  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The id of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.logs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logs</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.logs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the logs of this ArrayTask.  # noqa: E501</p>
+<p>logs from array task  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The logs of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.memory">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">memory</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the memory of this ArrayTask.  # noqa: E501</p>
+<p>memory allocated to task in bytes  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The memory of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the name of this ArrayTask.  # noqa: E501</p>
+<p>Optional task name  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The name of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.namespace">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">namespace</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.namespace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the namespace of this ArrayTask.  # noqa: E501</p>
+<p>namespace task is tied to  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The namespace of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.query_type">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">query_type</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.query_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the query_type of this ArrayTask.  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The query_type of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="tiledb.cloud.rest_api.models.querytype.Querytype.html#tiledb.cloud.rest_api.models.querytype.Querytype" title="tiledb.cloud.rest_api.models.querytype.Querytype">Querytype</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.result_format">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">result_format</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.result_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the result_format of this ArrayTask.  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The result_format of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="tiledb.cloud.rest_api.models.result_format.ResultFormat.html#tiledb.cloud.rest_api.models.result_format.ResultFormat" title="tiledb.cloud.rest_api.models.result_format.ResultFormat">ResultFormat</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.sql_init_commands">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sql_init_commands</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.sql_init_commands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the sql_init_commands of this ArrayTask.  # noqa: E501</p>
+<p>SQL queries or commands to run before main sql query  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sql_init_commands of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.sql_parameters">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sql_parameters</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.sql_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the sql_parameters of this ArrayTask.  # noqa: E501</p>
+<p>SQL query parameters  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sql_parameters of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[object]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.sql_query">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sql_query</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.sql_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the sql_query of this ArrayTask.  # noqa: E501</p>
+<p>Optional actual sql query that is going to be executed  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sql_query of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.start_time">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_time</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.start_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the start_time of this ArrayTask.  # noqa: E501</p>
+<p>Start time RFC3339 for job  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The start_time of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.status">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">status</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the status of this ArrayTask.  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The status of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="tiledb.cloud.rest_api.models.array_task_status.ArrayTaskStatus.html#tiledb.cloud.rest_api.models.array_task_status.ArrayTaskStatus" title="tiledb.cloud.rest_api.models.array_task_status.ArrayTaskStatus">ArrayTaskStatus</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.status_message">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">status_message</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.status_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the status_message of this ArrayTask.  # noqa: E501</p>
+<p>The reason the array task status is in the state  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The status_message of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.subarray">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">subarray</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.subarray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the subarray of this ArrayTask.  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The subarray of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="tiledb.cloud.rest_api.models.domain_array.DomainArray.html#tiledb.cloud.rest_api.models.domain_array.DomainArray" title="tiledb.cloud.rest_api.models.domain_array.DomainArray">DomainArray</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.task_graph_uuid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">task_graph_uuid</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.task_graph_uuid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the task_graph_uuid of this ArrayTask.  # noqa: E501</p>
+<p>If set, the ID of the log for the task graph that this was part of.   # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The task_graph_uuid of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the model properties as a dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.to_str">
+<span class="sig-name descname"><span class="pre">to_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.to_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the string representation of the model</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.type">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the type of this ArrayTask.  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The type of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="tiledb.cloud.rest_api.models.array_task_type.ArrayTaskType.html#tiledb.cloud.rest_api.models.array_task_type.ArrayTaskType" title="tiledb.cloud.rest_api.models.array_task_type.ArrayTaskType">ArrayTaskType</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.udf_code">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">udf_code</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.udf_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the udf_code of this ArrayTask.  # noqa: E501</p>
+<p>Optional actual code that is going to be executed  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The udf_code of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.udf_language">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">udf_language</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.udf_language" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the udf_language of this ArrayTask.  # noqa: E501</p>
+<p>Optional actual language used to express udf_code  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The udf_language of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.models.array_task.ArrayTask.username">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">username</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.models.array_task.ArrayTask.username" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the username of this ArrayTask.  # noqa: E501</p>
+<p>username that executed this task  # noqa: E501</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The username of this ArrayTask.  # noqa: E501</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tiledb.cloud.rest_api.models.array_task.html" class="btn btn-neutral float-left" title="tiledb.cloud.rest_api.models.array_task" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tiledb.cloud.rest_api.models.array_task_browser_sidebar.html" class="btn btn-neutral float-right" title="tiledb.cloud.rest_api.models.array_task_browser_sidebar" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020–2023, TileDB, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

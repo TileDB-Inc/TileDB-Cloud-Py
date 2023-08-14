@@ -1,0 +1,6 @@
+tiledb.cloud.dag.visualization.update\_plotly\_graph
+====================================================
+
+.. currentmodule:: tiledb.cloud.dag.visualization
+
+.. autofunction:: update_plotly_graph

@@ -1,0 +1,41 @@
+tiledb.cloud.rest\_api.models.task\_graph\_node\_metadata.TaskGraphNodeMetadata
+===============================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.task_graph_node_metadata
+
+.. autoclass:: TaskGraphNodeMetadata
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TaskGraphNodeMetadata.__init__
+      ~TaskGraphNodeMetadata.to_dict
+      ~TaskGraphNodeMetadata.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TaskGraphNodeMetadata.attribute_map
+      ~TaskGraphNodeMetadata.client_node_uuid
+      ~TaskGraphNodeMetadata.depends_on
+      ~TaskGraphNodeMetadata.executions
+      ~TaskGraphNodeMetadata.name
+      ~TaskGraphNodeMetadata.openapi_types
+      ~TaskGraphNodeMetadata.run_location
+      ~TaskGraphNodeMetadata.status
+      ~TaskGraphNodeMetadata.status_message
+   
+   

@@ -1,0 +1,6 @@
+tiledb.cloud.bioimg.ingestion.ingest\_udf
+=========================================
+
+.. currentmodule:: tiledb.cloud.bioimg.ingestion
+
+.. autofunction:: ingest_udf

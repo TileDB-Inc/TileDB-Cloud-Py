@@ -1,0 +1,36 @@
+tiledb.cloud.rest\_api.models.udf\_favorites\_data.UDFFavoritesData
+===================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.udf_favorites_data
+
+.. autoclass:: UDFFavoritesData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UDFFavoritesData.__init__
+      ~UDFFavoritesData.to_dict
+      ~UDFFavoritesData.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UDFFavoritesData.attribute_map
+      ~UDFFavoritesData.openapi_types
+      ~UDFFavoritesData.pagination_metadata
+      ~UDFFavoritesData.udfs
+   
+   

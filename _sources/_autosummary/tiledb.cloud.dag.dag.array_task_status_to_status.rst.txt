@@ -1,0 +1,6 @@
+tiledb.cloud.dag.dag.array\_task\_status\_to\_status
+====================================================
+
+.. currentmodule:: tiledb.cloud.dag.dag
+
+.. autofunction:: array_task_status_to_status

@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.task\_graph\_log\_run\_location.TaskGraphLogRunLocation
+=====================================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.task_graph_log_run_location
+
+.. autoclass:: TaskGraphLogRunLocation
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TaskGraphLogRunLocation.__init__
+      ~TaskGraphLogRunLocation.to_dict
+      ~TaskGraphLogRunLocation.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TaskGraphLogRunLocation.CLIENT
+      ~TaskGraphLogRunLocation.SERVER
+      ~TaskGraphLogRunLocation.VIRTUAL
+      ~TaskGraphLogRunLocation.allowable_values
+      ~TaskGraphLogRunLocation.attribute_map
+      ~TaskGraphLogRunLocation.openapi_types
+   
+   

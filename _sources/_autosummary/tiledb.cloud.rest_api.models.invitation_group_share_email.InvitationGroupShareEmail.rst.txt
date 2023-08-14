@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.invitation\_group\_share\_email.InvitationGroupShareEmail
+=======================================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.invitation_group_share_email
+
+.. autoclass:: InvitationGroupShareEmail
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~InvitationGroupShareEmail.__init__
+      ~InvitationGroupShareEmail.to_dict
+      ~InvitationGroupShareEmail.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~InvitationGroupShareEmail.array_actions
+      ~InvitationGroupShareEmail.attribute_map
+      ~InvitationGroupShareEmail.group_actions
+      ~InvitationGroupShareEmail.invitee_email_or_name
+      ~InvitationGroupShareEmail.openapi_types
+   
+   

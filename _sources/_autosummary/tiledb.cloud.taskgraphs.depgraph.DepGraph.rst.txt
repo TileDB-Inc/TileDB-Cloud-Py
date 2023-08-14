@@ -1,0 +1,40 @@
+tiledb.cloud.taskgraphs.depgraph.DepGraph
+=========================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.depgraph
+
+.. autoclass:: DepGraph
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DepGraph.__init__
+      ~DepGraph.add_edge
+      ~DepGraph.add_new_node
+      ~DepGraph.children_of
+      ~DepGraph.copy
+      ~DepGraph.edges
+      ~DepGraph.leaves
+      ~DepGraph.parents_of
+      ~DepGraph.remove
+      ~DepGraph.roots
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DepGraph.topo_sorted
+   
+   

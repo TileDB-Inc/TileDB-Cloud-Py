@@ -1,0 +1,39 @@
+tiledb.cloud.sql.db\_api\_exceptions
+====================================
+
+.. automodule:: tiledb.cloud.sql.db_api_exceptions
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      DataError
+      DatabaseError
+      Error
+      IntegrityError
+      InterfaceError
+      InternalError
+      NotSupportedError
+      OperationalError
+      ProgrammingError
+      Warning
+   
+   
+
+
+

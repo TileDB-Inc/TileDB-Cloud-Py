@@ -1,0 +1,32 @@
+tiledb.cloud.file
+=================
+
+.. automodule:: tiledb.cloud.file
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      create_file
+      export_file
+      export_file_local
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

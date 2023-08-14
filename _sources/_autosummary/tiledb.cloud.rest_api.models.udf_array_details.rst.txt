@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.udf\_array\_details
+=================================================
+
+.. automodule:: tiledb.cloud.rest_api.models.udf_array_details
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      UDFArrayDetails
+   
+   
+
+   
+   
+   
+
+
+

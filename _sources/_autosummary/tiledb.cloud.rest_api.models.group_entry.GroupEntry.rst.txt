@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.group\_entry.GroupEntry
+=====================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.group_entry
+
+.. autoclass:: GroupEntry
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GroupEntry.__init__
+      ~GroupEntry.to_dict
+      ~GroupEntry.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GroupEntry.array
+      ~GroupEntry.attribute_map
+      ~GroupEntry.group
+      ~GroupEntry.member_id
+      ~GroupEntry.openapi_types
+   
+   

@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.dimension\_tile\_extent
+=====================================================
+
+.. automodule:: tiledb.cloud.rest_api.models.dimension_tile_extent
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      DimensionTileExtent
+   
+   
+
+   
+   
+   
+
+
+

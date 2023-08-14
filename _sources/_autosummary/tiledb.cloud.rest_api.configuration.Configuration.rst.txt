@@ -1,0 +1,60 @@
+tiledb.cloud.rest\_api.configuration.Configuration
+==================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.configuration
+
+.. autoclass:: Configuration
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Configuration.__init__
+      ~Configuration.auth_settings
+      ~Configuration.get_api_key_with_prefix
+      ~Configuration.get_basic_auth_token
+      ~Configuration.get_default_copy
+      ~Configuration.get_host_from_settings
+      ~Configuration.get_host_settings
+      ~Configuration.set_default
+      ~Configuration.to_debug_report
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Configuration.debug
+      ~Configuration.logger_file
+      ~Configuration.logger_format
+      ~Configuration.host
+      ~Configuration.temp_folder_path
+      ~Configuration.refresh_api_key_hook
+      ~Configuration.username
+      ~Configuration.password
+      ~Configuration.access_token
+      ~Configuration.logger
+      ~Configuration.logger_stream_handler
+      ~Configuration.logger_file_handler
+      ~Configuration.verify_ssl
+      ~Configuration.ssl_ca_cert
+      ~Configuration.cert_file
+      ~Configuration.key_file
+      ~Configuration.assert_hostname
+      ~Configuration.connection_pool_maxsize
+      ~Configuration.proxy
+      ~Configuration.proxy_headers
+      ~Configuration.safe_chars_for_path_param
+      ~Configuration.retries
+   
+   

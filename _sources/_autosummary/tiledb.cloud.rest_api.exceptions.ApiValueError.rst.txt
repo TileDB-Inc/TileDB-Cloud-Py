@@ -1,0 +1,6 @@
+tiledb.cloud.rest\_api.exceptions.ApiValueError
+===============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.exceptions
+
+.. autoexception:: ApiValueError

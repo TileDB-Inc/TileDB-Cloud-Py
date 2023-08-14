@@ -1,0 +1,44 @@
+tiledb.cloud.rest\_api.models.udf\_info\_update.UDFInfoUpdate
+=============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.udf_info_update
+
+.. autoclass:: UDFInfoUpdate
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UDFInfoUpdate.__init__
+      ~UDFInfoUpdate.to_dict
+      ~UDFInfoUpdate.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UDFInfoUpdate.attribute_map
+      ~UDFInfoUpdate.exec_raw
+      ~UDFInfoUpdate.image_name
+      ~UDFInfoUpdate.language
+      ~UDFInfoUpdate.license_id
+      ~UDFInfoUpdate.license_text
+      ~UDFInfoUpdate.name
+      ~UDFInfoUpdate.openapi_types
+      ~UDFInfoUpdate.readme
+      ~UDFInfoUpdate.tags
+      ~UDFInfoUpdate.type
+      ~UDFInfoUpdate.version
+   
+   

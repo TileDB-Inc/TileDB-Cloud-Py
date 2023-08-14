@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.utils.find\_index
+==================================
+
+.. currentmodule:: tiledb.cloud.vcf.utils
+
+.. autofunction:: find_index

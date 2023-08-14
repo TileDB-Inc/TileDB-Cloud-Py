@@ -1,0 +1,43 @@
+tiledb.cloud.rest\_api.models.query.Query
+=========================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.query
+
+.. autoclass:: Query
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Query.__init__
+      ~Query.to_dict
+      ~Query.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Query.array
+      ~Query.attribute_buffer_headers
+      ~Query.attribute_map
+      ~Query.layout
+      ~Query.openapi_types
+      ~Query.reader
+      ~Query.status
+      ~Query.total_fixed_length_buffer_bytes
+      ~Query.total_var_len_buffer_bytes
+      ~Query.type
+      ~Query.writer
+   
+   

@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.invitation\_organization\_join\_email.InvitationOrganizationJoinEmail
+===================================================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.invitation_organization_join_email
+
+.. autoclass:: InvitationOrganizationJoinEmail
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~InvitationOrganizationJoinEmail.__init__
+      ~InvitationOrganizationJoinEmail.to_dict
+      ~InvitationOrganizationJoinEmail.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~InvitationOrganizationJoinEmail.actions
+      ~InvitationOrganizationJoinEmail.attribute_map
+      ~InvitationOrganizationJoinEmail.invitee_email
+      ~InvitationOrganizationJoinEmail.openapi_types
+      ~InvitationOrganizationJoinEmail.organization_role
+   
+   

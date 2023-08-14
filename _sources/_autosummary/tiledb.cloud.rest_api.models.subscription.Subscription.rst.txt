@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.subscription.Subscription
+=======================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.subscription
+
+.. autoclass:: Subscription
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Subscription.__init__
+      ~Subscription.to_dict
+      ~Subscription.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Subscription.attribute_map
+      ~Subscription.customer_namespace_uuid
+      ~Subscription.id
+      ~Subscription.openapi_types
+      ~Subscription.owner_namespace_uuid
+      ~Subscription.pricing
+   
+   

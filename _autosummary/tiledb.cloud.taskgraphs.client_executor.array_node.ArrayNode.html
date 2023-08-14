@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode &mdash; TileDB-Cloud-Py  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tiledb.cloud.taskgraphs.client_executor.impl" href="tiledb.cloud.taskgraphs.client_executor.impl.html" />
+    <link rel="prev" title="tiledb.cloud.taskgraphs.client_executor.array_node" href="tiledb.cloud.taskgraphs.client_executor.array_node.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TileDB-Cloud-Py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.html">tiledb.cloud</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.array.html">tiledb.cloud.array</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.client.html">tiledb.cloud.client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.compute.html">tiledb.cloud.compute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.config.html">tiledb.cloud.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.dag.html">tiledb.cloud.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.file.html">tiledb.cloud.file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.groups.html">tiledb.cloud.groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.notebook.html">tiledb.cloud.notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.pool_manager_wrapper.html">tiledb.cloud.pool_manager_wrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.sql.html">tiledb.cloud.sql</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tiledb.cloud.taskgraphs.html">tiledb.cloud.taskgraphs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.GraphOrRegistered.html">tiledb.cloud.taskgraphs.GraphOrRegistered</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.execute.html">tiledb.cloud.taskgraphs.execute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.builder.html">tiledb.cloud.taskgraphs.builder</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="tiledb.cloud.taskgraphs.client_executor.html">tiledb.cloud.taskgraphs.client_executor</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="tiledb.cloud.taskgraphs.client_executor.array_node.html">tiledb.cloud.taskgraphs.client_executor.array_node</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.taskgraphs.client_executor.impl.html">tiledb.cloud.taskgraphs.client_executor.impl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.taskgraphs.client_executor.input_node.html">tiledb.cloud.taskgraphs.client_executor.input_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.taskgraphs.client_executor.sql_node.html">tiledb.cloud.taskgraphs.client_executor.sql_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.taskgraphs.client_executor.udf_node.html">tiledb.cloud.taskgraphs.client_executor.udf_node</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.delayed.html">tiledb.cloud.taskgraphs.delayed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.depgraph.html">tiledb.cloud.taskgraphs.depgraph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.executor.html">tiledb.cloud.taskgraphs.executor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.registration.html">tiledb.cloud.taskgraphs.registration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.types.html">tiledb.cloud.taskgraphs.types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.visualization.html">tiledb.cloud.taskgraphs.visualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tasks.html">tiledb.cloud.tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tiledb_cloud_error.html">tiledb.cloud.tiledb_cloud_error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.udf.html">tiledb.cloud.udf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.utils.html">tiledb.cloud.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.version.html">tiledb.cloud.version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TileDB-Cloud-Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.html">tiledb.cloud</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.taskgraphs.html">tiledb.cloud.taskgraphs</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.taskgraphs.client_executor.html">tiledb.cloud.taskgraphs.client_executor</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.taskgraphs.client_executor.array_node.html">tiledb.cloud.taskgraphs.client_executor.array_node</a></li>
+      <li class="breadcrumb-item active">tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tiledb-cloud-taskgraphs-client-executor-array-node-arraynode">
+<h1>tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode<a class="headerlink" href="#tiledb-cloud-taskgraphs-client-executor-array-node-arraynode" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tiledb.cloud.taskgraphs.client_executor.array_node.</span></span><span class="sig-name descname"><span class="pre">ArrayNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">UUID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ET</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">ET</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">_T</span></code>]</p>
+<p>A node representing a read from a TileDB Array.</p>
+<p>This node is not executed by itself; instead, it only appears as an input
+to TileDB UDF nodes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">UUID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ET</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.__init__" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(uid, owner, name, json_data)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.add_done_callback" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.add_done_callback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_done_callback</span></code></a>(fn)</p></td>
+<td><p>Adds a callback that will be called when this Node completes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.cancel" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.cancel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cancel</span></code></a>()</p></td>
+<td><p>If possible, cancels execution of this node.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.cancelled" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.cancelled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cancelled</span></code></a>()</p></td>
+<td><p>Returns True if the Node was cancelled.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.done" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.done"><code class="xref py py-obj docutils literal notranslate"><span class="pre">done</span></code></a>()</p></td>
+<td><p>Returns True if this Node has completed or been cancelled.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.exception" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.exception"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exception</span></code></a>([timeout])</p></td>
+<td><p>If this node failed, the exception that was raised.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.result" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">result</span></code></a>([timeout])</p></td>
+<td><p>The value resulting from executing this node.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.retry" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.retry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">retry</span></code></a>()</p></td>
+<td><p>Attempts to submit this node for retry, if possible.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.running" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.running"><code class="xref py py-obj docutils literal notranslate"><span class="pre">running</span></code></a>()</p></td>
+<td><p>Returns True if the Node is currently executing.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.task_id" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.task_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">task_id</span></code></a>([timeout])</p></td>
+<td><p>The task ID that was returned from the server, if applicable.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.wait" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.wait"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wait</span></code></a>([timeout])</p></td>
+<td><p>Waits for the given amount of time for this Node to complete.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.display_name" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.display_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_name</span></code></a></p></td>
+<td><p>The name for this node that should show up in UIs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.fallback_name" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.fallback_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fallback_name</span></code></a></p></td>
+<td><p>A fallback name for this node if unnamed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.status" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.status"><code class="xref py py-obj docutils literal notranslate"><span class="pre">status</span></code></a></p></td>
+<td><p>The current lifecycle state of this Node.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.id" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span></code></a></p></td>
+<td><p>The client-generated UUID of this node.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.owner" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.owner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">owner</span></code></a></p></td>
+<td><p>The executor which this node belongs to.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.name" title="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
+<td><p>The name of the node, if present.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.add_done_callback">
+<span class="sig-name descname"><span class="pre">add_done_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">_NSelf</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.add_done_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a callback that will be called when this Node completes.</p>
+<p>While the current behavior is similar to the way <code class="docutils literal notranslate"><span class="pre">add_done_callback</span></code>
+on a regular <code class="docutils literal notranslate"><span class="pre">Future</span></code> works, we don’t guarantee that it will remain
+the same (e.g. will it be called immediately, on what thread).
+A callback may be called back multiple times if the Node completes
+multiple times.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.cancel">
+<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.cancel" title="Permalink to this definition">¶</a></dt>
+<dd><p>If possible, cancels execution of this node.</p>
+<p>Returns True if cancellation succeeded, False if we could not cancel.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.cancelled">
+<span class="sig-name descname"><span class="pre">cancelled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.cancelled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the Node was cancelled.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.display_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">display_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.display_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name for this node that should show up in UIs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.done">
+<span class="sig-name descname"><span class="pre">done</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.done" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if this Node has completed or been cancelled.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.exception">
+<span class="sig-name descname"><span class="pre">exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Exception</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>If this node failed, the exception that was raised.</p>
+<p>If the Node succeeded, returns None. If the Node was cancelled, a
+<code class="docutils literal notranslate"><span class="pre">futures.CancelledError</span></code> will be <em>raised</em> rather than returned.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.fallback_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fallback_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.fallback_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A fallback name for this node if unnamed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>The client-generated UUID of this node.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the node, if present.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.owner">
+<span class="sig-name descname"><span class="pre">owner</span></span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.owner" title="Permalink to this definition">¶</a></dt>
+<dd><p>The executor which this node belongs to.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.result">
+<span class="sig-name descname"><span class="pre">result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_T</span></span></span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.result" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value resulting from executing this node.</p>
+<p>Returns the result if present, or raises an exception if execution
+raised an exception.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.retry">
+<span class="sig-name descname"><span class="pre">retry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.retry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to submit this node for retry, if possible.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.running">
+<span class="sig-name descname"><span class="pre">running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the Node is currently executing.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.status">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="tiledb.cloud.taskgraphs.executor.Status.html#tiledb.cloud.taskgraphs.executor.Status" title="tiledb.cloud.taskgraphs.executor.Status"><span class="pre">Status</span></a></em><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current lifecycle state of this Node.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.task_id">
+<span class="sig-name descname"><span class="pre">task_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">UUID</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.task_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>The task ID that was returned from the server, if applicable.</p>
+<p>If this was executed on the server side, this should return the UUID of
+the actual execution of this task. If it was purely client-side, or the
+server did not return a UUID, this should return None.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.wait">
+<span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tiledb.cloud.taskgraphs.client_executor.array_node.ArrayNode.wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Waits for the given amount of time for this Node to complete.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tiledb.cloud.taskgraphs.client_executor.array_node.html" class="btn btn-neutral float-left" title="tiledb.cloud.taskgraphs.client_executor.array_node" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tiledb.cloud.taskgraphs.client_executor.impl.html" class="btn btn-neutral float-right" title="tiledb.cloud.taskgraphs.client_executor.impl" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020–2023, TileDB, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+tiledb.cloud.bioimg.exportation.export
+======================================
+
+.. currentmodule:: tiledb.cloud.bioimg.exportation
+
+.. autofunction:: export

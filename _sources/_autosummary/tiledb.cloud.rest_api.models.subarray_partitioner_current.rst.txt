@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.subarray\_partitioner\_current
+============================================================
+
+.. automodule:: tiledb.cloud.rest_api.models.subarray_partitioner_current
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SubarrayPartitionerCurrent
+   
+   
+
+   
+   
+   
+
+
+

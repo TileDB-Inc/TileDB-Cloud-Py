@@ -1,0 +1,6 @@
+tiledb.cloud.array.register\_array
+==================================
+
+.. currentmodule:: tiledb.cloud.array
+
+.. autofunction:: register_array

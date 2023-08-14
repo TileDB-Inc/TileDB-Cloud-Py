@@ -1,0 +1,6 @@
+tiledb.cloud.client.Config
+==========================
+
+.. currentmodule:: tiledb.cloud.client
+
+.. autofunction:: Config

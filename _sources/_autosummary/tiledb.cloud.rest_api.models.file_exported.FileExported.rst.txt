@@ -1,0 +1,35 @@
+tiledb.cloud.rest\_api.models.file\_exported.FileExported
+=========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.file_exported
+
+.. autoclass:: FileExported
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FileExported.__init__
+      ~FileExported.to_dict
+      ~FileExported.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FileExported.attribute_map
+      ~FileExported.openapi_types
+      ~FileExported.output_uri
+   
+   

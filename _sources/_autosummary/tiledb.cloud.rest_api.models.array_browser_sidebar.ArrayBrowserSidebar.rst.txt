@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.array\_browser\_sidebar.ArrayBrowserSidebar
+=========================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_browser_sidebar
+
+.. autoclass:: ArrayBrowserSidebar
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayBrowserSidebar.__init__
+      ~ArrayBrowserSidebar.to_dict
+      ~ArrayBrowserSidebar.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayBrowserSidebar.attribute_map
+      ~ArrayBrowserSidebar.namespaces
+      ~ArrayBrowserSidebar.openapi_types
+      ~ArrayBrowserSidebar.result_count_by_namespace
+      ~ArrayBrowserSidebar.result_count_for_all
+   
+   

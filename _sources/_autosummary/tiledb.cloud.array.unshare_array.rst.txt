@@ -1,0 +1,6 @@
+tiledb.cloud.array.unshare\_array
+=================================
+
+.. currentmodule:: tiledb.cloud.array
+
+.. autofunction:: unshare_array

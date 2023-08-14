@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.writer.Writer
+===========================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.writer
+
+.. autoclass:: Writer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Writer.__init__
+      ~Writer.to_dict
+      ~Writer.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Writer.attribute_map
+      ~Writer.check_coord_dups
+      ~Writer.check_coord_oob
+      ~Writer.dedup_coords
+      ~Writer.openapi_types
+      ~Writer.subarray
+   
+   

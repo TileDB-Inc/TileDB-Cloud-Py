@@ -1,0 +1,6 @@
+tiledb.cloud.taskgraphs.executor.ParentFailedError
+==================================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.executor
+
+.. autoexception:: ParentFailedError

@@ -1,0 +1,36 @@
+tiledb.cloud.rest\_api.models.query\_json.QueryJson
+===================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.query_json
+
+.. autoclass:: QueryJson
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~QueryJson.__init__
+      ~QueryJson.to_dict
+      ~QueryJson.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~QueryJson.attribute_map
+      ~QueryJson.fields
+      ~QueryJson.openapi_types
+      ~QueryJson.query_ranges
+   
+   

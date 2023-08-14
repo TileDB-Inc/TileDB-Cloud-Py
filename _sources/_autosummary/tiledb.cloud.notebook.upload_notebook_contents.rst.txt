@@ -1,0 +1,6 @@
+tiledb.cloud.notebook.upload\_notebook\_contents
+================================================
+
+.. currentmodule:: tiledb.cloud.notebook
+
+.. autofunction:: upload_notebook_contents

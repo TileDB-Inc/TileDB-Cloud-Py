@@ -1,0 +1,41 @@
+tiledb.cloud.rest\_api.models.group\_update.GroupUpdate
+=======================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.group_update
+
+.. autoclass:: GroupUpdate
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GroupUpdate.__init__
+      ~GroupUpdate.to_dict
+      ~GroupUpdate.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GroupUpdate.access_credentials_name
+      ~GroupUpdate.attribute_map
+      ~GroupUpdate.description
+      ~GroupUpdate.license_id
+      ~GroupUpdate.license_text
+      ~GroupUpdate.logo
+      ~GroupUpdate.name
+      ~GroupUpdate.openapi_types
+      ~GroupUpdate.tags
+   
+   

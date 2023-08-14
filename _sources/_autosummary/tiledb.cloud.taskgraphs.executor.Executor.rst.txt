@@ -1,0 +1,46 @@
+tiledb.cloud.taskgraphs.executor.Executor
+=========================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.executor
+
+.. autoclass:: Executor
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Executor.__init__
+      ~Executor.add_update_callback
+      ~Executor.cancel
+      ~Executor.cancelled_nodes
+      ~Executor.execute
+      ~Executor.failed_nodes
+      ~Executor.node
+      ~Executor.nodes_by_name
+      ~Executor.retry
+      ~Executor.retry_all
+      ~Executor.running_nodes
+      ~Executor.successful_nodes
+      ~Executor.unstarted_nodes
+      ~Executor.visualize
+      ~Executor.wait
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Executor.server_graph_uuid
+      ~Executor.status
+   
+   

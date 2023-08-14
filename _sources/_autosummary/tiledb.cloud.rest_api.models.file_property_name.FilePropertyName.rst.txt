@@ -1,0 +1,42 @@
+tiledb.cloud.rest\_api.models.file\_property\_name.FilePropertyName
+===================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.file_property_name
+
+.. autoclass:: FilePropertyName
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FilePropertyName.__init__
+      ~FilePropertyName.to_dict
+      ~FilePropertyName.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FilePropertyName.CODE_BLOCK
+      ~FilePropertyName.IMAGE
+      ~FilePropertyName.IS_DASHBOARD
+      ~FilePropertyName.SIZE
+      ~FilePropertyName.UDF_LANGUAGE
+      ~FilePropertyName.VERSION_PRUNING_ENABLED
+      ~FilePropertyName.VERSION_PRUNING_LIMIT
+      ~FilePropertyName.allowable_values
+      ~FilePropertyName.attribute_map
+      ~FilePropertyName.openapi_types
+   
+   

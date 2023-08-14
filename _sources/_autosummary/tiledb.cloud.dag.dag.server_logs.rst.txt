@@ -1,0 +1,6 @@
+tiledb.cloud.dag.dag.server\_logs
+=================================
+
+.. currentmodule:: tiledb.cloud.dag.dag
+
+.. autofunction:: server_logs

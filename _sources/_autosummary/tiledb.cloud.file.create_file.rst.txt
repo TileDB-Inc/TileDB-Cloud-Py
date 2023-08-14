@@ -1,0 +1,6 @@
+tiledb.cloud.file.create\_file
+==============================
+
+.. currentmodule:: tiledb.cloud.file
+
+.. autofunction:: create_file

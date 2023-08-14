@@ -1,0 +1,27 @@
+tiledb.cloud.rest\_api.api.sql\_api.SqlApi
+==========================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.sql_api
+
+.. autoclass:: SqlApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SqlApi.__init__
+      ~SqlApi.run_sql
+      ~SqlApi.run_sql_with_http_info
+   
+   
+
+   
+   
+   

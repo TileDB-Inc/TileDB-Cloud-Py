@@ -1,0 +1,31 @@
+tiledb.cloud.soma
+=================
+
+.. automodule:: tiledb.cloud.soma
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      ingest_h5ad
+      run_ingest_workflow
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

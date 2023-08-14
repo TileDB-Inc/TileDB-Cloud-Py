@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.file\_uploaded.FileUploaded
+=========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.file_uploaded
+
+.. autoclass:: FileUploaded
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FileUploaded.__init__
+      ~FileUploaded.to_dict
+      ~FileUploaded.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FileUploaded.attribute_map
+      ~FileUploaded.file_name
+      ~FileUploaded.id
+      ~FileUploaded.openapi_types
+      ~FileUploaded.output_uri
+   
+   

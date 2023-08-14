@@ -1,0 +1,27 @@
+tiledb.cloud.rest\_api.api.array\_tasks\_api.ArrayTasksApi
+==========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.array_tasks_api
+
+.. autoclass:: ArrayTasksApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayTasksApi.__init__
+      ~ArrayTasksApi.get_array_tasks_sidebar
+      ~ArrayTasksApi.get_array_tasks_sidebar_with_http_info
+   
+   
+
+   
+   
+   

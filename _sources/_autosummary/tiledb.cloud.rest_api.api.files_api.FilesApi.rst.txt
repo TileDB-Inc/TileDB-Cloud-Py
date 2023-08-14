@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.api.files\_api.FilesApi
+==============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.files_api
+
+.. autoclass:: FilesApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FilesApi.__init__
+      ~FilesApi.handle_create_file
+      ~FilesApi.handle_create_file_with_http_info
+      ~FilesApi.handle_export_file
+      ~FilesApi.handle_export_file_with_http_info
+      ~FilesApi.handle_upload_file
+      ~FilesApi.handle_upload_file_with_http_info
+   
+   
+
+   
+   
+   

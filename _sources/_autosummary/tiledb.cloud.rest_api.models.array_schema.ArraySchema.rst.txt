@@ -1,0 +1,45 @@
+tiledb.cloud.rest\_api.models.array\_schema.ArraySchema
+=======================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_schema
+
+.. autoclass:: ArraySchema
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArraySchema.__init__
+      ~ArraySchema.to_dict
+      ~ArraySchema.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArraySchema.allows_duplicates
+      ~ArraySchema.array_type
+      ~ArraySchema.attribute_map
+      ~ArraySchema.attributes
+      ~ArraySchema.capacity
+      ~ArraySchema.cell_order
+      ~ArraySchema.coords_filter_pipeline
+      ~ArraySchema.domain
+      ~ArraySchema.offset_filter_pipeline
+      ~ArraySchema.openapi_types
+      ~ArraySchema.tile_order
+      ~ArraySchema.uri
+      ~ArraySchema.version
+   
+   

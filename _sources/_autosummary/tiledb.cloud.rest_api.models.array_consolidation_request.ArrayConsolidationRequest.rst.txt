@@ -1,0 +1,35 @@
+tiledb.cloud.rest\_api.models.array\_consolidation\_request.ArrayConsolidationRequest
+=====================================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_consolidation_request
+
+.. autoclass:: ArrayConsolidationRequest
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayConsolidationRequest.__init__
+      ~ArrayConsolidationRequest.to_dict
+      ~ArrayConsolidationRequest.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayConsolidationRequest.attribute_map
+      ~ArrayConsolidationRequest.config
+      ~ArrayConsolidationRequest.openapi_types
+   
+   

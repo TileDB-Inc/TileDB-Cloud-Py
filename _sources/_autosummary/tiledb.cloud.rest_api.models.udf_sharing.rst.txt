@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.udf\_sharing
+==========================================
+
+.. automodule:: tiledb.cloud.rest_api.models.udf_sharing
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      UDFSharing
+   
+   
+
+   
+   
+   
+
+
+

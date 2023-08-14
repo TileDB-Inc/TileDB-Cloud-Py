@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tiledb.cloud.rest_api.api.query_api.QueryApi &mdash; TileDB-Cloud-Py  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tiledb.cloud.rest_api.api.registered_task_graphs_api" href="tiledb.cloud.rest_api.api.registered_task_graphs_api.html" />
+    <link rel="prev" title="tiledb.cloud.rest_api.api.query_api" href="tiledb.cloud.rest_api.api.query_api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TileDB-Cloud-Py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.html">tiledb.cloud</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.array.html">tiledb.cloud.array</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.client.html">tiledb.cloud.client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.compute.html">tiledb.cloud.compute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.config.html">tiledb.cloud.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.dag.html">tiledb.cloud.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.file.html">tiledb.cloud.file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.groups.html">tiledb.cloud.groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.notebook.html">tiledb.cloud.notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.pool_manager_wrapper.html">tiledb.cloud.pool_manager_wrapper</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="tiledb.cloud.rest_api.api.html">tiledb.cloud.rest_api.api</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.array_api.html">tiledb.cloud.rest_api.api.array_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.array_tasks_api.html">tiledb.cloud.rest_api.api.array_tasks_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.favorites_api.html">tiledb.cloud.rest_api.api.favorites_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.files_api.html">tiledb.cloud.rest_api.api.files_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.groups_api.html">tiledb.cloud.rest_api.api.groups_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.invitation_api.html">tiledb.cloud.rest_api.api.invitation_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.notebook_api.html">tiledb.cloud.rest_api.api.notebook_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.notebooks_api.html">tiledb.cloud.rest_api.api.notebooks_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.organization_api.html">tiledb.cloud.rest_api.api.organization_api</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="tiledb.cloud.rest_api.api.query_api.html">tiledb.cloud.rest_api.api.query_api</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">tiledb.cloud.rest_api.api.query_api.QueryApi</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.registered_task_graphs_api.html">tiledb.cloud.rest_api.api.registered_task_graphs_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.sql_api.html">tiledb.cloud.rest_api.api.sql_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.stats_api.html">tiledb.cloud.rest_api.api.stats_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.task_graph_logs_api.html">tiledb.cloud.rest_api.api.task_graph_logs_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.task_graphs_api.html">tiledb.cloud.rest_api.api.task_graphs_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.tasks_api.html">tiledb.cloud.rest_api.api.tasks_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.udf_api.html">tiledb.cloud.rest_api.api.udf_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.user_api.html">tiledb.cloud.rest_api.api.user_api</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.api_client.html">tiledb.cloud.rest_api.api_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.configuration.html">tiledb.cloud.rest_api.configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.exceptions.html">tiledb.cloud.rest_api.exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.models.html">tiledb.cloud.rest_api.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.rest.html">tiledb.cloud.rest_api.rest</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.sql.html">tiledb.cloud.sql</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.taskgraphs.html">tiledb.cloud.taskgraphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tasks.html">tiledb.cloud.tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tiledb_cloud_error.html">tiledb.cloud.tiledb_cloud_error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.udf.html">tiledb.cloud.udf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.utils.html">tiledb.cloud.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.version.html">tiledb.cloud.version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TileDB-Cloud-Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.html">tiledb.cloud</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.api.html">tiledb.cloud.rest_api.api</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.api.query_api.html">tiledb.cloud.rest_api.api.query_api</a></li>
+      <li class="breadcrumb-item active">tiledb.cloud.rest_api.api.query_api.QueryApi</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/tiledb.cloud.rest_api.api.query_api.QueryApi.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tiledb-cloud-rest-api-api-query-api-queryapi">
+<h1>tiledb.cloud.rest_api.api.query_api.QueryApi<a class="headerlink" href="#tiledb-cloud-rest-api-api-query-api-queryapi" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.query_api.QueryApi">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tiledb.cloud.rest_api.api.query_api.</span></span><span class="sig-name descname"><span class="pre">QueryApi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.query_api.QueryApi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>NOTE: This class is auto generated by OpenAPI Generator
+Ref: <a class="reference external" href="https://openapi-generator.tech">https://openapi-generator.tech</a></p>
+<p>Do not edit the class manually.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.query_api.QueryApi.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.__init__" title="tiledb.cloud.rest_api.api.query_api.QueryApi.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([api_client])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.finalize_query" title="tiledb.cloud.rest_api.api.query_api.QueryApi.finalize_query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalize_query</span></code></a>(namespace, array, type, ...)</p></td>
+<td><p>finalize_query  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.finalize_query_with_http_info" title="tiledb.cloud.rest_api.api.query_api.QueryApi.finalize_query_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalize_query_with_http_info</span></code></a>(namespace, ...)</p></td>
+<td><p>finalize_query  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.get_est_result_sizes" title="tiledb.cloud.rest_api.api.query_api.QueryApi.get_est_result_sizes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_est_result_sizes</span></code></a>(namespace, array, type, ...)</p></td>
+<td><p>get_est_result_sizes  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.get_est_result_sizes_with_http_info" title="tiledb.cloud.rest_api.api.query_api.QueryApi.get_est_result_sizes_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_est_result_sizes_with_http_info</span></code></a>(...)</p></td>
+<td><p>get_est_result_sizes  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.get_file" title="tiledb.cloud.rest_api.api.query_api.QueryApi.get_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_file</span></code></a>(namespace, array, content_type, ...)</p></td>
+<td><p>get_file  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.get_file_with_http_info" title="tiledb.cloud.rest_api.api.query_api.QueryApi.get_file_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_file_with_http_info</span></code></a>(namespace, array, ...)</p></td>
+<td><p>get_file  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query" title="tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_query</span></code></a>(namespace, array, type, ...)</p></td>
+<td><p>submit_query  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query_json" title="tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_query_json</span></code></a>(namespace, array, ...)</p></td>
+<td><p>submit_query_json  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query_json_with_http_info" title="tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query_json_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_query_json_with_http_info</span></code></a>(namespace, ...)</p></td>
+<td><p>submit_query_json  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query_with_http_info" title="tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_query_with_http_info</span></code></a>(namespace, ...)</p></td>
+<td><p>submit_query  # noqa: E501</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.query_api.QueryApi.finalize_query">
+<span class="sig-name descname"><span class="pre">finalize_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.finalize_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>finalize_query  # noqa: E501</p>
+<p>send a query to run against a specified array/URI registered to a group/project  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.finalize_query(namespace, array, type, content_type, query, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>array</strong> (<em>str</em>) – name/uri of array that is url-encoded (required)</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – type of query (required)</p></li>
+<li><p><strong>content_type</strong> (<em>str</em>) – Content Type of input and return mime (required)</p></li>
+<li><p><strong>query</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.query.Query.html#tiledb.cloud.rest_api.models.query.Query" title="tiledb.cloud.rest_api.models.query.Query"><em>Query</em></a>) – query to run (required)</p></li>
+<li><p><strong>x_payer</strong> (<em>str</em>) – Name of organization or user who should be charged for this request</p></li>
+<li><p><strong>open_at</strong> (<em>int</em>) – open_at for array in unix epoch</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Query
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.query_api.QueryApi.finalize_query_with_http_info">
+<span class="sig-name descname"><span class="pre">finalize_query_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.finalize_query_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>finalize_query  # noqa: E501</p>
+<p>send a query to run against a specified array/URI registered to a group/project  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.finalize_query_with_http_info(namespace, array, type, content_type, query, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>array</strong> (<em>str</em>) – name/uri of array that is url-encoded (required)</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – type of query (required)</p></li>
+<li><p><strong>content_type</strong> (<em>str</em>) – Content Type of input and return mime (required)</p></li>
+<li><p><strong>query</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.query.Query.html#tiledb.cloud.rest_api.models.query.Query" title="tiledb.cloud.rest_api.models.query.Query"><em>Query</em></a>) – query to run (required)</p></li>
+<li><p><strong>x_payer</strong> (<em>str</em>) – Name of organization or user who should be charged for this request</p></li>
+<li><p><strong>open_at</strong> (<em>int</em>) – open_at for array in unix epoch</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(Query, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.query_api.QueryApi.get_est_result_sizes">
+<span class="sig-name descname"><span class="pre">get_est_result_sizes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.get_est_result_sizes" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_est_result_sizes  # noqa: E501</p>
+<p>send a query to run against a specified array/URI registered to a group/project  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_est_result_sizes(namespace, array, type, content_type, query, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>array</strong> (<em>str</em>) – name/uri of array that is url-encoded (required)</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – type of query (required)</p></li>
+<li><p><strong>content_type</strong> (<em>str</em>) – Content Type of input and return mime (required)</p></li>
+<li><p><strong>query</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.query.Query.html#tiledb.cloud.rest_api.models.query.Query" title="tiledb.cloud.rest_api.models.query.Query"><em>Query</em></a>) – query to run (required)</p></li>
+<li><p><strong>x_payer</strong> (<em>str</em>) – Name of organization or user who should be charged for this request</p></li>
+<li><p><strong>open_at</strong> (<em>int</em>) – open_at for array in unix epoch</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Query
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.query_api.QueryApi.get_est_result_sizes_with_http_info">
+<span class="sig-name descname"><span class="pre">get_est_result_sizes_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.get_est_result_sizes_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_est_result_sizes  # noqa: E501</p>
+<p>send a query to run against a specified array/URI registered to a group/project  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_est_result_sizes_with_http_info(namespace, array, type, content_type, query, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>array</strong> (<em>str</em>) – name/uri of array that is url-encoded (required)</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – type of query (required)</p></li>
+<li><p><strong>content_type</strong> (<em>str</em>) – Content Type of input and return mime (required)</p></li>
+<li><p><strong>query</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.query.Query.html#tiledb.cloud.rest_api.models.query.Query" title="tiledb.cloud.rest_api.models.query.Query"><em>Query</em></a>) – query to run (required)</p></li>
+<li><p><strong>x_payer</strong> (<em>str</em>) – Name of organization or user who should be charged for this request</p></li>
+<li><p><strong>open_at</strong> (<em>int</em>) – open_at for array in unix epoch</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(Query, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.query_api.QueryApi.get_file">
+<span class="sig-name descname"><span class="pre">get_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.get_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_file  # noqa: E501</p>
+<p>send a query to run against a specified array/URI registered to a group/project, returns file bytes  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_file(namespace, array, content_type, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>array</strong> (<em>str</em>) – name/uri of array that is url-encoded (required)</p></li>
+<li><p><strong>content_type</strong> (<em>str</em>) – Content Type of input and return mime (required)</p></li>
+<li><p><strong>x_payer</strong> (<em>str</em>) – Name of organization or user who should be charged for this request</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>file
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.query_api.QueryApi.get_file_with_http_info">
+<span class="sig-name descname"><span class="pre">get_file_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.get_file_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_file  # noqa: E501</p>
+<p>send a query to run against a specified array/URI registered to a group/project, returns file bytes  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_file_with_http_info(namespace, array, content_type, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>array</strong> (<em>str</em>) – name/uri of array that is url-encoded (required)</p></li>
+<li><p><strong>content_type</strong> (<em>str</em>) – Content Type of input and return mime (required)</p></li>
+<li><p><strong>x_payer</strong> (<em>str</em>) – Name of organization or user who should be charged for this request</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(file, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query">
+<span class="sig-name descname"><span class="pre">submit_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>submit_query  # noqa: E501</p>
+<p>send a query to run against a specified array/URI registered to a group/project  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.submit_query(namespace, array, type, content_type, query, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>array</strong> (<em>str</em>) – name/uri of array that is url-encoded (required)</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – type of query (required)</p></li>
+<li><p><strong>content_type</strong> (<em>str</em>) – Content Type of input and return mime (required)</p></li>
+<li><p><strong>query</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.query.Query.html#tiledb.cloud.rest_api.models.query.Query" title="tiledb.cloud.rest_api.models.query.Query"><em>Query</em></a>) – query to run (required)</p></li>
+<li><p><strong>x_payer</strong> (<em>str</em>) – Name of organization or user who should be charged for this request</p></li>
+<li><p><strong>open_at</strong> (<em>int</em>) – open_at for array in unix epoch</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Query
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query_json">
+<span class="sig-name descname"><span class="pre">submit_query_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query_json</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>submit_query_json  # noqa: E501</p>
+<p>send a query to run against a specified array/URI registered to a group/project, returns JSON results  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.submit_query_json(namespace, array, content_type, query_json, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>array</strong> (<em>str</em>) – name/uri of array that is url-encoded (required)</p></li>
+<li><p><strong>content_type</strong> (<em>str</em>) – Content Type of input and return mime (required)</p></li>
+<li><p><strong>query_json</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.query_json.QueryJson.html#tiledb.cloud.rest_api.models.query_json.QueryJson" title="tiledb.cloud.rest_api.models.query_json.QueryJson"><em>QueryJson</em></a>) – query to run (required)</p></li>
+<li><p><strong>x_payer</strong> (<em>str</em>) – Name of organization or user who should be charged for this request</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>object
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query_json_with_http_info">
+<span class="sig-name descname"><span class="pre">submit_query_json_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query_json</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query_json_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>submit_query_json  # noqa: E501</p>
+<p>send a query to run against a specified array/URI registered to a group/project, returns JSON results  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.submit_query_json_with_http_info(namespace, array, content_type, query_json, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>array</strong> (<em>str</em>) – name/uri of array that is url-encoded (required)</p></li>
+<li><p><strong>content_type</strong> (<em>str</em>) – Content Type of input and return mime (required)</p></li>
+<li><p><strong>query_json</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.query_json.QueryJson.html#tiledb.cloud.rest_api.models.query_json.QueryJson" title="tiledb.cloud.rest_api.models.query_json.QueryJson"><em>QueryJson</em></a>) – query to run (required)</p></li>
+<li><p><strong>x_payer</strong> (<em>str</em>) – Name of organization or user who should be charged for this request</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(object, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query_with_http_info">
+<span class="sig-name descname"><span class="pre">submit_query_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.query_api.QueryApi.submit_query_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>submit_query  # noqa: E501</p>
+<p>send a query to run against a specified array/URI registered to a group/project  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.submit_query_with_http_info(namespace, array, type, content_type, query, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>array</strong> (<em>str</em>) – name/uri of array that is url-encoded (required)</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – type of query (required)</p></li>
+<li><p><strong>content_type</strong> (<em>str</em>) – Content Type of input and return mime (required)</p></li>
+<li><p><strong>query</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.query.Query.html#tiledb.cloud.rest_api.models.query.Query" title="tiledb.cloud.rest_api.models.query.Query"><em>Query</em></a>) – query to run (required)</p></li>
+<li><p><strong>x_payer</strong> (<em>str</em>) – Name of organization or user who should be charged for this request</p></li>
+<li><p><strong>open_at</strong> (<em>int</em>) – open_at for array in unix epoch</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(Query, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tiledb.cloud.rest_api.api.query_api.html" class="btn btn-neutral float-left" title="tiledb.cloud.rest_api.api.query_api" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tiledb.cloud.rest_api.api.registered_task_graphs_api.html" class="btn btn-neutral float-right" title="tiledb.cloud.rest_api.api.registered_task_graphs_api" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020–2023, TileDB, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

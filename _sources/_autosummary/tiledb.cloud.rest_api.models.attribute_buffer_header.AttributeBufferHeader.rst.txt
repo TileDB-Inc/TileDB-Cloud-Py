@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.attribute\_buffer\_header.AttributeBufferHeader
+=============================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.attribute_buffer_header
+
+.. autoclass:: AttributeBufferHeader
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AttributeBufferHeader.__init__
+      ~AttributeBufferHeader.to_dict
+      ~AttributeBufferHeader.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AttributeBufferHeader.attribute_map
+      ~AttributeBufferHeader.fixed_len_buffer_size_in_bytes
+      ~AttributeBufferHeader.name
+      ~AttributeBufferHeader.openapi_types
+      ~AttributeBufferHeader.var_len_buffer_size_in_bytes
+   
+   

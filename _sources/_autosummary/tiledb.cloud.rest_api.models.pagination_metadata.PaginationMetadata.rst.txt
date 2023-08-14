@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.pagination\_metadata.PaginationMetadata
+=====================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.pagination_metadata
+
+.. autoclass:: PaginationMetadata
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PaginationMetadata.__init__
+      ~PaginationMetadata.to_dict
+      ~PaginationMetadata.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PaginationMetadata.attribute_map
+      ~PaginationMetadata.openapi_types
+      ~PaginationMetadata.page
+      ~PaginationMetadata.per_page
+      ~PaginationMetadata.total_items
+      ~PaginationMetadata.total_pages
+   
+   

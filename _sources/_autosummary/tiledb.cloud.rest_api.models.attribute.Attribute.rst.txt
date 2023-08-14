@@ -1,0 +1,40 @@
+tiledb.cloud.rest\_api.models.attribute.Attribute
+=================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.attribute
+
+.. autoclass:: Attribute
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Attribute.__init__
+      ~Attribute.to_dict
+      ~Attribute.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Attribute.attribute_map
+      ~Attribute.cell_val_num
+      ~Attribute.fill_value
+      ~Attribute.filter_pipeline
+      ~Attribute.name
+      ~Attribute.nullable
+      ~Attribute.openapi_types
+      ~Attribute.type
+   
+   

@@ -1,0 +1,6 @@
+tiledb.cloud.array.apply\_async
+===============================
+
+.. currentmodule:: tiledb.cloud.array
+
+.. autofunction:: apply_async

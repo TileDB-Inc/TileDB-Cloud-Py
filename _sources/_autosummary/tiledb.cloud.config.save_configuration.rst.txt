@@ -1,0 +1,6 @@
+tiledb.cloud.config.save\_configuration
+=======================================
+
+.. currentmodule:: tiledb.cloud.config
+
+.. autofunction:: save_configuration

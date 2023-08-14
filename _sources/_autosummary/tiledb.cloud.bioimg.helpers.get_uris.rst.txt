@@ -1,0 +1,6 @@
+tiledb.cloud.bioimg.helpers.get\_uris
+=====================================
+
+.. currentmodule:: tiledb.cloud.bioimg.helpers
+
+.. autofunction:: get_uris

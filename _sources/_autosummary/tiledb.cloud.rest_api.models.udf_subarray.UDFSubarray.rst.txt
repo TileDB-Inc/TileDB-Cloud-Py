@@ -1,0 +1,36 @@
+tiledb.cloud.rest\_api.models.udf\_subarray.UDFSubarray
+=======================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.udf_subarray
+
+.. autoclass:: UDFSubarray
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UDFSubarray.__init__
+      ~UDFSubarray.to_dict
+      ~UDFSubarray.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UDFSubarray.attribute_map
+      ~UDFSubarray.layout
+      ~UDFSubarray.openapi_types
+      ~UDFSubarray.ranges
+   
+   

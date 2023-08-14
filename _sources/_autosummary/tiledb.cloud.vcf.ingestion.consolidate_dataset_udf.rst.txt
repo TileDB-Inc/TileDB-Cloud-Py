@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.ingestion.consolidate\_dataset\_udf
+====================================================
+
+.. currentmodule:: tiledb.cloud.vcf.ingestion
+
+.. autofunction:: consolidate_dataset_udf

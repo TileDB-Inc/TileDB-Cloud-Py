@@ -1,0 +1,42 @@
+tiledb.cloud.rest\_api.models.result\_format.ResultFormat
+=========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.result_format
+
+.. autoclass:: ResultFormat
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ResultFormat.__init__
+      ~ResultFormat.to_dict
+      ~ResultFormat.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ResultFormat.ARROW
+      ~ResultFormat.BYTES
+      ~ResultFormat.JSON
+      ~ResultFormat.NATIVE
+      ~ResultFormat.PYTHON_PICKLE
+      ~ResultFormat.R_SERIALIZATION
+      ~ResultFormat.TILEDB_JSON
+      ~ResultFormat.allowable_values
+      ~ResultFormat.attribute_map
+      ~ResultFormat.openapi_types
+   
+   

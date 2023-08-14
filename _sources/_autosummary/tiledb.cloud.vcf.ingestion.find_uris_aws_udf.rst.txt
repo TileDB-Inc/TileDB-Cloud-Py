@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.ingestion.find\_uris\_aws\_udf
+===============================================
+
+.. currentmodule:: tiledb.cloud.vcf.ingestion
+
+.. autofunction:: find_uris_aws_udf

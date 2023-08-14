@@ -1,0 +1,6 @@
+tiledb.cloud.client.default\_user
+=================================
+
+.. currentmodule:: tiledb.cloud.client
+
+.. autofunction:: default_user

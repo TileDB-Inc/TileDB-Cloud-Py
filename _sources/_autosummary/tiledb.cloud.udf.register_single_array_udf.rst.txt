@@ -1,0 +1,6 @@
+tiledb.cloud.udf.register\_single\_array\_udf
+=============================================
+
+.. currentmodule:: tiledb.cloud.udf
+
+.. autofunction:: register_single_array_udf

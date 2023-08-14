@@ -1,0 +1,6 @@
+tiledb.cloud.array.update\_info
+===============================
+
+.. currentmodule:: tiledb.cloud.array
+
+.. autofunction:: update_info

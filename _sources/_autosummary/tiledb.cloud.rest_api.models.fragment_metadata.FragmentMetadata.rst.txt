@@ -1,0 +1,59 @@
+tiledb.cloud.rest\_api.models.fragment\_metadata.FragmentMetadata
+=================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.fragment_metadata
+
+.. autoclass:: FragmentMetadata
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FragmentMetadata.__init__
+      ~FragmentMetadata.to_dict
+      ~FragmentMetadata.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FragmentMetadata.attribute_map
+      ~FragmentMetadata.file_sizes
+      ~FragmentMetadata.file_validity_sizes
+      ~FragmentMetadata.file_var_sizes
+      ~FragmentMetadata.fragment_maxs
+      ~FragmentMetadata.fragment_mins
+      ~FragmentMetadata.fragment_null_counts
+      ~FragmentMetadata.fragment_sums
+      ~FragmentMetadata.fragment_uri
+      ~FragmentMetadata.has_delete_meta
+      ~FragmentMetadata.has_timestamps
+      ~FragmentMetadata.last_tile_cell_num
+      ~FragmentMetadata.openapi_types
+      ~FragmentMetadata.sparse_tile_num
+      ~FragmentMetadata.tile_index_base
+      ~FragmentMetadata.tile_max_buffer
+      ~FragmentMetadata.tile_max_var_buffer
+      ~FragmentMetadata.tile_min_buffer
+      ~FragmentMetadata.tile_min_var_buffer
+      ~FragmentMetadata.tile_null_counts
+      ~FragmentMetadata.tile_offsets
+      ~FragmentMetadata.tile_sums
+      ~FragmentMetadata.tile_validity_offsets
+      ~FragmentMetadata.tile_var_offsets
+      ~FragmentMetadata.tile_var_sizes
+      ~FragmentMetadata.timestamp_range
+      ~FragmentMetadata.version
+   
+   

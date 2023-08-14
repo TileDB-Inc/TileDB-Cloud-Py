@@ -1,0 +1,6 @@
+tiledb.cloud.rest\_api.exceptions.ApiException
+==============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.exceptions
+
+.. autoexception:: ApiException

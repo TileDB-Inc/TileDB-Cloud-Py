@@ -1,0 +1,6 @@
+tiledb.cloud.array.share\_array
+===============================
+
+.. currentmodule:: tiledb.cloud.array
+
+.. autofunction:: share_array

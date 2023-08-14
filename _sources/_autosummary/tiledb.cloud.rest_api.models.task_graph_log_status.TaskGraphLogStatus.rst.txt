@@ -1,0 +1,42 @@
+tiledb.cloud.rest\_api.models.task\_graph\_log\_status.TaskGraphLogStatus
+=========================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.task_graph_log_status
+
+.. autoclass:: TaskGraphLogStatus
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TaskGraphLogStatus.__init__
+      ~TaskGraphLogStatus.to_dict
+      ~TaskGraphLogStatus.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TaskGraphLogStatus.ABANDONED
+      ~TaskGraphLogStatus.CANCELLED
+      ~TaskGraphLogStatus.FAILED
+      ~TaskGraphLogStatus.IDLE
+      ~TaskGraphLogStatus.RUNNING
+      ~TaskGraphLogStatus.SUBMITTED
+      ~TaskGraphLogStatus.SUCCEEDED
+      ~TaskGraphLogStatus.allowable_values
+      ~TaskGraphLogStatus.attribute_map
+      ~TaskGraphLogStatus.openapi_types
+   
+   

@@ -1,0 +1,6 @@
+tiledb.cloud.notebook.rename\_notebook
+======================================
+
+.. currentmodule:: tiledb.cloud.notebook
+
+.. autofunction:: rename_notebook

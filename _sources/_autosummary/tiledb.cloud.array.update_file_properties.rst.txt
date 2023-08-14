@@ -1,0 +1,6 @@
+tiledb.cloud.array.update\_file\_properties
+===========================================
+
+.. currentmodule:: tiledb.cloud.array
+
+.. autofunction:: update_file_properties

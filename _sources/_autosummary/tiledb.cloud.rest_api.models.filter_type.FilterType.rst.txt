@@ -1,0 +1,46 @@
+tiledb.cloud.rest\_api.models.filter\_type.FilterType
+=====================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.filter_type
+
+.. autoclass:: FilterType
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FilterType.__init__
+      ~FilterType.to_dict
+      ~FilterType.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FilterType.BITSHUFFLE
+      ~FilterType.BIT_WIDTH_REDUCTION
+      ~FilterType.BYTESHUFFLE
+      ~FilterType.BZIP2
+      ~FilterType.DOUBLE_DELTA
+      ~FilterType.GZIP
+      ~FilterType.LZ4
+      ~FilterType.NONE
+      ~FilterType.POSITIVE_DELTA
+      ~FilterType.RLE
+      ~FilterType.ZSTD
+      ~FilterType.allowable_values
+      ~FilterType.attribute_map
+      ~FilterType.openapi_types
+   
+   

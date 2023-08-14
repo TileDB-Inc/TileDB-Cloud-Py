@@ -1,0 +1,36 @@
+tiledb.cloud.rest\_api.models.group\_changes.GroupChanges
+=========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.group_changes
+
+.. autoclass:: GroupChanges
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GroupChanges.__init__
+      ~GroupChanges.to_dict
+      ~GroupChanges.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GroupChanges.add
+      ~GroupChanges.attribute_map
+      ~GroupChanges.openapi_types
+      ~GroupChanges.remove
+   
+   

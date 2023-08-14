@@ -1,0 +1,32 @@
+tiledb.cloud.rest\_api.rest
+===========================
+
+.. automodule:: tiledb.cloud.rest_api.rest
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      RESTClientObject
+      RESTResponse
+   
+   
+
+   
+   
+   
+
+
+

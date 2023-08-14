@@ -1,0 +1,50 @@
+tiledb.cloud.compute.delayed.DelayedBase
+========================================
+
+.. currentmodule:: tiledb.cloud.compute.delayed
+
+.. autoclass:: DelayedBase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DelayedBase.__init__
+      ~DelayedBase.add_done_callback
+      ~DelayedBase.all
+      ~DelayedBase.cancel
+      ~DelayedBase.cancelled
+      ~DelayedBase.compute
+      ~DelayedBase.depends_on
+      ~DelayedBase.done
+      ~DelayedBase.exception
+      ~DelayedBase.finished
+      ~DelayedBase.result
+      ~DelayedBase.retry
+      ~DelayedBase.running
+      ~DelayedBase.set_timeout
+      ~DelayedBase.task_id
+      ~DelayedBase.visualize
+      ~DelayedBase.wait
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DelayedBase.error
+      ~DelayedBase.future
+      ~DelayedBase.name
+      ~DelayedBase.status
+   
+   

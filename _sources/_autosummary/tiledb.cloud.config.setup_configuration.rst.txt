@@ -1,0 +1,6 @@
+tiledb.cloud.config.setup\_configuration
+========================================
+
+.. currentmodule:: tiledb.cloud.config
+
+.. autofunction:: setup_configuration

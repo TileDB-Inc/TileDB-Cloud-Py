@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.api.notebooks\_api
+=========================================
+
+.. automodule:: tiledb.cloud.rest_api.api.notebooks_api
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      NotebooksApi
+   
+   
+
+   
+   
+   
+
+
+

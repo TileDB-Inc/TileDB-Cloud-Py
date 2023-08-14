@@ -1,0 +1,6 @@
+tiledb.cloud.client.list\_public\_arrays
+========================================
+
+.. currentmodule:: tiledb.cloud.client
+
+.. autofunction:: list_public_arrays

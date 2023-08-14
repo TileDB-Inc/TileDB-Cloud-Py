@@ -1,0 +1,6 @@
+tiledb.cloud.groups.create
+==========================
+
+.. currentmodule:: tiledb.cloud.groups
+
+.. autofunction:: create

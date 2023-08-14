@@ -1,0 +1,6 @@
+tiledb.cloud.array.exec\_multi\_array\_udf\_base
+================================================
+
+.. currentmodule:: tiledb.cloud.array
+
+.. autofunction:: exec_multi_array_udf_base

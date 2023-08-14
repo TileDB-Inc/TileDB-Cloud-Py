@@ -1,0 +1,34 @@
+tiledb.cloud.taskgraphs.types.Arguments
+=======================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.types
+
+.. autoclass:: Arguments
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Arguments.__init__
+      ~Arguments.apply
+      ~Arguments.of
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Arguments.args
+      ~Arguments.kwargs
+   
+   

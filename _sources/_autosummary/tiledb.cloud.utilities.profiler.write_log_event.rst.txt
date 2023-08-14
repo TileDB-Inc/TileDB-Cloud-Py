@@ -1,0 +1,6 @@
+tiledb.cloud.utilities.profiler.write\_log\_event
+=================================================
+
+.. currentmodule:: tiledb.cloud.utilities.profiler
+
+.. autofunction:: write_log_event

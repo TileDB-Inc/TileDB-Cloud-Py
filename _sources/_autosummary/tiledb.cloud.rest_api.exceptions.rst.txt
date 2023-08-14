@@ -1,0 +1,41 @@
+tiledb.cloud.rest\_api.exceptions
+=================================
+
+.. automodule:: tiledb.cloud.rest_api.exceptions
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      render_path
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      ApiException
+      ApiKeyError
+      ApiTypeError
+      ApiValueError
+      OpenApiException
+   
+   
+
+
+

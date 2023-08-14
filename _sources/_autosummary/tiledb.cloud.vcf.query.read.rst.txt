@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.query.read
+===========================
+
+.. currentmodule:: tiledb.cloud.vcf.query
+
+.. autofunction:: read

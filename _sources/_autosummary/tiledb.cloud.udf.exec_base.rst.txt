@@ -1,0 +1,6 @@
+tiledb.cloud.udf.exec\_base
+===========================
+
+.. currentmodule:: tiledb.cloud.udf
+
+.. autofunction:: exec_base

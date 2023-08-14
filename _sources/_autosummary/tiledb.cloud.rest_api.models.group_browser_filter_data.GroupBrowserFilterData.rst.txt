@@ -1,0 +1,36 @@
+tiledb.cloud.rest\_api.models.group\_browser\_filter\_data.GroupBrowserFilterData
+=================================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.group_browser_filter_data
+
+.. autoclass:: GroupBrowserFilterData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GroupBrowserFilterData.__init__
+      ~GroupBrowserFilterData.to_dict
+      ~GroupBrowserFilterData.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GroupBrowserFilterData.attribute_map
+      ~GroupBrowserFilterData.group_types
+      ~GroupBrowserFilterData.namespaces
+      ~GroupBrowserFilterData.openapi_types
+   
+   

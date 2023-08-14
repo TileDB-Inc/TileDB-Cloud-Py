@@ -1,0 +1,6 @@
+tiledb.cloud.rest\_api.exceptions.render\_path
+==============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.exceptions
+
+.. autofunction:: render_path

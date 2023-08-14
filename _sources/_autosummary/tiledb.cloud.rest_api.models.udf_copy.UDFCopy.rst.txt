@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.udf\_copy.UDFCopy
+===============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.udf_copy
+
+.. autoclass:: UDFCopy
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UDFCopy.__init__
+      ~UDFCopy.to_dict
+      ~UDFCopy.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UDFCopy.attribute_map
+      ~UDFCopy.name
+      ~UDFCopy.namespace
+      ~UDFCopy.openapi_types
+      ~UDFCopy.output_uri
+   
+   

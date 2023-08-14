@@ -1,0 +1,39 @@
+tiledb.cloud.rest\_api.models.domain\_verification\_status.DomainVerificationStatus
+===================================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.domain_verification_status
+
+.. autoclass:: DomainVerificationStatus
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DomainVerificationStatus.__init__
+      ~DomainVerificationStatus.to_dict
+      ~DomainVerificationStatus.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DomainVerificationStatus.FAILED
+      ~DomainVerificationStatus.GRACE_PERIOD
+      ~DomainVerificationStatus.UNVERIFIED
+      ~DomainVerificationStatus.VERIFIED
+      ~DomainVerificationStatus.allowable_values
+      ~DomainVerificationStatus.attribute_map
+      ~DomainVerificationStatus.openapi_types
+   
+   

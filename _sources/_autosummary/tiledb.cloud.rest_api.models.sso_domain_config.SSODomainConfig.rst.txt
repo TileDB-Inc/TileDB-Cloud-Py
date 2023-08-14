@@ -1,0 +1,42 @@
+tiledb.cloud.rest\_api.models.sso\_domain\_config.SSODomainConfig
+=================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.sso_domain_config
+
+.. autoclass:: SSODomainConfig
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SSODomainConfig.__init__
+      ~SSODomainConfig.to_dict
+      ~SSODomainConfig.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SSODomainConfig.attribute_map
+      ~SSODomainConfig.check_results
+      ~SSODomainConfig.domain
+      ~SSODomainConfig.domain_setup
+      ~SSODomainConfig.oidc_client_id
+      ~SSODomainConfig.oidc_client_secret
+      ~SSODomainConfig.oidc_issuer
+      ~SSODomainConfig.openapi_types
+      ~SSODomainConfig.uuid
+      ~SSODomainConfig.verification_status
+   
+   

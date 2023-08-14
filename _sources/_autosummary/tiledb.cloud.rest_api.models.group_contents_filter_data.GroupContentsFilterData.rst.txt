@@ -1,0 +1,35 @@
+tiledb.cloud.rest\_api.models.group\_contents\_filter\_data.GroupContentsFilterData
+===================================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.group_contents_filter_data
+
+.. autoclass:: GroupContentsFilterData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GroupContentsFilterData.__init__
+      ~GroupContentsFilterData.to_dict
+      ~GroupContentsFilterData.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GroupContentsFilterData.attribute_map
+      ~GroupContentsFilterData.namespaces
+      ~GroupContentsFilterData.openapi_types
+   
+   

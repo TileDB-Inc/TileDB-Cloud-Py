@@ -1,0 +1,50 @@
+tiledb.cloud.rest\_api.models.activity\_event\_type.ActivityEventType
+=====================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.activity_event_type
+
+.. autoclass:: ActivityEventType
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ActivityEventType.__init__
+      ~ActivityEventType.to_dict
+      ~ActivityEventType.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ActivityEventType.ARRAY_METADATA_GET
+      ~ActivityEventType.ARRAY_METADATA_UPDATE
+      ~ActivityEventType.CREATE
+      ~ActivityEventType.DELETE
+      ~ActivityEventType.DEREGISTER
+      ~ActivityEventType.ESTIMATED_RESULT_SIZES
+      ~ActivityEventType.MAX_BUFFER_SIZES
+      ~ActivityEventType.NON_EMPTY_DOMAIN
+      ~ActivityEventType.QUERY_DELETE
+      ~ActivityEventType.QUERY_READ
+      ~ActivityEventType.QUERY_WRITE
+      ~ActivityEventType.READ_FRAGMENT_INFO
+      ~ActivityEventType.READ_SCHEMA
+      ~ActivityEventType.REGISTER
+      ~ActivityEventType.UDF
+      ~ActivityEventType.allowable_values
+      ~ActivityEventType.attribute_map
+      ~ActivityEventType.openapi_types
+   
+   

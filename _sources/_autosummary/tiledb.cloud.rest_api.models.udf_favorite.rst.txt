@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.udf\_favorite
+===========================================
+
+.. automodule:: tiledb.cloud.rest_api.models.udf_favorite
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      UDFFavorite
+   
+   
+
+   
+   
+   
+
+
+

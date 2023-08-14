@@ -1,0 +1,6 @@
+tiledb.cloud.udf.update\_single\_array\_udf
+===========================================
+
+.. currentmodule:: tiledb.cloud.udf
+
+.. autofunction:: update_single_array_udf

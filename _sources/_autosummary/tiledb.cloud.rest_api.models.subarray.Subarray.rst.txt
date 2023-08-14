@@ -1,0 +1,36 @@
+tiledb.cloud.rest\_api.models.subarray.Subarray
+===============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.subarray
+
+.. autoclass:: Subarray
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Subarray.__init__
+      ~Subarray.to_dict
+      ~Subarray.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Subarray.attribute_map
+      ~Subarray.layout
+      ~Subarray.openapi_types
+      ~Subarray.ranges
+   
+   

@@ -1,0 +1,6 @@
+tiledb.cloud.client.login
+=========================
+
+.. currentmodule:: tiledb.cloud.client
+
+.. autofunction:: login

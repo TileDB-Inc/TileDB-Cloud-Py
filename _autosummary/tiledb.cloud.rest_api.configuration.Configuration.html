@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tiledb.cloud.rest_api.configuration.Configuration &mdash; TileDB-Cloud-Py  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tiledb.cloud.rest_api.exceptions" href="tiledb.cloud.rest_api.exceptions.html" />
+    <link rel="prev" title="tiledb.cloud.rest_api.configuration" href="tiledb.cloud.rest_api.configuration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TileDB-Cloud-Py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.html">tiledb.cloud</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.array.html">tiledb.cloud.array</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.client.html">tiledb.cloud.client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.compute.html">tiledb.cloud.compute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.config.html">tiledb.cloud.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.dag.html">tiledb.cloud.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.file.html">tiledb.cloud.file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.groups.html">tiledb.cloud.groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.notebook.html">tiledb.cloud.notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.pool_manager_wrapper.html">tiledb.cloud.pool_manager_wrapper</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.api.html">tiledb.cloud.rest_api.api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.api_client.html">tiledb.cloud.rest_api.api_client</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="tiledb.cloud.rest_api.configuration.html">tiledb.cloud.rest_api.configuration</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tiledb.cloud.rest_api.configuration.Configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration"><code class="docutils literal notranslate"><span class="pre">Configuration</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.exceptions.html">tiledb.cloud.rest_api.exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.models.html">tiledb.cloud.rest_api.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.rest.html">tiledb.cloud.rest_api.rest</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.sql.html">tiledb.cloud.sql</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.taskgraphs.html">tiledb.cloud.taskgraphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tasks.html">tiledb.cloud.tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tiledb_cloud_error.html">tiledb.cloud.tiledb_cloud_error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.udf.html">tiledb.cloud.udf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.utils.html">tiledb.cloud.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.version.html">tiledb.cloud.version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TileDB-Cloud-Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.html">tiledb.cloud</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.configuration.html">tiledb.cloud.rest_api.configuration</a></li>
+      <li class="breadcrumb-item active">tiledb.cloud.rest_api.configuration.Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/tiledb.cloud.rest_api.configuration.Configuration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tiledb-cloud-rest-api-configuration-configuration">
+<h1>tiledb.cloud.rest_api.configuration.Configuration<a class="headerlink" href="#tiledb-cloud-rest-api-configuration-configuration" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tiledb.cloud.rest_api.configuration.</span></span><span class="sig-name descname"><span class="pre">Configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'http://localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discard_unknown_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>NOTE: This class is auto generated by OpenAPI Generator</p>
+<blockquote>
+<div><p>Ref: <a class="reference external" href="https://openapi-generator.tech">https://openapi-generator.tech</a>
+Do not edit the class manually.</p>
+<dl class="field-list">
+<dt class="field-odd">param host<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Base url</p>
+</dd>
+<dt class="field-even">param api_key<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict to store API key(s).
+Each entry in the dict specifies an API key.
+The dict key is the name of the security scheme in the OAS specification.
+The dict value is the API key secret.</p>
+</dd>
+<dt class="field-odd">param api_key_prefix<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict to store API prefix (e.g. Bearer)
+The dict key is the name of the security scheme in the OAS specification.
+The dict value is an API key prefix when generating the auth data.</p>
+</dd>
+<dt class="field-even">param username<span class="colon">:</span></dt>
+<dd class="field-even"><p>Username for HTTP basic authentication</p>
+</dd>
+<dt class="field-odd">param password<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Password for HTTP basic authentication</p>
+</dd>
+<dt class="field-even">param discard_unknown_keys<span class="colon">:</span></dt>
+<dd class="field-even"><p>Boolean value indicating whether to discard
+unknown properties. A server may send a response that includes additional
+properties that are not known by the client in the following scenarios:
+1. The OpenAPI document is incomplete, i.e. it does not match the server</p>
+<blockquote>
+<div><p>implementation.</p>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p>The client was generated using an older version of the OpenAPI document
+and the server has been upgraded since then.</p></li>
+</ol>
+<p>If a schema in the OpenAPI document defines the additionalProperties attribute,
+then all undeclared properties received by the server are injected into the
+additional properties map. In that case, there are undeclared properties, and
+nothing to discard.</p>
+</dd>
+<dt class="field-odd">Example<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<p>API Key Authentication Example.
+Given the following security scheme in the OpenAPI specification:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>components:</dt><dd><dl class="simple">
+<dt>securitySchemes:</dt><dd><dl class="simple">
+<dt>cookieAuth:         # name for the security scheme</dt><dd><p>type: apiKey
+in: cookie
+name: JSESSIONID  # cookie name</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>You can programmatically set the cookie:</p>
+</div></blockquote>
+<dl class="simple">
+<dt>conf = tiledb.cloud.rest_api.Configuration(</dt><dd><p>api_key={‘cookieAuth’: ‘abc123’}
+api_key_prefix={‘cookieAuth’: ‘JSESSIONID’}</p>
+</dd>
+</dl>
+<p>)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>The following cookie will be added to the HTTP request:</dt><dd><p>Cookie: JSESSIONID abc123</p>
+</dd>
+</dl>
+<p>HTTP Basic Authentication Example.
+Given the following security scheme in the OpenAPI specification:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>components:</dt><dd><dl class="simple">
+<dt>securitySchemes:</dt><dd><dl class="simple">
+<dt>http_basic_auth:</dt><dd><p>type: http
+scheme: basic</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>Configure API client with HTTP basic authentication:</p>
+</div></blockquote>
+<dl class="simple">
+<dt>conf = tiledb.cloud.rest_api.Configuration(</dt><dd><p>username=’the-user’,
+password=’the-password’,</p>
+</dd>
+</dl>
+<p>)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'http://localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discard_unknown_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.__init__" title="tiledb.cloud.rest_api.configuration.Configuration.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([host, api_key, api_key_prefix, ...])</p></td>
+<td><p>Constructor</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.auth_settings" title="tiledb.cloud.rest_api.configuration.Configuration.auth_settings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">auth_settings</span></code></a>()</p></td>
+<td><p>Gets Auth Settings dict for api client.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.get_api_key_with_prefix" title="tiledb.cloud.rest_api.configuration.Configuration.get_api_key_with_prefix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_api_key_with_prefix</span></code></a>(identifier)</p></td>
+<td><p>Gets API key (with prefix if set).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.get_basic_auth_token" title="tiledb.cloud.rest_api.configuration.Configuration.get_basic_auth_token"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_basic_auth_token</span></code></a>()</p></td>
+<td><p>Gets HTTP basic authentication header (string).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.get_default_copy" title="tiledb.cloud.rest_api.configuration.Configuration.get_default_copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_default_copy</span></code></a>()</p></td>
+<td><p>Return new instance of configuration.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.get_host_from_settings" title="tiledb.cloud.rest_api.configuration.Configuration.get_host_from_settings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_host_from_settings</span></code></a>(index[, variables])</p></td>
+<td><p>Gets host URL based on the index and variables :param index: array index of the host settings :param variables: hash of variable and the corresponding value :return: URL based on host settings</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.get_host_settings" title="tiledb.cloud.rest_api.configuration.Configuration.get_host_settings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_host_settings</span></code></a>()</p></td>
+<td><p>Gets an array of host settings</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.set_default" title="tiledb.cloud.rest_api.configuration.Configuration.set_default"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_default</span></code></a>(default)</p></td>
+<td><p>Set default instance of configuration.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.to_debug_report" title="tiledb.cloud.rest_api.configuration.Configuration.to_debug_report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_debug_report</span></code></a>()</p></td>
+<td><p>Gets the essential information for debugging.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.debug" title="tiledb.cloud.rest_api.configuration.Configuration.debug"><code class="xref py py-obj docutils literal notranslate"><span class="pre">debug</span></code></a></p></td>
+<td><p>Debug switch</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.logger_file" title="tiledb.cloud.rest_api.configuration.Configuration.logger_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger_file</span></code></a></p></td>
+<td><p>Debug file location</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.logger_format" title="tiledb.cloud.rest_api.configuration.Configuration.logger_format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger_format</span></code></a></p></td>
+<td><p>Log format</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.host" title="tiledb.cloud.rest_api.configuration.Configuration.host"><code class="xref py py-obj docutils literal notranslate"><span class="pre">host</span></code></a></p></td>
+<td><p>Default Base url</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.temp_folder_path" title="tiledb.cloud.rest_api.configuration.Configuration.temp_folder_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">temp_folder_path</span></code></a></p></td>
+<td><p>Temp file folder for downloading files</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.refresh_api_key_hook" title="tiledb.cloud.rest_api.configuration.Configuration.refresh_api_key_hook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">refresh_api_key_hook</span></code></a></p></td>
+<td><p>function hook to refresh API key if expired</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.username" title="tiledb.cloud.rest_api.configuration.Configuration.username"><code class="xref py py-obj docutils literal notranslate"><span class="pre">username</span></code></a></p></td>
+<td><p>Username for HTTP basic authentication</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.password" title="tiledb.cloud.rest_api.configuration.Configuration.password"><code class="xref py py-obj docutils literal notranslate"><span class="pre">password</span></code></a></p></td>
+<td><p>Password for HTTP basic authentication</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.access_token" title="tiledb.cloud.rest_api.configuration.Configuration.access_token"><code class="xref py py-obj docutils literal notranslate"><span class="pre">access_token</span></code></a></p></td>
+<td><p>access token for OAuth/Bearer</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.logger" title="tiledb.cloud.rest_api.configuration.Configuration.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
+<td><p>Logging Settings</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.logger_stream_handler" title="tiledb.cloud.rest_api.configuration.Configuration.logger_stream_handler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger_stream_handler</span></code></a></p></td>
+<td><p>Log stream handler</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.logger_file_handler" title="tiledb.cloud.rest_api.configuration.Configuration.logger_file_handler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger_file_handler</span></code></a></p></td>
+<td><p>Log file handler</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.verify_ssl" title="tiledb.cloud.rest_api.configuration.Configuration.verify_ssl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">verify_ssl</span></code></a></p></td>
+<td><p>SSL/TLS verification Set this to false to skip verifying SSL certificate when calling API from https server.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.ssl_ca_cert" title="tiledb.cloud.rest_api.configuration.Configuration.ssl_ca_cert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssl_ca_cert</span></code></a></p></td>
+<td><p>Set this to customize the certificate file to verify the peer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.cert_file" title="tiledb.cloud.rest_api.configuration.Configuration.cert_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cert_file</span></code></a></p></td>
+<td><p>client certificate file</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.key_file" title="tiledb.cloud.rest_api.configuration.Configuration.key_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">key_file</span></code></a></p></td>
+<td><p>client key file</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.assert_hostname" title="tiledb.cloud.rest_api.configuration.Configuration.assert_hostname"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_hostname</span></code></a></p></td>
+<td><p>Set this to True/False to enable/disable SSL hostname verification.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.connection_pool_maxsize" title="tiledb.cloud.rest_api.configuration.Configuration.connection_pool_maxsize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">connection_pool_maxsize</span></code></a></p></td>
+<td><p>urllib3 connection pool's maximum number of connections saved per pool.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.proxy" title="tiledb.cloud.rest_api.configuration.Configuration.proxy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">proxy</span></code></a></p></td>
+<td><p>Proxy URL</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.proxy_headers" title="tiledb.cloud.rest_api.configuration.Configuration.proxy_headers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">proxy_headers</span></code></a></p></td>
+<td><p>Proxy headers</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.safe_chars_for_path_param" title="tiledb.cloud.rest_api.configuration.Configuration.safe_chars_for_path_param"><code class="xref py py-obj docutils literal notranslate"><span class="pre">safe_chars_for_path_param</span></code></a></p></td>
+<td><p>Safe chars for path_param</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.configuration.Configuration.retries" title="tiledb.cloud.rest_api.configuration.Configuration.retries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">retries</span></code></a></p></td>
+<td><p>Adding retries to override urllib3 default value 3</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.access_token">
+<span class="sig-name descname"><span class="pre">access_token</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.access_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>access token for OAuth/Bearer</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.assert_hostname">
+<span class="sig-name descname"><span class="pre">assert_hostname</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.assert_hostname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set this to True/False to enable/disable SSL hostname verification.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.auth_settings">
+<span class="sig-name descname"><span class="pre">auth_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.auth_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets Auth Settings dict for api client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Auth Settings information dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.cert_file">
+<span class="sig-name descname"><span class="pre">cert_file</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.cert_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>client certificate file</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.connection_pool_maxsize">
+<span class="sig-name descname"><span class="pre">connection_pool_maxsize</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.connection_pool_maxsize" title="Permalink to this definition">¶</a></dt>
+<dd><p>urllib3 connection pool’s maximum number of connections saved
+per pool. urllib3 uses 1 connection as default value, but this is
+not the best value when you are making a lot of possibly parallel
+requests to the same host, which is often the case here.
+cpu_count * 5 is used as default value to increase performance.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.debug">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Debug switch</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.get_api_key_with_prefix">
+<span class="sig-name descname"><span class="pre">get_api_key_with_prefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.get_api_key_with_prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets API key (with prefix if set).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>identifier</strong> – The identifier of apiKey.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The token for api key authentication.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.get_basic_auth_token">
+<span class="sig-name descname"><span class="pre">get_basic_auth_token</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.get_basic_auth_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets HTTP basic authentication header (string).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The token for basic HTTP authentication.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.get_default_copy">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_default_copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.get_default_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return new instance of configuration.</p>
+<p>This method returns newly created, based on default constructor,
+object of Configuration class or returns a copy of default
+configuration passed by the set_default method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The configuration object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.get_host_from_settings">
+<span class="sig-name descname"><span class="pre">get_host_from_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.get_host_from_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets host URL based on the index and variables
+:param index: array index of the host settings
+:param variables: hash of variable and the corresponding value
+:return: URL based on host settings</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.get_host_settings">
+<span class="sig-name descname"><span class="pre">get_host_settings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.get_host_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets an array of host settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An array of host settings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.host">
+<span class="sig-name descname"><span class="pre">host</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default Base url</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.key_file">
+<span class="sig-name descname"><span class="pre">key_file</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.key_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>client key file</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.logger">
+<span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logging Settings</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.logger_file">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger_file</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.logger_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Debug file location</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.logger_file_handler">
+<span class="sig-name descname"><span class="pre">logger_file_handler</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.logger_file_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log file handler</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.logger_format">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger_format</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.logger_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log format</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.logger_stream_handler">
+<span class="sig-name descname"><span class="pre">logger_stream_handler</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.logger_stream_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log stream handler</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.password">
+<span class="sig-name descname"><span class="pre">password</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Password for HTTP basic authentication</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.proxy">
+<span class="sig-name descname"><span class="pre">proxy</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.proxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proxy URL</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.proxy_headers">
+<span class="sig-name descname"><span class="pre">proxy_headers</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.proxy_headers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proxy headers</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.refresh_api_key_hook">
+<span class="sig-name descname"><span class="pre">refresh_api_key_hook</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.refresh_api_key_hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>function hook to refresh API key if expired</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.retries">
+<span class="sig-name descname"><span class="pre">retries</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.retries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adding retries to override urllib3 default value 3</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.safe_chars_for_path_param">
+<span class="sig-name descname"><span class="pre">safe_chars_for_path_param</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.safe_chars_for_path_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Safe chars for path_param</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.set_default">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.set_default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set default instance of configuration.</p>
+<p>It stores default configuration, which can be
+returned by get_default_copy method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>default</strong> – object of Configuration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.ssl_ca_cert">
+<span class="sig-name descname"><span class="pre">ssl_ca_cert</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.ssl_ca_cert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set this to customize the certificate file to verify the peer.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.temp_folder_path">
+<span class="sig-name descname"><span class="pre">temp_folder_path</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.temp_folder_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Temp file folder for downloading files</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.to_debug_report">
+<span class="sig-name descname"><span class="pre">to_debug_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.to_debug_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the essential information for debugging.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The report for debugging.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.username">
+<span class="sig-name descname"><span class="pre">username</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.username" title="Permalink to this definition">¶</a></dt>
+<dd><p>Username for HTTP basic authentication</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.configuration.Configuration.verify_ssl">
+<span class="sig-name descname"><span class="pre">verify_ssl</span></span><a class="headerlink" href="#tiledb.cloud.rest_api.configuration.Configuration.verify_ssl" title="Permalink to this definition">¶</a></dt>
+<dd><p>SSL/TLS verification
+Set this to false to skip verifying SSL certificate when calling API
+from https server.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tiledb.cloud.rest_api.configuration.html" class="btn btn-neutral float-left" title="tiledb.cloud.rest_api.configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tiledb.cloud.rest_api.exceptions.html" class="btn btn-neutral float-right" title="tiledb.cloud.rest_api.exceptions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020–2023, TileDB, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

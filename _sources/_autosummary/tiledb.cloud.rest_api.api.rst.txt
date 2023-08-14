@@ -1,0 +1,49 @@
+tiledb.cloud.rest\_api.api
+==========================
+
+.. automodule:: tiledb.cloud.rest_api.api
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+
+   tiledb.cloud.rest_api.api.array_api
+   tiledb.cloud.rest_api.api.array_tasks_api
+   tiledb.cloud.rest_api.api.favorites_api
+   tiledb.cloud.rest_api.api.files_api
+   tiledb.cloud.rest_api.api.groups_api
+   tiledb.cloud.rest_api.api.invitation_api
+   tiledb.cloud.rest_api.api.notebook_api
+   tiledb.cloud.rest_api.api.notebooks_api
+   tiledb.cloud.rest_api.api.organization_api
+   tiledb.cloud.rest_api.api.query_api
+   tiledb.cloud.rest_api.api.registered_task_graphs_api
+   tiledb.cloud.rest_api.api.sql_api
+   tiledb.cloud.rest_api.api.stats_api
+   tiledb.cloud.rest_api.api.task_graph_logs_api
+   tiledb.cloud.rest_api.api.task_graphs_api
+   tiledb.cloud.rest_api.api.tasks_api
+   tiledb.cloud.rest_api.api.udf_api
+   tiledb.cloud.rest_api.api.user_api
+

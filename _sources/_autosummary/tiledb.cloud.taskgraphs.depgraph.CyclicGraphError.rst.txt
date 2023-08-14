@@ -1,0 +1,6 @@
+tiledb.cloud.taskgraphs.depgraph.CyclicGraphError
+=================================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.depgraph
+
+.. autoexception:: CyclicGraphError

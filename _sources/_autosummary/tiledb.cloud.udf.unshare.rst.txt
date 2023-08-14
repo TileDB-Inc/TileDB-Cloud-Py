@@ -1,0 +1,6 @@
+tiledb.cloud.udf.unshare
+========================
+
+.. currentmodule:: tiledb.cloud.udf
+
+.. autofunction:: unshare

@@ -1,0 +1,35 @@
+tiledb.cloud.taskgraphs.builder.Node
+====================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.builder
+
+.. autoclass:: Node
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Node.__init__
+      ~Node.to_registration_json
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Node.display_name
+      ~Node.id
+      ~Node.owner
+      ~Node.name
+   
+   

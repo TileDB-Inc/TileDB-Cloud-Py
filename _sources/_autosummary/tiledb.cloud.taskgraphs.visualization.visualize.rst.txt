@@ -1,0 +1,6 @@
+tiledb.cloud.taskgraphs.visualization.visualize
+===============================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.visualization
+
+.. autofunction:: visualize

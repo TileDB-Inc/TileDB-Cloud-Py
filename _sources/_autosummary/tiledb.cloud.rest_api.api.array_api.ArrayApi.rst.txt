@@ -1,0 +1,89 @@
+tiledb.cloud.rest\_api.api.array\_api.ArrayApi
+==============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.array_api
+
+.. autoclass:: ArrayApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayApi.__init__
+      ~ArrayApi.array_activity_log
+      ~ArrayApi.array_activity_log_with_http_info
+      ~ArrayApi.arrays_browser_owned_get
+      ~ArrayApi.arrays_browser_owned_get_with_http_info
+      ~ArrayApi.arrays_browser_owned_sidebar_get
+      ~ArrayApi.arrays_browser_owned_sidebar_get_with_http_info
+      ~ArrayApi.arrays_browser_public_get
+      ~ArrayApi.arrays_browser_public_get_with_http_info
+      ~ArrayApi.arrays_browser_public_sidebar_get
+      ~ArrayApi.arrays_browser_public_sidebar_get_with_http_info
+      ~ArrayApi.arrays_browser_shared_get
+      ~ArrayApi.arrays_browser_shared_get_with_http_info
+      ~ArrayApi.arrays_browser_shared_sidebar_get
+      ~ArrayApi.arrays_browser_shared_sidebar_get_with_http_info
+      ~ArrayApi.arrays_namespace_array_end_timestamps_get
+      ~ArrayApi.arrays_namespace_array_end_timestamps_get_with_http_info
+      ~ArrayApi.consolidate_array
+      ~ArrayApi.consolidate_array_with_http_info
+      ~ArrayApi.create_array
+      ~ArrayApi.create_array_with_http_info
+      ~ArrayApi.delete_array
+      ~ArrayApi.delete_array_with_http_info
+      ~ArrayApi.deregister_array
+      ~ArrayApi.deregister_array_with_http_info
+      ~ArrayApi.fragment_info
+      ~ArrayApi.fragment_info_with_http_info
+      ~ArrayApi.get_activity_log_by_id
+      ~ArrayApi.get_activity_log_by_id_with_http_info
+      ~ArrayApi.get_all_array_metadata
+      ~ArrayApi.get_all_array_metadata_with_http_info
+      ~ArrayApi.get_array
+      ~ArrayApi.get_array_max_buffer_sizes
+      ~ArrayApi.get_array_max_buffer_sizes_with_http_info
+      ~ArrayApi.get_array_meta_data_json
+      ~ArrayApi.get_array_meta_data_json_with_http_info
+      ~ArrayApi.get_array_metadata
+      ~ArrayApi.get_array_metadata_capnp
+      ~ArrayApi.get_array_metadata_capnp_with_http_info
+      ~ArrayApi.get_array_metadata_with_http_info
+      ~ArrayApi.get_array_non_empty_domain
+      ~ArrayApi.get_array_non_empty_domain_json
+      ~ArrayApi.get_array_non_empty_domain_json_with_http_info
+      ~ArrayApi.get_array_non_empty_domain_with_http_info
+      ~ArrayApi.get_array_sample_data
+      ~ArrayApi.get_array_sample_data_with_http_info
+      ~ArrayApi.get_array_sharing_policies
+      ~ArrayApi.get_array_sharing_policies_with_http_info
+      ~ArrayApi.get_array_with_http_info
+      ~ArrayApi.get_arrays_in_namespace
+      ~ArrayApi.get_arrays_in_namespace_with_http_info
+      ~ArrayApi.get_fragment_end_timestamp
+      ~ArrayApi.get_fragment_end_timestamp_with_http_info
+      ~ArrayApi.get_last_accessed_arrays
+      ~ArrayApi.get_last_accessed_arrays_with_http_info
+      ~ArrayApi.register_array
+      ~ArrayApi.register_array_with_http_info
+      ~ArrayApi.share_array
+      ~ArrayApi.share_array_with_http_info
+      ~ArrayApi.update_array_metadata
+      ~ArrayApi.update_array_metadata_capnp
+      ~ArrayApi.update_array_metadata_capnp_with_http_info
+      ~ArrayApi.update_array_metadata_with_http_info
+      ~ArrayApi.vacuum_array
+      ~ArrayApi.vacuum_array_with_http_info
+   
+   
+
+   
+   
+   

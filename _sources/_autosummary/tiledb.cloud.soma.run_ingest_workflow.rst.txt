@@ -1,0 +1,6 @@
+tiledb.cloud.soma.run\_ingest\_workflow
+=======================================
+
+.. currentmodule:: tiledb.cloud.soma
+
+.. autofunction:: run_ingest_workflow

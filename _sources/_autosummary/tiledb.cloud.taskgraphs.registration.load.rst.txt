@@ -1,0 +1,6 @@
+tiledb.cloud.taskgraphs.registration.load
+=========================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.registration
+
+.. autofunction:: load

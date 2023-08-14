@@ -1,0 +1,6 @@
+tiledb.cloud.dag.dag.replace\_stored\_params
+============================================
+
+.. currentmodule:: tiledb.cloud.dag.dag
+
+.. autofunction:: replace_stored_params

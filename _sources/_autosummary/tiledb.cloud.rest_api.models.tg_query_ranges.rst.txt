@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.tg\_query\_ranges
+===============================================
+
+.. automodule:: tiledb.cloud.rest_api.models.tg_query_ranges
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      TGQueryRanges
+   
+   
+
+   
+   
+   
+
+
+

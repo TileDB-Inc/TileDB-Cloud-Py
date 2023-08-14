@@ -1,0 +1,6 @@
+tiledb.cloud.tiledb\_cloud\_error.TileDBCloudError
+==================================================
+
+.. currentmodule:: tiledb.cloud.tiledb_cloud_error
+
+.. autoexception:: TileDBCloudError

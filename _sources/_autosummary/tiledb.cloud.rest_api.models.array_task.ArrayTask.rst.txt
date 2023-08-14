@@ -1,0 +1,63 @@
+tiledb.cloud.rest\_api.models.array\_task.ArrayTask
+===================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_task
+
+.. autoclass:: ArrayTask
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayTask.__init__
+      ~ArrayTask.to_dict
+      ~ArrayTask.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayTask.access_cost
+      ~ArrayTask.activity
+      ~ArrayTask.array_metadata
+      ~ArrayTask.attribute_map
+      ~ArrayTask.client_node_uuid
+      ~ArrayTask.cost
+      ~ArrayTask.cpu
+      ~ArrayTask.description
+      ~ArrayTask.duration
+      ~ArrayTask.egress_cost
+      ~ArrayTask.finish_time
+      ~ArrayTask.id
+      ~ArrayTask.logs
+      ~ArrayTask.memory
+      ~ArrayTask.name
+      ~ArrayTask.namespace
+      ~ArrayTask.openapi_types
+      ~ArrayTask.query_type
+      ~ArrayTask.result_format
+      ~ArrayTask.sql_init_commands
+      ~ArrayTask.sql_parameters
+      ~ArrayTask.sql_query
+      ~ArrayTask.start_time
+      ~ArrayTask.status
+      ~ArrayTask.status_message
+      ~ArrayTask.subarray
+      ~ArrayTask.task_graph_uuid
+      ~ArrayTask.type
+      ~ArrayTask.udf_code
+      ~ArrayTask.udf_language
+      ~ArrayTask.username
+   
+   

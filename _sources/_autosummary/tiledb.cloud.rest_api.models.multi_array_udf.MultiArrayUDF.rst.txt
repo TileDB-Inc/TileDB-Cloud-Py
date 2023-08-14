@@ -1,0 +1,55 @@
+tiledb.cloud.rest\_api.models.multi\_array\_udf.MultiArrayUDF
+=============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.multi_array_udf
+
+.. autoclass:: MultiArrayUDF
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MultiArrayUDF.__init__
+      ~MultiArrayUDF.to_dict
+      ~MultiArrayUDF.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MultiArrayUDF.access_credentials_name
+      ~MultiArrayUDF.argument
+      ~MultiArrayUDF.arguments_json
+      ~MultiArrayUDF.arrays
+      ~MultiArrayUDF.attribute_map
+      ~MultiArrayUDF.buffers
+      ~MultiArrayUDF.client_node_uuid
+      ~MultiArrayUDF.dont_download_results
+      ~MultiArrayUDF.exec_raw
+      ~MultiArrayUDF.image_name
+      ~MultiArrayUDF.language
+      ~MultiArrayUDF.openapi_types
+      ~MultiArrayUDF.ranges
+      ~MultiArrayUDF.resource_class
+      ~MultiArrayUDF.result_format
+      ~MultiArrayUDF.store_results
+      ~MultiArrayUDF.stored_param_uuids
+      ~MultiArrayUDF.subarray
+      ~MultiArrayUDF.task_graph_uuid
+      ~MultiArrayUDF.task_name
+      ~MultiArrayUDF.timeout
+      ~MultiArrayUDF.udf_info_name
+      ~MultiArrayUDF.version
+   
+   

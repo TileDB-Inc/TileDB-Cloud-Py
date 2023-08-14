@@ -1,0 +1,54 @@
+tiledb.cloud.array
+==================
+
+.. automodule:: tiledb.cloud.array
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      apply
+      apply_async
+      apply_base
+      array_activity
+      delete_array
+      deregister_array
+      exec_multi_array_udf
+      exec_multi_array_udf_async
+      exec_multi_array_udf_base
+      info
+      list_shared_with
+      parse_ranges
+      register_array
+      share_array
+      unshare_array
+      update_file_properties
+      update_info
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ArrayList
+   
+   
+
+   
+   
+   
+
+
+

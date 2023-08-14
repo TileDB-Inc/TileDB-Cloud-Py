@@ -1,0 +1,40 @@
+tiledb.cloud.rest\_api.models.query\_reader.QueryReader
+=======================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.query_reader
+
+.. autoclass:: QueryReader
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~QueryReader.__init__
+      ~QueryReader.to_dict
+      ~QueryReader.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~QueryReader.attribute_map
+      ~QueryReader.layout
+      ~QueryReader.openapi_types
+      ~QueryReader.read_state
+      ~QueryReader.subarray
+      ~QueryReader.var_offsets_add_extra_element
+      ~QueryReader.var_offsets_bitsize
+      ~QueryReader.var_offsets_mode
+   
+   

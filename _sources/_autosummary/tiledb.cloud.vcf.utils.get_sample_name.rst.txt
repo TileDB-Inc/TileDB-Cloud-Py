@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.utils.get\_sample\_name
+========================================
+
+.. currentmodule:: tiledb.cloud.vcf.utils
+
+.. autofunction:: get_sample_name

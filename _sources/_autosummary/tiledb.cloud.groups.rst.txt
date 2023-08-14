@@ -1,0 +1,32 @@
+tiledb.cloud.groups
+===================
+
+.. automodule:: tiledb.cloud.groups
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      create
+      deregister
+      register
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.subarray\_ranges.SubarrayRanges
+=============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.subarray_ranges
+
+.. autoclass:: SubarrayRanges
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SubarrayRanges.__init__
+      ~SubarrayRanges.to_dict
+      ~SubarrayRanges.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SubarrayRanges.attribute_map
+      ~SubarrayRanges.buffer
+      ~SubarrayRanges.has_default_range
+      ~SubarrayRanges.openapi_types
+      ~SubarrayRanges.type
+   
+   

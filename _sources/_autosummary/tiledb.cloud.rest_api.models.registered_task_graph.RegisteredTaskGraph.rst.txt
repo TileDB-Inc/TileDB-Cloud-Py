@@ -1,0 +1,42 @@
+tiledb.cloud.rest\_api.models.registered\_task\_graph.RegisteredTaskGraph
+=========================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.registered_task_graph
+
+.. autoclass:: RegisteredTaskGraph
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RegisteredTaskGraph.__init__
+      ~RegisteredTaskGraph.to_dict
+      ~RegisteredTaskGraph.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~RegisteredTaskGraph.attribute_map
+      ~RegisteredTaskGraph.license_id
+      ~RegisteredTaskGraph.license_text
+      ~RegisteredTaskGraph.name
+      ~RegisteredTaskGraph.namespace
+      ~RegisteredTaskGraph.nodes
+      ~RegisteredTaskGraph.openapi_types
+      ~RegisteredTaskGraph.readme
+      ~RegisteredTaskGraph.tags
+      ~RegisteredTaskGraph.uuid
+   
+   

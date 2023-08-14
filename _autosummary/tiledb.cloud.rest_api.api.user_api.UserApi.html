@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tiledb.cloud.rest_api.api.user_api.UserApi &mdash; TileDB-Cloud-Py  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tiledb.cloud.rest_api.api_client" href="tiledb.cloud.rest_api.api_client.html" />
+    <link rel="prev" title="tiledb.cloud.rest_api.api.user_api" href="tiledb.cloud.rest_api.api.user_api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TileDB-Cloud-Py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.html">tiledb.cloud</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.array.html">tiledb.cloud.array</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.client.html">tiledb.cloud.client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.compute.html">tiledb.cloud.compute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.config.html">tiledb.cloud.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.dag.html">tiledb.cloud.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.file.html">tiledb.cloud.file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.groups.html">tiledb.cloud.groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.notebook.html">tiledb.cloud.notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.pool_manager_wrapper.html">tiledb.cloud.pool_manager_wrapper</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="tiledb.cloud.rest_api.api.html">tiledb.cloud.rest_api.api</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.array_api.html">tiledb.cloud.rest_api.api.array_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.array_tasks_api.html">tiledb.cloud.rest_api.api.array_tasks_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.favorites_api.html">tiledb.cloud.rest_api.api.favorites_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.files_api.html">tiledb.cloud.rest_api.api.files_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.groups_api.html">tiledb.cloud.rest_api.api.groups_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.invitation_api.html">tiledb.cloud.rest_api.api.invitation_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.notebook_api.html">tiledb.cloud.rest_api.api.notebook_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.notebooks_api.html">tiledb.cloud.rest_api.api.notebooks_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.organization_api.html">tiledb.cloud.rest_api.api.organization_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.query_api.html">tiledb.cloud.rest_api.api.query_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.registered_task_graphs_api.html">tiledb.cloud.rest_api.api.registered_task_graphs_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.sql_api.html">tiledb.cloud.rest_api.api.sql_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.stats_api.html">tiledb.cloud.rest_api.api.stats_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.task_graph_logs_api.html">tiledb.cloud.rest_api.api.task_graph_logs_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.task_graphs_api.html">tiledb.cloud.rest_api.api.task_graphs_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.tasks_api.html">tiledb.cloud.rest_api.api.tasks_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.udf_api.html">tiledb.cloud.rest_api.api.udf_api</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="tiledb.cloud.rest_api.api.user_api.html">tiledb.cloud.rest_api.api.user_api</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">tiledb.cloud.rest_api.api.user_api.UserApi</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.api_client.html">tiledb.cloud.rest_api.api_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.configuration.html">tiledb.cloud.rest_api.configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.exceptions.html">tiledb.cloud.rest_api.exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.models.html">tiledb.cloud.rest_api.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.rest.html">tiledb.cloud.rest_api.rest</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.sql.html">tiledb.cloud.sql</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.taskgraphs.html">tiledb.cloud.taskgraphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tasks.html">tiledb.cloud.tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tiledb_cloud_error.html">tiledb.cloud.tiledb_cloud_error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.udf.html">tiledb.cloud.udf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.utils.html">tiledb.cloud.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.version.html">tiledb.cloud.version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TileDB-Cloud-Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.html">tiledb.cloud</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.api.html">tiledb.cloud.rest_api.api</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.api.user_api.html">tiledb.cloud.rest_api.api.user_api</a></li>
+      <li class="breadcrumb-item active">tiledb.cloud.rest_api.api.user_api.UserApi</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/tiledb.cloud.rest_api.api.user_api.UserApi.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tiledb-cloud-rest-api-api-user-api-userapi">
+<h1>tiledb.cloud.rest_api.api.user_api.UserApi<a class="headerlink" href="#tiledb-cloud-rest-api-api-user-api-userapi" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tiledb.cloud.rest_api.api.user_api.</span></span><span class="sig-name descname"><span class="pre">UserApi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>NOTE: This class is auto generated by OpenAPI Generator
+Ref: <a class="reference external" href="https://openapi-generator.tech">https://openapi-generator.tech</a></p>
+<p>Do not edit the class manually.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.__init__" title="tiledb.cloud.rest_api.api.user_api.UserApi.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([api_client])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.add_aws_access_credentials" title="tiledb.cloud.rest_api.api.user_api.UserApi.add_aws_access_credentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_aws_access_credentials</span></code></a>(namespace, ...)</p></td>
+<td><p>add_aws_access_credentials  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.add_aws_access_credentials_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.add_aws_access_credentials_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_aws_access_credentials_with_http_info</span></code></a>(...)</p></td>
+<td><p>add_aws_access_credentials  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.add_user_to_organization" title="tiledb.cloud.rest_api.api.user_api.UserApi.add_user_to_organization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_user_to_organization</span></code></a>(organization, user, ...)</p></td>
+<td><p>add_user_to_organization  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.add_user_to_organization_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.add_user_to_organization_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_user_to_organization_with_http_info</span></code></a>(...)</p></td>
+<td><p>add_user_to_organization  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials" title="tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_aws_access_credentials</span></code></a>(namespace, **kwargs)</p></td>
+<td><p>check_aws_access_credentials  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials_by_name" title="tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials_by_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_aws_access_credentials_by_name</span></code></a>(...)</p></td>
+<td><p>check_aws_access_credentials_by_name  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials_by_name_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials_by_name_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_aws_access_credentials_by_name_with_http_info</span></code></a>(...)</p></td>
+<td><p>check_aws_access_credentials_by_name  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_aws_access_credentials_with_http_info</span></code></a>(...)</p></td>
+<td><p>check_aws_access_credentials  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.confirm_email" title="tiledb.cloud.rest_api.api.user_api.UserApi.confirm_email"><code class="xref py py-obj docutils literal notranslate"><span class="pre">confirm_email</span></code></a>(**kwargs)</p></td>
+<td><p>confirm_email  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.confirm_email_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.confirm_email_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">confirm_email_with_http_info</span></code></a>(**kwargs)</p></td>
+<td><p>confirm_email  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.create_user" title="tiledb.cloud.rest_api.api.user_api.UserApi.create_user"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_user</span></code></a>(user, **kwargs)</p></td>
+<td><p>create_user  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.create_user_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.create_user_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_user_with_http_info</span></code></a>(user, **kwargs)</p></td>
+<td><p>create_user  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.delete_aws_access_credentials" title="tiledb.cloud.rest_api.api.user_api.UserApi.delete_aws_access_credentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_aws_access_credentials</span></code></a>(namespace, ...)</p></td>
+<td><p>delete_aws_access_credentials  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.delete_aws_access_credentials_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.delete_aws_access_credentials_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_aws_access_credentials_with_http_info</span></code></a>(...)</p></td>
+<td><p>delete_aws_access_credentials  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.delete_user" title="tiledb.cloud.rest_api.api.user_api.UserApi.delete_user"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_user</span></code></a>(username, **kwargs)</p></td>
+<td><p>delete_user  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.delete_user_from_organization" title="tiledb.cloud.rest_api.api.user_api.UserApi.delete_user_from_organization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_user_from_organization</span></code></a>(organization, ...)</p></td>
+<td><p>delete_user_from_organization  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.delete_user_from_organization_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.delete_user_from_organization_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_user_from_organization_with_http_info</span></code></a>(...)</p></td>
+<td><p>delete_user_from_organization  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.delete_user_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.delete_user_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_user_with_http_info</span></code></a>(username, **kwargs)</p></td>
+<td><p>delete_user  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_organization_user" title="tiledb.cloud.rest_api.api.user_api.UserApi.get_organization_user"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_organization_user</span></code></a>(organization, ...)</p></td>
+<td><p>get_organization_user  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_organization_user_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.get_organization_user_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_organization_user_with_http_info</span></code></a>(...)</p></td>
+<td><p>get_organization_user  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_session" title="tiledb.cloud.rest_api.api.user_api.UserApi.get_session"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_session</span></code></a>(**kwargs)</p></td>
+<td><p>get_session  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_session_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.get_session_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_session_with_http_info</span></code></a>(**kwargs)</p></td>
+<td><p>get_session  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_token_scopes" title="tiledb.cloud.rest_api.api.user_api.UserApi.get_token_scopes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_token_scopes</span></code></a>(**kwargs)</p></td>
+<td><p>get_token_scopes  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_token_scopes_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.get_token_scopes_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_token_scopes_with_http_info</span></code></a>(**kwargs)</p></td>
+<td><p>get_token_scopes  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_user" title="tiledb.cloud.rest_api.api.user_api.UserApi.get_user"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_user</span></code></a>(**kwargs)</p></td>
+<td><p>get_user  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_user_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.get_user_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_user_with_http_info</span></code></a>(**kwargs)</p></td>
+<td><p>get_user  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_user_with_username" title="tiledb.cloud.rest_api.api.user_api.UserApi.get_user_with_username"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_user_with_username</span></code></a>(username, **kwargs)</p></td>
+<td><p>get_user_with_username  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_user_with_username_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.get_user_with_username_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_user_with_username_with_http_info</span></code></a>(...)</p></td>
+<td><p>get_user_with_username  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.request_token" title="tiledb.cloud.rest_api.api.user_api.UserApi.request_token"><code class="xref py py-obj docutils literal notranslate"><span class="pre">request_token</span></code></a>(**kwargs)</p></td>
+<td><p>request_token  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.request_token_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.request_token_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">request_token_with_http_info</span></code></a>(**kwargs)</p></td>
+<td><p>request_token  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.reset_user_password" title="tiledb.cloud.rest_api.api.user_api.UserApi.reset_user_password"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_user_password</span></code></a>(user, **kwargs)</p></td>
+<td><p>reset_user_password  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.reset_user_password_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.reset_user_password_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_user_password_with_http_info</span></code></a>(user, ...)</p></td>
+<td><p>reset_user_password  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.revoke_token" title="tiledb.cloud.rest_api.api.user_api.UserApi.revoke_token"><code class="xref py py-obj docutils literal notranslate"><span class="pre">revoke_token</span></code></a>(token, **kwargs)</p></td>
+<td><p>revoke_token  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.revoke_token_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.revoke_token_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">revoke_token_with_http_info</span></code></a>(token, **kwargs)</p></td>
+<td><p>revoke_token  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.tokens_get" title="tiledb.cloud.rest_api.api.user_api.UserApi.tokens_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokens_get</span></code></a>(**kwargs)</p></td>
+<td><p>tokens_get  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.tokens_get_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.tokens_get_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokens_get_with_http_info</span></code></a>(**kwargs)</p></td>
+<td><p>tokens_get  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.tokens_session_get" title="tiledb.cloud.rest_api.api.user_api.UserApi.tokens_session_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokens_session_get</span></code></a>(**kwargs)</p></td>
+<td><p>tokens_session_get  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.tokens_session_get_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.tokens_session_get_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokens_session_get_with_http_info</span></code></a>(**kwargs)</p></td>
+<td><p>tokens_session_get  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.update_aws_access_credentials" title="tiledb.cloud.rest_api.api.user_api.UserApi.update_aws_access_credentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_aws_access_credentials</span></code></a>(namespace, ...)</p></td>
+<td><p>update_aws_access_credentials  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.update_aws_access_credentials_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.update_aws_access_credentials_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_aws_access_credentials_with_http_info</span></code></a>(...)</p></td>
+<td><p>update_aws_access_credentials  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.update_user" title="tiledb.cloud.rest_api.api.user_api.UserApi.update_user"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_user</span></code></a>(username, user, **kwargs)</p></td>
+<td><p>update_user  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.update_user_in_organization" title="tiledb.cloud.rest_api.api.user_api.UserApi.update_user_in_organization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_user_in_organization</span></code></a>(organization, ...)</p></td>
+<td><p>update_user_in_organization  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.update_user_in_organization_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.update_user_in_organization_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_user_in_organization_with_http_info</span></code></a>(...)</p></td>
+<td><p>update_user_in_organization  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.user_api.UserApi.update_user_with_http_info" title="tiledb.cloud.rest_api.api.user_api.UserApi.update_user_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_user_with_http_info</span></code></a>(username, user, ...)</p></td>
+<td><p>update_user  # noqa: E501</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.add_aws_access_credentials">
+<span class="sig-name descname"><span class="pre">add_aws_access_credentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aws_access_credentials</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.add_aws_access_credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>add_aws_access_credentials  # noqa: E501</p>
+<p>Add aws keys  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.add_aws_access_credentials(namespace, aws_access_credentials, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace (required)</p></li>
+<li><p><strong>aws_access_credentials</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.aws_access_credentials.AWSAccessCredentials.html#tiledb.cloud.rest_api.models.aws_access_credentials.AWSAccessCredentials" title="tiledb.cloud.rest_api.models.aws_access_credentials.AWSAccessCredentials"><em>AWSAccessCredentials</em></a>) – aws access credentials to store for a namespace (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.add_aws_access_credentials_with_http_info">
+<span class="sig-name descname"><span class="pre">add_aws_access_credentials_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aws_access_credentials</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.add_aws_access_credentials_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>add_aws_access_credentials  # noqa: E501</p>
+<p>Add aws keys  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.add_aws_access_credentials_with_http_info(namespace, aws_access_credentials, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace (required)</p></li>
+<li><p><strong>aws_access_credentials</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.aws_access_credentials.AWSAccessCredentials.html#tiledb.cloud.rest_api.models.aws_access_credentials.AWSAccessCredentials" title="tiledb.cloud.rest_api.models.aws_access_credentials.AWSAccessCredentials"><em>AWSAccessCredentials</em></a>) – aws access credentials to store for a namespace (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.add_user_to_organization">
+<span class="sig-name descname"><span class="pre">add_user_to_organization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">organization</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.add_user_to_organization" title="Permalink to this definition">¶</a></dt>
+<dd><p>add_user_to_organization  # noqa: E501</p>
+<p>add a user to an organization  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.add_user_to_organization(organization, user, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>organization</strong> (<em>str</em>) – organization name (required)</p></li>
+<li><p><strong>user</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.organization_user.OrganizationUser.html#tiledb.cloud.rest_api.models.organization_user.OrganizationUser" title="tiledb.cloud.rest_api.models.organization_user.OrganizationUser"><em>OrganizationUser</em></a>) – user to add (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.add_user_to_organization_with_http_info">
+<span class="sig-name descname"><span class="pre">add_user_to_organization_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">organization</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.add_user_to_organization_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>add_user_to_organization  # noqa: E501</p>
+<p>add a user to an organization  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.add_user_to_organization_with_http_info(organization, user, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>organization</strong> (<em>str</em>) – organization name (required)</p></li>
+<li><p><strong>user</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.organization_user.OrganizationUser.html#tiledb.cloud.rest_api.models.organization_user.OrganizationUser" title="tiledb.cloud.rest_api.models.organization_user.OrganizationUser"><em>OrganizationUser</em></a>) – user to add (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials">
+<span class="sig-name descname"><span class="pre">check_aws_access_credentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>check_aws_access_credentials  # noqa: E501</p>
+<p>Check if aws keys are set  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.check_aws_access_credentials(namespace, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[AWSAccessCredentials]
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials_by_name">
+<span class="sig-name descname"><span class="pre">check_aws_access_credentials_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>check_aws_access_credentials_by_name  # noqa: E501</p>
+<p>Check if aws keys are set by name  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.check_aws_access_credentials_by_name(namespace, name, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>AWSAccessCredentials
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials_by_name_with_http_info">
+<span class="sig-name descname"><span class="pre">check_aws_access_credentials_by_name_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials_by_name_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>check_aws_access_credentials_by_name  # noqa: E501</p>
+<p>Check if aws keys are set by name  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.check_aws_access_credentials_by_name_with_http_info(namespace, name, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(AWSAccessCredentials, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials_with_http_info">
+<span class="sig-name descname"><span class="pre">check_aws_access_credentials_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.check_aws_access_credentials_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>check_aws_access_credentials  # noqa: E501</p>
+<p>Check if aws keys are set  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.check_aws_access_credentials_with_http_info(namespace, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(list[AWSAccessCredentials], status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.confirm_email">
+<span class="sig-name descname"><span class="pre">confirm_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.confirm_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>confirm_email  # noqa: E501</p>
+<p>confirm user email  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.confirm_email(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.confirm_email_with_http_info">
+<span class="sig-name descname"><span class="pre">confirm_email_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.confirm_email_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>confirm_email  # noqa: E501</p>
+<p>confirm user email  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.confirm_email_with_http_info(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.create_user">
+<span class="sig-name descname"><span class="pre">create_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.create_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>create_user  # noqa: E501</p>
+<p>create a user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.create_user(user, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>user</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.user.User.html#tiledb.cloud.rest_api.models.user.User" title="tiledb.cloud.rest_api.models.user.User"><em>User</em></a>) – user to create (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.create_user_with_http_info">
+<span class="sig-name descname"><span class="pre">create_user_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.create_user_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>create_user  # noqa: E501</p>
+<p>create a user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.create_user_with_http_info(user, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>user</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.user.User.html#tiledb.cloud.rest_api.models.user.User" title="tiledb.cloud.rest_api.models.user.User"><em>User</em></a>) – user to create (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.delete_aws_access_credentials">
+<span class="sig-name descname"><span class="pre">delete_aws_access_credentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.delete_aws_access_credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete_aws_access_credentials  # noqa: E501</p>
+<p>delete a AWS Access credentials in a namespace. This will likely cause arrays to become unreachable  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.delete_aws_access_credentials(namespace, name, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.delete_aws_access_credentials_with_http_info">
+<span class="sig-name descname"><span class="pre">delete_aws_access_credentials_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.delete_aws_access_credentials_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete_aws_access_credentials  # noqa: E501</p>
+<p>delete a AWS Access credentials in a namespace. This will likely cause arrays to become unreachable  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.delete_aws_access_credentials_with_http_info(namespace, name, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.delete_user">
+<span class="sig-name descname"><span class="pre">delete_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.delete_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete_user  # noqa: E501</p>
+<p>delete a user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.delete_user(username, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – username or ID (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.delete_user_from_organization">
+<span class="sig-name descname"><span class="pre">delete_user_from_organization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">organization</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.delete_user_from_organization" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete_user_from_organization  # noqa: E501</p>
+<p>delete a user from an organization  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.delete_user_from_organization(organization, username, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>organization</strong> (<em>str</em>) – organization name (required)</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – username to manipulate (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.delete_user_from_organization_with_http_info">
+<span class="sig-name descname"><span class="pre">delete_user_from_organization_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">organization</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.delete_user_from_organization_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete_user_from_organization  # noqa: E501</p>
+<p>delete a user from an organization  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.delete_user_from_organization_with_http_info(organization, username, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>organization</strong> (<em>str</em>) – organization name (required)</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – username to manipulate (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.delete_user_with_http_info">
+<span class="sig-name descname"><span class="pre">delete_user_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.delete_user_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete_user  # noqa: E501</p>
+<p>delete a user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.delete_user_with_http_info(username, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – username or ID (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.get_organization_user">
+<span class="sig-name descname"><span class="pre">get_organization_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">organization</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_organization_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_organization_user  # noqa: E501</p>
+<p>get a user from an organization  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_organization_user(organization, username, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>organization</strong> (<em>str</em>) – organization name (required)</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – username to manipulate (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>OrganizationUser
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.get_organization_user_with_http_info">
+<span class="sig-name descname"><span class="pre">get_organization_user_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">organization</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_organization_user_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_organization_user  # noqa: E501</p>
+<p>get a user from an organization  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_organization_user_with_http_info(organization, username, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>organization</strong> (<em>str</em>) – organization name (required)</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – username to manipulate (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(OrganizationUser, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.get_session">
+<span class="sig-name descname"><span class="pre">get_session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_session  # noqa: E501</p>
+<p>Get session token for user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_session(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>remember_me</strong> (<em>str</em>) – flag to create a token with expiration of 30 days, default is false</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Token
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.get_session_with_http_info">
+<span class="sig-name descname"><span class="pre">get_session_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_session_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_session  # noqa: E501</p>
+<p>Get session token for user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_session_with_http_info(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>remember_me</strong> (<em>str</em>) – flag to create a token with expiration of 30 days, default is false</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(Token, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.get_token_scopes">
+<span class="sig-name descname"><span class="pre">get_token_scopes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_token_scopes" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_token_scopes  # noqa: E501</p>
+<p>retrieves available token scopes for a user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_token_scopes(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[TokenScope]
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.get_token_scopes_with_http_info">
+<span class="sig-name descname"><span class="pre">get_token_scopes_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_token_scopes_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_token_scopes  # noqa: E501</p>
+<p>retrieves available token scopes for a user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_token_scopes_with_http_info(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(list[TokenScope], status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.get_user">
+<span class="sig-name descname"><span class="pre">get_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_user  # noqa: E501</p>
+<p>get a user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_user(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>User
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.get_user_with_http_info">
+<span class="sig-name descname"><span class="pre">get_user_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_user_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_user  # noqa: E501</p>
+<p>get a user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_user_with_http_info(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(User, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.get_user_with_username">
+<span class="sig-name descname"><span class="pre">get_user_with_username</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_user_with_username" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_user_with_username  # noqa: E501</p>
+<p>get a user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_user_with_username(username, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – username or ID (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>User
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.get_user_with_username_with_http_info">
+<span class="sig-name descname"><span class="pre">get_user_with_username_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.get_user_with_username_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_user_with_username  # noqa: E501</p>
+<p>get a user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_user_with_username_with_http_info(username, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – username or ID (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(User, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.request_token">
+<span class="sig-name descname"><span class="pre">request_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.request_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>request_token  # noqa: E501</p>
+<p>Request an authorization token, optionally taken a TokenRequest object to set parameters on the token  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.request_token(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>token_request</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.token_request.TokenRequest.html#tiledb.cloud.rest_api.models.token_request.TokenRequest" title="tiledb.cloud.rest_api.models.token_request.TokenRequest"><em>TokenRequest</em></a>) – token request object</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Token
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.request_token_with_http_info">
+<span class="sig-name descname"><span class="pre">request_token_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.request_token_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>request_token  # noqa: E501</p>
+<p>Request an authorization token, optionally taken a TokenRequest object to set parameters on the token  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.request_token_with_http_info(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>token_request</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.token_request.TokenRequest.html#tiledb.cloud.rest_api.models.token_request.TokenRequest" title="tiledb.cloud.rest_api.models.token_request.TokenRequest"><em>TokenRequest</em></a>) – token request object</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(Token, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.reset_user_password">
+<span class="sig-name descname"><span class="pre">reset_user_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.reset_user_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>reset_user_password  # noqa: E501</p>
+<p>reset user password  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.reset_user_password(user, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>user</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.inline_object.InlineObject.html#tiledb.cloud.rest_api.models.inline_object.InlineObject" title="tiledb.cloud.rest_api.models.inline_object.InlineObject"><em>InlineObject</em></a>) – (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.reset_user_password_with_http_info">
+<span class="sig-name descname"><span class="pre">reset_user_password_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.reset_user_password_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>reset_user_password  # noqa: E501</p>
+<p>reset user password  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.reset_user_password_with_http_info(user, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>user</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.inline_object.InlineObject.html#tiledb.cloud.rest_api.models.inline_object.InlineObject" title="tiledb.cloud.rest_api.models.inline_object.InlineObject"><em>InlineObject</em></a>) – (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.revoke_token">
+<span class="sig-name descname"><span class="pre">revoke_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.revoke_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>revoke_token  # noqa: E501</p>
+<p>revoke an authorization token  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.revoke_token(token, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>token</strong> (<em>str</em>) – token name or token itself (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.revoke_token_with_http_info">
+<span class="sig-name descname"><span class="pre">revoke_token_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.revoke_token_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>revoke_token  # noqa: E501</p>
+<p>revoke an authorization token  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.revoke_token_with_http_info(token, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>token</strong> (<em>str</em>) – token name or token itself (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.tokens_get">
+<span class="sig-name descname"><span class="pre">tokens_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.tokens_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>tokens_get  # noqa: E501</p>
+<p>Fetch a list of user tokens  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.tokens_get(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[Token]
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.tokens_get_with_http_info">
+<span class="sig-name descname"><span class="pre">tokens_get_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.tokens_get_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>tokens_get  # noqa: E501</p>
+<p>Fetch a list of user tokens  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.tokens_get_with_http_info(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(list[Token], status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.tokens_session_get">
+<span class="sig-name descname"><span class="pre">tokens_session_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.tokens_session_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>tokens_session_get  # noqa: E501</p>
+<p>Fetch a list of user session tokens  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.tokens_session_get(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[Token]
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.tokens_session_get_with_http_info">
+<span class="sig-name descname"><span class="pre">tokens_session_get_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.tokens_session_get_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>tokens_session_get  # noqa: E501</p>
+<p>Fetch a list of user session tokens  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.tokens_session_get_with_http_info(async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(list[Token], status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.update_aws_access_credentials">
+<span class="sig-name descname"><span class="pre">update_aws_access_credentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aws_access_credentials</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.update_aws_access_credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>update_aws_access_credentials  # noqa: E501</p>
+<p>Update aws keys or associated buckets. This will update the key associations for each array in the namespace  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.update_aws_access_credentials(namespace, name, aws_access_credentials, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name (required)</p></li>
+<li><p><strong>aws_access_credentials</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.aws_access_credentials.AWSAccessCredentials.html#tiledb.cloud.rest_api.models.aws_access_credentials.AWSAccessCredentials" title="tiledb.cloud.rest_api.models.aws_access_credentials.AWSAccessCredentials"><em>AWSAccessCredentials</em></a>) – aws credentials to update (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.update_aws_access_credentials_with_http_info">
+<span class="sig-name descname"><span class="pre">update_aws_access_credentials_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aws_access_credentials</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.update_aws_access_credentials_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>update_aws_access_credentials  # noqa: E501</p>
+<p>Update aws keys or associated buckets. This will update the key associations for each array in the namespace  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.update_aws_access_credentials_with_http_info(namespace, name, aws_access_credentials, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name (required)</p></li>
+<li><p><strong>aws_access_credentials</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.aws_access_credentials.AWSAccessCredentials.html#tiledb.cloud.rest_api.models.aws_access_credentials.AWSAccessCredentials" title="tiledb.cloud.rest_api.models.aws_access_credentials.AWSAccessCredentials"><em>AWSAccessCredentials</em></a>) – aws credentials to update (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.update_user">
+<span class="sig-name descname"><span class="pre">update_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.update_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>update_user  # noqa: E501</p>
+<p>update a user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.update_user(username, user, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – username or ID (required)</p></li>
+<li><p><strong>user</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.user.User.html#tiledb.cloud.rest_api.models.user.User" title="tiledb.cloud.rest_api.models.user.User"><em>User</em></a>) – user details to update (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.update_user_in_organization">
+<span class="sig-name descname"><span class="pre">update_user_in_organization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">organization</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.update_user_in_organization" title="Permalink to this definition">¶</a></dt>
+<dd><p>update_user_in_organization  # noqa: E501</p>
+<p>update a user in an organization  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.update_user_in_organization(organization, username, user, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>organization</strong> (<em>str</em>) – organization name (required)</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – username to manipulate (required)</p></li>
+<li><p><strong>user</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.organization_user.OrganizationUser.html#tiledb.cloud.rest_api.models.organization_user.OrganizationUser" title="tiledb.cloud.rest_api.models.organization_user.OrganizationUser"><em>OrganizationUser</em></a>) – user details to update (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.update_user_in_organization_with_http_info">
+<span class="sig-name descname"><span class="pre">update_user_in_organization_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">organization</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.update_user_in_organization_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>update_user_in_organization  # noqa: E501</p>
+<p>update a user in an organization  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.update_user_in_organization_with_http_info(organization, username, user, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>organization</strong> (<em>str</em>) – organization name (required)</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – username to manipulate (required)</p></li>
+<li><p><strong>user</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.organization_user.OrganizationUser.html#tiledb.cloud.rest_api.models.organization_user.OrganizationUser" title="tiledb.cloud.rest_api.models.organization_user.OrganizationUser"><em>OrganizationUser</em></a>) – user details to update (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.user_api.UserApi.update_user_with_http_info">
+<span class="sig-name descname"><span class="pre">update_user_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.user_api.UserApi.update_user_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>update_user  # noqa: E501</p>
+<p>update a user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.update_user_with_http_info(username, user, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>username</strong> (<em>str</em>) – username or ID (required)</p></li>
+<li><p><strong>user</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.user.User.html#tiledb.cloud.rest_api.models.user.User" title="tiledb.cloud.rest_api.models.user.User"><em>User</em></a>) – user details to update (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tiledb.cloud.rest_api.api.user_api.html" class="btn btn-neutral float-left" title="tiledb.cloud.rest_api.api.user_api" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tiledb.cloud.rest_api.api_client.html" class="btn btn-neutral float-right" title="tiledb.cloud.rest_api.api_client" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020–2023, TileDB, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

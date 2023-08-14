@@ -1,0 +1,44 @@
+tiledb.cloud.rest\_api.models.domain\_array.DomainArray
+=======================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.domain_array
+
+.. autoclass:: DomainArray
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DomainArray.__init__
+      ~DomainArray.to_dict
+      ~DomainArray.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DomainArray.attribute_map
+      ~DomainArray.float32
+      ~DomainArray.float64
+      ~DomainArray.int16
+      ~DomainArray.int32
+      ~DomainArray.int64
+      ~DomainArray.int8
+      ~DomainArray.openapi_types
+      ~DomainArray.uint16
+      ~DomainArray.uint32
+      ~DomainArray.uint64
+      ~DomainArray.uint8
+   
+   

@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.tg\_query\_ranges.TGQueryRanges
+=============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.tg_query_ranges
+
+.. autoclass:: TGQueryRanges
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TGQueryRanges.__init__
+      ~TGQueryRanges.to_dict
+      ~TGQueryRanges.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TGQueryRanges.attribute_map
+      ~TGQueryRanges.friendly_ranges
+      ~TGQueryRanges.layout
+      ~TGQueryRanges.openapi_types
+      ~TGQueryRanges.ranges
+   
+   

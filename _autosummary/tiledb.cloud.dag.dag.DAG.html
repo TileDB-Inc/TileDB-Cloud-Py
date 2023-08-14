@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tiledb.cloud.dag.dag.DAG &mdash; TileDB-Cloud-Py  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tiledb.cloud.dag.dag.Node" href="tiledb.cloud.dag.dag.Node.html" />
+    <link rel="prev" title="tiledb.cloud.dag.dag.task_graph_log_status_to_status" href="tiledb.cloud.dag.dag.task_graph_log_status_to_status.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TileDB-Cloud-Py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.html">tiledb.cloud</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.array.html">tiledb.cloud.array</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.client.html">tiledb.cloud.client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.compute.html">tiledb.cloud.compute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.config.html">tiledb.cloud.config</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tiledb.cloud.dag.html">tiledb.cloud.dag</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="tiledb.cloud.dag.dag.html">tiledb.cloud.dag.dag</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.dag.dag.array_task_status_to_status.html">tiledb.cloud.dag.dag.array_task_status_to_status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.dag.dag.list_logs.html">tiledb.cloud.dag.dag.list_logs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.dag.dag.replace_stored_params.html">tiledb.cloud.dag.dag.replace_stored_params</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.dag.dag.server_logs.html">tiledb.cloud.dag.dag.server_logs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.dag.dag.task_graph_log_status_to_status.html">tiledb.cloud.dag.dag.task_graph_log_status_to_status</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tiledb.cloud.dag.dag.DAG</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG"><code class="docutils literal notranslate"><span class="pre">DAG</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.dag.dag.Node.html">tiledb.cloud.dag.dag.Node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.dag.dag.ParentFailedError.html">tiledb.cloud.dag.dag.ParentFailedError</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.dag.mode.html">tiledb.cloud.dag.mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.dag.status.html">tiledb.cloud.dag.status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.dag.visualization.html">tiledb.cloud.dag.visualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.file.html">tiledb.cloud.file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.groups.html">tiledb.cloud.groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.notebook.html">tiledb.cloud.notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.pool_manager_wrapper.html">tiledb.cloud.pool_manager_wrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.sql.html">tiledb.cloud.sql</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.taskgraphs.html">tiledb.cloud.taskgraphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tasks.html">tiledb.cloud.tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tiledb_cloud_error.html">tiledb.cloud.tiledb_cloud_error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.udf.html">tiledb.cloud.udf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.utils.html">tiledb.cloud.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.version.html">tiledb.cloud.version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TileDB-Cloud-Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.html">tiledb.cloud</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.dag.html">tiledb.cloud.dag</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.dag.dag.html">tiledb.cloud.dag.dag</a></li>
+      <li class="breadcrumb-item active">tiledb.cloud.dag.dag.DAG</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/tiledb.cloud.dag.dag.DAG.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tiledb-cloud-dag-dag-dag">
+<h1>tiledb.cloud.dag.dag.DAG<a class="headerlink" href="#tiledb-cloud-dag-dag-dag" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tiledb.cloud.dag.dag.</span></span><span class="sig-name descname"><span class="pre">DAG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_processes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">done_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG" title="tiledb.cloud.dag.dag.DAG"><span class="pre">DAG</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG" title="tiledb.cloud.dag.dag.DAG"><span class="pre">DAG</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tiledb.cloud.dag.mode.Mode.html#tiledb.cloud.dag.mode.Mode" title="tiledb.cloud.dag.mode.Mode"><span class="pre">Mode</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Mode.REALTIME</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tiledb.cloud.rest_api.models.retry_strategy.RetryStrategy.html#tiledb.cloud.rest_api.models.retry_strategy.RetryStrategy" title="tiledb.cloud.rest_api.models.retry_strategy.RetryStrategy"><span class="pre">RetryStrategy</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workflow_retry_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tiledb.cloud.rest_api.models.retry_strategy.RetryStrategy.html#tiledb.cloud.rest_api.models.retry_strategy.RetryStrategy" title="tiledb.cloud.rest_api.models.retry_strategy.RetryStrategy"><span class="pre">RetryStrategy</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deadline</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_processes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">done_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG" title="tiledb.cloud.dag.dag.DAG"><span class="pre">DAG</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG" title="tiledb.cloud.dag.dag.DAG"><span class="pre">DAG</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tiledb.cloud.dag.mode.Mode.html#tiledb.cloud.dag.mode.Mode" title="tiledb.cloud.dag.mode.Mode"><span class="pre">Mode</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Mode.REALTIME</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tiledb.cloud.rest_api.models.retry_strategy.RetryStrategy.html#tiledb.cloud.rest_api.models.retry_strategy.RetryStrategy" title="tiledb.cloud.rest_api.models.retry_strategy.RetryStrategy"><span class="pre">RetryStrategy</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workflow_retry_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tiledb.cloud.rest_api.models.retry_strategy.RetryStrategy.html#tiledb.cloud.rest_api.models.retry_strategy.RetryStrategy" title="tiledb.cloud.rest_api.models.retry_strategy.RetryStrategy"><span class="pre">RetryStrategy</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deadline</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>DAG is a class for creating and managing direct acyclic graphs
+:param max_workers: how many workers should be used to execute the dag
+:param use_processes: if true will use processes instead of threads,</p>
+<blockquote>
+<div><p>defaults to threads</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>done_callback</strong> – optional call back function to register for
+when dag is completed. Function will be passed reference to this dag</p></li>
+<li><p><strong>update_callback</strong> – optional call back function to register for
+when dag status is updated. Function will be passed reference to this dag</p></li>
+<li><p><strong>namespace</strong> – optional namespace to use for all tasks in DAG</p></li>
+<li><p><strong>name</strong> – A human-readable name used to identify this task graph
+in logs. Does not need to be unique.</p></li>
+<li><p><strong>mode</strong> – Mode the DAG is to run in, valid options are
+Mode.REALTIME, Mode.BATCH</p></li>
+<li><p><strong>retry_strategy</strong> – RetryStrategy to be applied on every node of the DAG.</p></li>
+<li><p><strong>workflow_retry_strategy</strong> – RetryStrategy to use to retry the entire DAG.</p></li>
+<li><p><strong>deadline</strong> – Duration in seconds relative to the workflow start time
+which the workflow is allowed to run before it gets terminated.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.__init__" title="tiledb.cloud.dag.dag.DAG.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([max_workers, use_processes, ...])</p></td>
+<td><p>DAG is a class for creating and managing direct acyclic graphs :param max_workers: how many workers should be used to execute the dag :param use_processes: if true will use processes instead of threads,     defaults to threads :param done_callback: optional call back function to register for     when dag is completed. Function will be passed reference to this dag :param update_callback: optional call back function to register for     when dag status is updated. Function will be passed reference to this dag :param namespace: optional namespace to use for all tasks in DAG :param name: A human-readable name used to identify this task graph     in logs. Does not need to be unique. :param mode: Mode the DAG is to run in, valid options are     Mode.REALTIME, Mode.BATCH :param retry_strategy: RetryStrategy to be applied on every node of the DAG. :param workflow_retry_strategy: RetryStrategy to use to retry the entire DAG. :param deadline: Duration in seconds relative to the workflow start time     which the workflow is allowed to run before it gets terminated.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.add_done_callback" title="tiledb.cloud.dag.dag.DAG.add_done_callback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_done_callback</span></code></a>(func)</p></td>
+<td><p>Add a callback for when DAG is completed :param func: Function to call when DAG status is updated. The function will be passed reference to this dag :return:.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.add_node" title="tiledb.cloud.dag.dag.DAG.add_node"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_node</span></code></a>(func_exec, *args[, name, local_mode])</p></td>
+<td><p>Create and add a node.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.add_node_obj" title="tiledb.cloud.dag.dag.DAG.add_node_obj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_node_obj</span></code></a>(node)</p></td>
+<td><p>Add node to DAG :param node: to add to dag :return: node</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.add_update_callback" title="tiledb.cloud.dag.dag.DAG.add_update_callback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_update_callback</span></code></a>(func)</p></td>
+<td><p>Add a callback for when DAG status is updated :param func: Function to call when DAG status is updated. The function will be passed reference to this dag :return:.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cancel</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.compute" title="tiledb.cloud.dag.dag.DAG.compute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute</span></code></a>()</p></td>
+<td><p>Start the DAG by executing root nodes :return:</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">done</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.end_nodes" title="tiledb.cloud.dag.dag.DAG.end_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">end_nodes</span></code></a>()</p></td>
+<td><p>Find all ends nodes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.end_results" title="tiledb.cloud.dag.dag.DAG.end_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">end_results</span></code></a>()</p></td>
+<td><p>Get all end results, will block if all results are not ready</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.end_results_by_name" title="tiledb.cloud.dag.dag.DAG.end_results_by_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">end_results_by_name</span></code></a>()</p></td>
+<td><p>Get all end results, will block if all results are not ready</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.find_end_nodes" title="tiledb.cloud.dag.dag.DAG.find_end_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_end_nodes</span></code></a>()</p></td>
+<td><p>Find all end nodes :return: list of end nodes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.get_tiledb_plot_node_details" title="tiledb.cloud.dag.dag.DAG.get_tiledb_plot_node_details"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_tiledb_plot_node_details</span></code></a>()</p></td>
+<td><p>Build list of details needed for tiledb node graph :return:</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.initial_setup" title="tiledb.cloud.dag.dag.DAG.initial_setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_setup</span></code></a>()</p></td>
+<td><p>Performs one-time server-side setup tasks.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">networkx_graph</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.report_node_complete" title="tiledb.cloud.dag.dag.DAG.report_node_complete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">report_node_complete</span></code></a>(node)</p></td>
+<td><p>Report a node as complete :param node: to mark as complete :return</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">report_node_status_change</span></code>(node, new_status)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.retry_all" title="tiledb.cloud.dag.dag.DAG.retry_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">retry_all</span></code></a>()</p></td>
+<td><p>Retries all failed and cancelled nodes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">stats</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.submit" title="tiledb.cloud.dag.dag.DAG.submit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit</span></code></a>(func, *args, **kwargs)</p></td>
+<td><p>Submit a function that will be executed in the cloud serverlessly :param func: function to execute :param args: arguments for function execution :param name: name :return: Node that is created</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.submit_array_udf" title="tiledb.cloud.dag.dag.DAG.submit_array_udf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_array_udf</span></code></a>(func, *args, **kwargs)</p></td>
+<td><p>Submit a function that will be executed in the cloud serverlessly :param func: function to execute :param args: arguments for function execution :param name: name :return: Node that is created</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.submit_local" title="tiledb.cloud.dag.dag.DAG.submit_local"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_local</span></code></a>(func, *args, **kwargs)</p></td>
+<td><p>Submit a function that will run locally :param func: function to execute :param args: arguments for function execution :param name: name :return: Node that is created</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.submit_sql" title="tiledb.cloud.dag.dag.DAG.submit_sql"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_sql</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Submit a sql query to run serverlessly in the cloud :param sql: query to execute :param args: arguments for function execution :param name: name :return: Node that is created</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.submit_udf" title="tiledb.cloud.dag.dag.DAG.submit_udf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_udf</span></code></a>(func, *args, **kwargs)</p></td>
+<td><p>Submit a function that will be executed in the cloud serverlessly :param func: function to execute :param args: arguments for function execution :param name: name :return: Node that is created</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.submit_udf_stage" title="tiledb.cloud.dag.dag.DAG.submit_udf_stage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_udf_stage</span></code></a>(func, *args[, ...])</p></td>
+<td><p>Submit a function that will be executed in the cloud serverlessly :param func: function to execute :param args: arguments for function execution :param expand_node_output: the Node that we want to expand the output of. The output of the node should be a JSON encoded list. :param name: name :return: Node that is created.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.visualize" title="tiledb.cloud.dag.dag.DAG.visualize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">visualize</span></code></a>([notebook, auto_update, force_plotly])</p></td>
+<td><p>Build and render a tree diagram of the DAG. :param notebook: Is the visualization inside a jupyter notebook?     If so we'll use a widget :param auto_update: Should the diagram be auto updated with each status change :param force_plotly: Force the use of plotly graphs instead of     TileDB Plot Widget :return: returns figure.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.wait" title="tiledb.cloud.dag.dag.DAG.wait"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wait</span></code></a>([timeout])</p></td>
+<td><p>Wait for DAG to be completed :param timeout: optional timeout in seconds to wait for DAG to be completed :return: None or raises TimeoutError if timeout occurs</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">status</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.mode" title="tiledb.cloud.dag.dag.DAG.mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mode</span></code></a></p></td>
+<td><p>The server-generated UUID of this graph, used for logging.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.add_done_callback">
+<span class="sig-name descname"><span class="pre">add_done_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.add_done_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a callback for when DAG is completed
+:param func: Function to call when DAG status is updated.</p>
+<blockquote>
+<div><p>The function will be passed reference to this dag</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.add_node">
+<span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_exec</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.add_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and add a node.</p>
+<p>DEPRECATED. Use <cite>submit_local</cite> instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func_exec</strong> – function to execute</p></li>
+<li><p><strong>args</strong> – arguments for function execution</p></li>
+<li><p><strong>name</strong> – name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Node that is created</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.add_node_obj">
+<span class="sig-name descname"><span class="pre">add_node_obj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.add_node_obj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add node to DAG
+:param node: to add to dag
+:return: node</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.add_update_callback">
+<span class="sig-name descname"><span class="pre">add_update_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.add_update_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a callback for when DAG status is updated
+:param func: Function to call when DAG status is updated.</p>
+<blockquote>
+<div><p>The function will be passed reference to this dag</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the DAG by executing root nodes
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.end_nodes">
+<span class="sig-name descname"><span class="pre">end_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.end_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find all ends nodes</p>
+<p>dag = DAG()
+dag.add_node(Node())</p>
+<p>end_nodes = dag.end_nodes()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of root nodes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.end_results">
+<span class="sig-name descname"><span class="pre">end_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.end_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all end results, will block if all results are not ready</p>
+<p>dag = DAG()
+dag.add_node(Node())</p>
+<p>end_results = dag.end_results()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>map of results by node ID</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.end_results_by_name">
+<span class="sig-name descname"><span class="pre">end_results_by_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.end_results_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all end results, will block if all results are not ready</p>
+<p>dag = DAG()
+dag.add_node(Node())</p>
+<p>end_results = dag.end_results_by_name()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>map of results by node name</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.find_end_nodes">
+<span class="sig-name descname"><span class="pre">find_end_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.find_end_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find all end nodes
+:return: list of end nodes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.get_tiledb_plot_node_details">
+<span class="sig-name descname"><span class="pre">get_tiledb_plot_node_details</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.get_tiledb_plot_node_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build list of details needed for tiledb node graph
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.initial_setup">
+<span class="sig-name descname"><span class="pre">initial_setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.initial_setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs one-time server-side setup tasks.</p>
+<p>Can safely be called multiple times.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.mode">
+<span class="sig-name descname"><span class="pre">mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="tiledb.cloud.dag.mode.Mode.html#tiledb.cloud.dag.mode.Mode" title="tiledb.cloud.dag.mode.Mode"><span class="pre">Mode</span></a></em><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>The server-generated UUID of this graph, used for logging.</p>
+<p>Will be <code class="docutils literal notranslate"><span class="pre">None</span></code> until <a class="reference internal" href="#tiledb.cloud.dag.dag.DAG.initial_setup" title="tiledb.cloud.dag.dag.DAG.initial_setup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">initial_setup()</span></code></a> is called. If submitting
+the log works, will be the UUID; otherwise, will be None.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.report_node_complete">
+<span class="sig-name descname"><span class="pre">report_node_complete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tiledb.cloud.dag.dag.Node.html#tiledb.cloud.dag.dag.Node" title="tiledb.cloud.dag.dag.Node"><span class="pre">Node</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.report_node_complete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Report a node as complete
+:param node: to mark as complete
+:return</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.retry_all">
+<span class="sig-name descname"><span class="pre">retry_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.retry_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retries all failed and cancelled nodes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.submit">
+<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.submit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit a function that will be executed in the cloud serverlessly
+:param func: function to execute
+:param args: arguments for function execution
+:param name: name
+:return: Node that is created</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.submit_array_udf">
+<span class="sig-name descname"><span class="pre">submit_array_udf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.submit_array_udf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit a function that will be executed in the cloud serverlessly
+:param func: function to execute
+:param args: arguments for function execution
+:param name: name
+:return: Node that is created</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.submit_local">
+<span class="sig-name descname"><span class="pre">submit_local</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.submit_local" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit a function that will run locally
+:param func: function to execute
+:param args: arguments for function execution
+:param name: name
+:return: Node that is created</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.submit_sql">
+<span class="sig-name descname"><span class="pre">submit_sql</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.submit_sql" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit a sql query to run serverlessly in the cloud
+:param sql: query to execute
+:param args: arguments for function execution
+:param name: name
+:return: Node that is created</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.submit_udf">
+<span class="sig-name descname"><span class="pre">submit_udf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.submit_udf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit a function that will be executed in the cloud serverlessly
+:param func: function to execute
+:param args: arguments for function execution
+:param name: name
+:return: Node that is created</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.submit_udf_stage">
+<span class="sig-name descname"><span class="pre">submit_udf_stage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_node_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tiledb.cloud.dag.dag.Node.html#tiledb.cloud.dag.dag.Node" title="tiledb.cloud.dag.dag.Node"><span class="pre">Node</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.submit_udf_stage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit a function that will be executed in the cloud serverlessly
+:param func: function to execute
+:param args: arguments for function execution
+:param expand_node_output: the Node that we want to expand the output of.</p>
+<blockquote>
+<div><p>The output of the node should be a JSON encoded list.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – name</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Node that is created</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.visualize">
+<span class="sig-name descname"><span class="pre">visualize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">notebook</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_plotly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.visualize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build and render a tree diagram of the DAG.
+:param notebook: Is the visualization inside a jupyter notebook?</p>
+<blockquote>
+<div><p>If so we’ll use a widget</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>auto_update</strong> – Should the diagram be auto updated with each status change</p></li>
+<li><p><strong>force_plotly</strong> – Force the use of plotly graphs instead of
+TileDB Plot Widget</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>returns figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.dag.dag.DAG.wait">
+<span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#tiledb.cloud.dag.dag.DAG.wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for DAG to be completed
+:param timeout: optional timeout in seconds to wait for DAG to be completed
+:return: None or raises TimeoutError if timeout occurs</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tiledb.cloud.dag.dag.task_graph_log_status_to_status.html" class="btn btn-neutral float-left" title="tiledb.cloud.dag.dag.task_graph_log_status_to_status" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tiledb.cloud.dag.dag.Node.html" class="btn btn-neutral float-right" title="tiledb.cloud.dag.dag.Node" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020–2023, TileDB, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

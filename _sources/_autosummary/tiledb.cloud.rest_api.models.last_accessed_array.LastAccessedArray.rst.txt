@@ -1,0 +1,39 @@
+tiledb.cloud.rest\_api.models.last\_accessed\_array.LastAccessedArray
+=====================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.last_accessed_array
+
+.. autoclass:: LastAccessedArray
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LastAccessedArray.__init__
+      ~LastAccessedArray.to_dict
+      ~LastAccessedArray.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~LastAccessedArray.access_type
+      ~LastAccessedArray.accessed_time
+      ~LastAccessedArray.array_id
+      ~LastAccessedArray.array_name
+      ~LastAccessedArray.attribute_map
+      ~LastAccessedArray.namespace
+      ~LastAccessedArray.openapi_types
+   
+   

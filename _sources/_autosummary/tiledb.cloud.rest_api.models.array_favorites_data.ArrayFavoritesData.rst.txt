@@ -1,0 +1,36 @@
+tiledb.cloud.rest\_api.models.array\_favorites\_data.ArrayFavoritesData
+=======================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_favorites_data
+
+.. autoclass:: ArrayFavoritesData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayFavoritesData.__init__
+      ~ArrayFavoritesData.to_dict
+      ~ArrayFavoritesData.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayFavoritesData.arrays
+      ~ArrayFavoritesData.attribute_map
+      ~ArrayFavoritesData.openapi_types
+      ~ArrayFavoritesData.pagination_metadata
+   
+   

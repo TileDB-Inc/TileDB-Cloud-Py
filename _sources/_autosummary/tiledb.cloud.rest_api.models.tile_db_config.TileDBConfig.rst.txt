@@ -1,0 +1,35 @@
+tiledb.cloud.rest\_api.models.tile\_db\_config.TileDBConfig
+===========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.tile_db_config
+
+.. autoclass:: TileDBConfig
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TileDBConfig.__init__
+      ~TileDBConfig.to_dict
+      ~TileDBConfig.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TileDBConfig.attribute_map
+      ~TileDBConfig.entries
+      ~TileDBConfig.openapi_types
+   
+   

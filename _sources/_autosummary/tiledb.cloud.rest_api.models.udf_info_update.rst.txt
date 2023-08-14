@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.udf\_info\_update
+===============================================
+
+.. automodule:: tiledb.cloud.rest_api.models.udf_info_update
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      UDFInfoUpdate
+   
+   
+
+   
+   
+   
+
+
+

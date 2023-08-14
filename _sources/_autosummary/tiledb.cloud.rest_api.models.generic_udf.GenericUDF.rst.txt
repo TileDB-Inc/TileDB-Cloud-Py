@@ -1,0 +1,50 @@
+tiledb.cloud.rest\_api.models.generic\_udf.GenericUDF
+=====================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.generic_udf
+
+.. autoclass:: GenericUDF
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GenericUDF.__init__
+      ~GenericUDF.to_dict
+      ~GenericUDF.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GenericUDF.access_credentials_name
+      ~GenericUDF.argument
+      ~GenericUDF.attribute_map
+      ~GenericUDF.client_node_uuid
+      ~GenericUDF.dont_download_results
+      ~GenericUDF.exec_raw
+      ~GenericUDF.image_name
+      ~GenericUDF.language
+      ~GenericUDF.openapi_types
+      ~GenericUDF.resource_class
+      ~GenericUDF.result_format
+      ~GenericUDF.store_results
+      ~GenericUDF.stored_param_uuids
+      ~GenericUDF.task_graph_uuid
+      ~GenericUDF.task_name
+      ~GenericUDF.timeout
+      ~GenericUDF.udf_info_name
+      ~GenericUDF.version
+   
+   

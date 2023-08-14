@@ -1,0 +1,6 @@
+tiledb.cloud.dag.visualization.hierarchy\_pos
+=============================================
+
+.. currentmodule:: tiledb.cloud.dag.visualization
+
+.. autofunction:: hierarchy_pos

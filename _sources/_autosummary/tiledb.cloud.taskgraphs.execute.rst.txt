@@ -1,0 +1,6 @@
+tiledb.cloud.taskgraphs.execute
+===============================
+
+.. currentmodule:: tiledb.cloud.taskgraphs
+
+.. autofunction:: execute

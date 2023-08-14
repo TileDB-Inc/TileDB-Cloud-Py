@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.utils.is\_bgzipped
+===================================
+
+.. currentmodule:: tiledb.cloud.vcf.utils
+
+.. autofunction:: is_bgzipped

@@ -1,0 +1,6 @@
+tiledb.cloud.client.user\_profile
+=================================
+
+.. currentmodule:: tiledb.cloud.client
+
+.. autofunction:: user_profile

@@ -1,0 +1,36 @@
+tiledb.cloud.rest\_api.models.group\_type\_metadata\_key.GroupTypeMetadataKey
+=============================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.group_type_metadata_key
+
+.. autoclass:: GroupTypeMetadataKey
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GroupTypeMetadataKey.__init__
+      ~GroupTypeMetadataKey.to_dict
+      ~GroupTypeMetadataKey.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GroupTypeMetadataKey.DATASET_TYPE
+      ~GroupTypeMetadataKey.allowable_values
+      ~GroupTypeMetadataKey.attribute_map
+      ~GroupTypeMetadataKey.openapi_types
+   
+   

@@ -1,0 +1,6 @@
+tiledb.cloud.bioimg.helpers.scale\_calc
+=======================================
+
+.. currentmodule:: tiledb.cloud.bioimg.helpers
+
+.. autofunction:: scale_calc

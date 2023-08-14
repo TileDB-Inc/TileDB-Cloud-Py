@@ -1,0 +1,43 @@
+tiledb.cloud.rest\_api.models.array\_task\_status.ArrayTaskStatus
+=================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_task_status
+
+.. autoclass:: ArrayTaskStatus
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayTaskStatus.__init__
+      ~ArrayTaskStatus.to_dict
+      ~ArrayTaskStatus.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayTaskStatus.CANCELLED
+      ~ArrayTaskStatus.COMPLETED
+      ~ArrayTaskStatus.DENIED
+      ~ArrayTaskStatus.FAILED
+      ~ArrayTaskStatus.QUEUED
+      ~ArrayTaskStatus.RESOURCES_UNAVAILABLE
+      ~ArrayTaskStatus.RUNNING
+      ~ArrayTaskStatus.UNKNOWN
+      ~ArrayTaskStatus.allowable_values
+      ~ArrayTaskStatus.attribute_map
+      ~ArrayTaskStatus.openapi_types
+   
+   

@@ -1,0 +1,44 @@
+tiledb.cloud.rest\_api.models.task\_graph\_node.TaskGraphNode
+=============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.task_graph_node
+
+.. autoclass:: TaskGraphNode
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TaskGraphNode.__init__
+      ~TaskGraphNode.to_dict
+      ~TaskGraphNode.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TaskGraphNode.array_node
+      ~TaskGraphNode.attribute_map
+      ~TaskGraphNode.client_node_id
+      ~TaskGraphNode.deadline
+      ~TaskGraphNode.depends_on
+      ~TaskGraphNode.expand_node_output
+      ~TaskGraphNode.input_node
+      ~TaskGraphNode.name
+      ~TaskGraphNode.openapi_types
+      ~TaskGraphNode.retry_strategy
+      ~TaskGraphNode.sql_node
+      ~TaskGraphNode.udf_node
+   
+   

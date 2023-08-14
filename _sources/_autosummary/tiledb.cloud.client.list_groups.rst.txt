@@ -1,0 +1,6 @@
+tiledb.cloud.client.list\_groups
+================================
+
+.. currentmodule:: tiledb.cloud.client
+
+.. autofunction:: list_groups

@@ -1,0 +1,49 @@
+tiledb.cloud.rest\_api.models.token\_scope.TokenScope
+=====================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.token_scope
+
+.. autoclass:: TokenScope
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TokenScope.__init__
+      ~TokenScope.to_dict
+      ~TokenScope.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TokenScope.ARRAY_ADMIN
+      ~TokenScope.ARRAY_READ
+      ~TokenScope.ARRAY_READ_WRITE
+      ~TokenScope.CONFIRM_EMAIL
+      ~TokenScope.GROUP_ADMIN
+      ~TokenScope.GROUP_READ
+      ~TokenScope.GROUP_READ_WRITE
+      ~TokenScope.ORGANIZATION_ADMIN
+      ~TokenScope.ORGANIZATION_READ
+      ~TokenScope.ORGANIZATION_READ_WRITE
+      ~TokenScope.PASSWORD_RESET
+      ~TokenScope.USER_ADMIN
+      ~TokenScope.USER_READ
+      ~TokenScope.USER_READ_WRITE
+      ~TokenScope.allowable_values
+      ~TokenScope.attribute_map
+      ~TokenScope.openapi_types
+   
+   

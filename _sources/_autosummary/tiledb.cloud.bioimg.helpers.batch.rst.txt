@@ -1,0 +1,6 @@
+tiledb.cloud.bioimg.helpers.batch
+=================================
+
+.. currentmodule:: tiledb.cloud.bioimg.helpers
+
+.. autofunction:: batch

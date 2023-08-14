@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.public\_share\_filter.PublicShareFilter
+=====================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.public_share_filter
+
+.. autoclass:: PublicShareFilter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PublicShareFilter.__init__
+      ~PublicShareFilter.to_dict
+      ~PublicShareFilter.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PublicShareFilter.EXCLUDE
+      ~PublicShareFilter.ONLY
+      ~PublicShareFilter.allowable_values
+      ~PublicShareFilter.attribute_map
+      ~PublicShareFilter.openapi_types
+   
+   

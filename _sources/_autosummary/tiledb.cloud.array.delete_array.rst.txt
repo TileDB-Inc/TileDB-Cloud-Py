@@ -1,0 +1,6 @@
+tiledb.cloud.array.delete\_array
+================================
+
+.. currentmodule:: tiledb.cloud.array
+
+.. autofunction:: delete_array

@@ -1,0 +1,30 @@
+tiledb.cloud.dag.status.Status
+==============================
+
+.. currentmodule:: tiledb.cloud.dag.status
+
+.. autoclass:: Status
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Status.NOT_STARTED
+      ~Status.RUNNING
+      ~Status.COMPLETED
+      ~Status.FAILED
+      ~Status.CANCELLED
+      ~Status.PARENT_FAILED
+   
+   

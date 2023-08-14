@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.array\_type.ArrayType
+===================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_type
+
+.. autoclass:: ArrayType
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayType.__init__
+      ~ArrayType.to_dict
+      ~ArrayType.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayType.DENSE
+      ~ArrayType.SPARSE
+      ~ArrayType.allowable_values
+      ~ArrayType.attribute_map
+      ~ArrayType.openapi_types
+   
+   

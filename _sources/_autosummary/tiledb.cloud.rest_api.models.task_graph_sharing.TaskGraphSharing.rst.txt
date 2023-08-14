@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.task\_graph\_sharing.TaskGraphSharing
+===================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.task_graph_sharing
+
+.. autoclass:: TaskGraphSharing
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TaskGraphSharing.__init__
+      ~TaskGraphSharing.to_dict
+      ~TaskGraphSharing.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TaskGraphSharing.actions
+      ~TaskGraphSharing.attribute_map
+      ~TaskGraphSharing.namespace
+      ~TaskGraphSharing.namespace_type
+      ~TaskGraphSharing.openapi_types
+   
+   

@@ -1,0 +1,39 @@
+tiledb.cloud.rest\_api.models.tgsql\_node\_data.TGSQLNodeData
+=============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.tgsql_node_data
+
+.. autoclass:: TGSQLNodeData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TGSQLNodeData.__init__
+      ~TGSQLNodeData.to_dict
+      ~TGSQLNodeData.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TGSQLNodeData.attribute_map
+      ~TGSQLNodeData.init_commands
+      ~TGSQLNodeData.namespace
+      ~TGSQLNodeData.openapi_types
+      ~TGSQLNodeData.parameters
+      ~TGSQLNodeData.query
+      ~TGSQLNodeData.result_format
+   
+   

@@ -1,0 +1,53 @@
+tiledb.cloud.rest\_api.models.invitation.Invitation
+===================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.invitation
+
+.. autoclass:: Invitation
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Invitation.__init__
+      ~Invitation.to_dict
+      ~Invitation.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Invitation.accepted_at
+      ~Invitation.actions
+      ~Invitation.array_name
+      ~Invitation.array_uuid
+      ~Invitation.attribute_map
+      ~Invitation.created_at
+      ~Invitation.email
+      ~Invitation.expires_at
+      ~Invitation.group_actions
+      ~Invitation.group_uuid
+      ~Invitation.id
+      ~Invitation.invitation_type
+      ~Invitation.inviter_uuid
+      ~Invitation.openapi_types
+      ~Invitation.organization_name
+      ~Invitation.organization_role
+      ~Invitation.organization_user_uuid
+      ~Invitation.organization_uuid
+      ~Invitation.owner_namespace_uuid
+      ~Invitation.status
+      ~Invitation.user_namespace_uuid
+   
+   

@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.tg\_array\_node\_data.TGArrayNodeData
+===================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.tg_array_node_data
+
+.. autoclass:: TGArrayNodeData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TGArrayNodeData.__init__
+      ~TGArrayNodeData.to_dict
+      ~TGArrayNodeData.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TGArrayNodeData.attribute_map
+      ~TGArrayNodeData.buffers
+      ~TGArrayNodeData.openapi_types
+      ~TGArrayNodeData.ranges
+      ~TGArrayNodeData.uri
+   
+   

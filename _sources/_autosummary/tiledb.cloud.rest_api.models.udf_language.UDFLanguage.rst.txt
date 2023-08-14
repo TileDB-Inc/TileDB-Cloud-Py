@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.udf\_language.UDFLanguage
+=======================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.udf_language
+
+.. autoclass:: UDFLanguage
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UDFLanguage.__init__
+      ~UDFLanguage.to_dict
+      ~UDFLanguage.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UDFLanguage.PYTHON
+      ~UDFLanguage.R
+      ~UDFLanguage.allowable_values
+      ~UDFLanguage.attribute_map
+      ~UDFLanguage.openapi_types
+   
+   

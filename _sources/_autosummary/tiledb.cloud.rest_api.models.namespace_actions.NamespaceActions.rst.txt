@@ -1,0 +1,47 @@
+tiledb.cloud.rest\_api.models.namespace\_actions.NamespaceActions
+=================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.namespace_actions
+
+.. autoclass:: NamespaceActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~NamespaceActions.__init__
+      ~NamespaceActions.to_dict
+      ~NamespaceActions.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~NamespaceActions.CREATE
+      ~NamespaceActions.DELETE
+      ~NamespaceActions.DELETE_ORGANIZATION
+      ~NamespaceActions.EDIT
+      ~NamespaceActions.EDIT_BILLING
+      ~NamespaceActions.EDIT_ORGANIZATION
+      ~NamespaceActions.READ
+      ~NamespaceActions.READ_ARRAY_LOGS
+      ~NamespaceActions.READ_JOB_LOGS
+      ~NamespaceActions.READ_OBJECT_LOGS
+      ~NamespaceActions.RUN_JOB
+      ~NamespaceActions.WRITE
+      ~NamespaceActions.allowable_values
+      ~NamespaceActions.attribute_map
+      ~NamespaceActions.openapi_types
+   
+   

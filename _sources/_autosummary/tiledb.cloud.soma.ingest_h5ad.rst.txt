@@ -1,0 +1,6 @@
+tiledb.cloud.soma.ingest\_h5ad
+==============================
+
+.. currentmodule:: tiledb.cloud.soma
+
+.. autofunction:: ingest_h5ad

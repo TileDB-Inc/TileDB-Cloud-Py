@@ -1,0 +1,48 @@
+tiledb.cloud.taskgraphs.client\_executor.impl.LocalExecutor
+===========================================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.client_executor.impl
+
+.. autoclass:: LocalExecutor
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LocalExecutor.__init__
+      ~LocalExecutor.add_update_callback
+      ~LocalExecutor.cancel
+      ~LocalExecutor.cancelled_nodes
+      ~LocalExecutor.execute
+      ~LocalExecutor.failed_nodes
+      ~LocalExecutor.node
+      ~LocalExecutor.nodes_by_name
+      ~LocalExecutor.retry
+      ~LocalExecutor.retry_all
+      ~LocalExecutor.running_nodes
+      ~LocalExecutor.successful_nodes
+      ~LocalExecutor.unstarted_nodes
+      ~LocalExecutor.visualize
+      ~LocalExecutor.wait
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~LocalExecutor.name
+      ~LocalExecutor.namespace
+      ~LocalExecutor.server_graph_uuid
+      ~LocalExecutor.status
+   
+   

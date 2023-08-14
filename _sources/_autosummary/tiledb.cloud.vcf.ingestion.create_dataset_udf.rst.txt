@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.ingestion.create\_dataset\_udf
+===============================================
+
+.. currentmodule:: tiledb.cloud.vcf.ingestion
+
+.. autofunction:: create_dataset_udf

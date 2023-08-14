@@ -1,0 +1,6 @@
+tiledb.cloud.udf.delete
+=======================
+
+.. currentmodule:: tiledb.cloud.udf
+
+.. autofunction:: delete

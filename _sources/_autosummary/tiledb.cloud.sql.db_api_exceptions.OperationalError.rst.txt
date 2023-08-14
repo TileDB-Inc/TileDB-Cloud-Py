@@ -1,0 +1,6 @@
+tiledb.cloud.sql.db\_api\_exceptions.OperationalError
+=====================================================
+
+.. currentmodule:: tiledb.cloud.sql.db_api_exceptions
+
+.. autoexception:: OperationalError

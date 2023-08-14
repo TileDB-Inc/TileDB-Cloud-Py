@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.attribute\_buffer\_size.AttributeBufferSize
+=========================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.attribute_buffer_size
+
+.. autoclass:: AttributeBufferSize
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AttributeBufferSize.__init__
+      ~AttributeBufferSize.to_dict
+      ~AttributeBufferSize.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AttributeBufferSize.attribute
+      ~AttributeBufferSize.attribute_map
+      ~AttributeBufferSize.data_bytes
+      ~AttributeBufferSize.offset_bytes
+      ~AttributeBufferSize.openapi_types
+   
+   

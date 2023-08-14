@@ -1,0 +1,40 @@
+tiledb.cloud.rest\_api.models.subarray\_partitioner.SubarrayPartitioner
+=======================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.subarray_partitioner
+
+.. autoclass:: SubarrayPartitioner
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SubarrayPartitioner.__init__
+      ~SubarrayPartitioner.to_dict
+      ~SubarrayPartitioner.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SubarrayPartitioner.attribute_map
+      ~SubarrayPartitioner.budget
+      ~SubarrayPartitioner.current
+      ~SubarrayPartitioner.memory_budget
+      ~SubarrayPartitioner.memory_budget_var
+      ~SubarrayPartitioner.openapi_types
+      ~SubarrayPartitioner.state
+      ~SubarrayPartitioner.subarray
+   
+   

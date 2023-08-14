@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.pricing\_type
+===========================================
+
+.. automodule:: tiledb.cloud.rest_api.models.pricing_type
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      PricingType
+   
+   
+
+   
+   
+   
+
+
+

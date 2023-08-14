@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.query.concat\_tables\_udf
+==========================================
+
+.. currentmodule:: tiledb.cloud.vcf.query
+
+.. autofunction:: concat_tables_udf

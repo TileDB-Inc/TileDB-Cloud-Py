@@ -1,0 +1,6 @@
+tiledb.cloud.groups.deregister
+==============================
+
+.. currentmodule:: tiledb.cloud.groups
+
+.. autofunction:: deregister

@@ -1,0 +1,6 @@
+tiledb.cloud.groups.register
+============================
+
+.. currentmodule:: tiledb.cloud.groups
+
+.. autofunction:: register

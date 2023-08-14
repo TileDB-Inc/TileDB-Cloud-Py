@@ -1,0 +1,6 @@
+tiledb.cloud.udf.exec\_async
+============================
+
+.. currentmodule:: tiledb.cloud.udf
+
+.. autofunction:: exec_async

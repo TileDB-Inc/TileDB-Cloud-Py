@@ -1,0 +1,27 @@
+tiledb.cloud.dag.mode.Mode
+==========================
+
+.. currentmodule:: tiledb.cloud.dag.mode
+
+.. autoclass:: Mode
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Mode.LOCAL
+      ~Mode.REALTIME
+      ~Mode.BATCH
+   
+   

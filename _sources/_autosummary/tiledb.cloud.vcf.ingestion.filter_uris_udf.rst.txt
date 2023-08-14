@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.ingestion.filter\_uris\_udf
+============================================
+
+.. currentmodule:: tiledb.cloud.vcf.ingestion
+
+.. autofunction:: filter_uris_udf

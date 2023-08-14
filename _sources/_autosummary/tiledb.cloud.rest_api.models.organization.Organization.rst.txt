@@ -1,0 +1,50 @@
+tiledb.cloud.rest\_api.models.organization.Organization
+=======================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.organization
+
+.. autoclass:: Organization
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Organization.__init__
+      ~Organization.to_dict
+      ~Organization.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Organization.allowed_actions
+      ~Organization.asset_locations
+      ~Organization.attribute_map
+      ~Organization.created_at
+      ~Organization.default_s3_path
+      ~Organization.default_s3_path_credentials_name
+      ~Organization.description
+      ~Organization.enabled_features
+      ~Organization.id
+      ~Organization.logo
+      ~Organization.name
+      ~Organization.num_of_arrays
+      ~Organization.openapi_types
+      ~Organization.role
+      ~Organization.stripe_connect
+      ~Organization.unpaid_subscription
+      ~Organization.updated_at
+      ~Organization.users
+   
+   

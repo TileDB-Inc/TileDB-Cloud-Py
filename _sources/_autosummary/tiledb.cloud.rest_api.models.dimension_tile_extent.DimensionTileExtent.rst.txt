@@ -1,0 +1,44 @@
+tiledb.cloud.rest\_api.models.dimension\_tile\_extent.DimensionTileExtent
+=========================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.dimension_tile_extent
+
+.. autoclass:: DimensionTileExtent
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DimensionTileExtent.__init__
+      ~DimensionTileExtent.to_dict
+      ~DimensionTileExtent.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DimensionTileExtent.attribute_map
+      ~DimensionTileExtent.float32
+      ~DimensionTileExtent.float64
+      ~DimensionTileExtent.int16
+      ~DimensionTileExtent.int32
+      ~DimensionTileExtent.int64
+      ~DimensionTileExtent.int8
+      ~DimensionTileExtent.openapi_types
+      ~DimensionTileExtent.uint16
+      ~DimensionTileExtent.uint32
+      ~DimensionTileExtent.uint64
+      ~DimensionTileExtent.uint8
+   
+   

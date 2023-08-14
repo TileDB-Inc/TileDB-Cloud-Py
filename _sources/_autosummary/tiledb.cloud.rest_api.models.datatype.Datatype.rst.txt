@@ -1,0 +1,53 @@
+tiledb.cloud.rest\_api.models.datatype.Datatype
+===============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.datatype
+
+.. autoclass:: Datatype
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Datatype.__init__
+      ~Datatype.to_dict
+      ~Datatype.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Datatype.ANY
+      ~Datatype.CHAR
+      ~Datatype.FLOAT32
+      ~Datatype.FLOAT64
+      ~Datatype.INT16
+      ~Datatype.INT32
+      ~Datatype.INT64
+      ~Datatype.INT8
+      ~Datatype.STRING_ASCII
+      ~Datatype.STRING_UCS2
+      ~Datatype.STRING_UCS4
+      ~Datatype.STRING_UTF16
+      ~Datatype.STRING_UTF32
+      ~Datatype.STRING_UTF8
+      ~Datatype.UINT16
+      ~Datatype.UINT32
+      ~Datatype.UINT64
+      ~Datatype.UINT8
+      ~Datatype.allowable_values
+      ~Datatype.attribute_map
+      ~Datatype.openapi_types
+   
+   

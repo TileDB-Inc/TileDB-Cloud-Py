@@ -1,0 +1,6 @@
+tiledb.cloud.tasks.last\_sql\_task
+==================================
+
+.. currentmodule:: tiledb.cloud.tasks
+
+.. autofunction:: last_sql_task

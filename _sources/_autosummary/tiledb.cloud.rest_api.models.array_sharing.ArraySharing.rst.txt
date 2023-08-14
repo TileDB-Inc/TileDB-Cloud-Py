@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.array\_sharing.ArraySharing
+=========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_sharing
+
+.. autoclass:: ArraySharing
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArraySharing.__init__
+      ~ArraySharing.to_dict
+      ~ArraySharing.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArraySharing.actions
+      ~ArraySharing.attribute_map
+      ~ArraySharing.namespace
+      ~ArraySharing.namespace_type
+      ~ArraySharing.openapi_types
+   
+   

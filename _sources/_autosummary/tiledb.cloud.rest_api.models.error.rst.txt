@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.error
+===================================
+
+.. automodule:: tiledb.cloud.rest_api.models.error
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Error
+   
+   
+
+   
+   
+   
+
+
+

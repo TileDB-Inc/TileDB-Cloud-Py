@@ -1,0 +1,42 @@
+tiledb.cloud.rest\_api.models.notebook\_status.NotebookStatus
+=============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.notebook_status
+
+.. autoclass:: NotebookStatus
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~NotebookStatus.__init__
+      ~NotebookStatus.to_dict
+      ~NotebookStatus.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~NotebookStatus.attribute_map
+      ~NotebookStatus.cpu_count
+      ~NotebookStatus.cpu_usage
+      ~NotebookStatus.memory_limit
+      ~NotebookStatus.memory_usage
+      ~NotebookStatus.namespace
+      ~NotebookStatus.openapi_types
+      ~NotebookStatus.storage_limit
+      ~NotebookStatus.storage_usage
+      ~NotebookStatus.uptime
+   
+   

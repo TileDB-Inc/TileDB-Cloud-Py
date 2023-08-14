@@ -1,0 +1,6 @@
+tiledb.cloud.array.array\_activity
+==================================
+
+.. currentmodule:: tiledb.cloud.array
+
+.. autofunction:: array_activity

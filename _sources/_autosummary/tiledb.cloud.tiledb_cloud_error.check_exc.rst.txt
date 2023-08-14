@@ -1,0 +1,6 @@
+tiledb.cloud.tiledb\_cloud\_error.check\_exc
+============================================
+
+.. currentmodule:: tiledb.cloud.tiledb_cloud_error
+
+.. autofunction:: check_exc

@@ -1,0 +1,6 @@
+tiledb.cloud.udf.register\_udf
+==============================
+
+.. currentmodule:: tiledb.cloud.udf
+
+.. autofunction:: register_udf

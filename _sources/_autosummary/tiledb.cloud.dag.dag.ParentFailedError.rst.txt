@@ -1,0 +1,6 @@
+tiledb.cloud.dag.dag.ParentFailedError
+======================================
+
+.. currentmodule:: tiledb.cloud.dag.dag
+
+.. autoexception:: ParentFailedError

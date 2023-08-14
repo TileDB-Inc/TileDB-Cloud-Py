@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tiledb.cloud.vcf.query &mdash; TileDB-Cloud-Py  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tiledb.cloud.vcf.query.build_read_dag" href="tiledb.cloud.vcf.query.build_read_dag.html" />
+    <link rel="prev" title="tiledb.cloud.vcf.ingestion.Contigs" href="tiledb.cloud.vcf.ingestion.Contigs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TileDB-Cloud-Py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tiledb.cloud.html">tiledb.cloud</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.array.html">tiledb.cloud.array</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.bioimg.html">tiledb.cloud.bioimg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.client.html">tiledb.cloud.client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.compute.html">tiledb.cloud.compute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.config.html">tiledb.cloud.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.dag.html">tiledb.cloud.dag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.file.html">tiledb.cloud.file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.groups.html">tiledb.cloud.groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.notebook.html">tiledb.cloud.notebook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.pool_manager_wrapper.html">tiledb.cloud.pool_manager_wrapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.soma.html">tiledb.cloud.soma</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.sql.html">tiledb.cloud.sql</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.html">tiledb.cloud.taskgraphs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.tasks.html">tiledb.cloud.tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.tiledb_cloud_error.html">tiledb.cloud.tiledb_cloud_error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.udf.html">tiledb.cloud.udf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.utilities.html">tiledb.cloud.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.utils.html">tiledb.cloud.utils</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="tiledb.cloud.vcf.html">tiledb.cloud.vcf</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.vcf.allele_frequency.html">tiledb.cloud.vcf.allele_frequency</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.vcf.ingestion.html">tiledb.cloud.vcf.ingestion</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tiledb.cloud.vcf.query</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tiledb.cloud.vcf.query.build_read_dag.html">tiledb.cloud.vcf.query.build_read_dag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tiledb.cloud.vcf.query.concat_tables_udf.html">tiledb.cloud.vcf.query.concat_tables_udf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tiledb.cloud.vcf.query.read.html">tiledb.cloud.vcf.query.read</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tiledb.cloud.vcf.query.setup.html">tiledb.cloud.vcf.query.setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tiledb.cloud.vcf.query.vcf_query_udf.html">tiledb.cloud.vcf.query.vcf_query_udf</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.vcf.utils.html">tiledb.cloud.vcf.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.version.html">tiledb.cloud.version</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.array.html">tiledb.cloud.array</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.client.html">tiledb.cloud.client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.compute.html">tiledb.cloud.compute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.config.html">tiledb.cloud.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.dag.html">tiledb.cloud.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.file.html">tiledb.cloud.file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.groups.html">tiledb.cloud.groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.notebook.html">tiledb.cloud.notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.pool_manager_wrapper.html">tiledb.cloud.pool_manager_wrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.sql.html">tiledb.cloud.sql</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.taskgraphs.html">tiledb.cloud.taskgraphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tasks.html">tiledb.cloud.tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tiledb_cloud_error.html">tiledb.cloud.tiledb_cloud_error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.udf.html">tiledb.cloud.udf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.utils.html">tiledb.cloud.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.version.html">tiledb.cloud.version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TileDB-Cloud-Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.html">tiledb.cloud</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.vcf.html">tiledb.cloud.vcf</a></li>
+      <li class="breadcrumb-item active">tiledb.cloud.vcf.query</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/tiledb.cloud.vcf.query.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-tiledb.cloud.vcf.query">
+<span id="tiledb-cloud-vcf-query"></span><h1>tiledb.cloud.vcf.query<a class="headerlink" href="#module-tiledb.cloud.vcf.query" title="Permalink to this heading">¶</a></h1>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="tiledb.cloud.vcf.query.build_read_dag.html#tiledb.cloud.vcf.query.build_read_dag" title="tiledb.cloud.vcf.query.build_read_dag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_read_dag</span></code></a>(dataset_uri, *[, config, ...])</p></td>
+<td><p>Build the DAG for a distributed read on a TileDB-VCF dataset.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="tiledb.cloud.vcf.query.concat_tables_udf.html#tiledb.cloud.vcf.query.concat_tables_udf" title="tiledb.cloud.vcf.query.concat_tables_udf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">concat_tables_udf</span></code></a>(tables, *[, config, ...])</p></td>
+<td><p>Concatenate a list of Arrow tables.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="tiledb.cloud.vcf.query.read.html#tiledb.cloud.vcf.query.read" title="tiledb.cloud.vcf.query.read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code></a>(dataset_uri, *[, config, attrs, ...])</p></td>
+<td><p>Run a distributed read on a TileDB-VCF dataset.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="tiledb.cloud.vcf.query.setup.html#tiledb.cloud.vcf.query.setup" title="tiledb.cloud.vcf.query.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a>([config, verbose])</p></td>
+<td><p>Set the default TileDB context, OS environment variables for AWS, and return a logger instance.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="tiledb.cloud.vcf.query.vcf_query_udf.html#tiledb.cloud.vcf.query.vcf_query_udf" title="tiledb.cloud.vcf.query.vcf_query_udf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vcf_query_udf</span></code></a>(dataset_uri, *[, config, ...])</p></td>
+<td><p>Run a query on a TileDB-VCF dataset.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tiledb.cloud.vcf.ingestion.Contigs.html" class="btn btn-neutral float-left" title="tiledb.cloud.vcf.ingestion.Contigs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tiledb.cloud.vcf.query.build_read_dag.html" class="btn btn-neutral float-right" title="tiledb.cloud.vcf.query.build_read_dag" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020–2023, TileDB, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

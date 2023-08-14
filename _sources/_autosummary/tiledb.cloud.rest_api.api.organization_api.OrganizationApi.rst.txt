@@ -1,0 +1,65 @@
+tiledb.cloud.rest\_api.api.organization\_api.OrganizationApi
+============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.organization_api
+
+.. autoclass:: OrganizationApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OrganizationApi.__init__
+      ~OrganizationApi.add_aws_access_credentials
+      ~OrganizationApi.add_aws_access_credentials_with_http_info
+      ~OrganizationApi.add_user_to_organization
+      ~OrganizationApi.add_user_to_organization_with_http_info
+      ~OrganizationApi.check_aws_access_credentials
+      ~OrganizationApi.check_aws_access_credentials_by_name
+      ~OrganizationApi.check_aws_access_credentials_by_name_with_http_info
+      ~OrganizationApi.check_aws_access_credentials_with_http_info
+      ~OrganizationApi.check_sso_domain
+      ~OrganizationApi.check_sso_domain_with_http_info
+      ~OrganizationApi.create_organization
+      ~OrganizationApi.create_organization_with_http_info
+      ~OrganizationApi.create_sso_domain
+      ~OrganizationApi.create_sso_domain_with_http_info
+      ~OrganizationApi.delete_aws_access_credentials
+      ~OrganizationApi.delete_aws_access_credentials_with_http_info
+      ~OrganizationApi.delete_organization
+      ~OrganizationApi.delete_organization_with_http_info
+      ~OrganizationApi.delete_sso_domain
+      ~OrganizationApi.delete_sso_domain_with_http_info
+      ~OrganizationApi.delete_user_from_organization
+      ~OrganizationApi.delete_user_from_organization_with_http_info
+      ~OrganizationApi.get_all_organizations
+      ~OrganizationApi.get_all_organizations_with_http_info
+      ~OrganizationApi.get_organization
+      ~OrganizationApi.get_organization_user
+      ~OrganizationApi.get_organization_user_with_http_info
+      ~OrganizationApi.get_organization_with_http_info
+      ~OrganizationApi.get_sso_domain
+      ~OrganizationApi.get_sso_domain_with_http_info
+      ~OrganizationApi.get_sso_domains
+      ~OrganizationApi.get_sso_domains_with_http_info
+      ~OrganizationApi.update_aws_access_credentials
+      ~OrganizationApi.update_aws_access_credentials_with_http_info
+      ~OrganizationApi.update_organization
+      ~OrganizationApi.update_organization_with_http_info
+      ~OrganizationApi.update_sso_domain
+      ~OrganizationApi.update_sso_domain_with_http_info
+      ~OrganizationApi.update_user_in_organization
+      ~OrganizationApi.update_user_in_organization_with_http_info
+   
+   
+
+   
+   
+   

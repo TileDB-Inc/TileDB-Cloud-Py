@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.fragment\_info.FragmentInfo
+=========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.fragment_info
+
+.. autoclass:: FragmentInfo
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FragmentInfo.__init__
+      ~FragmentInfo.to_dict
+      ~FragmentInfo.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FragmentInfo.array_schema_all
+      ~FragmentInfo.attribute_map
+      ~FragmentInfo.fragment_info
+      ~FragmentInfo.openapi_types
+      ~FragmentInfo.to_vacuum
+   
+   

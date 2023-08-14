@@ -1,0 +1,33 @@
+tiledb.cloud.rest\_api.api.tasks\_api.TasksApi
+==============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.tasks_api
+
+.. autoclass:: TasksApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TasksApi.__init__
+      ~TasksApi.run_sql
+      ~TasksApi.run_sql_with_http_info
+      ~TasksApi.task_id_get
+      ~TasksApi.task_id_get_with_http_info
+      ~TasksApi.task_id_result_get
+      ~TasksApi.task_id_result_get_with_http_info
+      ~TasksApi.tasks_get
+      ~TasksApi.tasks_get_with_http_info
+   
+   
+
+   
+   
+   

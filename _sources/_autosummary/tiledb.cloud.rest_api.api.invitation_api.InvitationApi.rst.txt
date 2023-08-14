@@ -1,0 +1,41 @@
+tiledb.cloud.rest\_api.api.invitation\_api.InvitationApi
+========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.invitation_api
+
+.. autoclass:: InvitationApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~InvitationApi.__init__
+      ~InvitationApi.accept_invitation
+      ~InvitationApi.accept_invitation_with_http_info
+      ~InvitationApi.cancel_join_organization
+      ~InvitationApi.cancel_join_organization_with_http_info
+      ~InvitationApi.cancel_share_array_by_invite
+      ~InvitationApi.cancel_share_array_by_invite_with_http_info
+      ~InvitationApi.cancel_share_group_by_invite
+      ~InvitationApi.cancel_share_group_by_invite_with_http_info
+      ~InvitationApi.fetch_invitations
+      ~InvitationApi.fetch_invitations_with_http_info
+      ~InvitationApi.join_organization
+      ~InvitationApi.join_organization_with_http_info
+      ~InvitationApi.share_array_by_invite
+      ~InvitationApi.share_array_by_invite_with_http_info
+      ~InvitationApi.share_group_by_invite
+      ~InvitationApi.share_group_by_invite_with_http_info
+   
+   
+
+   
+   
+   

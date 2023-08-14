@@ -1,0 +1,50 @@
+tiledb.cloud.compute.delayed.Delayed
+====================================
+
+.. currentmodule:: tiledb.cloud.compute.delayed
+
+.. autoclass:: Delayed
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Delayed.__init__
+      ~Delayed.add_done_callback
+      ~Delayed.all
+      ~Delayed.cancel
+      ~Delayed.cancelled
+      ~Delayed.compute
+      ~Delayed.depends_on
+      ~Delayed.done
+      ~Delayed.exception
+      ~Delayed.finished
+      ~Delayed.result
+      ~Delayed.retry
+      ~Delayed.running
+      ~Delayed.set_timeout
+      ~Delayed.task_id
+      ~Delayed.visualize
+      ~Delayed.wait
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Delayed.error
+      ~Delayed.future
+      ~Delayed.name
+      ~Delayed.status
+   
+   

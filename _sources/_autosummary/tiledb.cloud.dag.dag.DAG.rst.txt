@@ -1,0 +1,58 @@
+tiledb.cloud.dag.dag.DAG
+========================
+
+.. currentmodule:: tiledb.cloud.dag.dag
+
+.. autoclass:: DAG
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DAG.__init__
+      ~DAG.add_done_callback
+      ~DAG.add_node
+      ~DAG.add_node_obj
+      ~DAG.add_update_callback
+      ~DAG.cancel
+      ~DAG.compute
+      ~DAG.done
+      ~DAG.end_nodes
+      ~DAG.end_results
+      ~DAG.end_results_by_name
+      ~DAG.find_end_nodes
+      ~DAG.get_tiledb_plot_node_details
+      ~DAG.initial_setup
+      ~DAG.networkx_graph
+      ~DAG.report_node_complete
+      ~DAG.report_node_status_change
+      ~DAG.retry_all
+      ~DAG.stats
+      ~DAG.submit
+      ~DAG.submit_array_udf
+      ~DAG.submit_local
+      ~DAG.submit_sql
+      ~DAG.submit_udf
+      ~DAG.submit_udf_stage
+      ~DAG.visualize
+      ~DAG.wait
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DAG.status
+      ~DAG.mode
+   
+   

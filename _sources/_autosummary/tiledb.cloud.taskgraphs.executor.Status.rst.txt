@@ -1,0 +1,37 @@
+tiledb.cloud.taskgraphs.executor.Status
+=======================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.executor
+
+.. autoclass:: Status
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Status.friendly_name
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Status.WAITING
+      ~Status.READY
+      ~Status.RUNNING
+      ~Status.SUCCEEDED
+      ~Status.FAILED
+      ~Status.CANCELLED
+      ~Status.PARENT_FAILED
+   
+   

@@ -1,0 +1,6 @@
+tiledb.cloud.dag.dag.task\_graph\_log\_status\_to\_status
+=========================================================
+
+.. currentmodule:: tiledb.cloud.dag.dag
+
+.. autofunction:: task_graph_log_status_to_status

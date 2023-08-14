@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.ml\_model\_favorite.MLModelFavorite
+=================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.ml_model_favorite
+
+.. autoclass:: MLModelFavorite
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MLModelFavorite.__init__
+      ~MLModelFavorite.to_dict
+      ~MLModelFavorite.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MLModelFavorite.attribute_map
+      ~MLModelFavorite.mlmodel_uuid
+      ~MLModelFavorite.name
+      ~MLModelFavorite.namespace
+      ~MLModelFavorite.openapi_types
+   
+   

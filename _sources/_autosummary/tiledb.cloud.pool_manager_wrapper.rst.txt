@@ -1,0 +1,23 @@
+tiledb.cloud.pool\_manager\_wrapper
+===================================
+
+.. automodule:: tiledb.cloud.pool_manager_wrapper
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

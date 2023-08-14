@@ -1,0 +1,43 @@
+tiledb.cloud.rest\_api.models.array\_activity\_log.ArrayActivityLog
+===================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_activity_log
+
+.. autoclass:: ArrayActivityLog
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayActivityLog.__init__
+      ~ArrayActivityLog.to_dict
+      ~ArrayActivityLog.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayActivityLog.action
+      ~ArrayActivityLog.array_task_id
+      ~ArrayActivityLog.attribute_map
+      ~ArrayActivityLog.bytes_received
+      ~ArrayActivityLog.bytes_sent
+      ~ArrayActivityLog.event_at
+      ~ArrayActivityLog.id
+      ~ArrayActivityLog.openapi_types
+      ~ArrayActivityLog.query_ranges
+      ~ArrayActivityLog.query_stats
+      ~ArrayActivityLog.username
+   
+   

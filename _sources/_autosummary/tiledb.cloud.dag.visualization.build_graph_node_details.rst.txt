@@ -1,0 +1,6 @@
+tiledb.cloud.dag.visualization.build\_graph\_node\_details
+==========================================================
+
+.. currentmodule:: tiledb.cloud.dag.visualization
+
+.. autofunction:: build_graph_node_details

@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.filter\_option.FilterOption
+=========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.filter_option
+
+.. autoclass:: FilterOption
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FilterOption.__init__
+      ~FilterOption.to_dict
+      ~FilterOption.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FilterOption.BIT_WIDTH_MAX_WINDOW
+      ~FilterOption.COMPRESSION_LEVEL
+      ~FilterOption.POSITIVE_DELTA_MAX_WINDOW
+      ~FilterOption.allowable_values
+      ~FilterOption.attribute_map
+      ~FilterOption.openapi_types
+   
+   

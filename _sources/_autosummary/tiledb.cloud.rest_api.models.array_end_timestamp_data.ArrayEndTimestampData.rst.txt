@@ -1,0 +1,36 @@
+tiledb.cloud.rest\_api.models.array\_end\_timestamp\_data.ArrayEndTimestampData
+===============================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_end_timestamp_data
+
+.. autoclass:: ArrayEndTimestampData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayEndTimestampData.__init__
+      ~ArrayEndTimestampData.to_dict
+      ~ArrayEndTimestampData.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayEndTimestampData.attribute_map
+      ~ArrayEndTimestampData.end_timestamps
+      ~ArrayEndTimestampData.openapi_types
+      ~ArrayEndTimestampData.pagination_metadata
+   
+   

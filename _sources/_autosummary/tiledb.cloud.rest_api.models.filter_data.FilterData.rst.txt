@@ -1,0 +1,44 @@
+tiledb.cloud.rest\_api.models.filter\_data.FilterData
+=====================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.filter_data
+
+.. autoclass:: FilterData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FilterData.__init__
+      ~FilterData.to_dict
+      ~FilterData.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FilterData.attribute_map
+      ~FilterData.float32
+      ~FilterData.float64
+      ~FilterData.int16
+      ~FilterData.int32
+      ~FilterData.int64
+      ~FilterData.int8
+      ~FilterData.openapi_types
+      ~FilterData.uint16
+      ~FilterData.uint32
+      ~FilterData.uint64
+      ~FilterData.uint8
+   
+   

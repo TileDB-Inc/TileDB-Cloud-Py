@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.ingestion.read\_uris\_udf
+==========================================
+
+.. currentmodule:: tiledb.cloud.vcf.ingestion
+
+.. autofunction:: read_uris_udf

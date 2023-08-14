@@ -1,0 +1,36 @@
+tiledb.cloud.rest\_api.models.domain\_check\_result.DomainCheckResult
+=====================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.domain_check_result
+
+.. autoclass:: DomainCheckResult
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DomainCheckResult.__init__
+      ~DomainCheckResult.to_dict
+      ~DomainCheckResult.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DomainCheckResult.attribute_map
+      ~DomainCheckResult.openapi_types
+      ~DomainCheckResult.status
+      ~DomainCheckResult.time
+   
+   

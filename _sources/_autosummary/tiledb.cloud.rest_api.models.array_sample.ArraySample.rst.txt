@@ -1,0 +1,35 @@
+tiledb.cloud.rest\_api.models.array\_sample.ArraySample
+=======================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_sample
+
+.. autoclass:: ArraySample
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArraySample.__init__
+      ~ArraySample.to_dict
+      ~ArraySample.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArraySample.attribute_map
+      ~ArraySample.data
+      ~ArraySample.openapi_types
+   
+   

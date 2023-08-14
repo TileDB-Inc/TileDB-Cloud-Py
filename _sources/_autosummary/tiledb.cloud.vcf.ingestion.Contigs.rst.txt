@@ -1,0 +1,28 @@
+tiledb.cloud.vcf.ingestion.Contigs
+==================================
+
+.. currentmodule:: tiledb.cloud.vcf.ingestion
+
+.. autoclass:: Contigs
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Contigs.ALL
+      ~Contigs.CHROMOSOMES
+      ~Contigs.OTHER
+      ~Contigs.ALL_DISABLE_MERGE
+   
+   

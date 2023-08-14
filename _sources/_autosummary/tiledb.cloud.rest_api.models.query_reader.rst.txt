@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.query\_reader
+===========================================
+
+.. automodule:: tiledb.cloud.rest_api.models.query_reader
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      QueryReader
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,65 @@
+tiledb.cloud.rest\_api.api.favorites\_api.FavoritesApi
+======================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.favorites_api
+
+.. autoclass:: FavoritesApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FavoritesApi.__init__
+      ~FavoritesApi.add_array_favorite
+      ~FavoritesApi.add_array_favorite_with_http_info
+      ~FavoritesApi.add_ml_model_favorite
+      ~FavoritesApi.add_ml_model_favorite_with_http_info
+      ~FavoritesApi.add_notebook_favorite
+      ~FavoritesApi.add_notebook_favorite_with_http_info
+      ~FavoritesApi.add_udf_favorite
+      ~FavoritesApi.add_udf_favorite_with_http_info
+      ~FavoritesApi.delete_array_favorite
+      ~FavoritesApi.delete_array_favorite_with_http_info
+      ~FavoritesApi.delete_ml_model_favorite
+      ~FavoritesApi.delete_ml_model_favorite_with_http_info
+      ~FavoritesApi.delete_notebook_favorite
+      ~FavoritesApi.delete_notebook_favorite_with_http_info
+      ~FavoritesApi.delete_udf_favorite
+      ~FavoritesApi.delete_udf_favorite_with_http_info
+      ~FavoritesApi.get_array_favorite
+      ~FavoritesApi.get_array_favorite_with_http_info
+      ~FavoritesApi.get_ml_model_favorite
+      ~FavoritesApi.get_ml_model_favorite_with_http_info
+      ~FavoritesApi.get_notebook_favorite
+      ~FavoritesApi.get_notebook_favorite_with_http_info
+      ~FavoritesApi.get_udf_favorite
+      ~FavoritesApi.get_udf_favorite_with_http_info
+      ~FavoritesApi.list_array_favorites
+      ~FavoritesApi.list_array_favorites_uui_ds
+      ~FavoritesApi.list_array_favorites_uui_ds_with_http_info
+      ~FavoritesApi.list_array_favorites_with_http_info
+      ~FavoritesApi.list_ml_model_favorites
+      ~FavoritesApi.list_ml_model_favorites_uui_ds
+      ~FavoritesApi.list_ml_model_favorites_uui_ds_with_http_info
+      ~FavoritesApi.list_ml_model_favorites_with_http_info
+      ~FavoritesApi.list_notebook_favorites
+      ~FavoritesApi.list_notebook_favorites_uui_ds
+      ~FavoritesApi.list_notebook_favorites_uui_ds_with_http_info
+      ~FavoritesApi.list_notebook_favorites_with_http_info
+      ~FavoritesApi.list_udf_favorites
+      ~FavoritesApi.list_udf_favorites_uui_ds
+      ~FavoritesApi.list_udf_favorites_uui_ds_with_http_info
+      ~FavoritesApi.list_udf_favorites_with_http_info
+   
+   
+
+   
+   
+   

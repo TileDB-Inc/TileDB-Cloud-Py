@@ -1,0 +1,6 @@
+tiledb.cloud.tasks.fetch\_results
+=================================
+
+.. currentmodule:: tiledb.cloud.tasks
+
+.. autofunction:: fetch_results

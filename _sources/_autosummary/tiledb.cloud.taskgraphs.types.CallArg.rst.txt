@@ -1,0 +1,22 @@
+tiledb.cloud.taskgraphs.types.CallArg
+=====================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.types
+
+.. autoclass:: CallArg
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CallArg.__init__
+   
+   
+
+   
+   
+   

@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.backoff.Backoff
+=============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.backoff
+
+.. autoclass:: Backoff
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Backoff.__init__
+      ~Backoff.to_dict
+      ~Backoff.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Backoff.attribute_map
+      ~Backoff.duration
+      ~Backoff.factor
+      ~Backoff.max_duration
+      ~Backoff.openapi_types
+   
+   

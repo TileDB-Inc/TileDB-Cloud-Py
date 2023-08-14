@@ -1,0 +1,33 @@
+tiledb.cloud.rest\_api.rest.RESTClientObject
+============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.rest
+
+.. autoclass:: RESTClientObject
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RESTClientObject.DELETE
+      ~RESTClientObject.GET
+      ~RESTClientObject.HEAD
+      ~RESTClientObject.OPTIONS
+      ~RESTClientObject.PATCH
+      ~RESTClientObject.POST
+      ~RESTClientObject.PUT
+      ~RESTClientObject.__init__
+      ~RESTClientObject.request
+   
+   
+
+   
+   
+   

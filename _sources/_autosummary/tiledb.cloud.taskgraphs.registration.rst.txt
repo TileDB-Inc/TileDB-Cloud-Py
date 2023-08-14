@@ -1,0 +1,33 @@
+tiledb.cloud.taskgraphs.registration
+====================================
+
+.. automodule:: tiledb.cloud.taskgraphs.registration
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      delete
+      load
+      register
+      update
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

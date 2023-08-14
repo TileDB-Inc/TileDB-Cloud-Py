@@ -1,0 +1,50 @@
+tiledb.cloud.compute.delayed.DelayedArrayUDF
+============================================
+
+.. currentmodule:: tiledb.cloud.compute.delayed
+
+.. autoclass:: DelayedArrayUDF
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DelayedArrayUDF.__init__
+      ~DelayedArrayUDF.add_done_callback
+      ~DelayedArrayUDF.all
+      ~DelayedArrayUDF.cancel
+      ~DelayedArrayUDF.cancelled
+      ~DelayedArrayUDF.compute
+      ~DelayedArrayUDF.depends_on
+      ~DelayedArrayUDF.done
+      ~DelayedArrayUDF.exception
+      ~DelayedArrayUDF.finished
+      ~DelayedArrayUDF.result
+      ~DelayedArrayUDF.retry
+      ~DelayedArrayUDF.running
+      ~DelayedArrayUDF.set_timeout
+      ~DelayedArrayUDF.task_id
+      ~DelayedArrayUDF.visualize
+      ~DelayedArrayUDF.wait
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DelayedArrayUDF.error
+      ~DelayedArrayUDF.future
+      ~DelayedArrayUDF.name
+      ~DelayedArrayUDF.status
+   
+   

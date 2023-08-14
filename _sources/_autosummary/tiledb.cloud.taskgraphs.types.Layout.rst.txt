@@ -1,0 +1,35 @@
+tiledb.cloud.taskgraphs.types.Layout
+====================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.types
+
+.. autoclass:: Layout
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Layout.parse
+      ~Layout.to_json
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Layout.ROW_MAJOR
+      ~Layout.COL_MAJOR
+      ~Layout.GLOBAL_ORDER
+      ~Layout.UNORDERED
+   
+   

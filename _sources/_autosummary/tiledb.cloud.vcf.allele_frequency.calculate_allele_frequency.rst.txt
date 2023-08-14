@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.allele\_frequency.calculate\_allele\_frequency
+===============================================================
+
+.. currentmodule:: tiledb.cloud.vcf.allele_frequency
+
+.. autofunction:: calculate_allele_frequency

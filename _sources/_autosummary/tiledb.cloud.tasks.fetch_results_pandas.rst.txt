@@ -1,0 +1,6 @@
+tiledb.cloud.tasks.fetch\_results\_pandas
+=========================================
+
+.. currentmodule:: tiledb.cloud.tasks
+
+.. autofunction:: fetch_results_pandas

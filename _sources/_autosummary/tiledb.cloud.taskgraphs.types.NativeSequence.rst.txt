@@ -1,0 +1,6 @@
+tiledb.cloud.taskgraphs.types.NativeSequence
+============================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.types
+
+.. autodata:: NativeSequence

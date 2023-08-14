@@ -1,0 +1,45 @@
+tiledb.cloud.rest\_api.models.array\_info\_update.ArrayInfoUpdate
+=================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_info_update
+
+.. autoclass:: ArrayInfoUpdate
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayInfoUpdate.__init__
+      ~ArrayInfoUpdate.to_dict
+      ~ArrayInfoUpdate.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayInfoUpdate.access_credentials_name
+      ~ArrayInfoUpdate.attribute_map
+      ~ArrayInfoUpdate.description
+      ~ArrayInfoUpdate.file_properties
+      ~ArrayInfoUpdate.file_type
+      ~ArrayInfoUpdate.license_id
+      ~ArrayInfoUpdate.license_text
+      ~ArrayInfoUpdate.logo
+      ~ArrayInfoUpdate.name
+      ~ArrayInfoUpdate.openapi_types
+      ~ArrayInfoUpdate.read_only
+      ~ArrayInfoUpdate.tags
+      ~ArrayInfoUpdate.uri
+   
+   

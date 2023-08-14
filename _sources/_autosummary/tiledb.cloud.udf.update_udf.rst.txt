@@ -1,0 +1,6 @@
+tiledb.cloud.udf.update\_udf
+============================
+
+.. currentmodule:: tiledb.cloud.udf
+
+.. autofunction:: update_udf

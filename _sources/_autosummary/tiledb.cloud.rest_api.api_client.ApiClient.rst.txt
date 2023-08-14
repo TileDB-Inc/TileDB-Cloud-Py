@@ -1,0 +1,45 @@
+tiledb.cloud.rest\_api.api\_client.ApiClient
+============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api_client
+
+.. autoclass:: ApiClient
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ApiClient.__init__
+      ~ApiClient.call_api
+      ~ApiClient.close
+      ~ApiClient.deserialize
+      ~ApiClient.files_parameters
+      ~ApiClient.parameters_to_tuples
+      ~ApiClient.request
+      ~ApiClient.sanitize_for_serialization
+      ~ApiClient.select_header_accept
+      ~ApiClient.select_header_content_type
+      ~ApiClient.set_default_header
+      ~ApiClient.update_params_for_auth
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ApiClient.NATIVE_TYPES_MAPPING
+      ~ApiClient.PRIMITIVE_TYPES
+      ~ApiClient.pool
+      ~ApiClient.user_agent
+   
+   

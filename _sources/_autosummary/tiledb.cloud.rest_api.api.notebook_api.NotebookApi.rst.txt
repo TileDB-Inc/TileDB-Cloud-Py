@@ -1,0 +1,35 @@
+tiledb.cloud.rest\_api.api.notebook\_api.NotebookApi
+====================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.notebook_api
+
+.. autoclass:: NotebookApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~NotebookApi.__init__
+      ~NotebookApi.get_notebook_server_status
+      ~NotebookApi.get_notebook_server_status_with_http_info
+      ~NotebookApi.handle_copy_notebook
+      ~NotebookApi.handle_copy_notebook_with_http_info
+      ~NotebookApi.handle_upload_notebook
+      ~NotebookApi.handle_upload_notebook_with_http_info
+      ~NotebookApi.shutdown_notebook_server
+      ~NotebookApi.shutdown_notebook_server_with_http_info
+      ~NotebookApi.update_notebook_name
+      ~NotebookApi.update_notebook_name_with_http_info
+   
+   
+
+   
+   
+   

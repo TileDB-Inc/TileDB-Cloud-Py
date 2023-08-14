@@ -1,0 +1,50 @@
+tiledb.cloud.compute.delayed.DelayedSQL
+=======================================
+
+.. currentmodule:: tiledb.cloud.compute.delayed
+
+.. autoclass:: DelayedSQL
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DelayedSQL.__init__
+      ~DelayedSQL.add_done_callback
+      ~DelayedSQL.all
+      ~DelayedSQL.cancel
+      ~DelayedSQL.cancelled
+      ~DelayedSQL.compute
+      ~DelayedSQL.depends_on
+      ~DelayedSQL.done
+      ~DelayedSQL.exception
+      ~DelayedSQL.finished
+      ~DelayedSQL.result
+      ~DelayedSQL.retry
+      ~DelayedSQL.running
+      ~DelayedSQL.set_timeout
+      ~DelayedSQL.task_id
+      ~DelayedSQL.visualize
+      ~DelayedSQL.wait
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DelayedSQL.error
+      ~DelayedSQL.future
+      ~DelayedSQL.name
+      ~DelayedSQL.status
+   
+   

@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.ingestion.ingest
+=================================
+
+.. currentmodule:: tiledb.cloud.vcf.ingestion
+
+.. autofunction:: ingest

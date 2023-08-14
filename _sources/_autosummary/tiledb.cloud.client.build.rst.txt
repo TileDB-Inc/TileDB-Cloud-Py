@@ -1,0 +1,6 @@
+tiledb.cloud.client.build
+=========================
+
+.. currentmodule:: tiledb.cloud.client
+
+.. autofunction:: build

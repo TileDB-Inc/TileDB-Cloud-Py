@@ -1,0 +1,46 @@
+tiledb.cloud.taskgraphs.client\_executor.sql\_node.SQLNode
+==========================================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.client_executor.sql_node
+
+.. autoclass:: SQLNode
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SQLNode.__init__
+      ~SQLNode.add_done_callback
+      ~SQLNode.cancel
+      ~SQLNode.cancelled
+      ~SQLNode.done
+      ~SQLNode.exception
+      ~SQLNode.result
+      ~SQLNode.retry
+      ~SQLNode.running
+      ~SQLNode.task_id
+      ~SQLNode.wait
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SQLNode.display_name
+      ~SQLNode.fallback_name
+      ~SQLNode.status
+      ~SQLNode.id
+      ~SQLNode.owner
+      ~SQLNode.name
+   
+   

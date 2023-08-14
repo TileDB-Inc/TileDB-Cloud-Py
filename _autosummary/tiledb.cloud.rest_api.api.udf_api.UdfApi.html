@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tiledb.cloud.rest_api.api.udf_api.UdfApi &mdash; TileDB-Cloud-Py  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tiledb.cloud.rest_api.api.user_api" href="tiledb.cloud.rest_api.api.user_api.html" />
+    <link rel="prev" title="tiledb.cloud.rest_api.api.udf_api" href="tiledb.cloud.rest_api.api.udf_api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TileDB-Cloud-Py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.html">tiledb.cloud</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.array.html">tiledb.cloud.array</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.client.html">tiledb.cloud.client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.compute.html">tiledb.cloud.compute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.config.html">tiledb.cloud.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.dag.html">tiledb.cloud.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.file.html">tiledb.cloud.file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.groups.html">tiledb.cloud.groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.notebook.html">tiledb.cloud.notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.pool_manager_wrapper.html">tiledb.cloud.pool_manager_wrapper</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="tiledb.cloud.rest_api.api.html">tiledb.cloud.rest_api.api</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.array_api.html">tiledb.cloud.rest_api.api.array_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.array_tasks_api.html">tiledb.cloud.rest_api.api.array_tasks_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.favorites_api.html">tiledb.cloud.rest_api.api.favorites_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.files_api.html">tiledb.cloud.rest_api.api.files_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.groups_api.html">tiledb.cloud.rest_api.api.groups_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.invitation_api.html">tiledb.cloud.rest_api.api.invitation_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.notebook_api.html">tiledb.cloud.rest_api.api.notebook_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.notebooks_api.html">tiledb.cloud.rest_api.api.notebooks_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.organization_api.html">tiledb.cloud.rest_api.api.organization_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.query_api.html">tiledb.cloud.rest_api.api.query_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.registered_task_graphs_api.html">tiledb.cloud.rest_api.api.registered_task_graphs_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.sql_api.html">tiledb.cloud.rest_api.api.sql_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.stats_api.html">tiledb.cloud.rest_api.api.stats_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.task_graph_logs_api.html">tiledb.cloud.rest_api.api.task_graph_logs_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.task_graphs_api.html">tiledb.cloud.rest_api.api.task_graphs_api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.tasks_api.html">tiledb.cloud.rest_api.api.tasks_api</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="tiledb.cloud.rest_api.api.udf_api.html">tiledb.cloud.rest_api.api.udf_api</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">tiledb.cloud.rest_api.api.udf_api.UdfApi</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.rest_api.api.user_api.html">tiledb.cloud.rest_api.api.user_api</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.api_client.html">tiledb.cloud.rest_api.api_client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.configuration.html">tiledb.cloud.rest_api.configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.exceptions.html">tiledb.cloud.rest_api.exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.models.html">tiledb.cloud.rest_api.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.rest_api.rest.html">tiledb.cloud.rest_api.rest</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.sql.html">tiledb.cloud.sql</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.taskgraphs.html">tiledb.cloud.taskgraphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tasks.html">tiledb.cloud.tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tiledb_cloud_error.html">tiledb.cloud.tiledb_cloud_error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.udf.html">tiledb.cloud.udf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.utils.html">tiledb.cloud.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.version.html">tiledb.cloud.version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TileDB-Cloud-Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.html">tiledb.cloud</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.api.html">tiledb.cloud.rest_api.api</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.rest_api.api.udf_api.html">tiledb.cloud.rest_api.api.udf_api</a></li>
+      <li class="breadcrumb-item active">tiledb.cloud.rest_api.api.udf_api.UdfApi</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/tiledb.cloud.rest_api.api.udf_api.UdfApi.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tiledb-cloud-rest-api-api-udf-api-udfapi">
+<h1>tiledb.cloud.rest_api.api.udf_api.UdfApi<a class="headerlink" href="#tiledb-cloud-rest-api-api-udf-api-udfapi" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tiledb.cloud.rest_api.api.udf_api.</span></span><span class="sig-name descname"><span class="pre">UdfApi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>NOTE: This class is auto generated by OpenAPI Generator
+Ref: <a class="reference external" href="https://openapi-generator.tech">https://openapi-generator.tech</a></p>
+<p>Do not edit the class manually.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.__init__" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([api_client])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.delete_udf_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.delete_udf_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_udf_info</span></code></a>(namespace, name, **kwargs)</p></td>
+<td><p>delete_udf_info  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.delete_udf_info_with_http_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.delete_udf_info_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_udf_info_with_http_info</span></code></a>(namespace, ...)</p></td>
+<td><p>delete_udf_info  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_udf_info</span></code></a>(namespace, name, **kwargs)</p></td>
+<td><p>get_udf_info  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info_sharing_policies" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info_sharing_policies"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_udf_info_sharing_policies</span></code></a>(namespace, ...)</p></td>
+<td><p>get_udf_info_sharing_policies  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info_sharing_policies_with_http_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info_sharing_policies_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_udf_info_sharing_policies_with_http_info</span></code></a>(...)</p></td>
+<td><p>get_udf_info_sharing_policies  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info_with_http_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_udf_info_with_http_info</span></code></a>(namespace, name, ...)</p></td>
+<td><p>get_udf_info  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.handle_copy_udf" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.handle_copy_udf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_copy_udf</span></code></a>(namespace, name, udf_copy, ...)</p></td>
+<td><p>handle_copy_udf  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.handle_copy_udf_with_http_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.handle_copy_udf_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_copy_udf_with_http_info</span></code></a>(namespace, ...)</p></td>
+<td><p>handle_copy_udf  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.register_udf_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.register_udf_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_udf_info</span></code></a>(namespace, name, udf, **kwargs)</p></td>
+<td><p>register_udf_info  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.register_udf_info_with_http_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.register_udf_info_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_udf_info_with_http_info</span></code></a>(namespace, ...)</p></td>
+<td><p>register_udf_info  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.share_udf_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.share_udf_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">share_udf_info</span></code></a>(namespace, name, udf_sharing, ...)</p></td>
+<td><p>share_udf_info  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.share_udf_info_with_http_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.share_udf_info_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">share_udf_info_with_http_info</span></code></a>(namespace, ...)</p></td>
+<td><p>share_udf_info  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_generic_udf" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_generic_udf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_generic_udf</span></code></a>(namespace, udf, **kwargs)</p></td>
+<td><p>submit_generic_udf  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_generic_udf_with_http_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_generic_udf_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_generic_udf_with_http_info</span></code></a>(namespace, ...)</p></td>
+<td><p>submit_generic_udf  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_multi_array_udf" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_multi_array_udf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_multi_array_udf</span></code></a>(namespace, udf, **kwargs)</p></td>
+<td><p>submit_multi_array_udf  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_multi_array_udf_with_http_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_multi_array_udf_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_multi_array_udf_with_http_info</span></code></a>(...)</p></td>
+<td><p>submit_multi_array_udf  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_udf" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_udf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_udf</span></code></a>(namespace, array, udf, **kwargs)</p></td>
+<td><p>submit_udf  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_udf_with_http_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_udf_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">submit_udf_with_http_info</span></code></a>(namespace, array, ...)</p></td>
+<td><p>submit_udf  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.udf_namespace_array_end_timestamps_get" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.udf_namespace_array_end_timestamps_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">udf_namespace_array_end_timestamps_get</span></code></a>(...)</p></td>
+<td><p>udf_namespace_array_end_timestamps_get  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.udf_namespace_array_end_timestamps_get_with_http_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.udf_namespace_array_end_timestamps_get_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">udf_namespace_array_end_timestamps_get_with_http_info</span></code></a>(...)</p></td>
+<td><p>udf_namespace_array_end_timestamps_get  # noqa: E501</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.update_udf_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.update_udf_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_udf_info</span></code></a>(namespace, name, udf, **kwargs)</p></td>
+<td><p>update_udf_info  # noqa: E501</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.update_udf_info_with_http_info" title="tiledb.cloud.rest_api.api.udf_api.UdfApi.update_udf_info_with_http_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_udf_info_with_http_info</span></code></a>(namespace, ...)</p></td>
+<td><p>update_udf_info  # noqa: E501</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.delete_udf_info">
+<span class="sig-name descname"><span class="pre">delete_udf_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.delete_udf_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete_udf_info  # noqa: E501</p>
+<p>delete a registered UDF – this will remove all sharing and can not be undone  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.delete_udf_info(namespace, name, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name to register UDF under (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.delete_udf_info_with_http_info">
+<span class="sig-name descname"><span class="pre">delete_udf_info_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.delete_udf_info_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>delete_udf_info  # noqa: E501</p>
+<p>delete a registered UDF – this will remove all sharing and can not be undone  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.delete_udf_info_with_http_info(namespace, name, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name to register UDF under (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info">
+<span class="sig-name descname"><span class="pre">get_udf_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_udf_info  # noqa: E501</p>
+<p>get a specific UDF in the given namespace  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_udf_info(namespace, name, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name to register UDF under (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>UDFInfo
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info_sharing_policies">
+<span class="sig-name descname"><span class="pre">get_udf_info_sharing_policies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info_sharing_policies" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_udf_info_sharing_policies  # noqa: E501</p>
+<p>Get all sharing details of the UDF  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_udf_info_sharing_policies(namespace, name, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name of UDFInfo (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[UDFSharing]
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info_sharing_policies_with_http_info">
+<span class="sig-name descname"><span class="pre">get_udf_info_sharing_policies_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info_sharing_policies_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_udf_info_sharing_policies  # noqa: E501</p>
+<p>Get all sharing details of the UDF  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_udf_info_sharing_policies_with_http_info(namespace, name, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name of UDFInfo (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(list[UDFSharing], status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info_with_http_info">
+<span class="sig-name descname"><span class="pre">get_udf_info_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.get_udf_info_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_udf_info  # noqa: E501</p>
+<p>get a specific UDF in the given namespace  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.get_udf_info_with_http_info(namespace, name, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name to register UDF under (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(UDFInfo, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.handle_copy_udf">
+<span class="sig-name descname"><span class="pre">handle_copy_udf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf_copy</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.handle_copy_udf" title="Permalink to this definition">¶</a></dt>
+<dd><p>handle_copy_udf  # noqa: E501</p>
+<p>Copy a tiledb udf at the specified location  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.handle_copy_udf(namespace, name, udf_copy, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name of UDFInfo (required)</p></li>
+<li><p><strong>udf_copy</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.udf_copy.UDFCopy.html#tiledb.cloud.rest_api.models.udf_copy.UDFCopy" title="tiledb.cloud.rest_api.models.udf_copy.UDFCopy"><em>UDFCopy</em></a>) – Input/Output information to copy a UDF (required)</p></li>
+<li><p><strong>x_tiledb_cloud_access_credentials_name</strong> (<em>str</em>) – Optional registered access credentials to use for creation</p></li>
+<li><p><strong>end_timestamp</strong> (<em>int</em>) – Milliseconds since Unix epoch</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>UDFCopied
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.handle_copy_udf_with_http_info">
+<span class="sig-name descname"><span class="pre">handle_copy_udf_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf_copy</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.handle_copy_udf_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>handle_copy_udf  # noqa: E501</p>
+<p>Copy a tiledb udf at the specified location  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.handle_copy_udf_with_http_info(namespace, name, udf_copy, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name of UDFInfo (required)</p></li>
+<li><p><strong>udf_copy</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.udf_copy.UDFCopy.html#tiledb.cloud.rest_api.models.udf_copy.UDFCopy" title="tiledb.cloud.rest_api.models.udf_copy.UDFCopy"><em>UDFCopy</em></a>) – Input/Output information to copy a UDF (required)</p></li>
+<li><p><strong>x_tiledb_cloud_access_credentials_name</strong> (<em>str</em>) – Optional registered access credentials to use for creation</p></li>
+<li><p><strong>end_timestamp</strong> (<em>int</em>) – Milliseconds since Unix epoch</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(UDFCopied, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.register_udf_info">
+<span class="sig-name descname"><span class="pre">register_udf_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.register_udf_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>register_udf_info  # noqa: E501</p>
+<p>register a UDF in the given namespace  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.register_udf_info(namespace, name, udf, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name to register UDF under (required)</p></li>
+<li><p><strong>udf</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.udf_info_update.UDFInfoUpdate.html#tiledb.cloud.rest_api.models.udf_info_update.UDFInfoUpdate" title="tiledb.cloud.rest_api.models.udf_info_update.UDFInfoUpdate"><em>UDFInfoUpdate</em></a>) – UDF to register (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.register_udf_info_with_http_info">
+<span class="sig-name descname"><span class="pre">register_udf_info_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.register_udf_info_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>register_udf_info  # noqa: E501</p>
+<p>register a UDF in the given namespace  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.register_udf_info_with_http_info(namespace, name, udf, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name to register UDF under (required)</p></li>
+<li><p><strong>udf</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.udf_info_update.UDFInfoUpdate.html#tiledb.cloud.rest_api.models.udf_info_update.UDFInfoUpdate" title="tiledb.cloud.rest_api.models.udf_info_update.UDFInfoUpdate"><em>UDFInfoUpdate</em></a>) – UDF to register (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.share_udf_info">
+<span class="sig-name descname"><span class="pre">share_udf_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf_sharing</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.share_udf_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>share_udf_info  # noqa: E501</p>
+<p>Share a UDF with a user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.share_udf_info(namespace, name, udf_sharing, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name of UDFInfo (required)</p></li>
+<li><p><strong>udf_sharing</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.udf_sharing.UDFSharing.html#tiledb.cloud.rest_api.models.udf_sharing.UDFSharing" title="tiledb.cloud.rest_api.models.udf_sharing.UDFSharing"><em>UDFSharing</em></a>) – Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it’s likely the UDF will not be shared with the namespace at all. (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.share_udf_info_with_http_info">
+<span class="sig-name descname"><span class="pre">share_udf_info_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf_sharing</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.share_udf_info_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>share_udf_info  # noqa: E501</p>
+<p>Share a UDF with a user  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.share_udf_info_with_http_info(namespace, name, udf_sharing, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name of UDFInfo (required)</p></li>
+<li><p><strong>udf_sharing</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.udf_sharing.UDFSharing.html#tiledb.cloud.rest_api.models.udf_sharing.UDFSharing" title="tiledb.cloud.rest_api.models.udf_sharing.UDFSharing"><em>UDFSharing</em></a>) – Namespace and list of permissions to share with. An empty list of permissions will remove the namespace; if permissions already exist they will be deleted then new ones added. In the event of a failure, the new policies will be rolled back to prevent partial policies, and it’s likely the UDF will not be shared with the namespace at all. (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_generic_udf">
+<span class="sig-name descname"><span class="pre">submit_generic_udf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_generic_udf" title="Permalink to this definition">¶</a></dt>
+<dd><p>submit_generic_udf  # noqa: E501</p>
+<p>submit a generic UDF in the given namespace  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.submit_generic_udf(namespace, udf, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>udf</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.generic_udf.GenericUDF.html#tiledb.cloud.rest_api.models.generic_udf.GenericUDF" title="tiledb.cloud.rest_api.models.generic_udf.GenericUDF"><em>GenericUDF</em></a>) – UDF to run (required)</p></li>
+<li><p><strong>accept_encoding</strong> (<em>str</em>) – Encoding to use</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>file
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_generic_udf_with_http_info">
+<span class="sig-name descname"><span class="pre">submit_generic_udf_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_generic_udf_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>submit_generic_udf  # noqa: E501</p>
+<p>submit a generic UDF in the given namespace  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.submit_generic_udf_with_http_info(namespace, udf, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>udf</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.generic_udf.GenericUDF.html#tiledb.cloud.rest_api.models.generic_udf.GenericUDF" title="tiledb.cloud.rest_api.models.generic_udf.GenericUDF"><em>GenericUDF</em></a>) – UDF to run (required)</p></li>
+<li><p><strong>accept_encoding</strong> (<em>str</em>) – Encoding to use</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(file, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_multi_array_udf">
+<span class="sig-name descname"><span class="pre">submit_multi_array_udf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_multi_array_udf" title="Permalink to this definition">¶</a></dt>
+<dd><p>submit_multi_array_udf  # noqa: E501</p>
+<p>submit a multi-array UDF in the given namespace  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.submit_multi_array_udf(namespace, udf, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>udf</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.multi_array_udf.MultiArrayUDF.html#tiledb.cloud.rest_api.models.multi_array_udf.MultiArrayUDF" title="tiledb.cloud.rest_api.models.multi_array_udf.MultiArrayUDF"><em>MultiArrayUDF</em></a>) – UDF to run (required)</p></li>
+<li><p><strong>accept_encoding</strong> (<em>str</em>) – Encoding to use</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>file
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_multi_array_udf_with_http_info">
+<span class="sig-name descname"><span class="pre">submit_multi_array_udf_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_multi_array_udf_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>submit_multi_array_udf  # noqa: E501</p>
+<p>submit a multi-array UDF in the given namespace  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.submit_multi_array_udf_with_http_info(namespace, udf, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>udf</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.multi_array_udf.MultiArrayUDF.html#tiledb.cloud.rest_api.models.multi_array_udf.MultiArrayUDF" title="tiledb.cloud.rest_api.models.multi_array_udf.MultiArrayUDF"><em>MultiArrayUDF</em></a>) – UDF to run (required)</p></li>
+<li><p><strong>accept_encoding</strong> (<em>str</em>) – Encoding to use</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(file, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_udf">
+<span class="sig-name descname"><span class="pre">submit_udf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_udf" title="Permalink to this definition">¶</a></dt>
+<dd><p>submit_udf  # noqa: E501</p>
+<p>send a UDF to run against a specified array/URI registered to a group/project  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.submit_udf(namespace, array, udf, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>array</strong> (<em>str</em>) – name/uri of array that is url-encoded (required)</p></li>
+<li><p><strong>udf</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.multi_array_udf.MultiArrayUDF.html#tiledb.cloud.rest_api.models.multi_array_udf.MultiArrayUDF" title="tiledb.cloud.rest_api.models.multi_array_udf.MultiArrayUDF"><em>MultiArrayUDF</em></a>) – UDF to run (required)</p></li>
+<li><p><strong>x_payer</strong> (<em>str</em>) – Name of organization or user who should be charged for this request</p></li>
+<li><p><strong>accept_encoding</strong> (<em>str</em>) – Encoding to use</p></li>
+<li><p><strong>v2</strong> (<em>str</em>) – flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>file
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_udf_with_http_info">
+<span class="sig-name descname"><span class="pre">submit_udf_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.submit_udf_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>submit_udf  # noqa: E501</p>
+<p>send a UDF to run against a specified array/URI registered to a group/project  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.submit_udf_with_http_info(namespace, array, udf, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>array</strong> (<em>str</em>) – name/uri of array that is url-encoded (required)</p></li>
+<li><p><strong>udf</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.multi_array_udf.MultiArrayUDF.html#tiledb.cloud.rest_api.models.multi_array_udf.MultiArrayUDF" title="tiledb.cloud.rest_api.models.multi_array_udf.MultiArrayUDF"><em>MultiArrayUDF</em></a>) – UDF to run (required)</p></li>
+<li><p><strong>x_payer</strong> (<em>str</em>) – Name of organization or user who should be charged for this request</p></li>
+<li><p><strong>accept_encoding</strong> (<em>str</em>) – Encoding to use</p></li>
+<li><p><strong>v2</strong> (<em>str</em>) – flag to indicate if v2 array UDFs should be used, currently in beta testing. Setting any value will enable v2 array UDFs.</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(file, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.udf_namespace_array_end_timestamps_get">
+<span class="sig-name descname"><span class="pre">udf_namespace_array_end_timestamps_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.udf_namespace_array_end_timestamps_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>udf_namespace_array_end_timestamps_get  # noqa: E501</p>
+<p>retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.udf_namespace_array_end_timestamps_get(namespace, array, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>array</strong> (<em>str</em>) – name/uri of array that is url-encoded (required)</p></li>
+<li><p><strong>page</strong> (<em>int</em>) – pagination offset</p></li>
+<li><p><strong>per_page</strong> (<em>int</em>) – pagination limit</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>ArrayEndTimestampData
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.udf_namespace_array_end_timestamps_get_with_http_info">
+<span class="sig-name descname"><span class="pre">udf_namespace_array_end_timestamps_get_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.udf_namespace_array_end_timestamps_get_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>udf_namespace_array_end_timestamps_get  # noqa: E501</p>
+<p>retrieve a list of timestamps from the array fragment info listing in milliseconds, paginated  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.udf_namespace_array_end_timestamps_get_with_http_info(namespace, array, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>array</strong> (<em>str</em>) – name/uri of array that is url-encoded (required)</p></li>
+<li><p><strong>page</strong> (<em>int</em>) – pagination offset</p></li>
+<li><p><strong>per_page</strong> (<em>int</em>) – pagination limit</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(ArrayEndTimestampData, status_code(int), headers(HTTPHeaderDict))
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.update_udf_info">
+<span class="sig-name descname"><span class="pre">update_udf_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.update_udf_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>update_udf_info  # noqa: E501</p>
+<p>update an existing registered UDF in the given namespace  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.update_udf_info(namespace, name, udf, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name to register UDF under (required)</p></li>
+<li><p><strong>udf</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.udf_info_update.UDFInfoUpdate.html#tiledb.cloud.rest_api.models.udf_info_update.UDFInfoUpdate" title="tiledb.cloud.rest_api.models.udf_info_update.UDFInfoUpdate"><em>UDFInfoUpdate</em></a>) – UDF to update (required)</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.rest_api.api.udf_api.UdfApi.update_udf_info_with_http_info">
+<span class="sig-name descname"><span class="pre">update_udf_info_with_http_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udf</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.rest_api.api.udf_api.UdfApi.update_udf_info_with_http_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>update_udf_info  # noqa: E501</p>
+<p>update an existing registered UDF in the given namespace  # noqa: E501
+This method makes a synchronous HTTP request by default. To make an
+asynchronous HTTP request, please pass async_req=True
+&gt;&gt;&gt; thread = api.update_udf_info_with_http_info(namespace, name, udf, async_req=True)
+&gt;&gt;&gt; result = thread.get()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bool</strong> (<em>async_req</em>) – execute request asynchronously</p></li>
+<li><p><strong>namespace</strong> (<em>str</em>) – namespace array is in (an organization name or user’s username) (required)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name to register UDF under (required)</p></li>
+<li><p><strong>udf</strong> (<a class="reference internal" href="tiledb.cloud.rest_api.models.udf_info_update.UDFInfoUpdate.html#tiledb.cloud.rest_api.models.udf_info_update.UDFInfoUpdate" title="tiledb.cloud.rest_api.models.udf_info_update.UDFInfoUpdate"><em>UDFInfoUpdate</em></a>) – UDF to update (required)</p></li>
+<li><p><strong>_return_http_data_only</strong> – response data without head status code
+and headers</p></li>
+<li><p><strong>_preload_content</strong> – if False, the urllib3.HTTPResponse object will
+be returned without reading/decoding response
+data. Default is True.</p></li>
+<li><p><strong>_request_timeout</strong> – timeout setting for this request. If one
+number provided, it will be total request
+timeout. It can also be a pair (tuple) of
+(connection, read) timeouts.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None
+If the method is called asynchronously,
+returns the request thread.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tiledb.cloud.rest_api.api.udf_api.html" class="btn btn-neutral float-left" title="tiledb.cloud.rest_api.api.udf_api" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tiledb.cloud.rest_api.api.user_api.html" class="btn btn-neutral float-right" title="tiledb.cloud.rest_api.api.user_api" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020–2023, TileDB, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.generic\_udf
+==========================================
+
+.. automodule:: tiledb.cloud.rest_api.models.generic_udf
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      GenericUDF
+   
+   
+
+   
+   
+   
+
+
+

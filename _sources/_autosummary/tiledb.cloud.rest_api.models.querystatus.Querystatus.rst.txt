@@ -1,0 +1,40 @@
+tiledb.cloud.rest\_api.models.querystatus.Querystatus
+=====================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.querystatus
+
+.. autoclass:: Querystatus
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Querystatus.__init__
+      ~Querystatus.to_dict
+      ~Querystatus.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Querystatus.COMPLETED
+      ~Querystatus.FAILED
+      ~Querystatus.INCOMPLETE
+      ~Querystatus.INPROGRESS
+      ~Querystatus.UNINITIALIZED
+      ~Querystatus.allowable_values
+      ~Querystatus.attribute_map
+      ~Querystatus.openapi_types
+   
+   

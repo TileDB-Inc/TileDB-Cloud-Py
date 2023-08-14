@@ -1,0 +1,6 @@
+tiledb.cloud.bioimg.ingestion.ingest
+====================================
+
+.. currentmodule:: tiledb.cloud.bioimg.ingestion
+
+.. autofunction:: ingest

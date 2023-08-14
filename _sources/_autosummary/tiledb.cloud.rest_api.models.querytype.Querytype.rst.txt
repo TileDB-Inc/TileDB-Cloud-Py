@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.querytype.Querytype
+=================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.querytype
+
+.. autoclass:: Querytype
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Querytype.__init__
+      ~Querytype.to_dict
+      ~Querytype.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Querytype.DELETE
+      ~Querytype.READ
+      ~Querytype.WRITE
+      ~Querytype.allowable_values
+      ~Querytype.attribute_map
+      ~Querytype.openapi_types
+   
+   

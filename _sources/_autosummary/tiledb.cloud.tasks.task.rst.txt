@@ -1,0 +1,6 @@
+tiledb.cloud.tasks.task
+=======================
+
+.. currentmodule:: tiledb.cloud.tasks
+
+.. autofunction:: task

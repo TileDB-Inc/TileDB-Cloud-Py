@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.utils.bgzip\_and\_index
+========================================
+
+.. currentmodule:: tiledb.cloud.vcf.utils
+
+.. autofunction:: bgzip_and_index

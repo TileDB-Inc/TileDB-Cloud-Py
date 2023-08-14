@@ -1,0 +1,40 @@
+tiledb.cloud.rest\_api.models.tgudf\_node\_data.TGUDFNodeData
+=============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.tgudf_node_data
+
+.. autoclass:: TGUDFNodeData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TGUDFNodeData.__init__
+      ~TGUDFNodeData.to_dict
+      ~TGUDFNodeData.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TGUDFNodeData.arguments
+      ~TGUDFNodeData.attribute_map
+      ~TGUDFNodeData.environment
+      ~TGUDFNodeData.executable_code
+      ~TGUDFNodeData.openapi_types
+      ~TGUDFNodeData.registered_udf_name
+      ~TGUDFNodeData.result_format
+      ~TGUDFNodeData.source_text
+   
+   

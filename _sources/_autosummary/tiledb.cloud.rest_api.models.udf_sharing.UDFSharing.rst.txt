@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.udf\_sharing.UDFSharing
+=====================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.udf_sharing
+
+.. autoclass:: UDFSharing
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UDFSharing.__init__
+      ~UDFSharing.to_dict
+      ~UDFSharing.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UDFSharing.actions
+      ~UDFSharing.attribute_map
+      ~UDFSharing.namespace
+      ~UDFSharing.namespace_type
+      ~UDFSharing.openapi_types
+   
+   

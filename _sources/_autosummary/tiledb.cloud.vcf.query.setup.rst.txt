@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.query.setup
+============================
+
+.. currentmodule:: tiledb.cloud.vcf.query
+
+.. autofunction:: setup

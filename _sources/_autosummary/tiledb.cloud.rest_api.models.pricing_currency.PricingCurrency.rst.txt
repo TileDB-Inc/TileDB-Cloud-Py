@@ -1,0 +1,36 @@
+tiledb.cloud.rest\_api.models.pricing\_currency.PricingCurrency
+===============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.pricing_currency
+
+.. autoclass:: PricingCurrency
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PricingCurrency.__init__
+      ~PricingCurrency.to_dict
+      ~PricingCurrency.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PricingCurrency.USD
+      ~PricingCurrency.allowable_values
+      ~PricingCurrency.attribute_map
+      ~PricingCurrency.openapi_types
+   
+   

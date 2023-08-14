@@ -1,0 +1,6 @@
+tiledb.cloud.udf.share
+======================
+
+.. currentmodule:: tiledb.cloud.udf
+
+.. autofunction:: share

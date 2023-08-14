@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.tgudf\_environment\_resources.TGUDFEnvironmentResources
+=====================================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.tgudf_environment_resources
+
+.. autoclass:: TGUDFEnvironmentResources
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TGUDFEnvironmentResources.__init__
+      ~TGUDFEnvironmentResources.to_dict
+      ~TGUDFEnvironmentResources.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TGUDFEnvironmentResources.attribute_map
+      ~TGUDFEnvironmentResources.cpu
+      ~TGUDFEnvironmentResources.gpu
+      ~TGUDFEnvironmentResources.memory
+      ~TGUDFEnvironmentResources.openapi_types
+   
+   

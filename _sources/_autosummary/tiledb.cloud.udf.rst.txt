@@ -1,0 +1,43 @@
+tiledb.cloud.udf
+================
+
+.. automodule:: tiledb.cloud.udf
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      delete
+      exec
+      exec_async
+      exec_base
+      info
+      register_generic_udf
+      register_multi_array_udf
+      register_single_array_udf
+      register_udf
+      share
+      unshare
+      update_generic_udf
+      update_single_array_udf
+      update_udf
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

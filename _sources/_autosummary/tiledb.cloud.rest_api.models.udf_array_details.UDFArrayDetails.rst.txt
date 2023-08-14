@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.udf\_array\_details.UDFArrayDetails
+=================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.udf_array_details
+
+.. autoclass:: UDFArrayDetails
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UDFArrayDetails.__init__
+      ~UDFArrayDetails.to_dict
+      ~UDFArrayDetails.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UDFArrayDetails.attribute_map
+      ~UDFArrayDetails.buffers
+      ~UDFArrayDetails.openapi_types
+      ~UDFArrayDetails.parameter_id
+      ~UDFArrayDetails.ranges
+      ~UDFArrayDetails.uri
+   
+   

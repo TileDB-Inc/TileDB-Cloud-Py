@@ -1,0 +1,35 @@
+tiledb.cloud.rest\_api.models.filter\_pipeline.FilterPipeline
+=============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.filter_pipeline
+
+.. autoclass:: FilterPipeline
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FilterPipeline.__init__
+      ~FilterPipeline.to_dict
+      ~FilterPipeline.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FilterPipeline.attribute_map
+      ~FilterPipeline.filters
+      ~FilterPipeline.openapi_types
+   
+   

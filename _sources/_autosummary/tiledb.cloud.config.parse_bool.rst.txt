@@ -1,0 +1,6 @@
+tiledb.cloud.config.parse\_bool
+===============================
+
+.. currentmodule:: tiledb.cloud.config
+
+.. autofunction:: parse_bool

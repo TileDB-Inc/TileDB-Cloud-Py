@@ -1,0 +1,41 @@
+tiledb.cloud.rest\_api.models.asset\_locations.AssetLocations
+=============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.asset_locations
+
+.. autoclass:: AssetLocations
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AssetLocations.__init__
+      ~AssetLocations.to_dict
+      ~AssetLocations.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AssetLocations.arrays
+      ~AssetLocations.attribute_map
+      ~AssetLocations.files
+      ~AssetLocations.groups
+      ~AssetLocations.ml_models
+      ~AssetLocations.notebooks
+      ~AssetLocations.openapi_types
+      ~AssetLocations.task_graphs
+      ~AssetLocations.udfs
+   
+   

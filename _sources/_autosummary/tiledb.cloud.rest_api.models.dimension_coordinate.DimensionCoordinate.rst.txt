@@ -1,0 +1,44 @@
+tiledb.cloud.rest\_api.models.dimension\_coordinate.DimensionCoordinate
+=======================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.dimension_coordinate
+
+.. autoclass:: DimensionCoordinate
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DimensionCoordinate.__init__
+      ~DimensionCoordinate.to_dict
+      ~DimensionCoordinate.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DimensionCoordinate.attribute_map
+      ~DimensionCoordinate.float32
+      ~DimensionCoordinate.float64
+      ~DimensionCoordinate.int16
+      ~DimensionCoordinate.int32
+      ~DimensionCoordinate.int64
+      ~DimensionCoordinate.int8
+      ~DimensionCoordinate.openapi_types
+      ~DimensionCoordinate.uint16
+      ~DimensionCoordinate.uint32
+      ~DimensionCoordinate.uint64
+      ~DimensionCoordinate.uint8
+   
+   

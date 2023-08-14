@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.notebook\_favorite.NotebookFavorite
+=================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.notebook_favorite
+
+.. autoclass:: NotebookFavorite
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~NotebookFavorite.__init__
+      ~NotebookFavorite.to_dict
+      ~NotebookFavorite.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~NotebookFavorite.attribute_map
+      ~NotebookFavorite.name
+      ~NotebookFavorite.namespace
+      ~NotebookFavorite.notebook_uuid
+      ~NotebookFavorite.openapi_types
+   
+   

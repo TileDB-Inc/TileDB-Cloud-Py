@@ -1,0 +1,42 @@
+tiledb.cloud.rest\_api.models.group\_member\_asset\_type.GroupMemberAssetType
+=============================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.group_member_asset_type
+
+.. autoclass:: GroupMemberAssetType
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GroupMemberAssetType.__init__
+      ~GroupMemberAssetType.to_dict
+      ~GroupMemberAssetType.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GroupMemberAssetType.ARRAY
+      ~GroupMemberAssetType.DASHBOARD
+      ~GroupMemberAssetType.FILE
+      ~GroupMemberAssetType.GROUP
+      ~GroupMemberAssetType.ML_MODEL
+      ~GroupMemberAssetType.NOTEBOOK
+      ~GroupMemberAssetType.USER_DEFINED_FUNCTION
+      ~GroupMemberAssetType.allowable_values
+      ~GroupMemberAssetType.attribute_map
+      ~GroupMemberAssetType.openapi_types
+   
+   

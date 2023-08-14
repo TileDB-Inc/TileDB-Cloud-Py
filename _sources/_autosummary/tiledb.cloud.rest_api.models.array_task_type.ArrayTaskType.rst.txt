@@ -1,0 +1,41 @@
+tiledb.cloud.rest\_api.models.array\_task\_type.ArrayTaskType
+=============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_task_type
+
+.. autoclass:: ArrayTaskType
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayTaskType.__init__
+      ~ArrayTaskType.to_dict
+      ~ArrayTaskType.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayTaskType.BATCH_UDF
+      ~ArrayTaskType.CLIENT_COMPUTATION
+      ~ArrayTaskType.GENERIC_UDF
+      ~ArrayTaskType.QUERY
+      ~ArrayTaskType.SQL
+      ~ArrayTaskType.UDF
+      ~ArrayTaskType.allowable_values
+      ~ArrayTaskType.attribute_map
+      ~ArrayTaskType.openapi_types
+   
+   

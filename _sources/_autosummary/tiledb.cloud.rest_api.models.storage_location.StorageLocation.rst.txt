@@ -1,0 +1,36 @@
+tiledb.cloud.rest\_api.models.storage\_location.StorageLocation
+===============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.storage_location
+
+.. autoclass:: StorageLocation
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~StorageLocation.__init__
+      ~StorageLocation.to_dict
+      ~StorageLocation.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~StorageLocation.attribute_map
+      ~StorageLocation.credentials_name
+      ~StorageLocation.openapi_types
+      ~StorageLocation.path
+   
+   

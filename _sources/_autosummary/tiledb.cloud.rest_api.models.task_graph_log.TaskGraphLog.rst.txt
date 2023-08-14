@@ -1,0 +1,50 @@
+tiledb.cloud.rest\_api.models.task\_graph\_log.TaskGraphLog
+===========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.task_graph_log
+
+.. autoclass:: TaskGraphLog
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TaskGraphLog.__init__
+      ~TaskGraphLog.to_dict
+      ~TaskGraphLog.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TaskGraphLog.access_cost
+      ~TaskGraphLog.attribute_map
+      ~TaskGraphLog.created_at
+      ~TaskGraphLog.created_by
+      ~TaskGraphLog.egress_cost
+      ~TaskGraphLog.end_time
+      ~TaskGraphLog.execution_time
+      ~TaskGraphLog.name
+      ~TaskGraphLog.namespace
+      ~TaskGraphLog.nodes
+      ~TaskGraphLog.openapi_types
+      ~TaskGraphLog.start_time
+      ~TaskGraphLog.status
+      ~TaskGraphLog.status_count
+      ~TaskGraphLog.task_graph_id
+      ~TaskGraphLog.task_graph_type
+      ~TaskGraphLog.total_cost
+      ~TaskGraphLog.uuid
+   
+   

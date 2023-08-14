@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.filter\_option
+============================================
+
+.. automodule:: tiledb.cloud.rest_api.models.filter_option
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      FilterOption
+   
+   
+
+   
+   
+   
+
+
+

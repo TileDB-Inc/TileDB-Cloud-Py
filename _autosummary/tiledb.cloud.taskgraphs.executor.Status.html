@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tiledb.cloud.taskgraphs.executor.Status &mdash; TileDB-Cloud-Py  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tiledb.cloud.taskgraphs.executor.ParentFailedError" href="tiledb.cloud.taskgraphs.executor.ParentFailedError.html" />
+    <link rel="prev" title="tiledb.cloud.taskgraphs.executor.Node" href="tiledb.cloud.taskgraphs.executor.Node.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TileDB-Cloud-Py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.html">tiledb.cloud</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.array.html">tiledb.cloud.array</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.client.html">tiledb.cloud.client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.compute.html">tiledb.cloud.compute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.config.html">tiledb.cloud.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.dag.html">tiledb.cloud.dag</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.file.html">tiledb.cloud.file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.groups.html">tiledb.cloud.groups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.notebook.html">tiledb.cloud.notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.pool_manager_wrapper.html">tiledb.cloud.pool_manager_wrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.rest_api.html">tiledb.cloud.rest_api</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.sql.html">tiledb.cloud.sql</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="tiledb.cloud.taskgraphs.html">tiledb.cloud.taskgraphs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.GraphOrRegistered.html">tiledb.cloud.taskgraphs.GraphOrRegistered</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.execute.html">tiledb.cloud.taskgraphs.execute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.builder.html">tiledb.cloud.taskgraphs.builder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.client_executor.html">tiledb.cloud.taskgraphs.client_executor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.delayed.html">tiledb.cloud.taskgraphs.delayed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.depgraph.html">tiledb.cloud.taskgraphs.depgraph</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="tiledb.cloud.taskgraphs.executor.html">tiledb.cloud.taskgraphs.executor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.taskgraphs.executor.GraphStructure.html">tiledb.cloud.taskgraphs.executor.GraphStructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.taskgraphs.executor.Executor.html">tiledb.cloud.taskgraphs.executor.Executor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.taskgraphs.executor.Node.html">tiledb.cloud.taskgraphs.executor.Node</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tiledb.cloud.taskgraphs.executor.Status</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tiledb.cloud.taskgraphs.executor.Status"><code class="docutils literal notranslate"><span class="pre">Status</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tiledb.cloud.taskgraphs.executor.ParentFailedError.html">tiledb.cloud.taskgraphs.executor.ParentFailedError</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.registration.html">tiledb.cloud.taskgraphs.registration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.types.html">tiledb.cloud.taskgraphs.types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.cloud.taskgraphs.visualization.html">tiledb.cloud.taskgraphs.visualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tasks.html">tiledb.cloud.tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.tiledb_cloud_error.html">tiledb.cloud.tiledb_cloud_error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.udf.html">tiledb.cloud.udf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.utils.html">tiledb.cloud.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiledb.cloud.version.html">tiledb.cloud.version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TileDB-Cloud-Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.html">tiledb.cloud</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.taskgraphs.html">tiledb.cloud.taskgraphs</a></li>
+          <li class="breadcrumb-item"><a href="tiledb.cloud.taskgraphs.executor.html">tiledb.cloud.taskgraphs.executor</a></li>
+      <li class="breadcrumb-item active">tiledb.cloud.taskgraphs.executor.Status</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/tiledb.cloud.taskgraphs.executor.Status.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tiledb-cloud-taskgraphs-executor-status">
+<h1>tiledb.cloud.taskgraphs.executor.Status<a class="headerlink" href="#tiledb-cloud-taskgraphs-executor-status" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.executor.Status">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tiledb.cloud.taskgraphs.executor.</span></span><span class="sig-name descname"><span class="pre">Status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.taskgraphs.executor.Status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>The current status of a Node (or a graph).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.executor.Status.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tiledb.cloud.taskgraphs.executor.Status.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">friendly_name</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.executor.Status.WAITING" title="tiledb.cloud.taskgraphs.executor.Status.WAITING"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WAITING</span></code></a></p></td>
+<td><p>A Node is waiting for input values.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.executor.Status.READY" title="tiledb.cloud.taskgraphs.executor.Status.READY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">READY</span></code></a></p></td>
+<td><p>All the inputs of a Node have resolved and it can run.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.executor.Status.RUNNING" title="tiledb.cloud.taskgraphs.executor.Status.RUNNING"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RUNNING</span></code></a></p></td>
+<td><p>The Node is currently running.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.executor.Status.SUCCEEDED" title="tiledb.cloud.taskgraphs.executor.Status.SUCCEEDED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SUCCEEDED</span></code></a></p></td>
+<td><p>The Node completed successfully.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.executor.Status.FAILED" title="tiledb.cloud.taskgraphs.executor.Status.FAILED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FAILED</span></code></a></p></td>
+<td><p>The Node failed to complete.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.executor.Status.CANCELLED" title="tiledb.cloud.taskgraphs.executor.Status.CANCELLED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CANCELLED</span></code></a></p></td>
+<td><p>The Node was cancelled before it could complete.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tiledb.cloud.taskgraphs.executor.Status.PARENT_FAILED" title="tiledb.cloud.taskgraphs.executor.Status.PARENT_FAILED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PARENT_FAILED</span></code></a></p></td>
+<td><p>One of the Node's parents failed, so the Node could not run.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.executor.Status.CANCELLED">
+<span class="sig-name descname"><span class="pre">CANCELLED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#tiledb.cloud.taskgraphs.executor.Status.CANCELLED" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Node was cancelled before it could complete.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.executor.Status.FAILED">
+<span class="sig-name descname"><span class="pre">FAILED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#tiledb.cloud.taskgraphs.executor.Status.FAILED" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Node failed to complete.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.executor.Status.PARENT_FAILED">
+<span class="sig-name descname"><span class="pre">PARENT_FAILED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#tiledb.cloud.taskgraphs.executor.Status.PARENT_FAILED" title="Permalink to this definition">¶</a></dt>
+<dd><p>One of the Node’s parents failed, so the Node could not run.</p>
+<p>For the purposes of the Future-like API of a Node, this is treated as
+cancellation.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.executor.Status.READY">
+<span class="sig-name descname"><span class="pre">READY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#tiledb.cloud.taskgraphs.executor.Status.READY" title="Permalink to this definition">¶</a></dt>
+<dd><p>All the inputs of a Node have resolved and it can run.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.executor.Status.RUNNING">
+<span class="sig-name descname"><span class="pre">RUNNING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#tiledb.cloud.taskgraphs.executor.Status.RUNNING" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Node is currently running.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.executor.Status.SUCCEEDED">
+<span class="sig-name descname"><span class="pre">SUCCEEDED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#tiledb.cloud.taskgraphs.executor.Status.SUCCEEDED" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Node completed successfully.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tiledb.cloud.taskgraphs.executor.Status.WAITING">
+<span class="sig-name descname"><span class="pre">WAITING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#tiledb.cloud.taskgraphs.executor.Status.WAITING" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Node is waiting for input values.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tiledb.cloud.taskgraphs.executor.Node.html" class="btn btn-neutral float-left" title="tiledb.cloud.taskgraphs.executor.Node" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tiledb.cloud.taskgraphs.executor.ParentFailedError.html" class="btn btn-neutral float-right" title="tiledb.cloud.taskgraphs.executor.ParentFailedError" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020–2023, TileDB, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

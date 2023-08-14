@@ -1,0 +1,54 @@
+tiledb.cloud.client
+===================
+
+.. automodule:: tiledb.cloud.client
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      Config
+      Ctx
+      build
+      default_charged_namespace
+      default_user
+      find_organization_or_user_for_default_charges
+      list_arrays
+      list_groups
+      list_public_arrays
+      list_public_groups
+      list_shared_arrays
+      list_shared_groups
+      login
+      organization
+      organizations
+      user_profile
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Client
+      RetryMode
+   
+   
+
+   
+   
+   
+
+
+

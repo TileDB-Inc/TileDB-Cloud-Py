@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.ingestion.ingest\_manifest\_udf
+================================================
+
+.. currentmodule:: tiledb.cloud.vcf.ingestion
+
+.. autofunction:: ingest_manifest_udf

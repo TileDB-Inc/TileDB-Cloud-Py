@@ -1,0 +1,36 @@
+tiledb.cloud.rest\_api.models.array\_browser\_data.ArrayBrowserData
+===================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_browser_data
+
+.. autoclass:: ArrayBrowserData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayBrowserData.__init__
+      ~ArrayBrowserData.to_dict
+      ~ArrayBrowserData.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayBrowserData.arrays
+      ~ArrayBrowserData.attribute_map
+      ~ArrayBrowserData.openapi_types
+      ~ArrayBrowserData.pagination_metadata
+   
+   

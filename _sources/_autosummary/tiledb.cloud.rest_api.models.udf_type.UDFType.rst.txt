@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.udf\_type.UDFType
+===============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.udf_type
+
+.. autoclass:: UDFType
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UDFType.__init__
+      ~UDFType.to_dict
+      ~UDFType.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UDFType.GENERIC
+      ~UDFType.MULTI_ARRAY
+      ~UDFType.SINGLE_ARRAY
+      ~UDFType.allowable_values
+      ~UDFType.attribute_map
+      ~UDFType.openapi_types
+   
+   

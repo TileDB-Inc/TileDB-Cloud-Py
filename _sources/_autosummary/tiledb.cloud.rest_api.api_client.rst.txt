@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.api\_client
+==================================
+
+.. automodule:: tiledb.cloud.rest_api.api_client
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ApiClient
+   
+   
+
+   
+   
+   
+
+
+

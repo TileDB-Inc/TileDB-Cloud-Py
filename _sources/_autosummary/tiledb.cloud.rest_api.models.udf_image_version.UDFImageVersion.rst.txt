@@ -1,0 +1,41 @@
+tiledb.cloud.rest\_api.models.udf\_image\_version.UDFImageVersion
+=================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.udf_image_version
+
+.. autoclass:: UDFImageVersion
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UDFImageVersion.__init__
+      ~UDFImageVersion.to_dict
+      ~UDFImageVersion.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UDFImageVersion.attribute_map
+      ~UDFImageVersion.default
+      ~UDFImageVersion.docker_image
+      ~UDFImageVersion.id
+      ~UDFImageVersion.latest
+      ~UDFImageVersion.name
+      ~UDFImageVersion.openapi_types
+      ~UDFImageVersion.udf_image_uuid
+      ~UDFImageVersion.version
+   
+   

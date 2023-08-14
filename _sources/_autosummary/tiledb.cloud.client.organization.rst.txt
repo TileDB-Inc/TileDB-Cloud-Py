@@ -1,0 +1,6 @@
+tiledb.cloud.client.organization
+================================
+
+.. currentmodule:: tiledb.cloud.client
+
+.. autofunction:: organization

@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.sso\_domain\_config
+=================================================
+
+.. automodule:: tiledb.cloud.rest_api.models.sso_domain_config
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SSODomainConfig
+   
+   
+
+   
+   
+   
+
+
+

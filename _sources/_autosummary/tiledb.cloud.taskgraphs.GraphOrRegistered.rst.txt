@@ -1,0 +1,6 @@
+tiledb.cloud.taskgraphs.GraphOrRegistered
+=========================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs
+
+.. autodata:: GraphOrRegistered

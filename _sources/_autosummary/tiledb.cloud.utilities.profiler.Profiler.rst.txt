@@ -1,0 +1,26 @@
+tiledb.cloud.utilities.profiler.Profiler
+========================================
+
+.. currentmodule:: tiledb.cloud.utilities.profiler
+
+.. autoclass:: Profiler
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Profiler.__init__
+      ~Profiler.write
+   
+   
+
+   
+   
+   

@@ -1,0 +1,43 @@
+tiledb.cloud.rest\_api.models.group\_create.GroupCreate
+=======================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.group_create
+
+.. autoclass:: GroupCreate
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GroupCreate.__init__
+      ~GroupCreate.to_dict
+      ~GroupCreate.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GroupCreate.access_credentials_name
+      ~GroupCreate.attribute_map
+      ~GroupCreate.description
+      ~GroupCreate.license_id
+      ~GroupCreate.license_text
+      ~GroupCreate.logo
+      ~GroupCreate.name
+      ~GroupCreate.openapi_types
+      ~GroupCreate.parent
+      ~GroupCreate.tags
+      ~GroupCreate.uri
+   
+   

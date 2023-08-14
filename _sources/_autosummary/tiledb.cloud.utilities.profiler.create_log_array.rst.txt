@@ -1,0 +1,6 @@
+tiledb.cloud.utilities.profiler.create\_log\_array
+==================================================
+
+.. currentmodule:: tiledb.cloud.utilities.profiler
+
+.. autofunction:: create_log_array

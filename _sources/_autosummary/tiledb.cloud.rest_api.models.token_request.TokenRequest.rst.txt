@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.token\_request.TokenRequest
+=========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.token_request
+
+.. autoclass:: TokenRequest
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TokenRequest.__init__
+      ~TokenRequest.to_dict
+      ~TokenRequest.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TokenRequest.attribute_map
+      ~TokenRequest.expires
+      ~TokenRequest.name
+      ~TokenRequest.openapi_types
+      ~TokenRequest.scope
+   
+   

@@ -1,0 +1,6 @@
+tiledb.cloud.notebook.download\_notebook\_contents
+==================================================
+
+.. currentmodule:: tiledb.cloud.notebook
+
+.. autofunction:: download_notebook_contents

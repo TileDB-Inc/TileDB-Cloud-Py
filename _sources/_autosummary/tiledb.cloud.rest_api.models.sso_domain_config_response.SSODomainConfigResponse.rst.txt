@@ -1,0 +1,35 @@
+tiledb.cloud.rest\_api.models.sso\_domain\_config\_response.SSODomainConfigResponse
+===================================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.sso_domain_config_response
+
+.. autoclass:: SSODomainConfigResponse
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SSODomainConfigResponse.__init__
+      ~SSODomainConfigResponse.to_dict
+      ~SSODomainConfigResponse.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SSODomainConfigResponse.attribute_map
+      ~SSODomainConfigResponse.domain_configs
+      ~SSODomainConfigResponse.openapi_types
+   
+   

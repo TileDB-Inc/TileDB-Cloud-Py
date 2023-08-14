@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.domain.Domain
+===========================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.domain
+
+.. autoclass:: Domain
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Domain.__init__
+      ~Domain.to_dict
+      ~Domain.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Domain.attribute_map
+      ~Domain.cell_order
+      ~Domain.dimensions
+      ~Domain.openapi_types
+      ~Domain.tile_order
+      ~Domain.type
+   
+   

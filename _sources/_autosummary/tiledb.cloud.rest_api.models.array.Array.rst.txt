@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.array.Array
+=========================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array
+
+.. autoclass:: Array
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Array.__init__
+      ~Array.to_dict
+      ~Array.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Array.attribute_map
+      ~Array.openapi_types
+      ~Array.query_type
+      ~Array.timestamp
+      ~Array.uri
+   
+   

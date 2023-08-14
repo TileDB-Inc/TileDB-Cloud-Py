@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.file\_create.FileCreate
+=====================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.file_create
+
+.. autoclass:: FileCreate
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FileCreate.__init__
+      ~FileCreate.to_dict
+      ~FileCreate.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FileCreate.attribute_map
+      ~FileCreate.input_uri
+      ~FileCreate.name
+      ~FileCreate.openapi_types
+      ~FileCreate.output_uri
+   
+   

@@ -1,0 +1,40 @@
+tiledb.cloud.rest\_api.models.dimension.Dimension
+=================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.dimension
+
+.. autoclass:: Dimension
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Dimension.__init__
+      ~Dimension.to_dict
+      ~Dimension.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Dimension.attribute_map
+      ~Dimension.domain
+      ~Dimension.filter_pipeline
+      ~Dimension.name
+      ~Dimension.null_tile_extent
+      ~Dimension.openapi_types
+      ~Dimension.tile_extent
+      ~Dimension.type
+   
+   

@@ -1,0 +1,69 @@
+tiledb.cloud.rest\_api.api.user\_api.UserApi
+============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.user_api
+
+.. autoclass:: UserApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UserApi.__init__
+      ~UserApi.add_aws_access_credentials
+      ~UserApi.add_aws_access_credentials_with_http_info
+      ~UserApi.add_user_to_organization
+      ~UserApi.add_user_to_organization_with_http_info
+      ~UserApi.check_aws_access_credentials
+      ~UserApi.check_aws_access_credentials_by_name
+      ~UserApi.check_aws_access_credentials_by_name_with_http_info
+      ~UserApi.check_aws_access_credentials_with_http_info
+      ~UserApi.confirm_email
+      ~UserApi.confirm_email_with_http_info
+      ~UserApi.create_user
+      ~UserApi.create_user_with_http_info
+      ~UserApi.delete_aws_access_credentials
+      ~UserApi.delete_aws_access_credentials_with_http_info
+      ~UserApi.delete_user
+      ~UserApi.delete_user_from_organization
+      ~UserApi.delete_user_from_organization_with_http_info
+      ~UserApi.delete_user_with_http_info
+      ~UserApi.get_organization_user
+      ~UserApi.get_organization_user_with_http_info
+      ~UserApi.get_session
+      ~UserApi.get_session_with_http_info
+      ~UserApi.get_token_scopes
+      ~UserApi.get_token_scopes_with_http_info
+      ~UserApi.get_user
+      ~UserApi.get_user_with_http_info
+      ~UserApi.get_user_with_username
+      ~UserApi.get_user_with_username_with_http_info
+      ~UserApi.request_token
+      ~UserApi.request_token_with_http_info
+      ~UserApi.reset_user_password
+      ~UserApi.reset_user_password_with_http_info
+      ~UserApi.revoke_token
+      ~UserApi.revoke_token_with_http_info
+      ~UserApi.tokens_get
+      ~UserApi.tokens_get_with_http_info
+      ~UserApi.tokens_session_get
+      ~UserApi.tokens_session_get_with_http_info
+      ~UserApi.update_aws_access_credentials
+      ~UserApi.update_aws_access_credentials_with_http_info
+      ~UserApi.update_user
+      ~UserApi.update_user_in_organization
+      ~UserApi.update_user_in_organization_with_http_info
+      ~UserApi.update_user_with_http_info
+   
+   
+
+   
+   
+   

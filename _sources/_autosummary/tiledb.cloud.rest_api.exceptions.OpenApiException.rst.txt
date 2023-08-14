@@ -1,0 +1,6 @@
+tiledb.cloud.rest\_api.exceptions.OpenApiException
+==================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.exceptions
+
+.. autoexception:: OpenApiException

@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.allele\_frequency.read\_allele\_frequency
+==========================================================
+
+.. currentmodule:: tiledb.cloud.vcf.allele_frequency
+
+.. autofunction:: read_allele_frequency

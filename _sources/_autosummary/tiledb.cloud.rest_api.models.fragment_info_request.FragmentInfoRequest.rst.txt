@@ -1,0 +1,35 @@
+tiledb.cloud.rest\_api.models.fragment\_info\_request.FragmentInfoRequest
+=========================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.fragment_info_request
+
+.. autoclass:: FragmentInfoRequest
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FragmentInfoRequest.__init__
+      ~FragmentInfoRequest.to_dict
+      ~FragmentInfoRequest.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FragmentInfoRequest.attribute_map
+      ~FragmentInfoRequest.config
+      ~FragmentInfoRequest.openapi_types
+   
+   

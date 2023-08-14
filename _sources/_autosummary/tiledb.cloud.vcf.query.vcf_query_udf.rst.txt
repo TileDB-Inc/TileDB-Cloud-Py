@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.query.vcf\_query\_udf
+======================================
+
+.. currentmodule:: tiledb.cloud.vcf.query
+
+.. autofunction:: vcf_query_udf

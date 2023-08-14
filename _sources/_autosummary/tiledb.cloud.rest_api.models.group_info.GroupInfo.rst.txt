@@ -1,0 +1,53 @@
+tiledb.cloud.rest\_api.models.group\_info.GroupInfo
+===================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.group_info
+
+.. autoclass:: GroupInfo
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GroupInfo.__init__
+      ~GroupInfo.to_dict
+      ~GroupInfo.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GroupInfo.access_credentials_name
+      ~GroupInfo.allowed_actions
+      ~GroupInfo.asset_count
+      ~GroupInfo.attribute_map
+      ~GroupInfo.description
+      ~GroupInfo.group_count
+      ~GroupInfo.group_type
+      ~GroupInfo.id
+      ~GroupInfo.last_accessed
+      ~GroupInfo.license_id
+      ~GroupInfo.license_text
+      ~GroupInfo.logo
+      ~GroupInfo.name
+      ~GroupInfo.namespace
+      ~GroupInfo.openapi_types
+      ~GroupInfo.public_share
+      ~GroupInfo.share_count
+      ~GroupInfo.size
+      ~GroupInfo.tags
+      ~GroupInfo.tiledb_uri
+      ~GroupInfo.uri
+   
+   

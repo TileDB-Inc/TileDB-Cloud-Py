@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.ingestion.get\_logger\_wrapper
+===============================================
+
+.. currentmodule:: tiledb.cloud.vcf.ingestion
+
+.. autofunction:: get_logger_wrapper

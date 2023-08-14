@@ -1,0 +1,6 @@
+tiledb.cloud.client.list\_shared\_groups
+========================================
+
+.. currentmodule:: tiledb.cloud.client
+
+.. autofunction:: list_shared_groups

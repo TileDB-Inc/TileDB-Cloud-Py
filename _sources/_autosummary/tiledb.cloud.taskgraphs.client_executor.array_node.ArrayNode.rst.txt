@@ -1,0 +1,46 @@
+tiledb.cloud.taskgraphs.client\_executor.array\_node.ArrayNode
+==============================================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.client_executor.array_node
+
+.. autoclass:: ArrayNode
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayNode.__init__
+      ~ArrayNode.add_done_callback
+      ~ArrayNode.cancel
+      ~ArrayNode.cancelled
+      ~ArrayNode.done
+      ~ArrayNode.exception
+      ~ArrayNode.result
+      ~ArrayNode.retry
+      ~ArrayNode.running
+      ~ArrayNode.task_id
+      ~ArrayNode.wait
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayNode.display_name
+      ~ArrayNode.fallback_name
+      ~ArrayNode.status
+      ~ArrayNode.id
+      ~ArrayNode.owner
+      ~ArrayNode.name
+   
+   

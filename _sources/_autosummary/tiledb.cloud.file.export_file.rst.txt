@@ -1,0 +1,6 @@
+tiledb.cloud.file.export\_file
+==============================
+
+.. currentmodule:: tiledb.cloud.file
+
+.. autofunction:: export_file

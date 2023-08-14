@@ -1,0 +1,6 @@
+tiledb.cloud.tasks.last\_udf\_task
+==================================
+
+.. currentmodule:: tiledb.cloud.tasks
+
+.. autofunction:: last_udf_task

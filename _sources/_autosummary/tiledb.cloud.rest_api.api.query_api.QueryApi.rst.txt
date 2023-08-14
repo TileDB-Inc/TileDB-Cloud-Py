@@ -1,0 +1,35 @@
+tiledb.cloud.rest\_api.api.query\_api.QueryApi
+==============================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.query_api
+
+.. autoclass:: QueryApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~QueryApi.__init__
+      ~QueryApi.finalize_query
+      ~QueryApi.finalize_query_with_http_info
+      ~QueryApi.get_est_result_sizes
+      ~QueryApi.get_est_result_sizes_with_http_info
+      ~QueryApi.get_file
+      ~QueryApi.get_file_with_http_info
+      ~QueryApi.submit_query
+      ~QueryApi.submit_query_json
+      ~QueryApi.submit_query_json_with_http_info
+      ~QueryApi.submit_query_with_http_info
+   
+   
+
+   
+   
+   

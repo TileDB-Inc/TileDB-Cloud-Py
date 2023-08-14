@@ -1,0 +1,36 @@
+tiledb.cloud.rest\_api.models.array\_task\_data.ArrayTaskData
+=============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_task_data
+
+.. autoclass:: ArrayTaskData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayTaskData.__init__
+      ~ArrayTaskData.to_dict
+      ~ArrayTaskData.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayTaskData.array_tasks
+      ~ArrayTaskData.attribute_map
+      ~ArrayTaskData.openapi_types
+      ~ArrayTaskData.pagination_metadata
+   
+   

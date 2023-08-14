@@ -1,0 +1,39 @@
+tiledb.cloud.rest\_api.models.group\_type.GroupType
+===================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.group_type
+
+.. autoclass:: GroupType
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GroupType.__init__
+      ~GroupType.to_dict
+      ~GroupType.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GroupType.BIOIMG
+      ~GroupType.GENERIC
+      ~GroupType.SOMA
+      ~GroupType.VCF
+      ~GroupType.allowable_values
+      ~GroupType.attribute_map
+      ~GroupType.openapi_types
+   
+   

@@ -1,0 +1,37 @@
+tiledb.cloud.tiledb\_cloud\_error
+=================================
+
+.. automodule:: tiledb.cloud.tiledb_cloud_error
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      check_exc
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      TileDBCloudError
+   
+   
+
+
+

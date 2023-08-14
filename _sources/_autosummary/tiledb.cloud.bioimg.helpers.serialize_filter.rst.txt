@@ -1,0 +1,6 @@
+tiledb.cloud.bioimg.helpers.serialize\_filter
+=============================================
+
+.. currentmodule:: tiledb.cloud.bioimg.helpers
+
+.. autofunction:: serialize_filter

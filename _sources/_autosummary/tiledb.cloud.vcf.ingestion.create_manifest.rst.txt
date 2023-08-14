@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.ingestion.create\_manifest
+===========================================
+
+.. currentmodule:: tiledb.cloud.vcf.ingestion
+
+.. autofunction:: create_manifest

@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.group\_sharing.GroupSharing
+=========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.group_sharing
+
+.. autoclass:: GroupSharing
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GroupSharing.__init__
+      ~GroupSharing.to_dict
+      ~GroupSharing.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GroupSharing.array_actions
+      ~GroupSharing.attribute_map
+      ~GroupSharing.group_actions
+      ~GroupSharing.namespace
+      ~GroupSharing.namespace_type
+      ~GroupSharing.openapi_types
+   
+   

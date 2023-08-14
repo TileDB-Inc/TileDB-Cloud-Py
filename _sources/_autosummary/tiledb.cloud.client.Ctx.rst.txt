@@ -1,0 +1,6 @@
+tiledb.cloud.client.Ctx
+=======================
+
+.. currentmodule:: tiledb.cloud.client
+
+.. autofunction:: Ctx

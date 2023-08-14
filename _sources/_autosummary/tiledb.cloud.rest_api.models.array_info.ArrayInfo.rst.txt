@@ -1,0 +1,58 @@
+tiledb.cloud.rest\_api.models.array\_info.ArrayInfo
+===================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_info
+
+.. autoclass:: ArrayInfo
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayInfo.__init__
+      ~ArrayInfo.to_dict
+      ~ArrayInfo.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayInfo.access_credentials_name
+      ~ArrayInfo.allowed_actions
+      ~ArrayInfo.attribute_map
+      ~ArrayInfo.description
+      ~ArrayInfo.file_properties
+      ~ArrayInfo.file_type
+      ~ArrayInfo.id
+      ~ArrayInfo.is_favorite
+      ~ArrayInfo.last_accessed
+      ~ArrayInfo.license_id
+      ~ArrayInfo.license_text
+      ~ArrayInfo.logo
+      ~ArrayInfo.name
+      ~ArrayInfo.namespace
+      ~ArrayInfo.namespace_subscribed
+      ~ArrayInfo.openapi_types
+      ~ArrayInfo.pricing
+      ~ArrayInfo.public_share
+      ~ArrayInfo.read_only
+      ~ArrayInfo.share_count
+      ~ArrayInfo.size
+      ~ArrayInfo.subscriptions
+      ~ArrayInfo.tags
+      ~ArrayInfo.tiledb_uri
+      ~ArrayInfo.type
+      ~ArrayInfo.uri
+   
+   

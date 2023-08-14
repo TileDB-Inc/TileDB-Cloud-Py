@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.invitation\_type.InvitationType
+=============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.invitation_type
+
+.. autoclass:: InvitationType
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~InvitationType.__init__
+      ~InvitationType.to_dict
+      ~InvitationType.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~InvitationType.ARRAY_SHARE
+      ~InvitationType.GROUP_SHARE
+      ~InvitationType.JOIN_ORGANIZATION
+      ~InvitationType.allowable_values
+      ~InvitationType.attribute_map
+      ~InvitationType.openapi_types
+   
+   

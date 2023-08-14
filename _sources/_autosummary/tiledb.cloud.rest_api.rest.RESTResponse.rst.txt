@@ -1,0 +1,46 @@
+tiledb.cloud.rest\_api.rest.RESTResponse
+========================================
+
+.. currentmodule:: tiledb.cloud.rest_api.rest
+
+.. autoclass:: RESTResponse
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RESTResponse.__init__
+      ~RESTResponse.close
+      ~RESTResponse.fileno
+      ~RESTResponse.flush
+      ~RESTResponse.getheader
+      ~RESTResponse.getheaders
+      ~RESTResponse.isatty
+      ~RESTResponse.readable
+      ~RESTResponse.readline
+      ~RESTResponse.readlines
+      ~RESTResponse.seek
+      ~RESTResponse.seekable
+      ~RESTResponse.tell
+      ~RESTResponse.truncate
+      ~RESTResponse.writable
+      ~RESTResponse.writelines
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~RESTResponse.closed
+   
+   

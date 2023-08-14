@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.retry\_strategy.RetryStrategy
+===========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.retry_strategy
+
+.. autoclass:: RetryStrategy
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RetryStrategy.__init__
+      ~RetryStrategy.to_dict
+      ~RetryStrategy.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~RetryStrategy.attribute_map
+      ~RetryStrategy.backoff
+      ~RetryStrategy.expression
+      ~RetryStrategy.limit
+      ~RetryStrategy.openapi_types
+      ~RetryStrategy.retry_policy
+   
+   

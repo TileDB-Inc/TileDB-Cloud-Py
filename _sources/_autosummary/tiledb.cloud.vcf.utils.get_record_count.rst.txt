@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.utils.get\_record\_count
+=========================================
+
+.. currentmodule:: tiledb.cloud.vcf.utils
+
+.. autofunction:: get_record_count

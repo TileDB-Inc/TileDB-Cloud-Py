@@ -1,0 +1,6 @@
+tiledb.cloud.config.user
+========================
+
+.. currentmodule:: tiledb.cloud.config
+
+.. autodata:: user

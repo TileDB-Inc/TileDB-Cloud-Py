@@ -1,0 +1,6 @@
+tiledb.cloud.array.parse\_ranges
+================================
+
+.. currentmodule:: tiledb.cloud.array
+
+.. autofunction:: parse_ranges

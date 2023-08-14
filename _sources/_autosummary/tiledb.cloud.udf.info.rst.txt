@@ -1,0 +1,6 @@
+tiledb.cloud.udf.info
+=====================
+
+.. currentmodule:: tiledb.cloud.udf
+
+.. autofunction:: info

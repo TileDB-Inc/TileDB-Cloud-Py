@@ -1,0 +1,57 @@
+tiledb.cloud.rest\_api.api.groups\_api.GroupsApi
+================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.groups_api
+
+.. autoclass:: GroupsApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GroupsApi.__init__
+      ~GroupsApi.change_group_contents
+      ~GroupsApi.change_group_contents_with_http_info
+      ~GroupsApi.create_group
+      ~GroupsApi.create_group_with_http_info
+      ~GroupsApi.delete_group
+      ~GroupsApi.delete_group_with_http_info
+      ~GroupsApi.get_group
+      ~GroupsApi.get_group_contents
+      ~GroupsApi.get_group_contents_with_http_info
+      ~GroupsApi.get_group_sharing_policies
+      ~GroupsApi.get_group_sharing_policies_with_http_info
+      ~GroupsApi.get_group_with_http_info
+      ~GroupsApi.groups_browser_owned_filters_get
+      ~GroupsApi.groups_browser_owned_filters_get_with_http_info
+      ~GroupsApi.groups_browser_public_filters_get
+      ~GroupsApi.groups_browser_public_filters_get_with_http_info
+      ~GroupsApi.groups_browser_shared_filters_get
+      ~GroupsApi.groups_browser_shared_filters_get_with_http_info
+      ~GroupsApi.groups_group_namespace_group_name_contents_filters_get
+      ~GroupsApi.groups_group_namespace_group_name_contents_filters_get_with_http_info
+      ~GroupsApi.list_owned_groups
+      ~GroupsApi.list_owned_groups_with_http_info
+      ~GroupsApi.list_public_groups
+      ~GroupsApi.list_public_groups_with_http_info
+      ~GroupsApi.list_shared_groups
+      ~GroupsApi.list_shared_groups_with_http_info
+      ~GroupsApi.register_group
+      ~GroupsApi.register_group_with_http_info
+      ~GroupsApi.share_group
+      ~GroupsApi.share_group_with_http_info
+      ~GroupsApi.update_group
+      ~GroupsApi.update_group_with_http_info
+   
+   
+
+   
+   
+   

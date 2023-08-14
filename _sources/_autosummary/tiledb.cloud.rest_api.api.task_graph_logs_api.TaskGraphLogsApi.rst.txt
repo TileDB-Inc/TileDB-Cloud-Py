@@ -1,0 +1,43 @@
+tiledb.cloud.rest\_api.api.task\_graph\_logs\_api.TaskGraphLogsApi
+==================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.task_graph_logs_api
+
+.. autoclass:: TaskGraphLogsApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TaskGraphLogsApi.__init__
+      ~TaskGraphLogsApi.create_task_graph_log
+      ~TaskGraphLogsApi.create_task_graph_log_with_http_info
+      ~TaskGraphLogsApi.get_task_graph_log
+      ~TaskGraphLogsApi.get_task_graph_log_with_http_info
+      ~TaskGraphLogsApi.list_task_graph_logs
+      ~TaskGraphLogsApi.list_task_graph_logs_with_http_info
+      ~TaskGraphLogsApi.report_client_node
+      ~TaskGraphLogsApi.report_client_node_with_http_info
+      ~TaskGraphLogsApi.resubmit_task_graph_execution
+      ~TaskGraphLogsApi.resubmit_task_graph_execution_with_http_info
+      ~TaskGraphLogsApi.retry_task_graph_execution
+      ~TaskGraphLogsApi.retry_task_graph_execution_with_http_info
+      ~TaskGraphLogsApi.stop_task_graph_execution
+      ~TaskGraphLogsApi.stop_task_graph_execution_with_http_info
+      ~TaskGraphLogsApi.submit_task_graph
+      ~TaskGraphLogsApi.submit_task_graph_with_http_info
+      ~TaskGraphLogsApi.update_task_graph_log
+      ~TaskGraphLogsApi.update_task_graph_log_with_http_info
+   
+   
+
+   
+   
+   

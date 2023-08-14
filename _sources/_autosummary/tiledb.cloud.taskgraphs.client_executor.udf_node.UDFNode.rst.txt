@@ -1,0 +1,46 @@
+tiledb.cloud.taskgraphs.client\_executor.udf\_node.UDFNode
+==========================================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.client_executor.udf_node
+
+.. autoclass:: UDFNode
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UDFNode.__init__
+      ~UDFNode.add_done_callback
+      ~UDFNode.cancel
+      ~UDFNode.cancelled
+      ~UDFNode.done
+      ~UDFNode.exception
+      ~UDFNode.result
+      ~UDFNode.retry
+      ~UDFNode.running
+      ~UDFNode.task_id
+      ~UDFNode.wait
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UDFNode.display_name
+      ~UDFNode.fallback_name
+      ~UDFNode.status
+      ~UDFNode.id
+      ~UDFNode.owner
+      ~UDFNode.name
+   
+   

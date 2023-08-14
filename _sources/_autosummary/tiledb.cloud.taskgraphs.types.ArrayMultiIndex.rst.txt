@@ -1,0 +1,6 @@
+tiledb.cloud.taskgraphs.types.ArrayMultiIndex
+=============================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.types
+
+.. autodata:: ArrayMultiIndex

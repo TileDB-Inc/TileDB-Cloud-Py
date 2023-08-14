@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.notebook\_copy.NotebookCopy
+=========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.notebook_copy
+
+.. autoclass:: NotebookCopy
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~NotebookCopy.__init__
+      ~NotebookCopy.to_dict
+      ~NotebookCopy.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~NotebookCopy.attribute_map
+      ~NotebookCopy.name
+      ~NotebookCopy.namespace
+      ~NotebookCopy.openapi_types
+      ~NotebookCopy.output_uri
+   
+   

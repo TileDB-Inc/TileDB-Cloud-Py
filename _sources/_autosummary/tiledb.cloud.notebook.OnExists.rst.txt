@@ -1,0 +1,26 @@
+tiledb.cloud.notebook.OnExists
+==============================
+
+.. currentmodule:: tiledb.cloud.notebook
+
+.. autoclass:: OnExists
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~OnExists.FAIL
+      ~OnExists.OVERWRITE
+   
+   

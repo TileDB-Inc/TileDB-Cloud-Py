@@ -1,0 +1,36 @@
+tiledb.cloud.taskgraphs.builder.TaskGraphBuilder
+================================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.builder
+
+.. autoclass:: TaskGraphBuilder
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TaskGraphBuilder.__init__
+      ~TaskGraphBuilder.add_dep
+      ~TaskGraphBuilder.array_read
+      ~TaskGraphBuilder.input
+      ~TaskGraphBuilder.sql
+      ~TaskGraphBuilder.udf
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TaskGraphBuilder.name
+   
+   

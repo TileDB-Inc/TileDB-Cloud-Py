@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.ingestion.consolidate\_fragments\_udf
+======================================================
+
+.. currentmodule:: tiledb.cloud.vcf.ingestion
+
+.. autofunction:: consolidate_fragments_udf

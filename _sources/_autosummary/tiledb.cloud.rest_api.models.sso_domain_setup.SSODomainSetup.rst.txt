@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.sso\_domain\_setup.SSODomainSetup
+===============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.sso_domain_setup
+
+.. autoclass:: SSODomainSetup
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SSODomainSetup.__init__
+      ~SSODomainSetup.to_dict
+      ~SSODomainSetup.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SSODomainSetup.attribute_map
+      ~SSODomainSetup.cname_dst
+      ~SSODomainSetup.cname_src
+      ~SSODomainSetup.openapi_types
+      ~SSODomainSetup.txt
+   
+   

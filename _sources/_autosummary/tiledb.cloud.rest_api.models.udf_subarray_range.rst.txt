@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.models.udf\_subarray\_range
+==================================================
+
+.. automodule:: tiledb.cloud.rest_api.models.udf_subarray_range
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      UDFSubarrayRange
+   
+   
+
+   
+   
+   
+
+
+

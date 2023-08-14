@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.utils.create\_index\_file
+==========================================
+
+.. currentmodule:: tiledb.cloud.vcf.utils
+
+.. autofunction:: create_index_file

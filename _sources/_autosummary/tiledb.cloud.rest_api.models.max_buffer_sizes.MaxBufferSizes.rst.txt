@@ -1,0 +1,35 @@
+tiledb.cloud.rest\_api.models.max\_buffer\_sizes.MaxBufferSizes
+===============================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.max_buffer_sizes
+
+.. autoclass:: MaxBufferSizes
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MaxBufferSizes.__init__
+      ~MaxBufferSizes.to_dict
+      ~MaxBufferSizes.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MaxBufferSizes.attribute_map
+      ~MaxBufferSizes.max_buffer_sizes
+      ~MaxBufferSizes.openapi_types
+   
+   

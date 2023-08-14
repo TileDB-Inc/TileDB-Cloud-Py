@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.udf\_copied.UDFCopied
+===================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.udf_copied
+
+.. autoclass:: UDFCopied
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UDFCopied.__init__
+      ~UDFCopied.to_dict
+      ~UDFCopied.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UDFCopied.attribute_map
+      ~UDFCopied.id
+      ~UDFCopied.name
+      ~UDFCopied.namespace
+      ~UDFCopied.openapi_types
+      ~UDFCopied.output_uri
+   
+   

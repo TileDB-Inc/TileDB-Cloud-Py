@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.array\_metadata\_entry.ArrayMetadataEntry
+=======================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_metadata_entry
+
+.. autoclass:: ArrayMetadataEntry
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayMetadataEntry.__init__
+      ~ArrayMetadataEntry.to_dict
+      ~ArrayMetadataEntry.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayMetadataEntry.attribute_map
+      ~ArrayMetadataEntry.key
+      ~ArrayMetadataEntry.openapi_types
+      ~ArrayMetadataEntry.type
+      ~ArrayMetadataEntry.value
+      ~ArrayMetadataEntry.value_num
+   
+   

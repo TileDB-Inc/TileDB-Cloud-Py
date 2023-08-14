@@ -1,0 +1,46 @@
+tiledb.cloud.dag.dag.Node
+=========================
+
+.. currentmodule:: tiledb.cloud.dag.dag
+
+.. autoclass:: Node
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Node.__init__
+      ~Node.add_done_callback
+      ~Node.cancel
+      ~Node.cancelled
+      ~Node.depends_on
+      ~Node.done
+      ~Node.exception
+      ~Node.finished
+      ~Node.result
+      ~Node.retry
+      ~Node.running
+      ~Node.task_id
+      ~Node.wait
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Node.error
+      ~Node.future
+      ~Node.name
+      ~Node.status
+   
+   

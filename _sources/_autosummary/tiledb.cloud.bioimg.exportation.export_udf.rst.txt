@@ -1,0 +1,6 @@
+tiledb.cloud.bioimg.exportation.export\_udf
+===========================================
+
+.. currentmodule:: tiledb.cloud.bioimg.exportation
+
+.. autofunction:: export_udf

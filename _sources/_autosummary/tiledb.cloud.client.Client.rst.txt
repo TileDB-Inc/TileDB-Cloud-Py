@@ -1,0 +1,31 @@
+tiledb.cloud.client.Client
+==========================
+
+.. currentmodule:: tiledb.cloud.client
+
+.. autoclass:: Client
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Client.__init__
+      ~Client.build
+      ~Client.retry_mode
+      ~Client.set_default_retries
+      ~Client.set_disable_retries
+      ~Client.set_forceful_retries
+      ~Client.set_threads
+   
+   
+
+   
+   
+   

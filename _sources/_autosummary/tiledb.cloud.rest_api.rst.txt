@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api
+======================
+
+.. automodule:: tiledb.cloud.rest_api
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+
+   tiledb.cloud.rest_api.api
+   tiledb.cloud.rest_api.api_client
+   tiledb.cloud.rest_api.configuration
+   tiledb.cloud.rest_api.exceptions
+   tiledb.cloud.rest_api.models
+   tiledb.cloud.rest_api.rest
+

@@ -1,0 +1,6 @@
+tiledb.cloud.vcf.ingestion.ingest\_samples\_dag
+===============================================
+
+.. currentmodule:: tiledb.cloud.vcf.ingestion
+
+.. autofunction:: ingest_samples_dag

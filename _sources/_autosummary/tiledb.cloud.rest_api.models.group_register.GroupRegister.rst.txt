@@ -1,0 +1,43 @@
+tiledb.cloud.rest\_api.models.group\_register.GroupRegister
+===========================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.group_register
+
+.. autoclass:: GroupRegister
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GroupRegister.__init__
+      ~GroupRegister.to_dict
+      ~GroupRegister.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GroupRegister.access_credentials_name
+      ~GroupRegister.attribute_map
+      ~GroupRegister.description
+      ~GroupRegister.license_id
+      ~GroupRegister.license_text
+      ~GroupRegister.logo
+      ~GroupRegister.name
+      ~GroupRegister.openapi_types
+      ~GroupRegister.parent
+      ~GroupRegister.tags
+      ~GroupRegister.uri
+   
+   

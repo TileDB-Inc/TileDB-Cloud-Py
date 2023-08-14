@@ -1,0 +1,29 @@
+tiledb.cloud.rest\_api.api.notebooks\_api.NotebooksApi
+======================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.notebooks_api
+
+.. autoclass:: NotebooksApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~NotebooksApi.__init__
+      ~NotebooksApi.notebooks_namespace_array_end_timestamps_get
+      ~NotebooksApi.notebooks_namespace_array_end_timestamps_get_with_http_info
+      ~NotebooksApi.notebooks_namespace_array_prune_post
+      ~NotebooksApi.notebooks_namespace_array_prune_post_with_http_info
+   
+   
+
+   
+   
+   

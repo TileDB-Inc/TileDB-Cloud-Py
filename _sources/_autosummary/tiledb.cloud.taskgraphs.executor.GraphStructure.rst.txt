@@ -1,0 +1,6 @@
+tiledb.cloud.taskgraphs.executor.GraphStructure
+===============================================
+
+.. currentmodule:: tiledb.cloud.taskgraphs.executor
+
+.. autodata:: GraphStructure

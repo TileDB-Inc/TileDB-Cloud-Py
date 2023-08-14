@@ -1,0 +1,39 @@
+tiledb.cloud.rest\_api.models.organization\_roles.OrganizationRoles
+===================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.organization_roles
+
+.. autoclass:: OrganizationRoles
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OrganizationRoles.__init__
+      ~OrganizationRoles.to_dict
+      ~OrganizationRoles.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~OrganizationRoles.ADMIN
+      ~OrganizationRoles.OWNER
+      ~OrganizationRoles.READ_ONLY
+      ~OrganizationRoles.READ_WRITE
+      ~OrganizationRoles.allowable_values
+      ~OrganizationRoles.attribute_map
+      ~OrganizationRoles.openapi_types
+   
+   

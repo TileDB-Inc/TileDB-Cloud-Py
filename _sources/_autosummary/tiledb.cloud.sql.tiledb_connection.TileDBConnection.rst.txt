@@ -1,0 +1,28 @@
+tiledb.cloud.sql.tiledb\_connection.TileDBConnection
+====================================================
+
+.. currentmodule:: tiledb.cloud.sql.tiledb_connection
+
+.. autoclass:: TileDBConnection
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TileDBConnection.__init__
+      ~TileDBConnection.close
+      ~TileDBConnection.commit
+      ~TileDBConnection.cursor
+   
+   
+
+   
+   
+   

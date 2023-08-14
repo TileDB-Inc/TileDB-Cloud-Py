@@ -1,0 +1,47 @@
+tiledb.cloud.rest\_api.api.udf\_api.UdfApi
+==========================================
+
+.. currentmodule:: tiledb.cloud.rest_api.api.udf_api
+
+.. autoclass:: UdfApi
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UdfApi.__init__
+      ~UdfApi.delete_udf_info
+      ~UdfApi.delete_udf_info_with_http_info
+      ~UdfApi.get_udf_info
+      ~UdfApi.get_udf_info_sharing_policies
+      ~UdfApi.get_udf_info_sharing_policies_with_http_info
+      ~UdfApi.get_udf_info_with_http_info
+      ~UdfApi.handle_copy_udf
+      ~UdfApi.handle_copy_udf_with_http_info
+      ~UdfApi.register_udf_info
+      ~UdfApi.register_udf_info_with_http_info
+      ~UdfApi.share_udf_info
+      ~UdfApi.share_udf_info_with_http_info
+      ~UdfApi.submit_generic_udf
+      ~UdfApi.submit_generic_udf_with_http_info
+      ~UdfApi.submit_multi_array_udf
+      ~UdfApi.submit_multi_array_udf_with_http_info
+      ~UdfApi.submit_udf
+      ~UdfApi.submit_udf_with_http_info
+      ~UdfApi.udf_namespace_array_end_timestamps_get
+      ~UdfApi.udf_namespace_array_end_timestamps_get_with_http_info
+      ~UdfApi.update_udf_info
+      ~UdfApi.update_udf_info_with_http_info
+   
+   
+
+   
+   
+   

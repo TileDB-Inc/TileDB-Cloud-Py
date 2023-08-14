@@ -1,0 +1,31 @@
+tiledb.cloud.rest\_api.api.favorites\_api
+=========================================
+
+.. automodule:: tiledb.cloud.rest_api.api.favorites_api
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      FavoritesApi
+   
+   
+
+   
+   
+   
+
+
+

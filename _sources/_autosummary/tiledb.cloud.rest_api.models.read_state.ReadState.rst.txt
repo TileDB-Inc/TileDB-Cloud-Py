@@ -1,0 +1,38 @@
+tiledb.cloud.rest\_api.models.read\_state.ReadState
+===================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.read_state
+
+.. autoclass:: ReadState
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ReadState.__init__
+      ~ReadState.to_dict
+      ~ReadState.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ReadState.attribute_map
+      ~ReadState.initialized
+      ~ReadState.openapi_types
+      ~ReadState.overflowed
+      ~ReadState.subarray_partitioner
+      ~ReadState.unsplittable
+   
+   

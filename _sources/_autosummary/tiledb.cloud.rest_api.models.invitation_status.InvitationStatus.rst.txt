@@ -1,0 +1,37 @@
+tiledb.cloud.rest\_api.models.invitation\_status.InvitationStatus
+=================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.invitation_status
+
+.. autoclass:: InvitationStatus
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~InvitationStatus.__init__
+      ~InvitationStatus.to_dict
+      ~InvitationStatus.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~InvitationStatus.ACCEPTED
+      ~InvitationStatus.PENDING
+      ~InvitationStatus.allowable_values
+      ~InvitationStatus.attribute_map
+      ~InvitationStatus.openapi_types
+   
+   

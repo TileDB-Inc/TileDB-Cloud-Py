@@ -1,0 +1,35 @@
+tiledb.cloud.rest\_api.models.array\_vacuum\_request.ArrayVacuumRequest
+=======================================================================
+
+.. currentmodule:: tiledb.cloud.rest_api.models.array_vacuum_request
+
+.. autoclass:: ArrayVacuumRequest
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ArrayVacuumRequest.__init__
+      ~ArrayVacuumRequest.to_dict
+      ~ArrayVacuumRequest.to_str
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ArrayVacuumRequest.attribute_map
+      ~ArrayVacuumRequest.config
+      ~ArrayVacuumRequest.openapi_types
+   
+   
