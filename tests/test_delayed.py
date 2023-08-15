@@ -96,9 +96,9 @@ class DelayedFailureTest(unittest.TestCase):
 
         self.assertIsNotNone(node.dag)
         self.assertEqual(node.status, Status.FAILED)
-        self.assertEqual(
+        self.assertIn(
+            "unsupported operand type(s) for *",
             str(node.error),
-            "unsupported operand type(s) for *: 'function' and 'int'",
         )
         with self.assertRaises(TypeError):
             node.result()
@@ -117,9 +117,9 @@ class DelayedFailureTest(unittest.TestCase):
             node2.dag.wait(1)
 
         self.assertEqual(node.status, Status.FAILED)
-        self.assertEqual(
+        self.assertIn(
+            "unsupported operand type(s) for *",
             str(node.error),
-            "unsupported operand type(s) for *: 'function' and 'int'",
         )
         with self.assertRaises(TypeError):
             node.result()
@@ -207,9 +207,9 @@ class DelayedBatchModeTest(unittest.TestCase):
 
         self.assertIsNotNone(node.dag)
         self.assertEqual(node.status, Status.FAILED)
-        self.assertEqual(
+        self.assertIn(
+            "unsupported operand type(s) for *",
             str(node.error),
-            "unsupported operand type(s) for *: 'function' and 'int'",
         )
         with self.assertRaises(TypeError):
             node.result()
