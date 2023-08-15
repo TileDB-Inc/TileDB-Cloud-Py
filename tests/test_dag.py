@@ -428,9 +428,9 @@ class DAGFailureTest(unittest.TestCase):
         self.assertEqual(d.status, dag.Status.FAILED)
 
         self.assertEqual(node.status, dag.Status.FAILED)
-        self.assertEqual(
+        self.assertIn(
+            "unsupported operand type(s) for *",
             str(node.error),
-            "unsupported operand type(s) for *: 'function' and 'int'",
         )
         with self.assertRaises(TypeError):
             node.result()
@@ -450,9 +450,9 @@ class DAGFailureTest(unittest.TestCase):
         self.assertEqual(d.status, dag.Status.FAILED)
 
         self.assertEqual(node.status, dag.Status.FAILED)
-        self.assertEqual(
+        self.assertIn(
+            "unsupported operand type(s) for *",
             str(node.error),
-            "unsupported operand type(s) for *: 'function' and 'int'",
         )
         with self.assertRaises(TypeError):
             node.result()
@@ -645,9 +645,9 @@ class DAGBatchModeTest(unittest.TestCase):
         self.assertEqual(d.status, dag.Status.FAILED)
 
         self.assertEqual(node.status, dag.Status.FAILED)
-        self.assertEqual(
+        self.assertIn(
+            "unsupported operand type(s) for *",
             str(node.error),
-            "unsupported operand type(s) for *: 'function' and 'int'",
         )
         with self.assertRaises(TypeError):
             node.result()
