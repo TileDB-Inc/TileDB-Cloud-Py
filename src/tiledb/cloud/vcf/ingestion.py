@@ -281,8 +281,8 @@ def read_metadata_uris_udf(
     with tiledb.scope_ctx(config):
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
             with tiledb.open(metadata_uri) as A:
-                results = A.query(dims=[], attrs=["uri"])[:]["uri"]
-            results = [x.decode() for x in results]
+                df = A.query(dims=[], attrs=[metadata_attr]).df[:]
+            results = df[metadata_attr].to_list()
 
             if max_files:
                 results = results[:max_files]
@@ -1058,7 +1058,7 @@ def ingest_manifest_dag(
             **kwargs,
         )
 
-    sample_uris = submit(
+    filtered_sample_uris = submit(
         filter_uris_udf,
         dataset_uri_result,
         sample_uris,
@@ -1070,7 +1070,7 @@ def ingest_manifest_dag(
 
     run_dag(graph)
 
-    sample_uris = sample_uris.result()
+    sample_uris = filtered_sample_uris.result()
 
     if not sample_uris:
         logger.info("All samples found are already in the manifest.")
@@ -1456,16 +1456,10 @@ def ingest(
     """
 
     # Validate user input
-    if not search_uri and not sample_list_uri and not metadata_uri:
+    if sum([bool(search_uri), bool(sample_list_uri), bool(metadata_uri)]) != 1:
         raise ValueError(
-            "One of `search_uri`, `sample_list_uri`, or `metadata_uri`"
+            "Exactly one of `search_uri`, `sample_list_uri`, or `metadata_uri`"
             " must be provided."
-        )
-
-    if sum([bool(search_uri), bool(sample_list_uri), bool(metadata_uri)]) > 1:
-        raise ValueError(
-            "Only one of `search_uri`, `sample_list_uri`, or `metadata_uri`"
-            " can be provided."
         )
 
     if not search_uri and (pattern or ignore):
