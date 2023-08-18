@@ -281,8 +281,8 @@ def read_metadata_uris_udf(
     with tiledb.scope_ctx(config):
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
             with tiledb.open(metadata_uri) as A:
-                df = A.query(dims=[], attrs=[metadata_attr]).df[:]
-            results = df[metadata_attr].to_list()
+                results = A.query(dims=[], attrs=["uri"])[:]["uri"]
+            results = [x.decode() for x in results]
 
             if max_files:
                 results = results[:max_files]
