@@ -85,6 +85,13 @@ def register(
         _add_to(namespace=namespace, name=name, parent_uri=parent_uri)
 
 
+def info(uri: str) -> object:
+    """Gets metadata about the named TileDB Cloud group."""
+    namespace, group_name = utils.split_uri(uri)
+    groups_client = client.build(rest_api.GroupsApi)
+    return groups_client.get_group(group_namespace=namespace, group_name=group_name)
+
+
 def deregister(
     uri: str,
     *,
