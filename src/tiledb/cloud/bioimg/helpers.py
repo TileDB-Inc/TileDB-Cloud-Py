@@ -24,19 +24,25 @@ def get_uris(
             if uri.endswith((".tiff", ".tif", ".tdb")):
                 yield uri, create_output_path(uri, output_dir)
 
-    if len(source) == 1 and vfs.is_dir(source[0]):
-        # Check if the dir is actually a tiledb group for exportation
-        with tiledb.scope_ctx(ctx_or_config=config):
-            if tiledb.object_type(source[0]) != "group":
-                # Folder like input
-                contents = vfs.ls(source[0])
-                if len(contents) != 0:
-                    return tuple(iter_paths(contents))
+    if len(source) == 1:
+        if source[0].startswith("tiledb://"):
+            # Support tiledb uri single image
+            return ((source[0], create_output_path(source[0], output_dir)),)
+        elif vfs.is_dir(source[0]):
+            # Check if the dir is actually a tiledb group for exportation on VFS
+            with tiledb.scope_ctx(ctx_or_config=config):
+                if tiledb.object_type(source[0]) != "group":
+                    # Folder like input
+                    contents = vfs.ls(source[0])
+                    if len(contents) != 0:
+                        return tuple(iter_paths(contents))
+                    else:
+                        raise ValueError(
+                            "Input bucket should contain images for ingestion"
+                        )
                 else:
-                    raise ValueError("Input bucket should contain images for ingestion")
-            else:
-                # This is the exportation scenario for single tdb image
-                return ((source[0], create_output_path(source[0], output_dir)),)
+                    # This is the exportation scenario for single tdb image
+                    return ((source[0], create_output_path(source[0], output_dir)),)
     elif isinstance(source, Sequence):
         # List of input uris - single file is one element list
         return tuple(iter_paths(source))
