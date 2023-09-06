@@ -220,6 +220,58 @@ def create_dataset_udf(
         return dataset_uri
 
 
+def register_dataset_udf(
+    dataset_uri: str,
+    *,
+    register_name: str,
+    namespace: Optional[str] = None,
+    config: Optional[Mapping[str, Any]] = None,
+    verbose: bool = False,
+) -> None:
+    """
+    Register the dataset on TileDB Cloud.
+
+    :param dataset_uri: dataset URI
+    :param register_name: name to register the dataset with on TileDB Cloud
+    :param namespace: TileDB Cloud namespace, defaults to the user's default namespace
+    :param config: config dictionary, defaults to None
+    :param verbose: verbose logging, defaults to False
+    """
+
+    logger = get_logger_wrapper(verbose)
+
+    namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
+    tiledb_uri = f"tiledb://{namespace}/{register_name}"
+
+    with tiledb.scope_ctx(config):
+        found = False
+        try:
+            object_type = tiledb.object_type(tiledb_uri)
+            if object_type == "group":
+                found = True
+            elif object_type is not None:
+                raise ValueError(
+                    f"Another object is already registered at '{tiledb_uri}'."
+                )
+
+        except Exception:
+            # tiledb.object_type raises an exception if the namespace does not exist
+            logger.error(
+                "Error checking if %r is registered. Bad namespace?", tiledb_uri
+            )
+            raise
+
+        if found:
+            logger.info("Dataset already registered at %r.", tiledb_uri)
+        else:
+            logger.info("Registering dataset at %r.", tiledb_uri)
+            tiledb.cloud.groups.register(
+                dataset_uri,
+                name=register_name,
+                namespace=namespace,
+            )
+
+
 def read_uris_udf(
     dataset_uri: str,
     list_uri: str,
@@ -1380,6 +1432,7 @@ def ingest(
     *,
     config=None,
     namespace: Optional[str] = None,
+    register_name: Optional[str] = None,
     search_uri: Optional[str] = None,
     pattern: Optional[str] = None,
     ignore: Optional[str] = None,
@@ -1414,6 +1467,8 @@ def ingest(
     :param dataset_uri: dataset URI
     :param config: config dictionary, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
+    :param register_name: name to register the dataset with on TileDB Cloud,
+        defaults to None
     :param search_uri: URI to search for VCF files, defaults to None
     :param pattern: Unix shell style pattern to match when searching for VCF files,
         defaults to None
@@ -1519,5 +1574,15 @@ def ingest(
         compute=compute,
         consolidate_stats=consolidate_stats,
     )
+
+    # Register the dataset on TileDB Cloud
+    if register_name:
+        register_dataset_udf(
+            dataset_uri,
+            namespace=namespace,
+            register_name=register_name,
+            config=config,
+            verbose=verbose,
+        )
 
     return dag, sample_uris
