@@ -1,5 +1,6 @@
 from .allele_frequency import read_allele_frequency
 from .ingestion import Contigs
+from .ingestion import create_dataset_udf as create_dataset
 from .ingestion import ingest
 from .query import build_read_dag
 from .query import read
@@ -12,6 +13,7 @@ from .utils import is_bgzipped
 
 __all__ = [
     "Contigs",
+    "create_dataset",
     "ingest",
     "build_read_dag",
     "read",
