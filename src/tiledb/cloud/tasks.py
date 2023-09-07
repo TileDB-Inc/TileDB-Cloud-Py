@@ -1,8 +1,6 @@
 import datetime
 import uuid
-from typing import Any
-
-import pandas as pd
+from typing import TYPE_CHECKING, Any
 
 from tiledb.cloud import array
 from tiledb.cloud import client
@@ -14,6 +12,9 @@ from tiledb.cloud._results import decoders
 from tiledb.cloud._results import results
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
+
+if TYPE_CHECKING:
+    import pandas
 
 
 def task(id, async_req=False):
@@ -143,6 +144,6 @@ def fetch_results_pandas(
     task_id: uuid.UUID,
     *,
     result_format: str = models.ResultFormat.NATIVE,
-) -> pd.DataFrame:
+) -> "pandas.DataFrame":
     """Fetches the results of a previously-executed UDF or SQL query."""
     return results.fetch_remote(task_id, decoders.PandasDecoder(result_format))

@@ -3,14 +3,16 @@
 import abc
 import dataclasses
 import json
-from typing import Any, Generic, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 import cloudpickle
-import pandas
 import pyarrow
 
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud.rest_api import models
+
+if TYPE_CHECKING:
+    import pandas
 
 _T = TypeVar("_T")
 
@@ -60,7 +62,7 @@ class Decoder(AbstractDecoder[_T]):
 
 
 @dataclasses.dataclass(frozen=True)
-class PandasDecoder(AbstractDecoder[pandas.DataFrame]):
+class PandasDecoder(AbstractDecoder["pandas.DataFrame"]):
     """Decoder which turns things into DataFrames.
 
     The exact name and location of this class is important, because instances
@@ -69,8 +71,10 @@ class PandasDecoder(AbstractDecoder[pandas.DataFrame]):
 
     format: str
 
-    def decode(self, data: bytes) -> pandas.DataFrame:
+    def decode(self, data: bytes) -> "pandas.DataFrame":
         if self.format == models.ResultFormat.ARROW:
             reader = pyarrow.RecordBatchStreamReader(data)
             return reader.read_pandas()
+        import pandas
+
         return pandas.DataFrame(Decoder(self.format).decode(data))

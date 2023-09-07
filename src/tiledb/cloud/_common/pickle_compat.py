@@ -15,9 +15,9 @@ import sys
 import types
 
 import cloudpickle.cloudpickle as cpcp
+import importlib_metadata
 import numpy
 import packaging.version as pkgver
-import pandas
 
 
 def patch_cloudpickle() -> None:
@@ -119,8 +119,16 @@ def patch_cloudpickle() -> None:
 def patch_pandas() -> None:
     """Make older Pandas versions able to unpickle new Pandas dataframes."""
 
-    pandas_ver = pkgver.parse(pandas.__version__)
-    if pkgver.parse("1.5") <= pandas_ver:
+    try:
+        pandas_ver_str = importlib_metadata.version("pandas")
+    except Exception:
+        # Not installed via the usual means; just import it and see
+        # what version we have.
+        import pandas
+
+        pandas_ver_str = pandas.__version__
+
+    if pkgver.parse("1.5") <= pkgver.parse(pandas_ver_str):
         # v1.5 is the newest version as of this writing.
         return
 

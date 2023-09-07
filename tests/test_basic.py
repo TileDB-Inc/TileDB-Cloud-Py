@@ -1,9 +1,13 @@
+import ast
+import subprocess
+import sys
 import unittest
 import uuid
 
 import numpy
 import numpy as np
 import pyarrow
+import pytest
 
 import tiledb
 import tiledb.cloud
@@ -17,6 +21,15 @@ from tiledb.cloud._common import testonly
 
 
 class BasicTests(unittest.TestCase):
+    @pytest.mark.xfail(reason="awaits next release of tiledb python package")
+    def test_dont_import_pandas(self):
+        # Get a list of all modules from a completely fresh interpreter.
+        all_mods_str = subprocess.check_output(
+            (sys.executable, "-c", "import sys, tiledb.cloud; print(list(sys.modules))")
+        )
+        all_mods = ast.literal_eval(all_mods_str.decode())
+        assert "pandas" not in all_mods
+
     def test_info(self):
         self.assertIsNotNone(array.info("tiledb://TileDB-Inc/quickstart_sparse"))
         self.assertIsNotNone(groups.info("tiledb://TileDB-Inc/TileDB_101"))
