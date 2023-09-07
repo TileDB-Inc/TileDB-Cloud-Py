@@ -165,6 +165,7 @@ def create_dataset_udf(
     extra_attrs: Optional[Union[Sequence[str], str]] = None,
     vcf_attrs: Optional[str] = None,
     anchor_gap: Optional[int] = None,
+    compression_level: Optional[int] = None,
     verbose: bool = False,
 ) -> str:
     """
@@ -175,6 +176,8 @@ def create_dataset_udf(
     :param extra_attrs: INFO/FORMAT fields to materialize, defaults to None
     :param vcf_attrs: VCF with all INFO/FORMAT fields to materialize, defaults to None
     :param anchor_gap: anchor gap for VCF dataset, defaults to None
+    :param compression_level: zstd compression level for the VCF dataset,
+        defaults to None (uses the default level in TileDB-VCF)
     :param verbose: verbose logging, defaults to False
     :return: dataset URI
     """
@@ -203,6 +206,7 @@ def create_dataset_udf(
                 extra_attrs=extra_attrs,
                 vcf_attrs=vcf_attrs,
                 anchor_gap=anchor_gap,
+                compression_level=compression_level,
             )
 
             # Create log array and add it to the dataset group
@@ -1016,6 +1020,7 @@ def ingest_manifest_dag(
     extra_attrs: Optional[Union[Sequence[str], str]] = None,
     vcf_attrs: Optional[str] = None,
     anchor_gap: Optional[int] = None,
+    compression_level: Optional[int] = None,
     verbose: bool = False,
     batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
@@ -1039,6 +1044,8 @@ def ingest_manifest_dag(
     :param extra_attrs: INFO/FORMAT fields to materialize, defaults to None
     :param vcf_attrs: VCF with all INFO/FORMAT fields to materialize, defaults to None
     :param anchor_gap: anchor gap for VCF dataset, defaults to None
+    :param compression_level: zstd compression level for the VCF dataset,
+        defaults to None (uses the default level in TileDB-VCF)
     :param verbose: verbose logging, defaults to False
     :param batch_mode: run all DAGs in batch mode, defaults to True
     :param access_credentials_name: name of role in TileDB Cloud to use in tasks
@@ -1067,6 +1074,7 @@ def ingest_manifest_dag(
         extra_attrs=extra_attrs,
         vcf_attrs=vcf_attrs,
         anchor_gap=anchor_gap,
+        compression_level=compression_level,
         verbose=verbose,
         name="Create VCF dataset ",
         **kwargs,
@@ -1446,6 +1454,7 @@ def ingest(
     extra_attrs: Optional[Union[Sequence[str], str]] = DEFAULT_ATTRIBUTES,
     vcf_attrs: Optional[str] = None,
     anchor_gap: Optional[int] = None,
+    compression_level: Optional[int] = None,
     manifest_batch_size: int = MANIFEST_BATCH_SIZE,
     manifest_workers: int = MANIFEST_WORKERS,
     vcf_batch_size: int = VCF_BATCH_SIZE,
@@ -1489,6 +1498,8 @@ def ingest(
     :param vcf_attrs: VCF with all INFO/FORMAT fields to materialize,
         defaults to None
     :param anchor_gap: anchor gap for VCF dataset, defaults to None
+    :param compression_level: zstd compression level for the VCF dataset,
+        defaults to None (uses the default level in TileDB-VCF)
     :param manifest_batch_size: batch size for manifest ingestion,
         defaults to MANIFEST_BATCH_SIZE
     :param manifest_workers: number of workers for manifest ingestion,
@@ -1548,6 +1559,7 @@ def ingest(
         extra_attrs=extra_attrs,
         vcf_attrs=vcf_attrs,
         anchor_gap=anchor_gap,
+        compression_level=compression_level,
         verbose=verbose,
         batch_mode=batch_mode,
         access_credentials_name=access_credentials_name,
