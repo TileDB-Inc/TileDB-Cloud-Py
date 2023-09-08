@@ -124,7 +124,7 @@ def vcf_query_udf(
     logger.debug("tiledbvcf=%s", tiledbvcf.version)
 
     # TODO: evaluate TileDB config options
-    # config["rest.use_refactored_array_open"] = True
+    config["rest.use_refactored_array_open"] = True
     # Avoid issue loading tile offsets for a large number of fragments
     # config["sm.mem.reader.sparse_unordered_with_dups.ratio_array_data"] = 0.4
     # config["sm.mem.reader.sparse_unordered_with_dups.ratio_coords"] = 0.4
