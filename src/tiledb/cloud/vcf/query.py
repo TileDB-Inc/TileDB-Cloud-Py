@@ -232,6 +232,7 @@ def build_read_dag(
     num_region_partitions: int = 1,
     max_workers: int = MAX_WORKERS,
     samples: Optional[Union[Sequence[str], str]] = None,
+    num_samples: Optional[int] = None,
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
     transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
@@ -269,13 +270,14 @@ def build_read_dag(
 
     # Return an empty table if no samples or regions are specified.
     # This avoids reading the entire array by accident.
-    if samples is None or (regions is None and bed_file is None):
+    #    if samples is None or (regions is None and bed_file is None):
+    if regions is None and bed_file is None:
         return pa.table({})
 
     attrs = attrs or DEFAULT_ATTRS
 
     # Set number of sample partitions
-    num_samples = len(samples)
+    num_samples = num_samples or len(samples)
     sample_batch_size = ceil(num_samples * num_region_partitions / max_workers)
     sample_batch_size = min(sample_batch_size, max_sample_batch_size)  # max batch size
     sample_batch_size = max(sample_batch_size, MIN_SAMPLE_BATCH_SIZE)  # min batch size
@@ -349,6 +351,7 @@ def read(
     num_region_partitions: int = 1,
     max_workers: int = MAX_WORKERS,
     samples: Optional[Union[Sequence[str], str]] = None,
+    num_samples: Optional[int] = None,
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
     transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
@@ -391,6 +394,7 @@ def read(
         num_region_partitions=num_region_partitions,
         max_workers=max_workers,
         samples=samples,
+        num_samples=num_samples,
         memory_budget_mb=memory_budget_mb,
         af_filter=af_filter,
         transform_result=transform_result,
