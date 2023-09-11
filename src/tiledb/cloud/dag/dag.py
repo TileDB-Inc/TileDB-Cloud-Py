@@ -1049,10 +1049,12 @@ class DAG:
                 # If the parent failed, put this back onto the "unstarted" pile.
                 self.not_started_nodes[node.id] = node
                 to_report = None
-            else:
-                assert node.status is Status.FAILED
+            elif node.status is Status.FAILED:
                 self.failed_nodes[node.id] = node
-                to_report = models.ArrayTaskStatus.FAILED
+                if node.mode == Mode.LOCAL:
+                    to_report = models.ArrayTaskStatus.FAILED
+            else:
+                raise AssertionError(f"Unknown node status {node.status}")
 
             if self.mode != Mode.BATCH:
                 for child in node.children.values():
