@@ -7,7 +7,6 @@ import uuid
 import numpy
 import numpy as np
 import pyarrow
-import pytest
 
 import tiledb
 import tiledb.cloud
@@ -21,7 +20,6 @@ from tiledb.cloud._common import testonly
 
 
 class BasicTests(unittest.TestCase):
-    @pytest.mark.xfail(reason="awaits next release of tiledb python package")
     def test_dont_import_pandas(self):
         # Get a list of all modules from a completely fresh interpreter.
         all_mods_str = subprocess.check_output(
