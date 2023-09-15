@@ -6,6 +6,8 @@ import uuid
 
 import numpy
 import numpy as np
+import packaging.version as pkgver
+import pandas
 import pyarrow
 
 import tiledb
@@ -20,6 +22,10 @@ from tiledb.cloud._common import testonly
 
 
 class BasicTests(unittest.TestCase):
+    @unittest.skipIf(
+        pkgver.parse(pandas.__version__) < pkgver.parse("1.5"),
+        "does not work if we have to patch Pandas",
+    )
     def test_dont_import_pandas(self):
         # Get a list of all modules from a completely fresh interpreter.
         all_mods_str = subprocess.check_output(
