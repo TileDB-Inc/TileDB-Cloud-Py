@@ -4,10 +4,8 @@ import subprocess
 import sys
 from collections import defaultdict
 from fnmatch import fnmatch
-from functools import partial
 from math import ceil
 from multiprocessing.pool import ThreadPool
-from os.path import basename
 from typing import Any, Mapping, Optional, Sequence, Tuple, Union
 
 import numpy as np
@@ -16,6 +14,7 @@ import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.utilities import Profiler
+from tiledb.cloud.utilities import consolidate_fragments
 from tiledb.cloud.utilities import create_log_array
 from tiledb.cloud.utilities import get_logger
 from tiledb.cloud.utilities import read_file
@@ -44,9 +43,6 @@ VCF_BATCH_SIZE = 10
 VCF_WORKERS = 40
 VCF_THREADS = 8
 VCF_HEADER_MB = 50  # memory per sample per thread
-TARGET_FRAGMENT_BYTES = 1 << 30  # 1 GiB
-CONSOLIDATION_BUFFER_SIZE = 1 << 30  # 1 GiB
-CONSOLIDATION_THREADS = 8
 
 # Consolidation task resources
 CONSOLIDATE_RESOURCES = {
@@ -54,16 +50,10 @@ CONSOLIDATE_RESOURCES = {
     "memory": "16Gi",
 }
 
-# Consolidation fragment task resources
-CONSOLIDATE_FRAGMENT_RESOURCES = {
-    "cpu": "8",
-    "memory": "32Gi",
-}
-
 # Load manifest task resources
 MANIFEST_RESOURCES = {
-    "cpu": "1",
-    "memory": "1Gi",
+    "cpu": "2",
+    "memory": "2Gi",
 }
 
 
@@ -860,144 +850,6 @@ def consolidate_dataset_udf(
                         print(e)
 
 
-def consolidate_fragments_udf(
-    dataset_uri: str,
-    *,
-    group_member: str,
-    config: Optional[Mapping[str, Any]] = None,
-    id: str = "consolidate",
-    verbose: bool = False,
-    unique_dim_index: int = 0,
-) -> None:
-    """
-    Consolidate fragments for an array in the dataset using a bin packing consolidation
-    algorithm that packs fragments into bins based on their size and the target size of
-    the consolidated fragment.
-
-    Fragments are first grouped by the nonempty-domain of the dimension with index
-    `unique_dim_index`. This ensures that fragments with the same nonempty-domain are
-    consolidated together. For example, fragments with `contig=chr1` will be
-    consolidated together, and fragments with `contig=chr2` will be consolidated
-    together, but fragments with `contig=chr1` and `contig=chr2` will not be
-    consolidated together.
-
-    :param dataset_uri: dataset URI
-    :param group_member: array group member
-    :param config: config dictionary, defaults to None
-    :param id: profiler event id, defaults to "consolidate"
-    :param verbose: verbose logging, defaults to False
-    :param unique_dim_index: index of the dimension used to group fragments,
-        defaults to 0
-    """
-
-    logger = get_logger_wrapper(verbose)
-
-    # Define a method to pack and consolidate fragments.
-    def consolidate_fragments(
-        fragment_info_list: Sequence[tiledb.FragmentInfo],
-        config: Optional[Mapping[str, Any]] = None,
-    ) -> None:
-        """
-        Run a bit packing algorithm to select fragments to be consolidated together
-        into a single fragment.
-
-        :param fragment_info_list: list of fragment info objects
-        :param config: config dictionary, defaults to None
-        """
-
-        # Return if there are no fragments to consolidate.
-        if len(fragment_info_list) < 2:
-            return
-
-        total_size = []
-        fragment_bins = []
-        vfs = tiledb.VFS(config=config)
-
-        for fi in fragment_info_list:
-            # Get the size of the fragment.
-            size = vfs.dir_size(fi.uri)
-            logger.debug("Packing fragment with size: %d", size)
-
-            packed = False
-            for i in range(len(total_size)):
-                # Add fragment to the first bin that has enough space.
-                if total_size[i] + size < TARGET_FRAGMENT_BYTES:
-                    total_size[i] += size
-                    fragment_bins[i].append(basename(fi.uri))
-                    logger.debug(
-                        "  packed into bin %d, new size = %f MiB",
-                        i,
-                        total_size[-1] / (1 << 20),
-                    )
-                    packed = True
-                    break
-
-            # If fragment was not packed into any bin, create a new bin.
-            if not packed:
-                total_size.append(size)
-                fragment_bins.append([basename(fi.uri)])
-                logger.debug(
-                    "  packed into new bin, new size = %f MiB",
-                    total_size[-1] / (1 << 20),
-                )
-
-        logger.debug("Total bins = %d", len(total_size))
-
-        # Consolidate the fragments in each bin.
-        for i, fragment_uris in enumerate(fragment_bins):
-            logger.debug(
-                "  %d: num_uris = %d size = %.3f MiB",
-                i,
-                len(fragment_uris),
-                total_size[i] / (1 << 20),
-            )
-
-            # If there is only one fragment, skip consolidation.
-            if len(fragment_uris) > 1:
-                logger.debug("Consolidating %d fragments", len(fragment_uris))
-
-                # Set config to consolidate fragments.
-                config = tiledb.Config(config)
-                config["sm.consolidation.mode"] = "fragments"
-                config["sm.consolidation.buffer_size"] = f"{CONSOLIDATION_BUFFER_SIZE}"
-
-                # Consolidate fragments.
-                with tiledb.open(array_uri, "w", config=config) as array:
-                    array.consolidate(fragment_uris=fragment_uris)
-
-    with tiledb.scope_ctx(config):
-        with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
-            with tiledb.Group(dataset_uri) as group:
-                array_uri = group[group_member].uri
-
-            # Build list of fragments to be consolidated for each unique nonempty-domain
-            # in the unique dimension.
-            fragment_info_lists = defaultdict(list)
-
-            fis = tiledb.FragmentInfoList(array_uri)
-            for fi in fis:
-                fragment_info_lists[fi.nonempty_domain[unique_dim_index]].append(fi)
-
-            logger.debug(
-                "Consolidating %d fragments into %d fragments",
-                len(fis),
-                len(fragment_info_lists),
-            )
-
-            # Run consolidation on each list of fragments.
-            with ThreadPool(CONSOLIDATION_THREADS) as pool:
-                pool.map(
-                    partial(consolidate_fragments, config=config),
-                    fragment_info_lists.values(),
-                )
-
-            # Vacuum fragments.
-            logger.debug("Vacuuming fragments")
-            config = tiledb.Config(config)
-            config["sm.vacuum.mode"] = "fragments"
-            tiledb.vacuum(array_uri, config=config)
-
-
 # --------------------------------------------------------------------
 # DAGs
 # --------------------------------------------------------------------
@@ -1374,46 +1226,25 @@ def ingest_samples_dag(
 
     # Consolidate fragments in the stats arrays, if enabled
     if consolidate_stats:
-        consolidate_ac = submit(
-            consolidate_fragments_udf,
-            dataset_uri,
-            group_member="allele_count",
-            config=config,
-            id="vcf-consol-ac",
-            verbose=verbose,
-            resources=CONSOLIDATE_FRAGMENT_RESOURCES,
-            name="Consolidate allele_count ",
-            **kwargs,
-        )
 
-        consolidate_vs = submit(
-            consolidate_fragments_udf,
-            dataset_uri,
-            group_member="variant_stats",
-            config=config,
-            id="vcf-consol-vs",
-            verbose=verbose,
-            resources=CONSOLIDATE_FRAGMENT_RESOURCES,
-            name="Consolidate variant stats ",
-            **kwargs,
-        )
+        def group_member_uri(group_uri, group_member, config):
+            with tiledb.scope_ctx(config):
+                with tiledb.Group(group_uri) as group:
+                    try:
+                        return group[group_member].uri
+                    except Exception:
+                        return None
 
-        consolidate_ac.depends_on(consolidate)
-        consolidate_vs.depends_on(consolidate)
-
-        consolidate = submit(
-            consolidate_dataset_udf,
-            dataset_uri,
-            config=config,
-            id="vcf-consol-final",
-            verbose=verbose,
-            resources=CONSOLIDATE_RESOURCES,
-            name="Consolidate VCF final ",
-            **kwargs,
-        )
-
-        consolidate.depends_on(consolidate_ac)
-        consolidate.depends_on(consolidate_vs)
+        for group_member in ["allele_count", "variant_stats"]:
+            array_uri = group_member_uri(dataset_uri, group_member, config)
+            if array_uri:
+                consolidate_fragments(
+                    array_uri,
+                    config=config,
+                    group_first_dim=True,
+                    graph=graph,
+                    dependencies=[consolidate],
+                )
 
     if compute:
         logger.info("Ingesting %d samples.", len(sample_uris))
@@ -1467,7 +1298,7 @@ def ingest(
     batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
     compute: bool = True,
-    consolidate_stats: bool = False,
+    consolidate_stats: bool = True,
     aws_find_mode: bool = False,
 ) -> Tuple[Optional[dag.DAG], Sequence[str]]:
     """
