@@ -5,7 +5,8 @@ import unittest
 import pyarrow
 import urllib3
 
-from tiledb.cloud.taskgraphs import _codec
+from tiledb.cloud._results import codecs
+from tiledb.cloud._results import tiledb_json
 
 
 class EscapingTest(unittest.TestCase):
@@ -105,43 +106,32 @@ class EscapingTest(unittest.TestCase):
         for name, json_text, native_value in cases:
             json_data = json.loads(json_text)
             with self.subTest(f"unescaping {name}"):
-                unesc = _codec.Unescaper()
+                unesc = tiledb_json.Decoder()
                 actual = unesc.visit(json_data)
                 self.assertEqual(native_value, actual)
 
             with self.subTest(f"escaping {name}"):
-                esc = _codec.Escaper()
+                esc = tiledb_json.Encoder()
                 actual = esc.visit(native_value)
                 self.assertEqual(json_data, actual)
-
-    def test_json_encodable(self):
-        data = _codec.BinaryResult("bytes", b"now")
-        esc = _codec.Escaper()
-        in_data = ["one", data, 2]
-        expected = [
-            "one",
-            {"__tdbudf__": "immediate", "format": "bytes", "base64_data": "bm93"},
-            2,
-        ]
-        self.assertEqual(expected, esc.visit(in_data))
 
 
 class BinaryResultTest(unittest.TestCase):
     def test_binary_result_of(self):
         cases = (
-            (b"possession", _codec.BinaryResult("bytes", b"possession")),
+            (b"possession", codecs.BinaryBlob("bytes", b"possession")),
             (
                 frozenset(),
-                _codec.BinaryResult(
+                codecs.BinaryBlob(
                     "python_pickle",
                     b"\x80\x04\x95\x04\x00\x00\x00\x00\x00\x00\x00(\x91\x94.",
                 ),
             ),
-            (pyarrow.Table.from_pydict({}), _codec.BinaryResult("arrow", b"")),
+            (pyarrow.Table.from_pydict({}), codecs.BinaryBlob("arrow", b"")),
         )
         for inval, expected in cases:
             with self.subTest(inval):
-                self.assertEqual(expected, _codec.BinaryResult.of(inval))
+                self.assertEqual(expected, codecs.BinaryBlob.of(inval))
 
     def test_from_response(self):
         cases = [
@@ -175,7 +165,7 @@ class BinaryResultTest(unittest.TestCase):
                     body=case["data"],
                     headers={"Content-Type": case["mime"]},
                 )
-                actual = _codec.BinaryResult.from_response(resp)
+                actual = codecs.BinaryBlob.from_response(resp)
                 self.assertEqual(case["want_format"], actual.format)
                 try:
                     want_out = case["want_output"]
@@ -200,7 +190,7 @@ class JSONableTest(unittest.TestCase):
         ]
         for case in cases:
             with self.subTest(case):
-                self.assertTrue(_codec.is_jsonable_shallow(case))
+                self.assertTrue(tiledb_json.is_jsonable_shallow(case))
 
     def test_no(self):
         cases = [
@@ -214,4 +204,4 @@ class JSONableTest(unittest.TestCase):
         ]
         for case in cases:
             with self.subTest(case):
-                self.assertFalse(_codec.is_jsonable_shallow(case))
+                self.assertFalse(tiledb_json.is_jsonable_shallow(case))

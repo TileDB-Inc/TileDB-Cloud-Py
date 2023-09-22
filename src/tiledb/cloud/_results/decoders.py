@@ -2,14 +2,14 @@
 
 import abc
 import dataclasses
-import json
 from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
-import cloudpickle
 import pyarrow
 
 from tiledb.cloud import tiledb_cloud_error as tce
 from tiledb.cloud.rest_api import models
+
+from . import codecs
 
 if TYPE_CHECKING:
     import pandas
@@ -25,24 +25,6 @@ class AbstractDecoder(Generic[_T], metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
 
-def _load_arrow(data: bytes) -> pyarrow.Table:
-    # If a UDF didn't return any rows, there will not have been any batches
-    # of data to write to the output, and thus it will not include any content
-    # at all. (SQL queries will include headers.)
-    if not data:
-        # In this case, we need to return an empty table.
-        return pyarrow.Table.from_pydict({})
-    reader = pyarrow.RecordBatchStreamReader(data)
-    return reader.read_all()
-
-
-_DECODE_FNS = {
-    models.ResultFormat.NATIVE: cloudpickle.loads,
-    models.ResultFormat.JSON: json.loads,
-    models.ResultFormat.ARROW: _load_arrow,
-}
-
-
 @dataclasses.dataclass(frozen=True)
 class Decoder(AbstractDecoder[_T]):
     """General decoder for the formats we support.
@@ -55,10 +37,10 @@ class Decoder(AbstractDecoder[_T]):
 
     def decode(self, data: bytes) -> _T:
         try:
-            decoder = _DECODE_FNS[self.format]
+            codec = codecs.CODECS_BY_FORMAT[self.format]
         except KeyError:
             raise tce.TileDBCloudError(f"{self.format!r} is not a valid result format.")
-        return decoder(data)
+        return codec.decode(data)
 
 
 @dataclasses.dataclass(frozen=True)

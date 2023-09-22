@@ -23,23 +23,25 @@ from typing import (
     Union,
 )
 
-from tiledb.cloud import array
-from tiledb.cloud import client
-from tiledb.cloud import rest_api
-from tiledb.cloud import tiledb_cloud_error as tce
-from tiledb.cloud import udf
-from tiledb.cloud._common import functions
-from tiledb.cloud._common import futures
-from tiledb.cloud._common import utils
-from tiledb.cloud._common import visitor
-from tiledb.cloud._results import results
-from tiledb.cloud._results import stored_params
-from tiledb.cloud.dag import status as st
-from tiledb.cloud.dag import visualization as viz
-from tiledb.cloud.dag.mode import Mode
-from tiledb.cloud.rest_api import models
-from tiledb.cloud.sql import _execution as _sql_exec
-from tiledb.cloud.taskgraphs import _codec
+from .. import array
+from .. import client
+from .. import rest_api
+from .. import tiledb_cloud_error as tce
+from .. import udf
+from .._common import functions
+from .._common import futures
+from .._common import utils
+from .._common import visitor
+from .._results import codecs
+from .._results import results
+from .._results import stored_params
+from .._results import tiledb_json
+from ..rest_api import models
+from ..sql import _execution as _sql_exec
+from ..taskgraphs import _results as _tg_results
+from . import status as st
+from . import visualization as viz
+from .mode import Mode
 
 Status = st.Status  # Re-export for compabitility.
 _T = TypeVar("_T")
@@ -130,7 +132,7 @@ class Node(futures.FutureLike[_T]):
         self._status = Status.NOT_STARTED
         self._starting = False
         self._result: Optional[results.Result[_T]] = None
-        self._lazy_result: Optional[_codec.LazyResult] = None
+        self._lazy_result: Optional[_tg_results.LazyResult] = None
         self._lifecycle_exception: Optional[Exception] = None
         self._exception: Optional[Exception] = None
         self._cb_list: List[Callable[["Node[_T]"], None]] = []
@@ -1520,7 +1522,9 @@ class DAG:
         for node in topo_sorted_nodes:
             kwargs = {}
             if callable(node.args[0]):
-                kwargs["executable_code"] = _codec.b64_str(_codec.pickle(node.args[0]))
+                kwargs["executable_code"] = codecs.PickleCodec.encode_base64(
+                    node.args[0]
+                )
                 kwargs["source_text"] = functions.getsourcelines(node.args[0])
             if type(node.args[0]) == str:
                 kwargs["registered_udf_name"] = node.args[0]
@@ -1550,7 +1554,7 @@ class DAG:
                             )
                         )
                 else:
-                    esc = _codec.Escaper()
+                    esc = tiledb_json.Encoder()
                     args.append(models.TGUDFArgument(value=esc.visit(arg)))
 
             for name, arg in node.kwargs.items():
@@ -1574,7 +1578,7 @@ class DAG:
                             )
                         )
                 else:
-                    esc = _codec.Escaper()
+                    esc = tiledb_json.Encoder()
                     args.append(models.TGUDFArgument(name=name, value=esc.visit(arg)))
 
             kwargs["arguments"] = args
@@ -1673,7 +1677,7 @@ class DAG:
                                 execution_id = new_node.executions[
                                     len(new_node.executions) - 1
                                 ].id
-                                node._lazy_result = _codec.LazyResult(
+                                node._lazy_result = _tg_results.LazyResult(
                                     client, execution_id
                                 )
                                 if new_node_status == Status.FAILED:

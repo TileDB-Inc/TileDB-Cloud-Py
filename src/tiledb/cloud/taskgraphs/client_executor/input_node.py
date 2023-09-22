@@ -1,9 +1,9 @@
 import uuid
 from typing import Any, Dict, Optional, TypeVar
 
-from tiledb.cloud import rest_api
-from tiledb.cloud.taskgraphs import _codec
-from tiledb.cloud.taskgraphs.client_executor import _base
+from ... import rest_api
+from ..._results import tiledb_json
+from . import _base
 
 _T = TypeVar("_T")
 
@@ -36,10 +36,10 @@ class InputNode(_base.Node[_base.ET, _T]):
         assert not parents, "InputNode cannot depend on anything"
         if input_value is _base.NOTHING:
             self._value_encoded = self._default_value_encoded
-            self._value = _codec.Unescaper().visit(self._value_encoded)
+            self._value = tiledb_json.Decoder().visit(self._value_encoded)
         else:
             self._value = input_value
-            self._value_encoded = _codec.Escaper().visit(input_value)
+            self._value_encoded = tiledb_json.Encoder().visit(input_value)
 
         if self._value_encoded is _base.NOTHING:
             raise KeyError(f"Input {self.name!r} must be provided")
