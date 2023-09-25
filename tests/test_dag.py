@@ -1202,23 +1202,17 @@ class ReplaceNodesTest(unittest.TestCase):
         self.assertEqual(pickle.dumps(want_lst), pickle.dumps(got_lst))
 
     def test_custom_types(self):
-        my_seq = CustomSeq(["a", "b", 0xC, "d", 0xE, CustomSeq(("F", 0x10)), "h"])
-
-        self.assertEqual(
-            CustomSeq(("a", "b", 0x18, "d", 0x1C, CustomSeq(("F", 0x20)), "h")),
-            Doubler().visit(my_seq),
+        # OrderedDict is a subclass of `dict`, so json.dumps seralizes it
+        # as a JSON dictionary.
+        doubled = Doubler().visit(
+            collections.OrderedDict(
+                zero=0,
+                one=1.0,
+                two=1,
+            )
         )
-
-        self.assertEqual(
-            collections.OrderedDict(zero=0, one=1.0, two=2),
-            Doubler().visit(
-                collections.OrderedDict(
-                    zero=0,
-                    one=1.0,
-                    two=1,
-                )
-            ),
-        )
+        self.assertIs(collections.OrderedDict, type(doubled))
+        self.assertEqual(collections.OrderedDict(zero=0, one=1.0, two=2), doubled)
 
     def test_dont_enter_special_types(self):
         df = pd.DataFrame([{"a": 1, "b": 2}, {"a": 2, "b": 3}])

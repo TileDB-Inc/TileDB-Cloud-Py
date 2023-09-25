@@ -1,7 +1,6 @@
 """Module containing the base abstract replacing visitor and shared logic."""
 
 import abc
-import collections.abc as cabc
 from typing import Any, Dict, Generic, Iterable, Optional, TypeVar
 
 import attrs
@@ -32,11 +31,11 @@ class ReplacingVisitor(metaclass=abc.ABCMeta):
     See implementations immediately below, or Doubler in the tests.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         # A dictionary mapping the ID of every object we have seen in our
         # traversal to the object it is replaced with, to avoid duplicating
         # work or getting caught in self-referential structures.
-        self.seen: Dict[int, Any] = {}
+        self.seen: Dict[int, object] = {}
         # A dictionary mapping IDs of every object we have probed in our
         # pre-traversal to:
         # - True, if it or a child node needs to be replaced.
@@ -45,7 +44,7 @@ class ReplacingVisitor(metaclass=abc.ABCMeta):
         # - None, if we are still descending through this object.
         self._needs_replacement: Dict[int, Optional[bool]] = {}
 
-    def visit(self, arg):
+    def visit(self, arg: object) -> object:
         """Visits a single node of the data structure and returns its new value.
 
         This function recursively descends through a data structure to transform
@@ -72,13 +71,6 @@ class ReplacingVisitor(metaclass=abc.ABCMeta):
             self.seen[original_id] = replacement.value
             return replacement.value
 
-        if isinstance(arg, (str, bytes, range)):
-            # Special-case these since they're weird sequences that you can't
-            # descend into normally (str and bytes return another str or bytes
-            # instance when indexed; you can't construct a range the way you can
-            # construct other sequences like tuples).
-            return arg
-
         deep_needs_replacement = self._probe(arg)
         if not deep_needs_replacement:
             # Sanity-check to ensure that the invariants we maintain are held.
@@ -88,47 +80,43 @@ class ReplacingVisitor(metaclass=abc.ABCMeta):
             self.seen[original_id] = arg
             return arg
 
-        # Descend into sequences and mappings.
+        # Descend into built-in sequence and mapping types.
+        # We only descend into the built-in types that directly serialize to
+        # JSON.
 
-        if isinstance(arg, cabc.MutableSequence):
+        if isinstance(arg, list):
             # Mutable types may contain self references, so we create one and
             # store it as the canonical substitution for this instance in case
             # we see this original again.
 
-            # We assume that calling a MutableSequence type with no arguments
-            # returns us an empty version of it (like `list()`)
-            replaced = type(arg)()
-            self.seen[original_id] = replaced
-            replaced.extend(map(self.visit, arg))
-            return replaced
-        if isinstance(arg, cabc.Sequence):
-            # We assume that calling an immutable Sequence type with an
+            # Still call `type(arg)()` rather than `list()` or `[]` in case
+            # this is a custom list subtype.
+            new_list = type(arg)()
+            self.seen[original_id] = new_list
+            new_list.extend(map(self.visit, arg))
+            return new_list
+        if isinstance(arg, tuple):
+            # We assume that calling an immutable tuple subtype with an
             # iterable argument returns that sequence, initialized with
             # the values from that iterable (like `tuple(some_iterable)`).
-            replaced = type(arg)(map(self.visit, arg))
-            self.seen[original_id] = replaced
-            return replaced
-        if isinstance(arg, cabc.MutableMapping):
+            new_tuple = type(arg)(map(self.visit, arg))
+            self.seen[original_id] = new_tuple
+            return new_tuple
+        if isinstance(arg, dict):
             # As before, create the mapping in advance to allow self references.
 
             # Similar to sequences, we assume that an empty call to a mapping
             # type gives us an empty version we can then update, like `dict()`.
-            replaced = type(arg)()
-            self.seen[original_id] = replaced
-            replaced.update((k, self.visit(v)) for k, v in arg.items())
-            return replaced
-        if isinstance(arg, cabc.Mapping):
-            # For immutable mappings, we assume that we can pass in K-V pairs
-            # into the type, also like `dict(k_v_pairs)`.
-            replaced = type(arg)((k, self.visit(v)) for k, v in arg.items())
-            self.seen[original_id] = replaced
-            return replaced
+            new_dict = type(arg)()
+            self.seen[original_id] = new_dict
+            new_dict.update((k, self.visit(v)) for k, v in arg.items())
+            return new_dict
 
         # Otherwise, we just return the original thing.
         self.seen[original_id] = arg
         return arg
 
-    def _probe(self, arg: Any) -> Optional[bool]:
+    def _probe(self, arg: object) -> Optional[bool]:
         """Probes a node and finds if anything in its tree needs replacement."""
         original_id = id(arg)
         try:
@@ -148,9 +136,9 @@ class ReplacingVisitor(metaclass=abc.ABCMeta):
 
         # Figure out what the children we may need to iterate over are.
         children: Iterable[Any] = ()
-        if isinstance(arg, cabc.Sequence):
+        if isinstance(arg, (list, tuple)):
             children = arg
-        elif isinstance(arg, cabc.Mapping):
+        elif isinstance(arg, dict):
             children = arg.values()
 
         # Probe every child of this object to see if we need to replace it.
@@ -165,7 +153,7 @@ class ReplacingVisitor(metaclass=abc.ABCMeta):
         return False
 
     @abc.abstractmethod
-    def maybe_replace(self, arg) -> Optional[Replacement]:
+    def maybe_replace(self, arg: object) -> Optional[Replacement]:
         """Abstract function returning a value if it should be replaced.
 
         This will be called as the visitor visits every node of the data
