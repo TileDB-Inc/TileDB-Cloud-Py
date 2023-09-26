@@ -300,13 +300,6 @@ class BasicTests(unittest.TestCase):
         tbl = tiledb.cloud.udf.exec(test, result_format="arrow")
         self.assertIsInstance(tbl, pyarrow.Table)
 
-    def needsUnittestUser(self):
-        """Skips the test unless it is run as the ``unittest`` user."""
-        if not testonly.is_unittest_user():
-            self.skipTest("May fail with non-unittest users.")
-
-
-class RangesTest(unittest.TestCase):
     def test_parse_ranges(self):
         parse_ranges = array.parse_ranges
 
@@ -413,11 +406,8 @@ class RangesTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             parse_ranges(["idx"])
 
-
-class GroupsTest(unittest.TestCase):
-    """Extremely basic tests to verify minimal groups listing functionality."""
-
     def test_groups(self):
+        self.needsUnittestUser()
         got = client.list_groups(
             per_page=2,
             page=4,
@@ -436,8 +426,14 @@ class GroupsTest(unittest.TestCase):
         self.assertEqual(3, len(got.groups))
 
     def test_shared_groups(self):
+        self.needsUnittestUser()
         got = client.list_shared_groups(
             per_page=1,
             page=1,
         )
         self.assertEqual(0, len(got.groups))
+
+    def needsUnittestUser(self):
+        """Skips the test unless it is run as the ``unittest`` user."""
+        if not testonly.is_unittest_user():
+            self.skipTest("May fail with non-unittest users.")

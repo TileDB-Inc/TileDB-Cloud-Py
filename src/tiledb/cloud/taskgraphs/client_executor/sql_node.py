@@ -1,12 +1,14 @@
 import uuid
 from typing import Any, Dict, Optional, TypeVar
 
-from tiledb.cloud import rest_api
-from tiledb.cloud._common import utils
-from tiledb.cloud._results import results
-from tiledb.cloud.taskgraphs import _codec
-from tiledb.cloud.taskgraphs.client_executor import _base
-from tiledb.cloud.taskgraphs.client_executor import _replacers
+from ... import rest_api
+from ..._common import utils
+from ..._results import codecs
+from ..._results import results
+from ..._results import tiledb_json
+from .. import _results as tg_results
+from . import _base
+from . import _replacers
 
 _T = TypeVar("_T")
 
@@ -25,7 +27,7 @@ class SQLNode(_base.Node[_base.ET, _T]):
         self._sql_data = json_data["sql_node"]
         self._task_id: Optional[uuid.UUID] = None
         """The server-side task ID for this node's execution."""
-        self._result: Optional[_codec.Result] = None
+        self._result: Optional[tg_results.Result] = None
         """The bytes of the result, as returned from the server."""
 
     def task_id(self, timeout: Optional[float] = None) -> Optional[uuid.UUID]:
@@ -77,13 +79,14 @@ class SQLNode(_base.Node[_base.ET, _T]):
         try:
             self._task_id = results.extract_task_id(resp)
             if download_results or not self._task_id:
-                self._result = _codec.BinaryResult.from_response(resp)
+                self._result = codecs.BinaryBlob.from_response(resp)
             else:
-                self._result = _codec.LazyResult(self.owner._client, self._task_id)
+                self._result = tg_results.LazyResult(self.owner._client, self._task_id)
         finally:
             utils.release_connection(resp)
 
     def _result_impl(self):
+        assert self._result
         return self._result.decode()
 
     def _encode_for_param(self, mode: _base.ParamFormat) -> Dict[str, Any]:
@@ -91,7 +94,7 @@ class SQLNode(_base.Node[_base.ET, _T]):
         if mode is _base.ParamFormat.STORED_PARAMS:
             if self._task_id:
                 return {
-                    _codec.SENTINEL_KEY: "stored_param",
+                    tiledb_json.SENTINEL_KEY: "stored_param",
                     "task_id": str(self._task_id),
                 }
         assert self._result

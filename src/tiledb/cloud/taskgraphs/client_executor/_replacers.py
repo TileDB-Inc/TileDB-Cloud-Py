@@ -3,14 +3,14 @@
 import uuid
 from typing import Any, Dict, List, Optional
 
-from tiledb.cloud._common import ordered
-from tiledb.cloud._common import visitor
-from tiledb.cloud.taskgraphs import _codec
-from tiledb.cloud.taskgraphs import types
-from tiledb.cloud.taskgraphs.client_executor import _base
+from ..._common import ordered
+from ..._common import visitor
+from ..._results import tiledb_json
+from .. import types
+from . import _base
 
 
-class NodeOutputValueReplacer(_codec.Unescaper):
+class NodeOutputValueReplacer(tiledb_json.Decoder):
     """An Unescaper for when the output value of a node must be used locally.
 
     For Nodes where non–UDF-parameter inputs may be Nodes (e.g. array query
@@ -58,19 +58,19 @@ class UDFParamReplacer(visitor.ReplacingVisitor):
             return None
 
         try:
-            kind = arg[_codec.SENTINEL_KEY]
+            kind = arg[tiledb_json.SENTINEL_KEY]
         except KeyError:
             return None
 
         # The current value is a __tdbudf__ dictionary.
 
-        if kind == _codec.ESCAPE_CODE:
+        if kind == tiledb_json.ESCAPE_CODE:
             # If we have an escaped dictionary, descend into it.
-            escaped: Dict[str, Any] = arg[_codec.ESCAPE_CODE]
+            escaped: Dict[str, Any] = arg[tiledb_json.ESCAPE_CODE]
             return visitor.Replacement(
                 {
-                    _codec.SENTINEL_KEY: _codec.ESCAPE_CODE,
-                    _codec.ESCAPE_CODE: {
+                    tiledb_json.SENTINEL_KEY: tiledb_json.ESCAPE_CODE,
+                    tiledb_json.ESCAPE_CODE: {
                         k: self.visit(v) for (k, v) in escaped.items()
                     },
                 }

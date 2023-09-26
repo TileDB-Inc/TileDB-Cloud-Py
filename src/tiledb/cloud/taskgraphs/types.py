@@ -2,20 +2,19 @@
 
 import enum
 import itertools
-from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union
+from typing import Any, Callable, Dict, Optional, Tuple, TypeVar, Union
 
 import attrs
 import numpy as np
 
+from .._results import types
+
 _T = TypeVar("_T")
-NativeSequence = Union[Tuple[_T, ...], List[_T]]
-"""Either of Python's built-in sequences."""
 
-# Aliases to clarify how data is managed through the lifecycle of building
-# and executing a task graph.
-
-NativeValue = Any
-"""Any *native* Python value, as opposed to one encoded into JSON."""
+# Re-exports.
+NativeSequence = types.NativeSequence
+NativeValue = types.NativeValue
+TileDBJSONValue = types.TileDBJSONValue
 
 RegisteredArg = Any
 """JSON-encodable values ready for writing into a registered task graph.
@@ -84,11 +83,11 @@ class Arguments:
     :meth:``of``.
     """
 
-    args: Tuple[Any, ...] = attrs.field(converter=tuple, default=())
-    kwargs: Dict[str, Any] = attrs.Factory(dict)
+    args: Tuple[object, ...] = attrs.field(converter=tuple, default=())
+    kwargs: Dict[str, object] = attrs.Factory(dict)
 
     @classmethod
-    def of(cls, *args, **kwargs) -> "Arguments":
+    def of(cls, *args: object, **kwargs: object) -> "Arguments":
         """Creates an Arguments object representing the given call.
 
         Calling this with any parameters will give you an ``Arguments``

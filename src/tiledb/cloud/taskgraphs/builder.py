@@ -17,13 +17,14 @@ from typing import (
 
 import attrs
 
-from tiledb.cloud._common import functions
-from tiledb.cloud._common import ordered
-from tiledb.cloud._common import utils
-from tiledb.cloud._common import visitor
-from tiledb.cloud.taskgraphs import _codec
-from tiledb.cloud.taskgraphs import depgraph
-from tiledb.cloud.taskgraphs import types
+from .._common import functions
+from .._common import ordered
+from .._common import utils
+from .._common import visitor
+from .._results import codecs
+from .._results import tiledb_json
+from . import depgraph
+from . import types
 
 _T = TypeVar("_T")
 """A generic type."""
@@ -270,7 +271,7 @@ class TaskGraphBuilder:
         )
 
 
-class Node(_codec.TDBJSONEncodable, Generic[_T]):
+class Node(Generic[_T]):
     """The root type of a Node when building a task graph.
 
     The basic building block of a task graph. Nodes represent the data and
@@ -599,7 +600,7 @@ class _UDFNode(Node[_T]):
             )
             if self.local:
                 env_dict["run_client_side"] = True
-            udf_node["executable_code"] = _codec.b64_str(_codec.pickle(self.func))
+            udf_node["executable_code"] = codecs.PickleCodec.encode_base64(self.func)
             if self.include_source:
                 source = functions.getsourcelines(self.func)
                 if source:
@@ -613,7 +614,7 @@ class _UDFNode(Node[_T]):
         return ret
 
 
-class _ParameterEscaper(_codec.Escaper):
+class _ParameterEscaper(tiledb_json.Encoder):
     """Converts Python arguments passed into Nodes into serializable format.
 
     The input to this ``Escaper`` is a ``NativeValue``, i.e. any Python value.
@@ -629,6 +630,7 @@ class _ParameterEscaper(_codec.Escaper):
     def maybe_replace(self, arg) -> Optional[visitor.Replacement]:
         if isinstance(arg, Node):
             self.seen_nodes.add(arg)
+            return visitor.Replacement(arg._tdb_to_json())
         return super().maybe_replace(arg)
 
     def arguments_to_json(self, arg: types.Arguments) -> types.RegisteredArg:
