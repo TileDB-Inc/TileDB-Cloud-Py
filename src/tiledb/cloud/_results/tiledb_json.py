@@ -79,8 +79,20 @@ class Decoder(visitor.ReplacingVisitor):
             return visitor.Replacement(
                 {k: self.visit(v) for (k, v) in inner_value.items()}
             )
+        if kind == "raw_json":
+            # `raw_json` is a special sentinel indicating that the value in
+            # the `raw_json` field is pure JSON with no TileDB values inside it.
+            # This means we can avoid descending into it. For example:
+            #
+            #   {"__tdbudf__": "raw_json", "raw_json": [some huge matrix]}
+            #
+            # Initially we only use it to write parameters and not results.
+            return visitor.Replacement(value["raw_json"])
         if kind == "immediate":
             # "immediate" values are values of the format
+            #   {fmt: format name, base64_data: data_string}
+            # where the format name is one of the codecs in codecs.py
+            # and the base64_data is the encoded data.
             fmt = value["format"]
             base64d = value["base64_data"]
             return visitor.Replacement(

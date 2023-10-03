@@ -115,6 +115,34 @@ class EscapingTest(unittest.TestCase):
                 actual = esc.visit(native_value)
                 self.assertEqual(json_data, actual)
 
+    def test_raw_json(self):
+        """Verifies that visiting ``raw_json`` nodes short-circuits."""
+        basic_case = {
+            "__tdbudf__": "raw_json",
+            "raw_json": {
+                "__tdbudf__": "who-cares",
+                "dont-visit-me": "hello",
+            },
+        }
+
+        me = self
+
+        class DontVisitVerifier(tiledb_json.Decoder):
+            def visit(self, value: object):
+                if isinstance(value, dict):
+                    me.assertNotIn("dont-visit-me", value)
+                return super().visit(value)
+
+        dec = DontVisitVerifier()
+        actual = dec.visit(basic_case)
+        self.assertEqual(
+            {
+                "__tdbudf__": "who-cares",
+                "dont-visit-me": "hello",
+            },
+            actual,
+        )
+
 
 class BinaryResultTest(unittest.TestCase):
     def test_binary_result_of(self):
