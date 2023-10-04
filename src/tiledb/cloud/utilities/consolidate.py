@@ -56,13 +56,16 @@ def consolidate(
     fragments: Sequence[tiledb.FragmentInfo],
     *,
     config: Optional[Mapping[str, Any]] = None,
-):
+    max_fragment_size: int = MAX_FRAGMENT_SIZE,
+) -> None:
     """
     Consolidate fragments
 
     :param array_uri: array URI
     :param fragments: list of fragments
     :param config: config dictionary, defaults to None
+    :param max_fragment_size: max size of consolidated fragments,
+        defaults to MAX_FRAGMENT_SIZE
     """
 
     logger = get_logger()
@@ -70,7 +73,7 @@ def consolidate(
 
     config = tiledb.Config(config)
     config["sm.consolidation.mode"] = "fragments"
-    config["sm.consolidation.max_fragment_size"] = MAX_FRAGMENT_SIZE
+    config["sm.consolidation.max_fragment_size"] = max_fragment_size
 
     # Consolidate fragments.
     fragment_names = [basename(fi.uri) for fi in fragments]
@@ -85,7 +88,7 @@ def convac(
     *,
     config: Optional[Mapping[str, Any]] = None,
     vacuum_fragments: bool = False,
-):
+) -> None:
     """
     Consolidate and vacuum commits and fragment metadata, with an option to
     vacuum fragments as the first step.
@@ -143,6 +146,7 @@ def consolidate_fragments(
     dependencies: Optional[Sequence[dag.Node]] = None,
     consolidate_resources: Optional[Mapping[str, str]] = None,
     namespace: Optional[str] = None,
+    max_fragment_size: int = MAX_FRAGMENT_SIZE,
 ) -> None:
     """
     Consolidate fragments in an array.
@@ -165,6 +169,8 @@ def consolidate_fragments(
     :param dependencies: list of nodes in the graph to depend on, defaults to None
     :param consolidate_resources: resources for the consolidate node, defaults to None
     :param namespace: TileDB Cloud namespace, defaults to the user's default namespace
+    :param max_fragment_size: max size of consolidated fragments,
+        defaults to MAX_FRAGMENT_SIZE
     """
 
     if graph is None and dependencies is not None:
@@ -176,10 +182,10 @@ def consolidate_fragments(
     # function.
     if not graph_provided:
         graph = dag.DAG(
-            name="distributed-consolidation-plan",
+            name="distributed-consolidation",
             namespace=namespace,
             mode=dag.Mode.BATCH,
-            max_workers=100,
+            max_workers=40,
             retry_strategy=RetryStrategy(
                 limit=3,
                 retry_policy="Always",
@@ -217,6 +223,7 @@ def consolidate_fragments(
         array_uri,
         fragment_groups,
         config=config,
+        max_fragment_size=max_fragment_size,
         expand_node_output=fragment_groups,
         name=f"Consolidate Fragments - {name}",
         resources=consolidate_resources,
