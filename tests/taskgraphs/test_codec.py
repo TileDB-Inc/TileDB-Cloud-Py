@@ -1,12 +1,18 @@
+import base64
 import datetime
 import json
+import pathlib
 import unittest
 
+import numpy
+import pandas
 import pyarrow
 import urllib3
 
 from tiledb.cloud._results import codecs
 from tiledb.cloud._results import tiledb_json
+
+TESTDATA = (pathlib.Path(__file__) / ".." / ".." / "testdata").resolve()
 
 
 class EscapingTest(unittest.TestCase):
@@ -142,6 +148,55 @@ class EscapingTest(unittest.TestCase):
             },
             actual,
         )
+
+
+class PandasArrowTest(unittest.TestCase):
+    DATA_DIR = TESTDATA / "pandas-arrow"
+
+    def test_read_compatibility(self):
+        for test_file in self.test_files():
+            with self.subTest(test_file):
+                got_df = codecs.ArrowDataFrameCodec.decode(test_file.read_bytes())
+                self.assert_dataframes_equal(self.makedf(), got_df)
+
+    def test_read_json(self):
+        in_json = {
+            "__tdbudf__": "immediate",
+            "format": "arrow_dataframe",
+            "base64_data": base64.b64encode(
+                (self.DATA_DIR / "demo-dataframe-py3.10-pd2.0.arrow").read_bytes()
+            ).decode("utf-8"),
+        }
+        dec = tiledb_json.Decoder()
+        actual = dec.visit(in_json)
+        self.assert_dataframes_equal(self.makedf(), actual)
+
+    def test_files(self):
+        return (f for f in self.DATA_DIR.iterdir() if f.suffix == ".arrow")
+
+    def makedf(self) -> pandas.DataFrame:
+        return pandas.DataFrame(
+            {
+                "strings": ["a", "b", "c"],
+                "floats": [1.0, -0.5, float("nan")],
+                "bools": [True, False, None],
+                "ints": [0, 1, 2],
+                "dates": [
+                    numpy.datetime64(1695742673, "s"),
+                    numpy.datetime64(1000000000, "s"),
+                    numpy.datetime64(1234567890, "s"),
+                ],
+            }
+        )
+
+    def assert_dataframes_equal(
+        self, expected: pandas.DataFrame, actual: pandas.DataFrame
+    ) -> None:
+        # DataFrame.compare returns empty if the dataframes have
+        # the same values; if different it returns a DataFrame
+        # containing the differences.
+        comparison = expected.compare(actual)
+        self.assertTrue(comparison.empty, f"differences:\n{comparison}")
 
 
 class BinaryResultTest(unittest.TestCase):

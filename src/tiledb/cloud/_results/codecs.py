@@ -1,7 +1,7 @@
 import abc
 import base64
 import json
-from typing import Any, Generic, Tuple, Type, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, Tuple, Type, TypeVar
 
 import attrs
 import cloudpickle
@@ -13,6 +13,9 @@ from typing_extensions import Self
 # format data.
 from . import tiledb_json
 from . import types
+
+if TYPE_CHECKING:
+    import pandas
 
 _ARROW_VERSION = pyarrow.MetadataVersion.V5
 _PICKLE_PROTOCOL = 4
@@ -113,6 +116,25 @@ class JSONCodec(Codec[object]):
         return json.loads(data)
 
 
+class ArrowDataFrameCodec(Codec["pandas.DataFrame"]):
+    """Encodes Pandas DataFrames as Arrow data."""
+
+    NAME = "arrow_dataframe"
+    # We don't actually serve this MIME type; it is subject to change.
+    MIME = "application/vnd.tiledb.arrow-dataframe"
+
+    @classmethod
+    def encode(cls, data: "pandas.DataFrame") -> bytes:
+        """Converts a Pandas array to the byte format of an Arrow table."""
+        tbl = pyarrow.Table.from_pandas(data)
+        return ArrowCodec.encode(tbl)
+
+    @classmethod
+    def decode(cls, data: bytes) -> "pandas.DataFrame":
+        reader = pyarrow.RecordBatchStreamReader(data)
+        return reader.read_pandas()
+
+
 class PickleCodec(Codec[object]):
     """Pickles objects using CloudPickle."""
 
@@ -145,6 +167,7 @@ class TileDBJSONCodec(Codec[object]):
 
 ALL_CODECS: Tuple[Type[Codec[Any]], ...] = (
     ArrowCodec,
+    ArrowDataFrameCodec,
     BytesCodec,
     JSONCodec,
     PickleCodec,
