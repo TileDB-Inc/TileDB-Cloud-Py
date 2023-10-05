@@ -5,8 +5,8 @@ from ._common import read_aws_config
 from ._common import read_file
 from ._common import run_dag
 from ._common import set_aws_context
-from .consolidate import consolidate_fragments
 from .consolidate import consolidate_and_vacuum
+from .consolidate import consolidate_fragments
 from .consolidate import group_fragments
 from .profiler import Profiler
 from .profiler import create_log_array
