@@ -43,10 +43,10 @@ def group_fragments(
                 fragment_info_lists["all"].append(fi)
 
         # Create a list of lists of fragment info objects.
-        results = [x for x in list(fragment_info_lists.values())]
+        results = list(fragment_info_lists.values())
 
-        logger.info(f"{len(fis)} fragments grouped into {len(results)} groups")
-        logger.info(f"max memory usage: {max_memory_usage() / (1 << 30):.3f} GiB")
+        logger.info("%d fragments grouped into %d groups", len(fis), len(results))
+        logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
 
         return results
 
@@ -69,7 +69,7 @@ def consolidate(
     """
 
     logger = get_logger()
-    logger.info(f"Consolidating {len(fragments)} fragments")
+    logger.info("Consolidating %d fragments", len(fragments))
 
     config = tiledb.Config(config)
     config["sm.consolidation.mode"] = "fragments"
@@ -80,10 +80,10 @@ def consolidate(
     with tiledb.open(array_uri, "w", config=config) as array:
         array.consolidate(fragment_uris=fragment_names)
 
-    logger.info(f"max memory usage: {max_memory_usage() / (1 << 30):.3f} GiB")
+    logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
 
 
-def convac(
+def consolidate_and_vacuum(
     array_uri: str,
     *,
     config: Optional[Mapping[str, Any]] = None,
@@ -102,39 +102,30 @@ def convac(
 
     with tiledb.scope_ctx(config):
         if vacuum_fragments:
-            try:
-                logger.info("Vacuuming fragments")
-                tiledb.vacuum(
-                    array_uri,
-                    config=tiledb.Config({"sm.vacuum.mode": "fragments"}),
-                )
-            except:
-                raise
+            logger.info("Vacuuming fragments")
+            tiledb.vacuum(
+                array_uri,
+                config=tiledb.Config({"sm.vacuum.mode": "fragments"}),
+            )
 
         # Modes for consolidate and vacuum
         modes = ["commits", "fragment_meta"]
 
         for mode in modes:
-            try:
-                logger.info(f"Consolidating {mode}")
-                tiledb.consolidate(
-                    array_uri,
-                    config=tiledb.Config({"sm.consolidation.mode": mode}),
-                )
-            except:
-                raise
+            logger.info("Consolidating %s", mode)
+            tiledb.consolidate(
+                array_uri,
+                config=tiledb.Config({"sm.consolidation.mode": mode}),
+            )
 
         for mode in modes:
-            try:
-                logger.info(f"Vacuuming {mode}")
-                tiledb.vacuum(
-                    array_uri,
-                    config=tiledb.Config({"sm.vacuum.mode": mode}),
-                )
-            except:
-                raise
+            logger.info("Vacuuming %s", mode)
+            tiledb.vacuum(
+                array_uri,
+                config=tiledb.Config({"sm.vacuum.mode": mode}),
+            )
 
-    logger.info(f"max memory usage: {max_memory_usage() / (1 << 30):.3f} GiB")
+    logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
 
 
 def consolidate_fragments(
@@ -173,14 +164,14 @@ def consolidate_fragments(
         defaults to MAX_FRAGMENT_SIZE
     """
 
-    if graph is None and dependencies is not None:
-        raise ValueError("Graph must be provided if dependencies are provided")
+    graph_omitted = graph is None
 
-    graph_provided = graph is not None
+    if graph_omitted and dependencies is not None:
+        raise ValueError("Graph must be provided if dependencies are provided")
 
     # If a graph is not provided, create a new graph and run it at the end of this
     # function.
-    if not graph_provided:
+    if graph_omitted:
         graph = dag.DAG(
             name="distributed-consolidation",
             namespace=namespace,
@@ -230,7 +221,7 @@ def consolidate_fragments(
     )
 
     vacuum_node = graph.submit(
-        convac,
+        consolidate_and_vacuum,
         array_uri,
         config=config,
         vacuum_fragments=True,
@@ -240,7 +231,7 @@ def consolidate_fragments(
 
     vacuum_node.depends_on(consolidate_node)
 
-    if not graph_provided:
+    if graph_omitted:
         run_dag(graph, wait=False)
         print(
             "Consolidate fragments submitted - ",

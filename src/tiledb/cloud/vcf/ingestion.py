@@ -14,7 +14,8 @@ import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.utilities import Profiler
-from tiledb.cloud.utilities import consolidate_fragments
+
+# from tiledb.cloud.utilities import consolidate_fragments
 from tiledb.cloud.utilities import create_log_array
 from tiledb.cloud.utilities import get_logger
 from tiledb.cloud.utilities import read_file
@@ -25,6 +26,17 @@ from tiledb.cloud.vcf.utils import create_index_file
 from tiledb.cloud.vcf.utils import find_index
 from tiledb.cloud.vcf.utils import get_record_count
 from tiledb.cloud.vcf.utils import get_sample_name
+
+if True:
+    # Bring code into scope for testing on TileDB Cloud
+    import importlib, os
+
+    path = os.path.dirname(importlib.import_module("tiledb.cloud").__file__)
+    files = [f"{path}/utilities/consolidate.py"]
+    for file in files:
+        with open(file) as f:
+            exec(compile(f.read(), file, "exec"))
+
 
 # Testing hooks
 local_ingest = False
