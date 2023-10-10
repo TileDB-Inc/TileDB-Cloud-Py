@@ -149,7 +149,7 @@ def create_manifest(dataset_uri: str) -> None:
     tiledb.Array.create(manifest_uri, schema)
 
     group = tiledb.Group(dataset_uri, "w")
-    group.add(manifest_uri, name=MANIFEST_ARRAY)
+    group.add(MANIFEST_ARRAY, name=MANIFEST_ARRAY, relative=True)
     group.close()
 
 
@@ -213,7 +213,7 @@ def create_dataset_udf(
             log_uri = f"{dataset_uri}/{LOG_ARRAY}"
             create_log_array(log_uri)
             with tiledb.Group(dataset_uri, "w") as group:
-                group.add(log_uri, name=LOG_ARRAY)
+                group.add(LOG_ARRAY, name=LOG_ARRAY, relative=True)
 
             write_log_event(log_uri, "create_dataset_udf", "create", data=dataset_uri)
 
