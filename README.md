@@ -12,6 +12,10 @@ See [Installation Instructions](https://docs.tiledb.com/cloud/client-api/install
 
 See [Quickstart](https://docs.tiledb.com/cloud/quickstart) section of the docs.
 
+### API Documentation
+
+See https://tiledb-inc.github.io/TileDB-Cloud-Py/
+
 ### Testing
 
 - Selection:
