@@ -1241,7 +1241,7 @@ def ingest_samples_dag(
                 consolidate_fragments(
                     array_uri,
                     config=config,
-                    group_first_dim=True,
+                    group_by_first_dim=True,
                     graph=graph,
                     dependencies=[consolidate],
                 )

@@ -9,14 +9,14 @@ from tiledb.cloud.utilities import get_logger
 from tiledb.cloud.utilities import max_memory_usage
 from tiledb.cloud.utilities import run_dag
 
-MAX_FRAGMENT_SIZE = 1 << 30  # bytes
+MAX_FRAGMENT_SIZE_BYTES = 1 << 30
 
 
 def group_fragments(
     array_uri: str,
     *,
     config: Optional[Mapping[str, Any]] = None,
-    group_first_dim: bool = True,
+    group_by_first_dim: bool = True,
 ) -> Sequence[Sequence[tiledb.FragmentInfo]]:
     """
     Get a list of fragment info objects, optionally grouping fragments that have the
@@ -24,7 +24,7 @@ def group_fragments(
 
     :param array_uri: array URI
     :param config: config dictionary, defaults to None
-    :param group_first_dim: group by first dimension, defaults to True
+    :param group_by_first_dim: group by first dimension, defaults to True
     :return: list of lists of fragment info objects
     """
 
@@ -37,7 +37,7 @@ def group_fragments(
         fis = tiledb.FragmentInfoList(array_uri)
 
         for fi in fis:
-            if group_first_dim:
+            if group_by_first_dim:
                 fragment_info_lists[fi.nonempty_domain[0]].append(fi)
             else:
                 fragment_info_lists["all"].append(fi)
@@ -56,7 +56,7 @@ def consolidate(
     fragments: Sequence[tiledb.FragmentInfo],
     *,
     config: Optional[Mapping[str, Any]] = None,
-    max_fragment_size: int = MAX_FRAGMENT_SIZE,
+    max_fragment_size: int = MAX_FRAGMENT_SIZE_BYTES,
 ) -> None:
     """
     Consolidate fragments
@@ -65,7 +65,7 @@ def consolidate(
     :param fragments: list of fragments
     :param config: config dictionary, defaults to None
     :param max_fragment_size: max size of consolidated fragments,
-        defaults to MAX_FRAGMENT_SIZE
+        defaults to MAX_FRAGMENT_SIZE_BYTES
     """
 
     logger = get_logger()
@@ -132,19 +132,19 @@ def consolidate_fragments(
     array_uri: str,
     *,
     config: Optional[Mapping[str, Any]] = None,
-    group_first_dim: bool = False,
+    group_by_first_dim: bool = False,
     graph: Optional[dag.DAG] = None,
     dependencies: Optional[Sequence[dag.Node]] = None,
     consolidate_resources: Optional[Mapping[str, str]] = None,
     namespace: Optional[str] = None,
-    max_fragment_size: int = MAX_FRAGMENT_SIZE,
+    max_fragment_size: int = MAX_FRAGMENT_SIZE_BYTES,
 ) -> None:
     """
     Consolidate fragments in an array.
 
-    If `group_first_dim` is True, fragments with the same value for the first dimension
-    will be consolidated together. Otherwise, all fragments will be consolidated
-    together.
+    If `group_by_first_dim` is True, fragments with the same value for the first
+    dimension will be consolidated together. Otherwise, all fragments will be
+    consolidated together.
 
     If `graph` is provided, the consolidation task nodes will be submitted to the graph.
     If `dependencies` is provided, the consolidation nodes will depend on the nodes in
@@ -155,23 +155,23 @@ def consolidate_fragments(
 
     :param array_uri: array URI
     :param config: config dictionary, defaults to None
-    :param group_first_dim: group fragment by first dimension, defaults to True
+    :param group_by_first_dim: group fragment by first dimension, defaults to True
     :param graph: graph to submit nodes to, defaults to None
     :param dependencies: list of nodes in the graph to depend on, defaults to None
     :param consolidate_resources: resources for the consolidate node, defaults to None
     :param namespace: TileDB Cloud namespace, defaults to the user's default namespace
     :param max_fragment_size: max size of consolidated fragments,
-        defaults to MAX_FRAGMENT_SIZE
+        defaults to MAX_FRAGMENT_SIZE_BYTES
     """
 
     graph_omitted = graph is None
 
-    if graph_omitted and dependencies is not None:
-        raise ValueError("Graph must be provided if dependencies are provided")
-
     # If a graph is not provided, create a new graph and run it at the end of this
     # function.
     if graph_omitted:
+        if dependencies is not None:
+            raise ValueError("Graph must be provided if dependencies are provided")
+
         graph = dag.DAG(
             name="distributed-consolidation",
             namespace=namespace,
@@ -197,7 +197,7 @@ def consolidate_fragments(
         group_fragments,
         array_uri,
         config=config,
-        group_first_dim=group_first_dim,
+        group_by_first_dim=group_by_first_dim,
         name=f"Groups Fragments - {name}",
         resources={
             "cpu": "1",
