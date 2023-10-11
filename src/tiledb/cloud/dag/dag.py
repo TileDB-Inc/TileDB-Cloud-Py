@@ -198,22 +198,26 @@ class Node(futures.FutureLike[_T]):
         Check if the user has set the resource options correctly for the mode
         """
 
+        resources_set = self._resources is not None
         if self.mode == Mode.BATCH:
-            if self._resource_class and self._resources:
-                raise tce.TileDBCloudError(
-                    "Cannot set resource_class and resources for batch mode,"
-                    " choose one or the other"
-                )
-            if not self._resource_class and not self._resources:
+            if self._resource_class:
+                if resources_set:
+                    raise tce.TileDBCloudError(
+                        "Only one of `resources` and `resource_class`"
+                        " may be set when running a task graph node."
+                    )
+            elif not resources_set:
                 self._resource_class = "standard"
-
-        elif self.mode == Mode.REALTIME:
-            if "resources" in self.kwargs:
-                raise tce.TileDBCloudError(
-                    "Cannot set resources for REALTIME task graphs,"
-                    ' please use "resource_class" to set a predefined option'
-                    ' for "standard" or "large"'
-                )
+        elif resources_set:
+            raise tce.TileDBCloudError(
+                "Cannot set resources for REALTIME task graphs,"
+                ' please use "resource_class" to set a predefined option'
+                ' for "standard" or "large"'
+            )
+        elif self.mode is Mode.LOCAL and self._resource_class:
+            raise tce.TileDBCloudError(
+                "Resource class cannot be set for locally-executed nodes."
+            )
 
     def _find_deps(self):
         """Finds Nodes this depends on and adds them to our dependency list."""

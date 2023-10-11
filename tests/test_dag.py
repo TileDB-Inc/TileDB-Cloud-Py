@@ -188,6 +188,15 @@ class DAGClassTest(unittest.TestCase):
         self.assertIsInstance(result, results.RemoteResult)
         return result  # type: ignore
 
+    def test_resource_checks(self):
+        grf = dag.DAG()
+        with self.assertRaises(tce.TileDBCloudError):
+            grf.submit(repr, None, resources={"x": "y"})
+        with self.assertRaises(tce.TileDBCloudError):
+            grf.submit_local(repr, None, resources={"x": "y"})
+        with self.assertRaises(tce.TileDBCloudError):
+            grf.submit_local(repr, None, resource_class="hello")
+
     def test_kwargs(self):
         d = dag.DAG()
 
