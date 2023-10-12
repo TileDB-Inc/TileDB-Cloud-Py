@@ -23,6 +23,7 @@ def ingest(
     threads: Optional[int] = 8,
     resources: Optional[Mapping[str, Any]] = None,
     compute: bool = True,
+    local: bool = False,
     namespace: Optional[str],
     verbose: bool = False,
     exclude_metadata: bool = False,
@@ -150,6 +151,8 @@ def ingest(
                         verbose=verbose,
                         **kwargs,
                     )
+
+    submit = graph.submit_local if local else graph.submit
 
     if isinstance(source, str):
         # Handle only lists
