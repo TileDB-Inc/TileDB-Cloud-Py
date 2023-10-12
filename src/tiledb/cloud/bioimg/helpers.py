@@ -1,9 +1,9 @@
+import logging
 import math
 import os
 from typing import Any, Iterator, Mapping, Sequence, Tuple
 
 import tiledb
-import logging
 from tiledb.cloud.utilities import get_logger
 
 
@@ -28,7 +28,6 @@ def get_logger_wrapper(
     )
 
     return logger
-
 
 
 def get_uris(

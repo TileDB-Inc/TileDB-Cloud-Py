@@ -1,12 +1,13 @@
 from typing import Any, Dict, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
-from tiledb.cloud._common.utils import logger
 from tiledb.cloud.bioimg.helpers import batch
+from tiledb.cloud.bioimg.helpers import get_logger_wrapper
 from tiledb.cloud.bioimg.helpers import get_uris
 from tiledb.cloud.bioimg.helpers import scale_calc
 from tiledb.cloud.bioimg.helpers import serialize_filter
-from tiledb.cloud.bioimg.helpers import get_logger_wrapper
+from tiledb.cloud.utilities._common import run_dag
+
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-ingestion"
@@ -94,6 +95,7 @@ def ingest(
     # Get the list of all BioImg samples input/out
     samples = get_uris(source, output, config, "tdb")
     logger.debug("Input-Output pairs: %s", samples)
+
     batch_size, max_workers = scale_calc(samples, num_batches)
     logger.debug("Batch Size: %d and Workers: %d", batch_size, max_workers)
 
@@ -132,7 +134,7 @@ def ingest(
         )
 
     if compute:
-        graph.compute()
+        run_dag(graph, debug=verbose)
     return graph
 
 
