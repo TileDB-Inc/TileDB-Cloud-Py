@@ -212,7 +212,6 @@ def ingest(
     output = [output] if isinstance(output, str) else output
     validate_io_paths(source, output)
 
-    logger.debug("Ingesting files: %s", source)
 
     # Build the task graph
     dag_name = taskgraph_name or DEFAULT_DAG_NAME
