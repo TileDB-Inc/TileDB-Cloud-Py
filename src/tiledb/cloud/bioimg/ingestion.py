@@ -154,6 +154,8 @@ def ingest(
                         **kwargs,
                     )
 
+    submit = graph.submit_local if local else graph.submit
+
     if isinstance(source, str):
         # Handle only lists
         source = [source]
