@@ -1,13 +1,14 @@
 import abc
 import base64
 import json
+import sys
 from typing import TYPE_CHECKING, Any, Generic, Tuple, Type, TypeVar
 
 import attrs
 import cloudpickle
 import pyarrow
 import urllib3
-from typing_extensions import Self
+from typing_extensions import Self, TypeGuard
 
 # This is a circular dependency since we need to be able to decode `tiledb_json`
 # format data.
@@ -52,6 +53,10 @@ class Codec(Generic[_T], metaclass=abc.ABCMeta):
     def encode_base64(cls, obj: _T) -> str:
         data_bytes = cls.encode(obj)
         return base64.b64encode(data_bytes).decode("utf-8")
+
+    @classmethod
+    def to_blob(cls, obj: _T) -> "BinaryBlob":
+        return BinaryBlob(cls.NAME, cls.encode(obj))
 
 
 class ArrowCodec(Codec[pyarrow.Table]):
@@ -230,10 +235,31 @@ class BinaryBlob:
         )
 
     @classmethod
-    def of(cls, obj: Any) -> Self:
+    def of(cls, obj: object) -> "BinaryBlob":
         """Turns a non–JSON-encodable object into a ``BinaryBlob``."""
         if isinstance(obj, bytes):
-            return cls("bytes", obj)
+            return BytesCodec.to_blob(obj)
         if isinstance(obj, pyarrow.Table):
-            return cls("arrow", ArrowCodec.encode(obj))
-        return cls("python_pickle", PickleCodec.encode(obj))
+            return ArrowCodec.to_blob(obj)
+        if _is_dataframe(obj):
+            try:
+                return ArrowDataFrameCodec.to_blob(obj)
+            except pyarrow.ArrowInvalid:
+                # We can't encode this as an Arrow dataframe for some reason
+                # (usually, a Python object column), so we fall back to pickle.
+                # This means that the client/server Pandas versions will have
+                # to be in sync, but this is a fairly rare situation. Besides,
+                # storing and serializing raw Python objects in dataframes is
+                # already fairly fragile.
+                pass
+        # If all else fails, just pickle it.
+        return PickleCodec.to_blob(obj)
+
+
+def _is_dataframe(obj: object) -> TypeGuard["pandas.DataFrame"]:
+    """``isinstance``, but doesn't require importing Pandas first."""
+    try:
+        pandas = sys.modules["pandas"]
+    except KeyError:
+        return False
+    return isinstance(obj, pandas.DataFrame)

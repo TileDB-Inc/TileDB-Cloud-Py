@@ -2,9 +2,14 @@ import base64
 import datetime
 import json
 import pathlib
+import subprocess
+import sys
+import textwrap
 import unittest
 
+import attrs
 import numpy
+import packaging.version as pkgver
 import pandas
 import pyarrow
 import urllib3
@@ -150,11 +155,16 @@ class EscapingTest(unittest.TestCase):
         )
 
 
+@attrs.define()
+class Empty:
+    """This is here to provide a "comparable" object to pickle/unpickle."""
+
+
 class PandasArrowTest(unittest.TestCase):
     DATA_DIR = TESTDATA / "pandas-arrow"
 
     def test_read_compatibility(self):
-        for test_file in self.test_files():
+        for test_file in self.arrow_files():
             with self.subTest(test_file):
                 got_df = codecs.ArrowDataFrameCodec.decode(test_file.read_bytes())
                 self.assert_dataframes_equal(self.makedf(), got_df)
@@ -171,7 +181,45 @@ class PandasArrowTest(unittest.TestCase):
         actual = dec.visit(in_json)
         self.assert_dataframes_equal(self.makedf(), actual)
 
-    def test_files(self):
+    def test_pickle_fallback(self):
+        df_with_objs = pandas.DataFrame(
+            {
+                "objs": [(), Empty(), complex(1, 2)],
+            }
+        )
+        encoded = tiledb_json.Encoder().visit(df_with_objs)
+
+        # We don't test the exact contents of the base64 data,
+        # because it varies based upon Python/Pandas version.
+        self.assertDictContainsSubset(
+            {"__tdbudf__": "immediate", "format": "python_pickle"},
+            encoded,
+        )
+        # Instead we just make sure the roundtrip works.
+        round_trip = tiledb_json.Decoder().visit(encoded)
+        self.assert_dataframes_equal(df_with_objs, round_trip)
+
+    @unittest.skipIf(
+        pkgver.parse(pandas.__version__) < pkgver.parse("1.5"),
+        "does not work if we have to patch Pandas",
+    )
+    def test_is_dataframe_doesnt_import(self):
+        subprocess.check_call(
+            (
+                sys.executable,
+                "-c",
+                textwrap.dedent(
+                    """
+                    import sys
+                    from tiledb.cloud._results import codecs
+                    assert not codecs._is_dataframe("hello")
+                    assert "pandas" not in sys.modules
+                    """
+                ),
+            )
+        )
+
+    def arrow_files(self):
         return (f for f in self.DATA_DIR.iterdir() if f.suffix == ".arrow")
 
     def makedf(self) -> pandas.DataFrame:
