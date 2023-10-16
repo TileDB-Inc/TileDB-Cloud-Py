@@ -1,20 +1,22 @@
 import uuid
 import warnings
-from typing import Any, Callable, Iterable, Optional, Sequence, Union
+from typing import Any, Callable, Iterable, List, Optional, Sequence, Union
 
 import numpy
 
-from tiledb.cloud import client
-from tiledb.cloud import rest_api
-from tiledb.cloud import tiledb_cloud_error
-from tiledb.cloud._common import functions
-from tiledb.cloud._common import json_safe
-from tiledb.cloud._common import utils
-from tiledb.cloud._results import decoders
-from tiledb.cloud._results import results
-from tiledb.cloud._results import sender
-from tiledb.cloud.rest_api import ApiException as GenApiException
-from tiledb.cloud.rest_api import models
+from . import client
+from . import rest_api
+from . import tiledb_cloud_error
+from . import udf
+from ._common import functions
+from ._common import json_safe
+from ._common import utils
+from ._results import decoders
+from ._results import results
+from ._results import sender
+from ._results import types
+from .rest_api import ApiException as GenApiException
+from .rest_api import models
 
 last_udf_task_id: Optional[str] = None
 
@@ -51,6 +53,7 @@ class ArrayList:
             uri=uri,
             ranges=models.QueryRanges(layout=converted_layout, ranges=parsed),
             buffers=buffers,
+            parameter_id=str(uuid.uuid4()),
         )
         self.arrayList.append(udf_array_details)
 
@@ -59,6 +62,23 @@ class ArrayList:
         Returns the list of UDFArrayDetails
         """
         return self.arrayList
+
+    def _to_tgudf_args(self) -> Sequence[object]:
+        tgudf_ified = tuple(
+            {
+                "__tdbudf__": "udf_array_details",
+                "udf_array_details": entry,
+            }
+            for entry in self.arrayList
+        )
+        if not tgudf_ified:
+            # If there are no arrays, nothing is prepended.
+            return ()
+        if len(tgudf_ified) == 1:
+            # If there is one array, it is prepended as a single value.
+            return ({"value": tgudf_ified[0]},)
+        # Otherwise, the list of arrays is passed as a single parameter.
+        return ({"value": tgudf_ified},)
 
 
 def info(uri, async_req=False):
@@ -460,32 +480,17 @@ def apply_base(
         )
     user_func = _pick_func(func=func, name=name)
 
-    parsed_ranges = parse_ranges(ranges)
-
-    if layout is None:
-        converted_layout = None
-    elif layout.upper() == "R":
-        converted_layout = "row-major"
-    elif layout.upper() == "C":
-        converted_layout = "col-major"
-    elif layout.upper() == "G":
-        converted_layout = "global-order"
-    elif layout.upper() == "U":
-        converted_layout = "unordered"
-    else:
-        raise ValueError("layout must be one of R, C, G, or U, or unset")
-
-    model_ranges = models.QueryRanges(layout=converted_layout, ranges=parsed_ranges)
+    array_list = ArrayList()
+    array_list.add(
+        uri=uri,
+        layout=layout,
+        ranges=ranges,
+        buffers=attrs,
+    )
 
     udf_model = models.MultiArrayUDF(
         language=models.UDFLanguage.PYTHON,
-        arrays=[
-            models.UDFArrayDetails(
-                uri=uri,
-                ranges=model_ranges,
-                buffers=attrs,
-            )
-        ],
+        arrays=array_list.get(),
         version=utils.PYTHON_VERSION,
         image_name=image_name,
         task_name=task_name,
@@ -507,6 +512,13 @@ def apply_base(
             udf_model.exec_raw = functions.getsourcelines(user_func)
     else:
         udf_model.udf_info_name = user_func
+
+    json_arguments: List[object] = []
+    json_arguments.extend(array_list._to_tgudf_args())
+    json_arguments.extend(
+        udf._StoredParamJSONer().encode_arguments(types.Arguments((), kwargs))
+    )
+    udf_model.arguments_json = json_arguments
 
     if kwargs:
         udf_model.argument = utils.b64_pickle((kwargs,))
@@ -660,6 +672,11 @@ def exec_multi_array_udf_base(
     else:
         udf_model.udf_info_name = user_func
 
+    json_arguments: List[object] = []
+    json_arguments.extend(array_list._to_tgudf_args())
+    json_arguments.extend(
+        udf._StoredParamJSONer().encode_arguments(types.Arguments((), kwargs))
+    )
     if kwargs:
         udf_model.argument = utils.b64_pickle((kwargs,))
 

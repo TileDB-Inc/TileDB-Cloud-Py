@@ -5,17 +5,22 @@ from typing import Any, Callable, Iterable, Optional, Union
 
 import cloudpickle
 
-from tiledb.cloud import array
-from tiledb.cloud import client
-from tiledb.cloud import rest_api
-from tiledb.cloud import tiledb_cloud_error
-from tiledb.cloud._common import functions
-from tiledb.cloud._common import utils
-from tiledb.cloud._results import decoders
-from tiledb.cloud._results import results
-from tiledb.cloud._results import sender
-from tiledb.cloud.rest_api import ApiException as GenApiException
-from tiledb.cloud.rest_api import models
+from . import array
+from . import client
+from . import rest_api
+from . import tiledb_cloud_error
+from ._common import functions
+from ._common import json_safe
+from ._common import utils
+from ._common import visitor
+from ._results import decoders
+from ._results import results
+from ._results import sender
+from ._results import stored_params
+from ._results import tiledb_json
+from ._results import types
+from .rest_api import ApiException as GenApiException
+from .rest_api import models
 
 # Deprecated; re-exported for backwards compatibility.
 tiledb_cloud_protocol = utils.TILEDB_CLOUD_PROTOCOL
@@ -105,7 +110,7 @@ def exec_base(
             )
         user_func = func
 
-    udf_model = models.GenericUDF(
+    udf_model = models.MultiArrayUDF(
         language=models.UDFLanguage.PYTHON,
         result_format=result_format,
         store_results=store_results,
@@ -130,9 +135,10 @@ def exec_base(
     else:
         udf_model.udf_info_name = user_func
 
-    arguments = tuple(filter(None, [args, kwargs]))
-    if arguments:
-        udf_model.argument = utils.b64_pickle(arguments)
+    arguments = types.Arguments(args, kwargs)
+    udf_model.arguments_json = json_safe.Value(
+        _StoredParamJSONer().encode_arguments(arguments)
+    )
 
     submit_kwargs = dict(namespace=namespace, udf=udf_model)
     if http_compressor:
@@ -562,3 +568,27 @@ def delete(name, namespace, async_req=False):
         )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
+
+
+class _StoredParamJSONer(tiledb_json.Encoder):
+    """Turns parameters passed to the existing UDF APIs into TileDB JSON.
+
+    Existing code needs to maintain the same interface for stored params,
+    so to match the behavior of the Pickle-based argument encoding,
+    we still accept ``StoredParam`` objects as parameters to the various UDF
+    execution functions.
+    """
+
+    def maybe_replace(self, arg: object) -> Optional[visitor.Replacement]:
+        if isinstance(arg, stored_params.StoredParam):
+            return visitor.Replacement(
+                {
+                    tiledb_json.SENTINEL_KEY: "stored_param",
+                    "task_id": str(arg.task_id),
+                    # Because the decoder may contain special logic apart from
+                    # "just read in the tdbjson-serialized object", we need to
+                    # specify the exact Decoder object we will use.
+                    "python_decoder": self.visit(arg.decoder),
+                }
+            )
+        return super().maybe_replace(arg)

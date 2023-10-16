@@ -558,7 +558,7 @@ class _UDFNode(Node[_T]):
         if isinstance(func, str) and local:
             raise ValueError("Registered UDFs may only be executed server-side.")
         jsoner = _ParameterEscaper()
-        self.args = jsoner.arguments_to_json(args)
+        self.args = jsoner.encode_arguments(args)
         if local and any(isinstance(node, _ArrayNode) for node in jsoner.seen_nodes):
             raise ValueError(
                 "UDFs that take array data as input must be run server-side."
@@ -632,14 +632,6 @@ class _ParameterEscaper(tiledb_json.Encoder):
             self.seen_nodes.add(arg)
             return visitor.Replacement(arg._tdb_to_json())
         return super().maybe_replace(arg)
-
-    def arguments_to_json(self, arg: types.Arguments) -> types.RegisteredArg:
-        arg_outputs = [{"value": self.visit(val)} for val in arg.args]
-        kwarg_outputs = [
-            {"name": name, "value": self.visit(value)}
-            for (name, value) in arg.kwargs.items()
-        ]
-        return arg_outputs + kwarg_outputs
 
 
 def _set_add(s: Set[_T], elem: _T) -> _T:

@@ -1,11 +1,13 @@
 import json
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Sequence, cast
 
 from .._common import visitor
 from . import codecs
+from . import types
 
 SENTINEL_KEY = "__tdbudf__"
 ESCAPE_CODE = "__escape__"
+_RAW_JSON = "raw_json"
 
 
 class Encoder(visitor.ReplacingVisitor):
@@ -17,6 +19,34 @@ class Encoder(visitor.ReplacingVisitor):
     *not* be passed to an ``Escaper``. The base implementation will return
     fully self-contained JSON-serializable objects, i.e. ``CallArg``s.
     """
+
+    def encode_arguments(
+        self, arguments: types.Arguments
+    ) -> Sequence[types.TileDBJSONValue]:
+        """Encodes Python arguments as TileDB JSON.
+
+        This is a convenience method to encode a whole set of ``Arguments`` into
+        the TileDB JSON arguments format. This includes both basic encoding
+        as well as adding the ``raw_json`` sentinel to arguments that do not
+        include any TileDB JSON data (to avoid descending into them).
+        """
+        encoded: List[Dict[str, object]] = []
+        encoded.extend({"value": self._encode_arg(val)} for val in arguments.args)
+        encoded.extend(
+            {"name": name, "value": self._encode_arg(val)}
+            for (name, val) in arguments.kwargs.items()
+        )
+        return cast(Sequence[types.TileDBJSONValue], encoded)
+
+    def _encode_arg(self, val: object) -> types.TileDBJSONValue:
+        encoded = self.visit(val)
+        if encoded is val and encoded and isinstance(encoded, (dict, list, tuple)):
+            # If we get here, then there is no TileDB-specific data, since
+            # the object we got out of encoding is the same object we passed in.
+            # Using the _RAW_JSON sentinel, we can avoid descending into this
+            # object on the decoding side.
+            return types.TileDBJSONValue({SENTINEL_KEY: _RAW_JSON, _RAW_JSON: encoded})
+        return types.TileDBJSONValue(encoded)
 
     def maybe_replace(self, arg) -> Optional[visitor.Replacement]:
         if is_jsonable_shallow(arg):
@@ -79,7 +109,7 @@ class Decoder(visitor.ReplacingVisitor):
             return visitor.Replacement(
                 {k: self.visit(v) for (k, v) in inner_value.items()}
             )
-        if kind == "raw_json":
+        if kind == _RAW_JSON:
             # `raw_json` is a special sentinel indicating that the value in
             # the `raw_json` field is pure JSON with no TileDB values inside it.
             # This means we can avoid descending into it. For example:
@@ -87,7 +117,7 @@ class Decoder(visitor.ReplacingVisitor):
             #   {"__tdbudf__": "raw_json", "raw_json": [some huge matrix]}
             #
             # Initially we only use it to write parameters and not results.
-            return visitor.Replacement(value["raw_json"])
+            return visitor.Replacement(value[_RAW_JSON])
         if kind == "immediate":
             # "immediate" values are values of the format
             #   {fmt: format name, base64_data: data_string}

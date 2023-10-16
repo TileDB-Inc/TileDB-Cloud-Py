@@ -16,6 +16,7 @@ import urllib3
 
 from tiledb.cloud._results import codecs
 from tiledb.cloud._results import tiledb_json
+from tiledb.cloud._results import types
 
 TESTDATA = (pathlib.Path(__file__) / ".." / ".." / "testdata").resolve()
 
@@ -152,6 +153,63 @@ class EscapingTest(unittest.TestCase):
                 "dont-visit-me": "hello",
             },
             actual,
+        )
+
+    maxDiff = None
+
+    def test_encode_arguments(self):
+        args = types.Arguments.of(
+            1,
+            2,
+            simple_dict={"simple": "value"},
+            simple_list=[1, 2, 3],
+            complicated=[complex(16, 9), b"bytes"],
+        )
+        encoded = tiledb_json.Encoder().encode_arguments(args)
+        self.assertEqual(
+            [
+                {"value": 1},
+                {"value": 2},
+                {
+                    "name": "simple_dict",
+                    "value": {
+                        "__tdbudf__": "raw_json",
+                        "raw_json": {"simple": "value"},
+                    },
+                },
+                {
+                    "name": "simple_list",
+                    "value": {"__tdbudf__": "raw_json", "raw_json": [1, 2, 3]},
+                },
+                {
+                    "name": "complicated",
+                    "value": [
+                        {
+                            "__tdbudf__": "immediate",
+                            "format": "python_pickle",
+                            "base64_data": "gASVLgAAAAAAAACMCGJ1aWx0aW5zlIwHY29tcGxleJSTlEdAMAAAAAAAAEdAIgAAAAAAAIaUUpQu",  # noqa: E501
+                        },
+                        {
+                            "__tdbudf__": "immediate",
+                            "format": "bytes",
+                            "base64_data": "Ynl0ZXM=",
+                        },
+                    ],
+                },
+            ],
+            encoded,
+        )
+
+        decoded = tiledb_json.Decoder().visit(encoded)
+        self.assertEqual(
+            [
+                {"value": 1},
+                {"value": 2},
+                {"name": "simple_dict", "value": {"simple": "value"}},
+                {"name": "simple_list", "value": [1, 2, 3]},
+                {"name": "complicated", "value": [complex(16, 9), b"bytes"]},
+            ],
+            decoded,
         )
 
 
