@@ -5,7 +5,7 @@ import dataclasses
 import uuid
 from typing import Any, Dict, Generic, TypeVar
 
-from tiledb.cloud._results import decoders
+from . import decoders
 
 _T = TypeVar("_T")
 

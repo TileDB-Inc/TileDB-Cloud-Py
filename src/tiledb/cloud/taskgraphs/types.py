@@ -1,17 +1,15 @@
 """User-facing types used in task graphs."""
 
 import enum
-import itertools
-from typing import Any, Callable, Dict, Optional, Tuple, TypeVar, Union
+from typing import Any, Dict, Optional, Union
 
-import attrs
 import numpy as np
 
 from .._results import types
 
-_T = TypeVar("_T")
-
-# Re-exports.
+# Re-exports of things that were previously in this module.
+Arguments = types.Arguments
+args = Arguments.of
 NativeSequence = types.NativeSequence
 NativeValue = types.NativeValue
 TileDBJSONValue = types.TileDBJSONValue
@@ -74,42 +72,4 @@ class Layout(enum.Enum):
 
 LayoutOrStr = Union[Layout, str]
 
-
-@attrs.define(frozen=True, slots=True)
-class Arguments:
-    """The arguments and keyword arguments that can be sent to a function.
-
-    You usually shouldn't call the constructor directly; instead use
-    :meth:``of``.
-    """
-
-    args: Tuple[object, ...] = attrs.field(converter=tuple, default=())
-    kwargs: Dict[str, object] = attrs.Factory(dict)
-
-    @classmethod
-    def of(cls, *args: object, **kwargs: object) -> "Arguments":
-        """Creates an Arguments object representing the given call.
-
-        Calling this with any parameters will give you an ``Arguments``
-        representing that call:
-
-        >>> Arguments.of(1, 2, a=1, b="two", **{"c": b"four"})
-        args(1, 2, a=1, b="two", c=b"four")
-
-        """
-        return cls(args, kwargs)
-
-    def apply(self, to: Callable[..., _T]) -> _T:
-        return to(*self.args, **self.kwargs)
-
-    def __repr__(self):
-        """A representation of this which looks like a function call."""
-        parts = itertools.chain(
-            map(repr, self.args),
-            (f"{k}={v!r}" for (k, v) in self.kwargs.items()),
-        )
-        joined = ", ".join(parts)
-        return f"args({joined})"
-
-
-args = Arguments.of
+# Re-export Arguments type.
