@@ -4,6 +4,7 @@ import sys
 from typing import Any, Tuple
 
 import numpy as np
+import packaging.version as pkgver
 import pandas as pd
 import pytest
 
@@ -44,6 +45,10 @@ def import_tiledb_cloud():
     import tiledb.cloud  # noqa: F401
 
 
+@pytest.mark.skipif(
+    pkgver.Version("2") <= pkgver.Version(pd.__version__),
+    reason="Pandas 2 is an unresolvable breaking change",
+)
 @pytest.mark.parametrize("pd_ver", ["1.2.4", "1.5.3"])
 @pytest.mark.parametrize("name_want", RESULTS.items(), ids=lambda itm: itm[0])
 def test_pandas_compat(pd_ver: str, name_want: Tuple[str, Any]) -> None:
