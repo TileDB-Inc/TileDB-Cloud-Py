@@ -10,7 +10,7 @@ dependencies = [
   "cloudpickle>=1.4.1",
   "importlib-metadata",
   "packaging",
-  "pandas>=1.2.4,<2",
+  "pandas>=1.2.4",
   "pyarrow>=3.0.0",
   "python-dateutil",
   "six>=1.10",
