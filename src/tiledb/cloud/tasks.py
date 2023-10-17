@@ -1,6 +1,6 @@
 import datetime
 import uuid
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Optional
 
 from tiledb.cloud import array
 from tiledb.cloud import client
@@ -134,10 +134,11 @@ def last_udf_task():
 def fetch_results(
     task_id: uuid.UUID,
     *,
-    result_format: str = models.ResultFormat.NATIVE,
+    result_format: Optional[str] = None,
 ) -> Any:
     """Fetches the results of a previously-executed UDF or SQL query."""
-    return results.fetch_remote(task_id, decoders.Decoder(result_format))
+    decoder = None if result_format is None else decoders.Decoder(result_format)
+    return results.fetch_remote(task_id, decoder)
 
 
 def fetch_results_pandas(

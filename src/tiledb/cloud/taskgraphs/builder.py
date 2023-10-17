@@ -129,7 +129,7 @@ class TaskGraphBuilder:
         func: functions.Funcable[_T],
         args: types.Arguments = types.Arguments(),
         *,
-        result_format: Optional[str] = "python_pickle",
+        result_format: Optional[str] = "tiledb_json",
         include_source: bool = True,
         image_name: Optional[str] = None,
         timeout: Union[datetime.timedelta, int, None] = None,

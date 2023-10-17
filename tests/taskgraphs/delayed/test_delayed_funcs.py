@@ -25,7 +25,7 @@ class FunctionsTest(unittest.TestCase):
         c = passthrough.set(name="c")(a, b)
         d = delayed.udf(repr, name="d")(c)
 
-        self.assertEqual("(('a', ()), ((), 'b'))", d.compute(30))
+        self.assertEqual("[['a', []], [[], 'b']]", d.compute(30))
 
     def test_two_delayeds(self):
         d_repr = delayed.udf(repr)
