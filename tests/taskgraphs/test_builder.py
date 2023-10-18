@@ -159,7 +159,7 @@ class TestBuilder(unittest.TestCase):
                                 "language_version": utils.PYTHON_VERSION,
                             },
                             "executable_code": "gASVFAAAAAAAAACMCGJ1aWx0aW5zlIwDbGVulJOULg==",
-                            "result_format": "python_pickle",
+                            "result_format": "tiledb_json",
                         },
                     },
                     {
@@ -192,7 +192,7 @@ class TestBuilder(unittest.TestCase):
                                 "run_client_side": True,
                             },
                             "executable_code": "gASVQwAAAAAAAACMCGJ1aWx0aW5zlIwHZ2V0YXR0cpSTlIwbe2l0IXJ9IGhhcyBhIGxlbmd0aCBvZiB7bG59lIwGZm9ybWF0lIaUUpQu",
-                            "result_format": "python_pickle",
+                            "result_format": "tiledb_json",
                         },
                     },
                 ],
@@ -328,7 +328,7 @@ class TestBuilder(unittest.TestCase):
                             "language_version": utils.PYTHON_VERSION,
                         },
                         "executable_code": "gASVIwAAAAAAAACMCG9wZXJhdG9ylIwKaXRlbWdldHRlcpSTlIwBYZSFlFKULg==",
-                        "result_format": "python_pickle",
+                        "result_format": "tiledb_json",
                     },
                 },
                 {
@@ -352,7 +352,7 @@ class TestBuilder(unittest.TestCase):
                         },
                         "executable_code": "gASVEQAAAAAAAACMBW51bXB5lIwDc3VtlJOULg==",
                         "source_text": functions.getsourcelines(numpy.sum),
-                        "result_format": "python_pickle",
+                        "result_format": "tiledb_json",
                     },
                 },
                 {
@@ -374,7 +374,7 @@ class TestBuilder(unittest.TestCase):
                             "resource_class": "llama",
                         },
                         "executable_code": "gASVFAAAAAAAAACMCGJ1aWx0aW5zlIwDaW50lJOULg==",
-                        "result_format": "python_pickle",
+                        "result_format": "tiledb_json",
                     },
                 },
                 {
@@ -408,7 +408,7 @@ class TestBuilder(unittest.TestCase):
                             "language_version": utils.PYTHON_VERSION,
                         },
                         "executable_code": "gASVQgAAAAAAAACMCGJ1aWx0aW5zlIwHZ2V0YXR0cpSTlIwac3VtIG9mIHtuYW1lIXJ9IGlzIHtzdW0hcn2UjAZmb3JtYXSUhpRSlC4=",
-                        "result_format": "python_pickle",
+                        "result_format": "tiledb_json",
                     },
                 },
                 {
@@ -446,7 +446,7 @@ class TestBuilder(unittest.TestCase):
                             "run_client_side": True,
                         },
                         "executable_code": "gASVTgAAAAAAAACMCGJ1aWx0aW5zlIwHZ2V0YXR0cpSTlIwmYXJyYXkgeyFyfSBnYXZlIHJlc3VsdCB7fTsgc3FsIGdhdmUge32UjAZmb3JtYXSUhpRSlC4=",
-                        "result_format": "python_pickle",
+                        "result_format": "tiledb_json",
                     },
                 },
                 {
@@ -464,7 +464,7 @@ class TestBuilder(unittest.TestCase):
                         ],
                         "environment": {},
                         "registered_udf_name": "TileDB-Inc/example_registration",
-                        "result_format": "python_pickle",
+                        "result_format": "tiledb_json",
                     },
                 },
             ],
@@ -500,7 +500,7 @@ class TestBuilder(unittest.TestCase):
                             "language_version": utils.PYTHON_VERSION,
                         },
                         "executable_code": utils.b64_pickle(_codec.b64_str),
-                        "result_format": "python_pickle",
+                        "result_format": "tiledb_json",
                         "source_text": (
                             "def b64_str(val: bytes) -> str:\n"
                             '    return base64.b64encode(val).decode("ascii")\n'
@@ -540,7 +540,7 @@ class TestBuilder(unittest.TestCase):
                             "language_version": utils.PYTHON_VERSION,
                         },
                         "executable_code": utils.b64_pickle(_codec.b64_str),
-                        "result_format": "python_pickle",
+                        "result_format": "tiledb_json",
                         # No source text here!
                     },
                 },

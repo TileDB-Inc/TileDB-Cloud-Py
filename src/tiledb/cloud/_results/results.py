@@ -8,13 +8,14 @@ from typing import Any, Callable, Generic, Optional, TypeVar, Union
 import attrs
 import urllib3
 
-from tiledb.cloud import client
-from tiledb.cloud import rest_api
-from tiledb.cloud import tiledb_cloud_error as tce
-from tiledb.cloud._common import futures
-from tiledb.cloud._common import utils
-from tiledb.cloud._results import decoders
-from tiledb.cloud._results import stored_params
+from .. import client
+from .. import rest_api
+from .. import tiledb_cloud_error as tce
+from .._common import futures
+from .._common import utils
+from . import codecs
+from . import decoders
+from . import stored_params
 
 TASK_ID_HEADER = "X-TILEDB-CLOUD-TASK-ID"
 _T = TypeVar("_T")
@@ -165,7 +166,9 @@ def _maybe_uuid(id_str: Optional[str]) -> Optional[uuid.UUID]:
         return None
 
 
-def fetch_remote(task_id: uuid.UUID, decoder: decoders.AbstractDecoder[_T]) -> _T:
+def fetch_remote(
+    task_id: uuid.UUID, decoder: Optional[decoders.AbstractDecoder[Any]] = None
+) -> object:
     api_instance = client.build(rest_api.TasksApi)
     try:
         resp: urllib3.HTTPResponse = api_instance.task_id_result_get(
@@ -174,6 +177,8 @@ def fetch_remote(task_id: uuid.UUID, decoder: decoders.AbstractDecoder[_T]) -> _
         )
     except rest_api.ApiException as exc:
         raise tce.check_exc(exc) from None
+    if decoder is None:
+        return codecs.BinaryBlob.from_response(resp).decode()
     try:
         return decoder.decode(resp.data)
     finally:

@@ -396,7 +396,7 @@ class ClientExecutorTestInputs(unittest.TestCase):
         exec = client_executor.LocalExecutor(grf)
         exec.execute(frm=2, to=3)
         self.assertEqual(
-            (
+            [
                 {
                     "a": [[2, 3], [6, 7], [10, 11], [14, 15]],
                     "cols": [[2, 3], [2, 3], [2, 3], [2, 3]],
@@ -412,7 +412,7 @@ class ClientExecutorTestInputs(unittest.TestCase):
                     dict(a=14, cols=2, rows=4),
                     dict(a=15, cols=3, rows=4),
                 ],
-            ),
+            ],
             exec.node(result).result(30),
         )
         exec.wait(5)

@@ -35,7 +35,7 @@ def exec_base(
     http_compressor: Optional[str] = "deflate",
     include_source_lines: bool = True,
     task_name: Optional[str] = None,
-    result_format: str = models.ResultFormat.NATIVE,
+    result_format: str = "tiledb_json",
     result_format_version=None,
     store_results: bool = False,
     stored_param_uuids: Iterable[uuid.UUID] = (),
