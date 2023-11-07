@@ -39,10 +39,10 @@ DEFAULT_ATTRIBUTES = ["fmt_GT"]
 # Default values for ingestion parameters
 MANIFEST_BATCH_SIZE = 200
 MANIFEST_WORKERS = 40
-VCF_BATCH_SIZE = 10
+VCF_BATCH_SIZE = 100
 VCF_WORKERS = 40
 VCF_THREADS = 8
-VCF_HEADER_MB = 50  # memory per sample per thread
+VCF_HEADER_MB = 32  # memory per sample per thread
 
 # Consolidation task resources
 CONSOLIDATE_RESOURCES = {
