@@ -4,6 +4,7 @@ import os
 import pathlib
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Mapping, Optional, Sequence, Tuple
 
 import tiledb
@@ -234,21 +235,40 @@ def process_stream(
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         ) as process:
-            data = fp.read(read_size)
-            while data:
-                try:
-                    process.stdin.write(data)
-                except BrokenPipeError:
-                    # The subprocess has exited, stop reading.
-                    # This is an expected situation.
-                    break
-                data = fp.read(read_size)
-            try:
-                process.stdin.close()
-            except BrokenPipeError:
-                # Ignore broken pipe when closing stdin
-                pass
-            stdout = process.stdout.read().decode().strip()
-            stderr = process.stderr.read().decode().strip()
 
-    return stdout, stderr
+            def writer():
+                """Read from VFS and write to the subprocess stdin."""
+
+                data = fp.read(read_size)
+                while data:
+                    try:
+                        process.stdin.write(data)
+                    except BrokenPipeError:
+                        # The subprocess has exited, stop reading.
+                        # This is an expected situation.
+                        break
+                    data = fp.read(read_size)
+                try:
+                    process.stdin.close()
+                except BrokenPipeError:
+                    # Ignore broken pipe when closing stdin
+                    pass
+
+            def reader(stream):
+                """Return the stream contents as a string."""
+
+                return "".join(line.decode() for line in stream).strip()
+
+            # Create separate threads for writing and reading to drain the
+            # subprocess output pipes. This prevents a deadlock if the
+            # subprocess fills its output buffers.
+            with ThreadPoolExecutor(max_workers=3) as executor:
+                executor.submit(writer)
+                stdout_future = executor.submit(reader, process.stdout)
+                stderr_future = executor.submit(reader, process.stderr)
+
+            # Retrieve results
+            stdout = stdout_future.result()
+            stderr = stderr_future.result()
+
+            return stdout, stderr
