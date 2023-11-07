@@ -193,6 +193,14 @@ class ApiClient(object):
             url = _host + resource_path
 
         try:
+            import pprint
+            import sys
+
+            print("=====================", file=sys.stderr)
+            print(f"{method} {url}", file=sys.stderr)
+            print("-----------------", file=sys.stderr)
+            pprint.pprint(body, stream=sys.stderr)
+            print("=====================", file=sys.stderr)
             # perform request and return response
             response_data = self.request(
                 method,
