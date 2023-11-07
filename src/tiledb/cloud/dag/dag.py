@@ -1514,7 +1514,7 @@ class DAG:
             kwargs = {}
             if callable(node.args[0]):
                 kwargs["executable_code"] = _codec.b64_str(_codec.pickle(node.args[0]))
-                kwargs["source_text"] = functions.getsourcelines(node.args[0])
+                # kwargs["source_text"] = functions.getsourcelines(node.args[0])
             if type(node.args[0]) == str:
                 kwargs["registered_udf_name"] = node.args[0]
 
