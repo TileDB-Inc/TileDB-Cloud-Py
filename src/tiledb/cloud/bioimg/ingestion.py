@@ -1,12 +1,13 @@
 from typing import Any, Dict, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
+import enum
 from tiledb.cloud._common.utils import logger
 from tiledb.cloud.bioimg.helpers import batch
 from tiledb.cloud.bioimg.helpers import get_uris
 from tiledb.cloud.bioimg.helpers import scale_calc
 from tiledb.cloud.bioimg.helpers import serialize_filter
-from .types import EMBEDDINGS
+# from .types import EMBEDDINGS
 
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
@@ -16,7 +17,56 @@ DEFAULT_DAG_NAME = "bioimg-ingestion"
 # UDFs
 # --------------------------------------------------------------------
 
-def ingest_tiff_udf(
+class EMBEDDINGS(enum.Enum):
+            RESNET = enum.auto()
+
+class SupportedExtensions(enum.Enum):
+    TIFF: str = ".tiff"
+    TIF: str = ".tif"
+    SVS: str = ".svs"
+    TDB: str = ".tdb"
+# --------------------------------------------------------------------
+# User functions
+# --------------------------------------------------------------------
+
+def ingest(
+    source: Union[Sequence[str], str],
+    output: str,
+    config: Mapping[str, Any],
+    *args: Any,
+    taskgraph_name: Optional[str] = None,
+    num_batches: Optional[int] = None,
+    threads: Optional[int] = 8,
+    resources: Optional[Mapping[str, Any]] = None,
+    compute: bool = True,
+    namespace: Optional[str],
+    embedding_model: Optional[EMBEDDINGS] = None,
+    embedding_level: int = 0,
+    embedding_grid: Tuple[int, int] = (4, 4),
+    **kwargs,
+) -> tiledb.cloud.dag.DAG:
+    """The function ingests microscopy images into TileDB arrays
+
+    :param source: uri / iterable of uris of input files
+    :param output: output dir for the ingested tiledb arrays
+    :param config: dict configuration to pass on tiledb.VFS
+    :param taskgraph_name: Optional name for taskgraph, defaults to None
+    :param num_batches: Number of graph nodes to spawn.
+        Performs it sequentially if default, defaults to 1
+    :param threads: Number of threads for node side multiprocessing, defaults to 8
+    :param resources: configuration for node specs e.g. {"cpu": "8", "memory": "4Gi"},
+        defaults to None
+    :param compute: When True the DAG returned will be computed inside the function
+    otherwise DAG will only be returned.
+    :param namespace: The namespace where the DAG will run
+    :param embedding_model: The model to be used for creating embedding. Supported values are of type class EMBEDDINGS
+    :param embedding_level: The resolution level to be used for the embedding. This could be different from the ingestion level
+    selected with parameter `level`
+    :param embedding_grid: A tuple that represents the (num_of_rows, num_of_cols), in which the image will be splitted in patches
+    for the embedding creation. According to this grid internally the image is being splitted to fit this requirement.
+    """
+
+    def ingest_tiff_udf(
         io_uris: Sequence[Tuple],
         config: Mapping[str, Any],
         threads,
@@ -36,10 +86,19 @@ def ingest_tiff_udf(
         from tiledb import filter
         import numpy as np
         import os
-        from tiledb.cloud.bioimg.types import EMBEDDINGS
         import tiledb.vector_search as vs
         from tiledb.bioimg.converters.ome_tiff import OMETiffConverter
         from tiledb.bioimg.openslide import TileDBOpenSlide
+        import enum
+
+        class EMBEDDINGS(enum.Enum):
+            RESNET = enum.auto()
+
+        class SupportedExtensions(enum.Enum):
+            TIFF: str = ".tiff"
+            TIF: str = ".tif"
+            SVS: str = ".svs"
+            TDB: str = ".tdb"
         
         compressor = kwargs.get("compressor", None)
         if compressor:
@@ -138,48 +197,6 @@ def ingest_tiff_udf(
                     grp = tiledb.Group(output, "w")
                     grp.add(embeddings_flat_uri)
                     grp.add(embeddings_ivf_flat_uri)
-
-
-# --------------------------------------------------------------------
-# User functions
-# --------------------------------------------------------------------
-
-def ingest(
-    source: Union[Sequence[str], str],
-    output: str,
-    config: Mapping[str, Any],
-    *args: Any,
-    taskgraph_name: Optional[str] = None,
-    num_batches: Optional[int] = None,
-    threads: Optional[int] = 8,
-    resources: Optional[Mapping[str, Any]] = None,
-    compute: bool = True,
-    namespace: Optional[str],
-    embedding_model: Optional[EMBEDDINGS] = None,
-    embedding_level: int = 0,
-    embedding_grid: Tuple[int, int] = (4, 4),
-    **kwargs,
-) -> tiledb.cloud.dag.DAG:
-    """The function ingests microscopy images into TileDB arrays
-
-    :param source: uri / iterable of uris of input files
-    :param output: output dir for the ingested tiledb arrays
-    :param config: dict configuration to pass on tiledb.VFS
-    :param taskgraph_name: Optional name for taskgraph, defaults to None
-    :param num_batches: Number of graph nodes to spawn.
-        Performs it sequentially if default, defaults to 1
-    :param threads: Number of threads for node side multiprocessing, defaults to 8
-    :param resources: configuration for node specs e.g. {"cpu": "8", "memory": "4Gi"},
-        defaults to None
-    :param compute: When True the DAG returned will be computed inside the function
-    otherwise DAG will only be returned.
-    :param namespace: The namespace where the DAG will run
-    :param embedding_model: The model to be used for creating embedding. Supported values are of type class EMBEDDINGS
-    :param embedding_level: The resolution level to be used for the embedding. This could be different from the ingestion level
-    selected with parameter `level`
-    :param embedding_grid: A tuple that represents the (num_of_rows, num_of_cols), in which the image will be splitted in patches
-    for the embedding creation. According to this grid internally the image is being splitted to fit this requirement.
-    """
 
     if isinstance(source, str):
         # Handle only lists
