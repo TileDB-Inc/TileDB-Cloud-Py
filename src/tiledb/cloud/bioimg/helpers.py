@@ -3,15 +3,7 @@ import os
 from typing import Any, Iterator, Mapping, Sequence, Tuple
 
 import tiledb
-
-from dataclasses import dataclass
-
-@dataclass
-class SupportedExtensions:
-    TIFF: str = ".tiff"
-    TIF: str = ".tif"
-    SVS: str = ".svs"
-    TDB: str = ".tdb"
+from .types import SupportedExtensions
 
 def get_embeddings_uris(output_file_uri: str) -> Tuple[str, str]:
     destination = os.path.dirname(output_file_uri)

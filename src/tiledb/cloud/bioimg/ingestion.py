@@ -6,10 +6,7 @@ from tiledb.cloud.bioimg.helpers import batch
 from tiledb.cloud.bioimg.helpers import get_uris
 from tiledb.cloud.bioimg.helpers import scale_calc
 from tiledb.cloud.bioimg.helpers import serialize_filter
-import enum
-
-class EMBEDDINGS(enum.Enum):
-    RESNET = enum.auto()
+from .types import EMBEDDINGS
 
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
