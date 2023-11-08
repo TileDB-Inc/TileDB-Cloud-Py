@@ -29,7 +29,7 @@ def get_uris(
 
     def iter_paths(sequence) -> Iterator[Tuple]:
         for uri in sequence:
-            if uri.endswith(SupportedExtensions.__annotations__.values()):
+            if uri.endswith(tuple([ext.value for ext in SupportedExtensions])):
                 yield uri, create_output_path(uri, output_dir)
 
     if len(source) == 1 and vfs.is_dir(source[0]):

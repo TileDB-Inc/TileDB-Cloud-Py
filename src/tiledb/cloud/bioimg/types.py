@@ -1,11 +1,9 @@
 import enum
-from dataclasses import dataclass
 
 class EMBEDDINGS(enum.Enum):
     RESNET = enum.auto()
 
-@dataclass
-class SupportedExtensions:
+class SupportedExtensions(enum.Enum):
     TIFF: str = ".tiff"
     TIF: str = ".tif"
     SVS: str = ".svs"
