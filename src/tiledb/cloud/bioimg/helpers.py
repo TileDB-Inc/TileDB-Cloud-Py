@@ -4,6 +4,15 @@ from typing import Any, Iterator, Mapping, Sequence, Tuple
 
 import tiledb
 
+from dataclasses import dataclass
+
+@dataclass
+class SupportedExtensions:
+    TIFF: str = ".tiff"
+    TIF: str = ".tif"
+    SVS: str = ".svs"
+    TDB: str = ".tdb"
+
 def get_embeddings_uris(output_file_uri: str) -> Tuple[str, str]:
     destination = os.path.dirname(output_file_uri)
     filename = os.path.basename(output_file_uri).split('.')
@@ -28,7 +37,7 @@ def get_uris(
 
     def iter_paths(sequence) -> Iterator[Tuple]:
         for uri in sequence:
-            if uri.endswith((".tiff", ".tif", ".tdb")):
+            if uri.endswith(SupportedExtensions.__annotations__.values()):
                 yield uri, create_output_path(uri, output_dir)
 
     if len(source) == 1 and vfs.is_dir(source[0]):
