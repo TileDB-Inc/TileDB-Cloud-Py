@@ -3,7 +3,7 @@ from typing import Any, Dict, Mapping, Optional, Sequence, Tuple, Union
 import tiledb
 from tiledb.cloud._common.utils import logger
 from tiledb.cloud.bioimg.helpers import batch
-# from tiledb.cloud.bioimg.helpers import get_uris
+from tiledb.cloud.bioimg.helpers import get_uris
 from tiledb.cloud.bioimg.helpers import scale_calc
 
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}

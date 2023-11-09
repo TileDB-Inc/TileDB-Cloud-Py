@@ -145,6 +145,7 @@ def ingest_tiff_udf(
                 grp.add(embeddings_flat_uri)
                 grp.add(embeddings_ivf_flat_uri)
                 grp.meta["Embeddings Model"] = EMBEDDINGS.RESNET.name
+                grp.meta["fmt_version"] = 3
                 grp.close()        
 
                 try:
