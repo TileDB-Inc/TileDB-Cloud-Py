@@ -3,7 +3,7 @@ import os
 from typing import Any, Iterator, Mapping, Sequence, Tuple
 
 import tiledb
-#from .types import SupportedExtensions
+from .types import SupportedExtensions
 
 def get_embeddings_uris(output_file_uri: str) -> Tuple[str, str]:
     destination = os.path.dirname(output_file_uri)
@@ -12,7 +12,42 @@ def get_embeddings_uris(output_file_uri: str) -> Tuple[str, str]:
     embeddings_ivf_flat_uri = os.path.join(destination, f'{filename}_embeddings_ivf_flat')
     return embeddings_flat_uri, embeddings_ivf_flat_uri
 
+def get_uris(
+    source: Sequence[str], output_dir: str, config: Mapping[str, Any], output_ext: str
+):
+    """Match input uri/s with output destinations
 
+    :param source: A sequence of paths or path to input
+    :param output_dir: A path to the output directory
+    """
+    vfs = tiledb.VFS(config=config)
+
+    def create_output_path(input_file, output_dir) -> str:
+        filename = os.path.splitext(os.path.basename(input_file))[0]
+        return os.path.join(output_dir, filename + f".{output_ext}")
+
+    def iter_paths(sequence) -> Iterator[Tuple]:
+        for uri in sequence:
+            if uri.endswith(tuple([ext.value for ext in SupportedExtensions])):
+                yield uri, create_output_path(uri, output_dir)
+
+    if len(source) == 1 and vfs.is_dir(source[0]):
+        # Check if the dir is actually a tiledb group for exportation
+        with tiledb.scope_ctx(ctx_or_config=config):
+            if tiledb.object_type(source[0]) != "group":
+                # Folder like input
+                contents = vfs.ls(source[0])
+                if len(contents) != 0:
+                    return tuple(iter_paths(contents))
+                else:
+                    raise ValueError("Input bucket should contain images for ingestion")
+            else:
+                # This is the exportation scenario for single tdb image
+                return ((source[0], create_output_path(source[0], output_dir)),)
+    elif isinstance(source, Sequence):
+        # List of input uris - single file is one element list
+        return tuple(iter_paths(source))
+    
 def serialize_filter(filter):
     if isinstance(filter, tiledb.Filter):
         filter_dict = filter._attrs_()
