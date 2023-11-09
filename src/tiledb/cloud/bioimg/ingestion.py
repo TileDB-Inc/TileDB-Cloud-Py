@@ -1,4 +1,4 @@
-from typing import Any, Dict, Mapping, Optional, Sequence, Tuple, Union, Iterator
+from typing import Any, Dict, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
 from tiledb.cloud._common.utils import logger
@@ -6,6 +6,7 @@ from tiledb.cloud.bioimg.helpers import batch
 from tiledb.cloud.bioimg.helpers import get_uris
 from tiledb.cloud.bioimg.helpers import scale_calc
 from tiledb.cloud.bioimg.helpers import serialize_filter
+
 from .types import EMBEDDINGS
 
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
@@ -15,6 +16,7 @@ DEFAULT_DAG_NAME = "bioimg-ingestion"
 # --------------------------------------------------------------------
 # UDFs
 # --------------------------------------------------------------------
+
 
 def ingest_tiff_udf(
     io_uris: Sequence[Tuple],
@@ -31,21 +33,26 @@ def ingest_tiff_udf(
 
     :param io_uris: Pairs of tiff input - output tdb uris
     :param config: dict configuration to pass on tiledb.VFS
-    :param embedding_model: The model to be used for creating embedding. Supported values are of type class EMBEDDINGS
-    :param embedding_level: The resolution level to be used for the embedding. This could be different from the ingestion level
-    selected with parameter `level`
-    :param embedding_grid: A tuple that represents the (num_of_rows, num_of_cols), in which the image will be splitted in patches
-    for the embedding creation. According to this grid internally the image is being splitted to fit this requirement.
+    :param embedding_model: The model to be used for creating embedding.
+    Supported values are of type class EMBEDDINGS
+    :param embedding_level: The resolution level to be used for the embedding.
+    This could be different from the ingestion level selected with parameter `level`
+    :param embedding_grid: A tuple that represents the (num_of_rows, num_of_cols)
+    in which the image will be splitted in patches for the embedding creation.
+    According to this grid internally the image is being splitted
+    to fit this requirement.
     """
 
-    from tiledb import filter
-    import numpy as np
     import os
+
+    import numpy as np
+
     import tiledb.vector_search as vs
+    from tiledb import filter
     from tiledb.bioimg.converters.ome_tiff import OMETiffConverter
     from tiledb.bioimg.openslide import TileDBOpenSlide
     from tiledb.cloud.bioimg.types import EMBEDDINGS
-    
+
     compressor = kwargs.get("compressor", None)
     if compressor:
         compressor_args = dict(compressor)
@@ -54,9 +61,7 @@ def ingest_tiff_udf(
             compressor_args = {
                 k: None if not v else v for k, v in compressor_args.items()
             }
-            kwargs["compressor"] = vars(filter).get(compressor_name)(
-                **compressor_args
-            )
+            kwargs["compressor"] = vars(filter).get(compressor_name)(**compressor_args)
         else:
             raise ValueError
 
@@ -64,9 +69,12 @@ def ingest_tiff_udf(
     vfs = tiledb.VFS(config=conf)
     if embedding_model:
         # Calculate image embedding on image patches [arg=ResNet]
-        def calculate_model(images_array: np.ndarray, model_id: EMBEDDINGS) -> np.ndarray:
+        def calculate_model(
+            images_array: np.ndarray, model_id: EMBEDDINGS
+        ) -> np.ndarray:
             import tensorflow as tf
             from tensorflow.keras.applications.resnet_v2 import preprocess_input
+
             if model_id is EMBEDDINGS.RESNET:
                 model = tf.keras.applications.ResNet50V2(include_top=False)
                 maps = model.predict(preprocess_input(images_array))
@@ -77,24 +85,37 @@ def ingest_tiff_udf(
 
         def get_embeddings_uris(output_file_uri: str) -> Tuple[str, str]:
             # The uri of the embeddings point inside the image group
-            filename = os.path.basename(output_file_uri).split('.')[0]
-            embeddings_flat_uri = os.path.join(output_file_uri, f'{filename}_embeddings_flat')
-            embeddings_ivf_flat_uri = os.path.join(output_file_uri, f'{filename}_embeddings_ivf_flat')
-            return embeddings_flat_uri, embeddings_ivf_flat_uri     
+            filename = os.path.basename(output_file_uri).split(".")[0]
+            embeddings_flat_uri = os.path.join(
+                output_file_uri, f"{filename}_embeddings_flat"
+            )
+            embeddings_ivf_flat_uri = os.path.join(
+                output_file_uri, f"{filename}_embeddings_ivf_flat"
+            )
+            return embeddings_flat_uri, embeddings_ivf_flat_uri
 
     with tiledb.scope_ctx(ctx_or_config=conf):
         for input, output in io_uris:
             with vfs.open(input) as src:
                 OMETiffConverter.to_tiledb(src, output, **kwargs)
-    
+
             if embedding_model:
                 # Create the embeddings output paths
-                embeddings_flat_uri, embeddings_ivf_flat_uri = get_embeddings_uris(output)
+                embeddings_flat_uri, embeddings_ivf_flat_uri = get_embeddings_uris(
+                    output
+                )
 
                 # Split image [level=arg] in rectangular patches [arg] size
-                def split_in_patches(image: np.ndarray, embedding_level: int, embedding_grid: Tuple[int,int]) -> Sequence[np.ndarray]:
-                    level_shape_w, level_shape_h = image.level_dimensions[embedding_level]
-                    # Calculate the region size based on the desired number of rows and columns
+                def split_in_patches(
+                    image: np.ndarray,
+                    embedding_level: int,
+                    embedding_grid: Tuple[int, int],
+                ) -> Sequence[np.ndarray]:
+                    level_shape_w, level_shape_h = image.level_dimensions[
+                        embedding_level
+                    ]
+                    # Calculate the region size based on the desired
+                    # number of rows and columns
                     grid_row_num, grid_col_num = embedding_grid
                     region_height = level_shape_h // grid_row_num
                     region_width = level_shape_w // grid_col_num
@@ -103,19 +124,26 @@ def ingest_tiff_udf(
                     for i in range(grid_row_num):
                         for j in range(grid_col_num):
                             location = (i, j)
-                            patches.append(image.read_region(location, embedding_level, (region_height, region_width)))
+                            patches.append(
+                                image.read_region(
+                                    location,
+                                    embedding_level,
+                                    (region_height, region_width),
+                                )
+                            )
                     return patches
-                
+
                 with TileDBOpenSlide(output) as image:
-                    
                     # Filter out patches with [arg] % non-blank coverage
                     filtered = split_in_patches(image, embedding_level, embedding_grid)
-            
+
                     patches_array = np.array([])
                     for patch in filtered:
                         patch_transformed = patch[np.newaxis]
                         if patches_array.any():
-                            patches_array = np.concatenate((patches_array, patch_transformed), axis=0)
+                            patches_array = np.concatenate(
+                                (patches_array, patch_transformed), axis=0
+                            )
                         else:
                             patches_array = patch_transformed
 
@@ -139,14 +167,14 @@ def ingest_tiff_udf(
                         source_uri="features",
                         source_type="F32BIN",
                     )
-                
+
                 # Store embedding and flat index inside the image data model
                 grp = tiledb.Group(output, "w")
                 grp.add(embeddings_flat_uri)
                 grp.add(embeddings_ivf_flat_uri)
                 grp.meta["Embeddings Model"] = EMBEDDINGS.RESNET.name
                 grp.meta["fmt_version"] = 3
-                grp.close()        
+                grp.close()
 
                 try:
                     os.remove(tmp_features_file)
@@ -157,6 +185,7 @@ def ingest_tiff_udf(
 # --------------------------------------------------------------------
 # User functions
 # --------------------------------------------------------------------
+
 
 def ingest(
     source: Union[Sequence[str], str],
@@ -188,11 +217,14 @@ def ingest(
     :param compute: When True the DAG returned will be computed inside the function
     otherwise DAG will only be returned.
     :param namespace: The namespace where the DAG will run
-    :param embedding_model: The model to be used for creating embedding. Supported values are of type class EMBEDDINGS
-    :param embedding_level: The resolution level to be used for the embedding. This could be different from the ingestion level
-    selected with parameter `level`
-    :param embedding_grid: A tuple that represents the (num_of_rows, num_of_cols), in which the image will be splitted in patches
-    for the embedding creation. According to this grid internally the image is being splitted to fit this requirement.
+    :param embedding_model: The model to be used for creating embedding.
+    Supported values are of type class EMBEDDINGS
+    :param embedding_level: The resolution level to be used for the embedding.
+    This could be different from the ingestion level selected with parameter `level`
+    :param embedding_grid: A tuple that represents the (num_of_rows, num_of_cols)
+    in which the image will be splitted in patches for the embedding creation.
+    According to this grid internally the image is being splitted
+    to fit this requirement.
     """
 
     if isinstance(source, str):
@@ -241,6 +273,7 @@ def ingest(
     if compute:
         graph.compute()
     return graph
+
 
 def ingest_udf(*args: Any, **kwargs: Any) -> Dict[str, str]:
     """Ingestor wrapper function that can be used as a UDF."""

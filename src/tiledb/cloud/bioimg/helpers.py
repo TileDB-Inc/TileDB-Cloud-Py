@@ -3,14 +3,19 @@ import os
 from typing import Any, Iterator, Mapping, Sequence, Tuple
 
 import tiledb
+
 from .types import SupportedExtensions
+
 
 def get_embeddings_uris(output_file_uri: str) -> Tuple[str, str]:
     destination = os.path.dirname(output_file_uri)
-    filename = os.path.basename(output_file_uri).split('.')
-    embeddings_flat_uri = os.path.join(destination, f'{filename}_embeddings_flat')
-    embeddings_ivf_flat_uri = os.path.join(destination, f'{filename}_embeddings_ivf_flat')
+    filename = os.path.basename(output_file_uri).split(".")
+    embeddings_flat_uri = os.path.join(destination, f"{filename}_embeddings_flat")
+    embeddings_ivf_flat_uri = os.path.join(
+        destination, f"{filename}_embeddings_ivf_flat"
+    )
     return embeddings_flat_uri, embeddings_ivf_flat_uri
+
 
 def get_uris(
     source: Sequence[str], output_dir: str, config: Mapping[str, Any], output_ext: str
@@ -47,7 +52,8 @@ def get_uris(
     elif isinstance(source, Sequence):
         # List of input uris - single file is one element list
         return tuple(iter_paths(source))
-    
+
+
 def serialize_filter(filter):
     if isinstance(filter, tiledb.Filter):
         filter_dict = filter._attrs_()
