@@ -85,7 +85,7 @@ def export(
             work,
             config,
             *args,
-            name=f"{task_prefix} - {i}/{num_batches}",
+            name=f"{task_prefix} - {i}",
             mode=tiledb.cloud.dag.Mode.BATCH,
             resources=DEFAULT_RESOURCES if resources is None else resources,
             image_name=DEFAULT_IMG_NAME,
