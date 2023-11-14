@@ -29,6 +29,8 @@ def get_logger_wrapper(
 
     return logger
 
+from .types import SupportedExtensions
+
 
 def get_uris(
     source: Sequence[str], output_dir: str, config: Mapping[str, Any], output_ext: str
@@ -46,7 +48,7 @@ def get_uris(
 
     def iter_paths(sequence) -> Iterator[Tuple]:
         for uri in sequence:
-            if uri.endswith((".tiff", ".tif", ".tdb")):
+            if uri.endswith(tuple([ext.value for ext in SupportedExtensions])):
                 yield uri, create_output_path(uri, output_dir)
 
     if len(source) == 1:
