@@ -58,7 +58,6 @@ _SKIP_BATCH_UDF_KWARGS = [
     "result_format",
     "retry_strategy",
     "deadline",
-    "access_credentials_name",
 ]
 
 _TASK_GRAPH_LOG_STATUS_TO_STATUS_MAP = {
