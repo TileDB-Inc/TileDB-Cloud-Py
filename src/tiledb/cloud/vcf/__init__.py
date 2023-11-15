@@ -10,6 +10,7 @@ from .utils import create_index_file
 from .utils import find_index
 from .utils import get_record_count
 from .utils import get_sample_name
+from .utils import get_summary_stats
 from .utils import is_bgzipped
 
 __all__ = [
@@ -25,5 +26,6 @@ __all__ = [
     "find_index",
     "get_sample_name",
     "get_record_count",
+    "get_summary_stats",
     "is_bgzipped",
 ]

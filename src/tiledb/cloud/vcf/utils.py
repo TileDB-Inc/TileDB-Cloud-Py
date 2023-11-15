@@ -1,7 +1,7 @@
 import os
 import shutil
 import subprocess
-from typing import Optional
+from typing import Mapping, Optional
 
 import tiledb
 from tiledb.cloud.utilities import process_stream
@@ -90,6 +90,50 @@ def get_record_count(vcf_uri: str, index_uri: str) -> Optional[int]:
         return None
 
     return int(res.stdout)
+
+
+def get_summary_stats(vcf_uri: str) -> Mapping[str, int]:
+    """
+    Return the summary stats for a VCF file.
+
+    :param vcf_uri: URI of the VCF file
+    :return: mapping of summary stat name to value, which will be 0 if there
+             was an error
+    """
+
+    # Summary stats to collect from the bcftools stats command
+    keys = [
+        "samples",
+        "records",
+        "no_alts",
+        "snps",
+        "mnps",
+        "indels",
+        "others",
+        "multiallelics",
+        "multiallelic_snps",
+    ]
+    values = []
+
+    # Get the summary stats using bcftools
+    cmd = ("bcftools", "stats")
+    stdout, stderr = process_stream(vcf_uri, cmd)
+
+    if stderr:
+        print(stderr)
+    else:
+        # Parse the summary stats from stdout
+        for line in stdout.splitlines():
+            if line.startswith("SN"):
+                values.append(int(line.split()[-1]))
+
+    # Return a mapping of summary stat name to value
+    # or a mapping of summary stat name to 0 if there
+    # was an error.
+    if len(values) != len(keys):
+        values = [0] * len(keys)
+
+    return dict(zip(keys, values))
 
 
 def create_index_file(vcf_uri: str) -> str:

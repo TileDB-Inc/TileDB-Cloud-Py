@@ -2,6 +2,7 @@ import enum
 import logging
 import subprocess
 import sys
+import time
 from collections import defaultdict
 from fnmatch import fnmatch
 from math import ceil
@@ -26,6 +27,18 @@ from tiledb.cloud.vcf.utils import find_index
 from tiledb.cloud.vcf.utils import get_record_count
 from tiledb.cloud.vcf.utils import get_sample_name
 
+if False:
+    from tiledb.cloud.vcf.utils import get_summary_stats
+else:
+    import importlib, os
+
+    path = os.path.dirname(importlib.import_module("tiledb.cloud").__file__)
+    files = [f"{path}/vcf/utils.py"]
+    for file in files:
+        with open(file) as f:
+            exec(compile(f.read(), file, "exec"))
+
+
 # Testing hooks
 local_ingest = False
 
@@ -37,8 +50,8 @@ MANIFEST_ARRAY = "manifest"
 DEFAULT_ATTRIBUTES = ["fmt_GT"]
 
 # Default values for ingestion parameters
-MANIFEST_BATCH_SIZE = 200
-MANIFEST_WORKERS = 40
+MANIFEST_BATCH_SIZE = 25
+MANIFEST_WORKERS = 200
 VCF_BATCH_SIZE = 10
 VCF_WORKERS = 40
 VCF_THREADS = 8
@@ -124,6 +137,13 @@ def create_manifest(dataset_uri: str) -> None:
         tiledb.Attr(name="index_uri", dtype="ascii", filters=ascii_fl),
         tiledb.Attr(name="index_bytes", dtype=np.uint64, filters=int_fl),
         tiledb.Attr(name="records", dtype=np.uint64, filters=int_fl),
+        tiledb.Attr(name="no_alts", dtype=np.uint64, filters=int_fl),
+        tiledb.Attr(name="snps", dtype=np.uint64, filters=int_fl),
+        tiledb.Attr(name="mnps", dtype=np.uint64, filters=int_fl),
+        tiledb.Attr(name="indels", dtype=np.uint64, filters=int_fl),
+        tiledb.Attr(name="others", dtype=np.uint64, filters=int_fl),
+        tiledb.Attr(name="multiallelics", dtype=np.uint64, filters=int_fl),
+        tiledb.Attr(name="multiallelic_snps", dtype=np.uint64, filters=int_fl),
     ]
 
     schema = tiledb.ArraySchema(
@@ -692,13 +712,29 @@ def ingest_manifest_udf(
                             status = "" if status == "ok" else status + ","
                             status += "bad index"
 
+                    # Get summary statistics
+                    t_start = time.time()
+                    stats = get_summary_stats(vcf_uri)
+                    logger.info(
+                        "Summary stats for %r in %.2f seconds.",
+                        vcf_uri,
+                        time.time() - t_start,
+                    )
+
                     keys.append(sample_name)
                     values["status"].append(status)
                     values["vcf_uri"].append(vcf_uri)
                     values["vcf_bytes"].append(str(file_size(vcf_uri)))
                     values["index_uri"].append(index_uri)
                     values["index_bytes"].append(str(file_size(index_uri)))
-                    values["records"].append(str(records))
+                    values["records"].append(stats["records"])
+                    values["no_alts"].append(stats["no_alts"])
+                    values["snps"].append(stats["snps"])
+                    values["mnps"].append(stats["mnps"])
+                    values["indels"].append(stats["indels"])
+                    values["others"].append(stats["others"])
+                    values["multiallelics"].append(stats["multiallelics"])
+                    values["multiallelic_snps"].append(stats["multiallelic_snps"])
 
                 # Write to TileDB array, if any samples were found
                 if keys:
@@ -1000,7 +1036,7 @@ def ingest_manifest_dag(
 
     # Adjust batch size to ensure at least 20 samples per worker
     batch_size = min(batch_size, len(sample_uris) // workers)
-    batch_size = max(batch_size, 20)
+    # batch_size = max(batch_size, 20)
 
     num_partitions = ceil(len(sample_uris) / batch_size)
     num_consolidates = ceil(num_partitions / workers)
@@ -1022,7 +1058,7 @@ def ingest_manifest_dag(
                 include=[MANIFEST_ARRAY, LOG_ARRAY],
                 id=f"manifest-consol-{i//workers}",
                 verbose=verbose,
-                resources=CONSOLIDATE_RESOURCES,
+                resources=CONSOLIDATE_RESOURCES if batch_mode else None,
                 name=f"Consolidate VCF Manifest {i//workers + 1}/{num_consolidates} ",
                 **kwargs,
             )
@@ -1034,7 +1070,7 @@ def ingest_manifest_dag(
             config=config,
             verbose=verbose,
             id=f"manifest-ingest-{i}",
-            resources=MANIFEST_RESOURCES,
+            resources=MANIFEST_RESOURCES if batch_mode else None,
             name=f"Ingest VCF Manifest {i+1}/{num_partitions} ",
             **kwargs,
         )
