@@ -99,37 +99,8 @@ class BioimgTest(unittest.TestCase):
             print(f"{test_name}:", source, dest)
             validate_io_paths(source, dest)
 
-<<<<<<< HEAD
         # Non Accepted cases
         for test_name, io_tuple in self.non_accepted_pairs.items():
-=======
-        io_validation_ni_errors = {
-            "test3": ("s3://test_in/a", ["s3://test_out/b/", "s3://test_out/d/"]),
-        }
-
-        for test_name, io_tuple in io_validation_ni_errors.items():
-            source, dest = io_tuple
-            source = [source] if isinstance(source, str) else source
-            dest = [dest] if isinstance(dest, str) else dest
-            print(f"{test_name}:", source, dest)
-            with self.assertRaises(ValueError):
-                validate_io_paths(source, dest)
-
-        io_validation_value_errors = {
-            # Folder in - single file out
-            "test1": ("s3://test_in/a/", "s3://test_out/b"),
-            "test2": (["s3://test_in/a/"], "s3://test_out/b"),
-            "test3": ("s3://test_in/a/", ["s3://test_out/b"]),
-            "test4": (["s3://test_in/a/"], ["s3://test_out/b"]),
-            # Input list cannot contain dir
-            # One of the input is folder - out is folder
-            "test16": (["s3://test_in/a", "s3://test_in/c/"], "s3://test_out/b/"),
-            # One of the input is folder - out is folder and list
-            "test17": (["s3://test_in/a", "s3://test_in/c/"], ["s3://test_out/b/"]),
-        }
-
-        for test_name, io_tuple in io_validation_value_errors.items():
->>>>>>> 2b0bcb9 (Simplify validate logic - PR changes)
             source, dest = io_tuple
             source = [source] if isinstance(source, str) else source
             dest = [dest] if isinstance(dest, str) else dest
