@@ -163,7 +163,7 @@ def ingest(
     logger.debug("Building graph")
     graph = dag.DAG(
         name=dag_name,
-        mode=dag.Mode.BATCH,
+        mode=dag.Mode.REALTIME if local else dag.Mode.BATCH,
         max_workers=max_workers,
         namespace=namespace,
         retry_strategy=RetryStrategy(
