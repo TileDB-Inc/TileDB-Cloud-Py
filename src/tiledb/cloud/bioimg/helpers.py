@@ -29,6 +29,7 @@ def get_logger_wrapper(
 
     return logger
 
+
 _SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs", ".tdb")
 
 
