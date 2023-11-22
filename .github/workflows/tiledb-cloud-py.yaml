@@ -97,7 +97,7 @@ jobs:
 
       - name: Install TileDB-Cloud-Py
         run: |
-          pip install .
+          pip install .[tests]
 
       - name: Run tests
         # Test pinned dependencies on commit / tag and fresh installs on nightlies
