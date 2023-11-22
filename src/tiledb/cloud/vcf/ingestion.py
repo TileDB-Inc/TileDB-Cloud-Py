@@ -1298,7 +1298,7 @@ def ingest(
     batch_mode: bool = True,
     access_credentials_name: Optional[str] = None,
     compute: bool = True,
-    consolidate_stats: bool = True,
+    consolidate_stats: bool = False,
     aws_find_mode: bool = False,
 ) -> Tuple[Optional[dag.DAG], Sequence[str]]:
     """
