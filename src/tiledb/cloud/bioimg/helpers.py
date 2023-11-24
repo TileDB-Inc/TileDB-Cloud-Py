@@ -49,7 +49,7 @@ def get_uris(
 
     def iter_paths(sequence) -> Iterator[Tuple]:
         for uri in sequence:
-            if uri.endswith(tuple(ext for ext in _SUPPORTED_EXTENSIONS)):
+            if uri.endswith(_SUPPORTED_EXTENSIONS):
                 yield uri, create_output_path(uri, output_dir)
 
     if len(source) == 1:
