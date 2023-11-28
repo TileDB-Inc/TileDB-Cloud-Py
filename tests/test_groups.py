@@ -33,8 +33,12 @@ class GroupsTest(unittest.TestCase):
         inner_name = testonly.random_name("inner")
         groups.create(inner_name, parent_uri=outer_uri)
         self.assert_group_exists(inner_name)
-        time.sleep(3)  # Hack: this test keeps failing
-        groups.deregister(outer_uri, recursive=True)
+        for _ in range(TRIES):
+            try:
+                groups.deregister(outer_uri, recursive=True)
+                break
+            except Exception:
+                time.sleep(2)
         self.assert_group_not_exists(outer_name)
         self.assert_group_not_exists(inner_name)
 
