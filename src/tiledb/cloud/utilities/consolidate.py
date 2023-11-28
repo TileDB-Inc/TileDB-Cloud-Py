@@ -131,6 +131,7 @@ def consolidate_and_vacuum(
 def consolidate_fragments(
     array_uri: str,
     *,
+    acn: Optional[str] = None,
     config: Optional[Mapping[str, Any]] = None,
     group_by_first_dim: bool = False,
     graph: Optional[dag.DAG] = None,
@@ -154,6 +155,8 @@ def consolidate_fragments(
     Cloud.
 
     :param array_uri: array URI
+    :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
+        defaults to None
     :param config: config dictionary, defaults to None
     :param group_by_first_dim: group fragment by first dimension, defaults to True
     :param graph: graph to submit nodes to, defaults to None
@@ -199,6 +202,7 @@ def consolidate_fragments(
         config=config,
         group_by_first_dim=group_by_first_dim,
         name=f"Groups Fragments - {name}",
+        access_credentials_name=acn,
         resources={
             "cpu": "1",
             "memory": "1Gi",
@@ -217,6 +221,7 @@ def consolidate_fragments(
         max_fragment_size=max_fragment_size,
         expand_node_output=fragment_groups,
         name=f"Consolidate Fragments - {name}",
+        access_credentials_name=acn,
         resources=consolidate_resources,
     )
 
@@ -226,6 +231,7 @@ def consolidate_fragments(
         config=config,
         vacuum_fragments=True,
         name=f"Consolidate and Vacuum - {name}",
+        access_credentials_name=acn,
         resources=consolidate_resources,
     )
 
