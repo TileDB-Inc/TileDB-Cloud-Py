@@ -59,6 +59,43 @@ def run_ingest_workflow(
         manage execution and monitor progress.
     """
 
+    grf = get_ingest_workflow_graph(
+        output_uri=output_uri,
+        input_uri=input_uri,
+        measurement_name=measurement_name,
+        pattern=pattern,
+        extra_tiledb_config=extra_tiledb_config,
+        platform_config=platform_config,
+        ingest_mode=ingest_mode,
+        resources=resources,
+        namespace=namespace,
+        access_credentials_name=access_credentials_name,
+    )
+    grf.compute()
+    return {
+        "status": "started",
+        "graph_id": str(grf.server_graph_uuid),
+    }
+
+
+def get_ingest_workflow_graph(
+    *,
+    output_uri: str,
+    input_uri: str,
+    measurement_name: str,
+    pattern: Optional[str] = None,
+    extra_tiledb_config: Optional[Dict[str, object]] = None,
+    platform_config: Optional[Dict[str, object]] = None,
+    ingest_mode: str = "write",
+    resources: Optional[Dict[str, object]] = None,
+    namespace: Optional[str] = None,
+    access_credentials_name: Optional[str] = None,
+) -> dag.DAG:
+    """
+    Same signature as ``run_ingest_workflow``, but returns the graph object
+    directly.
+    """
+
     vfs = tiledb.VFS(config=extra_tiledb_config)
 
     if vfs.is_file(input_uri):
@@ -78,11 +115,7 @@ def run_ingest_workflow(
             resources=_DEFAULT_RESOURCES if resources is None else resources,
             access_credentials_name=access_credentials_name,
         )
-        grf.compute()
-        return {
-            "status": "started",
-            "graph_id": str(grf.server_graph_uuid),
-        }
+        return grf
 
     if vfs.is_dir(input_uri):
         grf = dag.DAG(
@@ -121,11 +154,7 @@ def run_ingest_workflow(
             )
             collector.depends_on(node)
 
-        grf.compute()
-        return {
-            "status": "started",
-            "graph_id": str(grf.server_graph_uuid),
-        }
+        return grf
 
     raise ValueError(f"input_uri {input_uri!r} is neither file nor directory")
 
