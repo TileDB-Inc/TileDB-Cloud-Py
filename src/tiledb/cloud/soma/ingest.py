@@ -12,90 +12,6 @@ _DEFAULT_RESOURCES = {"cpu": "8", "memory": "8Gi"}
 """Default resource size; equivalent to a "large" UDF container."""
 
 
-def _hack_patch_anndata() -> ContextManager[object]:
-    from anndata._core import file_backing
-
-    @file_backing.AnnDataFileManager.filename.setter
-    def filename(self, filename) -> None:
-        self._filename = filename
-
-    return mock.patch.object(file_backing.AnnDataFileManager, "filename", filename)
-
-
-def ingest_h5ad(
-    *,
-    output_uri: str,
-    input_uri: str,
-    measurement_name: str,
-    extra_tiledb_config: Optional[Dict[str, object]],
-    platform_config: Optional[Dict[str, object]],
-    ingest_mode: str,
-) -> None:
-    """Performs the actual work of ingesting H5AD data into TileDB.
-
-    :param output_uri: The output URI to write to. This will probably look like
-        ``tiledb://namespace/some://storage/uri``.
-    :param input_uri: The URI of the H5AD file to read from. This file is read
-        using TileDB VFS, so any path supported (and accessible) will work.
-    :param measurement_name: The name of the Measurement within the Experiment
-        to store the data.
-    :param extra_tiledb_config: Extra configuration for TileDB.
-    :param platform_config: The SOMA ``platform_config`` value to pass in,
-        if any.
-    :param ingest_mode: One of the ingest modes supported by
-        ``tiledbsoma.io.read_h5ad``.
-    """
-
-    import anndata
-    import tiledbsoma
-    import tiledbsoma.logging as somalog
-    from tiledbsoma import io
-
-    logging.basicConfig(level=logging.INFO)
-    somalog.info()
-
-    # While h5ad supports any file-like object, annndata specifically
-    # wants only an `os.PathLike` object. The only thing it does with
-    # the PathLike is to use it to get the filename.
-    class _FSPathWrapper:
-        """Tricks anndata into thinking a file-like object is an os.PathLike.
-
-        While h5ad supports any file-like object, anndata specifically wants
-        an os.PathLike object, which it uses *exclusively* to get the "filename"
-        of the opened file.
-
-        We need to provide ``__fspath__`` as a real class method, so simply
-        setting ``some_file_obj.__fspath__ = lambda: "some/path"`` won't work,
-        so here we just proxy all attributes except ``__fspath__``.
-        """
-
-        def __init__(self, obj: object, path: str) -> None:
-            self._obj = obj
-            self._path = path
-
-        def __fspath__(self) -> str:
-            return self._path
-
-        def __getattr__(self, name: str) -> object:
-            return getattr(self._obj, name)
-
-    soma_ctx = tiledbsoma.SOMATileDBContext()
-    if extra_tiledb_config:
-        soma_ctx = soma_ctx.replace(tiledb_config=extra_tiledb_config)
-    with tiledb.VFS(ctx=soma_ctx.tiledb_ctx).open(input_uri) as input_file:
-        with _hack_patch_anndata_byval():
-            input_data = anndata.read_h5ad(_FSPathWrapper(input_file, input_uri), "r")
-        output_uri = io.from_anndata(
-            experiment_uri=output_uri,
-            anndata=input_data,
-            measurement_name=measurement_name,
-            context=soma_ctx,
-            ingest_mode=ingest_mode,
-            platform_config=platform_config,
-        )
-    logging.info("Successfully wrote data from %r to %r", input_uri, output_uri)
-
-
 def run_ingest_workflow(
     *,
     output_uri: str,
@@ -212,6 +128,90 @@ def run_ingest_workflow(
         }
 
     raise ValueError(f"input_uri {input_uri!r} is neither file nor directory")
+
+
+def _hack_patch_anndata() -> ContextManager[object]:
+    from anndata._core import file_backing
+
+    @file_backing.AnnDataFileManager.filename.setter
+    def filename(self, filename) -> None:
+        self._filename = filename
+
+    return mock.patch.object(file_backing.AnnDataFileManager, "filename", filename)
+
+
+def ingest_h5ad(
+    *,
+    output_uri: str,
+    input_uri: str,
+    measurement_name: str,
+    extra_tiledb_config: Optional[Dict[str, object]],
+    platform_config: Optional[Dict[str, object]],
+    ingest_mode: str,
+) -> None:
+    """Performs the actual work of ingesting H5AD data into TileDB.
+
+    :param output_uri: The output URI to write to. This will probably look like
+        ``tiledb://namespace/some://storage/uri``.
+    :param input_uri: The URI of the H5AD file to read from. This file is read
+        using TileDB VFS, so any path supported (and accessible) will work.
+    :param measurement_name: The name of the Measurement within the Experiment
+        to store the data.
+    :param extra_tiledb_config: Extra configuration for TileDB.
+    :param platform_config: The SOMA ``platform_config`` value to pass in,
+        if any.
+    :param ingest_mode: One of the ingest modes supported by
+        ``tiledbsoma.io.read_h5ad``.
+    """
+
+    import anndata
+    import tiledbsoma
+    import tiledbsoma.logging as somalog
+    from tiledbsoma import io
+
+    logging.basicConfig(level=logging.INFO)
+    somalog.info()
+
+    # While h5ad supports any file-like object, annndata specifically
+    # wants only an `os.PathLike` object. The only thing it does with
+    # the PathLike is to use it to get the filename.
+    class _FSPathWrapper:
+        """Tricks anndata into thinking a file-like object is an os.PathLike.
+
+        While h5ad supports any file-like object, anndata specifically wants
+        an os.PathLike object, which it uses *exclusively* to get the "filename"
+        of the opened file.
+
+        We need to provide ``__fspath__`` as a real class method, so simply
+        setting ``some_file_obj.__fspath__ = lambda: "some/path"`` won't work,
+        so here we just proxy all attributes except ``__fspath__``.
+        """
+
+        def __init__(self, obj: object, path: str) -> None:
+            self._obj = obj
+            self._path = path
+
+        def __fspath__(self) -> str:
+            return self._path
+
+        def __getattr__(self, name: str) -> object:
+            return getattr(self._obj, name)
+
+    soma_ctx = tiledbsoma.SOMATileDBContext()
+    if extra_tiledb_config:
+        soma_ctx = soma_ctx.replace(tiledb_config=extra_tiledb_config)
+    with tiledb.VFS(ctx=soma_ctx.tiledb_ctx).open(input_uri) as input_file:
+        with _hack_patch_anndata_byval():
+            input_data = anndata.read_h5ad(_FSPathWrapper(input_file, input_uri), "r")
+        output_uri = io.from_anndata(
+            experiment_uri=output_uri,
+            anndata=input_data,
+            measurement_name=measurement_name,
+            context=soma_ctx,
+            ingest_mode=ingest_mode,
+            platform_config=platform_config,
+        )
+    logging.info("Successfully wrote data from %r to %r", input_uri, output_uri)
 
 
 # Until we fully get this version of tiledb.cloud deployed server-side, we must
