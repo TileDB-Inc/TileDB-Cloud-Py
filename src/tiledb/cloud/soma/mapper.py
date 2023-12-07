@@ -158,10 +158,7 @@ def get_collection_mapper_workflow_graph(
         namespace=namespace,
     )
 
-    collector = grf.submit(
-        lambda x: 0,
-        x=0,
-    )
+    nodes = []
 
     for _, soma_experiment_uri in soma_experiment_uris.items():
         node = grf.submit(
@@ -185,9 +182,19 @@ def get_collection_mapper_workflow_graph(
             # "large"
             ###resource_class="large",
             access_credentials_name=access_credentials_name,
+            name=soma_experiment_uri,
         )
 
-        collector.depends_on(node)
+        nodes.append(node)
+
+    def collect(nodes):
+        return [node.result() for node in nodes]
+
+    grf.submit(
+        collect,
+        nodes,
+        name="collector",
+    )
 
     return grf
 
@@ -294,14 +301,14 @@ def function_for_node(
 
     if counts_only:
         return result
-    else:
-        if result is None:
-            return None
-        else:
-            if not args_dict:  # if dictionary is empty
-                return callback(result)
-            else:
-                return callback(result, **args_dict)
+
+    if result is None:
+        return None
+
+    if not args_dict:  # if dictionary is empty
+        return callback(result)
+
+    return callback(result, **args_dict)
 
 
 # ----------------------------------------------------------------
