@@ -59,7 +59,7 @@ def run_ingest_workflow(
         manage execution and monitor progress.
     """
 
-    grf = get_ingest_workflow_graph(
+    grf = build_ingest_workflow_graph(
         output_uri=output_uri,
         input_uri=input_uri,
         measurement_name=measurement_name,
@@ -78,7 +78,7 @@ def run_ingest_workflow(
     }
 
 
-def get_ingest_workflow_graph(
+def build_ingest_workflow_graph(
     *,
     output_uri: str,
     input_uri: str,
