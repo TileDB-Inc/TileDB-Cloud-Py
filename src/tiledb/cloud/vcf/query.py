@@ -9,7 +9,8 @@ import pandas as pd
 import pyarrow as pa
 
 import tiledb.cloud
-from tiledb.cloud.compute import Delayed, DelayedSQL
+from tiledb.cloud.compute import Delayed
+from tiledb.cloud.compute import DelayedSQL
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import get_logger
 from tiledb.cloud.utilities import max_memory_usage
