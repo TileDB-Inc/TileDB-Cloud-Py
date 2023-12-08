@@ -1,14 +1,55 @@
-from typing import Any, Dict, Mapping, Optional, Sequence, Tuple, Union
+import os
+from typing import Any, Dict, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
-from tiledb.cloud._common.utils import logger
-from tiledb.cloud.bioimg.helpers import batch
-from tiledb.cloud.bioimg.helpers import get_uris
-from tiledb.cloud.bioimg.helpers import scale_calc
+from tiledb.cloud import dag
+from tiledb.cloud.bioimg.helpers import get_logger_wrapper
+from tiledb.cloud.utilities._common import run_dag
 
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-exportation"
+
+
+def build_io_uris_exportation(source: Sequence[str], output_dir: str, output_ext: str):
+    """Match input uri/s with output destinations
+
+    :param source: A sequence of paths or path to input
+    :param output_dir: A path to the output directory
+    """
+    vfs = tiledb.VFS()
+
+    def create_output_path(input_file, output_dir) -> str:
+        filename = os.path.splitext(os.path.basename(input_file))[0]
+        output_filename = filename + f".{output_ext}" if output_ext else filename
+        return os.path.join(output_dir, output_filename)
+
+    def iter_paths(source: Sequence) -> Iterator[Tuple]:
+        for uri in source:
+            if vfs.is_dir(uri) and tiledb.object_type(uri) != "group":
+                # Folder for exploration
+                contents = vfs.ls(uri)
+                yield from tuple(iter_paths(contents))
+            elif tiledb.object_type(uri) == "group":
+                # For exportation we require the source path to be a tiledb group
+                yield uri, create_output_path(uri, output_dir)
+
+    if len(source) == 0:
+        raise ValueError("The source files cannot be empty")
+    return tuple(iter_paths(source))
+
+
+def build_input_batches(
+    source: Sequence[str], output: str, num_batches: int, out_ext: str
+):
+    """Groups input URIs into batches."""
+    uri_pairs = build_io_uris_exportation(source, output, out_ext)
+    # If the user didn't specify a number of batches, run every import
+    # as its own task.
+    my_num_batches = num_batches or len(uri_pairs)
+    # If they specified too many batches, don't create empty tasks.
+    my_num_batches = min(len(uri_pairs), my_num_batches)
+    return [uri_pairs[n::my_num_batches] for n in range(my_num_batches)]
 
 
 def export(
@@ -20,14 +61,17 @@ def export(
     num_batches: Optional[int] = None,
     resources: Optional[Mapping[str, Any]] = None,
     compute: bool = True,
+    local: bool = False,
     namespace: Optional[str] = None,
+    verbose: bool = False,
+    output_ext: str = "tiff",
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
     """The function exports microscopy images from TileDB arrays
 
     :param source: uri / iterable of uris of input files
     :param output: output dir for the exported tiledb arrays
-    :param config: dict configuration to pass on tiledb.VFS
+    :param config: dict configuration to pass credentials of the destination
     :param taskgraph_name: Optional name for taskgraph, defaults to None
     :param num_batches: Number of graph nodes to spawn.
         Performs it sequentially if default, defaults to 1
@@ -39,9 +83,14 @@ def export(
     :param namespace: The namespace where the DAG will run
     """
 
+    logger = get_logger_wrapper(verbose)
+    logger.info("Exporting files: %s", source)
+    max_workers = None if num_batches else 20  # Default picked heuristically.
+
     def export_tiff_udf(
         io_uris: Sequence[Tuple],
         config: Mapping[str, Any],
+        verbose: bool = False,
         *args: Any,
         **kwargs,
     ):
@@ -51,49 +100,66 @@ def export(
         :param io_uris: Pairs of tiff input - output tdb uris
         :param config: dict configuration to pass on tiledb.VFS
         """
+        from tiledb.bioimg import Converters
+        from tiledb.bioimg import to_bioimg
 
-        from tiledb.bioimg.converters.ome_tiff import OMETiffConverter
-
-        conf = tiledb.Config(params=config)
+        src_cfg = tiledb.VFS().config
+        dest_cfg = tiledb.Config(params=config)
         for input, output in io_uris:
-            OMETiffConverter.from_tiledb(input, output, config=conf, **kwargs)
+            to_bioimg(
+                input,
+                output,
+                converter=Converters.OMETIFF,
+                config=src_cfg,
+                output_config=dest_cfg,
+                verbose=verbose,
+                **kwargs,
+            )
 
     if isinstance(source, str):
         # Handle only lists
         source = [source]
 
-    # Get the list of all BioImg samples input/out
-    samples = get_uris(source, output, config, "tiff")
-    batch_size, max_workers = scale_calc(samples, num_batches)
-
     # Build the task graph
     dag_name = taskgraph_name or DEFAULT_DAG_NAME
-    task_prefix = f"{dag_name} - Task"
 
     logger.info("Building graph")
-    graph = tiledb.cloud.dag.DAG(
+    graph = dag.DAG(
         name=dag_name,
-        mode=tiledb.cloud.dag.Mode.BATCH,
+        mode=dag.Mode.REALTIME if local else dag.Mode.BATCH,
         max_workers=max_workers,
         namespace=namespace,
     )
 
-    for i, work in enumerate(batch(samples, batch_size)):
-        logger.info(f"Adding batch {i}")
-        graph.submit(
-            export_tiff_udf,
-            work,
-            config,
-            *args,
-            name=f"{task_prefix} - {i}",
-            mode=tiledb.cloud.dag.Mode.BATCH,
-            resources=DEFAULT_RESOURCES if resources is None else resources,
-            image_name=DEFAULT_IMG_NAME,
-            **kwargs,
-        )
+    # The lister doesn't need many resources.
+    input_list_node = graph.submit(
+        build_input_batches,
+        source,
+        output,
+        num_batches,
+        output_ext,
+        access_credentials_name=kwargs.get("access_credentials_name"),
+        name=f"{dag_name} input collector",
+        result_format="json",
+    )
+
+    logger.debug("Batched Input-Output pairs: %s", input_list_node)
+
+    graph.submit(
+        export_tiff_udf,
+        input_list_node,
+        config,
+        verbose,
+        *args,
+        name=f"{dag_name} exporter",
+        expand_node_output=input_list_node,
+        resources=DEFAULT_RESOURCES if resources is None else resources,
+        image_name=DEFAULT_IMG_NAME,
+        **kwargs,
+    )
 
     if compute:
-        graph.compute()
+        run_dag(graph, debug=verbose)
     return graph
 
 
