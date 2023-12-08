@@ -10,6 +10,8 @@ import pyarrow as pa
 
 import tiledb.cloud
 from tiledb.cloud.compute import Delayed
+from tiledb.cloud.compute import DelayedArrayUDF
+from tiledb.cloud.compute import DelayedMultiArrayUDF
 from tiledb.cloud.compute import DelayedSQL
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import get_logger
@@ -234,11 +236,29 @@ def build_read_dag(
     *,
     config: Optional[Mapping[str, Any]] = None,
     attrs: Optional[Union[Sequence[str], str]] = None,
-    regions: Optional[Union[Sequence[str], str, Delayed, DelayedSQL]] = None,
+    regions: Optional[
+        Union[
+            Sequence[str],
+            str,
+            Delayed,
+            DelayedArrayUDF,
+            DelayedMultiArrayUDF,
+            DelayedSQL,
+        ]
+    ] = None,
     bed_file: Optional[str] = None,
     num_region_partitions: int = 1,
     max_workers: int = MAX_WORKERS,
-    samples: Optional[Union[Sequence[str], str, Delayed, DelayedSQL]] = None,
+    samples: Optional[
+        Union[
+            Sequence[str],
+            str,
+            Delayed,
+            DelayedArrayUDF,
+            DelayedMultiArrayUDF,
+            DelayedSQL,
+        ]
+    ] = None,
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
     transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
@@ -284,7 +304,10 @@ def build_read_dag(
     # If `samples` is a Delayed object, we execute the node to get the list of
     # samples. This is necessary because we need to know the number of samples
     # to determine the number of sample partitions.
-    if isinstance(samples, (Delayed, DelayedSQL)):
+    if isinstance(
+        samples,
+        (Delayed, DelayedArrayUDF, DelayedMultiArrayUDF, DelayedSQL),
+    ):
         samples = samples.compute().values.flatten()
 
     # Set number of sample partitions
@@ -313,7 +336,9 @@ def build_read_dag(
 
     # If `regions` is a Delayed object, we set the parent nodes to `dag` so the
     # Delayed object will be added to the `dag`.
-    if isinstance(regions, (Delayed, DelayedSQL)):
+    if isinstance(
+        regions, (Delayed, DelayedArrayUDF, DelayedMultiArrayUDF, DelayedSQL)
+    ):
         regions._DelayedBase__set_all_parent_nodes_same_dag(dag)
 
     tables = []
@@ -362,11 +387,29 @@ def read(
     *,
     config: Optional[Mapping[str, Any]] = None,
     attrs: Optional[Union[Sequence[str], str]] = None,
-    regions: Optional[Union[Sequence[str], str, Delayed, DelayedSQL]] = None,
+    regions: Optional[
+        Union[
+            Sequence[str],
+            str,
+            Delayed,
+            DelayedArrayUDF,
+            DelayedMultiArrayUDF,
+            DelayedSQL,
+        ]
+    ] = None,
     bed_file: Optional[str] = None,
     num_region_partitions: int = 1,
     max_workers: int = MAX_WORKERS,
-    samples: Optional[Union[Sequence[str], str, Delayed, DelayedSQL]] = None,
+    samples: Optional[
+        Union[
+            Sequence[str],
+            str,
+            Delayed,
+            DelayedArrayUDF,
+            DelayedMultiArrayUDF,
+            DelayedSQL,
+        ]
+    ] = None,
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
     transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
