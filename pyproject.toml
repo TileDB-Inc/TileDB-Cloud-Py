@@ -28,6 +28,7 @@ viz-plotly = ["networkx>=2", "plotly>=4", "pydot"]
 all = ["networkx>=2", "plotly>=4", "pydot", "tiledb-plot-widget>=0.1.7"]
 
 dev = ["black", "pytest", "ruff"]
+tests = ["xarray"]
 
 [project.urls]
 homepage = "https://tiledb.com"

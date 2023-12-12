@@ -5,9 +5,14 @@ import logging
 from math import ceil
 from typing import Any, Callable, List, Mapping, Optional, Sequence, Tuple, Union
 
+import pandas as pd
 import pyarrow as pa
 
 import tiledb.cloud
+from tiledb.cloud.compute import Delayed
+from tiledb.cloud.compute import DelayedArrayUDF
+from tiledb.cloud.compute import DelayedMultiArrayUDF
+from tiledb.cloud.compute import DelayedSQL
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import get_logger
 from tiledb.cloud.utilities import max_memory_usage
@@ -70,7 +75,7 @@ def vcf_query_udf(
     *,
     config: Optional[Mapping[str, Any]] = None,
     attrs: Optional[Union[Sequence[str], str]] = None,
-    regions: Optional[Union[Sequence[str], str]] = None,
+    regions: Optional[Union[Sequence[str], str, pd.DataFrame]] = None,
     bed_file: Optional[str] = None,
     samples: Optional[Union[Sequence[str], str]] = None,
     region_partition: Optional[Tuple[int, int]] = None,
@@ -115,8 +120,12 @@ def vcf_query_udf(
 
     if isinstance(attrs, str):
         attrs = [attrs]
+
     if isinstance(regions, str):
         regions = [regions]
+    elif isinstance(regions, pd.DataFrame):
+        regions = regions.values.flatten()
+
     if isinstance(samples, str):
         samples = [samples]
 
@@ -227,11 +236,29 @@ def build_read_dag(
     *,
     config: Optional[Mapping[str, Any]] = None,
     attrs: Optional[Union[Sequence[str], str]] = None,
-    regions: Optional[Union[Sequence[str], str]] = None,
+    regions: Optional[
+        Union[
+            Sequence[str],
+            str,
+            Delayed,
+            DelayedArrayUDF,
+            DelayedMultiArrayUDF,
+            DelayedSQL,
+        ]
+    ] = None,
     bed_file: Optional[str] = None,
     num_region_partitions: int = 1,
     max_workers: int = MAX_WORKERS,
-    samples: Optional[Union[Sequence[str], str]] = None,
+    samples: Optional[
+        Union[
+            Sequence[str],
+            str,
+            Delayed,
+            DelayedArrayUDF,
+            DelayedMultiArrayUDF,
+            DelayedSQL,
+        ]
+    ] = None,
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
     transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,
@@ -274,6 +301,15 @@ def build_read_dag(
 
     attrs = attrs or DEFAULT_ATTRS
 
+    # If `samples` is a Delayed object, we execute the node to get the list of
+    # samples. This is necessary because we need to know the number of samples
+    # to determine the number of sample partitions.
+    if isinstance(
+        samples,
+        (Delayed, DelayedArrayUDF, DelayedMultiArrayUDF, DelayedSQL),
+    ):
+        samples = samples.compute().values.flatten()
+
     # Set number of sample partitions
     num_samples = len(samples)
     sample_batch_size = ceil(num_samples * num_region_partitions / max_workers)
@@ -297,6 +333,13 @@ def build_read_dag(
         name="VCF-Distributed-Query",
         max_workers=max_workers,
     )
+
+    # If `regions` is a Delayed object, we set the parent nodes to `dag` so the
+    # Delayed object will be added to the `dag`.
+    if isinstance(
+        regions, (Delayed, DelayedArrayUDF, DelayedMultiArrayUDF, DelayedSQL)
+    ):
+        regions._DelayedBase__set_all_parent_nodes_same_dag(dag)
 
     tables = []
     for region in range(num_region_partitions):
@@ -344,11 +387,29 @@ def read(
     *,
     config: Optional[Mapping[str, Any]] = None,
     attrs: Optional[Union[Sequence[str], str]] = None,
-    regions: Optional[Union[Sequence[str], str]] = None,
+    regions: Optional[
+        Union[
+            Sequence[str],
+            str,
+            Delayed,
+            DelayedArrayUDF,
+            DelayedMultiArrayUDF,
+            DelayedSQL,
+        ]
+    ] = None,
     bed_file: Optional[str] = None,
     num_region_partitions: int = 1,
     max_workers: int = MAX_WORKERS,
-    samples: Optional[Union[Sequence[str], str]] = None,
+    samples: Optional[
+        Union[
+            Sequence[str],
+            str,
+            Delayed,
+            DelayedArrayUDF,
+            DelayedMultiArrayUDF,
+            DelayedSQL,
+        ]
+    ] = None,
     memory_budget_mb: int = 1024,
     af_filter: Optional[str] = None,
     transform_result: Optional[Callable[[pa.Table], pa.Table]] = None,

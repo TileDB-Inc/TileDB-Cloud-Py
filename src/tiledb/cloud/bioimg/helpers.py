@@ -1,8 +1,36 @@
+import logging
 import math
 import os
 from typing import Any, Iterator, Mapping, Sequence, Tuple
 
 import tiledb
+from tiledb.cloud.utilities import get_logger
+
+
+def get_logger_wrapper(
+    verbose: bool = False,
+) -> logging.Logger:
+    """
+    Get a logger instance and log version information.
+
+    :param verbose: verbose logging, defaults to False
+    :return: logger instance
+    """
+
+    level = logging.DEBUG if verbose else logging.INFO
+    logger = get_logger(level)
+
+    logger.debug(
+        "tiledb.cloud=%s, tiledb=%s, libtiledb=%s",
+        tiledb.cloud.version.version,
+        tiledb.version(),
+        tiledb.libtiledb.version(),
+    )
+
+    return logger
+
+
+_SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs", ".tdb")
 
 from .types import SupportedExtensions
 
@@ -33,22 +61,28 @@ def get_uris(
 
     def iter_paths(sequence) -> Iterator[Tuple]:
         for uri in sequence:
-            if uri.endswith(tuple([ext.value for ext in SupportedExtensions])):
+            if uri.endswith(_SUPPORTED_EXTENSIONS):
                 yield uri, create_output_path(uri, output_dir)
 
-    if len(source) == 1 and vfs.is_dir(source[0]):
-        # Check if the dir is actually a tiledb group for exportation
-        with tiledb.scope_ctx(ctx_or_config=config):
-            if tiledb.object_type(source[0]) != "group":
-                # Folder like input
-                contents = vfs.ls(source[0])
-                if len(contents) != 0:
-                    return tuple(iter_paths(contents))
+    if len(source) == 1:
+        if source[0].startswith("tiledb://"):
+            # Support tiledb uri single image
+            return ((source[0], create_output_path(source[0], output_dir)),)
+        elif vfs.is_dir(source[0]):
+            # Check if the dir is actually a tiledb group for exportation on VFS
+            with tiledb.scope_ctx(ctx_or_config=config):
+                if tiledb.object_type(source[0]) != "group":
+                    # Folder like input
+                    contents = vfs.ls(source[0])
+                    if len(contents) != 0:
+                        return tuple(iter_paths(contents))
+                    else:
+                        raise ValueError(
+                            "Input bucket should contain images for ingestion"
+                        )
                 else:
-                    raise ValueError("Input bucket should contain images for ingestion")
-            else:
-                # This is the exportation scenario for single tdb image
-                return ((source[0], create_output_path(source[0], output_dir)),)
+                    # This is the exportation scenario for single tdb image
+                    return ((source[0], create_output_path(source[0], output_dir)),)
     elif isinstance(source, Sequence):
         # List of input uris - single file is one element list
         return tuple(iter_paths(source))
