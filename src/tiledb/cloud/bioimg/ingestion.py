@@ -4,9 +4,9 @@ from typing import Any, Dict, Iterator, Mapping, Optional, Sequence, Tuple, Unio
 import tiledb
 import tiledb.bioimg
 from tiledb.cloud import dag
-from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.bioimg.helpers import get_logger_wrapper
 from tiledb.cloud.bioimg.helpers import serialize_filter
+from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.utilities._common import run_dag
 
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
@@ -31,9 +31,9 @@ def build_io_uris_ingestion(source: Sequence[str], output_dir: str, output_ext: 
     def iter_paths(source: Sequence[str]) -> Iterator[Tuple]:
         for uri in source:
             if vfs.is_dir(uri):
-                # Folder for exploration 
-                contents = vfs.ls(uri)  
-                # excluding root folder  - ls returns it    
+                # Folder for exploration
+                contents = vfs.ls(uri)
+                # excluding root folder  - ls returns it
                 yield from tuple(iter_paths(contents[1:]))
             elif uri.endswith(_SUPPORTED_EXTENSIONS):
                 yield uri, create_output_path(uri, output_dir)
@@ -154,6 +154,10 @@ def ingest(
         mode=dag.Mode.BATCH,
         max_workers=max_workers,
         namespace=namespace,
+        retry_strategy=RetryStrategy(
+            limit=3,
+            retry_policy="Always",
+        ),
     )
 
     # The lister doesn't need many resources.
