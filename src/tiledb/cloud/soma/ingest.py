@@ -12,6 +12,153 @@ _DEFAULT_RESOURCES = {"cpu": "8", "memory": "8Gi"}
 """Default resource size; equivalent to a "large" UDF container."""
 
 
+def run_ingest_workflow(
+    *,
+    output_uri: str,
+    input_uri: str,
+    measurement_name: str,
+    pattern: Optional[str] = None,
+    extra_tiledb_config: Optional[Dict[str, object]] = None,
+    platform_config: Optional[Dict[str, object]] = None,
+    ingest_mode: str = "write",
+    resources: Optional[Dict[str, object]] = None,
+    namespace: Optional[str] = None,
+    access_credentials_name: Optional[str] = None,
+) -> Dict[str, str]:
+    """Starts a workflow to ingest H5AD data into SOMA.
+
+    :param output_uri: The output URI to write to. This will probably look like
+        ``tiledb://namespace/some://storage/uri``.
+    :param input_uri: The URI of the H5AD file(s) to read from. These are read
+        using TileDB VFS, so any path supported (and accessible) will work.  If the
+        ``input_uri`` passes ``vfs.is_file``, it's ingested.  If the ``input_uri``
+        passes ``vfs.is_dir``, then all first-level entries are ingested .  In the
+        latter, directory case, an input file is skipped if ``pattern`` is provided
+        and doesn't match the input file. As well, in the directory case, each entry's
+        basename is appended to the ``output_uri`` to form the entry's output URI.
+        For example, if ``a.h5ad` and ``b.h5ad`` are present within ``input_uri`` of
+        ``s3://bucket/h5ads/`` and ``output_uri`` is
+        ``tiledb://namespace/s3://bucket/somas``, then
+        ``tiledb://namespace/s3://bucket/somas/a`` and
+        ``tiledb://namespace/s3://bucket/somas/b`` are written.
+    :param measurement_name: The name of the Measurement within the Experiment
+        to store the data.
+    :param pattern: As described for ``input_uri``.
+    :param extra_tiledb_config: Extra configuration for TileDB.
+    :param platform_config: The SOMA ``platform_config`` value to pass in,
+        if any.
+    :param ingest_mode: One of the ingest modes supported by
+        ``tiledbsoma.io.read_h5ad``.
+    :param resources: A specification for the amount of resources to provide
+        to the UDF executing the ingestion process, to override the default.
+    :param namespace: An alternate namespace to run the ingestion process under.
+    :param access_credentials_name: If provided, the name of the credentials
+        to pass to the executing UDF.
+    :return: A dictionary of ``{"status": "started", "graph_id": ...}``,
+        with the UUID of the graph on the server side, which can be used to
+        manage execution and monitor progress.
+    """
+
+    grf = build_ingest_workflow_graph(
+        output_uri=output_uri,
+        input_uri=input_uri,
+        measurement_name=measurement_name,
+        pattern=pattern,
+        extra_tiledb_config=extra_tiledb_config,
+        platform_config=platform_config,
+        ingest_mode=ingest_mode,
+        resources=resources,
+        namespace=namespace,
+        access_credentials_name=access_credentials_name,
+    )
+    grf.compute()
+    return {
+        "status": "started",
+        "graph_id": str(grf.server_graph_uuid),
+    }
+
+
+def build_ingest_workflow_graph(
+    *,
+    output_uri: str,
+    input_uri: str,
+    measurement_name: str,
+    pattern: Optional[str] = None,
+    extra_tiledb_config: Optional[Dict[str, object]] = None,
+    platform_config: Optional[Dict[str, object]] = None,
+    ingest_mode: str = "write",
+    resources: Optional[Dict[str, object]] = None,
+    namespace: Optional[str] = None,
+    access_credentials_name: Optional[str] = None,
+) -> dag.DAG:
+    """
+    Same signature as ``run_ingest_workflow``, but returns the graph object
+    directly.
+    """
+
+    vfs = tiledb.VFS(config=extra_tiledb_config)
+
+    if vfs.is_file(input_uri):
+        grf = dag.DAG(
+            name="ingest-h5ad-file",
+            mode=dag.Mode.BATCH,
+            namespace=namespace,
+        )
+        grf.submit(
+            _ingest_h5ad_byval,
+            output_uri=output_uri,
+            input_uri=input_uri,
+            measurement_name=measurement_name,
+            extra_tiledb_config=extra_tiledb_config,
+            ingest_mode=ingest_mode,
+            platform_config=platform_config,
+            resources=_DEFAULT_RESOURCES if resources is None else resources,
+            access_credentials_name=access_credentials_name,
+        )
+        return grf
+
+    if vfs.is_dir(input_uri):
+        grf = dag.DAG(
+            name="ingest-h5ad-files",
+            mode=dag.Mode.BATCH,
+            namespace=namespace,
+        )
+
+        collector = grf.submit(
+            lambda output_uri: output_uri,
+            output_uri=output_uri,
+        )
+
+        for entry_input_uri in vfs.ls(input_uri):
+            base = os.path.basename(entry_input_uri)
+            base, _ = os.path.splitext(base)
+
+            entry_output_uri = output_uri + "/" + base
+            if not output_uri.endswith("/"):
+                entry_output_uri += "/"
+            entry_output_uri += base
+
+            if pattern is not None and not re.match(pattern, entry_input_uri):
+                continue
+
+            node = grf.submit(
+                _ingest_h5ad_byval,
+                output_uri=entry_output_uri,
+                input_uri=entry_input_uri,
+                measurement_name=measurement_name,
+                extra_tiledb_config=extra_tiledb_config,
+                ingest_mode=ingest_mode,
+                platform_config=platform_config,
+                resources=_DEFAULT_RESOURCES if resources is None else resources,
+                access_credentials_name=access_credentials_name,
+            )
+            collector.depends_on(node)
+
+        return grf
+
+    raise ValueError(f"input_uri {input_uri!r} is neither file nor directory")
+
+
 def _hack_patch_anndata() -> ContextManager[object]:
     from anndata._core import file_backing
 
@@ -94,124 +241,6 @@ def ingest_h5ad(
             platform_config=platform_config,
         )
     logging.info("Successfully wrote data from %r to %r", input_uri, output_uri)
-
-
-def run_ingest_workflow(
-    *,
-    output_uri: str,
-    input_uri: str,
-    measurement_name: str,
-    pattern: Optional[str] = None,
-    extra_tiledb_config: Optional[Dict[str, object]] = None,
-    platform_config: Optional[Dict[str, object]] = None,
-    ingest_mode: str = "write",
-    resources: Optional[Dict[str, object]] = None,
-    namespace: Optional[str] = None,
-    access_credentials_name: Optional[str] = None,
-) -> Dict[str, str]:
-    """Starts a workflow to ingest H5AD data into SOMA.
-
-    :param output_uri: The output URI to write to. This will probably look like
-        ``tiledb://namespace/some://storage/uri``.
-    :param input_uri: The URI of the H5AD file(s) to read from. These are read
-        using TileDB VFS, so any path supported (and accessible) will work.  If the
-        ``input_uri`` passes ``vfs.is_file``, it's ingested.  If the ``input_uri``
-        passes ``vfs.is_dir``, then all first-level entries are ingested .  In the
-        latter, directory case, an input file is skipped if ``pattern`` is provided
-        and doesn't match the input file. As well, in the directory case, each entry's
-        basename is appended to the ``output_uri`` to form the entry's output URI.
-        For example, if ``a.h5ad` and ``b.h5ad`` are present within ``input_uri`` of
-        ``s3://bucket/h5ads/`` and ``output_uri`` is
-        ``tiledb://namespace/s3://bucket/somas``, then
-        ``tiledb://namespace/s3://bucket/somas/a`` and
-        ``tiledb://namespace/s3://bucket/somas/b`` are written.
-    :param measurement_name: The name of the Measurement within the Experiment
-        to store the data.
-    :param pattern: As described for ``input_uri``.
-    :param extra_tiledb_config: Extra configuration for TileDB.
-    :param platform_config: The SOMA ``platform_config`` value to pass in,
-        if any.
-    :param ingest_mode: One of the ingest modes supported by
-        ``tiledbsoma.io.read_h5ad``.
-    :param resources: A specification for the amount of resources to provide
-        to the UDF executing the ingestion process, to override the default.
-    :param namespace: An alternate namespace to run the ingestion process under.
-    :param access_credentials_name: If provided, the name of the credentials
-        to pass to the executing UDF.
-    :return: A dictionary of ``{"status": "started", "graph_id": ...}``,
-        with the UUID of the graph on the server side, which can be used to
-        manage execution and monitor progress.
-    """
-
-    vfs = tiledb.VFS(config=extra_tiledb_config)
-
-    if vfs.is_file(input_uri):
-        grf = dag.DAG(
-            name="ingest-h5ad-file",
-            mode=dag.Mode.BATCH,
-            namespace=namespace,
-        )
-        grf.submit(
-            _ingest_h5ad_byval,
-            output_uri=output_uri,
-            input_uri=input_uri,
-            measurement_name=measurement_name,
-            extra_tiledb_config=extra_tiledb_config,
-            ingest_mode=ingest_mode,
-            platform_config=platform_config,
-            resources=_DEFAULT_RESOURCES if resources is None else resources,
-            access_credentials_name=access_credentials_name,
-        )
-        grf.compute()
-        return {
-            "status": "started",
-            "graph_id": str(grf.server_graph_uuid),
-        }
-
-    if vfs.is_dir(input_uri):
-        grf = dag.DAG(
-            name="ingest-h5ad-files",
-            mode=dag.Mode.BATCH,
-            namespace=namespace,
-        )
-
-        collector = grf.submit(
-            lambda output_uri: output_uri,
-            output_uri=output_uri,
-        )
-
-        for entry_input_uri in vfs.ls(input_uri):
-            base = os.path.basename(entry_input_uri)
-            base, _ = os.path.splitext(base)
-
-            entry_output_uri = output_uri + "/" + base
-            if not output_uri.endswith("/"):
-                entry_output_uri += "/"
-            entry_output_uri += base
-
-            if pattern is not None and not re.match(pattern, entry_input_uri):
-                continue
-
-            node = grf.submit(
-                _ingest_h5ad_byval,
-                output_uri=entry_output_uri,
-                input_uri=entry_input_uri,
-                measurement_name=measurement_name,
-                extra_tiledb_config=extra_tiledb_config,
-                ingest_mode=ingest_mode,
-                platform_config=platform_config,
-                resources=_DEFAULT_RESOURCES if resources is None else resources,
-                access_credentials_name=access_credentials_name,
-            )
-            collector.depends_on(node)
-
-        grf.compute()
-        return {
-            "status": "started",
-            "graph_id": str(grf.server_graph_uuid),
-        }
-
-    raise ValueError(f"input_uri {input_uri!r} is neither file nor directory")
 
 
 # Until we fully get this version of tiledb.cloud deployed server-side, we must

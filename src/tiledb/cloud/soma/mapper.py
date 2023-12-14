@@ -40,7 +40,7 @@ def run_collection_mapper_workflow(
     XXX TODO
     """
 
-    grf = get_collection_mapper_workflow_graph(
+    grf = build_collection_mapper_workflow_graph(
         soma_collection_uri=soma_collection_uri,
         soma_experiment_uris=soma_experiment_uris,
         measurement_name=measurement_name,
@@ -72,7 +72,7 @@ _DEFAULT_RESOURCES = {"cpu": "8", "memory": "8Gi"}
 """Default resource size; equivalent to a "large" UDF container."""
 
 
-def get_collection_mapper_workflow_graph(
+def build_collection_mapper_workflow_graph(
     *,
     # Input data:
     soma_collection_uri: Optional[str] = None,

@@ -62,7 +62,8 @@ def ingest(
         """
 
         from tiledb import filter
-        from tiledb.bioimg.converters.ome_tiff import OMETiffConverter
+        from tiledb.bioimg import Converters
+        from tiledb.bioimg import from_bioimg
 
         compressor = kwargs.get("compressor", None)
         if compressor:
@@ -84,7 +85,7 @@ def ingest(
         with tiledb.scope_ctx(ctx_or_config=conf):
             for input, output in io_uris:
                 with vfs.open(input) as src:
-                    OMETiffConverter.to_tiledb(src, output, **kwargs)
+                    from_bioimg(src, output, converter=Converters.OMETIFF, **kwargs)
 
     if isinstance(source, str):
         # Handle only lists
