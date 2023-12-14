@@ -2,7 +2,9 @@ import os
 from typing import Any, Dict, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
+import tiledb.bioimg
 from tiledb.cloud import dag
+from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.bioimg.helpers import get_logger_wrapper
 from tiledb.cloud.bioimg.helpers import serialize_filter
 from tiledb.cloud.utilities._common import run_dag
@@ -29,9 +31,10 @@ def build_io_uris_ingestion(source: Sequence[str], output_dir: str, output_ext: 
     def iter_paths(source: Sequence[str]) -> Iterator[Tuple]:
         for uri in source:
             if vfs.is_dir(uri):
-                # Folder for exploration
-                contents = vfs.ls(uri)
-                yield from tuple(iter_paths(contents))
+                # Folder for exploration 
+                contents = vfs.ls(uri)  
+                # excluding root folder  - ls returns it    
+                yield from tuple(iter_paths(contents[1:]))
             elif uri.endswith(_SUPPORTED_EXTENSIONS):
                 yield uri, create_output_path(uri, output_dir)
 
@@ -140,12 +143,12 @@ def ingest(
     if isinstance(source, str):
         # Handle only lists
         source = [source]
-    logger.info("Ingesting files: %s", source)
+    logger.debug("Ingesting files: %s", source)
 
     # Build the task graph
     dag_name = taskgraph_name or DEFAULT_DAG_NAME
 
-    logger.info("Building graph")
+    logger.debug("Building graph")
     graph = dag.DAG(
         name=dag_name,
         mode=dag.Mode.BATCH,
@@ -165,8 +168,6 @@ def ingest(
         result_format="json",
     )
 
-    logger.debug("Batched Input-Output pairs: %s", input_list_node)
-
     # serialize udf arguments
     compressor = kwargs.pop("compressor", None)
     logger.debug("Compressor: %r", compressor)
@@ -179,7 +180,7 @@ def ingest(
         verbose,
         threads,
         *args,
-        name=f"{dag_name} ingestor",
+        name=f"{dag_name} ingestor ",
         expand_node_output=input_list_node,
         resources=DEFAULT_RESOURCES if resources is None else resources,
         image_name=DEFAULT_IMG_NAME,

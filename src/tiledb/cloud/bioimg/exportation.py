@@ -29,7 +29,7 @@ def build_io_uris_exportation(source: Sequence[str], output_dir: str, output_ext
             if vfs.is_dir(uri) and tiledb.object_type(uri) != "group":
                 # Folder for exploration
                 contents = vfs.ls(uri)
-                yield from tuple(iter_paths(contents))
+                yield from tuple(iter_paths(contents)[1:])
             elif tiledb.object_type(uri) == "group":
                 # For exportation we require the source path to be a tiledb group
                 yield uri, create_output_path(uri, output_dir)
