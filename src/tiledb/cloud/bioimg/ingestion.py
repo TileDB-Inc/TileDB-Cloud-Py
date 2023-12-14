@@ -87,6 +87,7 @@ def ingest(
     otherwise DAG will only be returned.
     :param namespace: The namespace where the DAG will run
     :param verbose: verbose logging, defaults to False
+    :output_ext: extension for the output images in tiledb
     """
 
     logger = get_logger_wrapper(verbose)

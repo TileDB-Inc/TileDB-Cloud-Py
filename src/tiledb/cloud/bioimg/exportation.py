@@ -55,8 +55,8 @@ def build_input_batches(
 def export(
     source: Union[Sequence[str], str],
     output: str,
-    config: Mapping[str, Any],
     *args: Any,
+    config: Optional[Mapping[str, Any]] = None,
     taskgraph_name: Optional[str] = None,
     num_batches: Optional[int] = None,
     resources: Optional[Mapping[str, Any]] = None,
@@ -102,9 +102,12 @@ def export(
         """
         from tiledb.bioimg import Converters
         from tiledb.bioimg import to_bioimg
+        from tiledb.ctx import default_ctx
 
-        src_cfg = tiledb.VFS().config
-        dest_cfg = tiledb.Config(params=config)
+        # if writer config not given assume same as source
+        src_cfg = default_ctx().config()
+        dest_cfg = src_cfg if not config else config
+
         for input, output in io_uris:
             to_bioimg(
                 input,
@@ -123,7 +126,7 @@ def export(
     # Build the task graph
     dag_name = taskgraph_name or DEFAULT_DAG_NAME
 
-    logger.info("Building graph")
+    logger.debug("Building graph")
     graph = dag.DAG(
         name=dag_name,
         mode=dag.Mode.REALTIME if local else dag.Mode.BATCH,
