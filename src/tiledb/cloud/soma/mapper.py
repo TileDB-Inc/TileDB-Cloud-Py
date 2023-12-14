@@ -175,6 +175,8 @@ def build_collection_mapper_workflow_graph(
             var_attrs=var_attrs,
             counts_only=counts_only,
             ####platform_config=platform_config,
+            ### XXX TODO: handle resource_class if realtime, else resources if batch-mode.
+            ### For now: just working with realtime.
             resources=_DEFAULT_RESOURCES if resources is None else resources,
             # tiledb.cloud.tiledb_cloud_error.TileDBCloudError:
             # Cannot set resources for REALTIME task graphs, please use
@@ -188,7 +190,7 @@ def build_collection_mapper_workflow_graph(
         nodes.append(node)
 
     def collect(nodes):
-        return [node.result() for node in nodes]
+        return {node.name: node.result() for node in nodes}
 
     grf.submit(
         collect,
