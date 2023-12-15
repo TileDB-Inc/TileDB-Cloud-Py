@@ -8,6 +8,10 @@ from tiledb.cloud import dag
 from tiledb.cloud._common import functions
 
 
+_DEFAULT_RESOURCES = {"cpu": "8", "memory": "8Gi"}
+"""Default resource size; equivalent to a "large" UDF container."""
+
+
 def run_collection_mapper_workflow(
     *,
     # Input data:
@@ -37,7 +41,11 @@ def run_collection_mapper_workflow(
     access_credentials_name: Optional[str] = None,
 ) -> Dict[str, str]:
     """
-    XXX TODO
+    This is an asynchronous entry point, which launches the task graph and returns
+    tracking information. Nominally this is not the primary use-case.
+    Please see ``build_collection_mapper_workflow_graph``.
+
+    TODO: describe each argument, and return values.
     """
 
     grf = build_collection_mapper_workflow_graph(
@@ -67,9 +75,6 @@ def run_collection_mapper_workflow(
         "graph_id": str(grf.server_graph_uuid),
     }
 
-
-_DEFAULT_RESOURCES = {"cpu": "8", "memory": "8Gi"}
-"""Default resource size; equivalent to a "large" UDF container."""
 
 
 def build_collection_mapper_workflow_graph(
@@ -101,7 +106,19 @@ def build_collection_mapper_workflow_graph(
     access_credentials_name: Optional[str] = None,
 ) -> dag.DAG:
     """
-    XXX TODO
+    The is the primary entrypoint for the mapper module. The caller passes in
+    either a seqeunce of SOMAExperiment URIs, or, a SOMACollection which is
+    simply a collection of SOMAExperiment objects. The caller also passes in
+    query terms, and a callback lambda which will be called on the
+    ``to_anndata`` of each experiment's query output. The top-level collector
+    node will be simply a dict from experiment name to the
+    callback lambda's output, for each input experiment.
+
+    For example, if the lambda maps an anndata object to its ``.shape``, then
+    with SOMA experiments ``A`` and ``B``, the collector node might return the
+    dict ``{"A": (56868,43050), "B": (23539, 42044)}``.
+
+    TODO: describe each argument, and return values.
     """
 
     # ----------------------------------------------------------------
@@ -124,7 +141,7 @@ def build_collection_mapper_workflow_graph(
     obs_attrs = obs_attrs or []
     var_attrs = var_attrs or []
 
-    # # Create context that enables faster array open
+    # Create context that enables faster array open
     # cfg_dict = cfg_dict or {}
     # cfg_dict["rest.use_refactored_array_open"] = True
 
