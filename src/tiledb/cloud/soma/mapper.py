@@ -175,10 +175,10 @@ def build_collection_mapper_workflow_graph(
         namespace=namespace,
     )
 
-    nodes = []
+    node_outputs = []
 
     for _, soma_experiment_uri in soma_experiment_uris.items():
-        node = grf.submit(
+        node_output = grf.submit(
             _function_for_node,
             soma_experiment_uri,
             measurement_name=measurement_name,
@@ -203,15 +203,18 @@ def build_collection_mapper_workflow_graph(
             access_credentials_name=access_credentials_name,
             name=soma_experiment_uri,
         )
+        logging.info(f"A: node output is a {type(node_output)}")
 
-        nodes.append(node)
+        node_outputs.append(node_output)
 
-    def collect(nodes):
-        return {node.name: node.result() for node in nodes}
+    def collect(node_outputs):
+        for node_output in node_outputs:
+            logging.info(f"B: node output is a {type(node_output)}")
+        return {node_output.name: node_output.result() for node_output in node_outputs}
 
     grf.submit(
         collect,
-        nodes,
+        node_outputs,
         name="collector",
     )
 
@@ -295,7 +298,7 @@ def function_for_node(
     obs_attrs: Optional[Sequence[str]] = None,
     var_attrs: Optional[Sequence[str]] = None,
     counts_only: bool = False,
-):
+) -> Any:
     import tiledbsoma
 
     if counts_only:
