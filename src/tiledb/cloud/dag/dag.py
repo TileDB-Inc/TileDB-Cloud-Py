@@ -176,6 +176,9 @@ class Node(futures.FutureLike[_T]):
         self._check_resources_and_mode()
         self._find_deps()
 
+    def __repr__(self):
+        return f"NODE name={self.name} id={self.id} mode={self.mode} status={self.status}"
+
     def __hash__(self):
         return hash(self.id)
 
@@ -1515,6 +1518,21 @@ class DAG:
 
         return results
 
+    def _build_aux(self, node, arg):
+        if isinstance(arg, Node):
+            if node._expand_node_output:
+                return models.TGUDFArgument(value="{{inputs.parameters.partId}}")
+            else:
+                return models.TGUDFArgument(
+                    value={
+                        "__tdbudf__": "node_output",
+                        "client_node_id": str(arg.id),
+                    }
+                )
+        else:
+            esc = tiledb_json.Encoder()
+            return models.TGUDFArgument(value=esc.visit(arg))
+
     def _build_batch_taskgraph(self):
         """
         Builds the batch taskgraph model for submission
@@ -1543,21 +1561,22 @@ class DAG:
                 # Skip if first arg is registered udf name
                 if i == 1 and type(arg) == str and "registered_udf_name" in kwargs:
                     continue
-                if isinstance(arg, Node):
-                    if node._expand_node_output:
-                        args.append(
-                            models.TGUDFArgument(value="{{inputs.parameters.partId}}")
-                        )
-                    else:
-                        args.append(
-                            models.TGUDFArgument(
-                                value={
-                                    "__tdbudf__": "node_output",
-                                    "client_node_id": str(arg.id),
-                                }
-                            )
-                        )
+
+                if isinstance(arg, Node): # XXX LOOKING AT
+                    print("IT IS A NODE", arg)
+                    args.append(self._build_aux(node, arg))
+
+                elif isinstance(arg, list):
+                    # XXX TEMP
+                    print("IT IS A LIST", arg)
+                    print("--PRE", arg)
+                    #args.append([self._build_aux(node, e) for e in arg])
+                    narg = [self._build_aux(node, e) for e in arg]
+                    print("--POST", narg)
+                    args.append(narg)
+
                 else:
+                    print("IT IS NOT ANY OF THOSE THINGS", arg)
                     esc = tiledb_json.Encoder()
                     args.append(models.TGUDFArgument(value=esc.visit(arg)))
 
