@@ -1,11 +1,13 @@
 import configparser
+import functools
+import inspect
 import logging
 import os
 import pathlib
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Mapping, Optional, Sequence, Tuple
+from typing import Any, Callable, Mapping, Optional, Sequence, Tuple
 
 import tiledb
 from tiledb.cloud import dag
@@ -272,3 +274,73 @@ def process_stream(
             stderr = stderr_future.result()
 
             return stdout, stderr
+
+
+def batch(func: Callable) -> Callable:
+    """
+    Decorator to run a function as a batch UDF on TileDB Cloud.
+
+    :param func: function to run
+    """
+
+    def filter_kwargs(
+        function: Callable, kwargs: Mapping[str, Any]
+    ) -> Mapping[str, Any]:
+        """
+        Filter kwargs to only include valid arguments for the function.
+
+        :param function: function to validate kwargs for
+        :param kwargs: kwargs to filter
+        :return: filtered kwargs
+        """
+        valid_args = inspect.signature(function).parameters
+        filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_args}
+        return filtered_kwargs
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs) -> None:
+        """
+        Run the function as a batch UDF on TileDB Cloud.
+
+        kwargs optionally includes:
+        - name: name of the node in the DAG, defaults to func.__name__
+        - namespace: TileDB Cloud namespace, defaults to the user's default namespace
+        - acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
+        - access_credentials_name: alias for acn, for backwards compatibility
+        - resources: resources to allocate for the UDF, defaults to None
+        """
+
+        name = kwargs.get("name", func.__name__)
+        namespace = kwargs.get("namespace", None)
+        acn = kwargs.get("acn", kwargs.get("access_credentials_name", None))
+        kwargs["acn"] = acn  # for backwards compatibility
+        resources = kwargs.get("resources", None)
+
+        # Create a new DAG
+        graph = dag.DAG(
+            name=f"batch->{name}",
+            namespace=namespace,
+            mode=dag.Mode.BATCH,
+        )
+
+        # Submit the function as a batch UDF
+        graph.submit(
+            func,
+            *args,
+            name=name,
+            access_credentials_name=acn,
+            resources=resources,
+            **filter_kwargs(func, kwargs),
+        )
+
+        # Run the DAG asynchronously
+        graph.compute()
+
+        print(
+            "TileDB Cloud task submitted - https://cloud.tiledb.com/activity/taskgraphs/{}/{}".format(
+                graph.namespace,
+                graph.server_graph_uuid,
+            )
+        )
+
+    return wrapper

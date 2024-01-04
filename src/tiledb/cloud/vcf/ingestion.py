@@ -1,6 +1,4 @@
 import enum
-import functools
-import inspect
 import logging
 import subprocess
 import sys
@@ -16,9 +14,11 @@ import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.utilities import Profiler
+from tiledb.cloud.utilities import batch
 from tiledb.cloud.utilities import consolidate_fragments
 from tiledb.cloud.utilities import create_log_array
 from tiledb.cloud.utilities import get_logger
+from tiledb.cloud.utilities import max_memory_usage
 from tiledb.cloud.utilities import read_file
 from tiledb.cloud.utilities import run_dag
 from tiledb.cloud.utilities import set_aws_context
@@ -155,6 +155,7 @@ def create_dataset_udf(
     vcf_attrs: Optional[str] = None,
     anchor_gap: Optional[int] = None,
     compression_level: Optional[int] = None,
+    annotation_dataset: bool = False,
     verbose: bool = False,
 ) -> str:
     """
@@ -167,6 +168,7 @@ def create_dataset_udf(
     :param anchor_gap: anchor gap for VCF dataset, defaults to None
     :param compression_level: zstd compression level for the VCF dataset,
         defaults to None (uses the default level in TileDB-VCF)
+    :param annotation_dataset: create an annotation dataset, defaults to False
     :param verbose: verbose logging, defaults to False
     :return: dataset URI
     """
@@ -190,8 +192,8 @@ def create_dataset_udf(
                 dataset_uri, mode="w", cfg=tiledbvcf.ReadConfig(tiledb_config=config)
             )
             ds.create_dataset(
-                enable_allele_count=True,
-                enable_variant_stats=True,
+                enable_allele_count=not annotation_dataset,
+                enable_variant_stats=not annotation_dataset,
                 extra_attrs=extra_attrs,
                 vcf_attrs=vcf_attrs,
                 anchor_gap=anchor_gap,
@@ -206,7 +208,10 @@ def create_dataset_udf(
 
             write_log_event(log_uri, "create_dataset_udf", "create", data=dataset_uri)
 
-            create_manifest(dataset_uri)
+            # Create manifest array and add it to the dataset group if
+            # not creating an annotation dataset.
+            if not annotation_dataset:
+                create_manifest(dataset_uri)
         else:
             logger.info("Using existing dataset: %r", dataset_uri)
 
@@ -784,6 +789,8 @@ def ingest_samples_udf(
 
             prof.write("log", extra=read_file("ingest.log"))
 
+    logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
+
 
 def consolidate_dataset_udf(
     dataset_uri: str,
@@ -813,7 +820,7 @@ def consolidate_dataset_udf(
     if isinstance(include, str):
         include = [include]
 
-    get_logger_wrapper(verbose)
+    logger = get_logger_wrapper(verbose)
 
     with tiledb.scope_ctx(config):
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY, id=id):
@@ -847,6 +854,8 @@ def consolidate_dataset_udf(
                         tiledb.vacuum(uri, config=config)
                     except Exception as e:
                         print(e)
+
+    logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
 
 
 # --------------------------------------------------------------------
@@ -1240,6 +1249,161 @@ def ingest_samples_dag(
 # --------------------------------------------------------------------
 
 
+@batch
+def ingest_annotations(
+    dataset_uri: str,
+    *,
+    vcf_uri: Optional[str] = None,
+    search_uri: Optional[str] = None,
+    pattern: Optional[str] = None,
+    ignore: Optional[str] = None,
+    create_index: bool = True,
+    config=None,
+    acn: Optional[str] = None,
+    namespace: Optional[str] = None,
+    register_name: Optional[str] = None,
+    ingest_resources: Optional[Mapping[str, str]] = None,
+    verbose: bool = False,
+) -> None:
+    """
+    Ingest annotation VCF into a dataset. For example, a ClinVar or gnomAD VCF.
+
+    :param dataset_uri: dataset URI
+    :param vcf_uri: VCF URI, defaults to None
+    :param search_uri: URI to search for VCF files, defaults to None
+    :param pattern: Unix shell style pattern to match when searching for VCF files,
+        defaults to None
+    :param ignore: Unix shell style pattern to ignore when searching for VCF files,
+        defaults to None
+    :param create_index: force creation of a local index file, defaults to True
+    :param config: config dictionary, defaults to None
+    :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
+        defaults to None
+    :param namespace: TileDB-Cloud namespace, defaults to None
+    :param register_name: name to register the dataset with on TileDB Cloud,
+        defaults to None
+    :param ingest_resources: manual override for ingest UDF resources, defaults to None
+    :param verbose: verbose logging, defaults to False
+    """
+
+    if vcf_uri is None and search_uri is None:
+        raise ValueError("vcf_uri or search_uri must be provided")
+
+    if vcf_uri and search_uri:
+        raise ValueError("vcf_uri and search_uri cannot both be provided")
+
+    logger = get_logger_wrapper(verbose)
+    logger.info("Ingesting annotation VCF into %r", dataset_uri)
+
+    if search_uri:
+        # Create and run DAG to find VCF URIs.
+        graph = dag.DAG(
+            name="vcf-find-annotations",
+            namespace=namespace,
+            mode=dag.Mode.BATCH,
+        )
+
+        vcf_uris = graph.submit(
+            find_uris_udf,
+            dataset_uri,
+            search_uri,
+            config=config,
+            include=pattern,
+            exclude=ignore,
+            verbose=verbose,
+            name="Find annotation VCF URIs ",
+            access_credentials_name=acn,
+        )
+
+        run_dag(graph)
+        vcf_uris = vcf_uris.result()
+    else:
+        vfs = tiledb.VFS()
+        if not vfs.is_file(vcf_uri):
+            raise ValueError(f"'{vcf_uri}' not found.")
+
+        vcf_uris = [vcf_uri]
+
+    # TODO: optionally filter VCFs with bcftools
+
+    # Create the DAG.
+    graph = dag.DAG(
+        name="vcf-ingest-annotations",
+        namespace=namespace,
+        mode=dag.Mode.BATCH,
+        max_workers=40,
+    )
+
+    # Add a node to create the dataset.
+    dataset_node = graph.submit(
+        create_dataset_udf,
+        dataset_uri,
+        config=config,
+        vcf_attrs=vcf_uris[0],
+        annotation_dataset=True,
+        verbose=verbose,
+        name="Create annotation dataset ",
+        access_credentials_name=acn,
+    )
+
+    # Add a node to consolidate the dataset.
+    consolidate_node = graph.submit(
+        consolidate_dataset_udf,
+        dataset_uri,
+        config=config,
+        verbose=verbose,
+        resources=CONSOLIDATE_RESOURCES,
+        name="Consolidate annotations ",
+        access_credentials_name=acn,
+    )
+
+    if ingest_resources is None:
+        ingest_resources = {"cpu": "2", "memory": "16Gi"}
+
+    threads = 1
+    vcf_memory_mb = 1024 * threads
+
+    # Add a node to ingest each VCF.
+    for i, vcf_uri in enumerate(vcf_uris):
+        ingest_node = graph.submit(
+            ingest_samples_udf,
+            dataset_uri,
+            [vcf_uri],
+            config=config,
+            threads=threads,
+            memory_mb=vcf_memory_mb,
+            sample_batch_size=1,
+            resume=False,
+            create_index=create_index,
+            verbose=verbose,
+            resources=ingest_resources,
+            name=f"Ingest annotations {i+1}/{len(vcf_uris)} ",
+            access_credentials_name=acn,
+        )
+
+        # Set dependencies so that the ingest nodes run in parallel
+        # and the consolidate node runs after all of the ingest nodes.
+        ingest_node.depends_on(dataset_node)
+        consolidate_node.depends_on(ingest_node)
+
+    # Optionally add a node to register the dataset.
+    if register_name:
+        register = graph.submit(
+            register_dataset_udf,
+            dataset_uri=dataset_uri,
+            register_name=register_name,
+            namespace=namespace,
+            config=config,
+            verbose=verbose,
+            name="Register annotations ",
+            access_credentials_name=acn,
+        )
+
+        register.depends_on(consolidate_node)
+
+    run_dag(graph, wait=False, debug=verbose)
+
+
 def ingest_vcf(
     dataset_uri: str,
     *,
@@ -1387,71 +1551,6 @@ def ingest_vcf(
             config=config,
             verbose=verbose,
         )
-
-
-def batch(func):
-    """
-    Decorator to run a function as a batch UDF on TileDB Cloud.
-
-    :param func: function to run
-    """
-
-    def filter_kwargs(function, kwargs):
-        """
-        Filter kwargs to only include valid arguments for the function.
-
-        :param function: function to validate kwargs for
-        :param kwargs: kwargs to filter
-        :return: filtered kwargs
-        """
-        valid_args = inspect.signature(function).parameters
-        filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_args}
-        return filtered_kwargs
-
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        """
-        Run the function as a batch UDF on TileDB Cloud.
-
-        kwargs optionally includes:
-        - name: name of the node in the DAG, defaults to func.__name__
-        - namespace: TileDB Cloud namespace, defaults to the user's default namespace
-        - acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
-        - access_credentials_name: alias for acn, for backwards compatibility
-        """
-
-        name = kwargs.get("name", func.__name__)
-        namespace = kwargs.get("namespace", None)
-        acn = kwargs.get("acn", kwargs.get("access_credentials_name", None))
-        kwargs["acn"] = acn  # for backwards compatibility
-
-        # Create a new DAG
-        graph = dag.DAG(
-            name=f"batch->{name}",
-            namespace=namespace,
-            mode=dag.Mode.BATCH,
-        )
-
-        # Submit the function as a batch UDF
-        graph.submit(
-            func,
-            *args,
-            name=name,
-            access_credentials_name=acn,
-            **filter_kwargs(func, kwargs),
-        )
-
-        # Run the DAG asynchronously
-        graph.compute()
-
-        print(
-            "TileDB Cloud task submitted - https://cloud.tiledb.com/activity/taskgraphs/{}/{}".format(
-                graph.namespace,
-                graph.server_graph_uuid,
-            )
-        )
-
-    return wrapper
 
 
 # Wrapper function for batch VCF ingestion

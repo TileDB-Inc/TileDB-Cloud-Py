@@ -139,8 +139,13 @@ class Profiler(object):
             raise ValueError("group_member must be specified")
 
         if group_uri is not None:
-            with tiledb.Group(group_uri) as group:
-                self.array_uri = group[group_member].uri
+            try:
+                with tiledb.Group(group_uri) as group:
+                    self.array_uri = group[group_member].uri
+            except Exception:
+                # Disable the profiler if we cannot access the group or member.
+                self.enabled = False
+                return
         else:
             self.array_uri = array_uri
 

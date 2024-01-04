@@ -1,3 +1,4 @@
+from ._common import batch
 from ._common import get_logger
 from ._common import max_memory_usage
 from ._common import process_stream
@@ -13,6 +14,7 @@ from .profiler import create_log_array
 from .profiler import write_log_event
 
 __all__ = [
+    "batch",
     "get_logger",
     "max_memory_usage",
     "process_stream",
