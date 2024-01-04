@@ -716,6 +716,17 @@ class DAGBatchModeTest(unittest.TestCase):
         d.wait(300)
         self.assertEqual(print_node.result(), [99.0, 299.0, 499.0, 699.0])
 
+    def test_param_replacement(self):
+        d = dag.DAG(mode=Mode.BATCH)
+        in_node = d.submit(lambda x: "out" + x[2:], "input")
+        wrap_node = d.submit(repr, [in_node])
+        dict_node = d.submit(lambda d: tuple(d.items()), {"wrapped": wrap_node})
+        d.compute()
+        d.wait(300)
+        self.assertEqual(in_node.result(), "output")
+        self.assertEqual(wrap_node.result(), "['output']")
+        self.assertEqual(dict_node.result(), (("wrapped", "['output']"),))
+
     def test_batch_dag_retries(self):
         def random_failure():
             import random

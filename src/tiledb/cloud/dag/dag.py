@@ -36,6 +36,7 @@ from .._results import codecs
 from .._results import results
 from .._results import stored_params
 from .._results import tiledb_json
+from .._results import types
 from ..rest_api import models
 from ..sql import _execution as _sql_exec
 from ..taskgraphs import _results as _tg_results
@@ -1525,67 +1526,26 @@ class DAG:
         node_jsons = []
         for node in topo_sorted_nodes:
             kwargs = {}
-            if callable(node.args[0]):
-                kwargs["executable_code"] = codecs.PickleCodec.encode_base64(
-                    node.args[0]
-                )
-                kwargs["source_text"] = functions.getsourcelines(node.args[0])
+            node_args = list(node.args)
+            # XXX: This is subtly different from the way functions are handled
+            # when coordinated locally ("realtime").
+            if callable(node_args[0]):
+                func = node_args.pop(0)
+                kwargs["executable_code"] = codecs.PickleCodec.encode_base64(func)
+                kwargs["source_text"] = functions.getsourcelines(func)
             if type(node.args[0]) == str:
-                kwargs["registered_udf_name"] = node.args[0]
+                func = node_args.pop(0)
+                kwargs["registered_udf_name"] = func
 
-            args = []
-            i = 0
-            for arg in node.args:
-                i += 1
-                # Skip if first arg is function
-                if i == 1 and callable(arg):
-                    continue
-                # Skip if first arg is registered udf name
-                if i == 1 and type(arg) == str and "registered_udf_name" in kwargs:
-                    continue
-                if isinstance(arg, Node):
-                    if node._expand_node_output:
-                        args.append(
-                            models.TGUDFArgument(value="{{inputs.parameters.partId}}")
-                        )
-                    else:
-                        args.append(
-                            models.TGUDFArgument(
-                                value={
-                                    "__tdbudf__": "node_output",
-                                    "client_node_id": str(arg.id),
-                                }
-                            )
-                        )
-                else:
-                    esc = tiledb_json.Encoder()
-                    args.append(models.TGUDFArgument(value=esc.visit(arg)))
+            filtered_node_kwargs = {
+                name: val
+                for name, val in node.kwargs.items()
+                if name not in _SKIP_BATCH_UDF_KWARGS
+            }
 
-            for name, arg in node.kwargs.items():
-                if name in _SKIP_BATCH_UDF_KWARGS:
-                    continue
-                elif isinstance(arg, Node):
-                    if node._expand_node_output:
-                        args.append(
-                            models.TGUDFArgument(
-                                name=name, value="{{inputs.parameters.partId}}"
-                            )
-                        )
-                    else:
-                        args.append(
-                            models.TGUDFArgument(
-                                name=name,
-                                value={
-                                    "__tdbudf__": "node_output",
-                                    "client_node_id": str(arg.id),
-                                },
-                            )
-                        )
-                else:
-                    esc = tiledb_json.Encoder()
-                    args.append(models.TGUDFArgument(name=name, value=esc.visit(arg)))
-
-            kwargs["arguments"] = args
+            all_args = types.Arguments(node_args, filtered_node_kwargs)
+            encoder = _BatchArgEncoder(input_is_expanded=bool(node._expand_node_output))
+            kwargs["arguments"] = encoder.encode_arguments(all_args)
 
             env_dict = {
                 "language": models.UDFLanguage.PYTHON,
@@ -1851,6 +1811,23 @@ class _NodeToStoredParamReplacer(visitor.ReplacingVisitor):
             self.ids.add(sp.task_id)
             return visitor.Replacement(sp)
         return visitor.Replacement(arg.result())
+
+
+class _BatchArgEncoder(tiledb_json.Encoder):
+    """Encodes arguments with the special format used by batch graphs."""
+
+    def __init__(self, input_is_expanded: bool) -> None:
+        self._input_is_expanded = input_is_expanded
+        super().__init__()
+
+    def maybe_replace(self, arg: object) -> Optional[visitor.Replacement]:
+        if isinstance(arg, Node):
+            if self._input_is_expanded:
+                return visitor.Replacement("{{inputs.parameters.partId}}")
+            return visitor.Replacement(
+                {"__tdbudf__": "node_output", "client_node_id": str(arg.id)}
+            )
+        return super().maybe_replace(arg)
 
 
 class _NodeResultReplacer(visitor.ReplacingVisitor):
