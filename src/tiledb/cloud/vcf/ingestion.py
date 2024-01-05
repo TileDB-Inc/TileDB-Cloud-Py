@@ -14,7 +14,7 @@ import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.utilities import Profiler
-from tiledb.cloud.utilities import batch
+from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import consolidate_fragments
 from tiledb.cloud.utilities import create_log_array
 from tiledb.cloud.utilities import get_logger
@@ -928,7 +928,7 @@ def ingest_manifest_dag(
         anchor_gap=anchor_gap,
         compression_level=compression_level,
         verbose=verbose,
-        name="Create VCF dataset ",
+        name="Create VCF dataset",
         access_credentials_name=acn,
     )
 
@@ -940,7 +940,7 @@ def ingest_manifest_dag(
             config=config,
             max_files=max_files,
             verbose=verbose,
-            name="Read VCF URIs ",
+            name="Read VCF URIs",
             access_credentials_name=acn,
         )
 
@@ -954,7 +954,7 @@ def ingest_manifest_dag(
             exclude=ignore,
             max_files=max_files,
             verbose=verbose,
-            name="Find VCF URIs ",
+            name="Find VCF URIs",
             access_credentials_name=acn,
         )
 
@@ -966,7 +966,7 @@ def ingest_manifest_dag(
             metadata_uri=metadata_uri,
             metadata_attr=metadata_attr,
             verbose=verbose,
-            name="Read VCF URIs from metadata ",
+            name="Read VCF URIs from metadata",
             access_credentials_name=acn,
         )
 
@@ -976,7 +976,7 @@ def ingest_manifest_dag(
         sample_uris,
         config=config,
         verbose=verbose,
-        name="Filter VCF URIs ",
+        name="Filter VCF URIs",
         access_credentials_name=acn,
     )
 
@@ -1022,7 +1022,7 @@ def ingest_manifest_dag(
                 id=f"manifest-consol-{i//workers}",
                 verbose=verbose,
                 resources=CONSOLIDATE_RESOURCES,
-                name=f"Consolidate VCF Manifest {i//workers + 1}/{num_consolidates} ",
+                name=f"Consolidate VCF Manifest {i//workers + 1}/{num_consolidates}",
                 access_credentials_name=acn,
             )
 
@@ -1034,7 +1034,7 @@ def ingest_manifest_dag(
             verbose=verbose,
             id=f"manifest-ingest-{i}",
             resources=MANIFEST_RESOURCES,
-            name=f"Ingest VCF Manifest {i+1}/{num_partitions} ",
+            name=f"Ingest VCF Manifest {i+1}/{num_partitions}",
             access_credentials_name=acn,
         )
         if prev_consolidate:
@@ -1179,7 +1179,7 @@ def ingest_samples_dag(
                 id=f"vcf-consol-{i//workers}",
                 verbose=verbose,
                 resources=CONSOLIDATE_RESOURCES,
-                name=f"Consolidate VCF {i//workers + 1}/{num_consolidates} ",
+                name=f"Consolidate VCF {i//workers + 1}/{num_consolidates}",
                 access_credentials_name=acn,
             )
 
@@ -1200,7 +1200,7 @@ def ingest_samples_dag(
             create_index=create_index,
             trace_id=trace_id,
             resources=ingest_resources,
-            name=f"Ingest VCF {i+1}/{num_partitions} ",
+            name=f"Ingest VCF {i+1}/{num_partitions}",
             access_credentials_name=acn,
         )
 
@@ -1249,8 +1249,7 @@ def ingest_samples_dag(
 # --------------------------------------------------------------------
 
 
-@batch
-def ingest_annotations(
+def ingest_vcf_annotations(
     dataset_uri: str,
     *,
     vcf_uri: Optional[str] = None,
@@ -1311,7 +1310,7 @@ def ingest_annotations(
             include=pattern,
             exclude=ignore,
             verbose=verbose,
-            name="Find annotation VCF URIs ",
+            name="Find annotation VCF URIs",
             access_credentials_name=acn,
         )
 
@@ -1342,7 +1341,7 @@ def ingest_annotations(
         vcf_attrs=vcf_uris[0],
         annotation_dataset=True,
         verbose=verbose,
-        name="Create annotation dataset ",
+        name="Create annotation dataset",
         access_credentials_name=acn,
     )
 
@@ -1353,7 +1352,7 @@ def ingest_annotations(
         config=config,
         verbose=verbose,
         resources=CONSOLIDATE_RESOURCES,
-        name="Consolidate annotations ",
+        name="Consolidate annotations",
         access_credentials_name=acn,
     )
 
@@ -1377,7 +1376,7 @@ def ingest_annotations(
             create_index=create_index,
             verbose=verbose,
             resources=ingest_resources,
-            name=f"Ingest annotations {i+1}/{len(vcf_uris)} ",
+            name=f"Ingest annotations {i+1}/{len(vcf_uris)}",
             access_credentials_name=acn,
         )
 
@@ -1395,13 +1394,17 @@ def ingest_annotations(
             namespace=namespace,
             config=config,
             verbose=verbose,
-            name="Register annotations ",
+            name="Register annotations",
             access_credentials_name=acn,
         )
 
         register.depends_on(consolidate_node)
 
     run_dag(graph, wait=False, debug=verbose)
+
+
+# Wrapper function for batch VCF annotation ingestion
+ingest_annotations = as_batch(ingest_vcf_annotations)
 
 
 def ingest_vcf(
@@ -1554,4 +1557,4 @@ def ingest_vcf(
 
 
 # Wrapper function for batch VCF ingestion
-ingest = batch(ingest_vcf)
+ingest = as_batch(ingest_vcf)

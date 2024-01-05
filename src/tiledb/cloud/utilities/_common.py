@@ -7,7 +7,7 @@ import pathlib
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Callable, Mapping, Optional, Sequence, Tuple
+from typing import Any, Callable, Mapping, Optional, Sequence, Tuple, TypeVar
 
 import tiledb
 from tiledb.cloud import dag
@@ -276,26 +276,28 @@ def process_stream(
             return stdout, stderr
 
 
-def batch(func: Callable) -> Callable:
+def _filter_kwargs(function: Callable, kwargs: Mapping[str, Any]) -> Mapping[str, Any]:
+    """
+    Filter kwargs to only include valid arguments for the function.
+
+    :param function: function to validate kwargs for
+    :param kwargs: kwargs to filter
+    :return: filtered kwargs
+    """
+    valid_args = inspect.signature(function).parameters
+    filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_args}
+    return filtered_kwargs
+
+
+_CT = TypeVar("_CT", bound=Callable)
+
+
+def as_batch(func: _CT) -> _CT:
     """
     Decorator to run a function as a batch UDF on TileDB Cloud.
 
     :param func: function to run
     """
-
-    def filter_kwargs(
-        function: Callable, kwargs: Mapping[str, Any]
-    ) -> Mapping[str, Any]:
-        """
-        Filter kwargs to only include valid arguments for the function.
-
-        :param function: function to validate kwargs for
-        :param kwargs: kwargs to filter
-        :return: filtered kwargs
-        """
-        valid_args = inspect.signature(function).parameters
-        filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_args}
-        return filtered_kwargs
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs) -> None:
@@ -330,7 +332,7 @@ def batch(func: Callable) -> Callable:
             name=name,
             access_credentials_name=acn,
             resources=resources,
-            **filter_kwargs(func, kwargs),
+            **_filter_kwargs(func, kwargs),
         )
 
         # Run the DAG asynchronously
