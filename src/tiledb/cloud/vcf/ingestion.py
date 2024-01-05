@@ -919,6 +919,7 @@ def ingest_manifest_dag(
         mode=dag.Mode.BATCH,
     )
 
+    # XXX TOUCH
     dataset_uri_result = graph.submit(
         create_dataset_udf,
         dataset_uri,
