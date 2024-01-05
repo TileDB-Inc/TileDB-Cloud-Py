@@ -1358,7 +1358,7 @@ def ingest_annotations(
     )
 
     if ingest_resources is None:
-        ingest_resources = {"cpu": "2", "memory": "16Gi"}
+        ingest_resources = {"cpu": "2", "memory": "32Gi"}
 
     threads = 1
     vcf_memory_mb = 1024 * threads
