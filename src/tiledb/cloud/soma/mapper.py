@@ -7,7 +7,6 @@ import tiledbsoma
 from tiledb.cloud import dag
 from tiledb.cloud._common import functions
 
-
 _DEFAULT_RESOURCES = {"cpu": "8", "memory": "8Gi"}
 """Default resource size; equivalent to a "large" UDF container."""
 
@@ -74,7 +73,6 @@ def run_collection_mapper_workflow(
         "status": "started",
         "graph_id": str(grf.server_graph_uuid),
     }
-
 
 
 def build_collection_mapper_workflow_graph(
@@ -170,12 +168,12 @@ def build_collection_mapper_workflow_graph(
 
     grf = dag.DAG(
         name=task_graph_name,
-        mode=dag.Mode.BATCH,
-        ###mode=dag.Mode.REALTIME,
+        ###mode=dag.Mode.BATCH,
+        mode=dag.Mode.REALTIME,
         namespace=namespace,
     )
 
-    nodes = []
+    node_names_to_ids = {}
 
     for _, soma_experiment_uri in soma_experiment_uris.items():
         node = grf.submit(
@@ -192,26 +190,31 @@ def build_collection_mapper_workflow_graph(
             var_attrs=var_attrs,
             counts_only=counts_only,
             ####platform_config=platform_config,
-            ### XXX TODO: handle resource_class if realtime, else resources if batch-mode.
-            ### For now: just working with realtime.
-            resources=_DEFAULT_RESOURCES if resources is None else resources,
+            ### XXX TODO: handle resource_class if realtime, else resources if
+            ### batch-mode.  For now: just working with realtime.
+            ### resources=_DEFAULT_RESOURCES if resources is None else
+            ### resources,
             # tiledb.cloud.tiledb_cloud_error.TileDBCloudError:
             # Cannot set resources for REALTIME task graphs, please use
             # "resource_class" to set a predefined option for "standard" or
             # "large"
-            ###resource_class="large",
+            resource_class="standard",
             access_credentials_name=access_credentials_name,
             name=soma_experiment_uri,
         )
+        # print("NODE NAME", node.name)
+        # print("NODE ID", node.id)
+        # print("NODE TASK_ID", node.task_id())
+        # print(dir(node))
 
-        nodes.append(node)
+        node_names_to_ids[node.name] = node.id
 
-    def collect(nodes):
-        return {node.name: node.result() for node in nodes}
+    def collect(node_names_to_ids):
+        return node_names_to_ids
 
     grf.submit(
         collect,
-        nodes,
+        node_names_to_ids,
         name="collector",
     )
 
