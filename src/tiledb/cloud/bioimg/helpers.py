@@ -32,6 +32,18 @@ def get_logger_wrapper(
 
 _SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs", ".tdb")
 
+from .types import SupportedExtensions
+
+
+def get_embeddings_uris(output_file_uri: str) -> Tuple[str, str]:
+    destination = os.path.dirname(output_file_uri)
+    filename = os.path.basename(output_file_uri).split(".")
+    embeddings_flat_uri = os.path.join(destination, f"{filename}_embeddings_flat")
+    embeddings_ivf_flat_uri = os.path.join(
+        destination, f"{filename}_embeddings_ivf_flat"
+    )
+    return embeddings_flat_uri, embeddings_ivf_flat_uri
+
 
 def get_uris(
     source: Sequence[str], output_dir: str, config: Mapping[str, Any], output_ext: str
