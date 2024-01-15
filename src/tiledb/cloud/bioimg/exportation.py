@@ -9,6 +9,7 @@ from tiledb.cloud.utilities._common import run_dag
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-exportation"
+_RUNNING_PROFILES = ("client", "server")
 
 
 def build_io_uris_exportation(source: Sequence[str], output_dir: str, output_ext: str):
@@ -61,7 +62,7 @@ def export(
     num_batches: Optional[int] = None,
     resources: Optional[Mapping[str, Any]] = None,
     compute: bool = True,
-    local: bool = False,
+    run_on: Optional[str] = None,
     namespace: Optional[str] = None,
     verbose: bool = False,
     output_ext: str = "tiff",
@@ -80,7 +81,11 @@ def export(
         defaults to None
     :param compute: When True the DAG returned will be computed inside the function
     otherwise DAG will only be returned.
+    :param run_on: By default runs on server if value is "client" runs client side.
     :param namespace: The namespace where the DAG will run
+    :param verbose: verbose logging, defaults to False
+    :output_ext: extension for the output images in tiledb
+
     """
 
     logger = get_logger_wrapper(verbose)
@@ -106,7 +111,7 @@ def export(
 
         # if writer config not given assume same as source
         src_cfg = default_ctx().config()
-        dest_cfg = src_cfg if not config else config
+        dest_cfg = config or src_cfg
 
         for input, output in io_uris:
             to_bioimg(
@@ -127,9 +132,14 @@ def export(
     dag_name = taskgraph_name or DEFAULT_DAG_NAME
 
     logger.debug("Building graph")
+
+    run_mode = run_on or "server"
+    if run_mode not in _RUNNING_PROFILES:
+        raise ValueError("Invalid value for argument 'run_on'")
+
     graph = dag.DAG(
         name=dag_name,
-        mode=dag.Mode.REALTIME if local else dag.Mode.BATCH,
+        mode=dag.Mode.REALTIME if run_mode == "client" else dag.Mode.BATCH,
         max_workers=max_workers,
         namespace=namespace,
     )

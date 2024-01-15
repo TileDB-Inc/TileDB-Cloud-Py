@@ -2,7 +2,6 @@ import os
 from typing import Any, Dict, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
-import tiledb.bioimg
 from tiledb.cloud import dag
 from tiledb.cloud.bioimg.helpers import get_logger_wrapper
 from tiledb.cloud.bioimg.helpers import serialize_filter
