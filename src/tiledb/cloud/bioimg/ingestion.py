@@ -46,7 +46,6 @@ def ingest(
     """
 
     logger = get_logger_wrapper(verbose)
-    logger.debug("tiledbioimg=%s", tiledb.bioimg.version.version)
 
     def ingest_tiff_udf(
         io_uris: Sequence[Tuple],
