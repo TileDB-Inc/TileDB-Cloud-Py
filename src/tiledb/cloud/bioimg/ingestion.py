@@ -25,6 +25,7 @@ def ingest(
     compute: bool = True,
     namespace: Optional[str],
     verbose: bool = False,
+    exclude_metadata: bool = False,
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
     """The function ingests microscopy images into TileDB arrays
@@ -45,12 +46,12 @@ def ingest(
     """
 
     logger = get_logger_wrapper(verbose)
-    logger.debug("tiledbioimg=%s", tiledb.bioimg.version.version)
 
     def ingest_tiff_udf(
         io_uris: Sequence[Tuple],
         config: Mapping[str, Any],
         verbose: bool = False,
+        exclude_metadata: bool = False,
         *args: Any,
         **kwargs,
     ):
@@ -85,7 +86,13 @@ def ingest(
         with tiledb.scope_ctx(ctx_or_config=conf):
             for input, output in io_uris:
                 with vfs.open(input) as src:
-                    from_bioimg(src, output, converter=Converters.OMETIFF, **kwargs)
+                    from_bioimg(
+                        src,
+                        output,
+                        converter=Converters.OMETIFF,
+                        exclude_metadata=exclude_metadata,
+                        **kwargs,
+                    )
 
     if isinstance(source, str):
         # Handle only lists
@@ -124,6 +131,7 @@ def ingest(
             work,
             config,
             verbose,
+            exclude_metadata,
             threads,
             *args,
             name=f"{task_prefix} - {i}",
