@@ -3,6 +3,7 @@ name = "tiledb-cloud"
 description = "TileDB Cloud platform Python client"
 readme = "./README.md"
 dynamic = ["version"]
+requires-python = ">=3.8"
 
 dependencies = [
     "attrs>=21.4.0",

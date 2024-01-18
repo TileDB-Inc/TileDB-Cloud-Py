@@ -3,7 +3,6 @@ import datetime
 import itertools
 import json
 import numbers
-import sys
 import threading
 import time
 import uuid
@@ -609,14 +608,6 @@ class DAG:
         :param deadline: Duration in seconds relative to the workflow start time
             which the workflow is allowed to run before it gets terminated.
         """
-        if sys.version_info < (3, 8):
-            warnings.warn(
-                DeprecationWarning(
-                    "Python 3.7 has been deprecated and support will soon be fully"
-                    " discontinued. Upgrade to Python 3.9 as soon as possible."
-                )
-            )
-
         self.id = uuid.uuid4()
         self.nodes: Dict[uuid.UUID, Node] = {}
         self.nodes_by_name: Dict[str, Node] = {}

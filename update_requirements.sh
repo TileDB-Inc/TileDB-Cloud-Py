@@ -15,6 +15,6 @@ write-requirements() {
   "$SCRATCH/venv/bin/pip" freeze --exclude tiledb-cloud >"requirements-py$VERSION.txt"
 }
 
-for VER in 3.7 3.9; do
+for VER in 3.9; do
   write-requirements "$VER"
 done
