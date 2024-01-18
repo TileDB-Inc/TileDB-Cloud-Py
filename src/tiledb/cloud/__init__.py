@@ -1,5 +1,8 @@
 # This file imports specifically to re-export.
 
+import sys
+import warnings
+
 from . import compute
 from . import dag
 from . import groups
@@ -37,6 +40,15 @@ from .tasks import last_sql_task
 from .tasks import last_udf_task
 from .tasks import task
 from .tiledb_cloud_error import TileDBCloudError
+
+if sys.version_info < (3, 8):
+    warnings.warn(
+        DeprecationWarning(
+            "Python 3.7 has been deprecated and support will soon be fully"
+            " discontinued. Upgrade to Python 3.9 as soon as possible."
+        )
+    )
+
 
 _pickle_compat.patch_cloudpickle()
 _pickle_compat.patch_pandas()
