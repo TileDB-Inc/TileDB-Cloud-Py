@@ -1,4 +1,3 @@
-import os
 from typing import Any, Dict, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
@@ -10,47 +9,6 @@ DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-exportation"
 _RUNNING_PROFILES = ("client", "server")
-
-
-def build_io_uris_exportation(source: Sequence[str], output_dir: str, output_ext: str):
-    """Match input uri/s with output destinations
-
-    :param source: A sequence of paths or path to input
-    :param output_dir: A path to the output directory
-    """
-    vfs = tiledb.VFS()
-
-    def create_output_path(input_file, output_dir) -> str:
-        filename = os.path.splitext(os.path.basename(input_file))[0]
-        output_filename = filename + f".{output_ext}" if output_ext else filename
-        return os.path.join(output_dir, output_filename)
-
-    def iter_paths(source: Sequence) -> Iterator[Tuple]:
-        for uri in source:
-            if vfs.is_dir(uri) and tiledb.object_type(uri) != "group":
-                # Folder for exploration
-                contents = vfs.ls(uri)
-                yield from tuple(iter_paths(contents)[1:])
-            elif tiledb.object_type(uri) == "group":
-                # For exportation we require the source path to be a tiledb group
-                yield uri, create_output_path(uri, output_dir)
-
-    if len(source) == 0:
-        raise ValueError("The source files cannot be empty")
-    return tuple(iter_paths(source))
-
-
-def build_input_batches(
-    source: Sequence[str], output: str, num_batches: int, out_ext: str
-):
-    """Groups input URIs into batches."""
-    uri_pairs = build_io_uris_exportation(source, output, out_ext)
-    # If the user didn't specify a number of batches, run every import
-    # as its own task.
-    my_num_batches = num_batches or len(uri_pairs)
-    # If they specified too many batches, don't create empty tasks.
-    my_num_batches = min(len(uri_pairs), my_num_batches)
-    return [uri_pairs[n::my_num_batches] for n in range(my_num_batches)]
 
 
 def export(
@@ -89,8 +47,53 @@ def export(
     """
 
     logger = get_logger_wrapper(verbose)
-    logger.info("Exporting files: %s", source)
+    logger.debug("Exporting files: %s", source)
     max_workers = None if num_batches else 20  # Default picked heuristically.
+
+    def build_io_uris_exportation(
+        source: Sequence[str], output_dir: str, output_ext: str
+    ):
+        """Match input uri/s with output destinations
+
+        :param source: A sequence of paths or path to input
+        :param output_dir: A path to the output directory
+        """
+        import os
+
+        import tiledb
+
+        vfs = tiledb.VFS()
+
+        def create_output_path(input_file, output_dir) -> str:
+            filename = os.path.splitext(os.path.basename(input_file))[0]
+            output_filename = filename + f".{output_ext}" if output_ext else filename
+            return os.path.join(output_dir, output_filename)
+
+        def iter_paths(source: Sequence) -> Iterator[Tuple]:
+            for uri in source:
+                if vfs.is_dir(uri) and tiledb.object_type(uri) != "group":
+                    # Folder for exploration
+                    contents = vfs.ls(uri)
+                    yield from iter_paths(contents)
+                elif tiledb.object_type(uri) == "group":
+                    # For exportation we require the source path to be a tiledb group
+                    yield uri, create_output_path(uri, output_dir)
+
+        if len(source) == 0:
+            raise ValueError("The source files cannot be empty")
+        return tuple(iter_paths(source))
+
+    def build_input_batches(
+        source: Sequence[str], output: str, num_batches: int, out_ext: str
+    ):
+        """Groups input URIs into batches."""
+        uri_pairs = build_io_uris_exportation(source, output, out_ext)
+        # If the user didn't specify a number of batches, run every import
+        # as its own task.
+        my_num_batches = num_batches or len(uri_pairs)
+        # If they specified too many batches, don't create empty tasks.
+        my_num_batches = min(len(uri_pairs), my_num_batches)
+        return [uri_pairs[n::my_num_batches] for n in range(my_num_batches)]
 
     def export_tiff_udf(
         io_uris: Sequence[Tuple],
@@ -127,6 +130,7 @@ def export(
     if isinstance(source, str):
         # Handle only lists
         source = [source]
+    logger.debug("Exporting files: %s", source)
 
     # Build the task graph
     dag_name = taskgraph_name or DEFAULT_DAG_NAME

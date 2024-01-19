@@ -1,4 +1,3 @@
-import os
 from typing import Any, Dict, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
@@ -12,47 +11,6 @@ DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-ingestion"
 _SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs")
-
-
-def build_io_uris_ingestion(source: Sequence[str], output_dir: str, output_ext: str):
-    """Match input uri/s with output destinations
-
-    :param source: A sequence of paths or path to input
-    :param output_dir: A path to the output directory
-    """
-    vfs = tiledb.VFS()
-
-    def create_output_path(input_file, output_dir) -> str:
-        filename = os.path.splitext(os.path.basename(input_file))[0]
-        output_filename = filename + f".{output_ext}" if output_ext else filename
-        return os.path.join(output_dir, output_filename)
-
-    def iter_paths(source: Sequence[str]) -> Iterator[Tuple]:
-        for uri in source:
-            if vfs.is_dir(uri):
-                # Folder for exploration
-                contents = vfs.ls(uri)
-                # excluding root folder  - ls returns it
-                yield from tuple(iter_paths(contents[1:]))
-            elif uri.endswith(_SUPPORTED_EXTENSIONS):
-                yield uri, create_output_path(uri, output_dir)
-
-    if len(source) == 0:
-        raise ValueError("The source files cannot be empty")
-    return tuple(iter_paths(source))
-
-
-def build_input_batches(
-    source: Sequence[str], output: str, num_batches: int, out_ext: str
-):
-    """Groups input URIs into batches."""
-    uri_pairs = build_io_uris_ingestion(source, output, out_ext)
-    # If the user didn't specify a number of batches, run every import
-    # as its own task.
-    my_num_batches = num_batches or len(uri_pairs)
-    # If they specified too many batches, don't create empty tasks.
-    my_num_batches = min(len(uri_pairs), my_num_batches)
-    return [uri_pairs[n::my_num_batches] for n in range(my_num_batches)]
 
 
 def ingest(
@@ -91,6 +49,59 @@ def ingest(
 
     logger = get_logger_wrapper(verbose)
     max_workers = None if num_batches else 20  # Default picked heuristically.
+
+    def build_io_uris_ingestion(
+        source: Sequence[str],
+        output_dir: str,
+        output_ext: str,
+        supported_exts: Tuple[str],
+    ):
+        """Match input uri/s with output destinations
+
+        :param source: A sequence of paths or path to input
+        :param output_dir: A path to the output directory
+        """
+        import os
+
+        import tiledb
+
+        vfs = tiledb.VFS()
+        # Even though a tuple by definition when passed through submit becomes list
+        supported_exts = tuple(supported_exts)
+
+        def create_output_path(input_file, output_dir) -> str:
+            filename = os.path.splitext(os.path.basename(input_file))[0]
+            output_filename = filename + f".{output_ext}" if output_ext else filename
+            return os.path.join(output_dir, output_filename)
+
+        def iter_paths(source: Sequence[str]) -> Iterator[Tuple]:
+            for uri in source:
+                if vfs.is_dir(uri):
+                    # Folder for exploration
+                    contents = vfs.ls(uri)
+                    yield from iter_paths(contents)
+                elif uri.endswith(supported_exts):
+                    yield uri, create_output_path(uri, output_dir)
+
+        if len(source) == 0:
+            raise ValueError("The source files cannot be empty")
+        return tuple(iter_paths(source))
+
+    def build_input_batches(
+        source: Sequence[str],
+        output: str,
+        num_batches: int,
+        out_ext: str,
+        supported_exts: Tuple,
+    ):
+        """Groups input URIs into batches."""
+        uri_pairs = build_io_uris_ingestion(source, output, out_ext, supported_exts)
+        # If the user didn't specify a number of batches, run every import
+        # as its own task.
+        my_num_batches = num_batches or len(uri_pairs)
+        # If they specified too many batches, don't create empty tasks.
+        my_num_batches = min(len(uri_pairs), my_num_batches)
+        return [uri_pairs[n::my_num_batches] for n in range(my_num_batches)]
 
     def ingest_tiff_udf(
         io_uris: Sequence[Tuple],
@@ -167,6 +178,7 @@ def ingest(
         output,
         num_batches,
         output_ext,
+        _SUPPORTED_EXTENSIONS,
         access_credentials_name=kwargs.get("access_credentials_name"),
         name=f"{dag_name} input collector",
         result_format="json",
