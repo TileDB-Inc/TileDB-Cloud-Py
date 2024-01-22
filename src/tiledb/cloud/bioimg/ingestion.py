@@ -11,6 +11,7 @@ DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-ingestion"
 _SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs")
+_RUNNING_PROFILES = ("client", "server")
 
 
 def ingest(
@@ -23,7 +24,7 @@ def ingest(
     threads: Optional[int] = 8,
     resources: Optional[Mapping[str, Any]] = None,
     compute: bool = True,
-    local: bool = False,
+    run_on: Optional[str] = None,
     namespace: Optional[str],
     verbose: bool = False,
     exclude_metadata: bool = False,
@@ -43,9 +44,10 @@ def ingest(
         defaults to None
     :param compute: When True the DAG returned will be computed inside the function
     otherwise DAG will only be returned.
+    :param run_on: By default runs on server if value is "client" runs client side.
     :param namespace: The namespace where the DAG will run
     :param verbose: verbose logging, defaults to False
-    :output_ext: extension for the output images in tiledb
+    :param output_ext: extension for the output images in tiledb
     """
 
     logger = get_logger_wrapper(verbose)
@@ -161,9 +163,14 @@ def ingest(
     dag_name = taskgraph_name or DEFAULT_DAG_NAME
 
     logger.debug("Building graph")
+
+    run_mode = run_on or "server"
+    if run_mode not in _RUNNING_PROFILES:
+        raise ValueError("Invalid value for argument 'run_on'")
+
     graph = dag.DAG(
         name=dag_name,
-        mode=dag.Mode.REALTIME if local else dag.Mode.BATCH,
+        mode=dag.Mode.REALTIME if run_mode == "client" else dag.Mode.BATCH,
         max_workers=max_workers,
         namespace=namespace,
         retry_strategy=RetryStrategy(
@@ -184,7 +191,6 @@ def ingest(
         name=f"{dag_name} input collector",
         result_format="json",
     )
-    submit = graph.submit_local if local else graph.submit
 
     # serialize udf arguments
     compressor = kwargs.pop("compressor", None)
