@@ -243,7 +243,6 @@ def ingest(
         name=f"{dag_name} input collector",
         result_format="json",
     )
-    submit = graph.submit_local if local else graph.submit
 
     # serialize udf arguments
     compressor = kwargs.pop("compressor", None)
