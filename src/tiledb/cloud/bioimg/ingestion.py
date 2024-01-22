@@ -12,6 +12,7 @@ DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-ingestion"
 _SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs")
+_SUPPORTED_CONVERTERS = ("tiff", "zarr", "svs")
 
 
 def ingest(
@@ -28,6 +29,7 @@ def ingest(
     namespace: Optional[str],
     verbose: bool = False,
     exclude_metadata: bool = False,
+    converter: Optional[str] = None,
     output_ext: str = "",
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
@@ -47,6 +49,9 @@ def ingest(
     :param mode: By default runs Mode.Batch
     :param namespace: The namespace where the DAG will run
     :param verbose: verbose logging, defaults to False
+    :param exclude_metadata: a boolean for excluding all the metadata from the
+        ingested image
+    :param converter: The converter to be used for the image ingestion
     :param output_ext: extension for the output images in tiledb
     """
 
@@ -125,6 +130,17 @@ def ingest(
         from tiledb.bioimg import Converters
         from tiledb.bioimg import from_bioimg
 
+        converter = kwargs.get("converter", None)
+        user_converter = Converters.OMETIFF
+        if not converter or converter == "tiff" or "svs":
+            user_converter = Converters.OMETIFF
+        elif converter == "zarr":
+            user_converter = Converters.OMEZARR
+        elif converter == "osd":
+            user_converter = Converters.OSD
+        else:
+            raise ValueError("The converter {user_converter} is not yet supported")
+
         compressor = kwargs.get("compressor", None)
         if compressor:
             compressor_args = dict(compressor)
@@ -148,7 +164,7 @@ def ingest(
                     from_bioimg(
                         src,
                         output,
-                        converter=Converters.OMETIFF,
+                        converter=user_converter,
                         exclude_metadata=exclude_metadata,
                         verbose=verbose,
                         **kwargs,
@@ -187,7 +203,6 @@ def ingest(
         name=f"{dag_name} input collector",
         result_format="json",
     )
-    submit = graph.submit_local if local else graph.submit
 
     # serialize udf arguments
     compressor = kwargs.pop("compressor", None)
@@ -206,6 +221,7 @@ def ingest(
         resources=DEFAULT_RESOURCES if resources is None else resources,
         image_name=DEFAULT_IMG_NAME,
         compressor=compressor_serial,
+        converter=converter,
         **kwargs,
     )
     if compute:
