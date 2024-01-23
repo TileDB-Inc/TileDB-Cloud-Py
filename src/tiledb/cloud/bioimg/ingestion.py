@@ -12,7 +12,7 @@ DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-ingestion"
 _SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs")
-_SUPPORTED_CONVERTERS = ("tiff", "zarr", "svs")
+_SUPPORTED_CONVERTERS = ("tiff", "zarr", "osd")
 
 
 def ingest(
@@ -51,7 +51,9 @@ def ingest(
     :param verbose: verbose logging, defaults to False
     :param exclude_metadata: a boolean for excluding all the metadata from the
         ingested image
-    :param converter: The converter to be used for the image ingestion
+    :param converter: The converter to be used for the image ingestion,
+        when None the default TIFF converter is used. Available converters
+        are one of the ("tiff", "zarr", "osd").
     :param output_ext: extension for the output images in tiledb
     """
 
@@ -132,14 +134,12 @@ def ingest(
 
         converter = kwargs.get("converter", None)
         user_converter = Converters.OMETIFF
-        if not converter or converter == "tiff" or "svs":
+        if not converter or converter == "tiff":
             user_converter = Converters.OMETIFF
         elif converter == "zarr":
             user_converter = Converters.OMEZARR
         elif converter == "osd":
             user_converter = Converters.OSD
-        else:
-            raise ValueError("The converter {user_converter} is not yet supported")
 
         compressor = kwargs.get("compressor", None)
         if compressor:
@@ -173,6 +173,14 @@ def ingest(
     if isinstance(source, str):
         # Handle only lists
         source = [source]
+
+    # Default None the TIFF converter is used
+    if converter and converter not in _SUPPORTED_CONVERTERS:
+        raise ValueError(
+            f"The selected converter is not supported please \
+                choose on of {_SUPPORTED_CONVERTERS}"
+        )
+
     logger.debug("Ingesting files: %s", source)
 
     # Build the task graph
