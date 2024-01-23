@@ -29,6 +29,7 @@ def ingest(
     verbose: bool = False,
     exclude_metadata: bool = False,
     output_ext: str = "",
+    rename_hashmap: Optional[Mapping[str, str]] = None,
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
     """The function ingests microscopy images into TileDB arrays
@@ -55,9 +56,10 @@ def ingest(
 
     def build_io_uris_ingestion(
         source: Sequence[str],
-        output_dir: str,
+        output: str,
         output_ext: str,
         supported_exts: Tuple[str],
+        name_hashmap: Mapping[str, str],
     ):
         """Match input uri/s with output destinations
 
@@ -72,23 +74,56 @@ def ingest(
         # Even though a tuple by definition when passed through submit becomes list
         supported_exts = tuple(supported_exts)
 
-        def create_output_path(input_file, output_dir) -> str:
-            filename = os.path.splitext(os.path.basename(input_file))[0]
-            output_filename = filename + f".{output_ext}" if output_ext else filename
-            return os.path.join(output_dir, output_filename)
+        def create_output_path(
+            input_file: str, output: str, name_hashmap: Mapping[str, str]
+        ) -> str:
+            # Check if output is dir
+            if output.endswith("/"):
+                filename = os.path.splitext(os.path.basename(input_file))[0]
+                # If output is a directory the target name is the input filename
+                # with possible user ext if a hashmap is not defined otherwise
+                # we use the mapping.
+                if name_hashmap:
+                    hashed_name = name_hashmap.get(filename, None)
+                    if not hashed_name:
+                        raise ValueError(
+                            f"File {filename} has no corresponding rename value"
+                        )
+                    else:
+                        output_filename = (
+                            hashed_name + f".{output_ext}"
+                            if output_ext
+                            else hashed_name
+                        )
+                else:
+                    output_filename = (
+                        filename + f".{output_ext}" if output_ext else filename
+                    )
 
-        def iter_paths(source: Sequence[str]) -> Iterator[Tuple]:
+                return os.path.join(output, output_filename)
+            else:
+                # The output is considered a target file
+                return output
+
+        def iter_paths(
+            source: Sequence[str], name_hashmap: Mapping[str, str]
+        ) -> Iterator[Tuple]:
             for uri in source:
                 if vfs.is_dir(uri):
                     # Folder for exploration
                     contents = vfs.ls(uri)
                     yield from iter_paths(contents)
                 elif uri.endswith(supported_exts):
-                    yield uri, create_output_path(uri, output_dir)
+                    yield uri, create_output_path(uri, output, name_hashmap)
 
         if len(source) == 0:
             raise ValueError("The source files cannot be empty")
-        return tuple(iter_paths(source))
+        elif len(source) > 1 and not output.endswith("/"):
+            raise ValueError(
+                "For multiple files the output arg \
+                             should end with a trailing '/'"
+            )
+        return tuple(iter_paths(source, name_hashmap))
 
     def build_input_batches(
         source: Sequence[str],
@@ -96,9 +131,12 @@ def ingest(
         num_batches: int,
         out_ext: str,
         supported_exts: Tuple,
+        name_hashmap: Mapping[str, str],
     ):
         """Groups input URIs into batches."""
-        uri_pairs = build_io_uris_ingestion(source, output, out_ext, supported_exts)
+        uri_pairs = build_io_uris_ingestion(
+            source, output, out_ext, supported_exts, name_hashmap
+        )
         # If the user didn't specify a number of batches, run every import
         # as its own task.
         my_num_batches = num_batches or len(uri_pairs)
@@ -183,6 +221,7 @@ def ingest(
         num_batches,
         output_ext,
         _SUPPORTED_EXTENSIONS,
+        rename_hashmap,
         access_credentials_name=kwargs.get("access_credentials_name"),
         name=f"{dag_name} input collector",
         result_format="json",
