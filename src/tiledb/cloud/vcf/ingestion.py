@@ -222,6 +222,7 @@ def register_dataset_udf(
     dataset_uri: str,
     *,
     register_name: str,
+    acn: str,
     namespace: Optional[str] = None,
     config: Optional[Mapping[str, Any]] = None,
     verbose: bool = False,
@@ -267,6 +268,7 @@ def register_dataset_udf(
                 dataset_uri,
                 name=register_name,
                 namespace=namespace,
+                credentials_name=acn,
             )
 
 
@@ -1292,6 +1294,9 @@ def ingest_vcf_annotations(
     if vcf_uri and search_uri:
         raise ValueError("vcf_uri and search_uri cannot both be provided")
 
+    if register_name and not acn:
+        raise ValueError("acn must be provided to register the dataset")
+
     logger = get_logger_wrapper(verbose)
     logger.info("Ingesting annotation VCF into %r", dataset_uri)
 
@@ -1393,6 +1398,7 @@ def ingest_vcf_annotations(
             dataset_uri=dataset_uri,
             register_name=register_name,
             namespace=namespace,
+            acn=acn,
             config=config,
             verbose=verbose,
             name="Register annotations",
@@ -1498,6 +1504,9 @@ def ingest_vcf(
     if not search_uri and (pattern or ignore):
         raise ValueError("Only specify `pattern` or `ignore` with `search_uri`.")
 
+    if register_name and not acn:
+        raise ValueError("acn must be provided to register the dataset")
+
     # Remove any trailing slashes
     dataset_uri = dataset_uri.rstrip("/")
 
@@ -1552,6 +1561,7 @@ def ingest_vcf(
             dataset_uri,
             namespace=namespace,
             register_name=register_name,
+            acn=acn,
             config=config,
             verbose=verbose,
         )
