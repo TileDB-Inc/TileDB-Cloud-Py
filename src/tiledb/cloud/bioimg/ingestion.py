@@ -5,6 +5,7 @@ from tiledb.cloud import dag
 from tiledb.cloud.bioimg.helpers import get_logger_wrapper
 from tiledb.cloud.bioimg.helpers import serialize_filter
 from tiledb.cloud.dag.mode import Mode
+from tiledb.cloud.bioimg.helpers import validate_io_paths
 from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.utilities._common import run_dag
 
@@ -16,7 +17,7 @@ _SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs")
 
 def ingest(
     source: Union[Sequence[str], str],
-    output: str,
+    output: Union[Sequence[str], str],
     config: Mapping[str, Any],
     *args: Any,
     taskgraph_name: Optional[str] = None,
@@ -29,7 +30,6 @@ def ingest(
     verbose: bool = False,
     exclude_metadata: bool = False,
     output_ext: str = "",
-    name_map: Optional[Mapping[str, str]] = None,
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
     """The function ingests microscopy images into TileDB arrays
@@ -192,9 +192,10 @@ def ingest(
                         **kwargs,
                     )
 
-    if isinstance(source, str):
-        # Handle only lists
-        source = [source]
+    source, output = validate_io_paths(source, output)
+    source = [source] if isinstance(source, str) else source
+    output = [output] if isinstance(output, str) else output
+
     logger.debug("Ingesting files: %s", source)
 
     # Build the task graph
@@ -221,7 +222,6 @@ def ingest(
         num_batches,
         output_ext,
         _SUPPORTED_EXTENSIONS,
-        name_map,
         access_credentials_name=kwargs.get("access_credentials_name"),
         name=f"{dag_name} input collector",
         result_format="json",
