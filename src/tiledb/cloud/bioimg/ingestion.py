@@ -56,13 +56,11 @@ def ingest(
 
     def build_io_uris_ingestion(
         source: Sequence[str],
-        output: str,
+        output: Sequence[str],
         output_ext: str,
         supported_exts: Tuple[str],
-        name_map: Mapping[str, str],
     ):
         """Match input uri/s with output destinations
-
         :param source: A sequence of paths or path to input
         :param output_dir: A path to the output directory
         """
@@ -74,56 +72,34 @@ def ingest(
         # Even though a tuple by definition when passed through submit becomes list
         supported_exts = tuple(supported_exts)
 
-        def create_output_path(
-            input_file: str, output: str, name_map: Mapping[str, str]
-        ) -> str:
+        def create_output_path(input_file: str, output: str) -> str:
             # Check if output is dir
             if output.endswith("/"):
                 filename = os.path.splitext(os.path.basename(input_file))[0]
-                # If output is a directory the target name is the input filename
-                # with possible user ext if a hashmap is not defined otherwise
-                # we use the mapping.
-                if name_map:
-                    mapped_name = name_map.get(filename, None)
-                    if not mapped_name:
-                        raise ValueError(
-                            f"File {filename} has no corresponding rename value"
-                        )
-                    else:
-                        output_filename = (
-                            mapped_name + f".{output_ext}"
-                            if output_ext
-                            else mapped_name
-                        )
-                else:
-                    output_filename = (
-                        filename + f".{output_ext}" if output_ext else filename
-                    )
-
+                output_filename = (
+                    filename + f".{output_ext}" if output_ext else filename
+                )
                 return os.path.join(output, output_filename)
             else:
                 # The output is considered a target file
                 return output
 
-        def iter_paths(
-            source: Sequence[str], name_hashmap: Mapping[str, str]
-        ) -> Iterator[Tuple]:
-            for uri in source:
-                if vfs.is_dir(uri):
-                    # Folder for exploration
-                    contents = vfs.ls(uri)
-                    yield from iter_paths(contents)
-                elif uri.endswith(supported_exts):
-                    yield uri, create_output_path(uri, output, name_hashmap)
+        def iter_paths(source: Sequence[str], output: Sequence[str]) -> Iterator[Tuple]:
+            if len(output) != 1:
+                for s, o in zip(source, output):
+                    yield s, create_output_path(s, o)
+            else:
+                for s in source:
+                    if s.endswith("/"):
+                        # Folder for exploration
+                        contents = vfs.ls(s)
+                        yield from iter_paths(contents, output)
+                    elif s.endswith(supported_exts):
+                        yield s, create_output_path(s, output[0])
 
-        if len(source) == 0:
-            raise ValueError("The source files cannot be empty")
-        elif len(source) > 1 and not output.endswith("/"):
-            raise ValueError(
-                "For multiple files the output arg \
-                             should end with a trailing '/'"
-            )
-        return tuple(iter_paths(source, name_map))
+        if len(source) == 0 or len(output) == 0:
+            raise ValueError("The source and output files cannot be empty")
+        return tuple(iter_paths(source, output))
 
     def build_input_batches(
         source: Sequence[str],
