@@ -34,8 +34,10 @@ def ingest(
 ) -> tiledb.cloud.dag.DAG:
     """The function ingests microscopy images into TileDB arrays
 
-    :param source: uri / iterable of uris of input files
-    :param output: output dir for the ingested tiledb arrays
+    :param source: uri / iterable of uris of input files.
+        If the uri points to a directory of files make sure it ends with a trailing '/'
+    :param output: uri / iterable of uris of input files.
+        If the uri points to a directory of files make sure it ends with a trailing '/'
     :param config: dict configuration to pass on tiledb.VFS
     :param taskgraph_name: Optional name for taskgraph, defaults to None
     :param num_batches: Number of graph nodes to spawn.
