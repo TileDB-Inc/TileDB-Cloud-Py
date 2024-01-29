@@ -1,16 +1,12 @@
-import math
 import unittest
-from unittest import mock
 
 from tiledb.cloud.bioimg.helpers import validate_io_paths
-from tiledb.cloud.bioimg.ingestion import build_io_uris_ingestion, _SUPPORTED_EXTENSIONS
-from tiledb.vfs import VFS
 
 
 class BioimgTest(unittest.TestCase):
     def setUp(self) -> None:
         self.out_path = "out"
-        self.accepted_pairs = {            
+        self.accepted_pairs = {
             # One file in one file out
             "test1": ("s3://test_in/a.tiff", "s3://test_out/b"),
             # One file in one file out - out 1-elem list
@@ -19,7 +15,6 @@ class BioimgTest(unittest.TestCase):
             "test3": (["s3://test_in/a.tiff"], "s3://test_out/b"),
             # One file in one file out - in & out 1-elem list
             "test4": (["s3://test_in/a.tiff"], ["s3://test_out/b"]),
-            
             # One folder in one folder out
             "test5": ("s3://test_in/a/", "s3://test_out/b/"),
             # One folder in one file out - in & out 1-elem list
@@ -28,7 +23,6 @@ class BioimgTest(unittest.TestCase):
             "test7": ("s3://test_in/a/", ["s3://test_out/b/"]),
             # One folder in one file out - in 1-elem list
             "test8": (["s3://test_in/a/"], "s3://test_out/b/"),
-
             # One file in one folder out
             "test9": ("s3://test_in/a.tiff", "s3://test_out/b/"),
             # One file in one folder out - in 1- elem list
@@ -37,25 +31,27 @@ class BioimgTest(unittest.TestCase):
             "test11": ("s3://test_in/a.tiff", ["s3://test_out/b/"]),
             # One file in one folder out - in & out 1- elem list
             "test12": (["s3://test_in/a.tiff"], ["s3://test_out/b/"]),
-
             # Multiple files in one folder out
-            "test13": (["s3://test_in/a.tiff", 
-                       "s3://test_in/c.tiff"], "s3://test_out/b/"),
+            "test13": (
+                ["s3://test_in/a.tiff", "s3://test_in/c.tiff"],
+                "s3://test_out/b/",
+            ),
             # Multiple files in one folder out
-            "test14": (["s3://test_in/a.tiff", 
-                       "s3://test_in/c.tiff"], ["s3://test_out/b/"]),
+            "test14": (
+                ["s3://test_in/a.tiff", "s3://test_in/c.tiff"],
+                ["s3://test_out/b/"],
+            ),
             # Multiple files in multiple files out - equal length
             # a -> b & c -> d
-            "test15": (["s3://test_in/a.tiff", 
-                       "s3://test_in/c.tiff"], 
-                       ["s3://test_out/b",
-                        "s3://test_out/d"]),
+            "test15": (
+                ["s3://test_in/a.tiff", "s3://test_in/c.tiff"],
+                ["s3://test_out/b", "s3://test_out/d"],
+            ),
         }
 
         return super().setUp()
 
     def test_validate_io_paths(self):
-
         # Accepted cases
         for test_name, io_tuple in self.accepted_pairs.items():
             source, dest = io_tuple
@@ -63,9 +59,7 @@ class BioimgTest(unittest.TestCase):
             validate_io_paths(source, dest)
 
         io_validation_ni_errors = {
-            "test3": ("s3://test_in/a",
-                       ["s3://test_out/b/",
-                        "s3://test_out/d/"]),
+            "test3": ("s3://test_in/a", ["s3://test_out/b/", "s3://test_out/d/"]),
         }
 
         for test_name, io_tuple in io_validation_ni_errors.items():
@@ -75,26 +69,16 @@ class BioimgTest(unittest.TestCase):
                 validate_io_paths(source, dest)
 
         io_validation_value_errors = {
-            # Folder in - single file out 
-            "test1": ("s3://test_in/a/",
-                      "s3://test_out/b"),
-            "test2": (["s3://test_in/a/"],
-                      "s3://test_out/b"),
-            "test3": ("s3://test_in/a/",
-                      ["s3://test_out/b"]),
-            "test4": (["s3://test_in/a/"],
-                      ["s3://test_out/b"]),
-            
+            # Folder in - single file out
+            "test1": ("s3://test_in/a/", "s3://test_out/b"),
+            "test2": (["s3://test_in/a/"], "s3://test_out/b"),
+            "test3": ("s3://test_in/a/", ["s3://test_out/b"]),
+            "test4": (["s3://test_in/a/"], ["s3://test_out/b"]),
             # Input list cannot contain dir
             # One of the input is folder - out is folder
-            "test16": (["s3://test_in/a",
-                       "s3://test_in/c/"],
-                      "s3://test_out/b/"),
+            "test16": (["s3://test_in/a", "s3://test_in/c/"], "s3://test_out/b/"),
             # One of the input is folder - out is folder and list
-            "test17": (["s3://test_in/a",
-                       "s3://test_in/c/"],
-                      ["s3://test_out/b/"]),
-            
+            "test17": (["s3://test_in/a", "s3://test_in/c/"], ["s3://test_out/b/"]),
         }
 
         for test_name, io_tuple in io_validation_value_errors.items():
@@ -112,7 +96,7 @@ class BioimgTest(unittest.TestCase):
     #             source, output = pair
     #             source = [source] if isinstance(source, str) else source
     #             output = [output] if isinstance(output, str) else output
-                
+
     #             paths = build_io_uris_ingestion(source,
     #                                     output,
     #                                     out_suffix,

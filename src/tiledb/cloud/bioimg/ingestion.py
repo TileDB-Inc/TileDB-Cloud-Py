@@ -107,12 +107,9 @@ def ingest(
         num_batches: int,
         out_ext: str,
         supported_exts: Tuple,
-        name_map: Mapping[str, str],
     ):
         """Groups input URIs into batches."""
-        uri_pairs = build_io_uris_ingestion(
-            source, output, out_ext, supported_exts, name_map
-        )
+        uri_pairs = build_io_uris_ingestion(source, output, out_ext, supported_exts)
         # If the user didn't specify a number of batches, run every import
         # as its own task.
         my_num_batches = num_batches or len(uri_pairs)
