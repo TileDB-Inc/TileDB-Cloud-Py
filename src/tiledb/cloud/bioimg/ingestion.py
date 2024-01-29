@@ -33,7 +33,6 @@ def ingest(
     exclude_metadata: bool = False,
     converter: Optional[str] = None,
     output_ext: str = "",
-    name_map: Optional[Mapping[str, str]] = None,
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
     """The function ingests microscopy images into TileDB arrays
