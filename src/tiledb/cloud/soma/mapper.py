@@ -173,7 +173,7 @@ def build_collection_mapper_workflow_graph(
         namespace=namespace,
     )
 
-    node_outputs = []
+    node_outputs = {}
 
     for _, soma_experiment_uri in soma_experiment_uris.items():
         node_output = grf.submit(
@@ -204,7 +204,7 @@ def build_collection_mapper_workflow_graph(
         )
         logging.info(f"A: node output is a {type(node_output)}")
 
-        node_outputs.append(node_output)
+        node_outputs[soma_experiment_uri] = node_output
 
     def collect(node_outputs):
         for node_output in node_outputs:
