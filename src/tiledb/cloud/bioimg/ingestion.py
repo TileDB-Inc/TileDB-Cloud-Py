@@ -27,6 +27,7 @@ def ingest(
     threads: Optional[int] = 8,
     resources: Optional[Mapping[str, Any]] = None,
     compute: bool = True,
+    register: bool = False,
     mode: Optional[Mode] = Mode.BATCH,
     namespace: Optional[str],
     verbose: bool = False,
@@ -50,6 +51,8 @@ def ingest(
         defaults to None
     :param compute: When True the DAG returned will be computed inside the function
     otherwise DAG will only be returned.
+    :param register: When True the ingested images are also being registered under the
+        namespace in which were ingested.
     :param mode: By default runs Mode.Batch
     :param namespace: The namespace where the DAG will run
     :param verbose: verbose logging, defaults to False
@@ -197,6 +200,72 @@ def ingest(
                         verbose=verbose,
                         **kwargs,
                     )
+        return io_uris
+
+    def register_dataset_udf(
+        io_uris: Sequence[Tuple],
+        *,
+        acn: str,
+        namespace: Optional[str] = None,
+        config: Optional[Mapping[str, Any]] = None,
+        verbose: bool = False,
+    ) -> None:
+        """
+        Register the dataset on TileDB Cloud.
+        The ingested assets are being registered with the register name matching
+        the ingested filename of the data
+
+        :param io_uris: Tuple of source and dest paths from ingestion UDF
+        :param namespace: TileDB Cloud namespace, defaults to the user's
+            default namespace
+        :param config: config dictionary, defaults to None
+        :param verbose: verbose logging, defaults to False
+        """
+        import os
+
+        logger = get_logger_wrapper(verbose)
+
+        namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
+        # Default registration based on the output filename
+        register_map = {}
+        tiledb_uris = {}
+        for _, output_path in io_uris:
+            register_name = os.path.splitext(os.path.basename(output_path))[0]
+            register_map[output_path] = register_name
+            tiledb_uris[output_path] = f"tiledb://{namespace}/{register_name}"
+
+        with tiledb.scope_ctx(config):
+            for dataset_uri, tiledb_uri in tiledb_uris.items():
+                found = False
+                logger.debug()
+                try:
+                    object_type = tiledb.object_type(tiledb_uri)
+                    logger.debug(f"Object type of {tiledb_uri} : {object_type}")
+                    if object_type == "group":
+                        found = True
+                    elif object_type is not None:
+                        raise ValueError(
+                            f"Another object is already registered at '{tiledb_uri}'."
+                        )
+
+                except Exception:
+                    # tiledb.object_type raises an exception
+                    # if the namespace does not exist
+                    logger.error(
+                        "Error checking if %r is registered. Bad namespace?", tiledb_uri
+                    )
+                    raise
+
+                if found:
+                    logger.info("Dataset already registered at %r.", tiledb_uri)
+                else:
+                    logger.info(f"Registering dataset {dataset_uri} at {tiledb_uri}")
+                    tiledb.cloud.groups.register(
+                        dataset_uri,
+                        name=register_name,
+                        namespace=namespace,
+                        credentials_name=acn,
+                    )
 
 
     # Default None the TIFF converter is used
@@ -211,7 +280,6 @@ def ingest(
     source = [source] if isinstance(source, str) else source
     output = [output] if isinstance(output, str) else output
     validate_io_paths(source, output)
-
 
     # Build the task graph
     dag_name = taskgraph_name or DEFAULT_DAG_NAME
@@ -249,7 +317,7 @@ def ingest(
     logger.debug("Compressor: %r", compressor)
     compressor_serial = serialize_filter(compressor) if compressor else None
 
-    graph.submit(
+    ingest_list_node = graph.submit(
         ingest_tiff_udf,
         input_list_node,
         config,
@@ -265,6 +333,21 @@ def ingest(
         converter=converter,
         **kwargs,
     )
+
+    if register:
+        graph.submit(
+            register_dataset_udf,
+            ingest_list_node,
+            config=config,
+            verbose=verbose,
+            acn=kwargs.get("access_credentials_name"),
+            namespace=namespace,
+            name=f"{dag_name} registrator ",
+            expand_node_output=ingest_list_node,
+            resources=DEFAULT_RESOURCES if resources is None else resources,
+            image_name=DEFAULT_IMG_NAME,
+            **kwargs,
+        )
     if compute:
         run_dag(graph, debug=verbose)
     return graph
