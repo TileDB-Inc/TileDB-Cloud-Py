@@ -95,7 +95,8 @@ def ingest(
                     if s.endswith("/"):
                         # Folder for exploration
                         contents = vfs.ls(s)
-                        yield from iter_paths(contents, output)
+                        # [1:] till the SC-40049 is resolved
+                        yield from iter_paths(contents[1:], output)
                     elif s.endswith(supported_exts):
                         yield s, create_output_path(s, output[0])
 
