@@ -48,22 +48,16 @@ def validate_io_paths(source: Sequence[str], output: Sequence[str]):
     if len(source) == 0:
         raise ValueError("Source list must not be empty.")
 
-    # Case 1: If source is a list of files
-    if all(not is_folder(path) for path in source):
-        # Destination is a folder
-        if len(output) == 1 and is_folder(output[0]):
-            return True
-        # Destination has the same number of paths with source - rename at destination
-        elif len(output) == len(source) and all(not is_folder(path) for path in output):
-            return True
+    if len(output) == 1 and is_folder(output[0]):
+        return True
 
-    # Case 2: If source is a list with length one
-    elif len(source) == 1:
-        if is_folder(source[0]):
-            if len(output) == 1 and is_folder(output[0]):
-                return True
-        else:
-            if len(output) == 1 and (is_folder(output[0]) or not is_folder(output[0])):
+    if all(is_folder(path) for path in output):
+        if all(is_folder(path) for path in source):
+            if len(output) == len(source):
                 return True
 
+    if all(not is_folder(path) for path in output):
+        if all(not is_folder(path) for path in source):
+            if len(output) == len(source):
+                return True
     raise ValueError("Invalid combination of source and output paths.")
