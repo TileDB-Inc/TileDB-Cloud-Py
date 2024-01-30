@@ -207,9 +207,9 @@ def build_collection_mapper_workflow_graph(
         node_outputs[soma_experiment_uri] = node_output
 
     def collect(node_outputs):
-        for node_output in node_outputs:
-            logging.info(f"B: node output is a {type(node_output)}")
-        return {node_output.name: node_output.result() for node_output in node_outputs}
+        for node_name, node_output in node_outputs.items():
+            logging.info(f"B: node output {node_name} is a {type(node_output)}")
+        return node_outputs
 
     grf.submit(
         collect,
