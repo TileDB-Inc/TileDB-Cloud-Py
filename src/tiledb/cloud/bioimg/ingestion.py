@@ -167,9 +167,9 @@ def ingest(
                         **kwargs,
                     )
 
-    source, output = validate_io_paths(source, output)
     source = [source] if isinstance(source, str) else source
     output = [output] if isinstance(output, str) else output
+    validate_io_paths(source, output)
 
     logger.debug("Ingesting files: %s", source)
 

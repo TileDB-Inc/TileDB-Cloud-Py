@@ -55,6 +55,8 @@ class BioimgTest(unittest.TestCase):
         # Accepted cases
         for test_name, io_tuple in self.accepted_pairs.items():
             source, dest = io_tuple
+            source = [source] if isinstance(source, str) else source
+            dest = [dest] if isinstance(dest, str) else dest
             print(f"{test_name}:", source, dest)
             validate_io_paths(source, dest)
 
@@ -64,8 +66,10 @@ class BioimgTest(unittest.TestCase):
 
         for test_name, io_tuple in io_validation_ni_errors.items():
             source, dest = io_tuple
+            source = [source] if isinstance(source, str) else source
+            dest = [dest] if isinstance(dest, str) else dest
             print(f"{test_name}:", source, dest)
-            with self.assertRaises(NotImplementedError):
+            with self.assertRaises(ValueError):
                 validate_io_paths(source, dest)
 
         io_validation_value_errors = {
@@ -83,22 +87,8 @@ class BioimgTest(unittest.TestCase):
 
         for test_name, io_tuple in io_validation_value_errors.items():
             source, dest = io_tuple
+            source = [source] if isinstance(source, str) else source
+            dest = [dest] if isinstance(dest, str) else dest
             print(f"{test_name}:", source, dest)
             with self.assertRaises(ValueError):
                 validate_io_paths(source, dest)
-
-    # def test_build_io_uris_ingestion(self):
-    #     out_suffix = "tdb"
-    #     mock_contents = ['s3://test_in/a/x.svs', 's3://test_in/a/y.svs']
-    #     with mock.patch.object(VFS, "ls", return_value=mock_contents):
-    #         out_suffix = "tdb"
-    #         for test_name, pair in self.accepted_pairs.items():
-    #             source, output = pair
-    #             source = [source] if isinstance(source, str) else source
-    #             output = [output] if isinstance(output, str) else output
-
-    #             paths = build_io_uris_ingestion(source,
-    #                                     output,
-    #                                     out_suffix,
-    #                                     _SUPPORTED_EXTENSIONS)
-    #             print(f"{test_name}: {pair} -> {paths}")
