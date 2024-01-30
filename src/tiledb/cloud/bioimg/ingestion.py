@@ -104,6 +104,7 @@ def ingest(
                     logger.debug(f"Pair {s} and {o}")
                     yield s, create_output_path(s, o)
             else:
+                logger.debug(f"Traverse source: {source}")
                 for s in source:
                     if s.endswith("/"):
                         # Folder for exploration
@@ -120,7 +121,7 @@ def ingest(
 
     def build_input_batches(
         source: Sequence[str],
-        output: str,
+        output: Sequence[str],
         num_batches: int,
         out_ext: str,
         supported_exts: Tuple,
@@ -136,6 +137,7 @@ def ingest(
         logger.debug(f"Input batches:{uri_pairs}")
         # If the user didn't specify a number of batches, run every import
         # as its own task.
+        logger.debug(f"The io pairs for ingestion: {uri_pairs}")
         my_num_batches = num_batches or len(uri_pairs)
         # If they specified too many batches, don't create empty tasks.
         my_num_batches = min(len(uri_pairs), my_num_batches)
@@ -237,7 +239,6 @@ def ingest(
         with tiledb.scope_ctx(config):
             for dataset_uri, tiledb_uri in tiledb_uris.items():
                 found = False
-                logger.debug()
                 try:
                     object_type = tiledb.object_type(tiledb_uri)
                     logger.debug(f"Object type of {tiledb_uri} : {object_type}")
