@@ -27,7 +27,7 @@ def ingest(
     threads: Optional[int] = 8,
     resources: Optional[Mapping[str, Any]] = None,
     compute: bool = True,
-    register: bool = False,
+    register: bool = True,
     mode: Optional[Mode] = Mode.BATCH,
     namespace: Optional[str],
     verbose: bool = False,
