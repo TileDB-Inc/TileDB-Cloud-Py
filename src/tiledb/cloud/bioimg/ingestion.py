@@ -4,6 +4,7 @@ import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud.bioimg.helpers import get_logger_wrapper
 from tiledb.cloud.bioimg.helpers import serialize_filter
+from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.utilities._common import run_dag
 
@@ -11,7 +12,6 @@ DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-ingestion"
 _SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs")
-_RUNNING_PROFILES = ("client", "server")
 
 
 def ingest(
@@ -24,7 +24,7 @@ def ingest(
     threads: Optional[int] = 8,
     resources: Optional[Mapping[str, Any]] = None,
     compute: bool = True,
-    run_on: Optional[str] = None,
+    mode: Optional[Mode] = Mode.BATCH,
     namespace: Optional[str],
     verbose: bool = False,
     exclude_metadata: bool = False,
@@ -44,7 +44,7 @@ def ingest(
         defaults to None
     :param compute: When True the DAG returned will be computed inside the function
     otherwise DAG will only be returned.
-    :param run_on: By default runs on server if value is "client" runs client side.
+    :param mode: By default runs Mode.Batch
     :param namespace: The namespace where the DAG will run
     :param verbose: verbose logging, defaults to False
     :param output_ext: extension for the output images in tiledb
@@ -164,13 +164,9 @@ def ingest(
 
     logger.debug("Building graph")
 
-    run_mode = run_on or "server"
-    if run_mode not in _RUNNING_PROFILES:
-        raise ValueError("Invalid value for argument 'run_on'")
-
     graph = dag.DAG(
         name=dag_name,
-        mode=dag.Mode.REALTIME if run_mode == "client" else dag.Mode.BATCH,
+        mode=mode,
         max_workers=max_workers,
         namespace=namespace,
         retry_strategy=RetryStrategy(
