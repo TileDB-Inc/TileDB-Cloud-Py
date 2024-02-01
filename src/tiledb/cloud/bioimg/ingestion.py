@@ -4,6 +4,7 @@ import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud.bioimg.helpers import get_logger_wrapper
 from tiledb.cloud.bioimg.helpers import serialize_filter
+from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.utilities._common import run_dag
 
@@ -23,6 +24,7 @@ def ingest(
     threads: Optional[int] = 8,
     resources: Optional[Mapping[str, Any]] = None,
     compute: bool = True,
+    mode: Optional[Mode] = Mode.BATCH,
     namespace: Optional[str],
     verbose: bool = False,
     exclude_metadata: bool = False,
@@ -42,9 +44,10 @@ def ingest(
         defaults to None
     :param compute: When True the DAG returned will be computed inside the function
     otherwise DAG will only be returned.
+    :param mode: By default runs Mode.Batch
     :param namespace: The namespace where the DAG will run
     :param verbose: verbose logging, defaults to False
-    :output_ext: extension for the output images in tiledb
+    :param output_ext: extension for the output images in tiledb
     """
 
     logger = get_logger_wrapper(verbose)
@@ -160,9 +163,10 @@ def ingest(
     dag_name = taskgraph_name or DEFAULT_DAG_NAME
 
     logger.debug("Building graph")
+
     graph = dag.DAG(
         name=dag_name,
-        mode=dag.Mode.BATCH,
+        mode=mode,
         max_workers=max_workers,
         namespace=namespace,
         retry_strategy=RetryStrategy(
@@ -203,7 +207,6 @@ def ingest(
         compressor=compressor_serial,
         **kwargs,
     )
-
     if compute:
         run_dag(graph, debug=verbose)
     return graph
