@@ -179,7 +179,7 @@ def get_metadata(
             yield GeoMetadata(
                 path=pth,
                 extents=extents,
-                projection=proj,
+                crs=proj,
                 block_shapes=(dst_tile_size, dst_tile_size),
             )
 
@@ -384,23 +384,21 @@ def ingest(
                 kwargs.pop("resampling", "bilinear").lower()
             ]
             with rasterio.open(output, mode="r+") as dst:
-                for b in range(dst.count):
-                    for blk, srcs in inputs:
-                        input_datasets = []
-                        try:
-                            input_datasets.extend([rasterio.open(s) for s in srcs])
-                            row_off = blk[0][0]
-                            col_off = blk[1][0]
-                            dst_window = rasterio.windows.Window(
-                                col_off,
-                                row_off,
-                                blk[1][1] - col_off,
-                                blk[0][1] - row_off,
-                            )
-                            dst_bounds = rasterio.windows.bounds(
-                                dst_window, dst.transform
-                            )
+                for blk, srcs in inputs:
+                    input_datasets = []
+                    try:
+                        input_datasets.extend([rasterio.open(s) for s in srcs])
+                        row_off = blk[0][0]
+                        col_off = blk[1][0]
+                        dst_window = rasterio.windows.Window(
+                            col_off,
+                            row_off,
+                            blk[1][1] - col_off,
+                            blk[0][1] - row_off,
+                        )
+                        dst_bounds = rasterio.windows.bounds(dst_window, dst.transform)
 
+                        for b in range(dst.count):
                             if len(srcs) == 1:
                                 with rasterio.vrt.WarpedVRT(
                                     input_datasets[0],
@@ -411,7 +409,10 @@ def ingest(
                                     height=dst.height,
                                     masked=True,
                                 ) as vrt:
+                                    # TODO fix this duplication of requests
+                                    # over multiple bands with a single call to merge
                                     data = vrt.read(window=dst_window)
+                                    dst.write(data[b], window=dst_window, indexes=b + 1)
                             else:
                                 data, _ = rasterio.merge.merge(
                                     input_datasets,
@@ -422,9 +423,9 @@ def ingest(
                                     resampling=resampling,
                                     indexes=[b + 1],
                                 )
-                            dst.write(data[0], window=dst_window, indexes=b + 1)
-                        finally:
-                            map(lambda s: s.close(), input_datasets)
+                                dst.write(data[0], window=dst_window, indexes=b + 1)
+                    finally:
+                        map(lambda s: s.close(), input_datasets)
 
     if isinstance(source, str):
         # Handle only lists

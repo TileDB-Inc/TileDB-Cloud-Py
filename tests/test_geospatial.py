@@ -15,7 +15,7 @@ import rasterio
 import tiledb
 from tiledb.cloud import batch
 from tiledb.cloud import scale_calc
-from tiledb.cloud.geospatial import GeoExtents
+from tiledb.cloud.geospatial import BoundingBox
 from tiledb.cloud.geospatial import get_metadata
 from tiledb.cloud.geospatial import ingest
 from tiledb.vfs import VFS
@@ -141,7 +141,7 @@ class GeospatialTest(unittest.TestCase):
         test_1 = ingest_uri_sample["test1"]
         with mock.patch.object(VFS, "ls", return_value=test_1):
             meta_1, full_extents_1, res = get_metadata(test_1, tile_size=tile_size)
-            expected_extents = GeoExtents(minx=-114, miny=33, maxx=-98, maxy=46)
+            expected_extents = BoundingBox(minx=-114, miny=33, maxx=-98, maxy=46)
             self.assertEqual(full_extents_1, expected_extents)
             self.assertEqual(len(meta_1), 3)
             self.assertEqual(len(meta_1[0]), 2)
