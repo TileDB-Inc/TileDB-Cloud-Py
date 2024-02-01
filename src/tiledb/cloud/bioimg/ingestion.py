@@ -4,8 +4,8 @@ import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud.bioimg.helpers import get_logger_wrapper
 from tiledb.cloud.bioimg.helpers import serialize_filter
-from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.bioimg.helpers import validate_io_paths
+from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.utilities._common import run_dag
 
@@ -30,6 +30,7 @@ def ingest(
     verbose: bool = False,
     exclude_metadata: bool = False,
     output_ext: str = "",
+    traverse: bool = False,
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
     """The function ingests microscopy images into TileDB arrays
@@ -51,6 +52,8 @@ def ingest(
     :param namespace: The namespace where the DAG will run
     :param verbose: verbose logging, defaults to False
     :param output_ext: extension for the output images in tiledb
+    :param traverse: If true then traverse the src paths for exploring images in
+        depths > 1. Default: (False) Check only in depth 1.
     """
 
     logger = get_logger_wrapper(verbose)
@@ -96,15 +99,23 @@ def ingest(
                         # Folder for exploration
                         contents = vfs.ls(s)
                         # [1:] till the SC-40049 is resolved this will restrict
-                        filtered_contents = [
-                            c
-                            for c in contents
-                            if not (
-                                vfs.is_dir(c)
-                                and vfs.is_file(c)
-                                and vfs.file_size(c) == 0
-                            )
-                        ]
+                        if traverse:
+                            filtered_contents = [
+                                c
+                                for c in contents
+                                if not (
+                                    # vfs.is_dir and vfs.is_file checks in vfs
+                                    # for empty folder objects SC-40049
+                                    vfs.is_dir(c)
+                                    and vfs.is_file(c)
+                                    and vfs.file_size(c) == 0
+                                )
+                            ]
+                        else:
+                            # Explore folders only at depth 1
+                            filtered_contents = [
+                                c for c in contents if not vfs.is_dir(c)
+                            ]
                         yield from iter_paths(filtered_contents, output)
                     elif s.endswith(supported_exts):
                         yield s, create_output_path(s, output[0])
@@ -119,9 +130,12 @@ def ingest(
         num_batches: int,
         out_ext: str,
         supported_exts: Tuple,
+        traverse: bool,
     ):
         """Groups input URIs into batches."""
-        uri_pairs = build_io_uris_ingestion(source, output, out_ext, supported_exts)
+        uri_pairs = build_io_uris_ingestion(
+            source, output, out_ext, supported_exts, traverse
+        )
         # If the user didn't specify a number of batches, run every import
         # as its own task.
         my_num_batches = num_batches or len(uri_pairs)
@@ -207,6 +221,7 @@ def ingest(
         num_batches,
         output_ext,
         _SUPPORTED_EXTENSIONS,
+        traverse,
         access_credentials_name=kwargs.get("access_credentials_name"),
         name=f"{dag_name} input collector",
         result_format="json",
