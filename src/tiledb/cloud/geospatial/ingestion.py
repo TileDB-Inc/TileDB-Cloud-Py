@@ -19,6 +19,7 @@ DEFAULT_DAG_NAME = "geo-ingestion"
 # fiona.drvsupport.supported_drivers["TileDB"] = "rw"
 # fiona.vfs.SCHEMES["tiledb"] = "tiledb"
 
+
 def ingest(
     source: Union[Sequence[str], str],
     output: str,
@@ -98,23 +99,22 @@ def ingest(
         if not append:
             extents = kwargs.pop("extents", None)
             if extents:
-                pipeline = pdal.Writer.tiledb(array_name=output,
-                                            x_domain_st=extents[0],
-                                            y_domain_st=extents[1],
-                                            z_domain_st=extents[2],
-                                            x_domain_ed=extents[3],
-                                            y_domain_ed=extents[4],
-                                            z_domain_ed=extents[5],
-                                            **kwargs
-                                            )
+                pipeline = pdal.Writer.tiledb(
+                    array_name=output,
+                    x_domain_st=extents[0],
+                    y_domain_st=extents[1],
+                    z_domain_st=extents[2],
+                    x_domain_ed=extents[3],
+                    y_domain_ed=extents[4],
+                    z_domain_ed=extents[5],
+                    **kwargs,
+                )
             else:
                 raise ValueError("Unknown extents for ingestion")
         else:
             for i in input:
                 pipeline |= pdal.Reader.las(filename=i)
-                pipeline |= pdal.Writer.tiledb(array_name=output,
-                                            **kwargs
-                                            )
+                pipeline |= pdal.Writer.tiledb(array_name=output, **kwargs)
 
         pipeline.execute()
 
@@ -161,25 +161,37 @@ def ingest(
                 else:
                     raise ValueError
 
-                # create empty array, inputs is a single reference file when creating the array
+                # create empty array,
+                # inputs is a single reference file when creating the array
                 with rasterio.open(inputs) as src:
                     dst_profile = src.profile.copy()
-                    dst_profile.update({
-                        "driver": "TileDB",
-                        "transform": from_origin(extents.minx, extents.maxy, *res),
-                        "width": math.floor((extents.maxx - extents.minx) / res[0]),
-                        "height": math.floor((extents.maxy - extents.miny) / res[1]),
-                        "blockysize": tile_size,
-                        "blockxsize": tile_size,
-                    })
-                    with rasterio.open(output, "w",
-                                       COMPRESSION=compressor_name[:-6].upper(), # remove trailing `Filter`
-                                       COMPRESSION_LEVEL=compression_level,
-                                       **dst_profile,):
+                    dst_profile.update(
+                        {
+                            "driver": "TileDB",
+                            "transform": from_origin(extents.minx, extents.maxy, *res),
+                            "width": math.floor((extents.maxx - extents.minx) / res[0]),
+                            "height": math.floor(
+                                (extents.maxy - extents.miny) / res[1]
+                            ),
+                            "blockysize": tile_size,
+                            "blockxsize": tile_size,
+                        }
+                    )
+                    with rasterio.open(
+                        output,
+                        "w",
+                        COMPRESSION=compressor_name[
+                            :-6
+                        ].upper(),  # remove trailing `Filter`
+                        COMPRESSION_LEVEL=compression_level,
+                        **dst_profile,
+                    ):
                         pass
         else:
             # srcs and dst have same number of bands
-            resampling = rasterio.enums.Resampling[kwargs.pop("resampling", "bilinear").lower()]
+            resampling = rasterio.enums.Resampling[
+                kwargs.pop("resampling", "bilinear").lower()
+            ]
             with rasterio.open(output, mode="r+") as dst:
                 for b in range(dst.count):
                     for blk, srcs in inputs:
@@ -188,17 +200,38 @@ def ingest(
                             input_datasets.extend([rasterio.open(s) for s in srcs])
                             row_off = blk[0][0]
                             col_off = blk[1][0]
-                            dst_window = rasterio.windows.Window(col_off, row_off,
-                                                                blk[1][1] - col_off, blk[0][1] - row_off)
-                            dst_bounds = rasterio.windows.bounds(dst_window, dst.transform)
+                            dst_window = rasterio.windows.Window(
+                                col_off,
+                                row_off,
+                                blk[1][1] - col_off,
+                                blk[0][1] - row_off,
+                            )
+                            dst_bounds = rasterio.windows.bounds(
+                                dst_window, dst.transform
+                            )
 
                             if len(srcs) == 1:
-                                with rasterio.vrt.WarpedVRT(input_datasets[0], crs=dst.crs, transform=dst.transform, resampling=resampling, width=dst.width, height=dst.height, masked=True) as vrt:
+                                with rasterio.vrt.WarpedVRT(
+                                    input_datasets[0],
+                                    crs=dst.crs,
+                                    transform=dst.transform,
+                                    resampling=resampling,
+                                    width=dst.width,
+                                    height=dst.height,
+                                    masked=True,
+                                ) as vrt:
                                     data = vrt.read(window=dst_window)
                             else:
-                                data, _ = rasterio.merge.merge(input_datasets, bounds=dst_bounds, res=dst.res,
-                                                                nodata=dst.nodata, dtype=dst.profile["dtype"], resampling=resampling, indexes=[b + 1])
-                            dst.write(data[0], window=dst_window, indexes=b+1)
+                                data, _ = rasterio.merge.merge(
+                                    input_datasets,
+                                    bounds=dst_bounds,
+                                    res=dst.res,
+                                    nodata=dst.nodata,
+                                    dtype=dst.profile["dtype"],
+                                    resampling=resampling,
+                                    indexes=[b + 1],
+                                )
+                            dst.write(data[0], window=dst_window, indexes=b + 1)
                         finally:
                             map(lambda s: s.close(), input_datasets)
 
@@ -216,14 +249,14 @@ def ingest(
     try:
         if not fn:
             rasterio.driver_from_extension(source[0])
-            fn = ingest_raster_udf      
+            fn = ingest_raster_udf
     except ValueError:
         pass
 
     try:
         if not fn:
             fiona.drvsupport.driver_from_extension(source[0])
-            fn = ingest_geometry_udf      
+            fn = ingest_geometry_udf
     except ValueError:
         pass
 
@@ -262,7 +295,7 @@ def ingest(
         # create first node
         ingest_node = graph.submit(
             fn,
-            init_path, # used to copy the raster profile
+            init_path,  # used to copy the raster profile
             output,
             config,
             threads,
@@ -274,8 +307,7 @@ def ingest(
             compressor=compressor_serial,
             extents=full_extents,
             res=res,
-            append=False
-            **kwargs,
+            append=False**kwargs,
         )
 
         for i, work in enumerate(batch(samples, batch_size)):
@@ -291,8 +323,7 @@ def ingest(
                 mode=tiledb.cloud.dag.Mode.BATCH,
                 resources=DEFAULT_RESOURCES if resources is None else resources,
                 image_name=DEFAULT_IMG_NAME,
-                append=True
-                **kwargs,
+                append=True**kwargs,
             )
 
             n.depends_on(ingest_node)
@@ -319,11 +350,19 @@ def ingest(
         # unit test inner functions
         # set up function
         fn(
-            inputs=init_path, # used to copy the raster profile
-            output=output, append=False, compressor=compressor_serial, extents=full_extents, res=res, *args, **kwargs)
+            inputs=init_path,  # used to copy the raster profile
+            output=output,
+            append=False,
+            compressor=compressor_serial,
+            extents=full_extents,
+            res=res,
+            *args,
+            **kwargs,
+        )
         # work functions
         for i, work in enumerate(batch(samples, batch_size)):
             fn(inputs=work, output=output, append=True, *args, **kwargs)
+
 
 def ingest_udf(*args: Any, **kwargs: Any) -> Dict[str, str]:
     """Ingestor wrapper function that can be used as a UDF."""
