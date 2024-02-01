@@ -24,7 +24,7 @@ DEFAULT_DAG_NAME = "geo-ingestion"
 
 
 @dataclass
-class GeoExtents:
+class BoundingBox:
     minx: float
     miny: float
     maxx: float
@@ -43,8 +43,8 @@ class GeoExtents:
 @dataclass
 class GeoMetadata:
     path: os.PathLike
-    extents: GeoExtents
-    projection: str
+    extents: BoundingBox
+    crs: str
     block_shapes: (1024, 1024)
 
     def __eq__(self, other):
@@ -57,7 +57,7 @@ def get_metadata(
     source: Sequence[os.PathLike], config: Mapping[str, Any] = None, **kwargs
 ) -> Tuple[
     Union[Tuple[GeoMetadata, ...], Tuple[Tuple[GeoMetadata], ...]],
-    GeoExtents,
+    BoundingBox,
     Tuple[float, float],
 ]:
     """Return geospatial metadata for a sequence of input data files
@@ -131,10 +131,10 @@ def get_metadata(
                 # however we will get the extents
                 pipeline = pdal.Reader.las(filename=pth).pipeline()
                 info = pipeline.quickinfo()
-                extents = GeoExtents(**info["stats"]["bbox"]["native"]["bbox"])
+                extents = BoundingBox(**info["stats"]["bbox"]["native"]["bbox"])
             elif pth.suffix[1:] in raster_exts:
                 with rasterio.open(pth) as src:
-                    extents = GeoExtents(
+                    extents = BoundingBox(
                         minx=src.bounds[0],
                         miny=src.bounds[1],
                         maxx=src.bounds[2],
@@ -165,7 +165,7 @@ def get_metadata(
                 continue
 
             if full_extents:
-                full_extents = GeoExtents(
+                full_extents = BoundingBox(
                     *shapely.unary_union(
                         [
                             shapely.box(*full_extents.bounds),
