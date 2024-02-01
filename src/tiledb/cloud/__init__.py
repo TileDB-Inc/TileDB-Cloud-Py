@@ -16,6 +16,9 @@ from .array import list_shared_with
 from .array import register_array
 from .array import share_array
 from .array import unshare_array
+from .batching import batch
+from .batching import scale_calc
+from .batching import serialize_filter
 from .client import Config
 from .client import Ctx
 from .client import list_arrays
@@ -97,4 +100,7 @@ __all__ = (
     "last_udf_task",
     "task",
     "TileDBCloudError",
+    "batch",
+    "scale_calc",
+    "serialize_filter",
 )

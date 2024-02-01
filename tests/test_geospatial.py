@@ -13,11 +13,11 @@ import pdal
 import rasterio
 
 import tiledb
+from tiledb.cloud import batch
+from tiledb.cloud import scale_calc
+from tiledb.cloud.geospatial import GeoExtents
+from tiledb.cloud.geospatial import get_metadata
 from tiledb.cloud.geospatial import ingest
-from tiledb.cloud.geospatial.helpers import GeoExtents
-from tiledb.cloud.geospatial.helpers import batch
-from tiledb.cloud.geospatial.helpers import get_metadata
-from tiledb.cloud.geospatial.helpers import scale_calc
 from tiledb.vfs import VFS
 
 RASTER_NAMES = [
