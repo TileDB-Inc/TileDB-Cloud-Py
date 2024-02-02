@@ -52,7 +52,8 @@ def ingest(
     :param namespace: The namespace where the DAG will run
     :param verbose: verbose logging, defaults to False
     :param output_ext: extension for the output images in tiledb
-    :param traverse: If true then traverse the src paths for exploring images in
+    :param traverse: If true then traverse the src paths recursively
+        to find images to convert in
         depths > 1. Default: (False) Check only in depth 1.
     """
 
