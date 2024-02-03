@@ -1,8 +1,9 @@
 import logging
+from typing import Sequence
 
 import tiledb
 from tiledb.cloud.utilities import get_logger
-from typing import Sequence
+
 
 def get_logger_wrapper(
     verbose: bool = False,
@@ -35,8 +36,10 @@ def serialize_filter(filter):
     else:
         raise TypeError
 
+
 def is_folder(path: str) -> bool:
     return path.endswith("/")
+
 
 def validate_io_paths(source: Sequence[str], output: Sequence[str]):
     if not isinstance(source, list) or not isinstance(output, list):
@@ -52,9 +55,11 @@ def validate_io_paths(source: Sequence[str], output: Sequence[str]):
             return True
     else:
         if len(source) == len(output):
-            if all(not is_folder(s) for s in source) and all(not is_folder(o) for o in output):
+            if all(not is_folder(s) for s in source) and all(
+                not is_folder(o) for o in output
+            ):
                 return True
-            else: 
-               raise ValueError("Invalid combination of source and output paths.") 
+            else:
+                raise ValueError("Invalid combination of source and output paths.")
         else:
-            raise ValueError("Invalid combination of source and output paths.") 
+            raise ValueError("Invalid combination of source and output paths.")
