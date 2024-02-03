@@ -4,6 +4,7 @@ import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud.bioimg.helpers import get_logger_wrapper
 from tiledb.cloud.bioimg.helpers import serialize_filter
+from tiledb.cloud.bioimg.helpers import validate_io_paths
 from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.utilities._common import run_dag
@@ -16,7 +17,7 @@ _SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs")
 
 def ingest(
     source: Union[Sequence[str], str],
-    output: str,
+    output: Union[Sequence[str], str],
     config: Mapping[str, Any],
     *args: Any,
     taskgraph_name: Optional[str] = None,
@@ -29,12 +30,15 @@ def ingest(
     verbose: bool = False,
     exclude_metadata: bool = False,
     output_ext: str = "",
+    traverse: bool = False,
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
     """The function ingests microscopy images into TileDB arrays
 
-    :param source: uri / iterable of uris of input files
-    :param output: output dir for the ingested tiledb arrays
+    :param source: uri / iterable of uris of input files.
+        If the uri points to a directory of files make sure it ends with a trailing '/'
+    :param output: uri / iterable of uris of input files.
+        If the uri points to a directory of files make sure it ends with a trailing '/'
     :param config: dict configuration to pass on tiledb.VFS
     :param taskgraph_name: Optional name for taskgraph, defaults to None
     :param num_batches: Number of graph nodes to spawn.
@@ -48,6 +52,9 @@ def ingest(
     :param namespace: The namespace where the DAG will run
     :param verbose: verbose logging, defaults to False
     :param output_ext: extension for the output images in tiledb
+    :param traverse: If true then traverse the src paths recursively
+        to find images to convert in
+        depths > 1. Default: (False) Check only in depth 1.
     """
 
     logger = get_logger_wrapper(verbose)
@@ -55,12 +62,11 @@ def ingest(
 
     def build_io_uris_ingestion(
         source: Sequence[str],
-        output_dir: str,
+        output: Sequence[str],
         output_ext: str,
         supported_exts: Tuple[str],
     ):
         """Match input uri/s with output destinations
-
         :param source: A sequence of paths or path to input
         :param output_dir: A path to the output directory
         """
@@ -72,23 +78,50 @@ def ingest(
         # Even though a tuple by definition when passed through submit becomes list
         supported_exts = tuple(supported_exts)
 
-        def create_output_path(input_file, output_dir) -> str:
-            filename = os.path.splitext(os.path.basename(input_file))[0]
-            output_filename = filename + f".{output_ext}" if output_ext else filename
-            return os.path.join(output_dir, output_filename)
+        def create_output_path(input_file: str, output: str) -> str:
+            # Check if output is dir
+            if output.endswith("/"):
+                filename = os.path.splitext(os.path.basename(input_file))[0]
+                output_filename = (
+                    filename + f".{output_ext}" if output_ext else filename
+                )
+                return os.path.join(output, output_filename)
+            else:
+                # The output is considered a target file
+                return output
 
-        def iter_paths(source: Sequence[str]) -> Iterator[Tuple]:
-            for uri in source:
-                if vfs.is_dir(uri):
-                    # Folder for exploration
-                    contents = vfs.ls(uri)
-                    yield from iter_paths(contents)
-                elif uri.endswith(supported_exts):
-                    yield uri, create_output_path(uri, output_dir)
+        def iter_paths(source: Sequence[str], output: Sequence[str]) -> Iterator[Tuple]:
+            if len(output) != 1:
+                for s, o in zip(source, output):
+                    yield s, create_output_path(s, o)
+            else:
+                for s in source:
+                    if s.endswith("/"):
+                        # Folder for exploration
+                        contents = vfs.ls(s)
+                        # [1:] till the SC-40049 is resolved this will restrict
+                        if traverse:
+                            filtered_contents = [
+                                c
+                                for c in contents
+                                if not (
+                                    # vfs.is_dir and vfs.is_file checks in vfs
+                                    # for empty folder objects SC-40049
+                                    vfs.is_dir(c)
+                                    and vfs.is_file(c)
+                                    and vfs.file_size(c) == 0
+                                )
+                            ]
+                        else:
+                            # Explore folders only at depth 1
+                            filtered_contents = [
+                                c for c in contents if not vfs.is_dir(c)
+                            ]
+                        yield from iter_paths(filtered_contents, output)
+                    elif s.endswith(supported_exts):
+                        yield s, create_output_path(s, output[0])
 
-        if len(source) == 0:
-            raise ValueError("The source files cannot be empty")
-        return tuple(iter_paths(source))
+        return tuple(iter_paths(source, output))
 
     def build_input_batches(
         source: Sequence[str],
@@ -96,9 +129,12 @@ def ingest(
         num_batches: int,
         out_ext: str,
         supported_exts: Tuple,
+        traverse: bool,
     ):
         """Groups input URIs into batches."""
-        uri_pairs = build_io_uris_ingestion(source, output, out_ext, supported_exts)
+        uri_pairs = build_io_uris_ingestion(
+            source, output, out_ext, supported_exts, traverse
+        )
         # If the user didn't specify a number of batches, run every import
         # as its own task.
         my_num_batches = num_batches or len(uri_pairs)
@@ -154,9 +190,10 @@ def ingest(
                         **kwargs,
                     )
 
-    if isinstance(source, str):
-        # Handle only lists
-        source = [source]
+    source = [source] if isinstance(source, str) else source
+    output = [output] if isinstance(output, str) else output
+    validate_io_paths(source, output)
+
     logger.debug("Ingesting files: %s", source)
 
     # Build the task graph
@@ -183,6 +220,7 @@ def ingest(
         num_batches,
         output_ext,
         _SUPPORTED_EXTENSIONS,
+        traverse,
         access_credentials_name=kwargs.get("access_credentials_name"),
         name=f"{dag_name} input collector",
         result_format="json",
