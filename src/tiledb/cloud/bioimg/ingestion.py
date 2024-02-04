@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Dict, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
@@ -65,6 +66,8 @@ def ingest(
         output: Sequence[str],
         output_ext: str,
         supported_exts: Tuple[str],
+        traverse: bool,
+        logger: logging.Logger,
     ):
         """Match input uri/s with output destinations
         :param source: A sequence of paths or path to input
@@ -93,6 +96,7 @@ def ingest(
         def iter_paths(source: Sequence[str], output: Sequence[str]) -> Iterator[Tuple]:
             if len(output) != 1:
                 for s, o in zip(source, output):
+                    logger.debug(f"Pair {s} and {o}")
                     yield s, create_output_path(s, o)
             else:
                 for s in source:
@@ -119,8 +123,10 @@ def ingest(
                             ]
                         yield from iter_paths(filtered_contents, output)
                     elif s.endswith(supported_exts):
+                        logger.debug(f"Pair {s} and {output[0]}")
                         yield s, create_output_path(s, output[0])
 
+        logger.debug(f"Create pairs between {source} and {output}")
         return tuple(iter_paths(source, output))
 
     def build_input_batches(
@@ -129,17 +135,25 @@ def ingest(
         num_batches: int,
         out_ext: str,
         supported_exts: Tuple,
+        *,
         traverse: bool,
+        verbose: bool,
     ):
+        logger = get_logger_wrapper(verbose)
+
         """Groups input URIs into batches."""
         uri_pairs = build_io_uris_ingestion(
-            source, output, out_ext, supported_exts, traverse
+            source, output, out_ext, supported_exts, traverse, logger
         )
+        logger.debug(f"Input batches:{uri_pairs}")
         # If the user didn't specify a number of batches, run every import
         # as its own task.
         my_num_batches = num_batches or len(uri_pairs)
         # If they specified too many batches, don't create empty tasks.
         my_num_batches = min(len(uri_pairs), my_num_batches)
+        logger.debug(f"Number of batches:{my_num_batches}")
+        split_batches = [uri_pairs[n::my_num_batches] for n in range(my_num_batches)]
+        logger.debug(f"Split batches:{split_batches}")
         return [uri_pairs[n::my_num_batches] for n in range(my_num_batches)]
 
     def ingest_tiff_udf(
@@ -220,7 +234,9 @@ def ingest(
         num_batches,
         output_ext,
         _SUPPORTED_EXTENSIONS,
-        traverse,
+        *args,
+        traverse=traverse,
+        verbose=verbose,
         access_credentials_name=kwargs.get("access_credentials_name"),
         name=f"{dag_name} input collector",
         result_format="json",
