@@ -33,7 +33,6 @@ def ingest(
     exclude_metadata: bool = False,
     converter: Optional[str] = None,
     output_ext: str = "",
-    traverse: bool = False,
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
     """The function ingests microscopy images into TileDB arrays
@@ -60,9 +59,6 @@ def ingest(
         when None the default TIFF converter is used. Available converters
         are one of the ("tiff", "zarr", "osd").
     :param output_ext: extension for the output images in tiledb
-    :param traverse: If true then traverse the src paths recursively
-        to find images to convert in
-        depths > 1. Default: (False) Check only in depth 1.
     """
 
     logger = get_logger_wrapper(verbose)
@@ -73,7 +69,6 @@ def ingest(
         output: Sequence[str],
         output_ext: str,
         supported_exts: Tuple[str],
-        traverse: bool,
         logger: logging.Logger,
     ):
         """Match input uri/s with output destinations
@@ -110,24 +105,8 @@ def ingest(
                     if s.endswith("/"):
                         # Folder for exploration
                         contents = vfs.ls(s)
-                        # [1:] till the SC-40049 is resolved this will restrict
-                        if traverse:
-                            filtered_contents = [
-                                c
-                                for c in contents
-                                if not (
-                                    # vfs.is_dir and vfs.is_file checks in vfs
-                                    # for empty folder objects SC-40049
-                                    vfs.is_dir(c)
-                                    and vfs.is_file(c)
-                                    and vfs.file_size(c) == 0
-                                )
-                            ]
-                        else:
-                            # Explore folders only at depth 1
-                            filtered_contents = [
-                                c for c in contents if not vfs.is_dir(c)
-                            ]
+                        # Explore folders only at depth 1
+                        filtered_contents = [c for c in contents if not vfs.is_dir(c)]
                         yield from iter_paths(filtered_contents, output)
                     elif s.endswith(supported_exts):
                         logger.debug(f"Pair {s} and {output[0]}")
@@ -143,14 +122,13 @@ def ingest(
         out_ext: str,
         supported_exts: Tuple,
         *,
-        traverse: bool,
         verbose: bool,
     ):
         logger = get_logger_wrapper(verbose)
 
         """Groups input URIs into batches."""
         uri_pairs = build_io_uris_ingestion(
-            source, output, out_ext, supported_exts, traverse, logger
+            source, output, out_ext, supported_exts, logger
         )
         logger.debug(f"Input batches:{uri_pairs}")
         # If the user didn't specify a number of batches, run every import
@@ -161,7 +139,7 @@ def ingest(
         logger.debug(f"Number of batches:{my_num_batches}")
         split_batches = [uri_pairs[n::my_num_batches] for n in range(my_num_batches)]
         logger.debug(f"Split batches:{split_batches}")
-        return [uri_pairs[n::my_num_batches] for n in range(my_num_batches)]
+        return split_batches
 
     def ingest_tiff_udf(
         io_uris: Sequence[Tuple],
@@ -261,7 +239,6 @@ def ingest(
         output_ext,
         _SUPPORTED_EXTENSIONS,
         *args,
-        traverse=traverse,
         verbose=verbose,
         access_credentials_name=kwargs.get("access_credentials_name"),
         name=f"{dag_name} input collector",
