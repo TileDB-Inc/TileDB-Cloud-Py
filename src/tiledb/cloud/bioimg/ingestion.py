@@ -116,8 +116,8 @@ def ingest(
     def ingest_tiff_udf(
         io_uris: Sequence[Tuple],
         config: Mapping[str, Any],
-        verbose: bool = False,
-        exclude_metadata: bool = False,
+        verbose: bool,
+        exclude_metadata: bool,
         *args: Any,
         **kwargs,
     ):
@@ -175,6 +175,9 @@ def ingest(
         source = [source]
 
     # Default None the TIFF converter is used
+    # The Converters Enum is defined in the tiledb-bioimg package
+    # and this is why we needed to pass them through the UDF
+    # without using them directly.
     if converter and converter not in _SUPPORTED_CONVERTERS:
         raise ValueError(
             f"The selected converter is not supported please \
@@ -222,6 +225,7 @@ def ingest(
         input_list_node,
         config,
         verbose,
+        exclude_metadata,
         threads,
         *args,
         name=f"{dag_name} ingestor ",
