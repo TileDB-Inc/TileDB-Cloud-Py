@@ -101,7 +101,7 @@ def ingest(
         def iter_paths(source: Sequence[str], output: Sequence[str]) -> Iterator[Tuple]:
             if len(output) != 1:
                 for s, o in zip(source, output):
-                    logger.debug("Pair %s and %s",s, o)
+                    logger.debug("Pair %s and %s", s, o)
                     yield s, create_output_path(s, o)
             else:
                 logger.debug("Traverse source: %s", source)
@@ -113,7 +113,7 @@ def ingest(
                         filtered_contents = [c for c in contents if not vfs.is_dir(c)]
                         yield from iter_paths(filtered_contents, output)
                     elif s.endswith(supported_exts):
-                        logger.debug(f"Pair %s and %s", s, output[0])
+                        logger.debug("Pair %s and %s", s, output[0])
                         yield s, create_output_path(s, output[0])
 
         logger.debug("Create pairs between %s and %s", source, output)
@@ -241,7 +241,7 @@ def ingest(
                 found = False
                 try:
                     object_type = tiledb.object_type(tiledb_uri)
-                    logger.debug(f"Object type of {tiledb_uri} : {object_type}")
+                    logger.debug("Object type of %s : %s", tiledb_uri, object_type)
                     if object_type == "group":
                         found = True
                     elif object_type is not None:
@@ -260,7 +260,7 @@ def ingest(
                 if found:
                     logger.info("Dataset already registered at %r.", tiledb_uri)
                 else:
-                    logger.info(f"Registering dataset {dataset_uri} at {tiledb_uri}")
+                    logger.info("Registering dataset %s at %s", dataset_uri, tiledb_uri)
                     tiledb.cloud.groups.register(
                         dataset_uri,
                         name=register_name,

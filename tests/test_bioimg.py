@@ -4,9 +4,9 @@ from tiledb.cloud.bioimg.helpers import validate_io_paths
 
 
 class BioimgTest(unittest.TestCase):
-    def setUp(self) -> None:
-        self.out_path = "out"
-        self.accepted_pairs = {
+    def test_validate_io_paths_accepted(self):
+        # Accepted cases
+        accepted_pairs = {
             # 1 File -> Output: 1 Folder
             "test1": (["s3://test_in/a.tiff"], ["s3://test_out/b/"]),
             # 1 File -> Output: 1 File
@@ -19,7 +19,12 @@ class BioimgTest(unittest.TestCase):
                 ["s3://test_out/b", "s3://test_out/d"],
             ),
         }
-        self.non_accepted_pairs = {
+        for test_name, (source, dest) in accepted_pairs.items():
+            with self.subTest(f"case: {test_name}"):
+                validate_io_paths(source, dest)
+
+        # Non Accepted cases
+        non_accepted_pairs = {
             # 1 File -> Output: Multiple Folders
             "test2": (
                 ["s3://test_in/a.tiff"],
@@ -88,22 +93,7 @@ class BioimgTest(unittest.TestCase):
                 ["s3://test_out/b/"],
             ),
         }
-        return super().setUp()
-
-    def test_validate_io_paths(self):
-        # Accepted cases
-        for test_name, io_tuple in self.accepted_pairs.items():
-            source, dest = io_tuple
-            source = [source] if isinstance(source, str) else source
-            dest = [dest] if isinstance(dest, str) else dest
-            print(f"{test_name}:", source, dest)
-            validate_io_paths(source, dest)
-
-        # Non Accepted cases
-        for test_name, io_tuple in self.non_accepted_pairs.items():
-            source, dest = io_tuple
-            source = [source] if isinstance(source, str) else source
-            dest = [dest] if isinstance(dest, str) else dest
-            print(f"{test_name}:", source, dest)
-            with self.assertRaises(ValueError):
-                validate_io_paths(source, dest)
+        for test_name, (source, dest) in non_accepted_pairs.items():
+            with self.subTest(f"case: {test_name}"):
+                with self.assertRaises(ValueError):
+                    validate_io_paths(source, dest)

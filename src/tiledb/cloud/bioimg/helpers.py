@@ -42,9 +42,6 @@ def is_folder(path: str) -> bool:
 
 
 def validate_io_paths(source: Sequence[str], output: Sequence[str]) -> None:
-    if not isinstance(source, list) or not isinstance(output, list):
-        raise ValueError("Both source and output must be lists.")
-
     if len(source) == 0 or len(output) == 0:
         raise ValueError("Source/Output list must not be empty.")
 
