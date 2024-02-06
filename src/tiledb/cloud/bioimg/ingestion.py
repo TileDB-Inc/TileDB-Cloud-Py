@@ -24,7 +24,7 @@ def ingest(
     *args: Any,
     taskgraph_name: Optional[str] = None,
     num_batches: Optional[int] = None,
-    threads: Optional[int] = 8,
+    threads: Optional[int] = 0,
     resources: Optional[Mapping[str, Any]] = None,
     compute: bool = True,
     register: bool = True,
@@ -151,6 +151,7 @@ def ingest(
         config: Mapping[str, Any],
         verbose: bool,
         exclude_metadata: bool,
+        converter: str = "tiff",
         *args: Any,
         **kwargs,
     ):
@@ -165,13 +166,10 @@ def ingest(
         from tiledb.bioimg import Converters
         from tiledb.bioimg import from_bioimg
 
-        converter = kwargs.get("converter", None)
         user_converter = Converters.OMETIFF
-        if not converter or converter == "tiff":
-            user_converter = Converters.OMETIFF
-        elif converter == "zarr":
+        if converter == "zarr":
             user_converter = Converters.OMEZARR
-        elif converter == "osd":
+        if converter == "osd":
             user_converter = Converters.OSD
 
         compressor = kwargs.get("compressor", None)
@@ -268,7 +266,6 @@ def ingest(
                         credentials_name=acn,
                     )
 
-
     # Default None the TIFF converter is used
     # The Converters Enum is defined in the tiledb-bioimg package
     # and this is why we needed to pass them through the UDF
@@ -324,14 +321,14 @@ def ingest(
         config,
         verbose,
         exclude_metadata,
-        threads,
+        converter,
         *args,
         name=f"{dag_name} ingestor ",
         expand_node_output=input_list_node,
         resources=DEFAULT_RESOURCES if resources is None else resources,
         image_name=DEFAULT_IMG_NAME,
+        max_workers=threads,
         compressor=compressor_serial,
-        converter=converter,
         **kwargs,
     )
 
