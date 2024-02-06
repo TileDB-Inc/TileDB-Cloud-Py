@@ -12,6 +12,7 @@ DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-ingestion"
 _SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs")
+_SUPPORTED_CONVERTERS = ("tiff", "zarr", "osd")
 
 
 def ingest(
@@ -28,6 +29,7 @@ def ingest(
     namespace: Optional[str],
     verbose: bool = False,
     exclude_metadata: bool = False,
+    converter: Optional[str] = None,
     output_ext: str = "",
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
@@ -47,6 +49,11 @@ def ingest(
     :param mode: By default runs Mode.Batch
     :param namespace: The namespace where the DAG will run
     :param verbose: verbose logging, defaults to False
+    :param exclude_metadata: a boolean for excluding all the metadata from the
+        ingested image
+    :param converter: The converter to be used for the image ingestion,
+        when None the default TIFF converter is used. Available converters
+        are one of the ("tiff", "zarr", "osd").
     :param output_ext: extension for the output images in tiledb
     """
 
@@ -109,8 +116,8 @@ def ingest(
     def ingest_tiff_udf(
         io_uris: Sequence[Tuple],
         config: Mapping[str, Any],
-        verbose: bool = False,
-        exclude_metadata: bool = False,
+        verbose: bool,
+        exclude_metadata: bool,
         *args: Any,
         **kwargs,
     ):
@@ -124,6 +131,15 @@ def ingest(
         from tiledb import filter
         from tiledb.bioimg import Converters
         from tiledb.bioimg import from_bioimg
+
+        converter = kwargs.get("converter", None)
+        user_converter = Converters.OMETIFF
+        if not converter or converter == "tiff":
+            user_converter = Converters.OMETIFF
+        elif converter == "zarr":
+            user_converter = Converters.OMEZARR
+        elif converter == "osd":
+            user_converter = Converters.OSD
 
         compressor = kwargs.get("compressor", None)
         if compressor:
@@ -148,7 +164,7 @@ def ingest(
                     from_bioimg(
                         src,
                         output,
-                        converter=Converters.OMETIFF,
+                        converter=user_converter,
                         exclude_metadata=exclude_metadata,
                         verbose=verbose,
                         **kwargs,
@@ -157,6 +173,17 @@ def ingest(
     if isinstance(source, str):
         # Handle only lists
         source = [source]
+
+    # Default None the TIFF converter is used
+    # The Converters Enum is defined in the tiledb-bioimg package
+    # and this is why we needed to pass them through the UDF
+    # without using them directly.
+    if converter and converter not in _SUPPORTED_CONVERTERS:
+        raise ValueError(
+            f"The selected converter is not supported please \
+                choose on of {_SUPPORTED_CONVERTERS}"
+        )
+
     logger.debug("Ingesting files: %s", source)
 
     # Build the task graph
@@ -198,6 +225,7 @@ def ingest(
         input_list_node,
         config,
         verbose,
+        exclude_metadata,
         threads,
         *args,
         name=f"{dag_name} ingestor ",
@@ -205,6 +233,7 @@ def ingest(
         resources=DEFAULT_RESOURCES if resources is None else resources,
         image_name=DEFAULT_IMG_NAME,
         compressor=compressor_serial,
+        converter=converter,
         **kwargs,
     )
     if compute:
