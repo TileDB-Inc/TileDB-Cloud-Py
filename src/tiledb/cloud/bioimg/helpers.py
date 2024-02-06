@@ -41,7 +41,7 @@ def is_folder(path: str) -> bool:
     return path.endswith("/")
 
 
-def validate_io_paths(source: Sequence[str], output: Sequence[str]):
+def validate_io_paths(source: Sequence[str], output: Sequence[str]) -> None:
     if not isinstance(source, list) or not isinstance(output, list):
         raise ValueError("Both source and output must be lists.")
 
@@ -52,13 +52,13 @@ def validate_io_paths(source: Sequence[str], output: Sequence[str]):
         if is_folder(source[0]) and not is_folder(output[0]):
             raise ValueError("Invalid combination of source and output paths.")
         else:
-            return True
+            return
     else:
         if len(source) == len(output):
             if all(not is_folder(s) for s in source) and all(
                 not is_folder(o) for o in output
             ):
-                return True
+                return
             else:
                 raise ValueError("Invalid combination of source and output paths.")
         else:

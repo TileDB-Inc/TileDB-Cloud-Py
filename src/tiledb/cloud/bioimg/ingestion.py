@@ -101,10 +101,10 @@ def ingest(
         def iter_paths(source: Sequence[str], output: Sequence[str]) -> Iterator[Tuple]:
             if len(output) != 1:
                 for s, o in zip(source, output):
-                    logger.debug(f"Pair {s} and {o}")
+                    logger.debug("Pair %s and %s",s, o)
                     yield s, create_output_path(s, o)
             else:
-                logger.debug(f"Traverse source: {source}")
+                logger.debug("Traverse source: %s", source)
                 for s in source:
                     if s.endswith("/"):
                         # Folder for exploration
@@ -113,10 +113,10 @@ def ingest(
                         filtered_contents = [c for c in contents if not vfs.is_dir(c)]
                         yield from iter_paths(filtered_contents, output)
                     elif s.endswith(supported_exts):
-                        logger.debug(f"Pair {s} and {output[0]}")
+                        logger.debug(f"Pair %s and %s", s, output[0])
                         yield s, create_output_path(s, output[0])
 
-        logger.debug(f"Create pairs between {source} and {output}")
+        logger.debug("Create pairs between %s and %s", source, output)
         return tuple(iter_paths(source, output))
 
     def build_input_batches(
