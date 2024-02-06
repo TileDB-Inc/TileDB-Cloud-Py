@@ -24,7 +24,7 @@ def run_ingest_workflow(
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
-    dry_run: Optional[bool] = False,
+    dry_run: bool = False,
 ) -> Dict[str, str]:
     """Starts a workflow to ingest H5AD data into SOMA.
 
@@ -94,7 +94,7 @@ def build_ingest_workflow_graph(
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
-    dry_run: Optional[bool] = False,
+    dry_run: bool = False,
 ) -> dag.DAG:
     """
     Same signature as ``run_ingest_workflow``, but returns the graph object
@@ -184,7 +184,7 @@ def ingest_h5ad(
     extra_tiledb_config: Optional[Dict[str, object]],
     platform_config: Optional[Dict[str, object]],
     ingest_mode: str,
-    dry_run: Optional[bool] = False,
+    dry_run: bool = False,
 ) -> None:
     """Performs the actual work of ingesting H5AD data into TileDB.
 
