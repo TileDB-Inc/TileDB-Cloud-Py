@@ -166,11 +166,10 @@ def ingest(
         from tiledb.bioimg import Converters
         from tiledb.bioimg import from_bioimg
 
-        user_converter = Converters.OMETIFF
-        if converter == "zarr":
-            user_converter = Converters.OMEZARR
-        if converter == "osd":
-            user_converter = Converters.OSD
+        user_converter = {
+            "zarr": Converters.OMEZARR,
+            "osd": Converters.OSD,
+        }.get(converter, Converters.OMETIFF)
 
         compressor = kwargs.get("compressor", None)
         if compressor:
