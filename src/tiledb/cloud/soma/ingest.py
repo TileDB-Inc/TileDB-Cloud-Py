@@ -24,6 +24,7 @@ def run_ingest_workflow(
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
+    dry_run: bool = False,
 ) -> Dict[str, str]:
     """Starts a workflow to ingest H5AD data into SOMA.
 
@@ -54,6 +55,8 @@ def run_ingest_workflow(
     :param namespace: An alternate namespace to run the ingestion process under.
     :param access_credentials_name: If provided, the name of the credentials
         to pass to the executing UDF.
+    :param dry_run: If provided and set to ``True``, does the input-path
+        traversals without ingesting data.
     :return: A dictionary of ``{"status": "started", "graph_id": ...}``,
         with the UUID of the graph on the server side, which can be used to
         manage execution and monitor progress.
@@ -70,6 +73,7 @@ def run_ingest_workflow(
         resources=resources,
         namespace=namespace,
         access_credentials_name=access_credentials_name,
+        dry_run=dry_run,
     )
     grf.compute()
     return {
@@ -90,6 +94,7 @@ def build_ingest_workflow_graph(
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
+    dry_run: bool = False,
 ) -> dag.DAG:
     """
     Same signature as ``run_ingest_workflow``, but returns the graph object
@@ -114,6 +119,7 @@ def build_ingest_workflow_graph(
             platform_config=platform_config,
             resources=_DEFAULT_RESOURCES if resources is None else resources,
             access_credentials_name=access_credentials_name,
+            dry_run=dry_run,
         )
         return grf
 
@@ -151,6 +157,7 @@ def build_ingest_workflow_graph(
                 platform_config=platform_config,
                 resources=_DEFAULT_RESOURCES if resources is None else resources,
                 access_credentials_name=access_credentials_name,
+                dry_run=dry_run,
             )
             collector.depends_on(node)
 
@@ -177,6 +184,7 @@ def ingest_h5ad(
     extra_tiledb_config: Optional[Dict[str, object]],
     platform_config: Optional[Dict[str, object]],
     ingest_mode: str,
+    dry_run: bool = False,
 ) -> None:
     """Performs the actual work of ingesting H5AD data into TileDB.
 
@@ -191,6 +199,8 @@ def ingest_h5ad(
         if any.
     :param ingest_mode: One of the ingest modes supported by
         ``tiledbsoma.io.read_h5ad``.
+    :param dry_run: If provided and set to ``True``, does the input-path
+        traversals without ingesting data.
     """
 
     import anndata
@@ -229,7 +239,12 @@ def ingest_h5ad(
     soma_ctx = tiledbsoma.SOMATileDBContext()
     if extra_tiledb_config:
         soma_ctx = soma_ctx.replace(tiledb_config=extra_tiledb_config)
+
     with tiledb.VFS(ctx=soma_ctx.tiledb_ctx).open(input_uri) as input_file:
+        if dry_run:
+            logging.info("Dry run for %r to %r", input_uri, output_uri)
+            return
+
         with _hack_patch_anndata_byval():
             input_data = anndata.read_h5ad(_FSPathWrapper(input_file, input_uri), "r")
         output_uri = io.from_anndata(
