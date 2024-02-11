@@ -1,4 +1,3 @@
-import math
 import os
 import shutil
 import tempfile
@@ -13,22 +12,21 @@ import pdal
 import rasterio
 
 import tiledb
-from tiledb.cloud import batch
-from tiledb.cloud import scale_calc
 from tiledb.cloud.geospatial import BoundingBox
-from tiledb.cloud.geospatial import get_metadata
-from tiledb.cloud.geospatial import ingest
+from tiledb.cloud.geospatial import get_raster_metadata
+from tiledb.cloud.geospatial import ingest_datasets
+from tiledb.cloud.utilities import batch
+from tiledb.cloud.utilities import serialize_filter
 from tiledb.vfs import VFS
 
 RASTER_NAMES = [
     "test1.tif",
     "test2.tif",
     "test3.tif",
-    "test_diff_crs.tif",
     "test_diff_res.tif",
+    "test_diff_crs.tif",
 ]
 PC_NAMES = ["test1.las", "test2.las", "test3.las"]
-NUMPY_NAMES = ["test.npy"]
 
 
 class GeospatialTest(unittest.TestCase):
@@ -76,25 +74,22 @@ class GeospatialTest(unittest.TestCase):
                 data = np.ones((10, 10), dtype=rasterio.uint8) * 3
                 dst.write(data, indexes=1)
 
-            # write a different crs
-            kwargs["crs"] = "EPSG:3857"
-            kwargs["transform"] = affine.Affine(0.2, 0, 1000, 0, -0.2, 1000)
-            with rasterio.open(
-                tmp_path.joinpath(RASTER_NAMES[3]), "w", **kwargs
-            ) as dst:
-                data = np.ones((10, 10), dtype=rasterio.uint8) * 4
-                dst.write(data, indexes=1)
-
             # write a different resolution
             kwargs["transform"] = affine.Affine(0.3, 0, -100, 0, -0.3, 35)
             with rasterio.open(
-                tmp_path.joinpath(RASTER_NAMES[4]), "w", **kwargs
+                tmp_path.joinpath(RASTER_NAMES[3]), "w", **kwargs
             ) as dst:
                 data = np.ones((10, 10), dtype=rasterio.uint8) * 3
                 dst.write(data, indexes=1)
 
-            data = np.ones((10, 10))
-            np.save(tmp_path.joinpath(NUMPY_NAMES[0]), data)
+            # write a different crs
+            kwargs["crs"] = "EPSG:3857"
+            kwargs["transform"] = affine.Affine(0.2, 0, 1000, 0, -0.2, 1000)
+            with rasterio.open(
+                tmp_path.joinpath(RASTER_NAMES[4]), "w", **kwargs
+            ) as dst:
+                data = np.ones((10, 10), dtype=rasterio.uint8) * 4
+                dst.write(data, indexes=1)
 
         def create_point_clouds(tmp_path: os.PathLike):
             for i in range(1, 4):
@@ -125,14 +120,10 @@ class GeospatialTest(unittest.TestCase):
         ingest_uri_sample = {
             "test1": [self.test_dir.joinpath(r) for r in RASTER_NAMES[:3]],
             "test2": [],
-            "test3": [self.test_dir.joinpath(r) for r in RASTER_NAMES],
+            "test3": [self.test_dir.joinpath(r) for r in RASTER_NAMES[:4]],
             "test4": [
-                self.test_dir.joinpath(NUMPY_NAMES[0]),
                 self.test_dir.joinpath(RASTER_NAMES[0]),
-            ],
-            "test5": [
-                self.test_dir.joinpath(RASTER_NAMES[0]),
-                self.test_dir.joinpath(RASTER_NAMES[4]),
+                self.test_dir.joinpath(RASTER_NAMES[3]),
             ],
         }
 
@@ -140,35 +131,40 @@ class GeospatialTest(unittest.TestCase):
         # Case 1-1 Ingestion
         test_1 = ingest_uri_sample["test1"]
         with mock.patch.object(VFS, "ls", return_value=test_1):
-            meta_1, full_extents_1, res = get_metadata(test_1, tile_size=tile_size)
+            meta_1 = get_raster_metadata(test_1, dst_tile_size=tile_size)
             expected_extents = BoundingBox(minx=-114, miny=33, maxx=-98, maxy=46)
-            self.assertEqual(full_extents_1, expected_extents)
-            self.assertEqual(len(meta_1), 3)
-            self.assertEqual(len(meta_1[0]), 2)
-            self.assertEqual(res, (0.2, 0.2))
+            self.assertEqual(meta_1.extents, expected_extents)
+            self.assertEqual(len(meta_1.block_metadata), 3)
+            self.assertEqual(len(meta_1.block_metadata[0].files), 2)
+            self.assertEqual(meta_1.res, (0.2, 0.2))
 
             # test the first return value for the first block
-            self.assertEqual(meta_1[0][1][0], test_1[0])
+            self.assertEqual(meta_1.block_metadata[0].files[0], test_1[0])
 
         # Case 1-2 Ingestion - Empty input list
         with mock.patch.object(VFS, "ls", return_value=ingest_uri_sample["test2"]):
             # Empty input list raises error
             with self.assertRaises(ValueError):
-                get_metadata(ingest_uri_sample["test2"])
+                get_raster_metadata(ingest_uri_sample["test2"])
 
-        # Case 1-3 Ingestion - See if mixed CRSs are detected
+        # Case 1-3 Ingestion - See if mixed resolutions are detected
         with mock.patch.object(VFS, "ls", return_value=ingest_uri_sample["test3"]):
+            # Mixed resolutions without forcing target resolution raises error
+            with self.assertRaises(ValueError):
+                get_raster_metadata(ingest_uri_sample["test3"])
+
+            tgt_res = (0.4, 0.4)
+            meta_3 = get_raster_metadata(ingest_uri_sample["test3"], res=tgt_res)
+            self.assertEqual(meta_3.res, tgt_res)
+
+        # Case 1-4 Ingestion - See if mixed CRSs are detected
+        # Same logic for data types and band counts
+        with mock.patch.object(VFS, "ls", return_value=ingest_uri_sample["test4"]):
             # Mixed CRSs raises error
             with self.assertRaises(ValueError):
-                get_metadata(ingest_uri_sample["test3"])
+                get_raster_metadata(ingest_uri_sample["test4"])
 
-        # Case 1-4 Ingestion - See if unsupported file types are filtered out
-        with mock.patch.object(VFS, "ls", return_value=ingest_uri_sample["test4"]):
-            result_4, _, _ = get_metadata(
-                ingest_uri_sample["test4"], tile_size=tile_size
-            )
-            self.assertEqual(len(ingest_uri_sample["test4"]), 2)
-            self.assertEqual(len(result_4), 1)
+        # TODO add tests for mixed band counts and data types
 
     def test_pointcloud_get_metadata(self):
         pass
@@ -180,24 +176,31 @@ class GeospatialTest(unittest.TestCase):
         tile_size = 16
         zstd_filter = tiledb.ZstdFilter(level=7)
         test_1 = [self.test_dir.joinpath(r) for r in RASTER_NAMES[:3]]
-        meta_1, result_extents_1, _ = get_metadata(test_1, tile_size=tile_size)
-        self.assertEqual(len(meta_1), 3)
+        meta_1 = get_raster_metadata(test_1, dst_tile_size=tile_size)
+        self.assertEqual(len(meta_1.block_metadata), 3)
         output_array = str(self.test_dir.joinpath("raster_output_array"))
+        dataset_list_uri = self.test_dir.joinpath("manifest.txt")
+        with open(dataset_list_uri, "w") as f:
+            for img in test_1:
+                f.write(f"{img}\n")
 
-        ingest(
-            source=test_1,
-            output=output_array,
+        ingest_datasets(
+            dataset_uri=output_array,
+            dataset_type="raster",
             config={},
-            compressor=zstd_filter,
-            # set batch size to 1 to test overlapping images and iteration
+            dataset_list_uri=dataset_list_uri,
+            compression_filter=serialize_filter(zstd_filter),
+            # set batch size to 1 to test overlapping images
             batch_size=1,
             # pick a size we wouldn't normally use for testing
             tile_size=tile_size,
             unit_testing=True,
         )
-
         with rasterio.open(output_array) as src:
-            self.assertEqual(src.bounds, result_extents_1.bounds)
+            self.assertEqual(src.bounds.left, meta_1.extents.minx)
+            self.assertEqual(src.bounds.right, meta_1.extents.maxx)
+            self.assertEqual(src.bounds.top, meta_1.extents.maxy)
+            self.assertEqual(src.bounds.bottom, meta_1.extents.miny)
             self.assertEqual(src.profile["blockysize"], tile_size)
             self.assertEqual(src.profile["blockxsize"], tile_size)
             self.assertEqual(src.checksum(1), 57947)
@@ -215,6 +218,7 @@ class GeospatialTest(unittest.TestCase):
         pass
 
     def test_batch(self):
+        # batching is critical, so lets include a test here
         samples = [self.test_dir.joinpath(r) for r in RASTER_NAMES[:3]]
 
         # Three nodes with 1 job are expected
@@ -234,17 +238,3 @@ class GeospatialTest(unittest.TestCase):
         result = batch(samples, batch_size)
         expected = 1
         self.assertEqual(len(tuple(result)), expected)
-
-    def test_scale_calc(self):
-        samples = [self.test_dir.joinpath(r) for r in RASTER_NAMES[:3]]
-
-        result = scale_calc(samples, None)
-        self.assertEqual(result, (1, 20))
-
-        expected = math.ceil(len(samples) / 2)
-        result = scale_calc(samples, 2)
-        self.assertEqual(result, (expected, None))
-
-        expected = math.ceil(len(samples) / 3)
-        result = scale_calc(samples, 3)
-        self.assertEqual(result, (expected, None))

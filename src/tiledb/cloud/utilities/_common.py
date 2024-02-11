@@ -7,7 +7,19 @@ import pathlib
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Callable, Dict, Mapping, Optional, Sequence, Tuple, TypeVar
+from fnmatch import fnmatch
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    Mapping,
+    Optional,
+    Sequence,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 import tiledb
 from tiledb.cloud import dag
@@ -100,6 +112,29 @@ def get_logger(level: int = logging.INFO, name: str = __name__) -> logging.Logge
     if not logger.handlers:
         logger.addHandler(sh)
         logger.setLevel(level)
+
+    return logger
+
+
+def get_logger_wrapper(
+    verbose: bool = False,
+) -> logging.Logger:
+    """
+    Get a logger instance and log version information.
+
+    :param verbose: verbose logging, defaults to False
+    :return: logger instance
+    """
+
+    level = logging.DEBUG if verbose else logging.INFO
+    logger = get_logger(level)
+
+    logger.debug(
+        "tiledb.cloud=%s, tiledb=%s, libtiledb=%s",
+        tiledb.cloud.__version__,
+        tiledb.version(),
+        tiledb.libtiledb.version(),
+    )
 
     return logger
 
@@ -347,3 +382,84 @@ def as_batch(func: _CT) -> _CT:
         return {"status": "started", "graph_id": str(graph.server_graph_uuid)}
 
     return wrapper
+
+
+def find(
+    uri: str,
+    *,
+    config: Optional[Mapping[str, Any]] = None,
+    include: Optional[Union[str, Callable]] = None,
+    exclude: Optional[Union[str, Callable]] = None,
+    max_count: Optional[int] = None,
+) -> Iterator[str]:
+    """Searches a path for files matching the include/exclude pattern using VFS.
+
+    :param uri: Input path to search
+    :param config: Optional dict configuration to pass on tiledb.VFS
+    :param include: Optional include pattern string
+    :param exclude: Optional exclude pattern string
+    :param max_count: Optional stop point when searching for files
+    :param count: Current number of files found
+    """
+
+    with tiledb.scope_ctx(config):
+        vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
+        listing = vfs.ls(uri)
+        current_count = 0
+
+        def list_files(listing):
+            for f in listing:
+                # Avoid infinite recursion
+                if f == uri:
+                    continue
+
+                if vfs.is_dir(f):
+                    yield list_files(
+                        f,
+                        include=include,
+                        exclude=exclude,
+                    )
+                else:
+                    # Skip files that do not match the include pattern or match
+                    # the exclude pattern.
+                    if callable(include):
+                        if not include(f):
+                            continue
+                    else:
+                        if include and not fnmatch(f, include):
+                            continue
+
+                    if callable(exclude):
+                        if exclude(f):
+                            continue
+                    else:
+                        if exclude and fnmatch(f, exclude):
+                            continue
+                    yield f
+
+        for f in list_files(listing):
+            current_count += 1
+            if max_count and current_count == max_count:
+                return
+            else:
+                yield f
+
+
+def batch(items, chunk_size):
+    # Iterator for providing batches of chunks
+    length = len(items)
+    for ndx in range(0, length, chunk_size):
+        yield items[ndx : min(ndx + chunk_size, length)]
+
+
+def serialize_filter(filter):
+    """Serialize TileDB filter
+
+    :return: dict TileDB filter attributes
+    """
+    if isinstance(filter, tiledb.Filter):
+        filter_dict = filter._attrs_()
+        filter_dict["_name"] = type(filter).__name__
+        return filter_dict
+    else:
+        raise TypeError
