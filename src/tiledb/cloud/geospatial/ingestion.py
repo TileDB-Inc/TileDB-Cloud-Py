@@ -1,10 +1,10 @@
 import math
 import os
 from dataclasses import dataclass
-from typing import Any, Iterable, Mapping, Optional, Sequence, Tuple
+from typing import Any, Iterable, List, Mapping, Optional, Sequence, Tuple, Union
 
 import fiona
-import pdal
+import laspy
 import rasterio
 import shapely
 from rtree import index
@@ -27,6 +27,7 @@ DEFAULT_DAG_NAME = "geo-ingestion"
 
 # Default values for ingestion parameters
 RASTER_TILE_SIZE = 1024
+POINT_CLOUD_CHUNK_SIZE = 1_000_000
 MAX_WORKERS = 40
 BATCH_SIZE = 10
 
@@ -56,32 +57,89 @@ class GeoBlockMetadata:
 
 @dataclass
 class GeoMetadata:
-    crs: str
+    # common properties
     extents: BoundingBox
+    crs: str = None
+    paths: Optional[Union[List[os.PathLike], os.PathLike]] = None
+    # raster properties
     dtype: Optional[str] = (None,)
     band_count: Optional[int] = None
     res: Optional[Tuple[float, float]] = None
     block_metadata: Optional[Tuple[GeoBlockMetadata, ...]] = None
-    path: Optional[os.PathLike] = None
-
-    def __eq__(self, other):
-        if not isinstance(other, GeoMetadata):
-            return NotImplemented
-        if self.block_metadata:
-            return NotImplemented
-        return self.path == other.path
+    # point cloud properties
+    scales: Optional[Tuple[float, float, float]] = None
+    offsets: Optional[Tuple[float, float, float]] = None
 
 
 def get_pointcloud_metadata(
-    source: Iterable[os.PathLike],
+    sources: Iterable[os.PathLike],
+    *,
     config: Mapping[str, Any] = None,
-) -> None:
+    verbose: bool = False,
+    id: str = "pointcloud_metadata",
+    trace: bool = False,
+    log_uri: Optional[str] = None,
+) -> GeoMetadata:
     """Return geospatial metadata for a sequence of input point cloud data files
 
-    :param source: A sequence of paths or path to input
-    :param config: dict configuration to pass on tiledb.VFS
+    :param sources: iterator, paths or path to process
+    :param config: dict, configuration to pass on tiledb.VFS
+    :param dst_tile_size: int, tile size of the destination mosaic
+    :param verbose: bool, enable verbose logging, default is False
+    :param trace: bool, enable trace logging, default is False
+    :param log_uri: Optional[str] = None,
+    :Return: GeoMetadata, a populated GeoMetadata object
     """
-    pass
+    if len(sources) == 0:
+        raise ValueError("Input point cloud datasets required")
+
+    with tiledb.scope_ctx(config):
+        vfs = tiledb.VFS()
+        logger = get_logger_wrapper(verbose)
+        with Profiler(array_uri=log_uri, id=id, trace=trace):
+            offsets = None
+            scales = None
+            mins = None
+            maxs = None
+            for f in sources:
+                logger.debug("finding metadata for %r", f)
+                with vfs.open(f, "rb") as src:
+                    # only open header
+                    las = laspy.open(src)
+                    hdr = las.header
+                    if mins is None:
+                        mins = hdr.mins
+                    else:
+                        mins = [min(e) for e in zip(mins, hdr.mins)]
+
+                    if maxs is None:
+                        maxs = hdr.maxs
+                    else:
+                        maxs = [max(e) for e in zip(maxs, hdr.maxs)]
+
+                    if scales is None:
+                        scales = hdr.scales
+                    else:
+                        scales = [max(e) for e in zip(scales, hdr.scales)]
+
+                    if offsets is None:
+                        offsets = hdr.offsets
+                    else:
+                        offsets = [min(e) for e in zip(offsets, hdr.offsets)]
+
+            return GeoMetadata(
+                paths=sources,
+                extents=BoundingBox(
+                    minx=mins[0],
+                    miny=mins[1],
+                    minz=mins[2],
+                    maxx=maxs[0],
+                    maxy=maxs[1],
+                    maxz=maxs[2],
+                ),
+                scales=tuple(scales),
+                offsets=tuple(offsets),
+            )
 
 
 def get_geometry_metadata(
@@ -119,7 +177,9 @@ def get_raster_metadata(
     :Return: GeoMetadata, a populated GeoMetadata objects with blocks
              and the files that contribute to each block
     """
-    vfs = tiledb.VFS(config=config)
+    if len(sources) == 0:
+        raise ValueError("Input raster datasets required")
+
     logger = get_logger_wrapper(verbose)
     full_extents = None
     crs = None
@@ -178,7 +238,7 @@ def get_raster_metadata(
                     results.append(
                         GeoBlockMetadata(
                             ranges=win.toranges(),
-                            files=tuple([meta[s].path for s in intersects]),
+                            files=tuple([meta[s].paths for s in intersects]),
                         )
                     )
 
@@ -187,6 +247,8 @@ def get_raster_metadata(
     with tiledb.scope_ctx(config):
         with Profiler(array_uri=log_uri, id=id, trace=trace):
             meta = []
+            vfs = tiledb.VFS(config=config)
+
             for pth in sources:
                 logger.debug("Including %r", pth)
                 extents = None
@@ -250,7 +312,7 @@ def get_raster_metadata(
 
                 meta.append(
                     GeoMetadata(
-                        path=pth,
+                        paths=pth,
                         extents=extents,
                         crs=crs,
                     )
@@ -270,8 +332,8 @@ def get_raster_metadata(
 
 
 def ingest_geometry_udf(
-    input: Sequence[str],
-    output: str,
+    sources: Optional[Sequence[str]],
+    dataset_uri: str,
     *args: Any,
     **kwargs,
 ):
@@ -285,41 +347,104 @@ def ingest_geometry_udf(
 
 
 def ingest_point_cloud_udf(
-    input: Sequence[str],
-    output: str,
-    *args: Any,
-    **kwargs,
+    sources: Optional[Sequence[str]] = None,
+    *,
+    dataset_uri: str,
+    template_sample: str,
+    append: bool = False,
+    extents: Optional[Tuple[float, float, float, float, float, float]] = None,
+    offsets: Optional[Tuple[float, float, float, float, float, float]] = None,
+    scales: Optional[Tuple[float, float, float, float, float, float]] = None,
+    chunk_size: Optional[int] = POINT_CLOUD_CHUNK_SIZE,
+    verbose: bool = False,
+    config: Optional[Mapping[str, Any]] = None,
+    id: str = "pointcloud",
+    trace: bool = False,
+    log_uri: Optional[str] = None,
 ):
     """Internal udf that ingests server side batch of point cloud files
     into tiledb arrays using PDAL API. Compression uses the default profile
-    build in to PDAL.
+    built in to PDAL.
 
-    :param input: laz/las input file names
-    :param output: output TileDB array name
+    :param sources: Sequence of input point cloud file names
+    :param dataset_uri: str, output TileDB array name
+    :param template_sample: first point cloud to be ingested to initialize the array
+    :param append: bool, whether to append to the array
+    :param extents: Tuple, extents of point cloud, minx,maxx,miny,maxy,minz,maxz
+    :param scales: Tuple, scale values for point cloud, ordered as x,y,z
+    :param offsets: Tuple, offset values for point cloud, ordered as x,y,z
+    :param chunk_size: PDAL configuration for chunking fragments
+    :param verbose: verbose logging, defaults to False
+    :param config: dict, configuration to pass on tiledb.VFS
+    :param id: str, ID for logging, defaults to None
+    :param trace, bool, enable trace logging
+    :param log_uri: log array URI
     """
-    append = kwargs.get("append", False)
+    import laspy
+    import pdal
 
-    if not append:
-        extents = kwargs.pop("extents", None)
-        if extents:
-            pipeline = pdal.Writer.tiledb(
-                array_name=output,
-                x_domain_st=extents[0],
-                y_domain_st=extents[1],
-                z_domain_st=extents[2],
-                x_domain_ed=extents[3],
-                y_domain_ed=extents[4],
-                z_domain_ed=extents[5],
-                **kwargs,
-            )
-        else:
-            raise ValueError("Unknown extents for ingestion")
-    else:
-        for i in input:
-            pipeline |= pdal.Reader.las(filename=i)
-            pipeline |= pdal.Writer.tiledb(array_name=output, **kwargs)
+    import tiledb
 
-    pipeline.execute()
+    with tiledb.scope_ctx(config):
+        with Profiler(array_uri=log_uri, id=id, trace=trace):
+            vfs = tiledb.VFS()
+            logger = get_logger_wrapper(verbose)
+
+            def scale_array(arr):
+                for idx, d in enumerate(["X", "Y", "Z"]):
+                    arr[d] = offsets[idx] + (arr[d] * scales[idx])
+                return arr
+
+            if append:
+                for f in sources:
+                    logger.debug("ingesting point cloud %r", f)
+                    with vfs.open(f, "rb") as src:
+                        las = laspy.open(src)
+                        chunk_itr = las.chunk_iterator(chunk_size)
+
+                        for chunk in chunk_itr:
+                            arr = scale_array(chunk.array)
+                            pipeline = pdal.Writer.tiledb(
+                                array_name=dataset_uri, append=append
+                            ).pipeline(arr)
+                            pipeline.execute()
+            else:
+                if extents and offsets and scales and template_sample:
+                    logger.debug("creating point cloud schema from %r", template_sample)
+                    with vfs.open(template_sample, "rb") as src:
+                        las = laspy.open(src)
+                        chunk_itr = las.chunk_iterator(chunk_size)
+                        first_chunk = next(chunk_itr)
+                        arr = scale_array(first_chunk.array)
+
+                        pipeline = pdal.Writer.tiledb(
+                            array_name=dataset_uri,
+                            x_domain_st=extents.minx - 1,
+                            y_domain_st=extents.miny - 1,
+                            z_domain_st=extents.minz - 1,
+                            x_domain_end=extents.maxx + 1,
+                            y_domain_end=extents.maxy + 1,
+                            z_domain_end=extents.maxz + 1,
+                            offset_x=offsets[0],
+                            offset_y=offsets[1],
+                            offset_z=offsets[1],
+                            scale_x=scales[0],
+                            scale_y=scales[1],
+                            scale_z=scales[1],
+                            chunk_size=chunk_size,
+                        ).pipeline(arr)
+                        pipeline.execute()
+
+                        for chunk in chunk_itr:
+                            arr = scale_array(chunk.array)
+                            pipeline = pdal.Writer.tiledb(
+                                array_name=dataset_uri, append=True
+                            ).pipeline(arr)
+                            pipeline.execute()
+                else:
+                    raise ValueError("Insufficient metadata for point cloud ingestion")
+
+            logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
 
 
 def ingest_raster_udf(
@@ -613,6 +738,7 @@ def ingest_datasets_dag(
     workers: int = MAX_WORKERS,
     batch_size: int = BATCH_SIZE,
     tile_size: int = RASTER_TILE_SIZE,
+    chunk_size: int = POINT_CLOUD_CHUNK_SIZE,
     nodata: Optional[float] = None,
     resampling: Optional[str] = "bilinear",
     res: Tuple[float, float] = None,
@@ -646,6 +772,7 @@ def ingest_datasets_dag(
     :param batch_size: batch size for dataset ingestion, defaults to BATCH_SIZE
     :param tile_size: for rasters this is the tile (block) size
         for the merged destination array, defaults to 1024
+    :param chunk_size: for point cloud this is the PDAL chunk size, defaults to 1000000
     :param nodata: NODATA value for raster merging
     :param resampling: string, resampling method,
         one of None, bilinear, cubic, nearest and average
@@ -708,12 +835,23 @@ def ingest_datasets_dag(
                     max_files=max_files,
                 )
 
-        full_extents = get_pointcloud_metadata(sources, config=config)
-        kwargs.update(
-            {
-                "extents": full_extents,
-            }
-        )
+        if len(sources) == 0:
+            raise ValueError("No point cloud datasets found")
+
+        meta = get_pointcloud_metadata(sources, config=config)
+        if len(meta.paths) > 0:
+            kwargs.update(
+                {
+                    "template_sample": meta.paths[0],
+                    "extents": meta.extents,
+                    "offsets": meta.offsets,
+                    "scales": meta.scales,
+                    "chunk_size": chunk_size,
+                }
+            )
+            samples = meta.paths[1:]
+        else:
+            raise ValueError("Require at least one point cloud file to have been found")
     elif dataset_type == "raster":
         fn = ingest_raster_udf
 
@@ -735,6 +873,9 @@ def ingest_datasets_dag(
                     max_files=max_files,
                 )
 
+        if len(sources) == 0:
+            raise ValueError("No raster datasets found")
+
         meta = get_raster_metadata(
             sources, config=config, dst_tile_size=tile_size, res=res
         )
@@ -748,6 +889,7 @@ def ingest_datasets_dag(
                 "nodata": nodata,
                 "resampling": resampling,
                 "tile_size": tile_size,
+                "compressor": compression_filter,
             }
         )
         samples = meta.block_metadata
@@ -801,7 +943,6 @@ def ingest_datasets_dag(
             fn,
             dataset_uri=dataset_uri,
             config=config,
-            compressor=compression_filter,
             append=False,
             verbose=verbose,
             trace=trace,
@@ -874,7 +1015,6 @@ def ingest_datasets_dag(
         fn(
             dataset_uri=dataset_uri,
             append=False,
-            compressor=compression_filter,
             verbose=verbose,
             trace=trace,
             log_uri=log_uri,
@@ -950,6 +1090,7 @@ def ingest_datasets(
     workers: int = MAX_WORKERS,
     batch_size: int = BATCH_SIZE,
     tile_size: int = RASTER_TILE_SIZE,
+    chunk_size: int = POINT_CLOUD_CHUNK_SIZE,
     nodata: Optional[float] = None,
     res: Tuple[float, float] = None,
     verbose: bool = False,
@@ -983,6 +1124,7 @@ def ingest_datasets(
     :param batch_size: batch size for dataset ingestion, defaults to BATCH_SIZE
     :param tile_size: for rasters this is the tile (block) size
         for the merged destination array defaults to 1024
+    :param chunk_size: for point cloud this is the PDAL chunk size, defaults to 1000000
     :param nodata: NODATA value for rasters
     :param res: Tuple[float, float], output resolution in x/y
     :param verbose: verbose logging, defaults to False
@@ -1026,6 +1168,7 @@ def ingest_datasets(
         workers=workers,
         batch_size=batch_size,
         tile_size=tile_size,
+        chunk_size=chunk_size,
         nodata=nodata,
         res=res,
         verbose=verbose,

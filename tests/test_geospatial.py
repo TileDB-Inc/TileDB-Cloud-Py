@@ -1,3 +1,4 @@
+import glob
 import os
 import shutil
 import tempfile
@@ -8,11 +9,11 @@ from unittest import mock
 
 import affine
 import numpy as np
-import pdal
 import rasterio
 
 import tiledb
 from tiledb.cloud.geospatial import BoundingBox
+from tiledb.cloud.geospatial import get_pointcloud_metadata
 from tiledb.cloud.geospatial import get_raster_metadata
 from tiledb.cloud.geospatial import ingest_datasets
 from tiledb.cloud.utilities import batch
@@ -26,7 +27,8 @@ RASTER_NAMES = [
     "test_diff_res.tif",
     "test_diff_crs.tif",
 ]
-PC_NAMES = ["test1.las", "test2.las", "test3.las"]
+
+PC_NAMES = glob.glob(f"{os.path.join(os.path.dirname(__file__), 'data')}/*.las")
 
 
 class GeospatialTest(unittest.TestCase):
@@ -91,23 +93,10 @@ class GeospatialTest(unittest.TestCase):
                 data = np.ones((10, 10), dtype=rasterio.uint8) * 4
                 dst.write(data, indexes=1)
 
-        def create_point_clouds(tmp_path: os.PathLike):
-            for i in range(1, 4):
-                vals = [(i, i, i)]
-                data = np.array(vals, dtype=[("X", float), ("Y", float), ("Z", float)])
-                pipeline = pdal.Pipeline(arrays=[data]) | pdal.Writer.las(
-                    filename=os.path.abspath(tmp_path.joinpath(f"test{i}.las"))
-                )
-                pipeline.execute()
-
         create_test_rasters(self.test_dir)
-        create_point_clouds(self.test_dir)
 
         for r in RASTER_NAMES:
             self.assertTrue(os.path.exists(self.test_dir.joinpath(r)))
-
-        for p in PC_NAMES:
-            self.assertTrue(os.path.exists(self.test_dir.joinpath(p)))
 
         self.out_path = "out"
 
@@ -167,7 +156,17 @@ class GeospatialTest(unittest.TestCase):
         # TODO add tests for mixed band counts and data types
 
     def test_pointcloud_get_metadata(self):
-        pass
+        with mock.patch.object(VFS, "ls", return_value=PC_NAMES):
+            meta_1 = get_pointcloud_metadata(PC_NAMES)
+            self.assertEqual(meta_1.extents.minx, 635619.85)
+            self.assertEqual(meta_1.extents.miny, 848899.7000000001)
+            self.assertEqual(meta_1.extents.minz, 406.59000000000003)
+            self.assertEqual(meta_1.extents.maxx, 638982.55)
+            self.assertEqual(meta_1.extents.maxy, 853535.43)
+            self.assertEqual(meta_1.extents.maxz, 586.38)
+            self.assertEqual(len(meta_1.paths), 11)
+            self.assertEqual(meta_1.scales, (0.01, 0.01, 0.01))
+            self.assertEqual(meta_1.offsets, (0.0, 0.0, 0.0))
 
     def test_geometry_get_metadata(self):
         pass
@@ -176,43 +175,63 @@ class GeospatialTest(unittest.TestCase):
         tile_size = 16
         zstd_filter = tiledb.ZstdFilter(level=7)
         test_1 = [self.test_dir.joinpath(r) for r in RASTER_NAMES[:3]]
-        meta_1 = get_raster_metadata(test_1, dst_tile_size=tile_size)
-        self.assertEqual(len(meta_1.block_metadata), 3)
-        output_array = str(self.test_dir.joinpath("raster_output_array"))
-        dataset_list_uri = self.test_dir.joinpath("manifest.txt")
-        with open(dataset_list_uri, "w") as f:
-            for img in test_1:
-                f.write(f"{img}\n")
+        with mock.patch.object(VFS, "ls", return_value=test_1):
+            expected_extents = BoundingBox(minx=-114, miny=33, maxx=-98, maxy=46)
+            output_array = str(self.test_dir.joinpath("raster_output_array"))
+            dataset_list_uri = self.test_dir.joinpath("manifest.txt")
+            with open(dataset_list_uri, "w") as f:
+                for img in test_1:
+                    f.write(f"{img}\n")
 
-        ingest_datasets(
-            dataset_uri=output_array,
-            dataset_type="raster",
-            config={},
-            dataset_list_uri=dataset_list_uri,
-            compression_filter=serialize_filter(zstd_filter),
-            # set batch size to 1 to test overlapping images
-            batch_size=1,
-            # pick a size we wouldn't normally use for testing
-            tile_size=tile_size,
-            unit_testing=True,
-        )
-        with rasterio.open(output_array) as src:
-            self.assertEqual(src.bounds.left, meta_1.extents.minx)
-            self.assertEqual(src.bounds.right, meta_1.extents.maxx)
-            self.assertEqual(src.bounds.top, meta_1.extents.maxy)
-            self.assertEqual(src.bounds.bottom, meta_1.extents.miny)
-            self.assertEqual(src.profile["blockysize"], tile_size)
-            self.assertEqual(src.profile["blockxsize"], tile_size)
-            self.assertEqual(src.checksum(1), 57947)
+            ingest_datasets(
+                dataset_uri=output_array,
+                dataset_type="raster",
+                config={},
+                dataset_list_uri=dataset_list_uri,
+                compression_filter=serialize_filter(zstd_filter),
+                # set batch size to 1 to test overlapping images
+                batch_size=1,
+                # pick a size we wouldn't normally use for testing
+                tile_size=tile_size,
+                unit_testing=True,
+            )
+            with rasterio.open(output_array) as src:
+                self.assertEqual(src.bounds.left, expected_extents.minx)
+                self.assertEqual(src.bounds.right, expected_extents.maxx)
+                self.assertEqual(src.bounds.top, expected_extents.maxy)
+                self.assertEqual(src.bounds.bottom, expected_extents.miny)
+                self.assertEqual(src.profile["blockysize"], tile_size)
+                self.assertEqual(src.profile["blockxsize"], tile_size)
+                self.assertEqual(src.checksum(1), 57947)
 
-        # check compression filter
-        with tiledb.open(output_array) as src:
-            fltr = src.schema.attr(0).filters[0]
-            self.assertIsInstance(fltr, tiledb.ZstdFilter)
-            self.assertEqual(fltr.level, 7)
+            # check compression filter
+            with tiledb.open(output_array) as src:
+                fltr = src.schema.attr(0).filters[0]
+                self.assertIsInstance(fltr, tiledb.ZstdFilter)
+                self.assertEqual(fltr.level, 7)
 
-    def test_point_cloud_ingest(self):
-        pass
+    def test_pointcloud_ingest(self):
+        test_1 = [self.test_dir.joinpath(r) for r in PC_NAMES]
+        with mock.patch.object(VFS, "ls", return_value=test_1):
+            output_array = str(self.test_dir.joinpath("pc_output_array"))
+            dataset_list_uri = self.test_dir.joinpath("manifest.txt")
+            with open(dataset_list_uri, "w") as f:
+                for img in test_1:
+                    f.write(f"{img}\n")
+
+            ingest_datasets(
+                dataset_uri=output_array,
+                dataset_type="pointcloud",
+                config={},
+                dataset_list_uri=dataset_list_uri,
+                batch_size=1,
+                chunk_size=100,
+                unit_testing=True,
+            )
+
+            with tiledb.open(output_array) as src:
+                data = src[:]
+                self.assertEqual(len(data["X"]), 1065)
 
     def test_geometry_ingest(self):
         pass
