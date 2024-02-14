@@ -208,6 +208,7 @@ def ingest(
         namespace: Optional[str] = None,
         config: Optional[Mapping[str, Any]] = None,
         verbose: bool = False,
+        **kwargs,
     ) -> None:
         """
         Register the dataset on TileDB Cloud.
