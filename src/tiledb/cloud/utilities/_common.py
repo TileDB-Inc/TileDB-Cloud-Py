@@ -7,7 +7,7 @@ import pathlib
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Callable, Mapping, Optional, Sequence, Tuple, TypeVar
+from typing import Any, Callable, Dict, Mapping, Optional, Sequence, Tuple, TypeVar
 
 import tiledb
 from tiledb.cloud import dag
@@ -300,7 +300,7 @@ def as_batch(func: _CT) -> _CT:
     """
 
     @functools.wraps(func)
-    def wrapper(*args, **kwargs) -> None:
+    def wrapper(*args, **kwargs) -> Dict[str, object]:
         """
         Run the function as a batch UDF on TileDB Cloud.
 
@@ -344,5 +344,6 @@ def as_batch(func: _CT) -> _CT:
                 graph.server_graph_uuid,
             )
         )
+        return {"status": "started", "graph_id": str(graph.server_graph_uuid)}
 
     return wrapper
