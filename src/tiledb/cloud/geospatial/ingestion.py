@@ -1,6 +1,7 @@
 import math
 import os
 from dataclasses import dataclass
+from enum import Enum
 from typing import Any, Iterable, List, Mapping, Optional, Sequence, Tuple, Union
 
 import fiona
@@ -13,6 +14,7 @@ import tiledb
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import batch
+from tiledb.cloud.utilities import create_log_array
 from tiledb.cloud.utilities import find
 from tiledb.cloud.utilities import get_logger_wrapper
 from tiledb.cloud.utilities import max_memory_usage
@@ -30,6 +32,12 @@ RASTER_TILE_SIZE = 1024
 POINT_CLOUD_CHUNK_SIZE = 1_000_000
 MAX_WORKERS = 40
 BATCH_SIZE = 10
+
+
+class DatasetType(Enum):
+    POINTCLOUD = 1
+    RASTER = 2
+    GEOMETRY = 3
 
 
 @dataclass
@@ -84,7 +92,6 @@ def get_pointcloud_metadata(
 
     :param sources: iterator, paths or path to process
     :param config: dict, configuration to pass on tiledb.VFS
-    :param dst_tile_size: int, tile size of the destination mosaic
     :param verbose: bool, enable verbose logging, default is False
     :param trace: bool, enable trace logging, default is False
     :param log_uri: Optional[str] = None,
@@ -145,7 +152,7 @@ def get_pointcloud_metadata(
 def get_geometry_metadata(
     source: Iterable[os.PathLike],
     config: Mapping[str, Any] = None,
-) -> None:
+) -> GeoMetadata:
     """Return geospatial metadata for a sequence of input geometry data files
 
     :param source: A sequence of paths or path to input
@@ -635,7 +642,7 @@ def ingest_raster_udf(
 
 def read_uris(
     list_uri: str,
-    dataset_type: str,
+    dataset_type: DatasetType,
     *,
     log_uri: Optional[str] = None,
     config: Optional[Mapping[str, Any]] = None,
@@ -646,6 +653,7 @@ def read_uris(
     Read a list of URIs from a URI.
 
     :param list_uri: URI of the list of URIs
+    :param dataset_type: dataset type, one of pointcloud, raster or geometry
     :param log_uri: log array URI
     :param config: config dictionary, defaults to None
     :param max_files: maximum number of URIs returned, defaults to None
@@ -664,7 +672,9 @@ def read_uris(
                 if max_files and len(result) == max_files:
                     break
 
-            logger.info("Found %d %r geospatial datasets.", len(result), dataset_type)
+            logger.info(
+                "Found %d %r geospatial datasets.", len(result), dataset_type.name
+            )
 
         return result
 
@@ -724,7 +734,7 @@ def register_dataset_udf(
 def ingest_datasets_dag(
     dataset_uri: str,
     *,
-    dataset_type: str,
+    dataset_type: DatasetType,
     acn: Optional[str] = None,
     config=None,
     namespace: Optional[str] = None,
@@ -745,13 +755,12 @@ def ingest_datasets_dag(
     verbose: bool = False,
     trace: bool = False,
     log_uri: Optional[str] = None,
-    unit_testing: bool = False,
 ) -> None:
     """
     Ingests geospatial point clouds, geometries and images into TileDB arrays
 
     :param dataset_uri: dataset URI
-    :param dataset_type: Classifier, one of pointcloud, raster or geometry
+    :param dataset_type: dataset type, one of pointcloud, raster or geometry
     :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
         defaults to None
     :param config: config dictionary, defaults to None
@@ -780,10 +789,12 @@ def ingest_datasets_dag(
     :param verbose: verbose logging, defaults to False
     :param trace: bool, enabling log tracing, defaults to False
     :param log_uri: log array URI
-    :param unit_testing: bool internal flag for unit testing the code flow
     """
 
     logger = get_logger_wrapper(verbose)
+
+    if log_uri:
+        create_log_array(log_uri)
 
     kwargs = {}
     fn = None
@@ -814,31 +825,38 @@ def ingest_datasets_dag(
         except ValueError:
             return False
 
-    if dataset_type == "pointcloud":
-        fn = ingest_point_cloud_udf
+    funcs = {
+        DatasetType.POINTCLOUD: {
+            "udf_fn": ingest_point_cloud_udf,
+            "pattern_fn": pointcloud_match,
+            "meta_fn": get_pointcloud_metadata,
+        },
+        DatasetType.RASTER: {
+            "udf_fn": ingest_raster_udf,
+            "pattern_fn": raster_match,
+            "meta_fn": get_raster_metadata,
+        },
+        DatasetType.GEOMETRY: {
+            "udf_fn": ingest_geometry_udf,
+            "geometry_fn": geometry_match,
+            "meta_fn": get_geometry_metadata,
+        },
+    }
 
-        if search_uri:
-            if pattern:
-                sources = find(
-                    search_uri,
-                    config=config,
-                    excludes=ignore,
-                    includes=pattern,
-                    max_files=max_files,
-                )
-            else:
-                sources = find(
-                    search_uri,
-                    config=config,
-                    excludes=ignore,
-                    includes=pointcloud_match,
-                    max_files=max_files,
-                )
+    if search_uri:
+        sources = find(
+            search_uri,
+            config=config,
+            excludes=ignore,
+            includes=pattern if pattern else funcs[dataset_type]["pattern_fn"],
+            max_files=max_files,
+        )
 
-        if len(sources) == 0:
-            raise ValueError("No point cloud datasets found")
+    if len(sources) == 0:
+        raise ValueError(f"No {dataset_type.name} datasets found")
 
-        meta = get_pointcloud_metadata(sources, config=config)
+    meta = funcs[dataset_type]["meta_fn"](sources, config=config)
+    if dataset_type == DatasetType.POINTCLOUD:
         if len(meta.paths) > 0:
             kwargs.update(
                 {
@@ -852,33 +870,7 @@ def ingest_datasets_dag(
             samples = meta.paths[1:]
         else:
             raise ValueError("Require at least one point cloud file to have been found")
-    elif dataset_type == "raster":
-        fn = ingest_raster_udf
-
-        if search_uri:
-            if pattern:
-                sources = find(
-                    search_uri,
-                    config=config,
-                    excludes=ignore,
-                    includes=pattern,
-                    max_files=max_files,
-                )
-            else:
-                sources = find(
-                    search_uri,
-                    config=config,
-                    excludes=ignore,
-                    includes=raster_match,
-                    max_files=max_files,
-                )
-
-        if len(sources) == 0:
-            raise ValueError("No raster datasets found")
-
-        meta = get_raster_metadata(
-            sources, config=config, dst_tile_size=tile_size, res=res
-        )
+    elif dataset_type == DatasetType.RASTER:
         kwargs.update(
             {
                 "crs": meta.crs,
@@ -893,40 +885,43 @@ def ingest_datasets_dag(
             }
         )
         samples = meta.block_metadata
-    elif dataset_type == "geometry":
-        fn = ingest_geometry_udf
-
-        if search_uri:
-            if pattern:
-                sources = find(
-                    search_uri,
-                    config=config,
-                    excludes=ignore,
-                    includes=pattern,
-                    max_files=max_files,
-                )
-            else:
-                sources = find(
-                    search_uri,
-                    config=config,
-                    exclude=ignore,
-                    includes=geometry_match,
-                    max_files=max_files,
-                )
-
-        full_extents = get_geometry_metadata(sources, config=config)
+    elif dataset_type == DatasetType.GEOMETRY:
         kwargs.update(
             {
-                "extents": full_extents,
+                "extents": meta.extents,
             }
         )
     else:
-        raise ValueError(f"Unsupported ingestion dataset type: {dataset_type}")
+        raise ValueError(f"Unsupported ingestion dataset type: {dataset_type.name}")
 
-    if not unit_testing:
+    fn = funcs[dataset_type]["udf_fn"]
+
+    if os.environ.get("UNIT_TESTING"):
+        # unit test inner functions
+        # set up function
+        fn(
+            dataset_uri=dataset_uri,
+            append=False,
+            verbose=verbose,
+            trace=trace,
+            log_uri=log_uri,
+            **kwargs,
+        )
+        # work functions
+        for i, work in enumerate(batch(samples, batch_size)):
+            fn(
+                work,
+                dataset_uri=dataset_uri,
+                append=True,
+                verbose=verbose,
+                trace=trace,
+                log_uri=log_uri,
+                **kwargs,
+            )
+    else:
         # Build the task graph
-        dag_name = f"{dataset_type}-{DEFAULT_DAG_NAME}"
-        task_prefix = f"{dataset_type} - Task"
+        dag_name = f"{dataset_type.name}-{DEFAULT_DAG_NAME}"
+        task_prefix = f"{dataset_type.name} - Task"
 
         logger.info("Building graph")
         graph = tiledb.cloud.dag.DAG(
@@ -978,7 +973,7 @@ def ingest_datasets_dag(
             nodes.append(n)
 
         graph.submit(
-            consolidate_fragment_meta,
+            consolidate_meta,
             dataset_uri,
             config,
             resources=DEFAULT_RESOURCES,
@@ -1005,35 +1000,13 @@ def ingest_datasets_dag(
         logger.info(
             "%s geospatial datasets ingestion submitted -"
             " https://cloud.tiledb.com/activity/taskgraphs/%s/%s",
-            dataset_type,
+            dataset_type.name,
             graph.namespace,
             graph.server_graph_uuid,
         )
-    else:
-        # unit test inner functions
-        # set up function
-        fn(
-            dataset_uri=dataset_uri,
-            append=False,
-            verbose=verbose,
-            trace=trace,
-            log_uri=log_uri,
-            **kwargs,
-        )
-        # work functions
-        for i, work in enumerate(batch(samples, batch_size)):
-            fn(
-                work,
-                dataset_uri=dataset_uri,
-                append=True,
-                verbose=verbose,
-                trace=trace,
-                log_uri=log_uri,
-                **kwargs,
-            )
 
 
-def consolidate_fragment_meta(
+def consolidate_meta(
     dataset_uri: str,
     *,
     config: Optional[Mapping[str, Any]] = None,
@@ -1076,7 +1049,7 @@ def consolidate_fragment_meta(
 def ingest_datasets(
     dataset_uri: str,
     *,
-    dataset_type: str,
+    dataset_type: DatasetType,
     acn: Optional[str] = None,
     config=None,
     namespace: Optional[str] = None,
@@ -1096,13 +1069,12 @@ def ingest_datasets(
     verbose: bool = False,
     trace: bool = False,
     log_uri: Optional[str] = None,
-    unit_testing: bool = False,
 ) -> None:
     """
     Ingest samples into a dataset.
 
     :param dataset_uri: dataset URI
-    :param dataset_type: Classifier, one of pointcloud, raster or geometry
+    :param dataset_type: dataset type, one of pointcloud, raster or geometry
     :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
         defaults to None
     :param config: config dictionary, defaults to None
@@ -1130,20 +1102,16 @@ def ingest_datasets(
     :param verbose: verbose logging, defaults to False
     :param trace: bool, enable trace for logging, defaults to False
     :param log_uri: log array URI
-    :param unit_testing: bool internal flag for unit testing the code flow
     """
 
     # Validate user input
-    if sum([bool(search_uri), bool(dataset_list_uri)]) != 1:
+    if bool(search_uri) & bool(dataset_list_uri):
         raise ValueError(
-            "Exactly one of `search_uri` or `dataset_list_uri`" " must be provided."
+            "Exactly one of `search_uri` or `dataset_list_uri` must be provided."
         )
 
     if not search_uri and (pattern or ignore):
         raise ValueError("Only specify `pattern` or `ignore` with `search_uri`.")
-
-    if dataset_type.lower() not in ["raster", "geometry", "pointcloud"]:
-        raise ValueError(f"{dataset_type} is not supported")
 
     # Remove any trailing slashes
     dataset_uri = dataset_uri.rstrip("/")
@@ -1174,7 +1142,6 @@ def ingest_datasets(
         verbose=verbose,
         trace=trace,
         log_uri=log_uri,
-        unit_testing=unit_testing,
     )
 
 

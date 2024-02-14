@@ -445,17 +445,27 @@ def find(
                 yield f
 
 
-def batch(items, chunk_size):
+T = TypeVar("T")
+
+
+def batch(items: Sequence[T], chunk_size: int) -> Iterator[Sequence[T]]:
+    """Batches a sequence of objects and returns an iterator where
+    each return sequence is of length chunk_size.
+
+    :param items: Sequence to split into batches
+    :param chunk_size: Size of chunks of the sequence to return
+    """
     # Iterator for providing batches of chunks
     length = len(items)
     for ndx in range(0, length, chunk_size):
         yield items[ndx : min(ndx + chunk_size, length)]
 
 
-def serialize_filter(filter):
-    """Serialize TileDB filter
+def serialize_filter(filter) -> dict:
+    """Serialize TileDB filter.
 
-    :return: dict TileDB filter attributes
+    :param filter: TileDB filter to serialize
+    :return: dict, TileDB filter attributes
     """
     if isinstance(filter, tiledb.Filter):
         filter_dict = filter._attrs_()

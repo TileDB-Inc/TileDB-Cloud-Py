@@ -13,12 +13,15 @@ import rasterio
 
 import tiledb
 from tiledb.cloud.geospatial import BoundingBox
+from tiledb.cloud.geospatial import DatasetType
 from tiledb.cloud.geospatial import get_pointcloud_metadata
 from tiledb.cloud.geospatial import get_raster_metadata
 from tiledb.cloud.geospatial import ingest_datasets
 from tiledb.cloud.utilities import batch
 from tiledb.cloud.utilities import serialize_filter
 from tiledb.vfs import VFS
+
+os.environ["UNIT_TESTING"] = "TRUE"
 
 RASTER_NAMES = [
     "test1.tif",
@@ -64,7 +67,7 @@ class GeospatialTest(unittest.TestCase):
                 tmp_path.joinpath(RASTER_NAMES[1]), "w", **kwargs
             ) as dst:
                 data = np.ones((10, 10), dtype=rasterio.uint8) * 2
-                data[:5, :5] = 0
+                data[:5, :5] = 0  # default nodata
                 dst.write(data, indexes=1)
 
             # distinct from test1 and test2 above
@@ -177,7 +180,13 @@ class GeospatialTest(unittest.TestCase):
         test_1 = [self.test_dir.joinpath(r) for r in RASTER_NAMES[:3]]
         with mock.patch.object(VFS, "ls", return_value=test_1):
             expected_extents = BoundingBox(minx=-114, miny=33, maxx=-98, maxy=46)
-            output_array = str(self.test_dir.joinpath("raster_output_array"))
+            # output_array = str(self.test_dir.joinpath("raster_output_array"))
+            import shutil
+
+            output_array = "/tmp/output_array"
+            if os.path.exists(output_array):
+                shutil.rmtree(output_array)
+
             dataset_list_uri = self.test_dir.joinpath("manifest.txt")
             with open(dataset_list_uri, "w") as f:
                 for img in test_1:
@@ -185,7 +194,7 @@ class GeospatialTest(unittest.TestCase):
 
             ingest_datasets(
                 dataset_uri=output_array,
-                dataset_type="raster",
+                dataset_type=DatasetType.RASTER,
                 config={},
                 dataset_list_uri=dataset_list_uri,
                 compression_filter=serialize_filter(zstd_filter),
@@ -193,7 +202,6 @@ class GeospatialTest(unittest.TestCase):
                 batch_size=1,
                 # pick a size we wouldn't normally use for testing
                 tile_size=tile_size,
-                unit_testing=True,
             )
             with rasterio.open(output_array) as src:
                 self.assertEqual(src.bounds.left, expected_extents.minx)
@@ -202,7 +210,8 @@ class GeospatialTest(unittest.TestCase):
                 self.assertEqual(src.bounds.bottom, expected_extents.miny)
                 self.assertEqual(src.profile["blockysize"], tile_size)
                 self.assertEqual(src.profile["blockxsize"], tile_size)
-                self.assertEqual(src.checksum(1), 57947)
+                # half of test_1, all of test_2 and test_3 = 50 + 200 + 300
+                self.assertEqual(src.checksum(1), 550)
 
             # check compression filter
             with tiledb.open(output_array) as src:
@@ -221,12 +230,11 @@ class GeospatialTest(unittest.TestCase):
 
             ingest_datasets(
                 dataset_uri=output_array,
-                dataset_type="pointcloud",
+                dataset_type=DatasetType.POINTCLOUD,
                 config={},
                 dataset_list_uri=dataset_list_uri,
                 batch_size=1,
                 chunk_size=100,
-                unit_testing=True,
             )
 
             with tiledb.open(output_array) as src:
