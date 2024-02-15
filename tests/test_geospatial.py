@@ -199,6 +199,7 @@ class GeospatialTest(unittest.TestCase):
                 config={},
                 dataset_list_uri=dataset_list_uri,
                 compression_filter=serialize_filter(zstd_filter),
+                nodata=0,
                 # set batch size to 1 to test overlapping images
                 batch_size=1,
                 # pick a size we wouldn't normally use for testing
@@ -211,7 +212,7 @@ class GeospatialTest(unittest.TestCase):
                 self.assertEqual(src.bounds.bottom, expected_extents.miny)
                 self.assertEqual(src.profile["blockysize"], tile_size)
                 self.assertEqual(src.profile["blockxsize"], tile_size)
-                # half of test_1, all of test_2 and test_3 = 50 + 200 + 300
+                # all of test_1, 3/4 of test_2 and test_3 = 100 + 150 + 300
                 self.assertEqual(src.checksum(1), 550)
 
             # check compression filter
