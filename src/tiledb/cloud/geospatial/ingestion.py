@@ -221,33 +221,25 @@ def get_raster_metadata(
 
         width = (bounds[2] - bounds[0]) / xres
         height = (bounds[3] - bounds[1]) / yres
-        num_blocks_x = math.ceil(width / dst_tile_size)
-        num_blocks_y = math.ceil(height / dst_tile_size)
 
         dst_transform = rasterio.transform.from_bounds(
             *full_extents.bounds, width, height
         )
-        dst_window = rasterio.windows.Window(0, 0, width, height)
+        dst_windows = rasterio.windows.window_split(height, width, dst_tile_size**2)
 
         results = []
-        for i in range(num_blocks_x):
-            for j in range(num_blocks_y):
-                # calculate window in local pixel co-ordinates
-                # and clamp to destination dimensions
-                win = rasterio.windows.Window(
-                    i * dst_tile_size, j * dst_tile_size, dst_tile_size, dst_tile_size
-                ).intersection(dst_window)
-                region_bounds = rasterio.windows.bounds(win, dst_transform)
-                # find intersection
-                intersects = tuple(idx.intersection(region_bounds))
-                if len(intersects) > 0:
-                    # append the result in pixel coords
-                    results.append(
-                        GeoBlockMetadata(
-                            ranges=win.toranges(),
-                            files=tuple([meta[s].paths for s in intersects]),
-                        )
+        for _, w in dst_windows:
+            region_bounds = rasterio.windows.bounds(w, dst_transform)
+            # find intersection
+            intersects = tuple(idx.intersection(region_bounds))
+            if len(intersects) > 0:
+                # append the result in pixel coords
+                results.append(
+                    GeoBlockMetadata(
+                        ranges=w.toranges(),
+                        files=tuple([meta[s].paths for s in intersects]),
                     )
+                )
 
         return tuple(results)
 
@@ -455,7 +447,7 @@ def ingest_point_cloud_udf(
 
 
 def ingest_raster_udf(
-    input_blocks: Optional[Tuple[GeoBlockMetadata, ...]] = None,
+    chunks: Optional[Tuple[GeoBlockMetadata, ...]] = None,
     *,
     dataset_uri: str,
     extents: Optional[BoundingBox] = None,
@@ -478,7 +470,7 @@ def ingest_raster_udf(
     into tiledb arrays using Rasterio API
 
     :param dataset_uri: str, output TileDB array name
-    :param input_blocks: tuple, sequence of GeoBlockMetadata objects containing
+    :param chunks: tuple, sequence of GeoBlockMetadata objects containing
         the destination raster window and the input files
         that contribute to this window
     :param extents: Extents of the destination raster
@@ -513,6 +505,7 @@ def ingest_raster_udf(
             vfs = tiledb.VFS()
 
             if not append:
+                import rasterio
                 from rasterio.transform import from_origin
 
                 from tiledb import filter
@@ -590,50 +583,31 @@ def ingest_raster_udf(
                 if resampling:
                     resampling = rasterio.enums.Resampling[resampling.lower()]
                 with rasterio.open(dataset_uri, mode="r+") as dst:
-                    for blk in input_blocks:
+                    for chunk in chunks:
                         input_datasets = [
-                            rasterio.open(f, opener=vfs.open) for f in blk.files
+                            rasterio.open(f, opener=vfs.open) for f in chunk.files
                         ]
                         try:
-                            row_off = blk.ranges[0][0]
-                            col_off = blk.ranges[1][0]
-                            dst_window = rasterio.windows.Window(
+                            row_off = chunk.ranges[0][0]
+                            col_off = chunk.ranges[1][0]
+                            chunk_window = rasterio.windows.Window(
                                 col_off,
                                 row_off,
-                                blk.ranges[1][1] - col_off,
-                                blk.ranges[0][1] - row_off,
+                                chunk.ranges[1][1] - col_off,
+                                chunk.ranges[0][1] - row_off,
                             )
-                            dst_bounds = rasterio.windows.bounds(
-                                dst_window, dst.transform
+                            chunk_bounds = rasterio.windows.bounds(
+                                chunk_window, dst.transform
                             )
 
                             for b in range(dst.count):
-                                if len(input_datasets) == 1:
-                                    # TODO deploy rasterio.merge update
-                                    with rasterio.vrt.WarpedVRT(
-                                        input_datasets[0],
-                                        crs=dst.crs,
-                                        transform=dst.transform,
-                                        resampling=resampling,
-                                        width=dst.width,
-                                        height=dst.height,
-                                        masked=True,
-                                    ) as vrt:
-                                        data = vrt.read(window=dst_window)
-                                        dst.write(
-                                            data[b], window=dst_window, indexes=b + 1
-                                        )
-                                else:
-                                    data, _ = rasterio.merge.merge(
-                                        input_datasets,
-                                        bounds=dst_bounds,
-                                        res=dst.res,
-                                        nodata=dst.nodata,
-                                        dtype=dst.profile["dtype"],
-                                        resampling=resampling,
-                                        indexes=[b + 1],
-                                    )
-                                    dst.write(data[0], window=dst_window, indexes=b + 1)
+                                chunk_arr, _ = rasterio.merge.merge(
+                                    input_datasets,
+                                    bounds=chunk_bounds,
+                                    nodata=nodata,
+                                    indexes=[b + 1],
+                                )
+                                dst.write(chunk_arr, window=chunk_window)
                         finally:
                             map(lambda s: s.close(), input_datasets)
 

@@ -9,7 +9,7 @@ pandas==2.1.1
 pyarrow==14.0.1
 python-dateutil==2.8.2
 pytz==2023.3.post1
-rasterio==git+https://github.com/rasterio/rasterio.git@34b0d1b34d49c3320fb1f8e89ab119e84349e9b6
+rasterio==git+https://github.com/rasterio/rasterio.git@441d8c85ba1b7170a0b19313a4d654c5fab6b77a
 pdal==3.3.0
 rtree=1.2.0
 shapely==2.0.2

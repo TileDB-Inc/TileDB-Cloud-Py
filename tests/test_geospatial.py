@@ -180,12 +180,13 @@ class GeospatialTest(unittest.TestCase):
         test_1 = [self.test_dir.joinpath(r) for r in RASTER_NAMES[:3]]
         with mock.patch.object(VFS, "ls", return_value=test_1):
             expected_extents = BoundingBox(minx=-114, miny=33, maxx=-98, maxy=46)
-            # output_array = str(self.test_dir.joinpath("raster_output_array"))
-            import shutil
+            output_array = str(self.test_dir.joinpath("raster_output_array"))
+            # keep - used to verify output if needed
+            # import shutil
 
-            output_array = "/tmp/output_array"
-            if os.path.exists(output_array):
-                shutil.rmtree(output_array)
+            # output_array = "/tmp/output_array"
+            # if os.path.exists(output_array):
+            #     shutil.rmtree(output_array)
 
             dataset_list_uri = self.test_dir.joinpath("manifest.txt")
             with open(dataset_list_uri, "w") as f:
