@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Dict, Iterator, Mapping, Optional, Sequence, Tuple, Union
+from typing import Any, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
 from tiledb.cloud import dag
@@ -8,6 +8,7 @@ from tiledb.cloud.bioimg.helpers import serialize_filter
 from tiledb.cloud.bioimg.helpers import validate_io_paths
 from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.rest_api.models import RetryStrategy
+from tiledb.cloud.utilities._common import as_batch
 from tiledb.cloud.utilities._common import run_dag
 
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
@@ -351,7 +352,5 @@ def ingest(
     return graph
 
 
-def ingest_udf(*args: Any, **kwargs: Any) -> Dict[str, str]:
-    """Ingestor wrapper function that can be used as a UDF."""
-    grf = ingest(*args, **kwargs)
-    return {"status": "started", "graph_id": str(grf.server_graph_uuid)}
+# Wrapper function for batch VCF ingestion
+ingest = as_batch(ingest)
