@@ -1,4 +1,5 @@
 import glob
+import json
 import os
 import shutil
 import tempfile
@@ -8,12 +9,15 @@ from pathlib import Path
 from unittest import mock
 
 import affine
+import fiona
 import numpy as np
 import rasterio
+import shapely
 
 import tiledb
 from tiledb.cloud.geospatial import BoundingBox
 from tiledb.cloud.geospatial import DatasetType
+from tiledb.cloud.geospatial import get_geometry_metadata
 from tiledb.cloud.geospatial import get_pointcloud_metadata
 from tiledb.cloud.geospatial import get_raster_metadata
 from tiledb.cloud.geospatial import ingest_datasets
@@ -33,6 +37,8 @@ RASTER_NAMES = [
 
 PC_NAMES = glob.glob(f"{os.path.join(os.path.dirname(__file__), 'data')}/*.las")
 
+GEOM_NAMES = ["test1.geojson", "test2.geojson", "test3.geojson"]
+
 
 class GeospatialTest(unittest.TestCase):
     def setUp(self):
@@ -40,6 +46,13 @@ class GeospatialTest(unittest.TestCase):
         warnings.simplefilter("ignore")
         # Create a temporary directory
         self.test_dir = Path(tempfile.mkdtemp())
+
+        def create_test_geometries(tmp_path: os.PathLike):
+            radius = 1.0
+            for i in range(1, 4):
+                g = shapely.Point(i, i).buffer(radius)
+                with open(tmp_path.joinpath(GEOM_NAMES[i - 1]), "w") as dst:
+                    json.dump(shapely.geometry.mapping(g), dst)
 
         def create_test_rasters(tmp_path: os.PathLike):
             kwargs = {
@@ -100,6 +113,10 @@ class GeospatialTest(unittest.TestCase):
 
         for r in RASTER_NAMES:
             self.assertTrue(os.path.exists(self.test_dir.joinpath(r)))
+
+        create_test_geometries(self.test_dir)
+        for g in GEOM_NAMES:
+            self.assertTrue(os.path.exists(self.test_dir.joinpath(g)))
 
         self.out_path = "out"
 
@@ -172,7 +189,15 @@ class GeospatialTest(unittest.TestCase):
             self.assertEqual(meta_1.offsets, (0.0, 0.0, 0.0))
 
     def test_geometry_get_metadata(self):
-        pass
+        with mock.patch.object(VFS, "ls", return_value=GEOM_NAMES):
+            meta_1 = get_geometry_metadata(
+                [self.test_dir.joinpath(g) for g in GEOM_NAMES]
+            )
+            self.assertEqual(meta_1.geometry_schema["geometry"], "Polygon")
+            self.assertEqual(meta_1.crs, fiona.crs.CRS.from_epsg(4326))
+            self.assertEqual(
+                meta_1.extents, BoundingBox(minx=0.0, miny=0.0, maxx=4.0, maxy=4.0)
+            )
 
     def test_raster_ingest(self):
         tile_size = 16
@@ -244,7 +269,29 @@ class GeospatialTest(unittest.TestCase):
                 self.assertEqual(len(data["X"]), 1065)
 
     def test_geometry_ingest(self):
-        pass
+        test_1 = [self.test_dir.joinpath(g) for g in GEOM_NAMES]
+        with mock.patch.object(VFS, "ls", return_value=test_1):
+            output_array = str(self.test_dir.joinpath("geom_output_array"))
+            # output_array = "/tmp/geom_output_array"
+            # if os.path.exists(output_array):
+            #     shutil.rmtree(output_array)
+
+            dataset_list_uri = self.test_dir.joinpath("manifest.txt")
+            with open(dataset_list_uri, "w") as f:
+                for g in test_1:
+                    f.write(f"{g}\n")
+
+            ingest_datasets(
+                dataset_uri=output_array,
+                dataset_type=DatasetType.GEOMETRY,
+                config={},
+                dataset_list_uri=dataset_list_uri,
+                batch_size=1,
+            )
+
+            with tiledb.open(output_array) as src:
+                data = src[:]
+                self.assertEqual(len(data["wkb_geometry"]), 3)
 
     def test_batch(self):
         # batching is critical, so lets include a test here

@@ -20,8 +20,8 @@ from tiledb.cloud.utilities import get_logger_wrapper
 from tiledb.cloud.utilities import max_memory_usage
 from tiledb.cloud.utilities import run_dag
 
-# fiona.drvsupport.supported_drivers["TileDB"] = "rw"
-# fiona.vfs.SCHEMES["tiledb"] = "tiledb"
+fiona.drvsupport.supported_drivers["TileDB"] = "arw"
+fiona.vfs.SCHEMES["tiledb"] = "tiledb"
 
 DEFAULT_RESOURCES = {"cpu": "2", "memory": "2Gi"}
 DEFAULT_IMG_NAME = "3.9-geo"
@@ -30,6 +30,7 @@ DEFAULT_DAG_NAME = "geo-ingestion"
 # Default values for ingestion parameters
 RASTER_TILE_SIZE = 1024
 POINT_CLOUD_CHUNK_SIZE = 1_000_000
+GEOMETRY_CHUNK_SIZE = 100_000
 MAX_WORKERS = 40
 BATCH_SIZE = 10
 
@@ -70,13 +71,15 @@ class GeoMetadata:
     crs: str = None
     paths: Optional[Union[List[os.PathLike], os.PathLike]] = None
     # raster properties
-    dtype: Optional[str] = (None,)
+    dtype: Optional[str] = None
     band_count: Optional[int] = None
     res: Optional[Tuple[float, float]] = None
     block_metadata: Optional[Tuple[GeoBlockMetadata, ...]] = None
     # point cloud properties
     scales: Optional[Tuple[float, float, float]] = None
     offsets: Optional[Tuple[float, float, float]] = None
+    # geometry properties
+    geometry_schema: Optional[dict] = None
 
 
 def get_pointcloud_metadata(
@@ -150,16 +153,75 @@ def get_pointcloud_metadata(
 
 
 def get_geometry_metadata(
-    source: Iterable[os.PathLike],
+    sources: Iterable[os.PathLike],
     config: Mapping[str, Any] = None,
+    verbose: bool = False,
+    id: str = "pointcloud_metadata",
+    trace: bool = False,
+    log_uri: Optional[str] = None,
 ) -> GeoMetadata:
     """Return geospatial metadata for a sequence of input geometry data files
 
-    :param source: A sequence of paths or path to input
+    :param sources: A sequence of paths or path to input
     :param config: dict configuration to pass on tiledb.VFS
+    :param verbose: bool, enable verbose logging, default is False
+    :param trace: bool, enable trace logging, default is False
+    :param log_uri: Optional[str] = None,
+    :Return: GeoMetadata, a populated GeoMetadata object
     """
-    # note this will be refactor to use /vsipyopener in fiona
-    pass
+    # note this will be refactored to use /vsipyopener in fiona
+    if len(sources) == 0:
+        raise ValueError("Input point cloud datasets required")
+
+    with tiledb.scope_ctx(config):
+        tiledb.VFS()
+        logger = get_logger_wrapper(verbose)
+        with Profiler(array_uri=log_uri, id=id, trace=trace):
+            # for geometries we need the maximum extents
+            # and to check geometry types / crs are the same
+            schema = None
+            full_extents = None
+            crs = None
+
+            for pth in sources:
+                logger.debug("finding metadata for %r", pth)
+                with fiona.open(pth) as src:
+                    if crs is None:
+                        crs = src.crs
+                    else:
+                        if src.crs != crs:
+                            raise ValueError("All datasets need to be in the same CRS")
+
+                    if schema is None:
+                        schema = src.schema
+                    else:
+                        if src.schema != schema:
+                            raise ValueError(
+                                "All datasets need to have the same schema"
+                            )
+
+                    # 2.5 is supported internally but not needed for ingest
+                    extents = BoundingBox(
+                        minx=src.bounds[0],
+                        miny=src.bounds[1],
+                        maxx=src.bounds[2],
+                        maxy=src.bounds[3],
+                    )
+                if full_extents:
+                    full_extents = BoundingBox(
+                        *shapely.unary_union(
+                            [
+                                shapely.box(*full_extents.bounds),
+                                shapely.box(*extents.bounds),
+                            ]
+                        ).bounds
+                    )
+                else:
+                    full_extents = extents
+
+            return GeoMetadata(
+                extents=full_extents, crs=crs, paths=sources, geometry_schema=schema
+            )
 
 
 def get_raster_metadata(
@@ -265,9 +327,7 @@ def get_raster_metadata(
                         crs = src.crs
                     else:
                         if crs != src.crs:
-                            raise ValueError(
-                                "All datasets need to be in the same projection"
-                            )
+                            raise ValueError("All datasets need to be in the same CRS")
 
                     if num_bands is None:
                         num_bands = src.count
@@ -331,18 +391,107 @@ def get_raster_metadata(
 
 
 def ingest_geometry_udf(
-    sources: Optional[Sequence[str]],
+    sources: Optional[Sequence[str]] = None,
+    *,
     dataset_uri: str,
-    *args: Any,
-    **kwargs,
+    schema: dict,
+    extents: Optional[Tuple[float, float, float, float]] = None,
+    crs: Optional[str] = None,
+    chunk_size: Optional[int] = GEOMETRY_CHUNK_SIZE,
+    compressor: Optional[dict] = None,
+    append: bool = False,
+    verbose: bool = False,
+    config: Optional[Mapping[str, Any]] = None,
+    id: str = "geometry",
+    trace: bool = False,
+    log_uri: Optional[str] = None,
 ):
     """Internal udf that ingests server side batch of geometry files
     into tiledb arrays using Fiona API
 
-    :param input: raster input file names
-    :param output: output TileDB array name
+    :param sources: Sequence of input geometry file names
+    :param dataset_uri: str, output TileDB array name
+    :param schema: dict, dictionary of schema attributes and geometries
+    :param geometry_type: str, fiona geometry type e.g. `Point`
+    :param extents: Extents of the destination geometry array
+    :param crs: str, CRS for the destination dataset
+    :param chunk_size: int, sets tile capacity and
+                       the number of geometries written at once
+    :param compressor: dict, serialized compression filter
+    :param append: bool, whether to append to the array
+    :param verbose: verbose logging, defaults to False
+    :param config: dict, configuration to pass on tiledb.VFS
+    :param id: str, ID for logging, defaults to None
+    :param trace, bool, enable trace logging
+    :param log_uri: log array URI
     """
-    pass
+    import fiona
+
+    from tiledb import filter
+
+    with tiledb.scope_ctx(config):
+        with Profiler(array_uri=log_uri, id=id, trace=trace):
+            tiledb.VFS()
+            logger = get_logger_wrapper(verbose)
+
+            if append:
+                for f in sources:
+                    logger.debug("ingesting geometry dataset %r", f)
+                    with fiona.open(f) as colxn:
+                        with fiona.open(dataset_uri, mode="a") as dst:
+                            for feat in colxn:
+                                # OGR buffers before writing
+                                dst.write(feat)
+            else:
+                if extents and crs:
+                    logger.debug("creating geometry schema for %r", dataset_uri)
+                    if compressor:
+                        compressor_args = dict(compressor)
+                        compressor_name = compressor_args.pop("_name")
+                        if compressor_name:
+                            compressor_args = {
+                                k: None if not v else v
+                                for k, v in compressor_args.items()
+                            }
+                            compression_filter = vars(filter).get(compressor_name)(
+                                **compressor_args
+                            )
+                            compression_level = compression_filter.level
+
+                        else:
+                            raise ValueError
+
+                        with fiona.open(
+                            dataset_uri,
+                            driver="TileDB",
+                            schema=schema,
+                            crs=crs,
+                            BATCH_SIZE=chunk_size,
+                            TILE_CAPACITY=chunk_size,
+                            COMPRESSION=compressor_name[
+                                :-6
+                            ].upper(),  # remove trailing `Filter`
+                            COMPRESSION_LEVEL=compression_level,
+                            BOUNDS=",".join(str(v) for v in extents),
+                        ):
+                            pass
+                    else:
+                        with fiona.open(
+                            dataset_uri,
+                            mode="w",
+                            driver="TileDB",
+                            schema=schema,
+                            crs=crs,
+                            BATCH_SIZE=chunk_size,
+                            TILE_CAPACITY=chunk_size,
+                            BOUNDS=",".join(str(v) for v in extents),
+                        ) as dst:
+                            pass
+
+                else:
+                    raise ValueError("Insufficient metadata for point cloud ingestion")
+
+            logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
 
 
 def ingest_point_cloud_udf(
@@ -830,6 +979,7 @@ def ingest_datasets_dag(
         raise ValueError(f"No {dataset_type.name} datasets found")
 
     meta = funcs[dataset_type]["meta_fn"](sources, config=config)
+
     if dataset_type == DatasetType.POINTCLOUD:
         if len(meta.paths) > 0:
             kwargs.update(
@@ -849,7 +999,7 @@ def ingest_datasets_dag(
             {
                 "crs": meta.crs,
                 "extents": meta.extents,
-                "res": meta.res,
+                "res": res if res else meta.res,
                 "band_count": meta.band_count,
                 "dtype": meta.dtype,
                 "nodata": nodata,
@@ -860,11 +1010,25 @@ def ingest_datasets_dag(
         )
         samples = meta.block_metadata
     elif dataset_type == DatasetType.GEOMETRY:
-        kwargs.update(
-            {
-                "extents": meta.extents,
-            }
-        )
+        if len(meta.paths) > 0:
+            bounds = [
+                meta.extents.minx,
+                meta.extents.miny,
+                meta.extents.maxx,
+                meta.extents.maxy,
+            ]
+            kwargs.update(
+                {
+                    "extents": bounds,
+                    "chunk_size": chunk_size,
+                    "compressor": compression_filter,
+                    "crs": meta.crs,
+                    "schema": meta.geometry_schema,
+                }
+            )
+            samples = meta.paths
+        else:
+            raise ValueError("Require at least one geometry file to have been found")
     else:
         raise ValueError(f"Unsupported ingestion dataset type: {dataset_type.name}")
 
