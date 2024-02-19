@@ -22,6 +22,7 @@ def ingest(
     source: Union[Sequence[str], str],
     output: Union[Sequence[str], str],
     config: Mapping[str, Any],
+    access_credentials_name: str,
     *args: Any,
     taskgraph_name: Optional[str] = None,
     num_batches: Optional[int] = None,
@@ -44,6 +45,8 @@ def ingest(
     :param output: uri / iterable of uris of input files.
         If the uri points to a directory of files make sure it ends with a trailing '/'
     :param config: dict configuration to pass on tiledb.VFS
+    :param access_credentials_name: Access Credentials Name (ACN) registered
+        in TileDB Cloud (ARN type)
     :param taskgraph_name: Optional name for taskgraph, defaults to None
     :param num_batches: Number of graph nodes to spawn.
         Performs it sequentially if default, defaults to 1
@@ -306,7 +309,7 @@ def ingest(
         _SUPPORTED_EXTENSIONS,
         *args,
         verbose=verbose,
-        access_credentials_name=kwargs.get("access_credentials_name"),
+        access_credentials_name=access_credentials_name,
         name=f"{dag_name} input collector",
         result_format="json",
     )
@@ -330,6 +333,7 @@ def ingest(
         image_name=DEFAULT_IMG_NAME,
         max_workers=threads,
         compressor=compressor_serial,
+        access_credentials_name=access_credentials_name,
         **kwargs,
     )
 
@@ -339,7 +343,7 @@ def ingest(
             ingest_list_node,
             config=config,
             verbose=verbose,
-            acn=kwargs.get("access_credentials_name"),
+            acn=access_credentials_name,
             namespace=namespace,
             name=f"{dag_name} registrator ",
             expand_node_output=ingest_list_node,
