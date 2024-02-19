@@ -1,9 +1,9 @@
 import math
 import os
-from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Iterable, List, Mapping, Optional, Sequence, Tuple, Union
+from typing import Iterable, Mapping, Optional, Sequence, Tuple, Union
 
+import attrs
 import fiona
 import laspy
 import rasterio
@@ -13,7 +13,7 @@ from rtree import index
 import tiledb
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import as_batch
-from tiledb.cloud.utilities import batch
+from tiledb.cloud.utilities import chunk
 from tiledb.cloud.utilities import create_log_array
 from tiledb.cloud.utilities import find
 from tiledb.cloud.utilities import get_logger_wrapper
@@ -34,6 +34,10 @@ GEOMETRY_CHUNK_SIZE = 100_000
 MAX_WORKERS = 40
 BATCH_SIZE = 10
 
+XYZBoundsTuple = Tuple[float, float, float, float, float, float]
+XYBoundsTuple = Tuple[float, float, float, float]
+XYZTuple = Tuple[float, float, float]
+
 
 class DatasetType(Enum):
     POINTCLOUD = 1
@@ -41,7 +45,7 @@ class DatasetType(Enum):
     GEOMETRY = 3
 
 
-@dataclass
+@attrs.define
 class BoundingBox:
     minx: float
     miny: float
@@ -51,41 +55,55 @@ class BoundingBox:
     maxz: Optional[float] = None
 
     @property
-    def bounds(self):
+    def bounds(self) -> Union[XYBoundsTuple, XYZBoundsTuple]:
         if self.minz:
             return (self.minx, self.miny, self.minz, self.maxx, self.maxy, self.maxz)
         else:
             return (self.minx, self.miny, self.maxx, self.maxy)
 
 
-@dataclass
+@attrs.define
 class GeoBlockMetadata:
     ranges: Tuple[Tuple[int, int], Tuple[int, int]]
-    files: Tuple[os.PathLike, ...]
+    files: Tuple[os.PathLike, ...] = attrs.field(converter=tuple)
 
 
-@dataclass
+def _wrap_paths(
+    paths: Optional[Union[Sequence[os.PathLike], os.PathLike]]
+) -> Optional[Tuple[os.PathLike, ...]]:
+    if paths is None:
+        return None
+        # Would it make sense to return () here, so it's always a Tuple[PathLike, ...]?
+    if isinstance(paths, (str, bytes)) or not isinstance(paths, Sequence):
+        # Editor's note: the isinstance has to go after the str-or-bytes check
+        # because str and bytes are both Sequences.
+        # (Worse yet, str is a Sequence[str].)
+        return (paths,)
+    return tuple(paths)
+
+
+@attrs.define
 class GeoMetadata:
     # common properties
     extents: BoundingBox
     crs: str = None
-    paths: Optional[Union[List[os.PathLike], os.PathLike]] = None
+    paths: attrs.field(converter=_wrap_paths, default=None) = None
     # raster properties
     dtype: Optional[str] = None
     band_count: Optional[int] = None
     res: Optional[Tuple[float, float]] = None
     block_metadata: Optional[Tuple[GeoBlockMetadata, ...]] = None
     # point cloud properties
-    scales: Optional[Tuple[float, float, float]] = None
-    offsets: Optional[Tuple[float, float, float]] = None
+    scales: Optional[XYZTuple] = None
+    offsets: Optional[XYZTuple] = None
     # geometry properties
     geometry_schema: Optional[dict] = None
 
 
-def get_pointcloud_metadata(
+def load_pointcloud_metadata(
     sources: Iterable[os.PathLike],
     *,
-    config: Mapping[str, Any] = None,
+    config: Optional[Mapping[str, object]] = None,
     verbose: bool = False,
     id: str = "pointcloud_metadata",
     trace: bool = False,
@@ -100,8 +118,13 @@ def get_pointcloud_metadata(
     :param log_uri: Optional[str] = None,
     :Return: GeoMetadata, a populated GeoMetadata object
     """
-    if len(sources) == 0:
+    if not sources:
         raise ValueError("Input point cloud datasets required")
+
+    def _fold_in(oper, existing, new):
+        if existing is None:
+            return new
+        return [oper(e) for e in zip(existing, new)]
 
     with tiledb.scope_ctx(config):
         vfs = tiledb.VFS()
@@ -117,25 +140,10 @@ def get_pointcloud_metadata(
                     # only open header
                     las = laspy.open(src)
                     hdr = las.header
-                    if mins is None:
-                        mins = hdr.mins
-                    else:
-                        mins = [min(e) for e in zip(mins, hdr.mins)]
-
-                    if maxs is None:
-                        maxs = hdr.maxs
-                    else:
-                        maxs = [max(e) for e in zip(maxs, hdr.maxs)]
-
-                    if scales is None:
-                        scales = hdr.scales
-                    else:
-                        scales = [max(e) for e in zip(scales, hdr.scales)]
-
-                    if offsets is None:
-                        offsets = hdr.offsets
-                    else:
-                        offsets = [min(e) for e in zip(offsets, hdr.offsets)]
+                    mins = _fold_in(min, mins, hdr.mins)
+                    maxs = _fold_in(max, maxs, hdr.maxs)
+                    scales = _fold_in(max, scales, hdr.scales)
+                    offsets = _fold_in(min, offsets, hdr.offsets)
 
             return GeoMetadata(
                 paths=sources,
@@ -152,9 +160,9 @@ def get_pointcloud_metadata(
             )
 
 
-def get_geometry_metadata(
+def load_geometry_metadata(
     sources: Iterable[os.PathLike],
-    config: Mapping[str, Any] = None,
+    config: Optional[Mapping[str, object]] = None,
     verbose: bool = False,
     id: str = "pointcloud_metadata",
     trace: bool = False,
@@ -170,7 +178,7 @@ def get_geometry_metadata(
     :Return: GeoMetadata, a populated GeoMetadata object
     """
     # note this will be refactored to use /vsipyopener in fiona
-    if len(sources) == 0:
+    if not sources:
         raise ValueError("Input point cloud datasets required")
 
     with tiledb.scope_ctx(config):
@@ -186,19 +194,13 @@ def get_geometry_metadata(
             for pth in sources:
                 logger.debug("finding metadata for %r", pth)
                 with fiona.open(pth) as src:
-                    if crs is None:
-                        crs = src.crs
-                    else:
-                        if src.crs != crs:
-                            raise ValueError("All datasets need to be in the same CRS")
+                    crs = src.crs if crs is None else crs
+                    if src.crs != crs:
+                        raise ValueError("All datasets need to be in the same CRS")
 
-                    if schema is None:
-                        schema = src.schema
-                    else:
-                        if src.schema != schema:
-                            raise ValueError(
-                                "All datasets need to have the same schema"
-                            )
+                    schema = src.schema if schema is None else schema
+                    if src.schema != schema:
+                        raise ValueError("All datasets need to have the same schema")
 
                     # 2.5 is supported internally but not needed for ingest
                     extents = BoundingBox(
@@ -224,10 +226,10 @@ def get_geometry_metadata(
             )
 
 
-def get_raster_metadata(
+def load_raster_metadata(
     sources: Iterable[os.PathLike],
     *,
-    config: Mapping[str, Any] = None,
+    config: Optional[Mapping[str, object]] = None,
     dst_tile_size: [int] = RASTER_TILE_SIZE,
     res: Tuple[float, float] = None,
     verbose: bool = False,
@@ -246,28 +248,26 @@ def get_raster_metadata(
     :Return: GeoMetadata, a populated GeoMetadata objects with blocks
              and the files that contribute to each block
     """
-    if len(sources) == 0:
+    if not sources:
         raise ValueError("Input raster datasets required")
 
     logger = get_logger_wrapper(verbose)
     full_extents = None
     crs = None
     num_bands = None
-    do_res_check = True
     dtype = None
 
     if res:
         xres, yres = res
         do_res_check = False
     else:
+        do_res_check = True
         xres = None
         yres = None
 
     def group_by_raster_block(
         meta: Sequence[GeoMetadata],
     ) -> Tuple[GeoBlockMetadata, ...]:
-        nonlocal logger
-
         # fast bulk load of geometries in to a r-tree
         def load_geoms(meta):
             for i, im in enumerate(meta):
@@ -294,12 +294,12 @@ def get_raster_metadata(
             region_bounds = rasterio.windows.bounds(w, dst_transform)
             # find intersection
             intersects = tuple(idx.intersection(region_bounds))
-            if len(intersects) > 0:
+            if intersects:
                 # append the result in pixel coords
                 results.append(
                     GeoBlockMetadata(
                         ranges=w.toranges(),
-                        files=tuple([meta[s].paths for s in intersects]),
+                        files=[meta[s].paths for s in intersects],
                     )
                 )
 
@@ -323,27 +323,20 @@ def get_raster_metadata(
                     logger.debug("Extents for %r %r", pth, extents)
 
                     # initialization of variables
-                    if crs is None:
-                        crs = src.crs
-                    else:
-                        if crs != src.crs:
-                            raise ValueError("All datasets need to be in the same CRS")
+                    crs = src.crs if crs is None else crs
+                    if crs != src.crs:
+                        raise ValueError("All datasets need to be in the same CRS")
 
-                    if num_bands is None:
-                        num_bands = src.count
-                    else:
-                        if num_bands != src.count:
-                            raise ValueError(
-                                "All datasets need to have the same number of bands"
-                            )
+                    num_bands = src.count if num_bands is None else num_bands
+                    if num_bands != src.count:
+                        raise ValueError(
+                            "All datasets need to have the same number of bands"
+                        )
 
-                    if dtype is None:
-                        dtype = src.profile["dtype"]
-                    else:
-                        if dtype != src.profile["dtype"]:
-                            raise ValueError(
-                                "All datasets need to have the same data type"
-                            )
+                    dtype = src.profile["dtype"] if dtype is None else dtype
+
+                    if dtype != src.profile["dtype"]:
+                        raise ValueError("All datasets need to have the same data type")
 
                     if do_res_check:
                         # first input resolution is used
@@ -401,7 +394,7 @@ def ingest_geometry_udf(
     compressor: Optional[dict] = None,
     append: bool = False,
     verbose: bool = False,
-    config: Optional[Mapping[str, Any]] = None,
+    config: Optional[Mapping[str, object]] = None,
     id: str = "geometry",
     trace: bool = False,
     log_uri: Optional[str] = None,
@@ -433,33 +426,32 @@ def ingest_geometry_udf(
         with Profiler(array_uri=log_uri, id=id, trace=trace):
             tiledb.VFS()
             logger = get_logger_wrapper(verbose)
+            try:
+                if append:
+                    for f in sources:
+                        logger.debug("ingesting geometry dataset %r", f)
+                        with fiona.open(f) as colxn:
+                            with fiona.open(dataset_uri, mode="a") as dst:
+                                for feat in colxn:
+                                    # OGR buffers before writing
+                                    dst.write(feat)
+                    return
 
-            if append:
-                for f in sources:
-                    logger.debug("ingesting geometry dataset %r", f)
-                    with fiona.open(f) as colxn:
-                        with fiona.open(dataset_uri, mode="a") as dst:
-                            for feat in colxn:
-                                # OGR buffers before writing
-                                dst.write(feat)
-            else:
                 if extents and crs:
                     logger.debug("creating geometry schema for %r", dataset_uri)
                     if compressor:
                         compressor_args = dict(compressor)
-                        compressor_name = compressor_args.pop("_name")
-                        if compressor_name:
-                            compressor_args = {
-                                k: None if not v else v
-                                for k, v in compressor_args.items()
-                            }
-                            compression_filter = vars(filter).get(compressor_name)(
-                                **compressor_args
+                        compressor_type = compressor_args.pop("_type")
+                        if compressor_type:
+                            compression_filter = getattr(filter, compressor_type)(
+                                **{k: v or None for k, v in compressor_args.items()}
                             )
                             compression_level = compression_filter.level
-
                         else:
-                            raise ValueError
+                            raise ValueError("Compression filter name not specified")
+
+                        # remove trailing `Filter`
+                        compressor_type = compressor_type[:-6].upper()
 
                         with fiona.open(
                             dataset_uri,
@@ -468,9 +460,7 @@ def ingest_geometry_udf(
                             crs=crs,
                             BATCH_SIZE=chunk_size,
                             TILE_CAPACITY=chunk_size,
-                            COMPRESSION=compressor_name[
-                                :-6
-                            ].upper(),  # remove trailing `Filter`
+                            COMPRESSION=compressor_type,
                             COMPRESSION_LEVEL=compression_level,
                             BOUNDS=",".join(str(v) for v in extents),
                         ):
@@ -487,11 +477,13 @@ def ingest_geometry_udf(
                             BOUNDS=",".join(str(v) for v in extents),
                         ) as dst:
                             pass
-
+                    return
                 else:
                     raise ValueError("Insufficient metadata for point cloud ingestion")
-
-            logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
+            finally:
+                logger.info(
+                    "max memory usage: %.3f GiB", max_memory_usage() / (1 << 30)
+                )
 
 
 def ingest_point_cloud_udf(
@@ -500,12 +492,12 @@ def ingest_point_cloud_udf(
     dataset_uri: str,
     template_sample: str,
     append: bool = False,
-    extents: Optional[Tuple[float, float, float, float, float, float]] = None,
-    offsets: Optional[Tuple[float, float, float, float, float, float]] = None,
-    scales: Optional[Tuple[float, float, float, float, float, float]] = None,
+    extents: Optional[XYZBoundsTuple] = None,
+    offsets: Optional[Tuple[float, float, float]] = None,
+    scales: Optional[Tuple[float, float, float]] = None,
     chunk_size: Optional[int] = POINT_CLOUD_CHUNK_SIZE,
     verbose: bool = False,
-    config: Optional[Mapping[str, Any]] = None,
+    config: Optional[Mapping[str, object]] = None,
     id: str = "pointcloud",
     trace: bool = False,
     log_uri: Optional[str] = None,
@@ -543,20 +535,22 @@ def ingest_point_cloud_udf(
                     arr[d] = offsets[idx] + (arr[d] * scales[idx])
                 return arr
 
-            if append:
-                for f in sources:
-                    logger.debug("ingesting point cloud %r", f)
-                    with vfs.open(f, "rb") as src:
-                        las = laspy.open(src)
-                        chunk_itr = las.chunk_iterator(chunk_size)
+            try:
+                if append:
+                    for f in sources:
+                        logger.debug("ingesting point cloud %r", f)
+                        with vfs.open(f, "rb") as src:
+                            las = laspy.open(src)
+                            chunk_itr = las.chunk_iterator(chunk_size)
 
-                        for chunk in chunk_itr:
-                            arr = scale_array(chunk.array)
-                            pipeline = pdal.Writer.tiledb(
-                                array_name=dataset_uri, append=append
-                            ).pipeline(arr)
-                            pipeline.execute()
-            else:
+                            for c in chunk_itr:
+                                arr = scale_array(c.array)
+                                pipeline = pdal.Writer.tiledb(
+                                    array_name=dataset_uri, append=append
+                                ).pipeline(arr)
+                                pipeline.execute()
+                    return
+
                 if extents and offsets and scales and template_sample:
                     logger.debug("creating point cloud schema from %r", template_sample)
                     with vfs.open(template_sample, "rb") as src:
@@ -575,28 +569,31 @@ def ingest_point_cloud_udf(
                             z_domain_end=extents.maxz + 1,
                             offset_x=offsets[0],
                             offset_y=offsets[1],
-                            offset_z=offsets[1],
+                            offset_z=offsets[2],
                             scale_x=scales[0],
                             scale_y=scales[1],
-                            scale_z=scales[1],
+                            scale_z=scales[2],
                             chunk_size=chunk_size,
                         ).pipeline(arr)
                         pipeline.execute()
 
-                        for chunk in chunk_itr:
-                            arr = scale_array(chunk.array)
+                        for c in chunk_itr:
+                            arr = scale_array(c.array)
                             pipeline = pdal.Writer.tiledb(
                                 array_name=dataset_uri, append=True
                             ).pipeline(arr)
                             pipeline.execute()
+                    return
                 else:
                     raise ValueError("Insufficient metadata for point cloud ingestion")
-
-            logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
+            finally:
+                logger.info(
+                    "max memory usage: %.3f GiB", max_memory_usage() / (1 << 30)
+                )
 
 
 def ingest_raster_udf(
-    chunks: Optional[Tuple[GeoBlockMetadata, ...]] = None,
+    chunks: Optional[Iterable[GeoBlockMetadata]] = None,
     *,
     dataset_uri: str,
     extents: Optional[BoundingBox] = None,
@@ -609,7 +606,7 @@ def ingest_raster_udf(
     resampling: str = "bilinear",
     append: bool = False,
     verbose: bool = False,
-    config: Optional[Mapping[str, Any]] = None,
+    config: Optional[Mapping[str, object]] = None,
     compressor: Optional[dict] = None,
     id: str = "raster",
     trace: bool = False,
@@ -652,98 +649,93 @@ def ingest_raster_udf(
     with tiledb.scope_ctx(config):
         with Profiler(array_uri=log_uri, id=id, trace=trace):
             vfs = tiledb.VFS()
+            try:
+                if not append:
+                    import rasterio
+                    from rasterio.transform import from_origin
 
-            if not append:
-                import rasterio
-                from rasterio.transform import from_origin
+                    from tiledb import filter
 
-                from tiledb import filter
-
-                if (
-                    extents is None
-                    or res is None
-                    or crs is None
-                    or band_count is None
-                    or dtype is None
-                ):
-                    raise ValueError(
-                        """CRS, band count, extents and resolution are
-                        required to create empty raster array"""
-                    )
-
-                # create empty array,
-                dst_profile = {
-                    "count": band_count,
-                    "dtype": dtype,
-                    "driver": "TileDB",
-                    "crs": crs,
-                    "transform": from_origin(extents.minx, extents.maxy, *res),
-                    "width": math.floor((extents.maxx - extents.minx) / res[0]),
-                    "height": math.floor((extents.maxy - extents.miny) / res[1]),
-                    "blockysize": tile_size,
-                    "blockxsize": tile_size,
-                }
-
-                logger.debug("Destination raster profile %r", dst_profile)
-
-                if nodata is not None:
-                    dst_profile.update(
-                        {
-                            "nodata": nodata,
-                        }
-                    )
-
-                if compressor:
-                    compressor_args = dict(compressor)
-                    compressor_name = compressor_args.pop("_name")
-                    if compressor_name:
-                        compressor_args = {
-                            k: None if not v else v for k, v in compressor_args.items()
-                        }
-                        compression_filter = vars(filter).get(compressor_name)(
-                            **compressor_args
+                    if None in (
+                        extents,
+                        res,
+                        crs,
+                        band_count,
+                        dtype,
+                    ):
+                        raise ValueError(
+                            "CRS, band count, extents and resolution are"
+                            "required to create empty raster array"
                         )
-                        compression_level = compression_filter.level
 
+                    # create empty array,
+                    dst_profile = {
+                        "count": band_count,
+                        "dtype": dtype,
+                        "driver": "TileDB",
+                        "crs": crs,
+                        "transform": from_origin(extents.minx, extents.maxy, *res),
+                        "width": math.floor((extents.maxx - extents.minx) / res[0]),
+                        "height": math.floor((extents.maxy - extents.miny) / res[1]),
+                        "blockysize": tile_size,
+                        "blockxsize": tile_size,
+                    }
+
+                    logger.debug("Destination raster profile %r", dst_profile)
+
+                    if nodata is not None:
+                        dst_profile.update(nodata=nodata)
+
+                    if compressor:
+                        compressor_args = dict(compressor)
+                        compressor_type = compressor_args.pop("_type")
+                        if compressor_type:
+                            compression_filter = getattr(filter, compressor_type)(
+                                **{k: v or None for k, v in compressor_args.items()}
+                            )
+                            compression_level = compression_filter.level
+                        else:
+                            raise ValueError("Compression filter name not specified")
+
+                        # remove trailing `Filter`
+                        compressor_type = compressor_type[:-6].upper()
+
+                        with rasterio.open(
+                            dataset_uri,
+                            mode="w",
+                            COMPRESSION=compressor_type,
+                            COMPRESSION_LEVEL=compression_level,
+                            **dst_profile,
+                        ):
+                            pass
                     else:
-                        raise ValueError
+                        with rasterio.open(
+                            dataset_uri,
+                            mode="w",
+                            **dst_profile,
+                        ):
+                            pass
 
-                    with rasterio.open(
-                        dataset_uri,
-                        mode="w",
-                        COMPRESSION=compressor_name[
-                            :-6
-                        ].upper(),  # remove trailing `Filter`
-                        COMPRESSION_LEVEL=compression_level,
-                        **dst_profile,
-                    ):
-                        pass
-                else:
-                    with rasterio.open(
-                        dataset_uri,
-                        mode="w",
-                        **dst_profile,
-                    ):
-                        pass
+                    logger.debug("Raster array created %r", dataset_uri)
+                    return
 
-                logger.debug("Raster array created %r", dataset_uri)
-            else:
                 # srcs and dst have same number of bands
                 if resampling:
                     resampling = rasterio.enums.Resampling[resampling.lower()]
+
                 with rasterio.open(dataset_uri, mode="r+") as dst:
-                    for chunk in chunks:
+                    for c in chunks:
                         input_datasets = [
-                            rasterio.open(f, opener=vfs.open) for f in chunk.files
+                            rasterio.open(f, opener=vfs.open) for f in c.files
                         ]
                         try:
-                            row_off = chunk.ranges[0][0]
-                            col_off = chunk.ranges[1][0]
+                            col_off = c.ranges[1][0]
+                            row_off = c.ranges[0][0]
                             chunk_window = rasterio.windows.Window(
                                 col_off,
                                 row_off,
-                                chunk.ranges[1][1] - col_off,
-                                chunk.ranges[0][1] - row_off,
+                                c.ranges[1][1] - col_off,
+                                c.ranges[0][1] - row_off,
                             )
                             chunk_bounds = rasterio.windows.bounds(
                                 chunk_window, dst.transform
@@ -758,9 +750,13 @@ def ingest_raster_udf(
                                 )
                                 dst.write(chunk_arr, window=chunk_window)
                         finally:
-                            map(lambda s: s.close(), input_datasets)
-
-            logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
+                            for s in input_datasets:
+                                s.close()
+                return
+            finally:
+                logger.info(
+                    "max memory usage: %.3f GiB", max_memory_usage() / (1 << 30)
+                )
 
 
 def read_uris(
@@ -768,7 +764,7 @@ def read_uris(
     dataset_type: DatasetType,
     *,
     log_uri: Optional[str] = None,
-    config: Optional[Mapping[str, Any]] = None,
+    config: Optional[Mapping[str, object]] = None,
     max_files: Optional[int] = None,
     verbose: bool = False,
 ) -> Sequence[str]:
@@ -807,7 +803,7 @@ def register_dataset_udf(
     *,
     register_name: str,
     namespace: Optional[str] = None,
-    config: Optional[Mapping[str, Any]] = None,
+    config: Optional[Mapping[str, object]] = None,
     verbose: bool = False,
 ) -> None:
     """
@@ -859,7 +855,7 @@ def ingest_datasets_dag(
     *,
     dataset_type: DatasetType,
     acn: Optional[str] = None,
-    config=None,
+    config=Optional[Mapping[str, object]],
     namespace: Optional[str] = None,
     register_name: Optional[str] = None,
     search_uri: Optional[str] = None,
@@ -952,17 +948,17 @@ def ingest_datasets_dag(
         DatasetType.POINTCLOUD: {
             "udf_fn": ingest_point_cloud_udf,
             "pattern_fn": pointcloud_match,
-            "meta_fn": get_pointcloud_metadata,
+            "meta_fn": load_pointcloud_metadata,
         },
         DatasetType.RASTER: {
             "udf_fn": ingest_raster_udf,
             "pattern_fn": raster_match,
-            "meta_fn": get_raster_metadata,
+            "meta_fn": load_raster_metadata,
         },
         DatasetType.GEOMETRY: {
             "udf_fn": ingest_geometry_udf,
             "geometry_fn": geometry_match,
-            "meta_fn": get_geometry_metadata,
+            "meta_fn": load_geometry_metadata,
         },
     }
 
@@ -975,38 +971,36 @@ def ingest_datasets_dag(
             max_files=max_files,
         )
 
-    if len(sources) == 0:
+    if not sources:
         raise ValueError(f"No {dataset_type.name} datasets found")
 
     meta = funcs[dataset_type]["meta_fn"](sources, config=config)
 
     if dataset_type == DatasetType.POINTCLOUD:
-        if len(meta.paths) > 0:
-            kwargs.update(
-                {
-                    "template_sample": meta.paths[0],
-                    "extents": meta.extents,
-                    "offsets": meta.offsets,
-                    "scales": meta.scales,
-                    "chunk_size": chunk_size,
-                }
-            )
-            samples = meta.paths[1:]
-        else:
+        if len(meta.paths) == 0:
             raise ValueError("Require at least one point cloud file to have been found")
-    elif dataset_type == DatasetType.RASTER:
+
         kwargs.update(
             {
-                "crs": meta.crs,
+                "template_sample": meta.paths[0],
                 "extents": meta.extents,
-                "res": res if res else meta.res,
-                "band_count": meta.band_count,
-                "dtype": meta.dtype,
-                "nodata": nodata,
-                "resampling": resampling,
-                "tile_size": tile_size,
-                "compressor": compression_filter,
+                "offsets": meta.offsets,
+                "scales": meta.scales,
+                "chunk_size": chunk_size,
             }
+        )
+        samples = meta.paths[1:]
+    elif dataset_type == DatasetType.RASTER:
+        kwargs.update(
+            crs=meta.crs,
+            extents=meta.extents,
+            res=res if res else meta.res,
+            band_count=meta.band_count,
+            dtype=meta.dtype,
+            nodata=nodata,
+            resampling=resampling,
+            tile_size=tile_size,
+            compressor=compression_filter,
         )
         samples = meta.block_metadata
     elif dataset_type == DatasetType.GEOMETRY:
@@ -1046,7 +1040,7 @@ def ingest_datasets_dag(
             **kwargs,
         )
         # work functions
-        for i, work in enumerate(batch(samples, batch_size)):
+        for i, work in enumerate(chunk(samples, batch_size)):
             fn(
                 work,
                 dataset_uri=dataset_uri,
@@ -1088,8 +1082,8 @@ def ingest_datasets_dag(
             **kwargs,
         )
         # work functions
-        for i, work in enumerate(batch(samples, batch_size)):
-            logger.info(f"Adding batch {i + 1}")
+        for i, work in enumerate(chunk(samples, batch_size)):
+            logger.info(f"Adding chunk {i + 1}")
             n = graph.submit(
                 fn,
                 work,
@@ -1147,7 +1141,7 @@ def ingest_datasets_dag(
 def consolidate_meta(
     dataset_uri: str,
     *,
-    config: Optional[Mapping[str, Any]] = None,
+    config: Optional[Mapping[str, object]] = None,
     id: str = "consolidate",
     verbose: bool = False,
     log_array_uri: Optional[str] = None,
@@ -1243,7 +1237,7 @@ def ingest_datasets(
     """
 
     # Validate user input
-    if bool(search_uri) & bool(dataset_list_uri):
+    if search_uri and dataset_list_uri:
         raise ValueError(
             "Exactly one of `search_uri` or `dataset_list_uri` must be provided."
         )

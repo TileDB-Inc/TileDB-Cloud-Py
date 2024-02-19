@@ -1,5 +1,5 @@
 from ._common import as_batch
-from ._common import batch
+from ._common import chunk
 from ._common import find
 from ._common import get_logger
 from ._common import get_logger_wrapper
@@ -19,7 +19,7 @@ from .profiler import write_log_event
 
 __all__ = [
     "as_batch",
-    "batch",
+    "chunk",
     "find",
     "get_logger",
     "get_logger_wrapper",

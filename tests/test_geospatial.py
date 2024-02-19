@@ -17,11 +17,11 @@ import shapely
 import tiledb
 from tiledb.cloud.geospatial import BoundingBox
 from tiledb.cloud.geospatial import DatasetType
-from tiledb.cloud.geospatial import get_geometry_metadata
-from tiledb.cloud.geospatial import get_pointcloud_metadata
-from tiledb.cloud.geospatial import get_raster_metadata
 from tiledb.cloud.geospatial import ingest_datasets
-from tiledb.cloud.utilities import batch
+from tiledb.cloud.geospatial import load_geometry_metadata
+from tiledb.cloud.geospatial import load_pointcloud_metadata
+from tiledb.cloud.geospatial import load_raster_metadata
+from tiledb.cloud.utilities import chunk
 from tiledb.cloud.utilities import serialize_filter
 from tiledb.vfs import VFS
 
@@ -35,7 +35,9 @@ RASTER_NAMES = [
     "test_diff_crs.tif",
 ]
 
-PC_NAMES = glob.glob(f"{os.path.join(os.path.dirname(__file__), 'data')}/*.las")
+PC_NAMES = glob.glob(
+    f"{os.path.join(os.path.dirname(__file__), 'data', 'geospatial')}/*.las"
+)
 
 GEOM_NAMES = ["test1.geojson", "test2.geojson", "test3.geojson"]
 
@@ -124,7 +126,7 @@ class GeospatialTest(unittest.TestCase):
         # Remove the directory after the test
         shutil.rmtree(self.test_dir)
 
-    def test_raster_get_metadata(self):
+    def test_raster_load_metadata(self):
         tile_size = 16
         ingest_uri_sample = {
             "test1": [self.test_dir.joinpath(r) for r in RASTER_NAMES[:3]],
@@ -140,7 +142,7 @@ class GeospatialTest(unittest.TestCase):
         # Case 1-1 Ingestion
         test_1 = ingest_uri_sample["test1"]
         with mock.patch.object(VFS, "ls", return_value=test_1):
-            meta_1 = get_raster_metadata(test_1, dst_tile_size=tile_size)
+            meta_1 = load_raster_metadata(test_1, dst_tile_size=tile_size)
             expected_extents = BoundingBox(minx=-114, miny=33, maxx=-98, maxy=46)
             self.assertEqual(meta_1.extents, expected_extents)
             self.assertEqual(len(meta_1.block_metadata), 3)
@@ -154,16 +156,16 @@ class GeospatialTest(unittest.TestCase):
         with mock.patch.object(VFS, "ls", return_value=ingest_uri_sample["test2"]):
             # Empty input list raises error
             with self.assertRaises(ValueError):
-                get_raster_metadata(ingest_uri_sample["test2"])
+                load_raster_metadata(ingest_uri_sample["test2"])
 
         # Case 1-3 Ingestion - See if mixed resolutions are detected
         with mock.patch.object(VFS, "ls", return_value=ingest_uri_sample["test3"]):
             # Mixed resolutions without forcing target resolution raises error
             with self.assertRaises(ValueError):
-                get_raster_metadata(ingest_uri_sample["test3"])
+                load_raster_metadata(ingest_uri_sample["test3"])
 
             tgt_res = (0.4, 0.4)
-            meta_3 = get_raster_metadata(ingest_uri_sample["test3"], res=tgt_res)
+            meta_3 = load_raster_metadata(ingest_uri_sample["test3"], res=tgt_res)
             self.assertEqual(meta_3.res, tgt_res)
 
         # Case 1-4 Ingestion - See if mixed CRSs are detected
@@ -171,13 +173,13 @@ class GeospatialTest(unittest.TestCase):
         with mock.patch.object(VFS, "ls", return_value=ingest_uri_sample["test4"]):
             # Mixed CRSs raises error
             with self.assertRaises(ValueError):
-                get_raster_metadata(ingest_uri_sample["test4"])
+                load_raster_metadata(ingest_uri_sample["test4"])
 
         # TODO add tests for mixed band counts and data types
 
-    def test_pointcloud_get_metadata(self):
+    def test_pointcloud_load_metadata(self):
         with mock.patch.object(VFS, "ls", return_value=PC_NAMES):
-            meta_1 = get_pointcloud_metadata(PC_NAMES)
+            meta_1 = load_pointcloud_metadata(PC_NAMES)
             self.assertEqual(meta_1.extents.minx, 635619.85)
             self.assertEqual(meta_1.extents.miny, 848899.7000000001)
             self.assertEqual(meta_1.extents.minz, 406.59000000000003)
@@ -188,9 +190,9 @@ class GeospatialTest(unittest.TestCase):
             self.assertEqual(meta_1.scales, (0.01, 0.01, 0.01))
             self.assertEqual(meta_1.offsets, (0.0, 0.0, 0.0))
 
-    def test_geometry_get_metadata(self):
+    def test_geometry_load_metadata(self):
         with mock.patch.object(VFS, "ls", return_value=GEOM_NAMES):
-            meta_1 = get_geometry_metadata(
+            meta_1 = load_geometry_metadata(
                 [self.test_dir.joinpath(g) for g in GEOM_NAMES]
             )
             self.assertEqual(meta_1.geometry_schema["geometry"], "Polygon")
@@ -293,24 +295,24 @@ class GeospatialTest(unittest.TestCase):
                 data = src[:]
                 self.assertEqual(len(data["wkb_geometry"]), 3)
 
-    def test_batch(self):
-        # batching is critical, so lets include a test here
+    def test_chunk(self):
+        # chunking is critical, so lets include a test here
         samples = [self.test_dir.joinpath(r) for r in RASTER_NAMES[:3]]
 
         # Three nodes with 1 job are expected
         batch_size = 1
-        result = batch(samples, batch_size)
+        result = chunk(samples, batch_size)
         expected = 3
         self.assertEqual(len(tuple(result)), expected)
 
         # Two nodes with 2,1 jobs are expected
         batch_size = 2
-        result = batch(samples, batch_size)
+        result = chunk(samples, batch_size)
         expected = 2
         self.assertEqual(len(tuple(result)), expected)
 
         # One node with all jobs is expected
         batch_size = 3
-        result = batch(samples, batch_size)
+        result = chunk(samples, batch_size)
         expected = 1
         self.assertEqual(len(tuple(result)), expected)

@@ -448,8 +448,8 @@ def find(
 T = TypeVar("T")
 
 
-def batch(items: Sequence[T], chunk_size: int) -> Iterator[Sequence[T]]:
-    """Batches a sequence of objects and returns an iterator where
+def chunk(items: Sequence[T], chunk_size: int) -> Iterator[Sequence[T]]:
+    """Chunks a sequence of objects and returns an iterator where
     each return sequence is of length chunk_size.
 
     :param items: Sequence to split into batches
@@ -469,7 +469,7 @@ def serialize_filter(filter) -> dict:
     """
     if isinstance(filter, tiledb.Filter):
         filter_dict = filter._attrs_()
-        filter_dict["_name"] = type(filter).__name__
+        filter_dict["_type"] = type(filter).__name__
         return filter_dict
     else:
         raise TypeError
