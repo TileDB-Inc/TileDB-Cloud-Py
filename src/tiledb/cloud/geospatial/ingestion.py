@@ -15,7 +15,6 @@ from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import chunk
 from tiledb.cloud.utilities import create_log_array
-from tiledb.cloud.utilities import find
 from tiledb.cloud.utilities import get_logger_wrapper
 from tiledb.cloud.utilities import max_memory_usage
 from tiledb.cloud.utilities import run_dag
@@ -162,6 +161,7 @@ def load_pointcloud_metadata(
 
 def load_geometry_metadata(
     sources: Iterable[os.PathLike],
+    *,
     config: Optional[Mapping[str, object]] = None,
     verbose: bool = False,
     id: str = "pointcloud_metadata",
@@ -384,13 +384,14 @@ def load_raster_metadata(
 
 
 def ingest_geometry_udf(
-    sources: Optional[Sequence[str]] = None,
+    sources: Sequence[str],
     *,
     dataset_uri: str,
-    schema: dict,
-    extents: Optional[Tuple[float, float, float, float]] = None,
+    schema: dict = None,
+    extents: Optional[XYBoundsTuple] = None,
     crs: Optional[str] = None,
     chunk_size: Optional[int] = GEOMETRY_CHUNK_SIZE,
+    batch_size: Optional[int] = BATCH_SIZE,
     compressor: Optional[dict] = None,
     append: bool = False,
     verbose: bool = False,
@@ -398,7 +399,7 @@ def ingest_geometry_udf(
     id: str = "geometry",
     trace: bool = False,
     log_uri: Optional[str] = None,
-):
+) -> Union[Sequence[os.PathLike], None]:
     """Internal udf that ingests server side batch of geometry files
     into tiledb arrays using Fiona API
 
@@ -410,6 +411,7 @@ def ingest_geometry_udf(
     :param crs: str, CRS for the destination dataset
     :param chunk_size: int, sets tile capacity and
                        the number of geometries written at once
+    :param batch_size: batch size for dataset ingestion, defaults to BATCH_SIZE
     :param compressor: dict, serialized compression filter
     :param append: bool, whether to append to the array
     :param verbose: verbose logging, defaults to False
@@ -417,6 +419,7 @@ def ingest_geometry_udf(
     :param id: str, ID for logging, defaults to None
     :param trace, bool, enable trace logging
     :param log_uri: log array URI
+    :return: if not appending then the function returns a tuple of file paths
     """
     import fiona
 
@@ -477,7 +480,8 @@ def ingest_geometry_udf(
                             BOUNDS=",".join(str(v) for v in extents),
                         ) as dst:
                             pass
-                    return
+
+                    return chunk(sources, batch_size)
                 else:
                     raise ValueError("Insufficient metadata for point cloud ingestion")
             finally:
@@ -487,21 +491,22 @@ def ingest_geometry_udf(
 
 
 def ingest_point_cloud_udf(
-    sources: Optional[Sequence[str]] = None,
+    sources: Sequence[str],
     *,
     dataset_uri: str,
-    template_sample: str,
+    template_sample: str = None,
     append: bool = False,
     extents: Optional[XYZBoundsTuple] = None,
-    offsets: Optional[Tuple[float, float, float]] = None,
-    scales: Optional[Tuple[float, float, float]] = None,
+    offsets: Optional[XYZTuple] = None,
+    scales: Optional[XYZTuple] = None,
     chunk_size: Optional[int] = POINT_CLOUD_CHUNK_SIZE,
+    batch_size: Optional[int] = BATCH_SIZE,
     verbose: bool = False,
     config: Optional[Mapping[str, object]] = None,
     id: str = "pointcloud",
     trace: bool = False,
     log_uri: Optional[str] = None,
-):
+) -> Union[Sequence[os.PathLike], None]:
     """Internal udf that ingests server side batch of point cloud files
     into tiledb arrays using PDAL API. Compression uses the default profile
     built in to PDAL.
@@ -514,11 +519,13 @@ def ingest_point_cloud_udf(
     :param scales: Tuple, scale values for point cloud, ordered as x,y,z
     :param offsets: Tuple, offset values for point cloud, ordered as x,y,z
     :param chunk_size: PDAL configuration for chunking fragments
+    :param batch_size: batch size for dataset ingestion, defaults to BATCH_SIZE
     :param verbose: verbose logging, defaults to False
     :param config: dict, configuration to pass on tiledb.VFS
     :param id: str, ID for logging, defaults to None
     :param trace, bool, enable trace logging
     :param log_uri: log array URI
+    :return: if not appending then a sequence of file paths
     """
     import laspy
     import pdal
@@ -583,7 +590,8 @@ def ingest_point_cloud_udf(
                                 array_name=dataset_uri, append=True
                             ).pipeline(arr)
                             pipeline.execute()
-                    return
+
+                    return chunk(sources, batch_size)
                 else:
                     raise ValueError("Insufficient metadata for point cloud ingestion")
             finally:
@@ -593,7 +601,7 @@ def ingest_point_cloud_udf(
 
 
 def ingest_raster_udf(
-    chunks: Optional[Iterable[GeoBlockMetadata]] = None,
+    sources: Tuple[GeoBlockMetadata],
     *,
     dataset_uri: str,
     extents: Optional[BoundingBox] = None,
@@ -605,20 +613,21 @@ def ingest_raster_udf(
     tile_size: int = RASTER_TILE_SIZE,
     resampling: str = "bilinear",
     append: bool = False,
+    batch_size: int = BATCH_SIZE,
     verbose: bool = False,
     config: Optional[Mapping[str, object]] = None,
     compressor: Optional[dict] = None,
     id: str = "raster",
     trace: bool = False,
     log_uri: Optional[str] = None,
-):
+) -> Union[Sequence[GeoBlockMetadata], None]:
     """Internal udf that ingests server side batch of raster files
     into tiledb arrays using Rasterio API
 
-    :param dataset_uri: str, output TileDB array name
-    :param chunks: tuple, sequence of GeoBlockMetadata objects containing
+    :param sources: tuple, sequence of GeoBlockMetadata objects containing
         the destination raster window and the input files
         that contribute to this window
+    :param dataset_uri: str, output TileDB array name
     :param extents: Extents of the destination raster
     :param band_count: int, number of bands in destination array
     :param dtype: str, dtype of destination array
@@ -628,12 +637,14 @@ def ingest_raster_udf(
     :param resampling: string, resampling method,
         one of None, bilinear, cubic, nearest and average
     :param append: bool, whether to append to the array
+    :param batch_size: batch size for dataset ingestion, defaults to BATCH_SIZE
     :param verbose: verbose logging, defaults to False
     :param config: dict, configuration to pass on tiledb.VFS
     :param compressor: dict, serialized compression filter
     :param id: str, ID for logging, defaults to None
     :param trace, bool, enable trace logging
     :param log_uri: log array URI
+    :return: if not appending then a sequence of populated GeoBlockMetadata objects
     """
 
     import rasterio
@@ -717,14 +728,14 @@ def ingest_raster_udf(
                             pass
 
                     logger.debug("Raster array created %r", dataset_uri)
-                    return
+                    return chunk(sources, batch_size)
 
                 # srcs and dst have same number of bands
                 if resampling:
                     resampling = rasterio.enums.Resampling[resampling.lower()]
 
                 with rasterio.open(dataset_uri, mode="r+") as dst:
-                    for c in chunks:
+                    for c in sources:
                         input_datasets = [
                             rasterio.open(f, opener=vfs.open) for f in c.files
                         ]
@@ -816,6 +827,9 @@ def register_dataset_udf(
     :param verbose: verbose logging, defaults to False
     """
 
+    import tiledb
+    from tiledb.cloud.utilities import get_logger_wrapper
+
     logger = get_logger_wrapper(verbose)
 
     namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
@@ -850,12 +864,186 @@ def register_dataset_udf(
             )
 
 
+def build_inputs_udf(
+    *,
+    dataset_type: DatasetType,
+    config: Optional[Mapping[str, object]] = None,
+    search_uri: Optional[str] = None,
+    pattern: Optional[str] = None,
+    ignore: Optional[str] = None,
+    dataset_list_uri: Optional[str] = None,
+    max_files: Optional[int] = None,
+    compression_filter: Optional[dict] = None,
+    tile_size: int = RASTER_TILE_SIZE,
+    chunk_size: int = POINT_CLOUD_CHUNK_SIZE,
+    nodata: Optional[float] = None,
+    resampling: Optional[str] = "bilinear",
+    res: Tuple[float, float] = None,
+    verbose: bool = False,
+    trace: bool = False,
+    log_uri: Optional[str] = None,
+) -> dict[str, object]:
+    """Groups input URIs into batches.
+    :param dataset_uri: dataset URI
+    :param dataset_type: dataset type, one of pointcloud, raster or geometry
+    :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
+        defaults to None
+    :param config: config dictionary, defaults to None
+    :param search_uri: URI to search for geospatial dataset files, defaults to None
+    :param pattern: Unix shell style pattern to match when searching for files,
+        defaults to None
+    :param ignore: Unix shell style pattern to ignore when searching for files,
+        defaults to None
+    :param dataset_list_uri: URI with a list of dataset URIs, defaults to None
+    :param max_files: maximum number of URIs to read/find,
+        defaults to None (no limit)
+    :param compression_filter: serialized tiledb filter,
+        defaults to None
+    :param tile_size: for rasters this is the tile (block) size
+        for the merged destination array, defaults to 1024
+    :param chunk_size: for point cloud this is the PDAL chunk size, defaults to 1000000
+    :param nodata: NODATA value for raster merging
+    :param resampling: string, resampling method,
+        one of None, bilinear, cubic, nearest and average
+    :param res: Tuple[float, float], output resolution in x/y
+    :param verbose: verbose logging, defaults to False
+    :param trace: bool, enabling log tracing, defaults to False
+    :param log_uri: log array URI
+    :return: A dict containing the kwargs needed for the next function call
+    """
+    from tiledb.cloud.utilities import Profiler
+    from tiledb.cloud.utilities import find
+    from tiledb.cloud.utilities import get_logger_wrapper
+    from tiledb.cloud.utilities import max_memory_usage
+
+    logger = get_logger_wrapper(verbose)
+    with Profiler(array_uri=log_uri, id=id, trace=trace):
+        try:
+
+            def raster_match(f: str):
+                import rasterio
+
+                try:
+                    rasterio.driver_from_extension(f)
+                    return True
+                except ValueError:
+                    return False
+
+            def pointcloud_match(f: str):
+                return os.path.splitext(f)[-1].lstrip(".").lower() in ["las", "laz"]
+
+            def geometry_match(f: str):
+                import fiona
+
+                try:
+                    fiona.drvsupport.driver_from_extension(f)
+                    return True
+                except ValueError:
+                    return False
+
+            fns = {
+                DatasetType.POINTCLOUD: {
+                    "pattern_fn": pointcloud_match,
+                    "meta_fn": load_pointcloud_metadata,
+                },
+                DatasetType.RASTER: {
+                    "pattern_fn": raster_match,
+                    "meta_fn": load_raster_metadata,
+                },
+                DatasetType.GEOMETRY: {
+                    "pattern_fn": geometry_match,
+                    "meta_fn": load_geometry_metadata,
+                },
+            }
+
+            kwargs = {}
+
+            if dataset_list_uri:
+                sources = read_uris(
+                    dataset_list_uri,
+                    dataset_type=dataset_type,
+                    log_uri=log_uri,
+                    config=config,
+                    max_files=max_files,
+                )
+
+            if search_uri:
+                sources = find(
+                    search_uri,
+                    config=config,
+                    excludes=ignore,
+                    includes=pattern if pattern else fns[dataset_type]["pattern_fn"],
+                    max_files=max_files,
+                )
+
+            if not sources:
+                raise ValueError(f"No {dataset_type.name} datasets found")
+
+            meta = fns[dataset_type]["meta_fn"](sources, config=config)
+
+            if dataset_type == DatasetType.POINTCLOUD:
+                if len(meta.paths) == 0:
+                    raise ValueError(
+                        "Require at least one point cloud file to have been found"
+                    )
+
+                kwargs.update(
+                    template_sample=meta.paths[0],
+                    extents=meta.extents,
+                    offsets=meta.offsets,
+                    scales=meta.scales,
+                    chunk_size=chunk_size,
+                    sources=meta.paths[1:],
+                )
+            elif dataset_type == DatasetType.RASTER:
+                kwargs.update(
+                    crs=meta.crs,
+                    extents=meta.extents,
+                    res=res if res else meta.res,
+                    band_count=meta.band_count,
+                    dtype=meta.dtype,
+                    nodata=nodata,
+                    resampling=resampling,
+                    tile_size=tile_size,
+                    compressor=compression_filter,
+                    sources=meta.block_metadata,
+                )
+            elif dataset_type == DatasetType.GEOMETRY:
+                if len(meta.paths) > 0:
+                    bounds = [
+                        meta.extents.minx,
+                        meta.extents.miny,
+                        meta.extents.maxx,
+                        meta.extents.maxy,
+                    ]
+                    kwargs.update(
+                        extents=bounds,
+                        chunk_size=chunk_size,
+                        compressor=compression_filter,
+                        crs=meta.crs,
+                        schema=meta.geometry_schema,
+                        sources=meta.paths,
+                    )
+                else:
+                    raise ValueError(
+                        "Require at least one geometry file to have been found"
+                    )
+            else:
+                raise ValueError(
+                    f"Unsupported ingestion dataset type: {dataset_type.name}"
+                )
+
+            return kwargs
+        finally:
+            logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
+
+
 def ingest_datasets_dag(
     dataset_uri: str,
     *,
     dataset_type: DatasetType,
     acn: Optional[str] = None,
-    config=Optional[Mapping[str, object]],
+    config: Optional[Mapping[str, object]] = None,
     namespace: Optional[str] = None,
     register_name: Optional[str] = None,
     search_uri: Optional[str] = None,
@@ -915,132 +1103,54 @@ def ingest_datasets_dag(
     if log_uri:
         create_log_array(log_uri)
 
-    kwargs = {}
-    fn = None
-
-    if dataset_list_uri:
-        sources = read_uris(
-            dataset_list_uri,
-            dataset_type=dataset_type,
-            log_uri=log_uri,
-            config=config,
-            max_files=max_files,
-        )
-
-    def pointcloud_match(f):
-        return os.path.splitext(f)[-1].lstrip(".").lower() in ["las", "laz"]
-
-    def raster_match(f):
-        try:
-            rasterio.driver_from_extension(f)
-            return True
-        except ValueError:
-            return False
-
-    def geometry_match(f):
-        try:
-            fiona.drvsupport.driver_from_extension(f)
-            return True
-        except ValueError:
-            return False
-
     funcs = {
         DatasetType.POINTCLOUD: {
             "udf_fn": ingest_point_cloud_udf,
-            "pattern_fn": pointcloud_match,
-            "meta_fn": load_pointcloud_metadata,
         },
         DatasetType.RASTER: {
             "udf_fn": ingest_raster_udf,
-            "pattern_fn": raster_match,
-            "meta_fn": load_raster_metadata,
         },
         DatasetType.GEOMETRY: {
             "udf_fn": ingest_geometry_udf,
-            "geometry_fn": geometry_match,
-            "meta_fn": load_geometry_metadata,
         },
     }
-
-    if search_uri:
-        sources = find(
-            search_uri,
-            config=config,
-            excludes=ignore,
-            includes=pattern if pattern else funcs[dataset_type]["pattern_fn"],
-            max_files=max_files,
-        )
-
-    if not sources:
-        raise ValueError(f"No {dataset_type.name} datasets found")
-
-    meta = funcs[dataset_type]["meta_fn"](sources, config=config)
-
-    if dataset_type == DatasetType.POINTCLOUD:
-        if len(meta.paths) == 0:
-            raise ValueError("Require at least one point cloud file to have been found")
-
-        kwargs.update(
-            {
-                "template_sample": meta.paths[0],
-                "extents": meta.extents,
-                "offsets": meta.offsets,
-                "scales": meta.scales,
-                "chunk_size": chunk_size,
-            }
-        )
-        samples = meta.paths[1:]
-    elif dataset_type == DatasetType.RASTER:
-        kwargs.update(
-            crs=meta.crs,
-            extents=meta.extents,
-            res=res if res else meta.res,
-            band_count=meta.band_count,
-            dtype=meta.dtype,
-            nodata=nodata,
-            resampling=resampling,
-            tile_size=tile_size,
-            compressor=compression_filter,
-        )
-        samples = meta.block_metadata
-    elif dataset_type == DatasetType.GEOMETRY:
-        if len(meta.paths) > 0:
-            bounds = [
-                meta.extents.minx,
-                meta.extents.miny,
-                meta.extents.maxx,
-                meta.extents.maxy,
-            ]
-            kwargs.update(
-                {
-                    "extents": bounds,
-                    "chunk_size": chunk_size,
-                    "compressor": compression_filter,
-                    "crs": meta.crs,
-                    "schema": meta.geometry_schema,
-                }
-            )
-            samples = meta.paths
-        else:
-            raise ValueError("Require at least one geometry file to have been found")
-    else:
-        raise ValueError(f"Unsupported ingestion dataset type: {dataset_type.name}")
 
     fn = funcs[dataset_type]["udf_fn"]
 
     if os.environ.get("UNIT_TESTING"):
         # unit test inner functions
+        kwargs = build_inputs_udf(
+            dataset_type=dataset_type,
+            config=config,
+            search_uri=search_uri,
+            pattern=pattern,
+            dataset_list_uri=dataset_list_uri,
+            max_files=max_files,
+            compression_filter=compression_filter,
+            tile_size=tile_size,
+            chunk_size=chunk_size,
+            nodata=nodata,
+            resampling=resampling,
+            res=res,
+            verbose=verbose,
+            trace=trace,
+        )
+
         # set up function
-        fn(
+        samples = fn(
             dataset_uri=dataset_uri,
             append=False,
+            batch_size=batch_size,
             verbose=verbose,
             trace=trace,
             log_uri=log_uri,
             **kwargs,
         )
+
+        kwargs.pop("sources")
+
         # work functions
-        for i, work in enumerate(chunk(samples, batch_size)):
+        for i, work in enumerate(samples):
             fn(
                 work,
                 dataset_uri=dataset_uri,
@@ -1063,11 +1173,33 @@ def ingest_datasets_dag(
             namespace=namespace,
         )
 
-        nodes = []
+        # find sources
+        input_list_node = graph.submit(
+            build_inputs_udf,
+            dataset_type=dataset_type,
+            acn=acn,
+            config=config,
+            search_uri=search_uri,
+            pattern=pattern,
+            ignore=ignore,
+            dataset_list_uri=dataset_list_uri,
+            max_files=max_files,
+            compression_filter=compression_filter,
+            tile_size=tile_size,
+            chunk_size=chunk_size,
+            nodata=nodata,
+            resampling=resampling,
+            res=res,
+            verbose=verbose,
+            trace=trace,
+            log_uri=log_uri,
+            name=f"{dag_name} input collector",
+        )
 
-        # create first node
+        # schema creation node, returns a sequence of work items
         ingest_node = graph.submit(
             fn,
+            **input_list_node,
             dataset_uri=dataset_uri,
             config=config,
             append=False,
@@ -1079,30 +1211,25 @@ def ingest_datasets_dag(
             resources=DEFAULT_RESOURCES,
             image_name=DEFAULT_IMG_NAME,
             access_credentials_name=acn,
-            **kwargs,
         )
-        # work functions
-        for i, work in enumerate(chunk(samples, batch_size)):
-            logger.info(f"Adding chunk {i + 1}")
-            n = graph.submit(
-                fn,
-                work,
-                dataset_uri=dataset_uri,
-                config=config,
-                name=f"{task_prefix} - {i}",
-                mode=tiledb.cloud.dag.Mode.BATCH,
-                append=True,
-                verbose=verbose,
-                trace=trace,
-                log_uri=log_uri,
-                resources=DEFAULT_RESOURCES,
-                image_name=DEFAULT_IMG_NAME,
-                access_credentials_name=acn,
-                **kwargs,
-            )
+        ingest_node.depends_on(input_list_node)
 
-            n.depends_on(ingest_node)
-            nodes.append(n)
+        process_node = graph.submit(
+            fn,
+            ingest_node,
+            dataset_uri=dataset_uri,
+            config=config,
+            name=f"{task_prefix} - {i}",
+            expand_node_output=ingest_node,
+            mode=tiledb.cloud.dag.Mode.BATCH,
+            append=True,
+            verbose=verbose,
+            trace=trace,
+            log_uri=log_uri,
+            resources=DEFAULT_RESOURCES,
+            image_name=DEFAULT_IMG_NAME,
+            access_credentials_name=acn,
+        )
 
         graph.submit(
             consolidate_meta,
@@ -1110,9 +1237,10 @@ def ingest_datasets_dag(
             config,
             resources=DEFAULT_RESOURCES,
             verbose=verbose,
+            trace=trace,
             log_uri=log_uri,
             access_credentials_name=acn,
-        ).depends_on(nodes)
+        ).depends_on(process_node)
 
         # Register the dataset on TileDB Cloud
         if register_name:
@@ -1144,7 +1272,8 @@ def consolidate_meta(
     config: Optional[Mapping[str, object]] = None,
     id: str = "consolidate",
     verbose: bool = False,
-    log_array_uri: Optional[str] = None,
+    trace: bool = False,
+    log_uri: Optional[str] = None,
 ) -> None:
     """
     Consolidate arrays in the dataset.
@@ -1158,7 +1287,7 @@ def consolidate_meta(
     logger = get_logger_wrapper(verbose)
 
     with tiledb.scope_ctx(config):
-        with Profiler(array_uri=log_array_uri, id=id):
+        with Profiler(array_uri=log_uri, id=id, trace=trace):
             modes = ["commits", "fragment_meta", "array_meta"]
 
             for mode in modes:
