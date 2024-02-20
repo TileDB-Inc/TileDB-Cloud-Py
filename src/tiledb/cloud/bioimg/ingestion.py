@@ -357,4 +357,4 @@ def ingest(
 
 
 # Wrapper function for batch VCF ingestion
-ingest_wrappper = as_batch(ingest)
+ingest_batch = as_batch(ingest)
