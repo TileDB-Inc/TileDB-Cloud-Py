@@ -316,7 +316,7 @@ def as_batch(func: _CT) -> _CT:
         namespace = kwargs.get("namespace", None)
         acn = kwargs.get("acn", kwargs.get("access_credentials_name", None))
         kwargs["acn"] = acn  # for backwards compatibility
-        resources = kwargs.get("resources", None)
+        resources = kwargs.pop("resources", None)
 
         # Create a new DAG
         graph = dag.DAG(
