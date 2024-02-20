@@ -17,15 +17,16 @@ import shapely
 import tiledb
 from tiledb.cloud.geospatial import BoundingBox
 from tiledb.cloud.geospatial import DatasetType
-from tiledb.cloud.geospatial import ingest_datasets
+from tiledb.cloud.geospatial import build_inputs_udf
+from tiledb.cloud.geospatial import ingest_geometry_udf
+from tiledb.cloud.geospatial import ingest_point_cloud_udf
+from tiledb.cloud.geospatial import ingest_raster_udf
 from tiledb.cloud.geospatial import load_geometry_metadata
 from tiledb.cloud.geospatial import load_pointcloud_metadata
 from tiledb.cloud.geospatial import load_raster_metadata
 from tiledb.cloud.utilities import chunk
 from tiledb.cloud.utilities import serialize_filter
 from tiledb.vfs import VFS
-
-os.environ["UNIT_TESTING"] = "TRUE"
 
 RASTER_NAMES = [
     "test1.tif",
@@ -40,6 +41,50 @@ PC_NAMES = glob.glob(
 )
 
 GEOM_NAMES = ["test1.geojson", "test2.geojson", "test3.geojson"]
+
+
+def run_local(
+    dataset_uri: str, *, dataset_type: DatasetType, batch_size: int, **kwargs
+):
+    # run the key functions of the DAG locally in sequence
+    funcs = {
+        DatasetType.POINTCLOUD: {
+            "udf_fn": ingest_point_cloud_udf,
+        },
+        DatasetType.RASTER: {
+            "udf_fn": ingest_raster_udf,
+        },
+        DatasetType.GEOMETRY: {
+            "udf_fn": ingest_geometry_udf,
+        },
+    }
+
+    fn = funcs[dataset_type]["udf_fn"]
+
+    # unit test inner functions
+    new_kwargs = build_inputs_udf(
+        dataset_type=dataset_type,
+        **kwargs,
+    )
+
+    # set up function
+    samples = fn(
+        dataset_uri=dataset_uri,
+        append=False,
+        batch_size=batch_size,
+        **new_kwargs,
+    )
+
+    new_kwargs.pop("sources")
+
+    # work functions
+    for _, work in enumerate(samples):
+        fn(
+            work,
+            dataset_uri=dataset_uri,
+            append=True,
+            **new_kwargs,
+        )
 
 
 class GeospatialTest(unittest.TestCase):
@@ -220,7 +265,7 @@ class GeospatialTest(unittest.TestCase):
                 for img in test_1:
                     f.write(f"{img}\n")
 
-            ingest_datasets(
+            run_local(
                 dataset_uri=output_array,
                 dataset_type=DatasetType.RASTER,
                 config={},
@@ -232,6 +277,7 @@ class GeospatialTest(unittest.TestCase):
                 # pick a size we wouldn't normally use for testing
                 tile_size=tile_size,
             )
+
             with rasterio.open(output_array) as src:
                 self.assertEqual(src.bounds.left, expected_extents.minx)
                 self.assertEqual(src.bounds.right, expected_extents.maxx)
@@ -257,7 +303,7 @@ class GeospatialTest(unittest.TestCase):
                 for img in test_1:
                     f.write(f"{img}\n")
 
-            ingest_datasets(
+            run_local(
                 dataset_uri=output_array,
                 dataset_type=DatasetType.POINTCLOUD,
                 config={},
@@ -283,7 +329,7 @@ class GeospatialTest(unittest.TestCase):
                 for g in test_1:
                     f.write(f"{g}\n")
 
-            ingest_datasets(
+            run_local(
                 dataset_uri=output_array,
                 dataset_type=DatasetType.GEOMETRY,
                 config={},

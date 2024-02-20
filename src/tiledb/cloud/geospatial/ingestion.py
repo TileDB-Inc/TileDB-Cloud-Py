@@ -1117,153 +1117,110 @@ def ingest_datasets_dag(
 
     fn = funcs[dataset_type]["udf_fn"]
 
-    if os.environ.get("UNIT_TESTING"):
-        # unit test inner functions
-        kwargs = build_inputs_udf(
-            dataset_type=dataset_type,
-            config=config,
-            search_uri=search_uri,
-            pattern=pattern,
-            dataset_list_uri=dataset_list_uri,
-            max_files=max_files,
-            compression_filter=compression_filter,
-            tile_size=tile_size,
-            chunk_size=chunk_size,
-            nodata=nodata,
-            resampling=resampling,
-            res=res,
-            verbose=verbose,
-            trace=trace,
-        )
+    # Build the task graph
+    dag_name = f"{dataset_type.name}-{DEFAULT_DAG_NAME}"
+    task_prefix = f"{dataset_type.name} - Task"
 
-        # set up function
-        samples = fn(
-            dataset_uri=dataset_uri,
-            append=False,
-            batch_size=batch_size,
-            verbose=verbose,
-            trace=trace,
-            log_uri=log_uri,
-            **kwargs,
-        )
+    logger.info("Building graph")
+    graph = tiledb.cloud.dag.DAG(
+        name=dag_name,
+        mode=tiledb.cloud.dag.Mode.BATCH,
+        max_workers=workers,
+        namespace=namespace,
+    )
 
-        kwargs.pop("sources")
+    # find sources
+    input_list_node = graph.submit(
+        build_inputs_udf,
+        dataset_type=dataset_type,
+        acn=acn,
+        config=config,
+        search_uri=search_uri,
+        pattern=pattern,
+        ignore=ignore,
+        dataset_list_uri=dataset_list_uri,
+        max_files=max_files,
+        compression_filter=compression_filter,
+        tile_size=tile_size,
+        chunk_size=chunk_size,
+        nodata=nodata,
+        resampling=resampling,
+        res=res,
+        verbose=verbose,
+        trace=trace,
+        log_uri=log_uri,
+        name=f"{dag_name} input collector",
+    )
 
-        # work functions
-        for i, work in enumerate(samples):
-            fn(
-                work,
-                dataset_uri=dataset_uri,
-                append=True,
-                verbose=verbose,
-                trace=trace,
-                log_uri=log_uri,
-                **kwargs,
-            )
-    else:
-        # Build the task graph
-        dag_name = f"{dataset_type.name}-{DEFAULT_DAG_NAME}"
-        task_prefix = f"{dataset_type.name} - Task"
+    # schema creation node, returns a sequence of work items
+    ingest_node = graph.submit(
+        fn,
+        **input_list_node,
+        dataset_uri=dataset_uri,
+        config=config,
+        append=False,
+        batch_size=batch_size,
+        verbose=verbose,
+        trace=trace,
+        log_uri=log_uri,
+        name=f"{task_prefix} - schema creation",
+        mode=tiledb.cloud.dag.Mode.BATCH,
+        resources=DEFAULT_RESOURCES,
+        image_name=DEFAULT_IMG_NAME,
+        access_credentials_name=acn,
+    )
+    ingest_node.depends_on(input_list_node)
 
-        logger.info("Building graph")
-        graph = tiledb.cloud.dag.DAG(
-            name=dag_name,
-            mode=tiledb.cloud.dag.Mode.BATCH,
-            max_workers=workers,
-            namespace=namespace,
-        )
+    process_node = graph.submit(
+        fn,
+        ingest_node,
+        dataset_uri=dataset_uri,
+        config=config,
+        name=task_prefix,
+        expand_node_output=ingest_node,
+        mode=tiledb.cloud.dag.Mode.BATCH,
+        append=True,
+        verbose=verbose,
+        trace=trace,
+        log_uri=log_uri,
+        resources=DEFAULT_RESOURCES,
+        image_name=DEFAULT_IMG_NAME,
+        access_credentials_name=acn,
+    )
 
-        # find sources
-        input_list_node = graph.submit(
-            build_inputs_udf,
-            dataset_type=dataset_type,
-            acn=acn,
-            config=config,
-            search_uri=search_uri,
-            pattern=pattern,
-            ignore=ignore,
-            dataset_list_uri=dataset_list_uri,
-            max_files=max_files,
-            compression_filter=compression_filter,
-            tile_size=tile_size,
-            chunk_size=chunk_size,
-            nodata=nodata,
-            resampling=resampling,
-            res=res,
-            verbose=verbose,
-            trace=trace,
-            log_uri=log_uri,
-            name=f"{dag_name} input collector",
-        )
+    graph.submit(
+        consolidate_meta,
+        dataset_uri,
+        config,
+        resources=DEFAULT_RESOURCES,
+        verbose=verbose,
+        trace=trace,
+        log_uri=log_uri,
+        access_credentials_name=acn,
+    ).depends_on(process_node)
 
-        # schema creation node, returns a sequence of work items
-        ingest_node = graph.submit(
-            fn,
-            **input_list_node,
-            dataset_uri=dataset_uri,
-            config=config,
-            append=False,
-            verbose=verbose,
-            trace=trace,
-            log_uri=log_uri,
-            name=f"{task_prefix} - {0}",
-            mode=tiledb.cloud.dag.Mode.BATCH,
-            resources=DEFAULT_RESOURCES,
-            image_name=DEFAULT_IMG_NAME,
-            access_credentials_name=acn,
-        )
-        ingest_node.depends_on(input_list_node)
-
-        process_node = graph.submit(
-            fn,
-            ingest_node,
-            dataset_uri=dataset_uri,
-            config=config,
-            name=f"{task_prefix} - {i}",
-            expand_node_output=ingest_node,
-            mode=tiledb.cloud.dag.Mode.BATCH,
-            append=True,
-            verbose=verbose,
-            trace=trace,
-            log_uri=log_uri,
-            resources=DEFAULT_RESOURCES,
-            image_name=DEFAULT_IMG_NAME,
-            access_credentials_name=acn,
-        )
-
-        graph.submit(
-            consolidate_meta,
+    # Register the dataset on TileDB Cloud
+    if register_name:
+        register_dataset_udf(
             dataset_uri,
-            config,
-            resources=DEFAULT_RESOURCES,
+            namespace=namespace,
+            register_name=register_name,
+            config=config,
             verbose=verbose,
             trace=trace,
             log_uri=log_uri,
             access_credentials_name=acn,
-        ).depends_on(process_node)
-
-        # Register the dataset on TileDB Cloud
-        if register_name:
-            register_dataset_udf(
-                dataset_uri,
-                namespace=namespace,
-                register_name=register_name,
-                config=config,
-                verbose=verbose,
-                trace=trace,
-                log_uri=log_uri,
-                access_credentials_name=acn,
-            )
-
-        run_dag(graph, wait=False)
-
-        logger.info(
-            "%s geospatial datasets ingestion submitted -"
-            " https://cloud.tiledb.com/activity/taskgraphs/%s/%s",
-            dataset_type.name,
-            graph.namespace,
-            graph.server_graph_uuid,
         )
+
+    run_dag(graph, wait=False)
+
+    logger.info(
+        "%s geospatial datasets ingestion submitted -"
+        " https://cloud.tiledb.com/activity/taskgraphs/%s/%s",
+        dataset_type.name,
+        graph.namespace,
+        graph.server_graph_uuid,
+    )
 
 
 def consolidate_meta(
