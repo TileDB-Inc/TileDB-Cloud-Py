@@ -23,6 +23,7 @@ def ingest(
     output: Union[Sequence[str], str],
     config: Mapping[str, Any],
     *args: Any,
+    access_credentials_name: str,
     taskgraph_name: Optional[str] = None,
     num_batches: Optional[int] = None,
     threads: Optional[int] = 0,
@@ -298,8 +299,7 @@ def ingest(
         ),
     )
 
-    acn = kwargs.pop("access_credentials_name", None)
-    if not acn:
+    if not access_credentials_name:
         raise ValueError(
             "Ingestion graph requires `access_credentials_name` to be set."
         )
@@ -313,7 +313,7 @@ def ingest(
         _SUPPORTED_EXTENSIONS,
         *args,
         verbose=verbose,
-        access_credentials_name=acn,
+        access_credentials_name=access_credentials_name,
         name=f"{dag_name} input collector",
         result_format="json",
     )
@@ -337,7 +337,7 @@ def ingest(
         image_name=DEFAULT_IMG_NAME,
         max_workers=threads,
         compressor=compressor_serial,
-        access_credentials_name=acn,
+        access_credentials_name=access_credentials_name,
         **kwargs,
     )
 
@@ -347,7 +347,7 @@ def ingest(
             ingest_list_node,
             config=config,
             verbose=verbose,
-            acn=acn,
+            acn=access_credentials_name,
             namespace=namespace,
             name=f"{dag_name} registrator ",
             expand_node_output=ingest_list_node,
