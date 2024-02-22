@@ -34,14 +34,13 @@ def run_collection_mapper_workflow(
     # Misc. cloud configs:
     task_graph_name: Optional[str] = None,
     counts_only: Optional[bool] = False,
-    # XXX need a flag for real-time or batch-mode
-    # use_batch_mode: Optional[bool] = False,
-    # Only valid for real-time mode:
-    # resource_class
-    # XXX batch-mode:
-    resources: Optional[Dict[str, object]] = None,
+    # Real-time vs batch modes
+    use_batch_mode: bool = False,
+    resource_class: Optional[str] = None,  # only valid for real-time mode
+    resources: Optional[Dict[str, object]] = None,  # only valid for batch mode
+    access_credentials_name: Optional[str] = None,  # only valid for batch mode
+    #
     namespace: Optional[str] = None,
-    access_credentials_name: Optional[str] = None,
 ) -> Dict[str, str]:
     """
     This is an asynchronous entry point, which launches the task graph and returns
@@ -69,8 +68,8 @@ def run_collection_mapper_workflow(
         task_graph_name=task_graph_name,
         counts_only=counts_only,
         resources=resources,
-        namespace=namespace,
         access_credentials_name=access_credentials_name,
+        namespace=namespace,
     )
     grf.compute()
     return {
@@ -102,10 +101,12 @@ def build_collection_mapper_workflow_graph(
     # Misc. cloud configs:
     task_graph_name: Optional[str] = None,
     counts_only: Optional[bool] = False,
-    # XXX need a flag for real-time or batch-mode
-    resources: Optional[Dict[str, object]] = None,
+    # Real-time vs batch modes
+    use_batch_mode: bool = False,
+    resource_class: Optional[str] = None,  # only valid for real-time mode
+    resources: Optional[Dict[str, object]] = None,  # only valid for batch mode
+    access_credentials_name: Optional[str] = None,  # only valid for batch mode
     namespace: Optional[str] = None,
-    access_credentials_name: Optional[str] = None,
 ) -> dag.DAG:
     """
     The is the primary entrypoint for the mapper module. The caller passes in
@@ -123,7 +124,30 @@ def build_collection_mapper_workflow_graph(
     TODO: describe each argument, and return values.
     """
 
-    # ----------------------------------------------------------------
+    if use_batch_mode:
+        if resource_class is not None:
+            raise ValueError(
+                "The resource_class argument is not applicable to batch mode"
+            )
+
+        if resources is None:
+            resources = _DEFAULT_RESOURCES
+        mode = dag.Mode.BATCH
+    else:
+        if resources is not None:
+            raise ValueError(
+                "The resources argument is not applicable to realtime mode"
+            )
+        if access_credentials_name is not None:
+            raise ValueError(
+                "The access_credentials_name argument is not applicable "
+                "to realtime mode"
+            )
+
+        if resource_class is None:
+            resource_class = "standard"
+        mode = dag.Mode.REALTIME
+
     # XXX soma_experiment_uris as dict from name to URI, or, just URIs ...
     if soma_collection_uri is None and soma_experiment_uris is None:
         raise Exception(
@@ -136,8 +160,6 @@ def build_collection_mapper_workflow_graph(
     assert isinstance(task_graph_name, str) or task_graph_name is None
     if task_graph_name is None:
         task_graph_name = "SOMAExperiment Collection Mapper"
-    if resources is None:
-        resources = _DEFAULT_RESOURCES
 
     args_dict = args_dict or {}
     obs_attrs = obs_attrs or []
@@ -172,8 +194,7 @@ def build_collection_mapper_workflow_graph(
 
     grf = dag.DAG(
         name=task_graph_name,
-        ###mode=dag.Mode.BATCH,
-        mode=dag.Mode.REALTIME,
+        mode=mode,
         namespace=namespace,
     )
 
@@ -194,15 +215,11 @@ def build_collection_mapper_workflow_graph(
             var_attrs=var_attrs,
             counts_only=counts_only,
             ####platform_config=platform_config,
-            ### XXX TODO: handle resource_class if realtime, else resources if
-            ### batch-mode.  For now: just working with realtime.
-            ### resources=_DEFAULT_RESOURCES if resources is None else
-            ### resources,
-            # tiledb.cloud.tiledb_cloud_error.TileDBCloudError:
-            # Cannot set resources for REALTIME task graphs, please use
-            # "resource_class" to set a predefined option for "standard" or
-            # "large"
-            resource_class="standard",
+            # Eaten by UDF infra -- won't make it to our callee as kwarg:
+            resources=resources,
+            # Eaten by UDF infra -- won't make it to our callee as kwarg:
+            resource_class=resource_class,
+            # Eaten by UDF infra -- won't make it to our callee as kwarg:
             access_credentials_name=access_credentials_name,
             name=soma_experiment_uri,
         )
