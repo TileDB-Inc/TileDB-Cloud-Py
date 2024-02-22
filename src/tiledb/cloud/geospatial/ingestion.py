@@ -399,6 +399,7 @@ def ingest_geometry_udf(
     compressor: Optional[dict] = None,
     append: bool = False,
     verbose: bool = False,
+    stats: bool = False,
     config: Optional[Mapping[str, object]] = None,
     id: str = "geometry",
     trace: bool = False,
@@ -419,6 +420,7 @@ def ingest_geometry_udf(
     :param compressor: dict, serialized compression filter
     :param append: bool, whether to append to the array
     :param verbose: verbose logging, defaults to False
+    :param stats: bool, print TileDB stats to stdout
     :param config: dict, configuration to pass on tiledb.VFS
     :param id: str, ID for logging, defaults to None
     :param trace, bool, enable trace logging
@@ -438,7 +440,7 @@ def ingest_geometry_udf(
                     for f in sources:
                         logger.debug("ingesting geometry dataset %r", f)
                         with fiona.open(f) as colxn:
-                            with fiona.open(dataset_uri, mode="a") as dst:
+                            with fiona.open(dataset_uri, mode="a", STATS=stats) as dst:
                                 for feat in colxn:
                                     # OGR buffers before writing
                                     dst.write(feat)
@@ -469,6 +471,7 @@ def ingest_geometry_udf(
                             TILE_CAPACITY=chunk_size,
                             COMPRESSION=compressor_type,
                             COMPRESSION_LEVEL=compression_level,
+                            STATS=stats,
                             BOUNDS=",".join(str(v) for v in extents),
                         ):
                             pass
@@ -481,6 +484,7 @@ def ingest_geometry_udf(
                             crs=crs,
                             BATCH_SIZE=chunk_size,
                             TILE_CAPACITY=chunk_size,
+                            STATS=stats,
                             BOUNDS=",".join(str(v) for v in extents),
                         ) as dst:
                             pass
@@ -506,6 +510,7 @@ def ingest_point_cloud_udf(
     chunk_size: Optional[int] = POINT_CLOUD_CHUNK_SIZE,
     batch_size: Optional[int] = BATCH_SIZE,
     verbose: bool = False,
+    stats: bool = False,
     config: Optional[Mapping[str, object]] = None,
     id: str = "pointcloud",
     trace: bool = False,
@@ -525,6 +530,7 @@ def ingest_point_cloud_udf(
     :param chunk_size: PDAL configuration for chunking fragments
     :param batch_size: batch size for dataset ingestion, defaults to BATCH_SIZE
     :param verbose: verbose logging, defaults to False
+    :param stats: bool, print TileDB stats to stdout
     :param config: dict, configuration to pass on tiledb.VFS
     :param id: str, ID for logging, defaults to None
     :param trace, bool, enable trace logging
@@ -557,7 +563,7 @@ def ingest_point_cloud_udf(
                             for c in chunk_itr:
                                 arr = scale_array(c.array)
                                 pipeline = pdal.Writer.tiledb(
-                                    array_name=dataset_uri, append=append
+                                    array_name=dataset_uri, stats=stats, append=append
                                 ).pipeline(arr)
                                 pipeline.execute()
                     return
@@ -618,6 +624,7 @@ def ingest_raster_udf(
     resampling: str = "bilinear",
     append: bool = False,
     batch_size: int = BATCH_SIZE,
+    stats: bool = False,
     verbose: bool = False,
     config: Optional[Mapping[str, object]] = None,
     compressor: Optional[dict] = None,
@@ -642,6 +649,7 @@ def ingest_raster_udf(
         one of None, bilinear, cubic, nearest and average
     :param append: bool, whether to append to the array
     :param batch_size: batch size for dataset ingestion, defaults to BATCH_SIZE
+    :param stats: bool, print TileDB stats to stdout
     :param verbose: verbose logging, defaults to False
     :param config: dict, configuration to pass on tiledb.VFS
     :param compressor: dict, serialized compression filter
@@ -720,6 +728,7 @@ def ingest_raster_udf(
                             mode="w",
                             COMPRESSION=compressor_type,
                             COMPRESSION_LEVEL=compression_level,
+                            STATS=stats,
                             **dst_profile,
                         ):
                             pass
@@ -727,6 +736,7 @@ def ingest_raster_udf(
                         with rasterio.open(
                             dataset_uri,
                             mode="w",
+                            STATS=stats,
                             **dst_profile,
                         ):
                             pass
@@ -741,7 +751,8 @@ def ingest_raster_udf(
                 with rasterio.open(dataset_uri, mode="r+") as dst:
                     for c in sources:
                         input_datasets = [
-                            rasterio.open(f, opener=vfs.open) for f in c.files
+                            rasterio.open(f, opener=vfs.open, STATS=stats)
+                            for f in c.files
                         ]
                         try:
                             col_off = c.ranges[1][0]
@@ -1075,6 +1086,7 @@ def ingest_datasets_dag(
     nodata: Optional[float] = None,
     resampling: Optional[str] = "bilinear",
     res: Tuple[float, float] = None,
+    stats: bool = False,
     verbose: bool = False,
     trace: bool = False,
     log_uri: Optional[str] = None,
@@ -1112,6 +1124,7 @@ def ingest_datasets_dag(
     :param resampling: string, resampling method,
         one of None, bilinear, cubic, nearest and average
     :param res: Tuple[float, float], output resolution in x/y
+    :param stats: bool, print TileDB stats to stdout
     :param verbose: verbose logging, defaults to False
     :param trace: bool, enabling log tracing, defaults to False
     :param log_uri: log array URI
@@ -1180,6 +1193,7 @@ def ingest_datasets_dag(
         config=config,
         append=False,
         batch_size=batch_size,
+        stats=stats,
         verbose=verbose,
         trace=trace,
         log_uri=log_uri,
@@ -1200,6 +1214,7 @@ def ingest_datasets_dag(
         expand_node_output=ingest_node,
         mode=tiledb.cloud.dag.Mode.BATCH,
         append=True,
+        stats=stats,
         verbose=verbose,
         trace=trace,
         log_uri=log_uri,
@@ -1305,6 +1320,7 @@ def ingest_datasets(
     chunk_size: int = POINT_CLOUD_CHUNK_SIZE,
     nodata: Optional[float] = None,
     res: Tuple[float, float] = None,
+    stats: bool = False,
     verbose: bool = False,
     trace: bool = False,
     log_uri: Optional[str] = None,
@@ -1341,6 +1357,7 @@ def ingest_datasets(
     :param chunk_size: for point cloud this is the PDAL chunk size, defaults to 1000000
     :param nodata: NODATA value for rasters
     :param res: Tuple[float, float], output resolution in x/y
+    :param stats: bool, print TileDB stats to stdout
     :param verbose: verbose logging, defaults to False
     :param trace: bool, enable trace for logging, defaults to False
     :param log_uri: log array URI
@@ -1382,6 +1399,7 @@ def ingest_datasets(
         chunk_size=chunk_size,
         nodata=nodata,
         res=res,
+        stats=stats,
         verbose=verbose,
         trace=trace,
         log_uri=log_uri,
