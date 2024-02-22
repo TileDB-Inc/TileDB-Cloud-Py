@@ -1,3 +1,4 @@
+import sys
 import unittest
 
 import tiledb.cloud
@@ -5,6 +6,10 @@ import tiledb.cloud.soma
 
 
 class SOMAMapperTest(unittest.TestCase):
+    def __init__(self, foo):
+        super().__init__(foo)
+        self.maxDiff = None
+
     def test_mapper_basic_realtime(self):
         self._test_mapper_basic(False)
 
@@ -12,7 +17,11 @@ class SOMAMapperTest(unittest.TestCase):
         self._test_mapper_basic(True)
 
     def _test_mapper_basic(self, use_batch_mode):
-        soma_collection_uri = "tiledb://TileDB-Inc/stack-small-soco-prod"
+        if sys.version_info < (3, 8, 0):
+            # https://github.com/TileDB-Inc/tiledbsoma-feedstock/pull/86
+            return
+
+        soma_collection_uri = "tiledb://unittest/stack-small-soco-prod"
         measurement_name = "RNA"
         if use_batch_mode:
             pass
@@ -25,7 +34,7 @@ class SOMAMapperTest(unittest.TestCase):
             X_layer_name="data",
             callback=lambda x: x.shape,
             use_batch_mode=False,
-            namespace="TileDB-Inc",
+            namespace="unittest",
         )
 
         g.compute()
@@ -42,10 +51,22 @@ class SOMAMapperTest(unittest.TestCase):
             g.end_results_by_name(),
             {
                 "collector": {
-                    "tiledb://TileDB-Inc/432fa76f-34a0-4ed7-b0cb-69d6c137b208": [3, 5],
-                    "tiledb://TileDB-Inc/a719e2b5-69e6-4818-a831-f76a6b4c95de": [3, 6],
-                    "tiledb://TileDB-Inc/042bee7b-a91a-427f-b932-36787baff2eb": [3, 5],
-                    "tiledb://TileDB-Inc/c81a36da-1d4b-4119-843e-f3f71b412da4": [3, 4],
+                    "tiledb://unittest/3c0e8956-12d1-463d-87c4-16f644c204c9": [
+                        3,
+                        5,
+                    ],
+                    "tiledb://unittest/53109d02-4145-4860-9c86-349bb5b8c588": [
+                        3,
+                        6,
+                    ],
+                    "tiledb://unittest/c5cdcdcd-2ce4-4c1d-bed5-b90232568977": [
+                        3,
+                        5,
+                    ],
+                    "tiledb://unittest/a0b92925-a0da-41d4-aa55-f9c3e526ff2d": [
+                        3,
+                        4,
+                    ],
                 }
             },
         )

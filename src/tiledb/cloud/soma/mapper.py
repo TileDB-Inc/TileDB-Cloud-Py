@@ -16,9 +16,9 @@ def run_collection_mapper_workflow(
     # Input data:
     soma_collection_uri: Optional[str] = None,
     soma_experiment_uris: Optional[Sequence[str]] = None,
+    experiment_names: Optional[Sequence[str]] = None,
     measurement_name: str,
     X_layer_name: str,
-    experiment_names: Optional[Sequence[str]] = None,
     # Query parameters:
     obs_query_string: Optional[str] = None,
     var_query_string: Optional[str] = None,
@@ -28,34 +28,32 @@ def run_collection_mapper_workflow(
     callback: Callable = lambda x: x,
     args_dict: Optional[Dict[str, Any]] = None,
     reducer: Callable = lambda x: x,
-    # Misc. tiledb configs:
+    # TileDB configs:
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
-    # Misc. cloud configs:
+    # Cloud configs:
+    namespace: Optional[str] = None,
     task_graph_name: Optional[str] = None,
     counts_only: Optional[bool] = False,
-    # Real-time vs batch modes
+    # Real-time vs batch modes:
     use_batch_mode: bool = False,
     resource_class: Optional[str] = None,  # only valid for real-time mode
     resources: Optional[Dict[str, object]] = None,  # only valid for batch mode
     access_credentials_name: Optional[str] = None,  # only valid for batch mode
-    #
-    namespace: Optional[str] = None,
 ) -> Dict[str, str]:
     """
     This is an asynchronous entry point, which launches the task graph and returns
     tracking information. Nominally this is not the primary use-case.
-    Please see ``build_collection_mapper_workflow_graph``.
-
-    TODO: describe each argument, and return values.
+    Please see ``build_collection_mapper_workflow_graph`` for information about
+    arguments and return value.
     """
 
     grf = build_collection_mapper_workflow_graph(
         soma_collection_uri=soma_collection_uri,
         soma_experiment_uris=soma_experiment_uris,
+        experiment_names=experiment_names,
         measurement_name=measurement_name,
         X_layer_name=X_layer_name,
-        experiment_names=experiment_names,
         obs_query_string=obs_query_string,
         var_query_string=var_query_string,
         obs_attrs=obs_attrs,
@@ -63,13 +61,13 @@ def run_collection_mapper_workflow(
         callback=callback,
         args_dict=args_dict,
         reducer=reducer,
+        namespace=namespace,
         extra_tiledb_config=extra_tiledb_config,
         platform_config=platform_config,
         task_graph_name=task_graph_name,
         counts_only=counts_only,
         resources=resources,
         access_credentials_name=access_credentials_name,
-        namespace=namespace,
     )
     grf.compute()
     return {
@@ -83,9 +81,9 @@ def build_collection_mapper_workflow_graph(
     # Input data:
     soma_collection_uri: Optional[str] = None,
     soma_experiment_uris: Optional[Sequence[str]] = None,
+    experiment_names: Optional[Sequence[str]] = None,
     measurement_name: str,
     X_layer_name: str,
-    experiment_names: Optional[Sequence[str]] = None,
     # Query parameters:
     obs_query_string: Optional[str] = None,
     var_query_string: Optional[str] = None,
@@ -95,18 +93,18 @@ def build_collection_mapper_workflow_graph(
     callback: Callable = lambda x: x,
     args_dict: Optional[Dict[str, Any]] = None,
     reducer: Callable = lambda x: x,
-    # Misc. tiledb configs:
+    # TileDB configs:
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
-    # Misc. cloud configs:
+    # Cloud configs:
+    namespace: Optional[str] = None,
     task_graph_name: Optional[str] = None,
     counts_only: Optional[bool] = False,
-    # Real-time vs batch modes
+    # Real-time vs batch modes:
     use_batch_mode: bool = False,
     resource_class: Optional[str] = None,  # only valid for real-time mode
     resources: Optional[Dict[str, object]] = None,  # only valid for batch mode
     access_credentials_name: Optional[str] = None,  # only valid for batch mode
-    namespace: Optional[str] = None,
 ) -> dag.DAG:
     """
     The is the primary entrypoint for the mapper module. The caller passes in
@@ -121,7 +119,74 @@ def build_collection_mapper_workflow_graph(
     with SOMA experiments ``A`` and ``B``, the collector node might return the
     dict ``{"A": (56868,43050), "B": (23539, 42044)}``.
 
-    TODO: describe each argument, and return values.
+    Please
+
+    Parameters for input data:
+    :param soma_collection_uri: URI of a ``SOMACollection`` containing
+        ``SOMAExperiment`` objects to be processed.  Please specify only one of
+        ``soma_collection_uri`` or ``soma_experiment_uris``.
+    :param soma_experiment_uris: List/tuple of URIs of ``SOMAExperiment``
+        objects to be processed.
+
+    :param experiment_names: Optional list of experiment names. If not provided,
+        all ``SOMAExperiment`` objects are processed as specified by
+        ``soma_collection_uri`` or ``soma_experiment_uris``. If provided,
+        ``experiment_names`` can be used to further subset/restrict which
+        ``SOMAExperiment`` objects will be processed.
+    :param measurement_name: Which ``SOMAMeasurement`` to query within the
+        specified ``SOMAExperiment`` objects. For example, ``"RNA"``.
+    :param X_layer_name: Which ``X`` layer to query within the specified
+        ``SOMAMeasurement`` objects. For example, ``"data"``, ``"raw"``,
+        ``"normalized"``.
+
+    Query parameters:
+    :param obs_query_string: Optional query string for ``obs``. For example:
+        ``'cell_type == "liver"'``.
+    :param var_query_string: Optional query string for ``var``. For example:
+        ``'n_cells > 100'``.
+    :param obs_attrs: Optional list of which ``obs`` attrs to return as query
+        output.  Default: all.
+    :param var_attrs: Optional list of which ``var`` attrs to return as query
+        output.  Default: all.
+
+    Parameters for data processing:
+    :param callback: Your code to run on each UDF node, one for each
+        ``SOMAExperiment``.  On each node, ``tiledbsoma.AxisQuery`` is run,
+        using parameters you specify as above, and then ``query.to_anndata`` is
+        run on that query output.  Then, your ``callback`` function receives
+        that query-output AnnData object.  For example: ``lambda ad:
+        ad.obs.shape``.
+    :param args_dict: Optional additional arguments to be passed to your
+        callback.  If provided, this must be a dict from string experiment name,
+        to dict of key-value pairs.
+    :param reducer: Your code to run on all the collected UDF-node outputs.
+        Default: return all of the UDF-node outputs.
+
+    TileDB configs:
+    :param extra_tiledb_config: TODO -- I am not using this in the code yet ...
+    :param platform_config: TODO -- I am not using this in the code yet ...
+
+    Cloud configs:
+
+    :param namespace: TileDB namespace in which to run the UDFs.
+    :param task_graph_name: Optional name for your task graph, so you can
+        find it more easily among other runs.
+    :param counts_only: If specified, only return obs/var counts, not TODO
+
+    Real-time vs batch modes:
+    :param use_batch_mode: If false (which is the default), uses real-time UDFs.
+        These have lower latency but fewer resource options.
+    :param resource_class: ``"standard"`` or ``"large"``. Only valid when
+        ``use_batch_mode`` is False.
+    :param resources: Only valid when ``use_batch_mode`` is True.
+        Example: ``resources={"cpu": "2", "memory": "8Gi"}``.
+    :param access_credentials_name: Only valid when ``use_batch_mode`` is True.
+        TODO: hyperlink goes here.
+
+    Return value:
+    A ``DAG`` object. If you've named this ``dag``, you'll need to do
+        ``dag.compute()``, ``dag.wait()``, and ``dag.end_results()``.
+        TODO: hyperlink goes here.
     """
 
     if use_batch_mode:
@@ -148,7 +213,6 @@ def build_collection_mapper_workflow_graph(
             resource_class = "standard"
         mode = dag.Mode.REALTIME
 
-    # XXX soma_experiment_uris as dict from name to URI, or, just URIs ...
     if soma_collection_uri is None and soma_experiment_uris is None:
         raise Exception(
             "Need just one of soma_collection_uri or " "soma_experiment_uris"
@@ -208,13 +272,11 @@ def build_collection_mapper_workflow_graph(
             X_layer_name=X_layer_name,
             callback=callback,
             args_dict=args_dict,
-            # cfg_dict=cfg_dict, # XXX
             obs_query_string=obs_query_string,
             var_query_string=var_query_string,
             obs_attrs=obs_attrs,
             var_attrs=var_attrs,
             counts_only=counts_only,
-            ####platform_config=platform_config,
             # Eaten by UDF infra -- won't make it to our callee as kwarg:
             resources=resources,
             # Eaten by UDF infra -- won't make it to our callee as kwarg:
@@ -281,6 +343,12 @@ def experiment_to_anndata_slice(
     var_attrs: Optional[Sequence[str]] = None,
     # ctx,
 ) -> ad.AnnData:
+    """
+    This function is not to be called directly: please use
+    ``run_collection_mapper_workflow`` or
+    ``build_collection_mapper_workflow_graph``. This is the function that runs
+    as a UDF node for each ``SOMAExperiment`` you specify.
+    """
     import tiledbsoma
 
     obs_query = None
