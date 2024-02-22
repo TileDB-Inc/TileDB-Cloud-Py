@@ -11,6 +11,7 @@ from tiledb.cloud.geospatial.ingestion import ingest_raster_udf
 from tiledb.cloud.geospatial.ingestion import load_geometry_metadata
 from tiledb.cloud.geospatial.ingestion import load_pointcloud_metadata
 from tiledb.cloud.geospatial.ingestion import load_raster_metadata
+from tiledb.cloud.geospatial.ingestion import read_uris
 
 __all__ = (
     "BoundingBox",
@@ -26,4 +27,5 @@ __all__ = (
     "load_raster_metadata",
     "ingest",
     "ingest_datasets",
+    "read_uris",
 )

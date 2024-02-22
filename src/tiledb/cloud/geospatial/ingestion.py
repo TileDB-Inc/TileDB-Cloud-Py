@@ -28,6 +28,7 @@ DEFAULT_DAG_NAME = "geo-ingestion"
 
 # Default values for ingestion parameters
 RASTER_TILE_SIZE = 1024
+PIXELS_PER_FRAGMENT = (RASTER_TILE_SIZE**2) * 10
 POINT_CLOUD_CHUNK_SIZE = 1_000_000
 GEOMETRY_CHUNK_SIZE = 100_000
 MAX_WORKERS = 40
@@ -230,7 +231,7 @@ def load_raster_metadata(
     sources: Iterable[os.PathLike],
     *,
     config: Optional[Mapping[str, object]] = None,
-    dst_tile_size: [int] = RASTER_TILE_SIZE,
+    pixels_per_fragment: int = PIXELS_PER_FRAGMENT,
     res: Tuple[float, float] = None,
     verbose: bool = False,
     id: str = "raster_metadata",
@@ -241,7 +242,9 @@ def load_raster_metadata(
 
     :param sources: iterator, paths or path to process
     :param config: dict, configuration to pass on tiledb.VFS
-    :param dst_tile_size: int, tile size of the destination mosaic
+    :param pixels_per_fragment: for rasters this this the number of tiles
+        that will be processed together per fragment. Ideally aim to align
+        as a factor of tile_size
     :param verbose: bool, enable verbose logging, default is False
     :param trace: bool, enable trace logging, default is False
     :param log_uri: Optional[str] = None,
@@ -287,7 +290,8 @@ def load_raster_metadata(
         dst_transform = rasterio.transform.from_bounds(
             *full_extents.bounds, width, height
         )
-        dst_windows = rasterio.windows.window_split(height, width, dst_tile_size**2)
+
+        dst_windows = rasterio.windows.window_split(height, width, pixels_per_fragment)
 
         results = []
         for _, w in dst_windows:
@@ -875,6 +879,7 @@ def build_inputs_udf(
     max_files: Optional[int] = None,
     compression_filter: Optional[dict] = None,
     tile_size: int = RASTER_TILE_SIZE,
+    pixels_per_fragment: int = PIXELS_PER_FRAGMENT,
     chunk_size: int = POINT_CLOUD_CHUNK_SIZE,
     nodata: Optional[float] = None,
     resampling: Optional[str] = "bilinear",
@@ -901,6 +906,9 @@ def build_inputs_udf(
         defaults to None
     :param tile_size: for rasters this is the tile (block) size
         for the merged destination array, defaults to 1024
+    :param pixels_per_fragment: for rasters this this the number of tiles
+        that will be processed together per fragment. Ideally aim to align
+        as a factor of tile_size
     :param chunk_size: for point cloud this is the PDAL chunk size, defaults to 1000000
     :param nodata: NODATA value for raster merging
     :param resampling: string, resampling method,
@@ -945,14 +953,20 @@ def build_inputs_udf(
                 DatasetType.POINTCLOUD: {
                     "pattern_fn": pointcloud_match,
                     "meta_fn": load_pointcloud_metadata,
+                    "kwargs": {},
                 },
                 DatasetType.RASTER: {
                     "pattern_fn": raster_match,
                     "meta_fn": load_raster_metadata,
+                    "kwargs": {
+                        "pixels_per_fragment": pixels_per_fragment,
+                        "res": res,
+                    },
                 },
                 DatasetType.GEOMETRY: {
                     "pattern_fn": geometry_match,
                     "meta_fn": load_geometry_metadata,
+                    "kwargs": {},
                 },
             }
 
@@ -979,7 +993,8 @@ def build_inputs_udf(
             if not sources:
                 raise ValueError(f"No {dataset_type.name} datasets found")
 
-            meta = fns[dataset_type]["meta_fn"](sources, config=config)
+            meta_kwargs = fns[dataset_type]["kwargs"]
+            meta = fns[dataset_type]["meta_fn"](sources, config=config, **meta_kwargs)
 
             if dataset_type == DatasetType.POINTCLOUD:
                 if len(meta.paths) == 0:
@@ -1055,6 +1070,7 @@ def ingest_datasets_dag(
     workers: int = MAX_WORKERS,
     batch_size: int = BATCH_SIZE,
     tile_size: int = RASTER_TILE_SIZE,
+    pixels_per_fragment=PIXELS_PER_FRAGMENT,
     chunk_size: int = POINT_CLOUD_CHUNK_SIZE,
     nodata: Optional[float] = None,
     resampling: Optional[str] = "bilinear",
@@ -1088,6 +1104,9 @@ def ingest_datasets_dag(
     :param batch_size: batch size for dataset ingestion, defaults to BATCH_SIZE
     :param tile_size: for rasters this is the tile (block) size
         for the merged destination array, defaults to 1024
+    :param pixels_per_fragment: for rasters this this the number of tiles
+        that will be processed together per fragment. Ideally aim to align
+        as a factor of tile_size
     :param chunk_size: for point cloud this is the PDAL chunk size, defaults to 1000000
     :param nodata: NODATA value for raster merging
     :param resampling: string, resampling method,
@@ -1142,6 +1161,7 @@ def ingest_datasets_dag(
         max_files=max_files,
         compression_filter=compression_filter,
         tile_size=tile_size,
+        pixels_per_fragment=PIXELS_PER_FRAGMENT,
         chunk_size=chunk_size,
         nodata=nodata,
         resampling=resampling,
@@ -1281,6 +1301,7 @@ def ingest_datasets(
     workers: int = MAX_WORKERS,
     batch_size: int = BATCH_SIZE,
     tile_size: int = RASTER_TILE_SIZE,
+    pixels_per_fragment=PIXELS_PER_FRAGMENT,
     chunk_size: int = POINT_CLOUD_CHUNK_SIZE,
     nodata: Optional[float] = None,
     res: Tuple[float, float] = None,
@@ -1314,6 +1335,9 @@ def ingest_datasets(
     :param batch_size: batch size for dataset ingestion, defaults to BATCH_SIZE
     :param tile_size: for rasters this is the tile (block) size
         for the merged destination array defaults to 1024
+    :param pixels_per_fragment: for rasters this this the number of tiles
+        that will be processed together per fragment. Ideally aim to align
+        as a factor of tile_size
     :param chunk_size: for point cloud this is the PDAL chunk size, defaults to 1000000
     :param nodata: NODATA value for rasters
     :param res: Tuple[float, float], output resolution in x/y
@@ -1354,6 +1378,7 @@ def ingest_datasets(
         workers=workers,
         batch_size=batch_size,
         tile_size=tile_size,
+        pixels_per_fragment=pixels_per_fragment,
         chunk_size=chunk_size,
         nodata=nodata,
         res=res,

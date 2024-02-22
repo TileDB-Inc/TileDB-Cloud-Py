@@ -24,6 +24,7 @@ from tiledb.cloud.geospatial import ingest_raster_udf
 from tiledb.cloud.geospatial import load_geometry_metadata
 from tiledb.cloud.geospatial import load_pointcloud_metadata
 from tiledb.cloud.geospatial import load_raster_metadata
+from tiledb.cloud.geospatial import read_uris
 from tiledb.cloud.utilities import chunk
 from tiledb.cloud.utilities import serialize_filter
 from tiledb.vfs import VFS
@@ -173,6 +174,7 @@ class GeospatialTest(unittest.TestCase):
 
     def test_raster_load_metadata(self):
         tile_size = 16
+        pixels_per_fragment = tile_size**2
         ingest_uri_sample = {
             "test1": [self.test_dir.joinpath(r) for r in RASTER_NAMES[:3]],
             "test2": [],
@@ -187,7 +189,9 @@ class GeospatialTest(unittest.TestCase):
         # Case 1-1 Ingestion
         test_1 = ingest_uri_sample["test1"]
         with mock.patch.object(VFS, "ls", return_value=test_1):
-            meta_1 = load_raster_metadata(test_1, dst_tile_size=tile_size)
+            meta_1 = load_raster_metadata(
+                test_1, pixels_per_fragment=pixels_per_fragment
+            )
             expected_extents = BoundingBox(minx=-114, miny=33, maxx=-98, maxy=46)
             self.assertEqual(meta_1.extents, expected_extents)
             self.assertEqual(len(meta_1.block_metadata), 3)
@@ -248,17 +252,18 @@ class GeospatialTest(unittest.TestCase):
 
     def test_raster_ingest(self):
         tile_size = 16
+        pixels_per_fragment = 16**2
         zstd_filter = tiledb.ZstdFilter(level=7)
         test_1 = [self.test_dir.joinpath(r) for r in RASTER_NAMES[:3]]
         with mock.patch.object(VFS, "ls", return_value=test_1):
             expected_extents = BoundingBox(minx=-114, miny=33, maxx=-98, maxy=46)
-            output_array = str(self.test_dir.joinpath("raster_output_array"))
+            # output_array = str(self.test_dir.joinpath("raster_output_array"))
             # keep - used to verify output if needed
-            # import shutil
+            import shutil
 
-            # output_array = "/tmp/output_array"
-            # if os.path.exists(output_array):
-            #     shutil.rmtree(output_array)
+            output_array = "/tmp/output_array"
+            if os.path.exists(output_array):
+                shutil.rmtree(output_array)
 
             dataset_list_uri = self.test_dir.joinpath("manifest.txt")
             with open(dataset_list_uri, "w") as f:
@@ -271,11 +276,12 @@ class GeospatialTest(unittest.TestCase):
                 config={},
                 dataset_list_uri=dataset_list_uri,
                 compression_filter=serialize_filter(zstd_filter),
-                nodata=0,
+                nodata=255,
                 # set batch size to 1 to test overlapping images
                 batch_size=1,
                 # pick a size we wouldn't normally use for testing
                 tile_size=tile_size,
+                pixels_per_fragment=pixels_per_fragment,
             )
 
             with rasterio.open(output_array) as src:
@@ -286,13 +292,61 @@ class GeospatialTest(unittest.TestCase):
                 self.assertEqual(src.profile["blockysize"], tile_size)
                 self.assertEqual(src.profile["blockxsize"], tile_size)
                 # all of test_1, 3/4 of test_2 and test_3 = 100 + 150 + 300
-                self.assertEqual(src.checksum(1), 550)
+                with rasterio.open(output_array) as src:
+                    # all of test_1, 3/4 of test_2 and test_3 = 100 + 150 + 300
+                    data = src.read(1, masked=True)
+                    self.assertEqual(np.sum(data), 550)
 
             # check compression filter
             with tiledb.open(output_array) as src:
                 fltr = src.schema.attr(0).filters[0]
                 self.assertIsInstance(fltr, tiledb.ZstdFilter)
                 self.assertEqual(fltr.level, 7)
+
+    def test_raster_fragments(self):
+        tile_size = 5
+        # 25 pixels per tile, going to write at most 10 tiles per time
+        # first two images overlap and form
+        pixels_per_fragment = (tile_size**2) * 10
+        print(f"PIXELS PER FRAGMENT: {pixels_per_fragment}")
+        test_1 = [self.test_dir.joinpath(r) for r in RASTER_NAMES[:3]]
+        with mock.patch.object(VFS, "ls", return_value=test_1):
+            # output_array = str(self.test_dir.joinpath("frag_output_array"))
+            output_array = "/tmp/frag_output_array"
+
+            if os.path.exists(output_array):
+                shutil.rmtree(output_array)
+
+            dataset_list_uri = self.test_dir.joinpath("manifest.txt")
+            with open(dataset_list_uri, "w") as f:
+                for img in test_1:
+                    f.write(f"{img}\n")
+
+            run_local(
+                dataset_uri=output_array,
+                dataset_type=DatasetType.RASTER,
+                config={},
+                dataset_list_uri=dataset_list_uri,
+                nodata=255,
+                # set batch size to 1 to test pixels_per_fragment
+                batch_size=1,
+                # pick a size we wouldn't normally use for testing
+                tile_size=tile_size,
+                pixels_per_fragment=pixels_per_fragment,
+            )
+
+            with rasterio.open(output_array) as src:
+                # all of test_1, 3/4 of test_2 and test_3 = 100 + 150 + 300
+                data = src.read(1, masked=True)
+                self.assertEqual(np.sum(data), 550)
+
+            # num_fragments
+            fragments_info = tiledb.array_fragments(output_array)
+
+            uris = read_uris(dataset_list_uri, dataset_type=DatasetType.RASTER)
+            meta = load_raster_metadata(uris, pixels_per_fragment=pixels_per_fragment)
+            self.assertEqual(len(meta.block_metadata), 8)
+            self.assertEqual(len(fragments_info), 8)
 
     def test_pointcloud_ingest(self):
         test_1 = [self.test_dir.joinpath(r) for r in PC_NAMES]
