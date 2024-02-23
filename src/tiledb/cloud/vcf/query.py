@@ -294,10 +294,18 @@ def build_read_dag(
 
     logger = setup(config, verbose)
 
-    # Return an empty table if no samples or regions are specified.
-    # This avoids reading the entire array by accident.
-    if samples is None or (regions is None and bed_file is None):
-        return pa.table({})
+    # Validate inputs
+    if samples is None:
+        raise ValueError(
+            "`samples` must be provided in order to partition the query. "
+            "If querying a sample-less annotation VCF (like gnomAD or ClinVar)"
+            "set `samples=''`"
+        )
+
+    if regions is None and bed_file is None:
+        raise ValueError(
+            "`regions` or `bed_file` must be provided in order to partition the query."
+        )
 
     attrs = attrs or DEFAULT_ATTRS
 
@@ -309,6 +317,8 @@ def build_read_dag(
         (Delayed, DelayedArrayUDF, DelayedMultiArrayUDF, DelayedSQL),
     ):
         samples = samples.compute().values.flatten()
+    elif isinstance(samples, str):
+        samples = [samples]
 
     # Set number of sample partitions
     num_samples = len(samples)
