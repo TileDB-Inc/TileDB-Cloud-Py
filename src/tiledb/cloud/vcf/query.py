@@ -298,7 +298,8 @@ def build_read_dag(
     if samples is None:
         raise ValueError(
             "`samples` must be provided in order to partition the query. "
-            'If querying a sample-less annotation VCF (like gnomAD or ClinVar), set `samples=""`'
+            "If querying a sample-less annotation VCF (like gnomAD or ClinVar)"
+            "set `samples=''`"
         )
 
     if regions is None and bed_file is None:
