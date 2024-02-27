@@ -11,6 +11,9 @@ on:
     # 01:30 UTC = 20:30/21:30 America/New_York = 03:30/04:30 Europe/Athens
     - cron: "30 1 * * *"
 
+env:
+  PYTEST_SPLIT_GROUPS: 7
+
 jobs:
   format-check:
     runs-on: ubuntu-latest
@@ -49,6 +52,7 @@ jobs:
             path: ~/.cache/pip
           - os: macos-12
             path: ~/Library/Caches/pip
+        pytest-split-group: [1, 2, 3, 4, 5, 6, 7]
 
     steps:
       - name: Checkout
@@ -88,7 +92,7 @@ jobs:
 
       - name: Install prerequisites
         run: |
-          pip install --upgrade pip wheel pytest pytest-cov setuptools setuptools-scm
+          pip install --upgrade pip wheel pytest pytest-cov pytest-split setuptools setuptools-scm
 
       - name: Install pinned dependencies
         if: ${{ matrix.dependencies == 'pinned' }}
@@ -107,7 +111,8 @@ jobs:
             pytest -sv \
             --last-failed \
             --tb short \
-            --color yes
+            --color yes \
+            --splits ${{ env.PYTEST_SPLIT_GROUPS }} --group ${{ matrix.pytest-split-group }}
         env:
           TILEDB_REST_TOKEN: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
 

@@ -5,21 +5,21 @@ readme = "./README.md"
 dynamic = ["version"]
 
 dependencies = [
-  "attrs>=21.4.0",
-  "certifi",
-  "cloudpickle>=1.4.1,<3",
-  "importlib-metadata",
-  "packaging",
-  "pandas>=1.2.4",
-  "pyarrow>=3.0.0",
-  "python-dateutil",
-  "six>=1.10",
-  # Not directly used on the client, but some server-side environments have
-  # tblib transitively enabled, so this is needed for unpickling.
-  "tblib~=1.7",
-  "tiledb>=0.15.2",
-  "typing-extensions",
-  "urllib3>=1.26",
+    "attrs>=21.4.0",
+    "certifi",
+    "cloudpickle>=1.4.1,<3",
+    "importlib-metadata",
+    "packaging",
+    "pandas>=1.2.4",
+    "pyarrow>=3.0.0",
+    "python-dateutil",
+    "six>=1.10",
+    # Not directly used on the client, but some server-side environments have
+    # tblib transitively enabled, so this is needed for unpickling.
+    "tblib~=1.7",
+    "tiledb>=0.15.2",
+    "typing-extensions",
+    "urllib3>=1.26",
 ]
 
 [project.optional-dependencies]
@@ -28,7 +28,7 @@ viz-plotly = ["networkx>=2", "plotly>=4", "pydot"]
 all = ["networkx>=2", "plotly>=4", "pydot", "tiledb-plot-widget>=0.1.7"]
 
 dev = ["black", "pytest", "ruff"]
-tests = ["xarray"]
+tests = ["xarray", "pytest-split"]
 
 [project.urls]
 homepage = "https://tiledb.com"
