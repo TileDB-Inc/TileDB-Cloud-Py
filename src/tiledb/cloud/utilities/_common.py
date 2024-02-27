@@ -314,7 +314,7 @@ def as_batch(func: _CT) -> _CT:
 
         name = kwargs.get("name", func.__name__)
         namespace = kwargs.get("namespace", None)
-        acn = kwargs.get("acn", kwargs.get("access_credentials_name", None))
+        acn = kwargs.get("acn", kwargs.pop("access_credentials_name", None))
         kwargs["acn"] = acn  # for backwards compatibility
         resources = kwargs.pop("resources", None)
 
