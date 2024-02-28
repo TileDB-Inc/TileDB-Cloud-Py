@@ -12,7 +12,7 @@ on:
     - cron: "30 1 * * *"
 
 env:
-  PYTEST_SPLIT_GROUPS: 6 # How many parallel groups to create for the tests.
+  PYTEST_SPLIT_GROUPS: 3 # How many parallel groups to create for the tests.
   PYTEST_TEST_DURATIONS_CACHE_KEY: "test_durations"
 
 jobs:
@@ -53,7 +53,7 @@ jobs:
             path: ~/.cache/pip
           - os: macos-12
             path: ~/Library/Caches/pip
-        pytest-split-group: [1, 2, 3, 4, 5, 6] # Range the parallel test groups defined by env.PYTEST_SPLIT_GROUPS
+        pytest-split-group: [1, 2, 3] # Range the parallel test groups defined by env.PYTEST_SPLIT_GROUPS
 
     steps:
       - name: Checkout
@@ -121,16 +121,36 @@ jobs:
             --last-failed \
             --tb short \
             --color yes \
-            --splits ${{ env.PYTEST_SPLIT_GROUPS }} --group ${{ matrix.pytest-split-group }} \
-            --store-durations --splitting-algorithm least_duration --durations-path=.test_durations.${{ matrix.pytest-split-group }} --clean-durations
+            --splits ${{ env.PYTEST_SPLIT_GROUPS }} \
+            --group ${{ matrix.pytest-split-group }} \
+            --store-durations \
+            --splitting-algorithm least_duration \
+            --durations-path=.test_durations.${{ matrix.pytest-split-group }} \
+            --clean-durations
         env:
           TILEDB_REST_TOKEN: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
 
+      # Uploads the partial durations from one of the run (specifically from the ubuntu run but it would be the same with macos).
+      # These partial duration files will be combined into a single .test_durations file and used to update the test cache for the next runs
+      - name: "Upload partial durations"
+        uses: actions/upload-artifact@v4
+        if: (matrix.dependencies == 'fresh') == (github.event_name == 'schedule') && ${{ matrix.os }} == "ubuntu-20.04"
+        with:
+          name: partial-durations-${{ matrix.pytest-split-group }}
+          path: .test_durations.${{ matrix.pytest-split-group }}
+          retention-days: 1
+
   save-test-durations-to-cache:
-    needs: run-tests
+    name: Download, combine and save test_durations to the actions cache
     runs-on: ubuntu-latest
+    needs: run-tests
     continue-on-error: true
     steps:
+      - name: Download partial durations
+        uses: actions/download-artifact@v4
+        with:
+          pattern: .test_durations.*
+
       - name: "Combine test duration cache files in .test_durations"
         run: |
           jq '. + input' .test_durations.* > .test_durations
