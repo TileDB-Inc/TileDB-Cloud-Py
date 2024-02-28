@@ -12,7 +12,7 @@ on:
     - cron: "30 1 * * *"
 
 env:
-  PYTEST_SPLIT_GROUPS: 3 # How many parallel groups to create for the tests.
+  PYTEST_SPLIT_GROUPS: 5 # How many parallel groups to create for the tests.
   PYTEST_TEST_DURATIONS_CACHE_KEY: "test_durations"
 
 jobs:
@@ -53,7 +53,7 @@ jobs:
             path: ~/.cache/pip
           - os: macos-12
             path: ~/Library/Caches/pip
-        pytest-split-group: [1, 2, 3] # Range the parallel test groups defined by env.PYTEST_SPLIT_GROUPS
+        pytest-split-group: [1, 2, 3, 4, 5] # Range the parallel test groups defined by env.PYTEST_SPLIT_GROUPS
 
     steps:
       - name: Checkout
@@ -104,9 +104,10 @@ jobs:
         run: |
           pip install .[tests]
 
+      # Tries to restore the .test_durations file from the cache to use for splitting tests into groups.
       - name: "Attempt to restore .test_durations from cache"
         id: test-duration-cache-restore
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         continue-on-error: true
         with:
           path: .test_durations
@@ -134,12 +135,16 @@ jobs:
       # These partial duration files will be combined into a single .test_durations file and used to update the test cache for the next runs
       - name: "Upload partial durations"
         uses: actions/upload-artifact@v4
-        if: (matrix.dependencies == 'fresh') == (github.event_name == 'schedule') && ${{ matrix.os }} == "ubuntu-20.04"
+        continue-on-error: true
+        # Ensure that we save the partial test durations from an ubuntu job that the tests actually run.
+        if: matrix.os == 'ubuntu-20.04' && matrix.python-version == '3.9' && (matrix.dependencies == 'fresh') == (github.event_name == 'schedule')
         with:
           name: partial-durations-${{ matrix.pytest-split-group }}
           path: .test_durations.${{ matrix.pytest-split-group }}
           retention-days: 1
 
+  # Download and combine the partial test durations uploaded by the run-tests job,
+  # into a single file and save it to cache for future use.
   save-test-durations-to-cache:
     name: Download, combine and save test_durations to the actions cache
     runs-on: ubuntu-latest
