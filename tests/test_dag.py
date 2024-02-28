@@ -662,7 +662,6 @@ class DAGBatchModeTest(unittest.TestCase):
             node.result()
 
     def test_dynamic_batch_dag(self):
-        # FIXME: This takes 151 seconds to run
         d = dag.DAG(mode=Mode.BATCH, max_workers=2)
 
         def generate_split():
@@ -718,7 +717,6 @@ class DAGBatchModeTest(unittest.TestCase):
         self.assertEqual(print_node.result(), [99.0, 299.0, 499.0, 699.0])
 
     def test_param_replacement(self):
-        # FIXME: This takes 239 seconds to run
         d = dag.DAG(mode=Mode.BATCH)
         in_node = d.submit(lambda x: "out" + x[2:], "input")
         wrap_node = d.submit(repr, [in_node])
@@ -773,7 +771,6 @@ class DAGBatchModeTest(unittest.TestCase):
         self.assertEqual(d.status, dag.Status.FAILED)
 
     def test_batch_dag_manual_retries(self):
-        # FIXME: This takes 118 seconds to run
         def random_failure():
             import random
 

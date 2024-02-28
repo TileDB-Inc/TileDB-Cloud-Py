@@ -43,7 +43,7 @@ jobs:
       matrix:
         os:
           - ubuntu-20.04
-          - macos-12
+          # - macos-12
         python-version: ["3.9", "3.7"]
         dependencies:
           - pinned
@@ -51,8 +51,8 @@ jobs:
         include:
           - os: ubuntu-20.04
             path: ~/.cache/pip
-          - os: macos-12
-            path: ~/Library/Caches/pip
+          # - os: macos-12
+          # path: ~/Library/Caches/pip
         pytest-split-group: [1, 2, 3, 4, 5] # Range the parallel test groups defined by env.PYTEST_SPLIT_GROUPS
 
     steps:
@@ -139,7 +139,7 @@ jobs:
         # Ensure that we save the partial test durations from an ubuntu job that the tests actually run.
         if: matrix.os == 'ubuntu-20.04' && matrix.python-version == '3.9' && (matrix.dependencies == 'fresh') == (github.event_name == 'schedule')
         with:
-          name: partial-durations-${{ matrix.pytest-split-group }}
+          name: partial-test-durations-${{ matrix.pytest-split-group }}
           path: .test_durations.${{ matrix.pytest-split-group }}
           retention-days: 1
 
@@ -154,7 +154,7 @@ jobs:
       - name: Download partial durations
         uses: actions/download-artifact@v4
         with:
-          pattern: .test_durations.*
+          pattern: partial-test-durations-*
 
       - name: "Combine test duration cache files in .test_durations"
         run: |
