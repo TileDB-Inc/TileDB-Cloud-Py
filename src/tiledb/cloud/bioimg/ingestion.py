@@ -262,10 +262,15 @@ def ingest(
                 if found:
                     logger.info("Dataset already registered at %r.", tiledb_uri)
                 else:
-                    logger.info("Registering dataset %s at %s", dataset_uri, tiledb_uri)
+                    logger.info(
+                        "Registering dataset %s at %s with name %s",
+                        dataset_uri,
+                        tiledb_uri,
+                        register_map[dataset_uri],
+                    )
                     tiledb.cloud.groups.register(
                         dataset_uri,
-                        name=register_name,
+                        name=register_map[dataset_uri],
                         namespace=namespace,
                         credentials_name=acn,
                     )
