@@ -12,7 +12,7 @@ on:
     - cron: "30 1 * * *"
 
 env:
-  PYTEST_SPLIT_GROUPS: 5 # How many parallel groups to create for the tests.
+  PYTEST_SPLIT_GROUPS: 6 # How many parallel groups to create for the tests.
   PYTEST_TEST_DURATIONS_CACHE_KEY: "test_durations"
 
 jobs:
@@ -44,7 +44,9 @@ jobs:
         os:
           - ubuntu-20.04
           # - macos-12
-        python-version: ["3.9", "3.7"]
+        python-version:
+          - "3.9"
+          # - "3.7"
         dependencies:
           - pinned
           - fresh
@@ -53,7 +55,7 @@ jobs:
             path: ~/.cache/pip
           # - os: macos-12
           # path: ~/Library/Caches/pip
-        pytest-split-group: [1, 2, 3, 4, 5] # Range the parallel test groups defined by env.PYTEST_SPLIT_GROUPS
+        pytest-split-group: [1, 2, 3, 4, 5, 6] # Range the parallel test groups defined by env.PYTEST_SPLIT_GROUPS
 
     steps:
       - name: Checkout
@@ -126,8 +128,7 @@ jobs:
             --group ${{ matrix.pytest-split-group }} \
             --store-durations \
             --splitting-algorithm least_duration \
-            --durations-path=.test_durations.${{ matrix.pytest-split-group }} \
-            --clean-durations
+            --durations-path=.test_durations.${{ matrix.pytest-split-group }}
         env:
           TILEDB_REST_TOKEN: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
 
@@ -160,11 +161,9 @@ jobs:
           pattern: partial-test-durations-*
           merge-multiple: true
 
-      - run: ls -R
-
       - name: "Combine test duration cache files in .test_durations"
         run: |
-          ls -R partial-test-duration
+          ls -R partial-test-durations
           jq '. + input' partial-test-durations/.test_durations.* > .test_durations
 
       - name: "Save combined test durations to cache"
