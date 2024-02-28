@@ -141,6 +141,7 @@ jobs:
         with:
           name: partial-test-durations-${{ matrix.pytest-split-group }}
           path: .test_durations.${{ matrix.pytest-split-group }}
+          overwrite: true
           retention-days: 1
 
   # Download and combine the partial test durations uploaded by the run-tests job,
@@ -154,11 +155,16 @@ jobs:
       - name: Download partial durations
         uses: actions/download-artifact@v4
         with:
+          # Download partial test duration artifacts in the same folder
           path: partial-test-durations
           pattern: partial-test-durations-*
+          merge-multiple: true
+
+      - run: ls -R
 
       - name: "Combine test duration cache files in .test_durations"
         run: |
+          ls -R partial-test-duration
           jq '. + input' partial-test-durations/.test_durations.* > .test_durations
 
       - name: "Save combined test durations to cache"
