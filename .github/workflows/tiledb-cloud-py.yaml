@@ -154,11 +154,12 @@ jobs:
       - name: Download partial durations
         uses: actions/download-artifact@v4
         with:
+          path: partial-test-durations
           pattern: partial-test-durations-*
 
       - name: "Combine test duration cache files in .test_durations"
         run: |
-          jq '. + input' .test_durations.* > .test_durations
+          jq '. + input' partial-test-durations/.test_durations.* > .test_durations
 
       - name: "Save combined test durations to cache"
         uses: actions/cache/save@v3
