@@ -117,8 +117,6 @@ jobs:
           restore-keys: |
             ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-
 
-      - run: cat .test_durations
-
       - name: Run tests
         # Test pinned dependencies on commit / tag and fresh installs on nightlies
         if: (matrix.dependencies == 'fresh') == (github.event_name == 'schedule')
@@ -132,7 +130,7 @@ jobs:
             --group ${{ matrix.pytest-split-group }} \
             --store-durations \
             --splitting-algorithm least_duration \
-            --durations-path=.test_durations.${{ matrix.pytest-split-group }}
+            --clean-durations
         env:
           TILEDB_REST_TOKEN: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
 
@@ -145,7 +143,8 @@ jobs:
         if: matrix.os == 'ubuntu-20.04' && matrix.python-version == '3.9' && (matrix.dependencies == 'fresh') == (github.event_name == 'schedule')
         with:
           name: partial-test-durations-${{ matrix.pytest-split-group }}
-          path: .test_durations.${{ matrix.pytest-split-group }}
+          path: .test_durations
+          retention-days: 1
           overwrite: true
 
   # Download and combine the partial test durations uploaded by the run-tests job,
@@ -161,12 +160,12 @@ jobs:
         with:
           # Download partial test duration artifacts in the same folder
           path: partial-test-durations
-          # pattern: partial-test-durations-*
-          merge-multiple: true
+          pattern: partial-test-durations-*
 
       - name: "Combine test duration cache files in .test_durations"
         run: |
-          jq -s add partial-test-durations/.test_durations.* > .test_durations
+          jq -s add $(find partial-test-durations -type f -name .test_durations) > .test_durations
+          cat .test_durations
 
       - name: "Save combined test durations to cache"
         uses: actions/cache/save@v4
