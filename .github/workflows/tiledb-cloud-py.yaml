@@ -115,7 +115,7 @@ jobs:
           path: .test_durations
           key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}
 
-      - run: ll
+      - run: ls -alhF --group-directories-first
       - run: cat .test_durations
 
       - name: Run tests
