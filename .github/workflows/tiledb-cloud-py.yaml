@@ -113,9 +113,10 @@ jobs:
         continue-on-error: true
         with:
           path: .test_durations
-          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}
+          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-${{ hashFile('.test_durations') }}
+          restore-keys: |
+            ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-
 
-      - run: ls -alhF --group-directories-first
       - run: cat .test_durations
 
       - name: Run tests
@@ -165,13 +166,13 @@ jobs:
 
       - name: "Combine test duration cache files in .test_durations"
         run: |
-          jq '. + input' partial-test-durations/.test_durations.* > .test_durations
+          jq -s add partial-test-durations/.test_durations.* > .test_durations
 
       - name: "Save combined test durations to cache"
         uses: actions/cache/save@v3
         with:
           path: .test_durations
-          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}
+          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-${{ hashFiles('.test_durations') }}
 
   upload-to-pypi:
     # Upload a wheel only if the entire matrix succeeds.
