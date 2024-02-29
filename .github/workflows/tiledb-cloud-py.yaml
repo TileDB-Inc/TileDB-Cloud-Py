@@ -161,12 +161,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           # Download partial test duration artifacts in the same folder
-          path: $FolderPrefix
-          pattern: $FolderPrefix-*
+          path: partial-test-durations
+          pattern: partial-test-durations-*
 
       - name: "Combine test duration cache files in .test_durations"
         run: |
-          jq -s add $(find $FolderPrefix -type f -name .test_durations) > .test_durations
+          jq -s add $(find partial-test-durations -type f -name .test_durations) > .test_durations
           cat .test_durations
 
       - name: "Save combined test durations to cache"
