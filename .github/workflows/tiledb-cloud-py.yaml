@@ -115,7 +115,8 @@ jobs:
           path: .test_durations
           key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}
 
-      - run: ls
+      - run: ll
+      - run: cat .test_durations
 
       - name: Run tests
         # Test pinned dependencies on commit / tag and fresh installs on nightlies
