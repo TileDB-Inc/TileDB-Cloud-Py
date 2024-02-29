@@ -115,6 +115,8 @@ jobs:
           path: .test_durations
           key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}
 
+      - run: ls
+
       - name: Run tests
         # Test pinned dependencies on commit / tag and fresh installs on nightlies
         if: (matrix.dependencies == 'fresh') == (github.event_name == 'schedule')
@@ -159,9 +161,6 @@ jobs:
           path: partial-test-durations
           # pattern: partial-test-durations-*
           merge-multiple: true
-
-      - name: Artifacts
-        run: ls -R
 
       - name: "Combine test duration cache files in .test_durations"
         run: |
