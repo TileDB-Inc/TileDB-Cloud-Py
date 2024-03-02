@@ -95,7 +95,15 @@ jobs:
 
       - name: Install prerequisites
         run: |
-          pip install --upgrade pip wheel pytest pytest-cov pytest-split setuptools setuptools-scm
+          pip install --upgrade \
+            pip \
+            wheel \
+            pytest \
+            pytest-cov \
+            pytest-explicit \
+            pytest-split \
+            setuptools \
+            setuptools-scm
 
       - name: Install pinned dependencies
         if: ${{ matrix.dependencies == 'pinned' }}

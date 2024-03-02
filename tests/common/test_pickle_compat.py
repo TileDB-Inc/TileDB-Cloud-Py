@@ -1,7 +1,7 @@
 import pathlib
 import pickle
 import sys
-from typing import Any, Tuple
+from typing import Any, Callable, Tuple
 
 import numpy as np
 import packaging.version as pkgver
@@ -26,13 +26,11 @@ NDARRAY_BACKED_DF = pd.DataFrame(
         "z": (9, -5, 4, 8, 7),
     }
 )
-# Additional verification that `xarrays` will work based on customer need.
-XARRAY = NDARRAY_BACKED_DF.set_index(["x", "y", "timestamp"]).to_xarray()
 
 RESULTS = {
-    "simple_df": SIMPLE_DF,
-    "ndarray_backed_df": NDARRAY_BACKED_DF,
-    "xarray": XARRAY,
+    "simple_df": lambda: SIMPLE_DF,
+    "ndarray_backed_df": lambda: NDARRAY_BACKED_DF,
+    "xarray": lambda: NDARRAY_BACKED_DF.set_index(["x", "y", "timestamp"]).to_xarray(),
 }
 
 PICKLE_DIR = pathlib.Path(__file__).parent / "testdata" / "pickles"
@@ -51,8 +49,9 @@ def import_tiledb_cloud():
 )
 @pytest.mark.parametrize("pd_ver", ["1.2.4", "1.5.3"])
 @pytest.mark.parametrize("name_want", RESULTS.items(), ids=lambda itm: itm[0])
-def test_pandas_compat(pd_ver: str, name_want: Tuple[str, Any]) -> None:
-    name, want = name_want
+def test_pandas_compat(pd_ver: str, name_want: Tuple[str, Callable[[], Any]]) -> None:
+    name, want_func = name_want
+    want = want_func()
     pkl_file = PICKLE_DIR / "pandas" / f"{name}-pd{pd_ver}.pickle"
     pkl_bytes = pkl_file.read_bytes()
     got = pickle.loads(pkl_bytes)

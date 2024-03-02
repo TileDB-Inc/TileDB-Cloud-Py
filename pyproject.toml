@@ -38,6 +38,14 @@ repository = "https://github.com/TileDB-Inc/TileDB-Cloud-Py"
 [build-system]
 requires = ["setuptools>=42", "wheel", "setuptools_scm>=6"]
 
+[tool.pytest.ini_options]
+explicit-only = ["geospatial"]
+markers = [
+  "geospatial: tests that require the geospatial libraries",
+]
+norecursedirs = ["tiledb/cloud"]
+
+
 [tool.setuptools]
 zip-safe = false
 
