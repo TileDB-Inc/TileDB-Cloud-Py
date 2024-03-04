@@ -11,6 +11,10 @@ on:
     # 01:30 UTC = 20:30/21:30 America/New_York = 03:30/04:30 Europe/Athens
     - cron: "30 1 * * *"
 
+env:
+  PYTEST_SPLIT_GROUPS: 6 # How many parallel groups to create for the tests.
+  PYTEST_TEST_DURATIONS_CACHE_KEY: "test_durations" # Test durations cache key prefix
+
 jobs:
   format-check:
     runs-on: ubuntu-latest
@@ -39,16 +43,19 @@ jobs:
       matrix:
         os:
           - ubuntu-20.04
-          - macos-12
-        python-version: ["3.9", "3.7"]
+          # - macos-12
+        python-version:
+          - "3.9"
+          - "3.7"
         dependencies:
           - pinned
           - fresh
         include:
           - os: ubuntu-20.04
             path: ~/.cache/pip
-          - os: macos-12
-            path: ~/Library/Caches/pip
+          # - os: macos-12
+          # path: ~/Library/Caches/pip
+        pytest-split-group: [1, 2, 3, 4, 5, 6] # Range the parallel test groups defined by env.PYTEST_SPLIT_GROUPS
 
     steps:
       - name: Checkout
@@ -94,6 +101,7 @@ jobs:
             pytest \
             pytest-cov \
             pytest-explicit \
+            pytest-split \
             setuptools \
             setuptools-scm
 
@@ -106,6 +114,17 @@ jobs:
         run: |
           pip install .[tests]
 
+      # Tries to restore the .test_durations file from the cache to use for splitting tests into groups.
+      - name: "Attempt to restore .test_durations from cache"
+        id: test-duration-cache-restore
+        uses: actions/cache/restore@v4
+        continue-on-error: true
+        with:
+          path: .test_durations
+          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-${{ hashFiles('.test_durations') }}
+          restore-keys: |
+            ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-
+
       - name: Run tests
         # Test pinned dependencies on commit / tag and fresh installs on nightlies
         if: (matrix.dependencies == 'fresh') == (github.event_name == 'schedule')
@@ -114,9 +133,55 @@ jobs:
             pytest -sv \
             --last-failed \
             --tb short \
-            --color yes
+            --color yes \
+            --splits ${{ env.PYTEST_SPLIT_GROUPS }} \
+            --group ${{ matrix.pytest-split-group }} \
+            --store-durations \
+            --splitting-algorithm least_duration \
+            --clean-durations
         env:
           TILEDB_REST_TOKEN: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
+
+      # Uploads the partial durations from one of the run (specifically from the ubuntu run but it would be the same with macos).
+      # These partial duration files will be combined into a single .test_durations file and used to update the test cache for the next runs
+      - name: "Upload partial durations"
+        uses: actions/upload-artifact@v4
+        continue-on-error: true
+        # Ensure that we save the partial test durations from an ubuntu job that the tests actually run.
+        if: matrix.os == 'ubuntu-20.04' && matrix.python-version == '3.9' && (matrix.dependencies == 'fresh') == (github.event_name == 'schedule')
+        with:
+          name: partial-test-durations-${{ matrix.pytest-split-group }}
+          path: .test_durations
+          retention-days: 1
+          overwrite: true
+
+  # Download and combine the partial test durations uploaded by the run-tests job,
+  # into a single file and save it to cache for future use.
+  save-test-durations-to-cache:
+    name: Download, combine and save test_durations to the actions cache
+    runs-on: ubuntu-latest
+    needs: run-tests
+    continue-on-error: true
+    env:
+      FolderPrefix: partial-test-durations
+    steps:
+      - name: Download partial durations
+        uses: actions/download-artifact@v4
+        with:
+          # Download partial test duration artifacts in the same folder
+          path: partial-test-durations
+          pattern: partial-test-durations-*
+
+      - name: "Combine test duration cache files in .test_durations"
+        run: |
+          jq -s add $(find partial-test-durations -type f -name .test_durations) > .test_durations
+          cat .test_durations
+
+      - name: "Save combined test durations to cache"
+        uses: actions/cache/save@v4
+        with:
+          path: .test_durations
+          key: ${{ env.PYTEST_TEST_DURATIONS_CACHE_KEY }}-${{ hashFiles('.test_durations') }}
 
   upload-to-pypi:
     # Upload a wheel only if the entire matrix succeeds.
