@@ -174,12 +174,13 @@ def load_pointcloud_metadata(
             scales = None
             mins = None
             maxs = None
-            print(sources)
-            for f in sources:
-                print(type(f))
-                print(str(f))
-                logger.debug("finding metadata for %r", str(f))
-                with vfs.open(str(f), "rb") as src:
+            #print(sources)
+            paths = list(sources)
+            for f in paths:
+                #print(type(f))
+                #print(str(f))
+                logger.debug("finding metadata for %r", f)
+                with vfs.open(f, "rb") as src:
                     # only open header
                     las = laspy.open(src)
                     hdr = las.header
@@ -189,7 +190,7 @@ def load_pointcloud_metadata(
                     offsets = _fold_in(min, offsets, hdr.offsets)
 
             return GeoMetadata(
-                paths=sources,
+                paths=paths,
                 extents=BoundingBox(
                     minx=mins[0],
                     miny=mins[1],
@@ -1014,18 +1015,21 @@ def build_inputs_udf(
 
         with tiledb.scope_ctx(config):
             vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
-            listing = vfs.ls(uri)
             current_count = 0
 
-            def list_files(listing, include: Optional[Union[str, Callable]] = None, exclude: Optional[Union[str, Callable]] = None) -> Iterator[str]:
+            def list_files(listing, include: Optional[Union[str, Callable]] = None, exclude: Optional[Union[str, Callable]] = None, max_count: Optional[int] = None) -> Iterator[str]:
+                from fnmatch import fnmatch
+                listing = vfs.ls(uri)
                 for f in listing:
                     # Avoid infinite recursion
                     if f == uri:
                         continue
 
                     if vfs.is_dir(f):
-                        yield from list_files(
+                        yield from find(
                             f,
+                            config=config,
+                            max_count=max_count,
                             include=include,
                             exclude=exclude,
                         )
@@ -1047,7 +1051,7 @@ def build_inputs_udf(
                                 continue
                         yield f
 
-            for f in list_files(listing):
+            for f in list_files(uri, include, exclude, max_count):
                 current_count += 1
                 if max_count and current_count == max_count:
                     return
@@ -1127,7 +1131,8 @@ def build_inputs_udf(
             meta = fns[dataset_type]["meta_fn"](sources, config=config, **meta_kwargs)
 
             if dataset_type == DatasetType.POINTCLOUD:
-                if len(meta.paths) == 0:
+                if meta.paths is None:
+                #len(meta.paths) == 0:
                     raise ValueError(
                         "Require at least one point cloud file to have been found"
                     )
@@ -1534,14 +1539,17 @@ def ingest_datasets(
 ingest = as_batch(ingest_datasets)
 
 if __name__ == "__main__":
+    from datetime import datetime
+    date_mark = datetime.now().strftime('%Y%m%d-%H%M%S')
     ingest_datasets(
-        dataset_uri="tiledb://seth/s3://tiledb-seth/deleteme/lidar/ma/2024-03-04/test",
+        dataset_uri=f"tiledb://seth/s3://tiledb-seth/deleteme/lidar/ma/2024-03-04/test-{date_mark}",
         dataset_type=DatasetType.POINTCLOUD,
         acn="sandbox-role",
         namespace="seth",
         register_name="test_lidar_ma",
-        search_uri="s3://tiledb-seth/files/geospatial/lidar/MA_CentralEastern_2021_B21/",
+        search_uri="s3://tiledb-seth/deleteme/files/geospatial/lidar/MA_CentralEastern_2021_B21/",
         stats=True,
         verbose=True,
         trace=True,
+        pattern="*.laz",
     )
