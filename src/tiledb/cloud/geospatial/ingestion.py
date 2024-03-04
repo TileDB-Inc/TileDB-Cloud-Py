@@ -1,7 +1,7 @@
 import math
 import os
 from enum import Enum
-from typing import Iterable, Mapping, Optional, Sequence, Tuple, Union
+from typing import Any, Callable, Iterable, Mapping, Optional, Sequence, Tuple, Union
 
 import attrs
 import fiona
@@ -15,9 +15,35 @@ from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import chunk
 from tiledb.cloud.utilities import create_log_array
-from tiledb.cloud.utilities import get_logger_wrapper
+from tiledb.cloud.utilities import get_logger  # get_logger_wrapper
 from tiledb.cloud.utilities import max_memory_usage
 from tiledb.cloud.utilities import run_dag
+
+import logging
+
+
+def get_logger_wrapper(
+    verbose: bool = False,
+) -> logging.Logger:
+    """
+    Get a logger instance and log version information.
+
+    :param verbose: verbose logging, defaults to False
+    :return: logger instance
+    """
+
+    level = logging.DEBUG if verbose else logging.INFO
+    logger = get_logger(level)
+
+    logger.debug(
+        "tiledb.cloud=%s, tiledb=%s, libtiledb=%s",
+        tiledb.cloud.__version__,
+        tiledb.version(),
+        tiledb.libtiledb.version(),
+    )
+
+    return logger
+
 
 fiona.drvsupport.supported_drivers["TileDB"] = "arw"
 fiona.vfs.SCHEMES["tiledb"] = "tiledb"
@@ -37,6 +63,20 @@ BATCH_SIZE = 10
 XYZBoundsTuple = Tuple[float, float, float, float, float, float]
 XYBoundsTuple = Tuple[float, float, float, float]
 XYZTuple = Tuple[float, float, float]
+
+
+def install_dev():
+    import subprocess
+    import sys
+
+    packages = [
+        "tiledb-cloud@git+https://github.com/TileDB-Inc/TileDB-Cloud-Py@3a7910ae32f511fbbd3a1044077673adaa1026a9",
+    ]
+    subprocess.check_call(
+        [sys.executable, "-m", "pip", "install", "-q", "--no-cache-dir"] + packages
+    )
+
+    sys.path.insert(0, r"/home/udf/.local/lib/python3.9/site-packages")
 
 
 class DatasetType(Enum):
@@ -537,6 +577,9 @@ def ingest_point_cloud_udf(
     :param log_uri: log array URI
     :return: if not appending then a sequence of file paths
     """
+
+    install_dev()
+
     import laspy
     import pdal
 
@@ -904,8 +947,6 @@ def build_inputs_udf(
     """Groups input URIs into batches.
     :param dataset_uri: dataset URI
     :param dataset_type: dataset type, one of pointcloud, raster or geometry
-    :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
-        defaults to None
     :param config: config dictionary, defaults to None
     :param search_uri: URI to search for geospatial dataset files, defaults to None
     :param pattern: Unix shell style pattern to match when searching for files,
@@ -933,9 +974,81 @@ def build_inputs_udf(
     :return: A dict containing the kwargs needed for the next function call
     """
     from tiledb.cloud.utilities import Profiler
-    from tiledb.cloud.utilities import find
-    from tiledb.cloud.utilities import get_logger_wrapper
+    # from tiledb.cloud.utilities import find
+    # from tiledb.cloud.utilities import get_logger_wrapper
     from tiledb.cloud.utilities import max_memory_usage
+    from typing import (
+        Any,
+        Callable,
+        Iterable,
+        Mapping,
+        Optional,
+        Sequence,
+        Tuple,
+        Union,
+    )
+
+    install_dev()
+
+    def find(
+        uri: str,
+        *,
+        config: Optional[Mapping[str, Any]] = None,
+        include: Optional[Union[str, Callable]] = None,
+        exclude: Optional[Union[str, Callable]] = None,
+        max_count: Optional[int] = None,
+    ) -> Iterator[str]:
+        """Searches a path for files matching the include/exclude pattern using VFS.
+
+        :param uri: Input path to search
+        :param config: Optional dict configuration to pass on tiledb.VFS
+        :param include: Optional include pattern string
+        :param exclude: Optional exclude pattern string
+        :param max_count: Optional stop point when searching for files
+        :param count: Current number of files found
+        """
+
+        with tiledb.scope_ctx(config):
+            vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
+            listing = vfs.ls(uri)
+            current_count = 0
+
+            def list_files(listing):
+                for f in listing:
+                    # Avoid infinite recursion
+                    if f == uri:
+                        continue
+
+                    if vfs.is_dir(f):
+                        yield list_files(
+                            f,
+                            include=include,
+                            exclude=exclude,
+                        )
+                    else:
+                        # Skip files that do not match the include pattern or match
+                        # the exclude pattern.
+                        if callable(include):
+                            if not include(f):
+                                continue
+                        else:
+                            if include and not fnmatch(f, include):
+                                continue
+
+                        if callable(exclude):
+                            if exclude(f):
+                                continue
+                        else:
+                            if exclude and fnmatch(f, exclude):
+                                continue
+                        yield f
+
+            for f in list_files(listing):
+                current_count += 1
+                if max_count and current_count == max_count:
+                    return
+                else:
+                    yield f
 
     logger = get_logger_wrapper(verbose)
     with Profiler(array_uri=log_uri, id=id, trace=trace):
@@ -1167,7 +1280,7 @@ def ingest_datasets_dag(
     input_list_node = graph.submit(
         build_inputs_udf,
         dataset_type=dataset_type,
-        acn=acn,
+        access_credentials_name=acn,
         config=config,
         search_uri=search_uri,
         pattern=pattern,
@@ -1184,6 +1297,7 @@ def ingest_datasets_dag(
         verbose=verbose,
         trace=trace,
         log_uri=log_uri,
+        image_name=DEFAULT_IMG_NAME,
         name=f"{dag_name} input collector",
     )
 
@@ -1234,6 +1348,7 @@ def ingest_datasets_dag(
         trace=trace,
         log_uri=log_uri,
         access_credentials_name=acn,
+        image_name=DEFAULT_IMG_NAME,
     ).depends_on(process_node)
 
     # Register the dataset on TileDB Cloud
@@ -1248,6 +1363,7 @@ def ingest_datasets_dag(
             # trace=trace,
             # log_uri=log_uri,
             access_credentials_name=acn,
+            image_name=DEFAULT_IMG_NAME,
         ).depends_on(process_node)
 
     run_dag(graph, wait=False)
@@ -1278,6 +1394,7 @@ def consolidate_meta(
     :param id: profiler event id, defaults to "consolidate"
     :param verbose: verbose logging, defaults to False
     """
+    install_dev()
 
     logger = get_logger_wrapper(verbose)
 
@@ -1411,3 +1528,16 @@ def ingest_datasets(
 
 # Wrapper function for batch dataset ingestion
 ingest = as_batch(ingest_datasets)
+
+if __name__ == "__main__":
+    ingest_datasets(
+        dataset_uri="tiledb://seth/s3://tiledb-seth/deleteme/lidar/ma/2024-03-04/test",
+        dataset_type=DatasetType.POINTCLOUD,
+        acn="sandbox-role",
+        namespace="seth",
+        register_name="test_lidar_ma",
+        search_uri="s3://tiledb-seth/files/geospatial/lidar/MA_CentralEastern_2021_B21/",
+        stats=True,
+        verbose=True,
+        trace=True,
+    )
