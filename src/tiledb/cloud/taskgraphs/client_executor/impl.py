@@ -114,8 +114,7 @@ class LocalExecutor(_base.IClientExecutor):
 
         self._has_status_updates = False
         """True when a Node has status updates since the last callback."""
-        self._update_callback_thread: Optional[threading.Thread] = None
-        """If present, the thread that is dispatching update callbacks."""
+        self._callback_runner = futures.CallbackRunner(self)
 
     @property
     def name(self) -> Optional[str]:
@@ -428,26 +427,7 @@ class LocalExecutor(_base.IClientExecutor):
         any major work of its own; instead it should dispatch to another thread.
         """
         with self._update_callbacks_lock:
-            if not self._update_callbacks:
-                return
-            self._has_new_node_statuses = True
-            if not self._update_callback_thread:
-                self._update_callback_thread = threading.Thread(
-                    name=f"{self._prefix}-update-callbacks",
-                    target=self._call_update_callbacks,
-                )
-                self._update_callback_thread.start()
-
-    def _call_update_callbacks(self) -> None:
-        while True:
-            with self._update_callbacks_lock:
-                if not self._has_new_node_statuses:
-                    # If there are no updates, then quit.
-                    self._update_callback_thread = None
-                    return
-                self._has_new_node_statuses = False
-                cbs = tuple(self._update_callbacks)
-            futures.execute_callbacks(self, cbs)
+            self._callback_runner.run_callbacks(self._update_callbacks)
 
     #
     # Logging

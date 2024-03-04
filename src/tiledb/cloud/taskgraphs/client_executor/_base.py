@@ -28,7 +28,7 @@ class IClientExecutor(executor.Executor["Node"], metaclass=abc.ABCMeta):
     def _enqueue_done_node(self, node: "Node") -> None:
         raise NotImplementedError()
 
-    @abc.abstractclassmethod
+    @abc.abstractmethod
     def _notify_node_status_change(self) -> None:
         raise NotImplementedError()
 
@@ -78,6 +78,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
         This is distinct from ``_result_exception`` because it will be RAISED
         by methods like `.exception()` rather than returned.
         """
+        self._callback_runner = futures.CallbackRunner(self)
 
     #
     # External API.
@@ -108,7 +109,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
             self.owner._enqueue_done_node(self)
             cbs = self._callbacks()
         if cancelled:
-            futures.execute_callbacks(self, cbs)
+            self._callback_runner.run_callbacks(cbs)
         return cancelled
 
     def wait(self, timeout: Optional[float] = None) -> None:
@@ -193,7 +194,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
                 self.owner._enqueue_done_node(self)
                 cbs = self._callbacks()
         finally:
-            futures.execute_callbacks(self, cbs)
+            self._callback_runner.run_callbacks(cbs)
 
     #
     # Lifecycle-management internals.
@@ -252,7 +253,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
             self.owner._enqueue_done_node(self)
             cbs = self._callbacks()
 
-        futures.execute_callbacks(self, cbs)
+        self._callback_runner.run_callbacks(cbs)
 
     def _parent_failed_error(self) -> executor.ParentFailedError:
         """Returns the PFE that should be associated with this Node.
