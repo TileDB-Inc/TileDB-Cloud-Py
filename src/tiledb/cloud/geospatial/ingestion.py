@@ -1,7 +1,19 @@
 import math
 import os
 from enum import Enum
-from typing import Any, Callable, Iterable, Mapping, Optional, Sequence, Tuple, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    Iterable,
+    Mapping,
+    Optional,
+    Sequence,
+    Tuple,
+    Union,
+    TypeVar,
+)
 
 import attrs
 import fiona
@@ -13,13 +25,28 @@ from rtree import index
 import tiledb
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import as_batch
-from tiledb.cloud.utilities import chunk
+# from tiledb.cloud.utilities import chunk
 from tiledb.cloud.utilities import create_log_array
 from tiledb.cloud.utilities import get_logger  # get_logger_wrapper
 from tiledb.cloud.utilities import max_memory_usage
 from tiledb.cloud.utilities import run_dag
 
 import logging
+
+T = TypeVar("T")
+
+
+def chunk(items: Sequence[T], chunk_size: int) -> Iterator[Sequence[T]]:
+    """Chunks a sequence of objects and returns an iterator where
+    each return sequence is of length chunk_size.
+
+    :param items: Sequence to split into batches
+    :param chunk_size: Size of chunks of the sequence to return
+    """
+    # Iterator for providing batches of chunks
+    length = len(items)
+    for ndx in range(0, length, chunk_size):
+        yield items[ndx : min(ndx + chunk_size, length)]
 
 
 def get_logger_wrapper(
@@ -543,9 +570,10 @@ def ingest_geometry_udf(
 
 
 def ingest_point_cloud_udf(
-    sources: Sequence[str],
+    args: Dict,
     *,
-    dataset_uri: str,
+    sources: Sequence[str] = None,
+    dataset_uri: str = None,
     template_sample: str = None,
     append: bool = False,
     extents: Optional[XYZBoundsTuple] = None,
@@ -588,6 +616,24 @@ def ingest_point_cloud_udf(
     import pdal
 
     import tiledb
+    print(sources)
+    print(
+        f"extents={extents}, offset={offsets}, scales={scales}, template_sample={template_sample}"
+    )
+    print(args)
+
+    if sources is None and "sources" in args:
+        sources = args["sources"]
+    if template_sample is None and "template_sample" in args:
+        template_sample = args["template_sample"]
+    if extents is None and "extents" in args:
+        extents = args["extents"]
+    if offsets is None and "offsets" in args:
+        offsets = args["offsets"]
+    if scales is None and "scales" in args:
+        scales = args["scales"]
+    if chunk_size is None and "chunk_size" in args:
+        chunk_size = args["chunk_size"]
 
     with tiledb.scope_ctx(config):
         with Profiler(array_uri=log_uri, id=id, trace=trace):
@@ -1313,7 +1359,7 @@ def ingest_datasets_dag(
     # schema creation node, returns a sequence of work items
     ingest_node = graph.submit(
         fn,
-        input_list_node,
+        args=input_list_node,
         dataset_uri=dataset_uri,
         config=config,
         append=False,
