@@ -1,7 +1,8 @@
+import logging
 import math
 import os
 from enum import Enum
-from typing import Any, Callable, Iterable, Mapping, Optional, Sequence, Tuple, Union
+from typing import Iterable, Mapping, Optional, Sequence, Tuple, Union
 
 import attrs
 import fiona
@@ -18,8 +19,6 @@ from tiledb.cloud.utilities import create_log_array
 from tiledb.cloud.utilities import get_logger  # get_logger_wrapper
 from tiledb.cloud.utilities import max_memory_usage
 from tiledb.cloud.utilities import run_dag
-
-import logging
 
 
 def get_logger_wrapper(
@@ -976,21 +975,22 @@ def build_inputs_udf(
     :param log_uri: log array URI
     :return: A dict containing the kwargs needed for the next function call
     """
-    from tiledb.cloud.utilities import Profiler
-    # from tiledb.cloud.utilities import find
-    # from tiledb.cloud.utilities import get_logger_wrapper
-    from tiledb.cloud.utilities import max_memory_usage
+    from fnmatch import fnmatch
     from typing import (
         Any,
         Callable,
         Iterable,
+        Iterator,
         Mapping,
         Optional,
-        Sequence,
-        Tuple,
         Union,
-        Iterator,
     )
+
+    from tiledb.cloud.utilities import Profiler
+
+    # from tiledb.cloud.utilities import find
+    # from tiledb.cloud.utilities import get_logger_wrapper
+    from tiledb.cloud.utilities import max_memory_usage
 
     install_dev()
 
@@ -1017,18 +1017,14 @@ def build_inputs_udf(
             listing = vfs.ls(uri)
             current_count = 0
 
-            def list_files(listing, include: Optional[Union[str, Callable]] = None, exclude: Optional[Union[str, Callable]] = None) -> Iterator[str]:
+            def list_files(listing: Iterable[str]) -> Iterator[str]:
                 for f in listing:
                     # Avoid infinite recursion
                     if f == uri:
                         continue
 
                     if vfs.is_dir(f):
-                        yield from list_files(
-                            f,
-                            include=include,
-                            exclude=exclude,
-                        )
+                        yield from list_files([f])
                     else:
                         # Skip files that do not match the include pattern or match
                         # the exclude pattern.
@@ -1102,6 +1098,8 @@ def build_inputs_udf(
 
             kwargs = {}
 
+            sources: Iterable[str]
+
             if dataset_list_uri:
                 sources = read_uris(
                     dataset_list_uri,
@@ -1124,6 +1122,7 @@ def build_inputs_udf(
                 raise ValueError(f"No {dataset_type.name} datasets found")
 
             meta_kwargs = fns[dataset_type]["kwargs"]
+            print(f"SOURCES IS A {type(sources)}")
             meta = fns[dataset_type]["meta_fn"](sources, config=config, **meta_kwargs)
 
             if dataset_type == DatasetType.POINTCLOUD:
@@ -1343,7 +1342,7 @@ def ingest_datasets_dag(
         access_credentials_name=acn,
     )
 
-    consolidate_meta_node = graph.submit(
+    graph.submit(
         consolidate_meta,
         dataset_uri,
         config,
