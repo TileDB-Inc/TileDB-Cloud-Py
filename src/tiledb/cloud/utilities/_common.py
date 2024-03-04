@@ -407,18 +407,14 @@ def find(
         listing = vfs.ls(uri)
         current_count = 0
 
-        def list_files(listing):
+        def list_files(listing) -> Iterator[str]:
             for f in listing:
                 # Avoid infinite recursion
                 if f == uri:
                     continue
 
                 if vfs.is_dir(f):
-                    yield list_files(
-                        f,
-                        include=include,
-                        exclude=exclude,
-                    )
+                    yield from list_files(f)
                 else:
                     # Skip files that do not match the include pattern or match
                     # the exclude pattern.
