@@ -900,10 +900,7 @@ def build_inputs_udf(
     log_uri: Optional[str] = None,
 ) -> dict[str, object]:
     """Groups input URIs into batches.
-    :param dataset_uri: dataset URI
     :param dataset_type: dataset type, one of pointcloud, raster or geometry
-    :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
-        defaults to None
     :param config: config dictionary, defaults to None
     :param search_uri: URI to search for geospatial dataset files, defaults to None
     :param pattern: Unix shell style pattern to match when searching for files,
@@ -996,9 +993,9 @@ def build_inputs_udf(
                 sources = find(
                     search_uri,
                     config=config,
-                    excludes=ignore,
-                    includes=pattern if pattern else fns[dataset_type]["pattern_fn"],
-                    max_files=max_files,
+                    exclude=ignore,
+                    include=pattern if pattern else fns[dataset_type]["pattern_fn"],
+                    max_count=max_files,
                 )
 
             if not sources:
@@ -1101,7 +1098,7 @@ def ingest_datasets_dag(
     :param config: config dictionary, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
     :param register_name: name to register the dataset with on TileDB Cloud,
-        defaults to None
+        defaults to None and the destination array is not registered
     :param search_uri: URI to search for geospatial dataset files, defaults to None
     :param pattern: Unix shell style pattern to match when searching for files,
         defaults to None
@@ -1165,7 +1162,7 @@ def ingest_datasets_dag(
     input_list_node = graph.submit(
         build_inputs_udf,
         dataset_type=dataset_type,
-        acn=acn,
+        access_credentials_name=acn,
         config=config,
         search_uri=search_uri,
         pattern=pattern,
@@ -1236,16 +1233,15 @@ def ingest_datasets_dag(
 
     # Register the dataset on TileDB Cloud
     if register_name:
-        register_dataset_udf(
+        graph.submit(
+            register_dataset_udf,
             dataset_uri,
             namespace=namespace,
             register_name=register_name,
             config=config,
             verbose=verbose,
-            trace=trace,
-            log_uri=log_uri,
             access_credentials_name=acn,
-        )
+        ).depend_on(process_node)
 
     run_dag(graph, wait=False)
 
@@ -1344,7 +1340,6 @@ def ingest_datasets(
     :param dataset_list_uri: URI with a list of dataset URIs, defaults to None
     :param max_files: maximum number of URIs to read/find,
         defaults to None (no limit)
-    :param max_samples: maximum number of samples to ingest, defaults to None (no limit)
     :param compression_filter: serialized tiledb filter,
         defaults to None
     :param workers: number of workers for dataset ingestion, defaults to MAX_WORKERS
