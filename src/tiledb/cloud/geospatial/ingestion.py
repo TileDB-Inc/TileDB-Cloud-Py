@@ -831,6 +831,7 @@ def register_dataset_udf(
     namespace: Optional[str] = None,
     config: Optional[Mapping[str, object]] = None,
     verbose: bool = False,
+    access_credentials_name: Optional[str] = None,
 ) -> None:
     """
     Register the dataset on TileDB Cloud.
@@ -876,6 +877,7 @@ def register_dataset_udf(
                 dataset_uri,
                 name=register_name,
                 namespace=namespace,
+                credentials_name=access_credentials_name,
             )
 
 
@@ -1188,7 +1190,7 @@ def ingest_datasets_dag(
     # schema creation node, returns a sequence of work items
     ingest_node = graph.submit(
         fn,
-        **input_list_node,
+        input_list_node,
         dataset_uri=dataset_uri,
         config=config,
         append=False,
@@ -1223,7 +1225,7 @@ def ingest_datasets_dag(
         access_credentials_name=acn,
     )
 
-    graph.submit(
+    consolidate_meta_node = graph.submit(
         consolidate_meta,
         dataset_uri,
         config,
@@ -1236,16 +1238,17 @@ def ingest_datasets_dag(
 
     # Register the dataset on TileDB Cloud
     if register_name:
-        register_dataset_udf(
+        graph.submit(
+            register_dataset_udf,
             dataset_uri,
             namespace=namespace,
             register_name=register_name,
             config=config,
             verbose=verbose,
-            trace=trace,
-            log_uri=log_uri,
+            # trace=trace,
+            # log_uri=log_uri,
             access_credentials_name=acn,
-        )
+        ).depends_on(process_node)
 
     run_dag(graph, wait=False)
 
