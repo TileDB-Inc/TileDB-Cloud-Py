@@ -1014,17 +1014,17 @@ def build_inputs_udf(
 
         with tiledb.scope_ctx(config):
             vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
-            listing = vfs.ls(uri)
             current_count = 0
 
-            def list_files(listing: Iterable[str]) -> Iterator[str]:
+            def list_files(path: str) -> Iterator[str]:
+                listing = vfs.ls(path)
                 for f in listing:
                     # Avoid infinite recursion
                     if f == uri:
                         continue
 
                     if vfs.is_dir(f):
-                        yield from list_files([f])
+                        yield from list_files(f)
                     else:
                         # Skip files that do not match the include pattern or match
                         # the exclude pattern.
@@ -1043,7 +1043,7 @@ def build_inputs_udf(
                                 continue
                         yield f
 
-            for f in list_files(listing):
+            for f in list_files(uri):
                 current_count += 1
                 if max_count and current_count == max_count:
                     return
