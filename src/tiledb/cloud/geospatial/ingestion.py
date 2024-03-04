@@ -174,9 +174,12 @@ def load_pointcloud_metadata(
             scales = None
             mins = None
             maxs = None
+            print(sources)
             for f in sources:
-                logger.debug("finding metadata for %r", f)
-                with vfs.open(f, "rb") as src:
+                print(type(f))
+                print(str(f))
+                logger.debug("finding metadata for %r", str(f))
+                with vfs.open(str(f), "rb") as src:
                     # only open header
                     las = laspy.open(src)
                     hdr = las.header
@@ -986,6 +989,7 @@ def build_inputs_udf(
         Sequence,
         Tuple,
         Union,
+        Iterator,
     )
 
     install_dev()
@@ -1013,14 +1017,14 @@ def build_inputs_udf(
             listing = vfs.ls(uri)
             current_count = 0
 
-            def list_files(listing):
+            def list_files(listing, include: Optional[Union[str, Callable]] = None, exclude: Optional[Union[str, Callable]] = None) -> Iterator[str]:
                 for f in listing:
                     # Avoid infinite recursion
                     if f == uri:
                         continue
 
                     if vfs.is_dir(f):
-                        yield list_files(
+                        yield from list_files(
                             f,
                             include=include,
                             exclude=exclude,
@@ -1111,9 +1115,9 @@ def build_inputs_udf(
                 sources = find(
                     search_uri,
                     config=config,
-                    excludes=ignore,
-                    includes=pattern if pattern else fns[dataset_type]["pattern_fn"],
-                    max_files=max_files,
+                    exclude=ignore,
+                    include=pattern if pattern else fns[dataset_type]["pattern_fn"],
+                    max_count=max_files,
                 )
 
             if not sources:
