@@ -26,6 +26,3 @@ See https://tiledb-inc.github.io/TileDB-Cloud-Py/
   - These tests run on TileDB Cloud using your current environment variable `TILEDB_REST_TOKEN` -- you will need a valid API token for the tests to pass
   - For continuous integration, the token is configured for the `unittest` user and all tests should pass
   - For interactive use, if your `TILEDB_REST_TOKEN` points to your own account, most tests will run, except for those that explicitly check against contents of the `unittest` account which are skipped
-- Adding new tests:
-  - To run tests in parallel groups we are utilizing [pytest-split](https://pypi.org/project/pytest-split/).
-  - When adding new tests, you need to run `pytest --store-durations --splitting-algorithm least_duration` and commit the updated `.test_durations` file.
