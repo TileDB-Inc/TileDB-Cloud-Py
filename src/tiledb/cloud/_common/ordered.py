@@ -4,13 +4,10 @@ from typing import AbstractSet as _AbstractSet
 from typing import Iterable, Iterator, TypeVar
 from typing import MutableSet as _MutableSet
 
+from typing_extensions import Self
+
 _T = TypeVar("_T")
 _T_co = TypeVar("_T_co", covariant=True)
-_Self = TypeVar("_Self", bound="FrozenSet")
-"""Annotation for returning an object of your own type.
-
-See https://peps.python.org/pep-0673/.
-"""
 
 
 class FrozenSet(_AbstractSet[_T_co]):
@@ -31,7 +28,7 @@ class FrozenSet(_AbstractSet[_T_co]):
     def __init__(self, source: Iterable[_T_co] = ()):
         self._dict = {x: None for x in source}
 
-    def copy(self: _Self) -> _Self:
+    def copy(self) -> Self:
         """Returns itself, because it's immutable."""
         return self
 
@@ -60,7 +57,7 @@ class Set(FrozenSet[_T], _MutableSet[_T]):
     Not guaranteed to be thread-safe.
     """
 
-    def copy(self: _Self) -> _Self:
+    def copy(self) -> Self:
         """Returns a shallow copy of this set. Equivalent to ``set.copy()``."""
         return type(self)(self)
 
