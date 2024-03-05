@@ -41,10 +41,18 @@ def is_folder(path: str) -> bool:
     return path.endswith("/")
 
 
-def validate_io_paths(source: Sequence[str], output: Sequence[str]) -> None:
+def validate_io_paths(
+    source: Sequence[str], output: Sequence[str], register: bool
+) -> None:
     if len(source) == 0 or len(output) == 0:
         raise ValueError("Source/Output list must not be empty.")
 
+    if register:
+        if any(o.startswith("tiledb://") for o in output):
+            raise ValueError(
+                "Invalid value of argument 'register'. \
+                             TileDB URIs require register argument to be set to False"
+            )
     if len(source) == 1 and len(output) == 1:
         if is_folder(source[0]) and not is_folder(output[0]):
             raise ValueError("Invalid combination of source and output paths.")

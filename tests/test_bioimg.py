@@ -19,9 +19,11 @@ class BioimgTest(unittest.TestCase):
                 ["s3://test_out/b", "s3://test_out/d"],
             ),
         }
-        for test_name, (source, dest) in accepted_pairs.items():
-            with self.subTest(f"case: {test_name}"):
-                validate_io_paths(source, dest)
+        register = {"true": True, "false": False}
+        for _, r in register.items():
+            for test_name, (source, dest) in accepted_pairs.items():
+                with self.subTest(f"case: {test_name}"):
+                    validate_io_paths(source, dest, r)
 
         # Non Accepted cases
         non_accepted_pairs = {
@@ -93,7 +95,44 @@ class BioimgTest(unittest.TestCase):
                 ["s3://test_out/b/"],
             ),
         }
-        for test_name, (source, dest) in non_accepted_pairs.items():
+        for _, r in register.items():
+            for test_name, (source, dest) in non_accepted_pairs.items():
+                with self.subTest(f"case: {test_name}"):
+                    with self.assertRaises(ValueError):
+                        validate_io_paths(source, dest, r)
+
+        # Non accepted register with tiledb uri output
+        non_accepted_pairs_registration_true = {
+            # 1 File -> Output: 1 Folder
+            "test24": (
+                ["s3://test_in/a.tiff"],
+                ["tiledb://test_namespace/s3://test_out/b/"],
+            ),
+            # 1 File -> Output: 1 File
+            "test25": (
+                ["s3://test_in/a.tiff"],
+                ["tiledb://test_namespace/s3://test_out/b"],
+            ),
+            # 1 Folder -> Output: 1 Folder
+            "test26": (
+                ["s3://test_in/a/"],
+                ["tiledb://test_namespace/s3://test_out/b/"],
+            ),
+            # Multiple Files -> Output: Multiple Files (Matching number)
+            "test27": (
+                ["s3://test_in/a.tiff", "s3://test_in/c.tiff"],
+                ["s3://test_out/b", "tiledb://test_namespace/s3://test_out/d"],
+            ),
+        }
+
+        # Fail on register=True
+        for test_name, (source, dest) in non_accepted_pairs_registration_true.items():
             with self.subTest(f"case: {test_name}"):
                 with self.assertRaises(ValueError):
-                    validate_io_paths(source, dest)
+                    print(test_name)
+                    validate_io_paths(source, dest, register["true"])
+
+        # Pass on register=False
+        for test_name, (source, dest) in non_accepted_pairs_registration_true.items():
+            with self.subTest(f"case: {test_name}"):
+                validate_io_paths(source, dest, register["false"])
