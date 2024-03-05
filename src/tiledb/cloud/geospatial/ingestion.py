@@ -7,6 +7,7 @@ from typing import (
     Dict,
     Iterator,
     Iterable,
+    List,
     Mapping,
     Optional,
     Sequence,
@@ -570,7 +571,7 @@ def ingest_geometry_udf(
 
 
 def ingest_point_cloud_udf(
-    args: Dict,
+    args: Union[Dict, List],
     *,
     sources: Sequence[str] = None,
     dataset_uri: str = None,
@@ -618,22 +619,28 @@ def ingest_point_cloud_udf(
     import tiledb
     print(sources)
     print(
-        f"extents={extents}, offset={offsets}, scales={scales}, template_sample={template_sample}"
+        f"chunk_size={chunk_size}, extents={extents}, offset={offsets}, scales={scales}, template_sample={template_sample}"
     )
     print(args)
+    print(type(args))
 
-    if sources is None and "sources" in args:
-        sources = args["sources"]
-    if template_sample is None and "template_sample" in args:
-        template_sample = args["template_sample"]
-    if extents is None and "extents" in args:
-        extents = args["extents"]
-    if offsets is None and "offsets" in args:
-        offsets = args["offsets"]
-    if scales is None and "scales" in args:
-        scales = args["scales"]
-    if chunk_size is None and "chunk_size" in args:
-        chunk_size = args["chunk_size"]
+    if isinstance(args, dict):
+        print("setting based on dict")
+        if sources is None and "sources" in args:
+            sources = args["sources"]
+        if template_sample is None and "template_sample" in args:
+            template_sample = args["template_sample"]
+        if extents is None and "extents" in args:
+            extents = args["extents"]
+        if offsets is None and "offsets" in args:
+            offsets = args["offsets"]
+        if scales is None and "scales" in args:
+            scales = args["scales"]
+        if chunk_size is None and "chunk_size" in args:
+            chunk_size = args["chunk_size"]
+    elif isinstance(args, list):
+        print("setting based on list")
+        sources = args
 
     with tiledb.scope_ctx(config):
         with Profiler(array_uri=log_uri, id=id, trace=trace):
@@ -653,6 +660,7 @@ def ingest_point_cloud_udf(
                             las = laspy.open(src)
                             chunk_itr = las.chunk_iterator(chunk_size)
 
+                            print(chunk_itr)
                             for c in chunk_itr:
                                 arr = scale_array(c.array)
                                 pipeline = pdal.Writer.tiledb(
@@ -694,7 +702,8 @@ def ingest_point_cloud_udf(
                             ).pipeline(arr)
                             pipeline.execute()
 
-                    return chunk(sources, batch_size)
+                    args.sources = list(chunk(sources, batch_size))
+                    return args
                 else:
                     raise ValueError("Insufficient metadata for point cloud ingestion")
             finally:
@@ -1586,7 +1595,8 @@ ingest = as_batch(ingest_datasets)
 
 if __name__ == "__main__":
     from datetime import datetime
-    date_mark = datetime.now().strftime('%Y%m%d-%H%M%S')
+    # date_mark = datetime.now().strftime('%Y%m%d-%H%M%S')
+    date_mark = "1"
     ingest_datasets(
         dataset_uri=f"tiledb://seth/s3://tiledb-seth/deleteme/lidar/ma/2024-03-04/test-{date_mark}",
         dataset_type=DatasetType.POINTCLOUD,
