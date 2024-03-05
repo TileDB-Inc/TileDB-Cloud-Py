@@ -134,7 +134,8 @@ def load_pointcloud_metadata(
             scales = None
             mins = None
             maxs = None
-            for f in sources:
+            paths = list(sources)
+            for f in paths:
                 logger.debug("finding metadata for %r", f)
                 with vfs.open(f, "rb") as src:
                     # only open header
@@ -146,7 +147,7 @@ def load_pointcloud_metadata(
                     offsets = _fold_in(min, offsets, hdr.offsets)
 
             return GeoMetadata(
-                paths=sources,
+                paths=paths,
                 extents=BoundingBox(
                     minx=mins[0],
                     miny=mins[1],
