@@ -1185,7 +1185,7 @@ def ingest_datasets_dag(
     # schema creation node, returns a sequence of work items
     ingest_node = graph.submit(
         fn,
-        **input_list_node,
+        input_list_node,
         dataset_uri=dataset_uri,
         config=config,
         append=False,
