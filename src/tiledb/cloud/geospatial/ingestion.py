@@ -1148,8 +1148,8 @@ def ingest_datasets_dag(
     fn = funcs[dataset_type]["udf_fn"]
 
     # Build the task graph
-    dag_name = f"{dataset_type.name}-{DEFAULT_DAG_NAME}"
-    task_prefix = f"{dataset_type.name} - Task"
+    dag_name = f"{dataset_type.name.lower()}-{DEFAULT_DAG_NAME}"
+    task_prefix = f"{dataset_type.name.lower()} - Task"
 
     logger.info("Building graph")
     graph = tiledb.cloud.dag.DAG(
@@ -1180,6 +1180,7 @@ def ingest_datasets_dag(
         verbose=verbose,
         trace=trace,
         log_uri=log_uri,
+        image_name=DEFAULT_IMG_NAME,
         name=f"{dag_name} input collector",
     )
 
@@ -1242,7 +1243,7 @@ def ingest_datasets_dag(
             config=config,
             verbose=verbose,
             access_credentials_name=acn,
-        ).depend_on(process_node)
+        ).depends_on(process_node)
 
     run_dag(graph, wait=False)
 
