@@ -399,7 +399,6 @@ def find(
     :param include: Optional include pattern string
     :param exclude: Optional exclude pattern string
     :param max_count: Optional stop point when searching for files
-    :param count: Current number of files found
     """
 
     with tiledb.scope_ctx(config):
@@ -414,10 +413,8 @@ def find(
                     continue
 
                 if vfs.is_dir(f):
-                    yield list_files(
+                    yield from list_files(
                         f,
-                        include=include,
-                        exclude=exclude,
                     )
                 else:
                     # Skip files that do not match the include pattern or match
@@ -438,11 +435,11 @@ def find(
                     yield f
 
         for f in list_files(listing):
+            yield f
+
             current_count += 1
             if max_count and current_count == max_count:
                 return
-            else:
-                yield f
 
 
 T = TypeVar("T")
