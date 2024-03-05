@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Dict, Iterator, Mapping, Optional, Sequence, Tuple, Union
+from typing import Any, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
 from tiledb.cloud import dag
@@ -8,6 +8,7 @@ from tiledb.cloud.bioimg.helpers import serialize_filter
 from tiledb.cloud.bioimg.helpers import validate_io_paths
 from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.rest_api.models import RetryStrategy
+from tiledb.cloud.utilities._common import as_batch
 from tiledb.cloud.utilities._common import run_dag
 
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
@@ -22,6 +23,7 @@ def ingest(
     output: Union[Sequence[str], str],
     config: Mapping[str, Any],
     *args: Any,
+    access_credentials_name: str,
     taskgraph_name: Optional[str] = None,
     num_batches: Optional[int] = None,
     threads: Optional[int] = 0,
@@ -62,6 +64,8 @@ def ingest(
         when None the default TIFF converter is used. Available converters
         are one of the ("tiff", "zarr", "osd").
     :param output_ext: extension for the output images in tiledb
+    :param access_credentials_name: Access Credentials Name (ACN) registered
+        in TileDB Cloud (ARN type)
     """
 
     logger = get_logger_wrapper(verbose)
@@ -258,10 +262,15 @@ def ingest(
                 if found:
                     logger.info("Dataset already registered at %r.", tiledb_uri)
                 else:
-                    logger.info("Registering dataset %s at %s", dataset_uri, tiledb_uri)
+                    logger.info(
+                        "Registering dataset %s at %s with name %s",
+                        dataset_uri,
+                        tiledb_uri,
+                        register_map[dataset_uri],
+                    )
                     tiledb.cloud.groups.register(
                         dataset_uri,
-                        name=register_name,
+                        name=register_map[dataset_uri],
                         namespace=namespace,
                         credentials_name=acn,
                     )
@@ -295,6 +304,10 @@ def ingest(
         ),
     )
 
+    if not access_credentials_name:
+        raise ValueError(
+            "Ingestion graph requires `access_credentials_name` to be set."
+        )
     # The lister doesn't need many resources.
     input_list_node = graph.submit(
         build_input_batches,
@@ -305,7 +318,7 @@ def ingest(
         _SUPPORTED_EXTENSIONS,
         *args,
         verbose=verbose,
-        access_credentials_name=kwargs.get("access_credentials_name"),
+        access_credentials_name=access_credentials_name,
         name=f"{dag_name} input collector",
         result_format="json",
     )
@@ -329,6 +342,7 @@ def ingest(
         image_name=DEFAULT_IMG_NAME,
         max_workers=threads,
         compressor=compressor_serial,
+        access_credentials_name=access_credentials_name,
         **kwargs,
     )
 
@@ -338,7 +352,7 @@ def ingest(
             ingest_list_node,
             config=config,
             verbose=verbose,
-            acn=kwargs.get("access_credentials_name"),
+            acn=access_credentials_name,
             namespace=namespace,
             name=f"{dag_name} registrator ",
             expand_node_output=ingest_list_node,
@@ -351,7 +365,5 @@ def ingest(
     return graph
 
 
-def ingest_udf(*args: Any, **kwargs: Any) -> Dict[str, str]:
-    """Ingestor wrapper function that can be used as a UDF."""
-    grf = ingest(*args, **kwargs)
-    return {"status": "started", "graph_id": str(grf.server_graph_uuid)}
+# Wrapper function for batch VCF ingestion
+ingest_batch = as_batch(ingest)
