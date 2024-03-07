@@ -1,8 +1,9 @@
-from typing import List
-
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
+from tiledb.cloud.rest_api.models.invitation_organization_join_email import (
+    InvitationOrganizationJoinEmail,
+)
 
 
 def accept_invitation(invitation_id: str) -> None:
@@ -55,14 +56,16 @@ def fetch_invitations(**filters):
         raise tiledb_cloud_error.check_exc(exc)
 
 
-def invite_to_organization(organization: str, email_invite: List[str]) -> None:
+def invite_to_organization(
+    organization: str, email_invite: InvitationOrganizationJoinEmail
+) -> None:
     """
     Sends email to multiple recipients with joining information
     regarding an organization.
 
     Args:
         organization (str): name or UUID of organization.
-        email_invite (List[str]): list of email recipients
+        email_invite (InvitationOrganizationJoinEmail): list of email recipients
 
     Raises:
         TileDBCloudError
@@ -98,14 +101,16 @@ def cancel_invite_to_organization(invitation_id: str, organization: str) -> None
         raise tiledb_cloud_error.check_exc(exc)
 
 
-def invite_to_array(namespace: str, array: str, email_invite: List[str]) -> None:
+def invite_to_array(
+    namespace: str, array: str, email_invite: InvitationOrganizationJoinEmail
+) -> None:
     """
     Share array by email invite.
 
     Args:
         namespace (str): namespace array is in (an organization name or user's username)
         array (str): name/uri of array that is url-encoded
-        email_invite (List[str]): list of email recipients
+        email_invite (InvitationOrganizationJoinEmail): list of email recipients
 
     Raises:
         TileDBCloudError
@@ -146,14 +151,16 @@ def cancel_share_array_invitation(
         raise tiledb_cloud_error.check_exc(exc)
 
 
-def invite_to_group(namespace: str, group: str, email_invite: List[str]) -> None:
+def invite_to_group(
+    namespace: str, group: str, email_invite: InvitationOrganizationJoinEmail
+) -> None:
     """
     Sends email to multiple recipients with sharing information regarding a group.
 
     Args:
         namespace (str): namespace array is in (an organization name or user's username)
         group (str): name/uri of group that is url-encoded
-        email_invite (List[str]): list of email recipients
+        email_invite (InvitationOrganizationJoinEmail): list of email recipients
 
     Raises:
         TileDBCloudError
