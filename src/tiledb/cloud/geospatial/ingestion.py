@@ -634,8 +634,9 @@ def ingest_point_cloud_udf(
     into tiledb arrays using PDAL API. Compression uses the default profile
     built in to PDAL.
 
-    :param sources: Sequence of input point cloud file names
+    :param args: dict, input key value arguments as a dictionary
     :param dataset_uri: str, output TileDB array name
+    :param sources: Sequence of input point cloud file names
     :param template_sample: first point cloud to be ingested to initialize the array
     :param append: bool, whether to append to the array
     :param extents: Tuple, extents of point cloud, minx,maxx,miny,maxy,minz,maxz
@@ -658,16 +659,18 @@ def ingest_point_cloud_udf(
 
     if sources is None and "sources" in args:
         sources = args["sources"]
-    if template_sample is None and "template_sample" in args:
-        template_sample = args["template_sample"]
-    if extents is None and "extents" in args:
-        extents = args["extents"]
-    if offsets is None and "offsets" in args:
-        offsets = args["offsets"]
-    if scales is None and "scales" in args:
-        scales = args["scales"]
     if chunk_size is None and "chunk_size" in args:
         chunk_size = args["chunk_size"]
+
+    if not append:
+        if template_sample is None and "template_sample" in args:
+            template_sample = args["template_sample"]
+        if extents is None and "extents" in args:
+            extents = args["extents"]
+        if offsets is None and "offsets" in args:
+            offsets = args["offsets"]
+        if scales is None and "scales" in args:
+            scales = args["scales"]
 
     with tiledb.scope_ctx(config):
         with Profiler(array_uri=log_uri, id=id, trace=trace):
@@ -740,9 +743,10 @@ def ingest_point_cloud_udf(
 
 
 def ingest_raster_udf(
-    sources: Tuple[GeoBlockMetadata],
     *,
+    args: Union[Dict, List] = {},
     dataset_uri: str,
+    sources: Tuple[GeoBlockMetadata] = None,
     extents: Optional[BoundingBox] = None,
     band_count: Optional[int] = None,
     dtype: Optional[str] = None,
@@ -764,10 +768,11 @@ def ingest_raster_udf(
     """Internal udf that ingests server side batch of raster files
     into tiledb arrays using Rasterio API
 
+    :param args: dict, input key value arguments as a dictionary
+    :param dataset_uri: str, output TileDB array name
     :param sources: tuple, sequence of GeoBlockMetadata objects containing
         the destination raster window and the input files
         that contribute to this window
-    :param dataset_uri: str, output TileDB array name
     :param extents: Extents of the destination raster
     :param band_count: int, number of bands in destination array
     :param dtype: str, dtype of destination array
@@ -798,6 +803,31 @@ def ingest_raster_udf(
     from tiledb.cloud.utilities import max_memory_usage
 
     logger = get_logger_wrapper(verbose)
+
+    if sources is None and "sources" in args:
+        sources = args["sources"]
+    if resampling is None and "resampling" in args:
+        resampling = args["resampling"]
+
+    if not append:
+        if extents is None and "extents" in args:
+            extents = args["extents"]
+        if band_count is None and "band_count" in args:
+            band_count = args["band_count"]
+        if res is None and "res" in args:
+            res = args["res"]
+        if crs is None and "crs" in args:
+            crs = args["crs"]
+        if nodata is None and "nodata" in args:
+            nodata = args["nodata"]
+        if dtype is None and "dtype" in args:
+            dtype = args["dtype"]
+        if tile_size is None and "tile_size" in args:
+            tile_size = args["tile_size"]
+        if batch_size is None and "batch_size" in args:
+            batch_size = args["batch_size"]
+        if compressor is None and "compressor" in args:
+            compressor = args["compressor"]
 
     with tiledb.scope_ctx(config):
         with Profiler(array_uri=log_uri, id=id, trace=trace):
@@ -872,13 +902,12 @@ def ingest_raster_udf(
                             pass
 
                     logger.debug("Raster array created %r", dataset_uri)
-                    return chunk(sources, batch_size)
+                    return list(chunk(sources, batch_size))
 
                 # srcs and dst have same number of bands
                 if resampling:
                     resampling = rasterio.enums.Resampling[resampling.lower()]
-
-                with rasterio.open(dataset_uri, mode="r+") as dst:
+                with rasterio.open(dataset_uri, mode="r+", driver="TileDB") as dst:
                     for c in sources:
                         input_datasets = [
                             rasterio.open(f, opener=vfs.open, STATS=stats)
@@ -905,6 +934,9 @@ def ingest_raster_udf(
                                     indexes=[b + 1],
                                 )
                                 dst.write(chunk_arr, window=chunk_window)
+                            logger.debug(
+                                "Written %r bounds to %r", chunk_bounds, dataset_uri
+                            )
                         finally:
                             for s in input_datasets:
                                 s.close()
@@ -1541,18 +1573,46 @@ def ingest_datasets(
 # Wrapper function for batch dataset ingestion
 ingest = as_batch(ingest_datasets)
 
+# if __name__ == "__main__":
+#     # date_mark = datetime.now().strftime('%Y%m%d-%H%M%S')
+#     date_mark = "1"
+#     ingest_datasets(
+#         dataset_uri=f"s3://tiledb-norman/deleteme/lidar/ma/2024-03-05/test-{date_mark}",
+#         dataset_type=DatasetType.POINTCLOUD,
+#         acn="norman-cloud-sandbox-role",
+#         namespace="norman",
+#         register_name="test_lidar_ma",
+#         search_uri="s3://tiledb-norman/deleteme/files/geospatial/lidar/MA_CentralEastern_2021_B21/",
+#         stats=False,
+#         verbose=True,
+#         trace=True,
+#         pattern="*.laz",
+#     )
+
 if __name__ == "__main__":
+    from tiledb.cloud.utilities import serialize_filter
+
     # date_mark = datetime.now().strftime('%Y%m%d-%H%M%S')
     date_mark = "1"
+
+    tile_size = 1024
+    pixels_per_fragment = 1024 * 10  # 10 tiles per fragment
+    zstd_filter = tiledb.ZstdFilter(level=7)
+
     ingest_datasets(
-        dataset_uri=f"s3://tiledb-norman/deleteme/lidar/ma/2024-03-05/test-{date_mark}",
-        dataset_type=DatasetType.POINTCLOUD,
+        dataset_uri=f"s3://tiledb-norman/deleteme/raster/sentinel-s2-l2a/2024-03-08/test-{date_mark}",
+        dataset_type=DatasetType.RASTER,
+        batch_size=1,
+        tile_size=tile_size,
+        pixels_per_fragment=pixels_per_fragment,
+        nodata=0,
+        compression_filter=serialize_filter(zstd_filter),
         acn="norman-cloud-sandbox-role",
         namespace="norman",
-        register_name="test_lidar_ma",
-        search_uri="s3://tiledb-norman/deleteme/files/geospatial/lidar/MA_CentralEastern_2021_B21/",
+        register_name="test_sentinel_2",
+        search_uri="s3://tiledb-norman/deleteme/files/geospatial/raster/sentinel-s2-l2a-cogs/",
         stats=False,
         verbose=True,
         trace=True,
-        pattern="*.laz",
+        pattern="*.tif",
     )
