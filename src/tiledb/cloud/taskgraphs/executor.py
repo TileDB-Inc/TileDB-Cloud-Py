@@ -41,6 +41,56 @@ class Status(enum.Enum):
     def friendly_name(self) -> str:
         return self.name.replace("_", " ").lower()
 
+    def is_terminal(self) -> bool:
+        return self in (
+            Status.SUCCEEDED,
+            Status.FAILED,
+            Status.CANCELLED,
+            Status.PARENT_FAILED,
+        )
+
+    def is_cancellation(self) -> bool:
+        return self in (Status.CANCELLED, Status.PARENT_FAILED)
+
+    @staticmethod
+    def from_array_task_status(status: str) -> "Status":
+        status = status.upper()
+        try:
+            return _ARRAY_TASK_STATUSES[status]
+        except KeyError:
+            raise ValueError(f"{status!r} is not a known ArrayTaskStatus") from None
+
+    @staticmethod
+    def from_task_graph_log_status(status: str) -> "Status":
+        status = status.lower()
+        try:
+            return _TASK_GRAPH_LOG_STATUSES[status]
+        except KeyError:
+            raise ValueError(f"{status!r} is not a known TaskGraphLogStatus") from None
+
+
+_ARRAY_TASK_STATUSES = {
+    "QUEUED": Status.READY,
+    "FAILED": Status.FAILED,
+    "COMPLETED": Status.SUCCEEDED,
+    "RUNNING": Status.RUNNING,
+    "RESOURCES_UNAVAILABLE": Status.FAILED,
+    "UNKNOWN": Status.WAITING,
+    "CANCELLED": Status.CANCELLED,
+    "DENIED": Status.FAILED,
+}
+"""Mapping from ArrayTaskStatus strings to Status values."""
+
+_TASK_GRAPH_LOG_STATUSES = {
+    "submitted": Status.WAITING,
+    "running": Status.RUNNING,
+    "idle": Status.RUNNING,
+    "unfinished": Status.RUNNING,
+    "abandoned": Status.CANCELLED,
+    "succeeded": Status.SUCCEEDED,
+    "failed": Status.FAILED,
+    "cancelled": Status.CANCELLED,
+}
 
 GraphStructure = Union[Dict[str, Any], builder.TaskGraphBuilder]
 """The structure of a task graph, as the JSON serialization or a Builder."""
@@ -233,7 +283,9 @@ class Executor(Generic[_N], metaclass=abc.ABCMeta):
         Subclasses should not need to override this, since this has no
         Executor implementation–specific behavior.
         """
-        uid = uuid.UUID(node_json["client_node_id"])
+        uid = uuid.UUID(
+            node_json.get("client_node_id") or node_json["client_node_uuid"]
+        )
         name = node_json.get("name")
         node = self._make_node(uid, name, node_json)
         dep_strs = node_json.get("depends_on", ())
@@ -435,9 +487,4 @@ class Node(futures.FutureLike[_T], Generic[_ET, _T], metaclass=abc.ABCMeta):
         without a race condition if a client adds a callback at the same time
         as the Node completes.
         """
-        return self._status_impl() in (
-            Status.CANCELLED,
-            Status.SUCCEEDED,
-            Status.FAILED,
-            Status.PARENT_FAILED,
-        )
+        return self._status_impl().is_terminal()
