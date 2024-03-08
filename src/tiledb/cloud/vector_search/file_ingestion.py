@@ -1,7 +1,8 @@
-from typing import Any, Mapping, Optional, Sequence, Union, Dict, List
+from typing import Dict, List, Optional, Sequence
 
 from tiledb.cloud import dag
 from tiledb.cloud.utilities import as_batch
+
 
 def ingest_files_dag(
     file_dir_uri: str,
@@ -26,7 +27,7 @@ def ingest_files_dag(
         "chunk_overlap": 50,
     },
     # SentenceTransformersEmbedding params
-    model_name_or_path: str = 'BAAI/bge-small-en-v1.5',
+    model_name_or_path: str = "BAAI/bge-small-en-v1.5",
     # Index update params
     index_timestamp: int = None,
     workers: int = -1,
@@ -91,6 +92,7 @@ def ingest_files_dag(
     :param vector_indexing_mode: TaskGraph execution mode for the vector indexing.
     :param index_update_kwargs: Extra arguments to pass to the index update job.
     """
+
     def ingest_files_udf(
         file_dir_uri: str,
         index_uri: str,
@@ -114,7 +116,7 @@ def ingest_files_dag(
             "chunk_overlap": 50,
         },
         # SentenceTransformersEmbedding params
-        model_name_or_path: str = 'BAAI/bge-small-en-v1.5',
+        model_name_or_path: str = "BAAI/bge-small-en-v1.5",
         # Index update params
         index_timestamp: int = None,
         workers: int = -1,
@@ -180,6 +182,7 @@ def ingest_files_dag(
         :param index_update_kwargs: Extra arguments to pass to the index update job.
         """
         import tiledb
+
         # Install extra packages not yet available in vectorsearch UDF image.
         # TODO(nikos) remove the pacakge installations after the image is updated
         def install_extra_worker_modules():
@@ -192,7 +195,11 @@ def ingest_files_dag(
             os.environ["PATH"] = f"/home/udf/.local/bin:{os.environ['PATH']}"
             subprocess.check_call(
                 [
-                    sys.executable, "-m", "pip", "install", "--force-reinstall",
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--force-reinstall",
                     "tiledb-vector-search==0.0.23",
                     "tiledb==0.25.0",
                     "tiledb-cloud==0.11.10",
@@ -200,28 +207,33 @@ def ingest_files_dag(
             )
             subprocess.check_call(
                 [
-                    sys.executable, "-m", "pip", "install",
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "install",
                     "transformers==4.37.1",
-                    "PyMuPDF", 
+                    "PyMuPDF",
                     "beautifulsoup4",
                 ]
             )
+
         install_extra_worker_modules()
         import importlib
+
         importlib.reload(tiledb)
 
+        from tiledb.vector_search.embeddings import SentenceTransformersEmbedding
         from tiledb.vector_search.object_api import object_index
         from tiledb.vector_search.object_readers import DirectoryTextReader
-        from tiledb.vector_search.embeddings import SentenceTransformersEmbedding
 
         reader = DirectoryTextReader(
-                uri=file_dir_uri,
-                glob=f"**/{file_name}" if file_name is not None else glob,
-                exclude=exclude,
-                suffixes=suffixes,
-                text_splitter=text_splitter,
-                text_splitter_kwargs=text_splitter_kwargs,
-            )
+            uri=file_dir_uri,
+            glob=f"**/{file_name}" if file_name is not None else glob,
+            exclude=exclude,
+            suffixes=suffixes,
+            text_splitter=text_splitter,
+            text_splitter_kwargs=text_splitter_kwargs,
+        )
 
         embedding = SentenceTransformersEmbedding(
             model_name_or_path=model_name_or_path,
@@ -237,9 +249,7 @@ def ingest_files_dag(
             )
         else:
             index = object_index.ObjectIndex(
-                uri=index_uri, 
-                load_metadata_in_memory=False, 
-                memory_budget=1
+                uri=index_uri, load_metadata_in_memory=False, memory_budget=1
             )
 
         index.update_index(
@@ -308,6 +318,6 @@ def ingest_files_dag(
     )
     graph.compute()
     graph.wait()
-    
-        
+
+
 ingest_files = as_batch(ingest_files_dag)
