@@ -218,7 +218,7 @@ class LocalExecutor(_base.IClientExecutor):
                     Status.SUCCEEDED,
                 )
 
-            _base.wait_for(self._done_condition, is_done, timeout)
+            futures.wait_for(self._done_condition, is_done, timeout)
 
     @property
     def server_graph_uuid(self):

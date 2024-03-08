@@ -2,9 +2,8 @@
 
 import abc
 import enum
-import threading
 import uuid
-from typing import Any, Callable, Dict, Iterable, Optional, TypeVar
+from typing import Any, Dict, Iterable, Optional, TypeVar
 
 import attrs
 
@@ -67,7 +66,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
     All public-facing methods MUST be thread-safe.
     """
 
-    def __init__(self, *args):
+    def __init__(self, *args) -> None:
         super().__init__(*args)
         self._status: Status = Status.WAITING
         self._result_exception: Optional[Exception] = None
@@ -86,7 +85,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
 
     def result(self, timeout: Optional[float] = None) -> _T:
         with self._lifecycle_condition:
-            wait_for(self._lifecycle_condition, self._done, timeout)
+            futures.wait_for(self._lifecycle_condition, self._done, timeout)
             exc = self._lifecycle_exception or self._result_exception
             if exc:
                 raise exc
@@ -94,7 +93,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
 
     def exception(self, timeout: Optional[float] = None) -> Optional[Exception]:
         with self._lifecycle_condition:
-            wait_for(self._lifecycle_condition, self._done, timeout)
+            futures.wait_for(self._lifecycle_condition, self._done, timeout)
             if self._lifecycle_exception:
                 raise self._lifecycle_exception
             return self._result_exception
@@ -114,7 +113,7 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
 
     def wait(self, timeout: Optional[float] = None) -> None:
         with self._lifecycle_condition:
-            wait_for(self._lifecycle_condition, self._done, timeout)
+            futures.wait_for(self._lifecycle_condition, self._done, timeout)
 
     #
     # Abstract methods to be implemented by subclasses to do the work of a Node.
@@ -306,18 +305,3 @@ class Node(executor.Node[ET, _T], metaclass=abc.ABCMeta):
 
     def __repr__(self) -> str:
         return f"<{type(self).__name__} {self.display_name!r}>"
-
-
-def wait_for(
-    cond: threading.Condition,
-    pred: Callable[[], bool],
-    timeout: Optional[float],
-) -> None:
-    """Waits for the given condition variable, with a timeout.
-
-    Condition's ``wait_for`` method will return after the given amount of time,
-    even if the condition was not met, rather than raising a timeout (as one
-    might expect). This corrects that expectation to raise that timeout.
-    """
-    if not cond.wait_for(pred, timeout):
-        raise futures.TimeoutError(f"timed out after {timeout} sec")
