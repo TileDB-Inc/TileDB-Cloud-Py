@@ -4,6 +4,12 @@ from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud._common import utils
+from tiledb.cloud.rest_api.models.invitation_array_share_email import (
+    InvitationArrayShareEmail,
+)
+from tiledb.cloud.rest_api.models.invitation_group_share_email import (
+    InvitationGroupShareEmail,
+)
 from tiledb.cloud.rest_api.models.invitation_organization_join_email import (
     InvitationOrganizationJoinEmail,
 )
@@ -60,9 +66,7 @@ def invite_to_organization(
     :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
-    email_invite = InvitationOrganizationJoinEmail(
-        organization_role=role, invitee_email=recipients
-    )
+    email_invite = InvitationOrganizationJoinEmail(role, recipients)
     try:
         return invitation_api.join_organization(organization, email_invite)
     except rest_api.ApiException as exc:
@@ -84,20 +88,20 @@ def cancel_invite_to_organization(*, invitation_id: str, organization: str) -> N
         raise tiledb_cloud_error.check_exc(exc)
 
 
-def invite_to_array(uri: str, *, recipients: Sequence[str], role: str) -> None:
+def invite_to_array(
+    uri: str, *, recipients: Sequence[str], actions: Sequence[str]
+) -> None:
     """
     Share array by email invite.
 
     :param uri: URI of array in the form 'tiledb://<namespace>/<array>'
     :param recipients: list of recipient emails/usernames.
-    :param role: role assigned to the recipient.
+    :param actions: list of ArrayActions allowed to the recipient.
     :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
     namespace, uri = utils.split_uri(uri)
-    email_invite = InvitationOrganizationJoinEmail(
-        organization_role=role, invitee_email=recipients
-    )
+    email_invite = InvitationArrayShareEmail(actions, recipients)
     try:
         return invitation_api.share_array_by_invite(namespace, uri, email_invite)
     except rest_api.ApiException as exc:
@@ -122,21 +126,25 @@ def cancel_share_array_invitation(*, invitation_id: str, uri: str) -> None:
         raise tiledb_cloud_error.check_exc(exc)
 
 
-def invite_to_group(uri: str, *, recipients: Sequence[str], role: str) -> None:
+def invite_to_group(
+    uri: str,
+    *,
+    recipients: Sequence[str],
+    array_actions: Sequence[str],
+    group_actions: Sequence[str],
+) -> None:
     """
     Sends email to multiple recipients with sharing information regarding a group.
 
     :param uri: URI of group in the form 'tiledb://<namespace>/<group>'
     :param recipients: list of recipient emails/usernames.
-    :param role: role assigned to the recipient.
-
+    :param array_actions: list of ArrayActions allowed to the recipient.
+    :param group_actions: list of GroupActions allowed to the recipient.
     :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
     namespace, uri = utils.split_uri(uri)
-    email_invite = InvitationOrganizationJoinEmail(
-        organization_role=role, invitee_email=recipients
-    )
+    email_invite = InvitationGroupShareEmail(array_actions, group_actions, recipients)
     try:
         return invitation_api.share_group_by_invite(namespace, uri, email_invite)
     except rest_api.ApiException as exc:
