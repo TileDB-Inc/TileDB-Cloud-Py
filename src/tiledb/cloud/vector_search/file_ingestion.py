@@ -79,14 +79,15 @@ def ingest_files_dag(
         to specify the worker Docker image.
     :param extra_worker_modules: If `embeddings_generation_mode=BATCH` this can be used
         to install extra pip package to the image.
-    :param driver_resources: If `embeddings_generation_driver_mode=BATCH` this can be used
-        to specify the driver resources.
+    :param driver_resources: If `embeddings_generation_driver_mode=BATCH` this can be
+        used to specify the driver resources.
     :param driver_image: If `embeddings_generation_driver_mode=BATCH` this can be used
         to specify the driver Docker image.
     :param extra_driver_modules: If `embeddings_generation_driver_mode=BATCH` this can
         be used to install extra pip package to the image.
     :param max_tasks_per_stage: Number of maximum udf tasks per computation stage.
-    :param embeddings_generation_mode: TaskGraph execution mode for embeddings generation.
+    :param embeddings_generation_mode: TaskGraph execution mode for embeddings
+        generation.
     :param embeddings_generation_driver_mode: TaskGraph execution mode for the ingestion
         driver.
     :param vector_indexing_mode: TaskGraph execution mode for the vector indexing.
@@ -148,13 +149,14 @@ def ingest_files_dag(
         # Index creation params
         :param create_index: If true, creates a new vector search index.
         :param index_type: Vector search index type ("FLAT", "IVF_FLAT").
-        :param index_creation_kwargs: Arguments to be passed to the index creation method
+        :param index_creation_kwargs: Arguments to be passed to the index creation
+            method.
         # DirectoryTextReader params.
-        :param glob: Glob pattern relative to the specified path by default set to pick up
-            all non-hidden files.
+        :param glob: Glob pattern relative to the specified path by default set to
+            pick up all non-hidden files.
         :param exclude: Patterns to exclude from results, use glob syntax.
-        :param suffixes: Load only files with these suffixes. Suffixes must include the
-            dot, e.g. ".txt".
+        :param suffixes: Load only files with these suffixes. Suffixes must include
+            the dot, e.g. ".txt".
         :param text_splitter_kwargs: Arguments for the splitter class.
         # SentenceTransformersEmbedding params.
         :param model_name_or_path: Huggingface SentenceTransformer model name or path
@@ -166,18 +168,19 @@ def ingest_files_dag(
             to specify the worker resources.
         :param worker_image: If `embeddings_generation_mode=BATCH` this can be used
             to specify the worker Docker image.
-        :param extra_worker_modules: If `embeddings_generation_mode=BATCH` this can be used
-            to install extra pip package to the image.
-        :param driver_resources: If `embeddings_generation_driver_mode=BATCH` this can be used
-            to specify the driver resources.
-        :param driver_image: If `embeddings_generation_driver_mode=BATCH` this can be used
-            to specify the driver Docker image.
-        :param extra_driver_modules: If `embeddings_generation_driver_mode=BATCH` this can
-            be used to install extra pip package to the image.
+        :param extra_worker_modules: If `embeddings_generation_mode=BATCH` this can be
+            used to install extra pip package to the image.
+        :param driver_resources: If `embeddings_generation_driver_mode=BATCH` this can
+            be used to specify the driver resources.
+        :param driver_image: If `embeddings_generation_driver_mode=BATCH` this can be
+            used to specify the driver Docker image.
+        :param extra_driver_modules: If `embeddings_generation_driver_mode=BATCH` this
+            can be used to install extra pip package to the image.
         :param max_tasks_per_stage: Number of maximum udf tasks per computation stage.
-        :param embeddings_generation_mode: TaskGraph execution mode for embeddings generation.
-        :param embeddings_generation_driver_mode: TaskGraph execution mode for the ingestion
-            driver.
+        :param embeddings_generation_mode: TaskGraph execution mode for embeddings
+            generation.
+        :param embeddings_generation_driver_mode: TaskGraph execution mode for the
+            ingestion driver.
         :param vector_indexing_mode: TaskGraph execution mode for the vector indexing.
         :param index_update_kwargs: Extra arguments to pass to the index update job.
         """
