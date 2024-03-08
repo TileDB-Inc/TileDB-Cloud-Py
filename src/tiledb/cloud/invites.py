@@ -1,23 +1,21 @@
+from typing import List
+
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
+from tiledb.cloud._common import utils
 from tiledb.cloud.rest_api.models.invitation_organization_join_email import (
     InvitationOrganizationJoinEmail,
 )
+from tiledb.cloud.rest_api.models.organization_roles import OrganizationRoles
 
 
 def accept_invitation(invitation_id: str) -> None:
     """
     Accept an invitation.
 
-    Args:
-        invitation_id (str): the ID of invitation about to be accepted.
-
-    Raises:
-        TileDBCloudError
-
-    Returns:
-        None
+    :param str invitation_id: the ID of invitation about to be accepted.
+    :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
     try:
@@ -30,24 +28,18 @@ def fetch_invitations(**filters):
     """
     Fetches a paginated list of invitations.
 
-    Args (filters):
-        organization (str): name or ID of organization to filter
-        array (str): name/uri of array that is url-encoded to filter
-        group (str): name or ID of group to filter
-        start (int): start time for tasks to filter by
-        end (int): end time for tasks to filter by
-        page (int): pagination offset
-        per_page (int): pagination limit
-        type (str): invitation type, \"ARRAY_SHARE\", \"JOIN_ORGANIZATION\"
-        status (str): Filter to only return \"PENDING\", \"ACCEPTED\"
-        orderby (str): sort by which field valid values include
-                       timestamp, array_name, organization_name
-
-    Raises:
-        TileDBCloudError
-
-    Returns:
-        dict: Invitations and pagination metadata.
+    :param str organization: name or ID of organization to filter
+    :param str array: name/uri of array that is url-encoded to filter
+    :param str group: name or ID of group to filter
+    :param int start: start time for tasks to filter by
+    :param int end: end time for tasks to filter by
+    :param int page: pagination offset
+    :param int per_page: pagination limit
+    :param str type: invitation type, \"ARRAY_SHARE\", \"JOIN_ORGANIZATION\"
+    :param str status: Filter to only return \"PENDING\", \"ACCEPTED\"
+    :param str orderby: sort by which field valid values include
+                        timestamp, array_name, organization_name
+    :return dict: Invitations and pagination metadata.
     """
     invitation_api = client.build(rest_api.InvitationApi)
     try:
@@ -57,42 +49,34 @@ def fetch_invitations(**filters):
 
 
 def invite_to_organization(
-    organization: str, email_invite: InvitationOrganizationJoinEmail
+    *, organization: str, recipients: List[str], role: OrganizationRoles
 ) -> None:
     """
     Sends email to multiple recipients with joining information
     regarding an organization.
 
-    Args:
-        organization (str): name or UUID of organization.
-        email_invite (InvitationOrganizationJoinEmail): list of email recipients
-
-    Raises:
-        TileDBCloudError
-
-    Returns:
-        None
+    :param str organization: name or UUID of organization.
+    :param List[str] recipients: list of recipient emails
+    :param OrganizationRoles role: role assigned to the recipient.
+    :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
+    email_invite = InvitationOrganizationJoinEmail(
+        organization_role=role, invitee_email=recipients
+    )
     try:
         return invitation_api.join_organization(organization, email_invite)
     except rest_api.ApiException as exc:
         raise tiledb_cloud_error.check_exc(exc)
 
 
-def cancel_invite_to_organization(invitation_id: str, organization: str) -> None:
+def cancel_invite_to_organization(*, invitation_id: str, organization: str) -> None:
     """
     Cancels join organization invitation.
 
-    Args:
-        invitation_id (str): the ID of invitation about to be canceled.
-        organization (str): name or UUID of organization.
-
-    Raises:
-        TileDBCloudError
-
-    Returns:
-        None
+    :param str invitation_id: the ID of invitation about to be canceled.
+    :param str organization: name or UUID of organization.
+    :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
     try:
@@ -102,47 +86,37 @@ def cancel_invite_to_organization(invitation_id: str, organization: str) -> None
 
 
 def invite_to_array(
-    namespace: str, array: str, email_invite: InvitationOrganizationJoinEmail
+    *, array_uri: str, recipients: List[str], role: OrganizationRoles
 ) -> None:
     """
     Share array by email invite.
 
-    Args:
-        namespace (str): namespace array is in (an organization name or user's username)
-        array (str): name/uri of array that is url-encoded
-        email_invite (InvitationOrganizationJoinEmail): list of email recipients
-
-    Raises:
-        TileDBCloudError
-
-    Returns:
-        None
+    :param str array_uri: name/uri of array that is url-encoded
+    :param List[str] recipients: list of recipient emails
+    :param OrganizationRoles role: role assigned to the recipient.
+    :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
+    namespace, array = utils.split_uri(array_uri)
+    email_invite = InvitationOrganizationJoinEmail(
+        organization_role=role, invitee_email=recipients
+    )
     try:
         return invitation_api.share_array_by_invite(namespace, array, email_invite)
     except rest_api.ApiException as exc:
         raise tiledb_cloud_error.check_exc(exc)
 
 
-def cancel_share_array_invitation(
-    invitation_id: str, namespace: str, array: str
-) -> None:
+def cancel_share_array_invitation(*, invitation_id: str, array_uri: str) -> None:
     """
     Cancels array sharing invitation.
 
-    Args:
-        invitation_id (str): the ID of invitation about to be canceled.
-        namespace (str): namespace array is in (an organization name or user's username)
-        array (str): name/uri of array that is url-encoded
-
-    Raises:
-        TileDBCloudError
-
-    Returns:
-        None
+    :param str invitation_id: the ID of invitation about to be canceled.
+    :param str array_uri: name/uri of array that is url-encoded
+    :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
+    namespace, array = utils.split_uri(array_uri)
     try:
         return invitation_api.cancel_share_array_by_invite(
             namespace, invitation_id, array
@@ -152,47 +126,37 @@ def cancel_share_array_invitation(
 
 
 def invite_to_group(
-    namespace: str, group: str, email_invite: InvitationOrganizationJoinEmail
+    *, group_uri: str, recipients: List[str], role: OrganizationRoles
 ) -> None:
     """
     Sends email to multiple recipients with sharing information regarding a group.
 
-    Args:
-        namespace (str): namespace array is in (an organization name or user's username)
-        group (str): name/uri of group that is url-encoded
-        email_invite (InvitationOrganizationJoinEmail): list of email recipients
-
-    Raises:
-        TileDBCloudError
-
-    Returns:
-        None
+    :param str group_uri: uri of group that is url-encoded
+    :param List[str] recipients: list of recipient emails
+    :param OrganizationRoles role: role assigned to the recipient.
+    :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
+    namespace, group = utils.split_uri(group_uri)
+    email_invite = InvitationOrganizationJoinEmail(
+        organization_role=role, invitee_email=recipients
+    )
     try:
         return invitation_api.share_group_by_invite(namespace, group, email_invite)
     except rest_api.ApiException as exc:
         raise tiledb_cloud_error.check_exc(exc)
 
 
-def cancel_share_group_invitation(
-    invitation_id: str, namespace: str, group: str
-) -> None:
+def cancel_share_group_invitation(*, invitation_id: str, group_uri: str) -> None:
     """
     Cancels group sharing invitation.
 
-    Args:
-        invitation_id (str): the ID of invitation about to be canceled.
-        namespace (str): namespace array is in (an organization name or user's username)
-        group (str): name/uri of group that is url-encoded
-
-    Raises:
-        TileDBCloudError
-
-    Returns:
-        None
+    :param str invitation_id: the ID of invitation about to be canceled.
+    :param str group_uri: name/uri of group that is url-encoded
+    :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
+    namespace, group = utils.split_uri(group_uri)
     try:
         return invitation_api.cancel_share_group_by_invite(
             namespace, invitation_id, group
