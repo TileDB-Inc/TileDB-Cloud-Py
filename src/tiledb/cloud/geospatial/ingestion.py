@@ -1,7 +1,22 @@
+import logging
 import math
 import os
 from enum import Enum
-from typing import Iterable, Mapping, Optional, Sequence, Tuple, Union
+from fnmatch import fnmatch
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Mapping,
+    Optional,
+    Sequence,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 import attrs
 import fiona
@@ -13,11 +28,108 @@ from rtree import index
 import tiledb
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import as_batch
-from tiledb.cloud.utilities import chunk
+
+# from tiledb.cloud.utilities import chunk
 from tiledb.cloud.utilities import create_log_array
-from tiledb.cloud.utilities import get_logger_wrapper
+from tiledb.cloud.utilities import get_logger  # get_logger_wrapper
 from tiledb.cloud.utilities import max_memory_usage
 from tiledb.cloud.utilities import run_dag
+
+T = TypeVar("T")
+
+
+def chunk(items: Sequence[T], chunk_size: int) -> Iterator[Sequence[T]]:
+    """Chunks a sequence of objects and returns an iterator where
+    each return sequence is of length chunk_size.
+
+    :param items: Sequence to split into batches
+    :param chunk_size: Size of chunks of the sequence to return
+    """
+    # Iterator for providing batches of chunks
+    length = len(items)
+    for ndx in range(0, length, chunk_size):
+        yield items[ndx : min(ndx + chunk_size, length)]
+
+
+def get_logger_wrapper(
+    verbose: bool = False,
+) -> logging.Logger:
+    """
+    Get a logger instance and log version information.
+
+    :param verbose: verbose logging, defaults to False
+    :return: logger instance
+    """
+
+    level = logging.DEBUG if verbose else logging.INFO
+    logger = get_logger(level)
+
+    logger.debug(
+        "tiledb.cloud=%s, tiledb=%s, libtiledb=%s",
+        tiledb.cloud.__version__,
+        tiledb.version(),
+        tiledb.libtiledb.version(),
+    )
+
+    return logger
+
+
+def find(
+    uri: str,
+    *,
+    config: Optional[Mapping[str, Any]] = None,
+    include: Optional[Union[str, Callable]] = None,
+    exclude: Optional[Union[str, Callable]] = None,
+    max_count: Optional[int] = None,
+) -> Iterator[str]:
+    """Searches a path for files matching the include/exclude pattern using VFS.
+
+    :param uri: Input path to search
+    :param config: Optional dict configuration to pass on tiledb.VFS
+    :param include: Optional include pattern string
+    :param exclude: Optional exclude pattern string
+    :param max_count: Optional stop point when searching for files
+    """
+    with tiledb.scope_ctx(config):
+        vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
+        listing = vfs.ls(uri)
+        current_count = 0
+
+        def list_files(listing):
+            for f in listing:
+                # Avoid infinite recursion
+                if f == uri:
+                    continue
+
+                if vfs.is_dir(f):
+                    yield from list_files(
+                        vfs.ls(f),
+                    )
+                else:
+                    # Skip files that do not match the include pattern or match
+                    # the exclude pattern.
+                    if callable(include):
+                        if not include(f):
+                            continue
+                    else:
+                        if include and not fnmatch(f, include):
+                            continue
+
+                    if callable(exclude):
+                        if exclude(f):
+                            continue
+                    else:
+                        if exclude and fnmatch(f, exclude):
+                            continue
+                    yield f
+
+        for f in list_files(listing):
+            yield f
+
+            current_count += 1
+            if max_count and current_count == max_count:
+                return
+
 
 fiona.drvsupport.supported_drivers["TileDB"] = "arw"
 fiona.vfs.SCHEMES["tiledb"] = "tiledb"
@@ -492,7 +604,7 @@ def ingest_geometry_udf(
 
                     return chunk(sources, batch_size)
                 else:
-                    raise ValueError("Insufficient metadata for point cloud ingestion")
+                    raise ValueError("Insufficient metadata for geometry ingestion")
             finally:
                 logger.info(
                     "max memory usage: %.3f GiB", max_memory_usage() / (1 << 30)
@@ -500,9 +612,10 @@ def ingest_geometry_udf(
 
 
 def ingest_point_cloud_udf(
-    sources: Sequence[str],
     *,
+    args: Union[Dict, List] = {},
     dataset_uri: str,
+    sources: Sequence[str] = None,
     template_sample: str = None,
     append: bool = False,
     extents: Optional[XYZBoundsTuple] = None,
@@ -543,14 +656,27 @@ def ingest_point_cloud_udf(
 
     import tiledb
 
+    if sources is None and "sources" in args:
+        sources = args["sources"]
+    if template_sample is None and "template_sample" in args:
+        template_sample = args["template_sample"]
+    if extents is None and "extents" in args:
+        extents = args["extents"]
+    if offsets is None and "offsets" in args:
+        offsets = args["offsets"]
+    if scales is None and "scales" in args:
+        scales = args["scales"]
+    if chunk_size is None and "chunk_size" in args:
+        chunk_size = args["chunk_size"]
+
     with tiledb.scope_ctx(config):
         with Profiler(array_uri=log_uri, id=id, trace=trace):
             vfs = tiledb.VFS()
             logger = get_logger_wrapper(verbose)
 
-            def scale_array(arr):
+            def scale_array(arr, local_offsets, local_scales):
                 for idx, d in enumerate(["X", "Y", "Z"]):
-                    arr[d] = offsets[idx] + (arr[d] * scales[idx])
+                    arr[d] = local_offsets[idx] + (arr[d] * local_scales[idx])
                 return arr
 
             try:
@@ -562,7 +688,7 @@ def ingest_point_cloud_udf(
                             chunk_itr = las.chunk_iterator(chunk_size)
 
                             for c in chunk_itr:
-                                arr = scale_array(c.array)
+                                arr = scale_array(c.array, c.offsets, c.scales)
                                 pipeline = pdal.Writer.tiledb(
                                     array_name=dataset_uri, stats=stats, append=append
                                 ).pipeline(arr)
@@ -575,7 +701,9 @@ def ingest_point_cloud_udf(
                         las = laspy.open(src)
                         chunk_itr = las.chunk_iterator(chunk_size)
                         first_chunk = next(chunk_itr)
-                        arr = scale_array(first_chunk.array)
+                        arr = scale_array(
+                            first_chunk.array, first_chunk.offsets, first_chunk.scales
+                        )
 
                         pipeline = pdal.Writer.tiledb(
                             array_name=dataset_uri,
@@ -596,13 +724,13 @@ def ingest_point_cloud_udf(
                         pipeline.execute()
 
                         for c in chunk_itr:
-                            arr = scale_array(c.array)
+                            arr = scale_array(c.array, c.offsets, c.scales)
                             pipeline = pdal.Writer.tiledb(
-                                array_name=dataset_uri, append=True
+                                array_name=dataset_uri, stats=stats, append=True
                             ).pipeline(arr)
                             pipeline.execute()
 
-                    return chunk(sources, batch_size)
+                    return list(chunk(sources, batch_size))
                 else:
                     raise ValueError("Insufficient metadata for point cloud ingestion")
             finally:
@@ -665,7 +793,8 @@ def ingest_raster_udf(
 
     import tiledb
     from tiledb.cloud.utilities import Profiler
-    from tiledb.cloud.utilities import get_logger_wrapper
+
+    # from tiledb.cloud.utilities import get_logger_wrapper
     from tiledb.cloud.utilities import max_memory_usage
 
     logger = get_logger_wrapper(verbose)
@@ -830,6 +959,7 @@ def register_dataset_udf(
     *,
     register_name: str,
     namespace: Optional[str] = None,
+    acn: Optional[str] = None,
     config: Optional[Mapping[str, object]] = None,
     verbose: bool = False,
 ) -> None:
@@ -839,12 +969,15 @@ def register_dataset_udf(
     :param dataset_uri: dataset URI
     :param register_name: name to register the dataset with on TileDB Cloud
     :param namespace: TileDB Cloud namespace, defaults to the user's default namespace
+    :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
+        defaults to None
     :param config: config dictionary, defaults to None
     :param verbose: verbose logging, defaults to False
     """
 
     import tiledb
-    from tiledb.cloud.utilities import get_logger_wrapper
+
+    # from tiledb.cloud.utilities import get_logger_wrapper
 
     logger = get_logger_wrapper(verbose)
 
@@ -855,7 +988,7 @@ def register_dataset_udf(
         found = False
         try:
             object_type = tiledb.object_type(tiledb_uri)
-            if object_type == "group":
+            if object_type == "array":
                 found = True
             elif object_type is not None:
                 raise ValueError(
@@ -873,10 +1006,11 @@ def register_dataset_udf(
             logger.info("Dataset already registered at %r.", tiledb_uri)
         else:
             logger.info("Registering dataset at %r.", tiledb_uri)
-            tiledb.cloud.groups.register(
+            tiledb.cloud.array.register_array(
                 dataset_uri,
-                name=register_name,
+                array_name=register_name,
                 namespace=namespace,
+                access_credentials_name=acn,
             )
 
 
@@ -929,8 +1063,9 @@ def build_inputs_udf(
     :return: A dict containing the kwargs needed for the next function call
     """
     from tiledb.cloud.utilities import Profiler
-    from tiledb.cloud.utilities import find
-    from tiledb.cloud.utilities import get_logger_wrapper
+
+    # from tiledb.cloud.utilities import find
+    # from tiledb.cloud.utilities import get_logger_wrapper
     from tiledb.cloud.utilities import max_memory_usage
 
     logger = get_logger_wrapper(verbose)
@@ -1187,7 +1322,7 @@ def ingest_datasets_dag(
     # schema creation node, returns a sequence of work items
     ingest_node = graph.submit(
         fn,
-        input_list_node,
+        args=input_list_node,
         dataset_uri=dataset_uri,
         config=config,
         append=False,
@@ -1206,7 +1341,7 @@ def ingest_datasets_dag(
 
     process_node = graph.submit(
         fn,
-        ingest_node,
+        sources=ingest_node,
         dataset_uri=dataset_uri,
         config=config,
         name=task_prefix,
@@ -1225,7 +1360,7 @@ def ingest_datasets_dag(
     graph.submit(
         consolidate_meta,
         dataset_uri,
-        config,
+        config=config,
         resources=DEFAULT_RESOURCES,
         verbose=verbose,
         trace=trace,
@@ -1405,3 +1540,19 @@ def ingest_datasets(
 
 # Wrapper function for batch dataset ingestion
 ingest = as_batch(ingest_datasets)
+
+if __name__ == "__main__":
+    # date_mark = datetime.now().strftime('%Y%m%d-%H%M%S')
+    date_mark = "1"
+    ingest_datasets(
+        dataset_uri=f"s3://tiledb-norman/deleteme/lidar/ma/2024-03-05/test-{date_mark}",
+        dataset_type=DatasetType.POINTCLOUD,
+        acn="norman-cloud-sandbox-role",
+        namespace="norman",
+        register_name="test_lidar_ma",
+        search_uri="s3://tiledb-norman/deleteme/files/geospatial/lidar/MA_CentralEastern_2021_B21/",
+        stats=False,
+        verbose=True,
+        trace=True,
+        pattern="*.laz",
+    )

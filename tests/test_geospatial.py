@@ -81,7 +81,7 @@ def run_local(
     # work functions
     for _, work in enumerate(samples):
         fn(
-            work,
+            sources=work,
             dataset_uri=dataset_uri,
             append=True,
             **new_kwargs,

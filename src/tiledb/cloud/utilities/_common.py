@@ -400,7 +400,6 @@ def find(
     :param exclude: Optional exclude pattern string
     :param max_count: Optional stop point when searching for files
     """
-
     with tiledb.scope_ctx(config):
         vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
         listing = vfs.ls(uri)
@@ -414,7 +413,7 @@ def find(
 
                 if vfs.is_dir(f):
                     yield from list_files(
-                        f,
+                        vfs.ls(f),
                     )
                 else:
                     # Skip files that do not match the include pattern or match
