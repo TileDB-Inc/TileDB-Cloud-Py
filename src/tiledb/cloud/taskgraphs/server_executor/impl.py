@@ -107,7 +107,7 @@ class Node(executor.Node["ServerExecutor", _T], metaclass=abc.ABCMeta):
             except (AttributeError, ValueError):
                 status_changed = False
             try:
-                latest_exec = received_data["executions"][0]
+                latest_exec = received_data["executions"][-1]
                 exec_id = uuid.UUID(latest_exec["id"])
                 exec_id_changed = self._latest_exec_id != exec_id
                 self._latest_exec_id = exec_id
