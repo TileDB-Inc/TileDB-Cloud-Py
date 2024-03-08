@@ -14,7 +14,7 @@ from tiledb.cloud.utilities._common import run_dag
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-ingestion"
-_SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs")
+_SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs", ".ndpi")
 _SUPPORTED_CONVERTERS = ("tiff", "zarr", "osd")
 
 
