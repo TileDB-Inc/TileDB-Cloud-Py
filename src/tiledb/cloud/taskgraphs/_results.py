@@ -61,3 +61,7 @@ class LazyResult(Result):
                 finally:
                     utils.release_connection(resp)
             return self._result
+
+    def __repr__(self) -> str:
+        loaded_str = "loaded" if self._result else "unloaded"
+        return f"<LazyResult {self._task_id} ({loaded_str})>"
