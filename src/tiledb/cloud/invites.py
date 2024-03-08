@@ -49,7 +49,7 @@ def fetch_invitations(**filters):
 
 
 def invite_to_organization(
-    *, organization: str, recipients: List[str], role: OrganizationRoles
+    organization: str, *, recipients: List[str], role: OrganizationRoles
 ) -> None:
     """
     Sends email to multiple recipients with joining information
@@ -86,18 +86,18 @@ def cancel_invite_to_organization(*, invitation_id: str, organization: str) -> N
 
 
 def invite_to_array(
-    *, array_uri: str, recipients: List[str], role: OrganizationRoles
+    array: str, *, recipients: List[str], role: OrganizationRoles
 ) -> None:
     """
     Share array by email invite.
 
-    :param str array_uri: name/uri of array that is url-encoded
+    :param str array: name/uri of array that is url-encoded
     :param List[str] recipients: list of recipient emails
     :param OrganizationRoles role: role assigned to the recipient.
     :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
-    namespace, array = utils.split_uri(array_uri)
+    namespace, array = utils.split_uri(array)
     email_invite = InvitationOrganizationJoinEmail(
         organization_role=role, invitee_email=recipients
     )
@@ -107,16 +107,16 @@ def invite_to_array(
         raise tiledb_cloud_error.check_exc(exc)
 
 
-def cancel_share_array_invitation(*, invitation_id: str, array_uri: str) -> None:
+def cancel_share_array_invitation(*, invitation_id: str, array: str) -> None:
     """
     Cancels array sharing invitation.
 
     :param str invitation_id: the ID of invitation about to be canceled.
-    :param str array_uri: name/uri of array that is url-encoded
+    :param str array: name/uri of array that is url-encoded
     :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
-    namespace, array = utils.split_uri(array_uri)
+    namespace, array = utils.split_uri(array)
     try:
         return invitation_api.cancel_share_array_by_invite(
             namespace, invitation_id, array
@@ -126,18 +126,18 @@ def cancel_share_array_invitation(*, invitation_id: str, array_uri: str) -> None
 
 
 def invite_to_group(
-    *, group_uri: str, recipients: List[str], role: OrganizationRoles
+    group: str, *, recipients: List[str], role: OrganizationRoles
 ) -> None:
     """
     Sends email to multiple recipients with sharing information regarding a group.
 
-    :param str group_uri: uri of group that is url-encoded
+    :param str group: uri of group that is url-encoded
     :param List[str] recipients: list of recipient emails
     :param OrganizationRoles role: role assigned to the recipient.
     :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
-    namespace, group = utils.split_uri(group_uri)
+    namespace, group = utils.split_uri(group)
     email_invite = InvitationOrganizationJoinEmail(
         organization_role=role, invitee_email=recipients
     )
@@ -147,16 +147,16 @@ def invite_to_group(
         raise tiledb_cloud_error.check_exc(exc)
 
 
-def cancel_share_group_invitation(*, invitation_id: str, group_uri: str) -> None:
+def cancel_share_group_invitation(*, invitation_id: str, group: str) -> None:
     """
     Cancels group sharing invitation.
 
     :param str invitation_id: the ID of invitation about to be canceled.
-    :param str group_uri: name/uri of group that is url-encoded
+    :param str group: name/uri of group that is url-encoded
     :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
-    namespace, group = utils.split_uri(group_uri)
+    namespace, group = utils.split_uri(group)
     try:
         return invitation_api.cancel_share_group_by_invite(
             namespace, invitation_id, group
