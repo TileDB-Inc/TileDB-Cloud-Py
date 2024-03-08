@@ -501,9 +501,10 @@ def load_raster_metadata(
 
 
 def ingest_geometry_udf(
-    sources: Sequence[str],
     *,
     dataset_uri: str,
+    args: Union[Dict, List] = {},
+    sources: Sequence[str] = None,
     schema: dict = None,
     extents: Optional[XYBoundsTuple] = None,
     crs: Optional[str] = None,
@@ -521,10 +522,10 @@ def ingest_geometry_udf(
     """Internal udf that ingests server side batch of geometry files
     into tiledb arrays using Fiona API
 
-    :param sources: Sequence of input geometry file names
     :param dataset_uri: str, output TileDB array name
+    :param args: dict, input key value arguments as a dictionary
+    :param sources: Sequence of input geometry file names
     :param schema: dict, dictionary of schema attributes and geometries
-    :param geometry_type: str, fiona geometry type e.g. `Point`
     :param extents: Extents of the destination geometry array
     :param crs: str, CRS for the destination dataset
     :param chunk_size: int, sets tile capacity and
@@ -544,6 +545,21 @@ def ingest_geometry_udf(
 
     from tiledb import filter
 
+    if sources is None and "sources" in args:
+        sources = args["sources"]
+
+    if not append:
+        if schema is None and "schema" in args:
+            schema = args["schema"]
+        if extents is None and "extents" in args:
+            extents = args["extents"]
+        if crs is None and "crs" in args:
+            crs = args["crs"]
+        if chunk_size is None and "chunk_size" in args:
+            chunk_size = args["chunk_size"]
+        if compressor is None and "compressor" in args:
+            compressor = args["compressor"]
+
     with tiledb.scope_ctx(config):
         with Profiler(array_uri=log_uri, id=id, trace=trace):
             tiledb.VFS()
@@ -553,9 +569,12 @@ def ingest_geometry_udf(
                     for f in sources:
                         logger.debug("ingesting geometry dataset %r", f)
                         with fiona.open(f) as colxn:
-                            with fiona.open(dataset_uri, mode="a", STATS=stats) as dst:
+                            with fiona.open(
+                                dataset_uri, mode="a", STATS=stats, driver="TileDB"
+                            ) as dst:
                                 for feat in colxn:
-                                    # OGR buffers before writing
+                                    # TileDB OGR buffer features internally
+                                    # so we can write one at a time
                                     dst.write(feat)
                     return
 
@@ -602,7 +621,7 @@ def ingest_geometry_udf(
                         ) as dst:
                             pass
 
-                    return chunk(sources, batch_size)
+                    return list(chunk(sources, batch_size))
                 else:
                     raise ValueError("Insufficient metadata for geometry ingestion")
             finally:
