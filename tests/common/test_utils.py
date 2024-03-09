@@ -1,15 +1,14 @@
 import base64
 import datetime
+import pathlib
 import pickle
+import tempfile
 import unittest
-from unittest import mock
 
 import pytz  # Test-only dependency.
-from pyfakefs.fake_filesystem_unittest import TestCase as FileTestCase
 
 from tiledb.cloud._common import utils
 from tiledb.cloud.utilities import find
-from tiledb.vfs import VFS
 
 
 class UtilsTest(unittest.TestCase):
@@ -45,38 +44,30 @@ class UtilsTest(unittest.TestCase):
             with self.subTest(inval):
                 self.assertEqual(utils.datetime_to_msec(inval), expected)
 
-
-class FindTest(FileTestCase):
-    def setUp(self):
-        self.setUpPyfakefs()
-
     def test_find(self):
-        test_1 = [
-            self.fs.create_file("/var/data.dat"),
-            self.fs.create_file("/var/data/xx1.txt"),
-            self.fs.create_file("/var/data/xx2.txt"),
-        ]
+        with tempfile.TemporaryDirectory() as tmp_name:
+            tmp = pathlib.Path(tmp_name)
+            (tmp / "data.dat").write_text("test_data")
+            data_dir = tmp / "data"
+            data_dir.mkdir()
+            (data_dir / "xx1.txt").write_text("test_xx1")
+            (data_dir / "xx2.txt").write_text("test_xx2")
 
-        with mock.patch.object(VFS, "ls", return_value=test_1):
-            with mock.patch.object(VFS, "is_dir", return_value=True) as mock_is_dir:
-                mock_is_dir.side_effect = lambda f: self.fs.isdir(f.name)
-                self.assertEqual(len(list(find("."))), len(test_1))
+            self.assertEqual(len(list(find(tmp))), 3)
 
-                for v in range(2):
-                    max_count = v + 1
-                    self.assertEqual(
-                        len(list(find(".", max_count=max_count))), max_count
-                    )
+            for v in range(2):
+                max_count = v + 1
+                self.assertEqual(len(list(find(tmp, max_count=max_count))), max_count)
 
-                self.assertEqual(
-                    len(list(find(".", include=lambda f: f.name.endswith(".txt")))), 2
-                )
-                self.assertEqual(
-                    len(list(find(".", exclude=lambda f: f.name.endswith(".dat")))), 2
-                )
-                self.assertEqual(
-                    len(list(find(".", include=lambda f: f.name.endswith(".dat")))), 1
-                )
+            self.assertEqual(
+                len(list(find(tmp, include=lambda f: f.endswith(".txt")))), 2
+            )
+            self.assertEqual(
+                len(list(find(tmp, exclude=lambda f: f.endswith(".dat")))), 2
+            )
+            self.assertEqual(
+                len(list(find(tmp, include=lambda f: f.endswith(".dat")))), 1
+            )
 
 
 def _b64_unpickle(x):
