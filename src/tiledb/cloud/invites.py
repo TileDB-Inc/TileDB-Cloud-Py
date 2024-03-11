@@ -73,12 +73,12 @@ def invite_to_organization(
         raise tiledb_cloud_error.check_exc(exc)
 
 
-def cancel_invite_to_organization(*, invitation_id: str, organization: str) -> None:
+def cancel_invite_to_organization(organization: str, *, invitation_id: str) -> None:
     """
     Cancels join organization invitation.
 
-    :param invitation_id: the ID of invitation about to be canceled.
     :param organization: name or UUID of organization.
+    :param invitation_id: the ID of invitation about to be canceled.
     :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
@@ -108,12 +108,12 @@ def invite_to_array(
         raise tiledb_cloud_error.check_exc(exc)
 
 
-def cancel_share_array_invitation(*, invitation_id: str, uri: str) -> None:
+def cancel_invite_to_array(uri: str, *, invitation_id: str) -> None:
     """
     Cancels array sharing invitation.
 
-    :param invitation_id: the ID of invitation about to be canceled.
     :param uri: URI of array in the form 'tiledb://<namespace>/<array>'
+    :param invitation_id: the ID of invitation about to be canceled.
     :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
@@ -151,12 +151,12 @@ def invite_to_group(
         raise tiledb_cloud_error.check_exc(exc)
 
 
-def cancel_share_group_invitation(*, invitation_id: str, uri: str) -> None:
+def cancel_invite_to_group(uri: str, *, invitation_id: str) -> None:
     """
     Cancels group sharing invitation.
 
-    :param invitation_id: the ID of invitation about to be canceled.
     :param uri: URI of group in the form 'tiledb://<namespace>/<group>'
+    :param invitation_id: the ID of invitation about to be canceled.
     :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
