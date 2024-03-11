@@ -19,11 +19,10 @@ class BioimgTest(unittest.TestCase):
                 ["s3://test_out/b", "s3://test_out/d"],
             ),
         }
-        register = {"true": True, "false": False}
-        for _, r in register.items():
+        for register in (True, False):
             for test_name, (source, dest) in accepted_pairs.items():
                 with self.subTest(f"case: {test_name}"):
-                    validate_io_paths(source, dest, r)
+                    validate_io_paths(source, dest, for_registration=register)
 
         # Non Accepted cases
         non_accepted_pairs = {
@@ -95,11 +94,11 @@ class BioimgTest(unittest.TestCase):
                 ["s3://test_out/b/"],
             ),
         }
-        for _, r in register.items():
+        for register in (True, False):
             for test_name, (source, dest) in non_accepted_pairs.items():
                 with self.subTest(f"case: {test_name}"):
                     with self.assertRaises(ValueError):
-                        validate_io_paths(source, dest, r)
+                        validate_io_paths(source, dest, for_registration=register)
 
         # Non accepted register with tiledb uri output
         non_accepted_pairs_registration_true = {
@@ -130,9 +129,9 @@ class BioimgTest(unittest.TestCase):
             with self.subTest(f"case: {test_name}"):
                 with self.assertRaises(ValueError):
                     print(test_name)
-                    validate_io_paths(source, dest, register["true"])
+                    validate_io_paths(source, dest, for_registration=True)
 
         # Pass on register=False
         for test_name, (source, dest) in non_accepted_pairs_registration_true.items():
             with self.subTest(f"case: {test_name}"):
-                validate_io_paths(source, dest, register["false"])
+                validate_io_paths(source, dest, for_registration=False)

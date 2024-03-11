@@ -292,7 +292,7 @@ def ingest(
         )
     source = [source] if isinstance(source, str) else source
     output = [output] if isinstance(output, str) else output
-    validate_io_paths(source, output, register)
+    validate_io_paths(source, output, for_registration=register)
 
     # Build the task graph
     dag_name = taskgraph_name or DEFAULT_DAG_NAME
