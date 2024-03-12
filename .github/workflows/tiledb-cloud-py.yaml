@@ -201,9 +201,9 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.7"
+          python-version: "3.9"
           cache: pip
-          cache-dependency-path: requirements-py3.7.txt
+          cache-dependency-path: requirements-py3.9.txt
 
       - name: Make fake version for Test PyPI
         if: ${{ github.event_name != 'release' }}
@@ -213,7 +213,7 @@ jobs:
       - name: Build wheel
         run: |
           pip install --upgrade pip build wheel setuptools setuptools-scm
-          pip install -r requirements-py3.7.txt
+          pip install -r requirements-py3.9.txt
           python -m build
 
       - name: Publish to PyPI
