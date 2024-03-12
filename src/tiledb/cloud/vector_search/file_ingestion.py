@@ -14,7 +14,7 @@ def ingest_files_dag(
     verbose: bool = False,
     trace_id: Optional[str] = None,
     # Index creation params
-    create_index: bool = True,
+    create_index: bool = False,
     index_type: str = "IVF_FLAT",
     index_creation_kwargs: Dict = {},
     # DirectoryTextReader params
@@ -185,49 +185,16 @@ def ingest_files_dag(
         :param index_update_kwargs: Extra arguments to pass to the index update job.
         """
         import tiledb
-
-        # Install extra packages not yet available in vectorsearch UDF image.
-        # TODO(nikos) remove the pacakge installations after the image is updated
-        def install_extra_worker_modules():
-            import os
-            import subprocess
-            import sys
-
-            sys.path.insert(0, "/home/udf/.local/bin")
-            sys.path.insert(0, "/home/udf/.local/lib/python3.9/site-packages")
-            os.environ["PATH"] = f"/home/udf/.local/bin:{os.environ['PATH']}"
-            subprocess.check_call(
-                [
-                    sys.executable,
-                    "-m",
-                    "pip",
-                    "install",
-                    "--force-reinstall",
-                    "tiledb-vector-search==0.0.23",
-                    "tiledb==0.25.0",
-                    "tiledb-cloud==0.11.10",
-                ]
-            )
-            subprocess.check_call(
-                [
-                    sys.executable,
-                    "-m",
-                    "pip",
-                    "install",
-                    "transformers==4.37.1",
-                    "PyMuPDF",
-                    "beautifulsoup4",
-                ]
-            )
-
-        install_extra_worker_modules()
-        import importlib
-
-        importlib.reload(tiledb)
-
         from tiledb.vector_search.embeddings import SentenceTransformersEmbedding
         from tiledb.vector_search.object_api import object_index
         from tiledb.vector_search.object_readers import DirectoryTextReader
+
+        def index_exists(
+            index_uri: str,
+            config=None,
+        ) -> bool:
+            with tiledb.scope_ctx(config):
+                return tiledb.object_type(index_uri) == "group"
 
         reader = DirectoryTextReader(
             uri=file_dir_uri,
@@ -241,19 +208,38 @@ def ingest_files_dag(
         embedding = SentenceTransformersEmbedding(
             model_name_or_path=model_name_or_path,
         )
+        index_uri_exists = index_exists(
+            index_uri=index_uri,
+            config=config,
+        )
         if create_index:
-            index = object_index.create(
-                uri=index_uri,
-                index_type=index_type,
-                object_reader=reader,
-                embedding=embedding,
-                config=config,
-                **index_creation_kwargs,
-            )
+            if index_uri_exists:
+                raise ValueError(
+                    f"Index: {index_uri} allready exists and `create_index` was set to True."
+                )
+            else:
+                index = object_index.create(
+                    uri=index_uri,
+                    index_type=index_type,
+                    object_reader=reader,
+                    embedding=embedding,
+                    config=config,
+                    **index_creation_kwargs,
+                )
         else:
-            index = object_index.ObjectIndex(
-                uri=index_uri, load_metadata_in_memory=False, memory_budget=1
-            )
+            if index_uri_exists:
+                index = object_index.ObjectIndex(
+                    uri=index_uri, load_metadata_in_memory=False, memory_budget=1
+                )
+            else:
+                index = object_index.create(
+                    uri=index_uri,
+                    index_type=index_type,
+                    object_reader=reader,
+                    embedding=embedding,
+                    config=config,
+                    **index_creation_kwargs,
+                )
 
         index.update_index(
             index_timestamp=index_timestamp,
