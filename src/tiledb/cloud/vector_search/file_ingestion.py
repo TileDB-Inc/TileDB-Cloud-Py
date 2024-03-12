@@ -215,7 +215,7 @@ def ingest_files_dag(
         if create_index:
             if index_uri_exists:
                 raise ValueError(
-                    f"Index: {index_uri} allready exists and `create_index` was set to True."
+                    f"{index_uri} allready exists and `create_index` was set."
                 )
             else:
                 index = object_index.create(
