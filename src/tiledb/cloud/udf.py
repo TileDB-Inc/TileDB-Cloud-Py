@@ -1,5 +1,4 @@
 import base64
-import sys
 import uuid
 import warnings
 from typing import Any, Callable, Iterable, Optional, Union
@@ -81,14 +80,6 @@ def exec_base(
         the ID of this function's node within the graph. Otherwise, None.
     :param kwargs: named arguments to pass to function
     """
-
-    if sys.version_info < (3, 8):
-        warnings.warn(
-            DeprecationWarning(
-                "Python 3.7 has been deprecated and support will soon be fully"
-                " discontinued. Upgrade to Python 3.9 as soon as possible."
-            )
-        )
 
     if result_format_version:
         warnings.warn(DeprecationWarning("result_format_version is unused."))
