@@ -10,9 +10,7 @@ from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud._common import api_v2
 from tiledb.cloud._common import utils
-from tiledb.cloud._common.api_v2.models.group_metadata_update_request import (
-    GroupMetadataUpdateRequest,
-)
+from tiledb.cloud.rest_api.models import group_update
 
 
 def create(
@@ -101,6 +99,7 @@ def update_info(
     *,
     description: Optional[str] = None,
     name: Optional[str] = None,
+    logo: Optional[str] = None,
     tags: Optional[List[str]] = None,
 ) -> None:
     """
@@ -109,12 +108,13 @@ def update_info(
     :param uri: URI of the group in the form 'tiledb://<namespace>/<group>'
     :param description: Group description, defaults to None
     :param name: Group's name, defaults to None
+    :param logo: Group's logo, defaults to None
     :param tags: Group tags, defaults to None
     :return: None
     """
     namespace, group_name = utils.split_uri(uri)
-    groups_v2_client = client.build(api_v2.GroupsApi)
-    metadata = {}
+    groups_v1_client = client.build(rest_api.GroupsApi)
+    info = {}
     for kw, arg in inspect.signature(update_info).parameters.items():
         if arg.kind != inspect.Parameter.KEYWORD_ONLY:
             # Skip every non-keyword-only argument
@@ -124,13 +124,11 @@ def update_info(
         if value is None:
             # Explicitly update metadata
             continue
-        metadata[kw] = value
+        info[kw] = value
 
-    metadata = GroupMetadataUpdateRequest(metadata=metadata)
+    info = group_update.GroupUpdate(**info)
     try:
-        return groups_v2_client.update_group_metadata(
-            namespace, group_name, metadata_updating=metadata
-        )
+        return groups_v1_client.update_group(namespace, group_name, group_update=info)
     except rest_api.ApiException as exc:
         raise tce.check_exc(exc)
 
