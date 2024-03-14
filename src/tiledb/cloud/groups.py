@@ -103,7 +103,7 @@ def update_info(
     tags: Optional[List[str]] = None,
 ) -> None:
     """
-    Update Group Metadata
+    Update Group Attributes
 
     :param uri: URI of the group in the form 'tiledb://<namespace>/<group>'
     :param description: Group description, defaults to None
