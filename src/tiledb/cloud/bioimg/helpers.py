@@ -50,7 +50,8 @@ def validate_io_paths(
     if for_registration:
         if any(o.startswith("tiledb://") for o in output):
             raise ValueError(
-                "Output sequence contains a tiledb URI and this cannot be re-registered."
+                "Output sequence contains a tiledb URI"
+                "and this cannot be re-registered."
             )
     if len(source) == 1 and len(output) == 1:
         if is_folder(source[0]) and not is_folder(output[0]):
