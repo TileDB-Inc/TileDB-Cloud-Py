@@ -1612,20 +1612,30 @@ class DAG:
         )
 
     def _update_status(self) -> None:
+        consecutive_failures = 0
         while True:
             time.sleep(2)
             if self._done():
                 return
 
             try:
-                result: models.TaskGraphLog = client.build(
-                    rest_api.TaskGraphLogsApi
-                ).get_task_graph_log(
-                    namespace=self.namespace, id=self.server_graph_uuid
-                )
-            except rest_api.ApiException:
-                raise
-            else:
+                try:
+                    result: models.TaskGraphLog = client.build(
+                        rest_api.TaskGraphLogsApi
+                    ).get_task_graph_log(
+                        namespace=self.namespace, id=self.server_graph_uuid
+                    )
+                except rest_api.ApiException:
+                    consecutive_failures += 1
+                    # We might have a problem connecting to the server.
+                    # Ignore it if it's transient. (The exact number here
+                    # is a heuristic.)
+                    if consecutive_failures < 5:
+                        continue
+                    # At this point, we have had a lot of failures.
+                    # Handle it like any other internal error.
+                    raise
+                consecutive_failures = 0
                 for new_node in result.nodes or ():
                     assert isinstance(new_node, models.TaskGraphNodeMetadata)
                     node_uuid = uuid.UUID(new_node.client_node_uuid)
@@ -1662,6 +1672,24 @@ class DAG:
                 if self._status != new_workflow_status:
                     with self._lifecycle_condition:
                         self._set_status(new_workflow_status)
+            except Exception as e:
+                for nd in self.nodes.values():
+                    cbs = ()
+                    with nd._lifecycle_condition:
+                        if nd._status not in (
+                            Status.CANCELLED,
+                            Status.COMPLETED,
+                            Status.FAILED,
+                            Status.PARENT_FAILED,
+                        ):
+                            nd._status = Status.FAILED
+                            nd._lifecycle_exception = e
+                            nd._lifecycle_condition.notify_all()
+                            cbs = nd._callbacks()
+                    futures.execute_callbacks(nd, cbs)
+                with self._lifecycle_condition:
+                    self._set_status(Status.FAILED)
+                raise  # Bail out and fail loudly.
 
 
 def list_logs(
