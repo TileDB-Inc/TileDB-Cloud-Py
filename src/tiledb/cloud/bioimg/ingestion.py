@@ -36,6 +36,7 @@ def ingest(
     exclude_metadata: bool = False,
     converter: Optional[str] = None,
     output_ext: str = "",
+    tile_scale: int = 1,
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
     """The function ingests microscopy images into TileDB arrays
@@ -48,13 +49,14 @@ def ingest(
     :param taskgraph_name: Optional name for taskgraph, defaults to None
     :param num_batches: Number of graph nodes to spawn.
         Performs it sequentially if default, defaults to 1
-    :param threads: Number of threads for node side multiprocessing, defaults to 8
+    :param threads: Number of threads for node side multiprocessing, defaults to 0
     :param resources: configuration for node specs e.g. {"cpu": "8", "memory": "4Gi"},
         defaults to None
     :param compute: When True the DAG returned will be computed inside the function
     otherwise DAG will only be returned.
     :param register: When True the ingested images are also being registered under the
-        namespace in which were ingested.
+        namespace in which were ingested. Should be False when tiledb uris are given as
+        destination paths, registration node is merged with the ingestion stage.
     :param mode: By default runs Mode.Batch
     :param namespace: The namespace where the DAG will run
     :param verbose: verbose logging, defaults to False
@@ -64,6 +66,8 @@ def ingest(
         when None the default TIFF converter is used. Available converters
         are one of the ("tiff", "zarr", "osd").
     :param output_ext: extension for the output images in tiledb
+    :param tile_scale: The scaling factor applied to each tile during I/O.
+        Larger scale factors will result in less I/O operations.
     :param access_credentials_name: Access Credentials Name (ACN) registered
         in TileDB Cloud (ARN type)
     """
@@ -155,6 +159,7 @@ def ingest(
         config: Mapping[str, Any],
         verbose: bool,
         exclude_metadata: bool,
+        tile_scale: int,
         converter: str = "tiff",
         *args: Any,
         **kwargs,
@@ -201,6 +206,7 @@ def ingest(
                         converter=user_converter,
                         exclude_metadata=exclude_metadata,
                         verbose=verbose,
+                        tile_scale=tile_scale,
                         **kwargs,
                     )
         return io_uris
@@ -286,7 +292,7 @@ def ingest(
         )
     source = [source] if isinstance(source, str) else source
     output = [output] if isinstance(output, str) else output
-    validate_io_paths(source, output)
+    validate_io_paths(source, output, for_registration=register)
 
     # Build the task graph
     dag_name = taskgraph_name or DEFAULT_DAG_NAME
@@ -342,6 +348,7 @@ def ingest(
         image_name=DEFAULT_IMG_NAME,
         max_workers=threads,
         compressor=compressor_serial,
+        tile_scale=tile_scale,
         access_credentials_name=access_credentials_name,
         **kwargs,
     )
