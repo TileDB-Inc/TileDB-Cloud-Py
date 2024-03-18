@@ -78,6 +78,10 @@ def run_ingest_workflow(
         dry_run=dry_run,
     )
     grf.compute()
+    # On discussion with the cloud team:
+    # * In batch mode this does add call latency beyond grf.server_graph_uuid
+    # * However, the cloud UI cannot populate a DAG candelabra without us doing so.
+    # This is a necessary choice.
     the_node = next(iter(grf.nodes.values()))
     real_graph_uuid = the_node.result()
     return {
