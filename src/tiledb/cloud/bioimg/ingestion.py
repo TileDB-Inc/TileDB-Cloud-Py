@@ -159,7 +159,6 @@ def ingest(
         config: Mapping[str, Any],
         verbose: bool,
         exclude_metadata: bool,
-        tile_scale: int,
         converter: str = "tiff",
         *args: Any,
         **kwargs,
@@ -196,6 +195,8 @@ def ingest(
 
         write_context = tiledb.Ctx(config)
         vfs = tiledb.VFS()
+
+        tile_scale = kwargs.get("tile_scale", 1)
 
         for input, output in io_uris:
             with vfs.open(input) as src:
