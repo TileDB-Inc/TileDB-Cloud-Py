@@ -1,6 +1,7 @@
 name: autobuild
 
 on:
+  workflow_dispatch:
   pull_request:
     branches: ["*"]
   push:
@@ -125,7 +126,7 @@ jobs:
 
       - name: Run tests
         # Test pinned dependencies on commit / tag and fresh installs on nightlies
-        if: (matrix.dependencies == 'fresh') == (github.event_name == 'schedule')
+        if: (matrix.dependencies == 'fresh') == (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         run: |
           .github/scripts/retry 3 \
             pytest -sv \
@@ -146,7 +147,7 @@ jobs:
         uses: actions/upload-artifact@v4
         continue-on-error: true
         # Ensure that we save the partial test durations from an ubuntu job that the tests actually run.
-        if: matrix.os == 'ubuntu-20.04' && matrix.python-version == '3.9' && (matrix.dependencies == 'fresh') == (github.event_name == 'schedule')
+        if: matrix.os == 'ubuntu-20.04' && matrix.python-version == '3.9' && (matrix.dependencies == 'fresh') == (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         with:
           name: partial-test-durations-${{ matrix.pytest-split-group }}
           path: .test_durations
