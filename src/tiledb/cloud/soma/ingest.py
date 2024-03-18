@@ -143,7 +143,10 @@ def run_ingest_workflow_udf(
     output_uri: str,
     input_uri: str,
     measurement_name: str,
-    carry_along: Dict[str, Optional[str]],  # TODO: COMMENT ME
+    # Some kwargs are eaten by the tiledb.cloud package, and won't reach
+    # our child. In order to propagate these to a _grandchild_ we need to
+    # package these up with different names. We use a dict as a single bag.
+    carry_along: Dict[str, Optional[str]],
     pattern: Optional[str] = None,
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
@@ -162,9 +165,9 @@ def run_ingest_workflow_udf(
 
     logging.basicConfig(level=logging_level)
     logging.debug("ENUMERATOR ENTER")
-    logging.debug(f"ENUMERATOR INPUT_URI  {input_uri}")
-    logging.debug(f"ENUMERATOR OUTPUT_URI {output_uri}")
-    logging.debug(f"ENUMERATOR DRY_RUN {dry_run}")
+    logging.debug("ENUMERATOR INPUT_URI  %s", input_uri)
+    logging.debug("ENUMERATOR OUTPUT_URI %s", output_uri)
+    logging.debug("ENUMERATOR DRY_RUN    %s", str(dry_run))
 
     vfs = tiledb.VFS(config=extra_tiledb_config)
 
@@ -336,7 +339,7 @@ def ingest_h5ad(
 
     with tiledb.VFS(ctx=soma_ctx.tiledb_ctx).open(input_uri) as input_file:
         if dry_run:
-            logging.info("Dry run for %r to %r", input_uri, output_uri)
+            logging.info("Dry run for %s to %s", input_uri, output_uri)
             return
 
         with _hack_patch_anndata_byval():
@@ -349,7 +352,7 @@ def ingest_h5ad(
             ingest_mode=ingest_mode,
             platform_config=platform_config,
         )
-    logging.info("Successfully wrote data from %r to %r", input_uri, output_uri)
+    logging.info("Successfully wrote data from %s to %s", input_uri, output_uri)
 
 
 # Until we fully get this version of tiledb.cloud deployed server-side, we must
