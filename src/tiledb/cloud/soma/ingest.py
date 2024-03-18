@@ -24,6 +24,7 @@ def run_ingest_workflow(
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
+    logging_level: int = logging.INFO,
     dry_run: bool = False,
 ) -> Dict[str, str]:
     """Starts a workflow to ingest H5AD data into SOMA.
@@ -73,6 +74,7 @@ def run_ingest_workflow(
         resources=resources,
         namespace=namespace,
         access_credentials_name=access_credentials_name,
+        logging_level=logging_level,
         dry_run=dry_run,
     )
     grf.compute()
@@ -82,6 +84,7 @@ def run_ingest_workflow(
         "status": "started",
         "graph_id": str(real_graph_uuid),
     }
+
 
 def build_ingest_workflow_graph(
     *,
@@ -95,6 +98,7 @@ def build_ingest_workflow_graph(
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
+    logging_level: int = logging.INFO,
     dry_run: bool = False,
 ) -> dag.DAG:
     """
@@ -124,6 +128,7 @@ def build_ingest_workflow_graph(
             "namespace": namespace,
             "access_credentials_name": access_credentials_name,
         },
+        logging_level=logging_level,
         dry_run=dry_run,
     )
     return grf
@@ -142,6 +147,7 @@ def run_ingest_workflow_udf(
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
+    logging_level: int = logging.INFO,
     dry_run: bool = False,
 ) -> Dict[str, str]:
     """
@@ -150,16 +156,16 @@ def run_ingest_workflow_udf(
     on the client.
     """
 
-    logging.basicConfig(level=logging.INFO)
-    logging.info("ENUMERATOR ENTER")
-    logging.info(f"ENUMERATOR INPUT_URI  {input_uri}")
-    logging.info(f"ENUMERATOR OUTPUT_URI {output_uri}")
-    logging.info(f"ENUMERATOR DRY_RUN {dry_run}")
+    logging.basicConfig(level=logging_level)
+    logging.debug("ENUMERATOR ENTER")
+    logging.debug(f"ENUMERATOR INPUT_URI  {input_uri}")
+    logging.debug(f"ENUMERATOR OUTPUT_URI {output_uri}")
+    logging.debug(f"ENUMERATOR DRY_RUN {dry_run}")
 
     vfs = tiledb.VFS(config=extra_tiledb_config)
 
     if vfs.is_file(input_uri):
-        logging.info("ENUMERATOR VFS.IS_FILE")
+        logging.debug("ENUMERATOR VFS.IS_FILE")
 
         if dry_run:
             name = "dry-run-h5ad-file"
@@ -181,11 +187,12 @@ def run_ingest_workflow_udf(
             platform_config=platform_config,
             resources=carry_along["resources"],
             access_credentials_name=carry_along["access_credentials_name"],
+            logging_level=logging_level,
             dry_run=dry_run,
         )
 
     elif vfs.is_dir(input_uri):
-        logging.info("ENUMERATOR VFS.IS_DIR")
+        logging.debug("ENUMERATOR VFS.IS_DIR")
 
         if dry_run:
             name = "dry-run-h5ad-files"
@@ -204,7 +211,7 @@ def run_ingest_workflow_udf(
         )
 
         for entry_input_uri in vfs.ls(input_uri):
-            logging.info(f"ENUMERATOR ENTRY_INPUT_URI={entry_input_uri}")
+            logging.debug(f"ENUMERATOR ENTRY_INPUT_URI={entry_input_uri}")
             base = os.path.basename(entry_input_uri)
             base, _ = os.path.splitext(base)
 
@@ -212,10 +219,10 @@ def run_ingest_workflow_udf(
             if not output_uri.endswith("/"):
                 entry_output_uri += "/"
             entry_output_uri += base
-            logging.info(f"ENUMERATOR ENTRY_OUTPUT_URI={entry_output_uri}")
+            logging.debug(f"ENUMERATOR ENTRY_OUTPUT_URI={entry_output_uri}")
 
             if pattern is not None and not re.match(pattern, entry_input_uri):
-                logging.info(f"ENUMERATOR SKIP NO MATCH ON <<{pattern}>>")
+                logging.debug(f"ENUMERATOR SKIP NO MATCH ON <<{pattern}>>")
                 continue
 
             node = grf.submit(
@@ -228,6 +235,7 @@ def run_ingest_workflow_udf(
                 platform_config=platform_config,
                 resources=carry_along["resources"],
                 access_credentials_name=carry_along["access_credentials_name"],
+                logging_level=logging_level,
                 dry_run=dry_run,
             )
             collector.depends_on(node)
@@ -238,7 +246,7 @@ def run_ingest_workflow_udf(
     grf.compute()
     grf.wait()
 
-    logging.info(f"ENUMERATOR EXIT {grf.server_graph_uuid}")
+    logging.debug(f"ENUMERATOR EXIT {grf.server_graph_uuid}")
     return grf.server_graph_uuid
 
 
@@ -260,6 +268,7 @@ def ingest_h5ad(
     extra_tiledb_config: Optional[Dict[str, object]],
     platform_config: Optional[Dict[str, object]],
     ingest_mode: str,
+    logging_level: int = logging.INFO,
     dry_run: bool = False,
 ) -> None:
     """Performs the actual work of ingesting H5AD data into TileDB.
@@ -281,14 +290,16 @@ def ingest_h5ad(
 
     import anndata
     import tiledbsoma
-    import tiledbsoma.logging as somalog
+    import tiledbsoma.logging
     from tiledbsoma import io
 
-    # XXX parameterize
-    logging.basicConfig(level=logging.INFO)
-    somalog.info()
-    # logging.basicConfig(level=logging.DEBUG)
-    # somalog.debug()
+    # Oddly, "higher" debug levels (more verbose) are smaller numbers within
+    # the Python logging package.
+    logging.basicConfig(level=logging_level)
+    if logging_level <= logging.DEBUG:
+        tiledbsoma.logging.debug()
+    elif logging_level <= logging.INFO:
+        tiledbsoma.logging.info()
 
     # While h5ad supports any file-like object, annndata specifically
     # wants only an `os.PathLike` object. The only thing it does with
