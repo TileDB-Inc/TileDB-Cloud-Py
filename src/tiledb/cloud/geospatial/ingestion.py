@@ -672,6 +672,7 @@ def ingest_point_cloud_udf(
     :return: if not appending then a sequence of file paths
     """
     import laspy
+    import numpy as np
     import pdal
 
     import tiledb
@@ -696,9 +697,15 @@ def ingest_point_cloud_udf(
             vfs = tiledb.VFS()
             logger = get_logger_wrapper(verbose)
 
-            def scale_array(arr, local_offsets, local_scales):
-                for idx, d in enumerate(["X", "Y", "Z"]):
-                    arr[d] = local_offsets[idx] + (arr[d] * local_scales[idx])
+            def get_pc_array(chunk):
+                new_dt = np.dtype(
+                    [("X", "float64"), ("Y", "float64"), ("Z", "float64")]
+                    + chunk.array.dtype.descr[3:]
+                )
+                arr = np.array(chunk.array, dtype=new_dt)
+                arr["X"] = chunk.x
+                arr["Y"] = chunk.y
+                arr["Z"] = chunk.z
                 return arr
 
             try:
@@ -710,7 +717,7 @@ def ingest_point_cloud_udf(
                             chunk_itr = las.chunk_iterator(chunk_size)
 
                             for c in chunk_itr:
-                                arr = scale_array(c.array, c.offsets, c.scales)
+                                arr = get_pc_array(c)
                                 pipeline = pdal.Writer.tiledb(
                                     array_name=dataset_uri, stats=stats, append=append
                                 ).pipeline(arr)
@@ -723,9 +730,7 @@ def ingest_point_cloud_udf(
                         las = laspy.open(src)
                         chunk_itr = las.chunk_iterator(chunk_size)
                         first_chunk = next(chunk_itr)
-                        arr = scale_array(
-                            first_chunk.array, first_chunk.offsets, first_chunk.scales
-                        )
+                        arr = get_pc_array(first_chunk)
 
                         pipeline = pdal.Writer.tiledb(
                             array_name=dataset_uri,
@@ -746,7 +751,7 @@ def ingest_point_cloud_udf(
                         pipeline.execute()
 
                         for c in chunk_itr:
-                            arr = scale_array(c.array, c.offsets, c.scales)
+                            arr = get_pc_array(c)
                             pipeline = pdal.Writer.tiledb(
                                 array_name=dataset_uri, stats=stats, append=True
                             ).pipeline(arr)
@@ -1592,46 +1597,46 @@ def ingest_datasets(
 # Wrapper function for batch dataset ingestion
 ingest = as_batch(ingest_datasets)
 
-# if __name__ == "__main__":
-#     # date_mark = datetime.now().strftime('%Y%m%d-%H%M%S')
-#     date_mark = "1"
-#     ingest_datasets(
-#         dataset_uri=f"s3://tiledb-norman/deleteme/lidar/ma/2024-03-05/test-{date_mark}",
-#         dataset_type=DatasetType.POINTCLOUD,
-#         acn="norman-cloud-sandbox-role",
-#         namespace="norman",
-#         register_name="test_lidar_ma",
-#         search_uri="s3://tiledb-norman/deleteme/files/geospatial/lidar/MA_CentralEastern_2021_B21/",
-#         stats=False,
-#         verbose=True,
-#         trace=True,
-#         pattern="*.laz",
-#     )
-
 if __name__ == "__main__":
-    from tiledb.cloud.utilities import serialize_filter
-
     # date_mark = datetime.now().strftime('%Y%m%d-%H%M%S')
     date_mark = "1"
-
-    tile_size = 1024
-    pixels_per_fragment = 1024 * 10  # 10 tiles per fragment
-    zstd_filter = tiledb.ZstdFilter(level=7)
-
     ingest_datasets(
-        dataset_uri=f"s3://tiledb-norman/deleteme/raster/sentinel-s2-l2a/2024-03-08/test-{date_mark}",
-        dataset_type=DatasetType.RASTER,
-        batch_size=1,
-        tile_size=tile_size,
-        pixels_per_fragment=pixels_per_fragment,
-        nodata=0,
-        compression_filter=serialize_filter(zstd_filter),
+        dataset_uri=f"s3://tiledb-norman/deleteme/lidar/ma/2024-03-05/test-{date_mark}",
+        dataset_type=DatasetType.POINTCLOUD,
         acn="norman-cloud-sandbox-role",
         namespace="norman",
-        register_name="test_sentinel_2",
-        search_uri="s3://tiledb-norman/deleteme/files/geospatial/raster/sentinel-s2-l2a-cogs/",
+        register_name="test_lidar_ma",
+        search_uri="s3://tiledb-norman/deleteme/files/geospatial/lidar/MA_CentralEastern_2021_B21/",
         stats=False,
         verbose=True,
         trace=True,
-        pattern="*.tif",
+        pattern="*.laz",
     )
+
+# if __name__ == "__main__":
+#     from tiledb.cloud.utilities import serialize_filter
+
+#     # date_mark = datetime.now().strftime('%Y%m%d-%H%M%S')
+#     date_mark = "1"
+
+#     tile_size = 1024
+#     pixels_per_fragment = 1024 * 10  # 10 tiles per fragment
+#     zstd_filter = tiledb.ZstdFilter(level=7)
+
+#     ingest_datasets(
+#         dataset_uri=f"s3://tiledb-norman/deleteme/raster/sentinel-s2-l2a/2024-03-08/test-{date_mark}",
+#         dataset_type=DatasetType.RASTER,
+#         batch_size=1,
+#         tile_size=tile_size,
+#         pixels_per_fragment=pixels_per_fragment,
+#         nodata=0,
+#         compression_filter=serialize_filter(zstd_filter),
+#         acn="norman-cloud-sandbox-role",
+#         namespace="norman",
+#         register_name="test_sentinel_2",
+#         search_uri="s3://tiledb-norman/deleteme/files/geospatial/raster/sentinel-s2-l2a-cogs/",
+#         stats=False,
+#         verbose=True,
+#         trace=True,
+#         pattern="*.tif",
+#     )
