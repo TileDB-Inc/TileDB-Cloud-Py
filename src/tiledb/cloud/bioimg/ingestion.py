@@ -340,6 +340,7 @@ def ingest(
         config,
         verbose,
         exclude_metadata,
+        tile_scale,
         converter,
         *args,
         name=f"{dag_name} ingestor ",
@@ -348,7 +349,6 @@ def ingest(
         image_name=DEFAULT_IMG_NAME,
         max_workers=threads,
         compressor=compressor_serial,
-        tile_scale=tile_scale,
         access_credentials_name=access_credentials_name,
         **kwargs,
     )
