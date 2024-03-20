@@ -21,6 +21,7 @@ def run_ingest_workflow(
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
     ingest_mode: str = "write",
+    appending: bool = False,
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
@@ -50,6 +51,7 @@ def run_ingest_workflow(
         if any.
     :param ingest_mode: One of the ingest modes supported by
         ``tiledbsoma.io.read_h5ad``.
+    :param appending: TBD WRITE ME PLEASE
     :param resources: A specification for the amount of resources to provide
         to the UDF executing the ingestion process, to override the default.
     :param namespace: An alternate namespace to run the ingestion process under.
@@ -70,6 +72,7 @@ def run_ingest_workflow(
         extra_tiledb_config=extra_tiledb_config,
         platform_config=platform_config,
         ingest_mode=ingest_mode,
+        appending=appending,
         resources=resources,
         namespace=namespace,
         access_credentials_name=access_credentials_name,
@@ -91,6 +94,7 @@ def build_ingest_workflow_graph(
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
     ingest_mode: str = "write",
+    appending: bool = False,
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
@@ -100,10 +104,23 @@ def build_ingest_workflow_graph(
     Same signature as ``run_ingest_workflow``, but returns the graph object
     directly.
     """
+    import tiledbsoma.io
 
     vfs = tiledb.VFS(config=extra_tiledb_config)
 
+    # xxx appending ...
+
     if vfs.is_file(input_uri):
+        registration_mapping = None
+        if appending:
+            registration_mapping = tiledbsoma.io.register_h5ads(
+                experiment_uri=output_uri,
+                h5ad_file_names=[input_uri],
+                measurement_name=measurement_name,
+                obs_field_name="obs_id",  # XXX NEEDS TO BE AN ARG
+                var_field_name="var_id",  # XXX NEEDS TO BE AN ARG
+            )
+
         grf = dag.DAG(
             name="ingest-h5ad-file",
             mode=dag.Mode.BATCH,
@@ -116,6 +133,7 @@ def build_ingest_workflow_graph(
             measurement_name=measurement_name,
             extra_tiledb_config=extra_tiledb_config,
             ingest_mode=ingest_mode,
+            registration_mapping=registration_mapping,
             platform_config=platform_config,
             resources=_DEFAULT_RESOURCES if resources is None else resources,
             access_credentials_name=access_credentials_name,
@@ -135,6 +153,7 @@ def build_ingest_workflow_graph(
             output_uri=output_uri,
         )
 
+        input_paths = []
         for entry_input_uri in vfs.ls(input_uri):
             base = os.path.basename(entry_input_uri)
             base, _ = os.path.splitext(base)
@@ -146,14 +165,27 @@ def build_ingest_workflow_graph(
 
             if pattern is not None and not re.match(pattern, entry_input_uri):
                 continue
+            input_paths.append(entry_input_uri)
 
+        registration_mapping = None
+        if appending:
+            registration_mapping = tiledbsoma.io.register_h5ads(
+                experiment_uri=output_uri,
+                h5ad_file_names=input_paths,
+                measurement_name=measurement_name,
+                obs_field_name="obs_id",  # XXX NEEDS TO BE AN ARG
+                var_field_name="var_id",  # XXX NEEDS TO BE AN ARG
+            )
+
+        for input_path in input_paths:
             node = grf.submit(
                 _ingest_h5ad_byval,
                 output_uri=entry_output_uri,
-                input_uri=entry_input_uri,
+                input_uri=input_path,
                 measurement_name=measurement_name,
                 extra_tiledb_config=extra_tiledb_config,
                 ingest_mode=ingest_mode,
+                registration_mapping=registration_mapping,
                 platform_config=platform_config,
                 resources=_DEFAULT_RESOURCES if resources is None else resources,
                 access_credentials_name=access_credentials_name,
@@ -184,6 +216,9 @@ def ingest_h5ad(
     extra_tiledb_config: Optional[Dict[str, object]],
     platform_config: Optional[Dict[str, object]],
     ingest_mode: str,
+    registration_mapping: Optional[
+        "tiledbsoma.io._registration.ExperimentAmbientLabelMapping"
+    ] = None,
     dry_run: bool = False,
 ) -> None:
     """Performs the actual work of ingesting H5AD data into TileDB.
@@ -253,6 +288,7 @@ def ingest_h5ad(
             measurement_name=measurement_name,
             context=soma_ctx,
             ingest_mode=ingest_mode,
+            registration_mapping=registration_mapping,
             platform_config=platform_config,
         )
     logging.info("Successfully wrote data from %r to %r", input_uri, output_uri)
