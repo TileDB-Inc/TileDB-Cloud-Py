@@ -101,7 +101,9 @@ def export(
                         # Folder for exploration
                         contents = vfs.ls(s)
                         # Explore folders only at depth 1
-                        filtered_contents = [c for c in contents if not vfs.is_dir(c)]
+                        filtered_contents = [
+                            c for c in contents if tiledb.object_type(c) == "group"
+                        ]
                         yield from iter_paths(filtered_contents, output)
                     else:
                         logger.debug("Pair %s and %s", s, output[0])
@@ -129,9 +131,9 @@ def export(
         my_num_batches = num_batches or len(uri_pairs)
         # If they specified too many batches, don't create empty tasks.
         my_num_batches = min(len(uri_pairs), my_num_batches)
-        logger.debug("Number of batches: %s", my_num_batches)
+        logger.debug("Number of batches: %r", my_num_batches)
         split_batches = [uri_pairs[n::my_num_batches] for n in range(my_num_batches)]
-        logger.debug("Split batches: %s", split_batches)
+        logger.debug("Split batches: %r", split_batches)
         return split_batches
 
     def export_tiff_udf(
