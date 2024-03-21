@@ -78,17 +78,14 @@ def export(
 
         def create_output_path(input_file: str, output: str) -> str:
             # Check if output is dir
-            if output.endswith("/"):
-                filename = os.path.splitext(os.path.basename(input_file))[0]
-                output_filename = (
-                    filename + f".{output_ext}" if output_ext else filename
-                )
-                return os.path.join(output, output_filename)
-            else:
+            if not output.endswith("/"):
                 # The output is considered a target file
                 return output
+            filename = os.path.splitext(os.path.basename(input_file))[0]
+            output_filename = f"{filename}.{output_ext}" if output_ext else filename
+            return os.path.join(output, output_filename)
 
-        def iter_paths(source: Sequence, output: Sequence[str]) -> Iterator[Tuple]:
+        def iter_paths(source: Sequence[str], output: Sequence[str]) -> Iterator[Tuple]:
             if len(output) != 1:
                 for s, o in zip(source, output):
                     if tiledb.object_type(s) == "group":
@@ -127,14 +124,14 @@ def export(
         uri_pairs = build_io_uris_exportation(source, output, out_ext, logger)
         # If the user didn't specify a number of batches, run every import
         # as its own task.
-        logger.debug(f"Input batches:{uri_pairs}")
-        logger.debug(f"The io pairs for ingestion: {uri_pairs}")
+        logger.debug("Input batches: %s", uri_pairs)
+        logger.debug("The io pairs for ingestion: %s:", uri_pairs)
         my_num_batches = num_batches or len(uri_pairs)
         # If they specified too many batches, don't create empty tasks.
         my_num_batches = min(len(uri_pairs), my_num_batches)
-        logger.debug(f"Number of batches:{my_num_batches}")
+        logger.debug("Number of batches: %s", my_num_batches)
         split_batches = [uri_pairs[n::my_num_batches] for n in range(my_num_batches)]
-        logger.debug(f"Split batches:{split_batches}")
+        logger.debug("Split batches: %s", split_batches)
         return split_batches
 
     def export_tiff_udf(
