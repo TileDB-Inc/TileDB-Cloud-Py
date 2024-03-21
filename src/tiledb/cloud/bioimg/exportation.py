@@ -55,7 +55,10 @@ def export(
     :param output_ext: extension for the output images in tiledb
 
     """
-
+    if not access_credentials_name:
+        raise ValueError(
+            "Ingestion graph requires `access_credentials_name` to be set."
+        )
     logger = get_logger_wrapper(verbose)
     logger.debug("Exporting files: %s", source)
     max_workers = None if num_batches else 20  # Default picked heuristically.
@@ -187,11 +190,6 @@ def export(
             retry_policy="Always",
         ),
     )
-
-    if not access_credentials_name:
-        raise ValueError(
-            "Ingestion graph requires `access_credentials_name` to be set."
-        )
 
     # The lister doesn't need many resources.
     input_list_node = graph.submit(
