@@ -361,6 +361,7 @@ def build_read_dag(
                     config=config,
                     attrs=attrs,
                     regions=regions,
+                    bed_file=bed_file,
                     region_partition=(region, num_region_partitions),
                     sample_partition=(sample, num_sample_partitions),
                     memory_budget_mb=memory_budget_mb,
