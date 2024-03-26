@@ -1,14 +1,16 @@
 """Functions for managing TileDB Cloud groups."""
 
+import inspect
 import posixpath
 import urllib.parse
-from typing import Iterable, Optional, Tuple, Union
+from typing import Iterable, List, Optional, Tuple, Union
 
 import tiledb.cloud.tiledb_cloud_error as tce
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud._common import api_v2
 from tiledb.cloud._common import utils
+from tiledb.cloud.rest_api.models import group_update
 
 
 def create(
@@ -90,6 +92,45 @@ def info(uri: str) -> object:
     namespace, group_name = utils.split_uri(uri)
     groups_client = client.build(rest_api.GroupsApi)
     return groups_client.get_group(group_namespace=namespace, group_name=group_name)
+
+
+def update_info(
+    uri: str,
+    *,
+    description: Optional[str] = None,
+    name: Optional[str] = None,
+    logo: Optional[str] = None,
+    tags: Optional[List[str]] = None,
+) -> None:
+    """
+    Update Group Attributes
+
+    :param uri: URI of the group in the form 'tiledb://<namespace>/<group>'
+    :param description: Group description, defaults to None
+    :param name: Group's name, defaults to None
+    :param logo: Group's logo, defaults to None
+    :param tags: Group tags, defaults to None
+    :return: None
+    """
+    namespace, group_name = utils.split_uri(uri)
+    groups_v1_client = client.build(rest_api.GroupsApi)
+    info = {}
+    for kw, arg in inspect.signature(update_info).parameters.items():
+        if arg.kind != inspect.Parameter.KEYWORD_ONLY:
+            # Skip every non-keyword-only argument
+            continue
+
+        value = locals()[kw]
+        if value is None:
+            # Explicitly update metadata
+            continue
+        info[kw] = value
+
+    info = group_update.GroupUpdate(**info)
+    try:
+        return groups_v1_client.update_group(namespace, group_name, group_update=info)
+    except rest_api.ApiException as exc:
+        raise tce.check_exc(exc)
 
 
 def deregister(
