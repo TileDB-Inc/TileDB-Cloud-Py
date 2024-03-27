@@ -310,6 +310,7 @@ def as_batch(func: _CT) -> _CT:
         - acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
         - access_credentials_name: alias for acn, for backwards compatibility
         - resources: resources to allocate for the UDF, defaults to None
+        - image_name: Docker image_name to use for UDFs, defaults to None
         """
 
         name = kwargs.get("name", func.__name__)
@@ -317,6 +318,7 @@ def as_batch(func: _CT) -> _CT:
         acn = kwargs.get("acn", kwargs.pop("access_credentials_name", None))
         kwargs["acn"] = acn  # for backwards compatibility
         resources = kwargs.pop("resources", None)
+        image_name = kwargs.pop("image_name", None)
 
         # Create a new DAG
         graph = dag.DAG(
@@ -332,6 +334,7 @@ def as_batch(func: _CT) -> _CT:
             name=name,
             access_credentials_name=acn,
             resources=resources,
+            image_name=image_name,
             **_filter_kwargs(func, kwargs),
         )
 
