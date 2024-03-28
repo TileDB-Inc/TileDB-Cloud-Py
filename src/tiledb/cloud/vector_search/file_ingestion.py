@@ -126,7 +126,7 @@ def ingest_files_udf(
         text_splitter_kwargs = {}
 
     reader = DirectoryTextReader(
-        uri=file_dir_uri,
+        search_uri=file_dir_uri,
         include=f"{file_name}" if file_name is not None else include,
         exclude=exclude,
         suffixes=suffixes,
