@@ -260,6 +260,7 @@ def _is_dataframe(obj: object) -> TypeGuard["pandas.DataFrame"]:
     """``isinstance``, but doesn't require importing Pandas first."""
     try:
         pandas = sys.modules["pandas"]
+        print(dir(pandas))
     except KeyError:
         return False
     return isinstance(obj, pandas.DataFrame)
