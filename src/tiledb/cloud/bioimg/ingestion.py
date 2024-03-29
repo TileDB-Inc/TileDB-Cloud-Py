@@ -81,6 +81,7 @@ def ingest(
         output_ext: str,
         supported_exts: Tuple[str],
         logger: logging.Logger,
+        config: Optional[Mapping[str, Any]] = None,
     ):
         """Match input uri/s with output destinations
         :param source: A sequence of paths or path to input
@@ -90,7 +91,8 @@ def ingest(
 
         import tiledb
 
-        vfs = tiledb.VFS()
+        ctx = tiledb.Ctx(config)
+        vfs = tiledb.VFS(ctx=ctx)
         # Even though a tuple by definition when passed through submit becomes list
         supported_exts = tuple(supported_exts)
 
@@ -135,12 +137,13 @@ def ingest(
         supported_exts: Tuple,
         *,
         verbose: bool,
+        config: Optional[Mapping[str, Any]] = None,
     ):
         logger = get_logger_wrapper(verbose)
 
         """Groups input URIs into batches."""
         uri_pairs = build_io_uris_ingestion(
-            source, output, out_ext, supported_exts, logger
+            source, output, out_ext, supported_exts, logger, config=config
         )
         logger.debug(f"Input batches:{uri_pairs}")
         # If the user didn't specify a number of batches, run every import
@@ -195,7 +198,7 @@ def ingest(
                 raise ValueError
 
         write_context = tiledb.Ctx(config)
-        vfs = tiledb.VFS()
+        vfs = tiledb.VFS(ctx=write_context)
 
         for input, output in io_uris:
             with vfs.open(input) as src:
@@ -324,6 +327,7 @@ def ingest(
         _SUPPORTED_EXTENSIONS,
         *args,
         verbose=verbose,
+        config=config,
         access_credentials_name=access_credentials_name,
         name=f"{dag_name} input collector",
         result_format="json",
