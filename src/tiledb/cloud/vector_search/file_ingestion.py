@@ -108,9 +108,8 @@ def ingest_files_udf(
     :param vector_indexing_mode: TaskGraph execution mode for the vector indexing.
     :param index_update_kwargs: Extra arguments to pass to the index update job.
     """
-    import importlib
-
     import tiledb
+    import tiledb.vector_search.embeddings as embeddings_module
     from tiledb.vector_search.object_api import object_index
     from tiledb.vector_search.object_readers import DirectoryTextReader
 
@@ -127,7 +126,7 @@ def ingest_files_udf(
 
     reader = DirectoryTextReader(
         search_uri=file_dir_uri,
-        include=f"{file_name}" if file_name is not None else include,
+        include=file_name if file_name is not None else include,
         exclude=exclude,
         suffixes=suffixes,
         max_files=max_files,
@@ -137,7 +136,6 @@ def ingest_files_udf(
 
     if openai_key is not None:
         environment_variables["OPENAI_API_KEY"] = openai_key
-    embeddings_module = importlib.import_module("tiledb.vector_search.embeddings")
     embedding_class_ = getattr(embeddings_module, embedding_class)
     embedding = embedding_class_(**embedding_kwargs)
 
@@ -146,16 +144,15 @@ def ingest_files_udf(
     if create_index:
         if index_uri_exists:
             raise ValueError(f"{index_uri} allready exists and `create_index` was set.")
-        else:
-            index = object_index.create(
-                uri=index_uri,
-                index_type=index_type,
-                object_reader=reader,
-                embedding=embedding,
-                config=config,
-                environment_variables=environment_variables,
-                **index_creation_kwargs,
-            )
+        index = object_index.create(
+            uri=index_uri,
+            index_type=index_type,
+            object_reader=reader,
+            embedding=embedding,
+            config=config,
+            environment_variables=environment_variables,
+            **index_creation_kwargs,
+        )
     else:
         if index_uri_exists:
             index = object_index.ObjectIndex(
