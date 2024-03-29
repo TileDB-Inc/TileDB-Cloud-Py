@@ -24,19 +24,10 @@ def ingest_files_udf(
     suffixes: Optional[Sequence[str]] = None,
     max_files: Optional[int] = None,
     text_splitter: str = "RecursiveCharacterTextSplitter",
-    text_splitter_kwargs: Optional[Dict] = {
-        "chunk_size": 500,
-        "chunk_overlap": 50,
-    },
+    text_splitter_kwargs: Optional[Dict] = None,
     # Embedding params
     embedding_class: str = "LangChainEmbedding",
-    embedding_kwargs: Optional[Dict] = {
-        "dimensions": 1536,
-        "embedding_class": "OpenAIEmbeddings",
-        "embedding_kwargs": {
-            "model": "text-embedding-ada-002",
-        },
-    },
+    embedding_kwargs: Optional[Dict] = None,
     openai_key: Optional[str] = None,
     # Index update params
     index_timestamp: Optional[int] = None,
@@ -44,14 +35,14 @@ def ingest_files_udf(
     worker_resources: Optional[Dict] = None,
     worker_image: Optional[str] = None,
     extra_worker_modules: Optional[List[str]] = None,
-    driver_resources: Optional[Dict] = {"cpu": "2", "memory": "8Gi"},
+    driver_resources: Optional[Dict] = None,
     driver_image: Optional[str] = None,
     extra_driver_modules: Optional[List[str]] = None,
     max_tasks_per_stage: int = -1,
     embeddings_generation_mode: dag.Mode = dag.Mode.LOCAL,
     embeddings_generation_driver_mode: dag.Mode = dag.Mode.LOCAL,
     vector_indexing_mode: dag.Mode = dag.Mode.LOCAL,
-    index_update_kwargs: Optional[Dict] = {"files_per_partition": 100},
+    index_update_kwargs: Optional[Dict] = None,
 ):
     """
     Ingest files into a vector search text index.
@@ -118,11 +109,22 @@ def ingest_files_udf(
     if index_creation_kwargs is None:
         index_creation_kwargs = {}
     if index_update_kwargs is None:
-        index_update_kwargs = {}
+        index_update_kwargs = {"files_per_partition": 100}
     if embedding_kwargs is None:
-        embedding_kwargs = {}
+        embedding_kwargs = {
+            "dimensions": 1536,
+            "embedding_class": "OpenAIEmbeddings",
+            "embedding_kwargs": {
+                "model": "text-embedding-ada-002",
+            },
+        }
     if text_splitter_kwargs is None:
-        text_splitter_kwargs = {}
+        text_splitter_kwargs = {
+            "chunk_size": 500,
+            "chunk_overlap": 50,
+        }
+    if driver_resources is None:
+        driver_resources = {"cpu": "2", "memory": "8Gi"}
 
     reader = DirectoryTextReader(
         search_uri=file_dir_uri,
