@@ -174,10 +174,7 @@ def run_ingest_workflow_udf(
     if vfs.is_file(input_uri):
         logging.debug("ENUMERATOR VFS.IS_FILE")
 
-        if dry_run:
-            name = "dry-run-h5ad-file"
-        else:
-            name = "ingest-h5ad-file"
+        name = ("dry-run" if dry_run else "ingest") + "-h5ad-file"
 
         grf = dag.DAG(
             name=name,
@@ -218,7 +215,7 @@ def run_ingest_workflow_udf(
         )
 
         for entry_input_uri in vfs.ls(input_uri):
-            logging.debug(f"ENUMERATOR ENTRY_INPUT_URI={entry_input_uri}")
+            logging.debug("ENUMERATOR ENTRY_INPUT_URI=%r", entry_input_uri)
             base = os.path.basename(entry_input_uri)
             base, _ = os.path.splitext(base)
 
@@ -226,10 +223,10 @@ def run_ingest_workflow_udf(
             if not output_uri.endswith("/"):
                 entry_output_uri += "/"
             entry_output_uri += base
-            logging.debug(f"ENUMERATOR ENTRY_OUTPUT_URI={entry_output_uri}")
+            logging.debug("ENUMERATOR ENTRY_OUTPUT_URI=%r", entry_output_uri)
 
             if pattern is not None and not re.match(pattern, entry_input_uri):
-                logging.debug(f"ENUMERATOR SKIP NO MATCH ON <<{pattern}>>")
+                logging.debug("ENUMERATOR SKIP NO MATCH ON <<%r>>", pattern)
                 continue
 
             node = grf.submit(
@@ -248,12 +245,12 @@ def run_ingest_workflow_udf(
             collector.depends_on(node)
 
     else:
-        raise ValueError(f"input_uri {input_uri!r} is neither file nor directory")
+        raise ValueError("input_uri %r is neither file nor directory", input_uri)
 
     grf.compute()
     grf.wait()
 
-    logging.debug(f"ENUMERATOR EXIT {grf.server_graph_uuid}")
+    logging.debug("ENUMERATOR EXIT server_graph_uuid = %r", grf.server_graph_uuid)
     return grf.server_graph_uuid
 
 
