@@ -1,5 +1,5 @@
-from .file_ingestion import ingest_files
+from .file_ingestion import ingest
 
 __all__ = [
-    "ingest_files",
+    "ingest",
 ]
