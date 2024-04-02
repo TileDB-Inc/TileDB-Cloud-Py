@@ -248,7 +248,6 @@ def run_ingest_workflow_udf(
         raise ValueError("input_uri %r is neither file nor directory", input_uri)
 
     grf.compute()
-    grf.wait()
 
     logging.debug("ENUMERATOR EXIT server_graph_uuid = %r", grf.server_graph_uuid)
     return grf.server_graph_uuid
