@@ -13,23 +13,16 @@ from typing import (
 )
 
 import attrs
-import fiona
-import laspy
-import rasterio
-import shapely
-from rtree import index
 
 import tiledb
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import chunk
 from tiledb.cloud.utilities import create_log_array
+from tiledb.cloud.utilities import find
 from tiledb.cloud.utilities import get_logger_wrapper
 from tiledb.cloud.utilities import max_memory_usage
 from tiledb.cloud.utilities import run_dag
-
-fiona.drvsupport.supported_drivers["TileDB"] = "arw"
-fiona.vfs.SCHEMES["tiledb"] = "tiledb"
 
 DEFAULT_RESOURCES = {"cpu": "2", "memory": "2Gi"}
 DEFAULT_IMG_NAME = "3.9-geo"
@@ -127,6 +120,8 @@ def load_pointcloud_metadata(
     :param log_uri: Optional[str] = None,
     :Return: GeoMetadata, a populated GeoMetadata object
     """
+    import laspy
+
     if not sources:
         raise ValueError("Input point cloud datasets required")
 
@@ -189,6 +184,12 @@ def load_geometry_metadata(
     :Return: GeoMetadata, a populated GeoMetadata object
     """
     # note this will be refactored to use /vsipyopener in fiona
+    import fiona
+    import shapely
+
+    fiona.drvsupport.supported_drivers["TileDB"] = "arw"
+    fiona.vfs.SCHEMES["tiledb"] = "tiledb"
+
     if not sources:
         raise ValueError("Input point cloud datasets required")
 
@@ -261,6 +262,9 @@ def load_raster_metadata(
     :Return: GeoMetadata, a populated GeoMetadata objects with blocks
              and the files that contribute to each block
     """
+    import rasterio
+    import shapely
+
     if not sources:
         raise ValueError("Input raster datasets required")
 
@@ -281,6 +285,8 @@ def load_raster_metadata(
     def group_by_raster_block(
         meta: Sequence[GeoMetadata],
     ) -> Tuple[GeoBlockMetadata, ...]:
+        from rtree import index
+
         # fast bulk load of geometries in to a r-tree
         def load_geoms(meta):
             for i, im in enumerate(meta):
@@ -572,8 +578,6 @@ def ingest_point_cloud_udf(
     import numpy as np
     import pdal
 
-    import tiledb
-
     if sources is None and "sources" in args:
         sources = args["sources"]
     if chunk_size is None and "chunk_size" in args:
@@ -716,11 +720,6 @@ def ingest_raster_udf(
 
     import rasterio
     import rasterio.merge
-
-    import tiledb
-    from tiledb.cloud.utilities import Profiler
-    from tiledb.cloud.utilities import get_logger_wrapper
-    from tiledb.cloud.utilities import max_memory_usage
 
     logger = get_logger_wrapper(verbose)
 
@@ -926,10 +925,6 @@ def register_dataset_udf(
     :param config: config dictionary, defaults to None
     :param verbose: verbose logging, defaults to False
     """
-
-    import tiledb
-    from tiledb.cloud.utilities import get_logger_wrapper
-
     logger = get_logger_wrapper(verbose)
 
     namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
@@ -1013,11 +1008,6 @@ def build_inputs_udf(
     :param log_uri: log array URI
     :return: A dict containing the kwargs needed for the next function call
     """
-    from tiledb.cloud.utilities import Profiler
-    from tiledb.cloud.utilities import find
-    from tiledb.cloud.utilities import get_logger_wrapper
-    from tiledb.cloud.utilities import max_memory_usage
-
     logger = get_logger_wrapper(verbose)
     with Profiler(array_uri=log_uri, id=id, trace=trace):
         try:
