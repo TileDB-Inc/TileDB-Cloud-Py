@@ -1,20 +1,14 @@
-import logging
 import math
 import os
 from enum import Enum
-from fnmatch import fnmatch
 from typing import (
-    Any,
-    Callable,
     Dict,
     Iterable,
-    Iterator,
     List,
     Mapping,
     Optional,
     Sequence,
     Tuple,
-    TypeVar,
     Union,
 )
 
@@ -28,108 +22,11 @@ from rtree import index
 import tiledb
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import as_batch
-
-# from tiledb.cloud.utilities import chunk
+from tiledb.cloud.utilities import chunk
 from tiledb.cloud.utilities import create_log_array
-from tiledb.cloud.utilities import get_logger  # get_logger_wrapper
+from tiledb.cloud.utilities import get_logger_wrapper
 from tiledb.cloud.utilities import max_memory_usage
 from tiledb.cloud.utilities import run_dag
-
-T = TypeVar("T")
-
-
-def chunk(items: Sequence[T], chunk_size: int) -> Iterator[Sequence[T]]:
-    """Chunks a sequence of objects and returns an iterator where
-    each return sequence is of length chunk_size.
-
-    :param items: Sequence to split into batches
-    :param chunk_size: Size of chunks of the sequence to return
-    """
-    # Iterator for providing batches of chunks
-    length = len(items)
-    for ndx in range(0, length, chunk_size):
-        yield items[ndx : min(ndx + chunk_size, length)]
-
-
-def get_logger_wrapper(
-    verbose: bool = False,
-) -> logging.Logger:
-    """
-    Get a logger instance and log version information.
-
-    :param verbose: verbose logging, defaults to False
-    :return: logger instance
-    """
-
-    level = logging.DEBUG if verbose else logging.INFO
-    logger = get_logger(level)
-
-    logger.debug(
-        "tiledb.cloud=%s, tiledb=%s, libtiledb=%s",
-        tiledb.cloud.__version__,
-        tiledb.version(),
-        tiledb.libtiledb.version(),
-    )
-
-    return logger
-
-
-def find(
-    uri: str,
-    *,
-    config: Optional[Mapping[str, Any]] = None,
-    include: Optional[Union[str, Callable]] = None,
-    exclude: Optional[Union[str, Callable]] = None,
-    max_count: Optional[int] = None,
-) -> Iterator[str]:
-    """Searches a path for files matching the include/exclude pattern using VFS.
-
-    :param uri: Input path to search
-    :param config: Optional dict configuration to pass on tiledb.VFS
-    :param include: Optional include pattern string
-    :param exclude: Optional exclude pattern string
-    :param max_count: Optional stop point when searching for files
-    """
-    with tiledb.scope_ctx(config):
-        vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
-        listing = vfs.ls(uri)
-        current_count = 0
-
-        def list_files(listing):
-            for f in listing:
-                # Avoid infinite recursion
-                if f == uri:
-                    continue
-
-                if vfs.is_dir(f):
-                    yield from list_files(
-                        vfs.ls(f),
-                    )
-                else:
-                    # Skip files that do not match the include pattern or match
-                    # the exclude pattern.
-                    if callable(include):
-                        if not include(f):
-                            continue
-                    else:
-                        if include and not fnmatch(f, include):
-                            continue
-
-                    if callable(exclude):
-                        if exclude(f):
-                            continue
-                    else:
-                        if exclude and fnmatch(f, exclude):
-                            continue
-                    yield f
-
-        for f in list_files(listing):
-            yield f
-
-            current_count += 1
-            if max_count and current_count == max_count:
-                return
-
 
 fiona.drvsupport.supported_drivers["TileDB"] = "arw"
 fiona.vfs.SCHEMES["tiledb"] = "tiledb"
@@ -822,8 +719,7 @@ def ingest_raster_udf(
 
     import tiledb
     from tiledb.cloud.utilities import Profiler
-
-    # from tiledb.cloud.utilities import get_logger_wrapper
+    from tiledb.cloud.utilities import get_logger_wrapper
     from tiledb.cloud.utilities import max_memory_usage
 
     logger = get_logger_wrapper(verbose)
@@ -1032,8 +928,7 @@ def register_dataset_udf(
     """
 
     import tiledb
-
-    # from tiledb.cloud.utilities import get_logger_wrapper
+    from tiledb.cloud.utilities import get_logger_wrapper
 
     logger = get_logger_wrapper(verbose)
 
@@ -1119,9 +1014,8 @@ def build_inputs_udf(
     :return: A dict containing the kwargs needed for the next function call
     """
     from tiledb.cloud.utilities import Profiler
-
-    # from tiledb.cloud.utilities import find
-    # from tiledb.cloud.utilities import get_logger_wrapper
+    from tiledb.cloud.utilities import find
+    from tiledb.cloud.utilities import get_logger_wrapper
     from tiledb.cloud.utilities import max_memory_usage
 
     logger = get_logger_wrapper(verbose)
