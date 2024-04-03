@@ -121,7 +121,6 @@ def ingest_files(
     if isinstance(source, str):
         source = [source]
 
-    # logger.debug("Building the graph...")
     logger.debug("Build the file finding graph...")
     graph = dag.DAG(
         name=f"{taskgraph_name}-ingestor",
@@ -158,9 +157,10 @@ def ingest_files(
 
     # Step 3: Ingest the files
     graph.submit(
-        # load_files_method, need to discuss
-        chunks=chunks,
+        ingest_files_udf,
         dataset_uri=dataset_uri,
+        file_uris=chunks,
+        namespace=namespace,
         # Expand list of results into multiple node operations
         expand_node_output=chunks,
         config=config,
