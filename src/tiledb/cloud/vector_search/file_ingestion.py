@@ -15,7 +15,6 @@ def ingest_files_udf(
     verbose: bool = False,
     trace_id: Optional[str] = None,
     # Index creation params
-    create_index: bool = False,
     index_type: str = "IVF_FLAT",
     index_creation_kwargs: Optional[Dict] = None,
     # DirectoryTextReader params
@@ -59,7 +58,6 @@ def ingest_files_udf(
     :param verbose: verbose logging, defaults to False.
     :param trace_id: trace ID for logging, defaults to None.
     # Index creation params
-    :param create_index: If true, creates a new vector search index.
     :param index_type: Vector search index type ("FLAT", "IVF_FLAT").
     :param index_creation_kwargs: Arguments to be passed to the index creation
         method.
@@ -142,21 +140,7 @@ def ingest_files_udf(
     embedding = embedding_class_(**embedding_kwargs)
 
     with tiledb.scope_ctx(config):
-        index_uri_exists = tiledb.object_type(index_uri) == "group"
-    if create_index:
-        if index_uri_exists:
-            raise ValueError(f"{index_uri} allready exists and `create_index` was set.")
-        index = object_index.create(
-            uri=index_uri,
-            index_type=index_type,
-            object_reader=reader,
-            embedding=embedding,
-            config=config,
-            environment_variables=environment_variables,
-            **index_creation_kwargs,
-        )
-    else:
-        if index_uri_exists:
+        if tiledb.object_type(index_uri) == "group":
             index = object_index.ObjectIndex(
                 uri=index_uri,
                 environment_variables=environment_variables,
