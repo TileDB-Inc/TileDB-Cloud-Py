@@ -24,6 +24,16 @@ def upload_wheel(
 
     If the wheel Filestore exists, it will be updated with the new wheel file.
 
+    NOTE: The wheel file name must match the file name convention specified by the
+    python packaging specification:
+    https://packaging.python.org/en/latest/specifications/binary-distribution-format
+
+      {distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform tag}.whl
+
+    For example, a pure python wheel compatible with python 3:
+
+      udflib-0.1-py3-none-any.whl
+
     :param wheel_path: path to the local wheel file
     :param storage_uri: URI of the TileDB Filestore to be created or updated
     :param config: config dictionary, defaults to None
@@ -94,20 +104,10 @@ def install_wheel(
                 cmd += ["--user"]
             cmd += [wheel_path]
 
-            res = subprocess.run(
-                cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-            )
-
-            if res.returncode != 0:
-                print(" ".join(cmd))
-                print(res.stdout)
-                raise RuntimeError(f"Failed to install wheel '{wheel_uri}'")
+            res = subprocess.check_output(cmd, text=True)
 
             if verbose:
-                print(res.stdout)
+                print(res)
 
             # Modify sys.path if the wheel was installed with --user
             if not in_venv and USER_SITE not in sys.path:
