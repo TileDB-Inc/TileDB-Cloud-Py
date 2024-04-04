@@ -71,7 +71,7 @@ def ingest(
     :param tile_scale: The scaling factor applied to each tile during I/O.
         Larger scale factors will result in less I/O operations.
     :param access_credentials_name: [TBDeprecated] Access Credentials Name (ACN)
-        registered in TileDB Cloud (ARN type) if `acn` is not set.
+        registered in TileDB Cloud (ARN type) if ``acn`` is not set.
     """
 
     logger = get_logger_wrapper(verbose)
@@ -79,19 +79,20 @@ def ingest(
 
     # Demand for mutual exclusion of the two arguments and existence.
     access_credentials_name = kwargs.pop("access_credentials_name", None)
-    if not (bool(acn) != bool(access_credentials_name)):
+    if bool(acn) == bool(access_credentials_name):
         raise ValueError(
-            "Ingestion graph requires `access_credentials_name`"
-            "or `acn` mutually exclusively to be set."
+            "Ingestion graph requires 'access_credentials_name'"
+            "or 'acn' mutually exclusively to be set."
         )
     # Backwards compatibility: Assign when only access_credentials_name is set
     if not acn:
         acn = access_credentials_name
         warnings.warn(
-            "The 'access_credentials_name' parameter is about to be"
-            "deprecated and will be removed in future versions."
-            "Please use the 'acn' parameter instead.",
-            DeprecationWarning,
+            DeprecationWarning(
+                "The 'access_credentials_name' parameter is about to be"
+                "deprecated and will be removed in future versions."
+                "Please use the 'acn' parameter instead."
+            )
         )
 
     def build_io_uris_ingestion(
@@ -380,7 +381,8 @@ def ingest(
             expand_node_output=ingest_list_node,
             resources=DEFAULT_RESOURCES if resources is None else resources,
             image_name=DEFAULT_IMG_NAME,
-            access_credentials_name=acn**kwargs,
+            access_credentials_name=acn,
+            **kwargs,
         )
     if compute:
         run_dag(graph, debug=verbose)
