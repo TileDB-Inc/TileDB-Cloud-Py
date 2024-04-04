@@ -1139,6 +1139,13 @@ class DAG:
 
         return roots
 
+    def _find_leaf_nodes(self):
+        """
+        Find all leaf nodes
+        :return: list of leaf nodes
+        """
+        return [n for n in self.nodes.values() if not n.children]
+
     def compute(self):
         """
         Start the DAG by executing root nodes
