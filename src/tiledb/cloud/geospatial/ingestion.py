@@ -253,9 +253,8 @@ def load_raster_metadata(
 
     :param sources: iterator, paths or path to process
     :param config: dict, configuration to pass on tiledb.VFS
-    :param pixels_per_fragment: for rasters this this the number of tiles
-        that will be processed together per fragment. Ideally aim to align
-        as a factor of tile_size
+    :param pixels_per_fragment: This is the number of pixels that will be
+           written per fragment. Ideally aim to align as a factor of tile_size
     :param verbose: bool, enable verbose logging, default is False
     :param trace: bool, enable trace logging, default is False
     :param log_uri: Optional[str] = None,
@@ -391,6 +390,8 @@ def load_raster_metadata(
                 )
             if len(meta) > 0:
                 blocks = group_by_raster_block(meta)
+                logger.debug("Returning %i raster blocks", len(blocks))
+
                 return GeoMetadata(
                     block_metadata=blocks,
                     crs=crs,
@@ -854,7 +855,10 @@ def ingest_raster_udf(
                                 )
                                 dst.write(chunk_arr, window=chunk_window)
                             logger.debug(
-                                "Written %r bounds to %r", chunk_bounds, dataset_uri
+                                "Written %r coords %r bounds to %r",
+                                chunk_window,
+                                chunk_bounds,
+                                dataset_uri,
                             )
                         finally:
                             for s in input_datasets:
@@ -995,9 +999,8 @@ def build_inputs_udf(
         defaults to None
     :param tile_size: for rasters this is the tile (block) size
         for the merged destination array, defaults to 1024
-    :param pixels_per_fragment: for rasters this this the number of tiles
-        that will be processed together per fragment. Ideally aim to align
-        as a factor of tile_size
+    :param pixels_per_fragment: This is the number of pixels that will be
+           written per fragment. Ideally aim to align as a factor of tile_size
     :param chunk_size: for point cloud this is the PDAL chunk size, defaults to 1000000
     :param nodata: NODATA value for raster merging
     :param resampling: string, resampling method,
@@ -1189,9 +1192,8 @@ def ingest_datasets_dag(
     :param batch_size: batch size for dataset ingestion, defaults to BATCH_SIZE
     :param tile_size: for rasters this is the tile (block) size
         for the merged destination array, defaults to 1024
-    :param pixels_per_fragment: for rasters this this the number of tiles
-        that will be processed together per fragment. Ideally aim to align
-        as a factor of tile_size
+    :param pixels_per_fragment: This is the number of pixels that will be
+           written per fragment. Ideally aim to align as a factor of tile_size
     :param chunk_size: for point cloud this is the PDAL chunk size, defaults to 1000000
     :param nodata: NODATA value for raster merging
     :param resampling: string, resampling method,
@@ -1423,9 +1425,8 @@ def ingest_datasets(
     :param batch_size: batch size for dataset ingestion, defaults to BATCH_SIZE
     :param tile_size: for rasters this is the tile (block) size
         for the merged destination array defaults to 1024
-    :param pixels_per_fragment: for rasters this this the number of tiles
-        that will be processed together per fragment. Ideally aim to align
-        as a factor of tile_size
+    :param pixels_per_fragment: This is the number of pixels that will be
+           written per fragment. Ideally aim to align as a factor of tile_size
     :param chunk_size: for point cloud this is the PDAL chunk size, defaults to 1000000
     :param nodata: NODATA value for rasters
     :param res: Tuple[float, float], output resolution in x/y
@@ -1481,46 +1482,50 @@ def ingest_datasets(
 # Wrapper function for batch dataset ingestion
 ingest = as_batch(ingest_datasets)
 
-if __name__ == "__main__":
-    # date_mark = datetime.now().strftime('%Y%m%d-%H%M%S')
-    date_mark = "1"
-    ingest_datasets(
-        dataset_uri=f"s3://tiledb-norman/deleteme/lidar/ma/2024-03-05/test-{date_mark}",
-        dataset_type=DatasetType.POINTCLOUD,
-        acn="norman-cloud-sandbox-role",
-        namespace="norman",
-        register_name="test_lidar_ma",
-        search_uri="s3://tiledb-norman/deleteme/files/geospatial/lidar/MA_CentralEastern_2021_B21/",
-        stats=False,
-        verbose=True,
-        trace=True,
-        pattern="*.laz",
-    )
-
 # if __name__ == "__main__":
-#     from tiledb.cloud.utilities import serialize_filter
+#     import datetime
 
-#     # date_mark = datetime.now().strftime('%Y%m%d-%H%M%S')
-#     date_mark = "1"
-
-#     tile_size = 1024
-#     pixels_per_fragment = 1024 * 10  # 10 tiles per fragment
-#     zstd_filter = tiledb.ZstdFilter(level=7)
-
+#     date_mark = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+#     # date_mark = "1"
 #     ingest_datasets(
-#         dataset_uri=f"s3://tiledb-norman/deleteme/raster/sentinel-s2-l2a/2024-03-08/test-{date_mark}",
-#         dataset_type=DatasetType.RASTER,
-#         batch_size=1,
-#         tile_size=tile_size,
-#         pixels_per_fragment=pixels_per_fragment,
-#         nodata=0,
-#         compression_filter=serialize_filter(zstd_filter),
+#         dataset_uri=f"s3://tiledb-norman/deleteme/lidar/ma/2024-03-05/test-{date_mark}",
+#         dataset_type=DatasetType.POINTCLOUD,
 #         acn="norman-cloud-sandbox-role",
 #         namespace="norman",
-#         register_name="test_sentinel_2",
-#         search_uri="s3://tiledb-norman/deleteme/files/geospatial/raster/sentinel-s2-l2a-cogs/",
+#         register_name="test_lidar_ma",
+#         search_uri="s3://tiledb-norman/deleteme/files/geospatial/lidar/MA_CentralEastern_2021_B21/",
 #         stats=False,
 #         verbose=True,
 #         trace=True,
-#         pattern="*.tif",
+#         pattern="*.laz",
 #     )
+
+if __name__ == "__main__":
+    import datetime
+
+    from tiledb.cloud.utilities import serialize_filter
+
+    date_mark = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    # date_mark = "1"
+
+    tile_size = 1024
+    pixels_per_fragment = (tile_size**2) * 10  # 10 tiles per fragment
+    zstd_filter = tiledb.ZstdFilter(level=7)
+
+    ingest_datasets(
+        dataset_uri=f"s3://tiledb-norman/deleteme/raster/sentinel-s2-l2a/2024-03-08/test-{date_mark}",
+        dataset_type=DatasetType.RASTER,
+        batch_size=10,
+        tile_size=tile_size,
+        pixels_per_fragment=pixels_per_fragment,
+        nodata=0,
+        compression_filter=serialize_filter(zstd_filter),
+        acn="norman-cloud-sandbox-role",
+        namespace="norman",
+        register_name="test_sentinel_2",
+        search_uri="s3://tiledb-norman/deleteme/files/geospatial/raster/sentinel-s2-l2a-cogs/",
+        stats=False,
+        verbose=True,
+        trace=True,
+        pattern="*.tif",
+    )
