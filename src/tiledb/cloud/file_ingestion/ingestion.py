@@ -8,7 +8,7 @@ from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import get_logger_wrapper
 from tiledb.cloud.vcf.ingestion import find_uris_udf
 
-DEFAULT_RESOURCES = {"cpu": "2", "memory": "8Gi"}
+DEFAULT_RESOURCES = {"cpu": "1", "memory": "2Gi"}
 DEFAULT_FILE_INGESTION_NAME = "file-ingestion"
 DEFAULT_BATCH_SIZE = 100
 
@@ -35,8 +35,8 @@ def chunk_results_udf(
 
 
 def ingest_files_udf(
-    dataset_uri: str,
     file_uris: Sequence[str],
+    destination: str,
     *,
     namespace: Optional[str] = None,
     verbose: bool = False,
@@ -44,47 +44,46 @@ def ingest_files_udf(
     """
     Ingest files.
 
-    :param dataset_uri: The dataset URI.
     :param file_uris: An iterable of file URIs.
+    :param destination: URI to ingest the files into.
     :param namespace: TileDB-Cloud namespace, defaults to None.
     :param verbose: Verbose logging, defaults to False.
     """
     logger = get_logger_wrapper(verbose)
 
-    for file_uri in file_uris:
-        filename = file_uri.replace(",", "").replace(" ", "_")
-        filestore_array_uri = f"{dataset_uri}/{filename}"
-        filestore_array_s3_uri = f"s3{filestore_array_uri.split('s3')[1]}"
-        namespace = (
-            namespace or filestore_array_uri.split("tiledb://")[1].split("/s3")[0]
-        )
+    for filename in file_uris:
+        filestore_array_uri = f"{destination}/{filename}"
+        namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
         logger.debug(
             f"""
             ---------------------------------------------\n
             - Filename: {filename}\n
             - Namespace: {namespace}\n
-            - Array URI: {filestore_array_uri}\n
-            - S3 Array URI: {filestore_array_s3_uri}\n
+            - Destination URI: {filestore_array_uri}\n
             ---------------------------------------------
             """
         )
 
-        if not tiledb.array_exists(filestore_array_uri):
-            tiledb.cloud.file.create_file(
-                namespace=namespace,
-                name=filename,
-                input_uri=file_uri,
-                output_uri=filestore_array_s3_uri,
-            )
+        if tiledb.array_exists(filestore_array_uri):
+            logger.warn(f"Array '{filestore_array_uri}' already exists.")
+            continue
+
+        tiledb.cloud.file.create_file(
+            namespace=namespace,
+            name=filename,
+            input_uri=filename,
+            output_uri=filestore_array_uri,
+        )
 
 
 def ingest_files(
     dataset_uri: str,
+    source: Union[Sequence[str], str],
+    destination: str,
     *,
     acn: Optional[str] = None,
     config: Optional[dict] = None,
     namespace: Optional[str] = None,
-    source: Union[Sequence[str], str],
     include: Optional[str] = None,
     exclude: Optional[str] = None,
     taskgraph_name: Optional[str] = DEFAULT_FILE_INGESTION_NAME,
@@ -97,6 +96,7 @@ def ingest_files(
 
     :param dataset_uri: The dataset URI
     :param source: URI or an iterable of URIs of input files.
+    :param destination: URI to ingest the files into.
     :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
         defaults to None
     :param config: Config dictionary, defaults to None
@@ -108,7 +108,7 @@ def ingest_files(
     :param taskgraph_name: Optional name for taskgraph, defaults to "file-ingestion"
     :param batch_size: Batch size for file ingestion, defaults to 100
     :param resources: Configuration for node specs,
-        defaults to {"cpu": "2", "memory": "8Gi"}
+        defaults to {"cpu": "1", "memory": "2Gi"}
     :param verbose: Verbose logging, defaults to False
     :return tiledb.cloud.dag.DAG: The resulting ingestion graph
     """
@@ -158,8 +158,8 @@ def ingest_files(
     # Step 3: Ingest the files
     graph.submit(
         ingest_files_udf,
-        dataset_uri=dataset_uri,
         file_uris=chunks,
+        destination=destination,
         namespace=namespace,
         # Expand list of results into multiple node operations
         expand_node_output=chunks,
