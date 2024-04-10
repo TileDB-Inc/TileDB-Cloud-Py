@@ -2,6 +2,7 @@ import math
 import os
 from enum import Enum
 from typing import (
+    Callable,
     Dict,
     Iterable,
     List,
@@ -9,6 +10,7 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    TypeVar,
     Union,
 )
 
@@ -31,6 +33,7 @@ DEFAULT_DAG_NAME = "geo-ingestion"
 # Default values for ingestion parameters
 RASTER_TILE_SIZE = 1024
 PIXELS_PER_FRAGMENT = (RASTER_TILE_SIZE**2) * 10
+DEFAULT_RASTER_SAMPLING = "bilinear"
 POINT_CLOUD_CHUNK_SIZE = 1_000_000
 GEOMETRY_CHUNK_SIZE = 100_000
 MAX_WORKERS = 40
@@ -84,6 +87,15 @@ def _wrap_paths(
     return tuple(paths)
 
 
+T = TypeVar("T", int, float)
+
+
+def _fold_in(oper: Callable, existing: List[T], new: List[T]) -> List[T]:
+    if existing is None:
+        return new
+    return [oper(e) for e in zip(existing, new)]
+
+
 @attrs.define
 class GeoMetadata:
     # common properties
@@ -124,11 +136,6 @@ def load_pointcloud_metadata(
 
     if not sources:
         raise ValueError("Input point cloud datasets required")
-
-    def _fold_in(oper, existing, new):
-        if existing is None:
-            return new
-        return [oper(e) for e in zip(existing, new)]
 
     with tiledb.scope_ctx(config):
         vfs = tiledb.VFS()
@@ -309,6 +316,7 @@ def load_raster_metadata(
         dst_windows = rasterio.windows.window_split(height, width, pixels_per_fragment)
 
         results = []
+
         for _, w in dst_windows:
             region_bounds = rasterio.windows.bounds(w, dst_transform)
             # find intersection
@@ -446,23 +454,40 @@ def ingest_geometry_udf(
     :return: if not appending then the function returns a tuple of file paths
     """
     import fiona
+    import shapely
 
     from tiledb import filter
 
-    if sources is None and "sources" in args:
-        sources = args["sources"]
+    if not append and args:
+        # first map the args from the previous stage
+        sources = []
+        arg = args[0]
+        schema = arg["schema"]
+        crs = arg["crs"]
+        if batch_size in arg:
+            batch_size = arg["batch_size"]
+        if compressor in arg:
+            compressor = arg["compressor"]
+        if chunk_size in arg:
+            chunk_size = arg["chunk_size"]
+        extents = None
+        for d in args:
+            if not extents:
+                extents = d["extents"]
+            else:
+                exts = d["extents"]
+                extents = BoundingBox(
+                    *shapely.unary_union(
+                        [
+                            shapely.box(*extents.bounds),
+                            shapely.box(*exts.bounds),
+                        ]
+                    ).bounds
+                )
+            sources.extend(d["sources"])
 
-    if not append:
-        if schema is None and "schema" in args:
-            schema = args["schema"]
-        if extents is None and "extents" in args:
-            extents = args["extents"]
-        if crs is None and "crs" in args:
-            crs = args["crs"]
-        if chunk_size is None and "chunk_size" in args:
-            chunk_size = args["chunk_size"]
-        if compressor is None and "compressor" in args:
-            compressor = args["compressor"]
+    if append and args:
+        sources = args["sources"]
 
     with tiledb.scope_ctx(config):
         with Profiler(array_uri=log_uri, id=id, trace=trace):
@@ -525,7 +550,7 @@ def ingest_geometry_udf(
                         ) as dst:
                             pass
 
-                    return list(chunk(sources, batch_size))
+                    return [{"sources": s} for s in chunk(sources, batch_size)]
                 else:
                     raise ValueError("Insufficient metadata for geometry ingestion")
             finally:
@@ -539,7 +564,6 @@ def ingest_point_cloud_udf(
     args: Union[Dict, List] = {},
     dataset_uri: str,
     sources: Sequence[str] = None,
-    template_sample: str = None,
     append: bool = False,
     extents: Optional[XYZBoundsTuple] = None,
     offsets: Optional[XYZTuple] = None,
@@ -557,10 +581,9 @@ def ingest_point_cloud_udf(
     into tiledb arrays using PDAL API. Compression uses the default profile
     built in to PDAL.
 
-    :param args: dict, input key value arguments as a dictionary
+    :param args: dict or list, input key value arguments as a dictionary
     :param dataset_uri: str, output TileDB array name
     :param sources: Sequence of input point cloud file names
-    :param template_sample: first point cloud to be ingested to initialize the array
     :param append: bool, whether to append to the array
     :param extents: Tuple, extents of point cloud, minx,maxx,miny,maxy,minz,maxz
     :param scales: Tuple, scale values for point cloud, ordered as x,y,z
@@ -578,21 +601,45 @@ def ingest_point_cloud_udf(
     import laspy
     import numpy as np
     import pdal
+    import shapely
 
-    if sources is None and "sources" in args:
+    if not append and args:
+        # first map the args from the previous stage
+        sources = []
+        arg = args[0]
+        if chunk_size in arg:
+            chunk_size = arg["chunk_size"]
+        if batch_size in arg:
+            batch_size = arg["batch_size"]
+
+        extents = None
+        offsets = None
+        for d in args:
+            sources.extend(d["sources"])
+            if not extents:
+                extents = d["extents"]
+            else:
+                exts = d["extents"]
+                extents = BoundingBox(
+                    *shapely.unary_union(
+                        [
+                            shapely.box(*extents.bounds),
+                            shapely.box(*exts.bounds),
+                        ]
+                    ).bounds
+                )
+            if not offsets and offsets in d:
+                offsets = d["offsets"]
+            else:
+                offsets = _fold_in(min, offsets, d["offsets"])
+
+            if not scales and scales in d:
+                scales = d["scales"]
+            else:
+                scales = _fold_in(max, scales, d["scales"])
+
+    if append and args:
         sources = args["sources"]
-    if chunk_size is None and "chunk_size" in args:
-        chunk_size = args["chunk_size"]
-
-    if not append:
-        if template_sample is None and "template_sample" in args:
-            template_sample = args["template_sample"]
-        if extents is None and "extents" in args:
-            extents = args["extents"]
-        if offsets is None and "offsets" in args:
-            offsets = args["offsets"]
-        if scales is None and "scales" in args:
-            scales = args["scales"]
 
     with tiledb.scope_ctx(config):
         with Profiler(array_uri=log_uri, id=id, trace=trace):
@@ -626,7 +673,8 @@ def ingest_point_cloud_udf(
                                 pipeline.execute()
                     return
 
-                if extents and offsets and scales and template_sample:
+                if extents and offsets and scales:
+                    template_sample = sources[0]
                     logger.debug("creating point cloud schema from %r", template_sample)
                     with vfs.open(template_sample, "rb") as src:
                         las = laspy.open(src)
@@ -659,7 +707,7 @@ def ingest_point_cloud_udf(
                             ).pipeline(arr)
                             pipeline.execute()
 
-                    return list(chunk(sources, batch_size))
+                    return [{"sources": s} for s in chunk(sources[1:], batch_size)]
                 else:
                     raise ValueError("Insufficient metadata for point cloud ingestion")
             finally:
@@ -680,7 +728,7 @@ def ingest_raster_udf(
     crs: Optional[str] = None,
     nodata: Optional[float] = None,
     tile_size: int = RASTER_TILE_SIZE,
-    resampling: str = "bilinear",
+    resampling: str = DEFAULT_RASTER_SAMPLING,
     append: bool = False,
     batch_size: int = BATCH_SIZE,
     stats: bool = False,
@@ -721,33 +769,61 @@ def ingest_raster_udf(
 
     import rasterio
     import rasterio.merge
+    import shapely
 
     logger = get_logger_wrapper(verbose)
+    if not append and args:
+        # first map the args from the previous stage
+        sources = []
+        arg = args[0]
+        band_count = arg["band_count"]
+        crs = arg["crs"]
+        dtype = arg["dtype"]
+        nodata = arg["nodata"] if "nodata" in arg else None
+        res = arg["res"] if "res" in arg else None
+        resampling = (
+            arg["resampling"] if "resampling" in arg else DEFAULT_RASTER_SAMPLING
+        )
+        tile_size = arg["tile_size"]
+        batch_size = arg["batch_size"] if "batch_size" in arg else BATCH_SIZE
+        compressor = arg["compressor"] if "compressor" in arg else None
+        extents = None
 
-    if sources is None and "sources" in args:
+        for d in args:
+            if not extents:
+                extents = d["extents"]
+            else:
+                exts = d["extents"]
+                extents = BoundingBox(
+                    *shapely.unary_union(
+                        [
+                            shapely.box(*extents.bounds),
+                            shapely.box(*exts.bounds),
+                        ]
+                    ).bounds
+                )
+
+            # reduce dictionary size
+            for k in [
+                "band_count",
+                "crs",
+                "dtype",
+                "extents",
+                "nodata",
+                "res",
+                "tile_size",
+                "batch_size",
+                "compressor",
+            ]:
+                if k in d:
+                    del d[k]
+            sources.append(d)
+
+    if append and args:
         sources = args["sources"]
-    if resampling is None and "resampling" in args:
-        resampling = args["resampling"]
-
-    if not append:
-        if extents is None and "extents" in args:
-            extents = args["extents"]
-        if band_count is None and "band_count" in args:
-            band_count = args["band_count"]
-        if res is None and "res" in args:
-            res = args["res"]
-        if crs is None and "crs" in args:
-            crs = args["crs"]
-        if nodata is None and "nodata" in args:
-            nodata = args["nodata"]
-        if dtype is None and "dtype" in args:
-            dtype = args["dtype"]
-        if tile_size is None and "tile_size" in args:
-            tile_size = args["tile_size"]
-        if batch_size is None and "batch_size" in args:
-            batch_size = args["batch_size"]
-        if compressor is None and "compressor" in args:
-            compressor = args["compressor"]
+        resampling = (
+            args["resampling"] if resampling in args else DEFAULT_RASTER_SAMPLING
+        )
 
     with tiledb.scope_ctx(config):
         with Profiler(array_uri=log_uri, id=id, trace=trace):
@@ -822,47 +898,48 @@ def ingest_raster_udf(
                             pass
 
                     logger.debug("Raster array created %r", dataset_uri)
-                    return list(chunk(sources, batch_size))
+                    return [{"sources": s} for s in chunk(sources, batch_size)]
 
                 # srcs and dst have same number of bands
                 if resampling:
                     resampling = rasterio.enums.Resampling[resampling.lower()]
                 with rasterio.open(dataset_uri, mode="r+", driver="TileDB") as dst:
-                    for c in sources:
-                        input_datasets = [
-                            rasterio.open(f, opener=vfs.open, STATS=stats)
-                            for f in c.files
-                        ]
-                        try:
-                            col_off = c.ranges[1][0]
-                            row_off = c.ranges[0][0]
-                            chunk_window = rasterio.windows.Window(
-                                col_off,
-                                row_off,
-                                c.ranges[1][1] - col_off,
-                                c.ranges[0][1] - row_off,
-                            )
-                            chunk_bounds = rasterio.windows.bounds(
-                                chunk_window, dst.transform
-                            )
-
-                            for b in range(dst.count):
-                                chunk_arr, _ = rasterio.merge.merge(
-                                    input_datasets,
-                                    bounds=chunk_bounds,
-                                    nodata=nodata,
-                                    indexes=[b + 1],
+                    for w in sources:
+                        for c in w["sources"]:
+                            input_datasets = [
+                                rasterio.open(f, opener=vfs.open, STATS=stats)
+                                for f in c.files
+                            ]
+                            try:
+                                col_off = c.ranges[1][0]
+                                row_off = c.ranges[0][0]
+                                chunk_window = rasterio.windows.Window(
+                                    col_off,
+                                    row_off,
+                                    c.ranges[1][1] - col_off,
+                                    c.ranges[0][1] - row_off,
                                 )
-                                dst.write(chunk_arr, window=chunk_window)
-                            logger.debug(
-                                "Written %r coords %r bounds to %r",
-                                chunk_window,
-                                chunk_bounds,
-                                dataset_uri,
-                            )
-                        finally:
-                            for s in input_datasets:
-                                s.close()
+                                chunk_bounds = rasterio.windows.bounds(
+                                    chunk_window, dst.transform
+                                )
+
+                                for b in range(dst.count):
+                                    chunk_arr, _ = rasterio.merge.merge(
+                                        input_datasets,
+                                        bounds=chunk_bounds,
+                                        nodata=nodata,
+                                        indexes=[b + 1],
+                                    )
+                                    dst.write(chunk_arr, window=chunk_window)
+                                logger.debug(
+                                    "Written %r coords %r bounds to %r",
+                                    chunk_window,
+                                    chunk_bounds,
+                                    dataset_uri,
+                                )
+                            finally:
+                                for s in input_datasets:
+                                    s.close()
                 return
             finally:
                 logger.info(
@@ -964,7 +1041,7 @@ def register_dataset_udf(
             )
 
 
-def build_inputs_udf(
+def build_file_list_udf(
     *,
     dataset_type: DatasetType,
     config: Optional[Mapping[str, object]] = None,
@@ -973,18 +1050,11 @@ def build_inputs_udf(
     ignore: Optional[str] = None,
     dataset_list_uri: Optional[str] = None,
     max_files: Optional[int] = None,
-    compression_filter: Optional[dict] = None,
-    tile_size: int = RASTER_TILE_SIZE,
-    pixels_per_fragment: int = PIXELS_PER_FRAGMENT,
-    chunk_size: int = POINT_CLOUD_CHUNK_SIZE,
-    nodata: Optional[float] = None,
-    resampling: Optional[str] = "bilinear",
-    res: Tuple[float, float] = None,
     verbose: bool = False,
     trace: bool = False,
     log_uri: Optional[str] = None,
-) -> dict[str, object]:
-    """Groups input URIs into batches.
+) -> Sequence[str]:
+    """Build a list of sources
     :param dataset_type: dataset type, one of pointcloud, raster or geometry
     :param config: config dictionary, defaults to None
     :param search_uri: URI to search for geospatial dataset files, defaults to None
@@ -995,21 +1065,10 @@ def build_inputs_udf(
     :param dataset_list_uri: URI with a list of dataset URIs, defaults to None
     :param max_files: maximum number of URIs to read/find,
         defaults to None (no limit)
-    :param compression_filter: serialized tiledb filter,
-        defaults to None
-    :param tile_size: for rasters this is the tile (block) size
-        for the merged destination array, defaults to 1024
-    :param pixels_per_fragment: This is the number of pixels that will be
-           written per fragment. Ideally aim to align as a factor of tile_size
-    :param chunk_size: for point cloud this is the PDAL chunk size, defaults to 1000000
-    :param nodata: NODATA value for raster merging
-    :param resampling: string, resampling method,
-        one of None, bilinear, cubic, nearest and average
-    :param res: Tuple[float, float], output resolution in x/y
     :param verbose: verbose logging, defaults to False
     :param trace: bool, enabling log tracing, defaults to False
     :param log_uri: log array URI
-    :return: A dict containing the kwargs needed for the next function call
+    :return: A sequence of source files grouped into batches
     """
     logger = get_logger_wrapper(verbose)
     with Profiler(array_uri=log_uri, id=id, trace=trace):
@@ -1039,25 +1098,14 @@ def build_inputs_udf(
             fns = {
                 DatasetType.POINTCLOUD: {
                     "pattern_fn": pointcloud_match,
-                    "meta_fn": load_pointcloud_metadata,
-                    "kwargs": {},
                 },
                 DatasetType.RASTER: {
                     "pattern_fn": raster_match,
-                    "meta_fn": load_raster_metadata,
-                    "kwargs": {
-                        "pixels_per_fragment": pixels_per_fragment,
-                        "res": res,
-                    },
                 },
                 DatasetType.GEOMETRY: {
                     "pattern_fn": geometry_match,
-                    "meta_fn": load_geometry_metadata,
-                    "kwargs": {},
                 },
             }
-
-            kwargs = {}
 
             if dataset_list_uri:
                 sources = read_uris(
@@ -1080,6 +1128,70 @@ def build_inputs_udf(
             if not sources:
                 raise ValueError(f"No {dataset_type.name} datasets found")
 
+            return list(sources)
+        finally:
+            logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
+
+
+def build_inputs_udf(
+    *,
+    dataset_type: DatasetType,
+    sources: Iterable[str],
+    config: Optional[Mapping[str, object]] = None,
+    compression_filter: Optional[dict] = None,
+    tile_size: int = RASTER_TILE_SIZE,
+    pixels_per_fragment: int = PIXELS_PER_FRAGMENT,
+    chunk_size: int = POINT_CLOUD_CHUNK_SIZE,
+    nodata: Optional[float] = None,
+    resampling: Optional[str] = "bilinear",
+    res: Tuple[float, float] = None,
+    verbose: bool = False,
+    trace: bool = False,
+    log_uri: Optional[str] = None,
+) -> dict[str, object]:
+    """Groups input URIs into batches.
+    :param dataset_type: dataset type, one of pointcloud, raster or geometry
+    :param sources: URIs to process
+    :param config: config dictionary, defaults to None
+    :param compression_filter: serialized tiledb filter,
+        defaults to None
+    :param tile_size: for rasters this is the tile (block) size
+        for the merged destination array, defaults to 1024
+    :param pixels_per_fragment: This is the number of pixels that will be
+           written per fragment. Ideally aim to align as a factor of tile_size
+    :param chunk_size: for point cloud this is the PDAL chunk size, defaults to 1000000
+    :param nodata: NODATA value for raster merging
+    :param resampling: string, resampling method,
+        one of None, bilinear, cubic, nearest and average
+    :param res: Tuple[float, float], output resolution in x/y
+    :param verbose: verbose logging, defaults to False
+    :param trace: bool, enabling log tracing,    to False
+    :param log_uri: log array URI
+    :return: A dict containing the kwargs needed for the next function call
+    """
+    logger = get_logger_wrapper(verbose)
+    with Profiler(array_uri=log_uri, id=id, trace=trace):
+        try:
+            fns = {
+                DatasetType.POINTCLOUD: {
+                    "meta_fn": load_pointcloud_metadata,
+                    "kwargs": {},
+                },
+                DatasetType.RASTER: {
+                    "meta_fn": load_raster_metadata,
+                    "kwargs": {
+                        "pixels_per_fragment": pixels_per_fragment,
+                        "res": res,
+                    },
+                },
+                DatasetType.GEOMETRY: {
+                    "meta_fn": load_geometry_metadata,
+                    "kwargs": {},
+                },
+            }
+
+            kwargs = {}
+
             meta_kwargs = fns[dataset_type]["kwargs"]
             meta = fns[dataset_type]["meta_fn"](sources, config=config, **meta_kwargs)
 
@@ -1090,12 +1202,11 @@ def build_inputs_udf(
                     )
 
                 kwargs.update(
-                    template_sample=meta.paths[0],
                     extents=meta.extents,
                     offsets=meta.offsets,
                     scales=meta.scales,
                     chunk_size=chunk_size,
-                    sources=meta.paths[1:],
+                    sources=meta.paths,
                 )
             elif dataset_type == DatasetType.RASTER:
                 kwargs.update(
@@ -1134,7 +1245,6 @@ def build_inputs_udf(
                 raise ValueError(
                     f"Unsupported ingestion dataset type: {dataset_type.name}"
                 )
-
             return kwargs
         finally:
             logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
@@ -1236,9 +1346,9 @@ def ingest_datasets_dag(
         namespace=namespace,
     )
 
-    # find sources
-    input_list_node = graph.submit(
-        build_inputs_udf,
+    # first find sources to pass to build_inputs_udf
+    file_list_node = graph.submit(
+        build_file_list_udf,
         dataset_type=dataset_type,
         access_credentials_name=acn,
         config=config,
@@ -1247,6 +1357,16 @@ def ingest_datasets_dag(
         ignore=ignore,
         dataset_list_uri=dataset_list_uri,
         max_files=max_files,
+        image_name=DEFAULT_IMG_NAME,
+        name=f"{dag_name} source finder",
+    )
+
+    input_list_node = graph.submit(
+        build_inputs_udf,
+        dataset_type=dataset_type,
+        access_credentials_name=acn,
+        config=config,
+        sources=file_list_node,
         compression_filter=compression_filter,
         tile_size=tile_size,
         pixels_per_fragment=pixels_per_fragment,
@@ -1259,7 +1379,10 @@ def ingest_datasets_dag(
         log_uri=log_uri,
         image_name=DEFAULT_IMG_NAME,
         name=f"{dag_name} input collector",
+        expand_node_output=file_list_node,
     )
+
+    input_list_node.depends_on(file_list_node)
 
     # schema creation node, returns a sequence of work items
     ingest_node = graph.submit(
@@ -1283,7 +1406,7 @@ def ingest_datasets_dag(
 
     process_node = graph.submit(
         fn,
-        sources=ingest_node,
+        args=ingest_node,
         dataset_uri=dataset_uri,
         config=config,
         name=task_prefix,
@@ -1298,6 +1421,7 @@ def ingest_datasets_dag(
         image_name=DEFAULT_IMG_NAME,
         access_credentials_name=acn,
     )
+    process_node.depends_on(ingest_node)
 
     graph.submit(
         consolidate_meta,
@@ -1482,50 +1606,50 @@ def ingest_datasets(
 # Wrapper function for batch dataset ingestion
 ingest = as_batch(ingest_datasets)
 
-# if __name__ == "__main__":
-#     import datetime
-
-#     date_mark = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-#     # date_mark = "1"
-#     ingest_datasets(
-#         dataset_uri=f"s3://tiledb-norman/deleteme/lidar/ma/2024-03-05/test-{date_mark}",
-#         dataset_type=DatasetType.POINTCLOUD,
-#         acn="norman-cloud-sandbox-role",
-#         namespace="norman",
-#         register_name="test_lidar_ma",
-#         search_uri="s3://tiledb-norman/deleteme/files/geospatial/lidar/MA_CentralEastern_2021_B21/",
-#         stats=False,
-#         verbose=True,
-#         trace=True,
-#         pattern="*.laz",
-#     )
-
 if __name__ == "__main__":
     import datetime
 
-    from tiledb.cloud.utilities import serialize_filter
-
     date_mark = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     # date_mark = "1"
-
-    tile_size = 1024
-    pixels_per_fragment = (tile_size**2) * 10  # 10 tiles per fragment
-    zstd_filter = tiledb.ZstdFilter(level=7)
-
     ingest_datasets(
-        dataset_uri=f"s3://tiledb-norman/deleteme/raster/sentinel-s2-l2a/2024-03-08/test-{date_mark}",
-        dataset_type=DatasetType.RASTER,
-        batch_size=10,
-        tile_size=tile_size,
-        pixels_per_fragment=pixels_per_fragment,
-        nodata=0,
-        compression_filter=serialize_filter(zstd_filter),
+        dataset_uri=f"s3://tiledb-norman/deleteme/lidar/ma/2024-03-05/test-{date_mark}",
+        dataset_type=DatasetType.POINTCLOUD,
         acn="norman-cloud-sandbox-role",
         namespace="norman",
-        register_name="test_sentinel_2",
-        search_uri="s3://tiledb-norman/deleteme/files/geospatial/raster/sentinel-s2-l2a-cogs/",
+        register_name="test_lidar_ma",
+        search_uri="s3://tiledb-norman/deleteme/files/geospatial/lidar/MA_CentralEastern_2021_B21/",
         stats=False,
         verbose=True,
         trace=True,
-        pattern="*.tif",
+        pattern="*.laz",
     )
+
+# if __name__ == "__main__":
+#     import datetime
+
+#     from tiledb.cloud.utilities import serialize_filter
+
+#     date_mark = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+#     # date_mark = "1"
+
+#     tile_size = 1024
+#     pixels_per_fragment = (tile_size**2) * 10  # 10 tiles per fragment
+#     zstd_filter = tiledb.ZstdFilter(level=7)
+
+#     ingest_datasets(
+#         dataset_uri=f"s3://tiledb-norman/deleteme/raster/sentinel-s2-l2a/2024-03-08/test-{date_mark}",
+#         dataset_type=DatasetType.RASTER,
+#         batch_size=10,
+#         tile_size=tile_size,
+#         pixels_per_fragment=pixels_per_fragment,
+#         nodata=0,
+#         compression_filter=serialize_filter(zstd_filter),
+#         acn="norman-cloud-sandbox-role",
+#         namespace="norman",
+#         register_name="test_sentinel_2",
+#         search_uri="s3://tiledb-norman/deleteme/files/geospatial/raster/sentinel-s2-l2a-cogs/",
+#         stats=False,
+#         verbose=True,
+#         trace=True,
+#         pattern="*.tif",
+#     )

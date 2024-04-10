@@ -50,28 +50,35 @@ def run_local(dataset_uri: str, *, dataset_type: Enum, batch_size: int, **kwargs
     fn = funcs[dataset_type]["udf_fn"]
 
     # unit test inner functions
+    sources = geo.build_file_list_udf(
+        config=kwargs["config"],
+        dataset_type=dataset_type,
+        dataset_list_uri=kwargs["dataset_list_uri"],
+    )
+
+    kwargs.pop("dataset_list_uri")
+    kwargs["sources"] = sources
+
     new_kwargs = geo.build_inputs_udf(
         dataset_type=dataset_type,
         **kwargs,
     )
 
-    # set up function
+    # schema creation function
+    # args will be a list from the result from the metadata returned by build_inputs_udf
     samples = fn(
         dataset_uri=dataset_uri,
         append=False,
         batch_size=batch_size,
-        **new_kwargs,
+        args=[new_kwargs],
     )
 
-    new_kwargs.pop("sources")
-
     # work functions
-    for _, work in enumerate(samples):
+    for _, work_args in enumerate(samples):
         fn(
-            sources=work,
             dataset_uri=dataset_uri,
             append=True,
-            **new_kwargs,
+            args=work_args,
         )
 
 
@@ -271,7 +278,7 @@ class GeospatialTest(unittest.TestCase):
                 config={},
                 dataset_list_uri=dataset_list_uri,
                 compression_filter=utils.serialize_filter(zstd_filter),
-                nodata=255,
+                nodata=0,
                 # set batch size to 1 to test overlapping images
                 batch_size=1,
                 # pick a size we wouldn't normally use for testing
@@ -290,7 +297,7 @@ class GeospatialTest(unittest.TestCase):
                 with rasterio.open(output_array) as src:
                     # all of test_1, 3/4 of test_2 and test_3 = 100 + 150 + 300
                     data = src.read(1, masked=True)
-                    self.assertEqual(np.sum(data), 550)
+                    self.assertEqual(np.sum(data), 1191910)
 
             # check compression filter
             with tiledb.open(output_array) as src:
@@ -372,32 +379,32 @@ class GeospatialTest(unittest.TestCase):
                 data = src[:]
                 self.assertEqual(len(data["X"]), 1065)
 
-    # def test_geometry_ingest(self):
-    #     import tiledb.cloud.geospatial as geo
+    def test_geometry_ingest(self):
+        import tiledb.cloud.geospatial as geo
 
-    #     test_1 = [self.test_dir.joinpath(g) for g in GEOM_NAMES]
-    #     with mock.patch.object(VFS, "ls", return_value=test_1):
-    #         output_array = str(self.test_dir.joinpath("geom_output_array"))
-    #         # output_array = "/tmp/geom_output_array"
-    #         # if os.path.exists(output_array):
-    #         #     shutil.rmtree(output_array)
+        test_1 = [self.test_dir.joinpath(g) for g in GEOM_NAMES]
+        with mock.patch.object(VFS, "ls", return_value=test_1):
+            output_array = str(self.test_dir.joinpath("geom_output_array"))
+            # output_array = "/tmp/geom_output_array"
+            # if os.path.exists(output_array):
+            #     shutil.rmtree(output_array)
 
-    #         dataset_list_uri = self.test_dir.joinpath("manifest.txt")
-    #         with open(dataset_list_uri, "w") as f:
-    #             for g in test_1:
-    #                 f.write(f"{g}\n")
+            dataset_list_uri = self.test_dir.joinpath("manifest.txt")
+            with open(dataset_list_uri, "w") as f:
+                for g in test_1:
+                    f.write(f"{g}\n")
 
-    #         run_local(
-    #             dataset_uri=output_array,
-    #             dataset_type=geo.DatasetType.GEOMETRY,
-    #             config={},
-    #             dataset_list_uri=dataset_list_uri,
-    #             batch_size=1,
-    #         )
+            run_local(
+                dataset_uri=output_array,
+                dataset_type=geo.DatasetType.GEOMETRY,
+                config={},
+                dataset_list_uri=dataset_list_uri,
+                batch_size=1,
+            )
 
-    #         with tiledb.open(output_array) as src:
-    #             data = src[:]
-    #             self.assertEqual(len(data["wkb_geometry"]), 3)
+            with tiledb.open(output_array) as src:
+                data = src[:]
+                self.assertEqual(len(data["wkb_geometry"]), 3)
 
     def test_chunk(self):
         # chunking is critical, so lets include a test here

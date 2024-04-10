@@ -2,6 +2,7 @@ from tiledb.cloud.geospatial.ingestion import BoundingBox
 from tiledb.cloud.geospatial.ingestion import DatasetType
 from tiledb.cloud.geospatial.ingestion import GeoBlockMetadata
 from tiledb.cloud.geospatial.ingestion import GeoMetadata
+from tiledb.cloud.geospatial.ingestion import build_file_list_udf
 from tiledb.cloud.geospatial.ingestion import build_inputs_udf
 from tiledb.cloud.geospatial.ingestion import ingest
 from tiledb.cloud.geospatial.ingestion import ingest_datasets
@@ -15,6 +16,7 @@ from tiledb.cloud.geospatial.ingestion import read_uris
 
 __all__ = (
     "BoundingBox",
+    "build_file_list_udf",
     "build_inputs_udf",
     "DatasetType",
     "GeoBlockMetadata",
