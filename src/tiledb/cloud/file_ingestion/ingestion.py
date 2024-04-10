@@ -88,6 +88,7 @@ def ingest_files(
     exclude: Optional[str] = None,
     taskgraph_name: Optional[str] = DEFAULT_FILE_INGESTION_NAME,
     batch_size: Optional[int] = DEFAULT_BATCH_SIZE,
+    max_files: Optional[int] = None,
     resources: Optional[Mapping[str, Any]] = None,
     verbose: bool = False,
 ) -> tiledb.cloud.dag.DAG:
@@ -107,6 +108,8 @@ def ingest_files(
         defaults to None
     :param taskgraph_name: Optional name for taskgraph, defaults to "file-ingestion"
     :param batch_size: Batch size for file ingestion, defaults to 100
+    :param max_files: maximum number of File URIs to read/find,
+        defaults to None (no limit)
     :param resources: Configuration for node specs,
         defaults to {"cpu": "1", "memory": "2Gi"}
     :param verbose: Verbose logging, defaults to False
@@ -139,6 +142,7 @@ def ingest_files(
                 config=config,
                 include=include,
                 exclude=exclude,
+                max_files=max_files,
                 verbose=verbose,
                 name=f"Find file URIs ({idx})",
                 access_credentials_name=acn,
