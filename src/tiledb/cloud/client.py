@@ -100,27 +100,28 @@ def login(
             os.getenv("TILEDB_REST_IGNORE_SSL_VALIDATION", "False")
         )
 
-        kwargs = {
-            "username": username,
-            "password": password,
-            "host": host,
-            "verify_ssl": verify_ssl,
-            "api_key": {},
-        }
+    config_args = {
+        "username": username,
+        "password": password,
+        "host": host,
+        "verify_ssl": verify_ssl,
+        "api_key": {},
+    }
+
     # Is user logs in with username/password we need to create a session
     if (token is None or token == "") and not no_session:
-        config.setup_configuration(**kwargs)
+        config.setup_configuration(**config_args)
         client.set_threads(threads)
         user_api = build(rest_api.UserApi)
         session = user_api.get_session(remember_me=True)
         token = session.token
 
     if token is not None and token != "":
-        kwargs["api_key"] = {"X-TILEDB-REST-API-KEY": token}
-        del kwargs["username"]
-        del kwargs["password"]
+        config_args["api_key"] = {"X-TILEDB-REST-API-KEY": token}
+        del config_args["username"]
+        del config_args["password"]
 
-    config.setup_configuration(**kwargs)
+    config.setup_configuration(**config_args)
     config.logged_in = True
     client.set_threads(threads)
     try:
