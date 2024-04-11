@@ -1,3 +1,4 @@
+import os
 from math import ceil
 from typing import Any, List, Mapping, Optional, Sequence, Union
 
@@ -13,8 +14,20 @@ DEFAULT_FILE_INGESTION_NAME = "file-ingestion"
 DEFAULT_BATCH_SIZE = 100
 
 
+def sanitize_filename(fname: str) -> str:
+    """
+    Sanitizes a filename by removing invalid characters.
+
+    :param fname: A filename to sanitize
+    :return str: The sanitized string
+    """
+    return fname.replace(",", "").replace(" ", "_")
+
+
 def chunk_results_udf(
-    udf_results: Sequence[Sequence[str]], batch_size: Optional[int] = DEFAULT_BATCH_SIZE
+    udf_results: Sequence[Sequence[str]],
+    batch_size: Optional[int] = DEFAULT_BATCH_SIZE,
+    verbose: bool = False,
 ) -> List[List[str]]:
     """
     Flatten and break a list of udf results into batches of a specified size.
@@ -23,11 +36,16 @@ def chunk_results_udf(
     :param batch_size: Resulting chunk size, defaults to 100.
     :return List[List[str]]: A list of chunks as lists.
     """
-    # Reduce batch size if there are fewer sample URIs
-    batch_size = min(batch_size, len(udf_results))
-    num_chunks = ceil(len(udf_results) / batch_size)
+    logger = get_logger_wrapper(verbose)
 
+    # Flatten the results into a list.
     flattened_results = [result for udf_result in udf_results for result in udf_result]
+
+    # Reduce batch size if there are fewer sample URIs
+    batch_size = min(batch_size, len(flattened_results))
+    num_chunks = ceil(len(flattened_results) / batch_size)
+    logger.info(f"Splitting results into {num_chunks} chunks...")
+
     return [
         flattened_results[n * batch_size : (n + 1) * batch_size]
         for n in range(num_chunks)
@@ -38,6 +56,7 @@ def ingest_files_udf(
     file_uris: Sequence[str],
     destination: str,
     *,
+    acn: Optional[str] = None,
     namespace: Optional[str] = None,
     group_uri: Optional[str] = None,
     verbose: bool = False,
@@ -47,40 +66,45 @@ def ingest_files_udf(
 
     :param file_uris: An iterable of file URIs.
     :param destination: URI to ingest the files into.
+    :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
+        defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None.
     :param group_uri: TileDB Group URI to add ingested file into,
         defaults to None.
     :param verbose: Verbose logging, defaults to False.
     """
     logger = get_logger_wrapper(verbose)
+    # Trim potential trailing / in the destination URI
+    destination = destination.rstrip("/")
 
-    for filename in file_uris:
+    for file_uri in file_uris:
+        filename = sanitize_filename(os.path.basename(file_uri))
         filestore_array_uri = f"{destination}/{filename}"
         namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
         logger.debug(
             f"""
-            ---------------------------------------------\n
-            - Filename: {filename}\n
-            - Namespace: {namespace}\n
-            - Destination URI: {filestore_array_uri}\n
             ---------------------------------------------
-            """
+            - Filename: {filename}
+            - Namespace: {namespace}
+            - Destination URI: {filestore_array_uri}
+            ---------------------------------------------"""
         )
 
-        if tiledb.array_exists(filestore_array_uri):
-            logger.warn(f"Array '{filestore_array_uri}' already exists.")
-            continue
-
-        tiledb.cloud.file.create_file(
-            namespace=namespace,
-            name=filename,
-            input_uri=filename,
-            output_uri=filestore_array_uri,
-        )
+        if not tiledb.array_exists(filestore_array_uri):
+            tiledb.cloud.file.create_file(
+                namespace=namespace,
+                name=filename,
+                input_uri=file_uri,
+                output_uri=filestore_array_uri,
+                access_credentials_name=acn,
+            )
+        else:
+            logger.warning(f"Array '{filestore_array_uri}' already exists.")
 
         if group_uri:
             with tiledb.Group(group_uri, mode="w") as group:
-                group.add(filestore_array_uri)
+                logger.debug(f"Adding to Group {group_uri}")
+                group.add(f"tiledb://{namespace}/{filename}")
 
 
 def ingest_files(
@@ -91,7 +115,6 @@ def ingest_files(
     acn: Optional[str] = None,
     config: Optional[dict] = None,
     namespace: Optional[str] = None,
-    register_name: Optional[str] = None,
     include: Optional[str] = None,
     exclude: Optional[str] = None,
     taskgraph_name: Optional[str] = DEFAULT_FILE_INGESTION_NAME,
@@ -110,7 +133,6 @@ def ingest_files(
         defaults to None
     :param config: Config dictionary, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
-    :param register_name: TileDB Group name to register
     :param include: UNIX shell style pattern to filter files in the search,
         defaults to None
     :param exclude: UNIX shell style pattern to filter files out of the search,
@@ -133,38 +155,14 @@ def ingest_files(
     if isinstance(source, str):
         source = [source]
 
-    group_uri = None
-    if register_name:
-        group_uri = f"tiledb://{namespace}/{register_name}"
-        with tiledb.scope_ctx(config):
-            try:
-                object_type = tiledb.object_type(group_uri)
-                found = object_type == "group"
-                if not found and object_type is not None:
-                    raise ValueError(
-                        f"Another object is already registered at '{group_uri}'."
-                    )
-            except Exception as exc:
-                # tiledb.object_type raises an exception
-                # if the namespace does not exist
-                logger.error(
-                    f"Error checking if {dataset_uri} is registered. Bad namespace?"
-                )
-                raise exc
-
-            if found:
-                logger.info(f"Dataset already registered at {group_uri}")
-            else:
-                logger.info(
-                    f"Registering dataset {dataset_uri} at {group_uri} "
-                    f"with name {register_name}"
-                )
-                tiledb.cloud.groups.register(
-                    dataset_uri,
-                    name=register_name,
-                    namespace=namespace,
-                    credentials_name=acn,
-                )
+    with tiledb.scope_ctx(config):
+        try:
+            is_group = tiledb.object_type(dataset_uri) == "group"
+        except Exception as exc:
+            # tiledb.object_type raises an exception
+            # if the namespace does not exist
+            logger.error(f"Error checking if {dataset_uri} is a Group. Bad namespace?")
+            raise exc
 
     logger.debug("Build the file finding graph...")
     graph = dag.DAG(
@@ -196,8 +194,8 @@ def ingest_files(
         chunk_results_udf,
         udf_results=results,
         batch_size=batch_size,
-        name="Break Found Files in Chunks",
         verbose=verbose,
+        name="Break Found Files in Chunks",
         access_credentials_name=acn,
     )
 
@@ -207,12 +205,10 @@ def ingest_files(
         file_uris=chunks,
         destination=destination,
         namespace=namespace,
-        group_uri=group_uri,
+        group_uri=dataset_uri if is_group else None,
+        verbose=verbose,
         # Expand list of results into multiple node operations
         expand_node_output=chunks,
-        config=config,
-        verbose=verbose,
-        id="file-ingest",
         name="Ingest file URIs",
         resources=resources,
         access_credentials_name=acn,
