@@ -39,6 +39,7 @@ def ingest_files_udf(
     destination: str,
     *,
     namespace: Optional[str] = None,
+    group_uri: Optional[str] = None,
     verbose: bool = False,
 ) -> None:
     """
@@ -47,6 +48,8 @@ def ingest_files_udf(
     :param file_uris: An iterable of file URIs.
     :param destination: URI to ingest the files into.
     :param namespace: TileDB-Cloud namespace, defaults to None.
+    :param group_uri: TileDB Group URI to add ingested file into,
+        defaults to None.
     :param verbose: Verbose logging, defaults to False.
     """
     logger = get_logger_wrapper(verbose)
@@ -75,6 +78,10 @@ def ingest_files_udf(
             output_uri=filestore_array_uri,
         )
 
+        if group_uri:
+            with tiledb.Group(group_uri, mode="w") as group:
+                group.add(filestore_array_uri)
+
 
 def ingest_files(
     dataset_uri: str,
@@ -84,6 +91,7 @@ def ingest_files(
     acn: Optional[str] = None,
     config: Optional[dict] = None,
     namespace: Optional[str] = None,
+    register_name: Optional[str] = None,
     include: Optional[str] = None,
     exclude: Optional[str] = None,
     taskgraph_name: Optional[str] = DEFAULT_FILE_INGESTION_NAME,
@@ -102,6 +110,7 @@ def ingest_files(
         defaults to None
     :param config: Config dictionary, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
+    :param register_name: TileDB Group name to register
     :param include: UNIX shell style pattern to filter files in the search,
         defaults to None
     :param exclude: UNIX shell style pattern to filter files out of the search,
@@ -123,6 +132,39 @@ def ingest_files(
     logger = get_logger_wrapper(verbose)
     if isinstance(source, str):
         source = [source]
+
+    group_uri = None
+    if register_name:
+        group_uri = f"tiledb://{namespace}/{register_name}"
+        with tiledb.scope_ctx(config):
+            try:
+                object_type = tiledb.object_type(group_uri)
+                found = object_type == "group"
+                if not found and object_type is not None:
+                    raise ValueError(
+                        f"Another object is already registered at '{group_uri}'."
+                    )
+            except Exception as exc:
+                # tiledb.object_type raises an exception
+                # if the namespace does not exist
+                logger.error(
+                    f"Error checking if {dataset_uri} is registered. Bad namespace?"
+                )
+                raise exc
+
+            if found:
+                logger.info(f"Dataset already registered at {group_uri}")
+            else:
+                logger.info(
+                    f"Registering dataset {dataset_uri} at {group_uri} "
+                    f"with name {register_name}"
+                )
+                tiledb.cloud.groups.register(
+                    dataset_uri,
+                    name=register_name,
+                    namespace=namespace,
+                    credentials_name=acn,
+                )
 
     logger.debug("Build the file finding graph...")
     graph = dag.DAG(
@@ -165,6 +207,7 @@ def ingest_files(
         file_uris=chunks,
         destination=destination,
         namespace=namespace,
+        group_uri=group_uri,
         # Expand list of results into multiple node operations
         expand_node_output=chunks,
         config=config,
