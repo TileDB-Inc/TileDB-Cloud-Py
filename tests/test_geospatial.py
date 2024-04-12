@@ -57,12 +57,17 @@ def run_local(dataset_uri: str, *, dataset_type: Enum, batch_size: int, **kwargs
     )
 
     kwargs.pop("dataset_list_uri")
-    kwargs["sources"] = sources
+    new_kwargs = []
 
-    new_kwargs = geo.build_inputs_udf(
-        dataset_type=dataset_type,
-        **kwargs,
-    )
+    for s in sources:
+        kwargs["sources"] = s
+
+        new_kwargs.append(
+            geo.build_inputs_udf(
+                dataset_type=dataset_type,
+                **kwargs,
+            )
+        )
 
     # schema creation function
     # args will be a list from the result from the metadata returned by build_inputs_udf
@@ -70,7 +75,7 @@ def run_local(dataset_uri: str, *, dataset_type: Enum, batch_size: int, **kwargs
         dataset_uri=dataset_uri,
         append=False,
         batch_size=batch_size,
-        args=[new_kwargs],
+        args=new_kwargs,
     )
 
     # work functions
