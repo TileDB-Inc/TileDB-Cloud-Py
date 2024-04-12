@@ -53,58 +53,73 @@ def chunk_results_udf(
 
 
 def ingest_files_udf(
+    dataset_uri: str,
     file_uris: Sequence[str],
     destination: str,
     *,
     acn: Optional[str] = None,
+    config: Optional[dict] = None,
     namespace: Optional[str] = None,
-    group_uri: Optional[str] = None,
     verbose: bool = False,
 ) -> None:
     """
     Ingest files.
 
+    :param dataset_uri: The dataset URI.
     :param file_uris: An iterable of file URIs.
     :param destination: URI to ingest the files into.
     :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
         defaults to None
+    :param config: Config dictionary, defaults to None.
     :param namespace: TileDB-Cloud namespace, defaults to None.
-    :param group_uri: TileDB Group URI to add ingested file into,
-        defaults to None.
     :param verbose: Verbose logging, defaults to False.
     """
     logger = get_logger_wrapper(verbose)
     # Trim potential trailing / in the destination URI
     destination = destination.rstrip("/")
 
-    for file_uri in file_uris:
-        filename = sanitize_filename(os.path.basename(file_uri))
-        filestore_array_uri = f"{destination}/{filename}"
-        namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
-        logger.debug(
-            f"""
-            ---------------------------------------------
-            - Filename: {filename}
-            - Namespace: {namespace}
-            - Destination URI: {filestore_array_uri}
-            ---------------------------------------------"""
-        )
+    with tiledb.scope_ctx(config):
+        try:
+            if dataset_uri:
+                is_group = tiledb.object_type(dataset_uri) == "group"
+            else:
+                is_group = False
+        except Exception as exc:
+            # tiledb.object_type raises an exception
+            # if the namespace does not exist
+            logger.error(f"Error checking if {dataset_uri} is a Group. Bad namespace?")
+            raise exc
 
-        if not tiledb.array_exists(filestore_array_uri):
-            tiledb.cloud.file.create_file(
-                namespace=namespace,
-                name=filename,
-                input_uri=file_uri,
-                output_uri=filestore_array_uri,
-                access_credentials_name=acn,
+        for file_uri in file_uris:
+            filename = sanitize_filename(os.path.basename(file_uri))
+            filestore_array_uri = f"{destination}/{filename}"
+            namespace = (
+                namespace or tiledb.cloud.user_profile().default_namespace_charged
             )
-        else:
-            logger.warning(f"Array '{filestore_array_uri}' already exists.")
+            logger.debug(
+                f"""
+                ---------------------------------------------
+                - Filename: {filename}
+                - Namespace: {namespace}
+                - Destination URI: {filestore_array_uri}
+                ---------------------------------------------"""
+            )
 
-        if group_uri:
-            with tiledb.Group(group_uri, mode="w") as group:
-                logger.debug(f"Adding to Group {group_uri}")
-                group.add(f"tiledb://{namespace}/{filename}")
+            if not tiledb.array_exists(filestore_array_uri):
+                tiledb.cloud.file.create_file(
+                    namespace=namespace,
+                    name=filename,
+                    input_uri=file_uri,
+                    output_uri=filestore_array_uri,
+                    access_credentials_name=acn,
+                )
+
+                if is_group:
+                    with tiledb.Group(dataset_uri, mode="w") as group:
+                        logger.debug(f"Adding to Group {dataset_uri}")
+                        group.add(f"tiledb://{namespace}/{filename}")
+            else:
+                logger.warning(f"Array '{filestore_array_uri}' already exists.")
 
 
 def ingest_files(
@@ -147,22 +162,12 @@ def ingest_files(
     :return tiledb.cloud.dag.DAG: The resulting ingestion graph
     """
     # Preparation and argument cleanup
-    config = config or dict()
     namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
     resources = resources or DEFAULT_RESOURCES
     dataset_uri = dataset_uri.rstrip("/")
     logger = get_logger_wrapper(verbose)
     if isinstance(source, str):
         source = [source]
-
-    with tiledb.scope_ctx(config):
-        try:
-            is_group = tiledb.object_type(dataset_uri) == "group"
-        except Exception as exc:
-            # tiledb.object_type raises an exception
-            # if the namespace does not exist
-            logger.error(f"Error checking if {dataset_uri} is a Group. Bad namespace?")
-            raise exc
 
     logger.debug("Build the file finding graph...")
     graph = dag.DAG(
@@ -205,7 +210,8 @@ def ingest_files(
         file_uris=chunks,
         destination=destination,
         namespace=namespace,
-        group_uri=dataset_uri if is_group else None,
+        dataset_uri=dataset_uri,
+        config=config,
         verbose=verbose,
         # Expand list of results into multiple node operations
         expand_node_output=chunks,
