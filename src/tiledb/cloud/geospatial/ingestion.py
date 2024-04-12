@@ -42,6 +42,7 @@ BATCH_SIZE = 10
 XYZBoundsTuple = Tuple[float, float, float, float, float, float]
 XYBoundsTuple = Tuple[float, float, float, float]
 XYZTuple = Tuple[float, float, float]
+XYTuple = Tuple[float, float]
 
 
 class DatasetType(Enum):
@@ -65,6 +66,20 @@ class BoundingBox:
             return (self.minx, self.miny, self.minz, self.maxx, self.maxy, self.maxz)
         else:
             return (self.minx, self.miny, self.maxx, self.maxy)
+
+    @property
+    def mins(self) -> Union[XYTuple, XYZTuple]:
+        if self.minz:
+            return (self.minx, self.miny, self.minz)
+        else:
+            return (self.minx, self.miny)
+
+    @property
+    def maxs(self) -> Union[XYTuple, XYZTuple]:
+        if self.maxz:
+            return (self.maxx, self.maxy, self.maxz)
+        else:
+            return (self.maxx, self.maxy)
 
 
 @attrs.define
@@ -565,7 +580,7 @@ def ingest_point_cloud_udf(
     dataset_uri: str,
     sources: Sequence[str] = None,
     append: bool = False,
-    extents: Optional[XYZBoundsTuple] = None,
+    extents: Optional[BoundingBox] = None,
     offsets: Optional[XYZTuple] = None,
     scales: Optional[XYZTuple] = None,
     chunk_size: Optional[int] = POINT_CLOUD_CHUNK_SIZE,
@@ -601,7 +616,6 @@ def ingest_point_cloud_udf(
     import laspy
     import numpy as np
     import pdal
-    import shapely
 
     if not append and args:
         # first map the args from the previous stage
@@ -612,22 +626,15 @@ def ingest_point_cloud_udf(
         if batch_size in arg:
             batch_size = arg["batch_size"]
 
-        extents = None
+        mins = None
+        maxs = None
         offsets = None
+        scales = None
+
         for d in args:
             sources.extend(d["sources"])
-            if not extents:
-                extents = d["extents"]
-            else:
-                exts = d["extents"]
-                extents = BoundingBox(
-                    *shapely.unary_union(
-                        [
-                            shapely.box(*extents.bounds),
-                            shapely.box(*exts.bounds),
-                        ]
-                    ).bounds
-                )
+            mins = _fold_in(min, mins, d["extents"].mins)
+            maxs = _fold_in(max, maxs, d["extents"].maxs)
             if not offsets and offsets in d:
                 offsets = d["offsets"]
             else:
@@ -637,6 +644,15 @@ def ingest_point_cloud_udf(
                 scales = d["scales"]
             else:
                 scales = _fold_in(max, scales, d["scales"])
+
+        extents = BoundingBox(
+            minx=mins[0],
+            miny=mins[1],
+            minz=mins[2],
+            maxx=maxs[0],
+            maxy=maxs[1],
+            maxz=maxs[2],
+        )
 
     if append and args:
         sources = args["sources"]
@@ -673,7 +689,7 @@ def ingest_point_cloud_udf(
                                 pipeline.execute()
                     return
 
-                if extents and offsets and scales:
+                if extents:
                     template_sample = sources[0]
                     logger.debug("creating point cloud schema from %r", template_sample)
                     with vfs.open(template_sample, "rb") as src:
@@ -681,23 +697,35 @@ def ingest_point_cloud_udf(
                         chunk_itr = las.chunk_iterator(chunk_size)
                         first_chunk = next(chunk_itr)
                         arr = get_pc_array(first_chunk)
+                        if offsets and scales:
+                            pipeline = pdal.Writer.tiledb(
+                                array_name=dataset_uri,
+                                x_domain_st=extents.minx - 1,
+                                y_domain_st=extents.miny - 1,
+                                z_domain_st=extents.minz - 1,
+                                x_domain_end=extents.maxx + 1,
+                                y_domain_end=extents.maxy + 1,
+                                z_domain_end=extents.maxz + 1,
+                                offset_x=offsets[0],
+                                offset_y=offsets[1],
+                                offset_z=offsets[2],
+                                scale_x=scales[0],
+                                scale_y=scales[1],
+                                scale_z=scales[2],
+                                chunk_size=chunk_size,
+                            ).pipeline(arr)
+                        else:
+                            pipeline = pdal.Writer.tiledb(
+                                array_name=dataset_uri,
+                                x_domain_st=extents.minx - 1,
+                                y_domain_st=extents.miny - 1,
+                                z_domain_st=extents.minz - 1,
+                                x_domain_end=extents.maxx + 1,
+                                y_domain_end=extents.maxy + 1,
+                                z_domain_end=extents.maxz + 1,
+                                chunk_size=chunk_size,
+                            ).pipeline(arr)
 
-                        pipeline = pdal.Writer.tiledb(
-                            array_name=dataset_uri,
-                            x_domain_st=extents.minx - 1,
-                            y_domain_st=extents.miny - 1,
-                            z_domain_st=extents.minz - 1,
-                            x_domain_end=extents.maxx + 1,
-                            y_domain_end=extents.maxy + 1,
-                            z_domain_end=extents.maxz + 1,
-                            offset_x=offsets[0],
-                            offset_y=offsets[1],
-                            offset_z=offsets[2],
-                            scale_x=scales[0],
-                            scale_y=scales[1],
-                            scale_z=scales[2],
-                            chunk_size=chunk_size,
-                        ).pipeline(arr)
                         pipeline.execute()
 
                         for c in chunk_itr:
@@ -1128,7 +1156,7 @@ def build_file_list_udf(
             if not sources:
                 raise ValueError(f"No {dataset_type.name} datasets found")
 
-            return list(sources)
+            return list(chunk(list(sources), BATCH_SIZE))
         finally:
             logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
 
@@ -1136,7 +1164,7 @@ def build_file_list_udf(
 def build_inputs_udf(
     *,
     dataset_type: DatasetType,
-    sources: Iterable[str],
+    sources: Sequence[str],
     config: Optional[Mapping[str, object]] = None,
     compression_filter: Optional[dict] = None,
     tile_size: int = RASTER_TILE_SIZE,
