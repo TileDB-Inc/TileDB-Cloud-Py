@@ -2,14 +2,14 @@ attrs==23.1.0
 certifi==2023.7.22
 cloudpickle==2.2.1
 importlib-metadata==6.8.0
-fiona=1.9.5
+fiona==1.10a2
 numpy==1.26.1
 packaging==23.2
 pandas==2.1.1
 pyarrow==14.0.1
 python-dateutil==2.8.2
 pytz==2023.3.post1
-rasterio==git+https://github.com/rasterio/rasterio.git@441d8c85ba1b7170a0b19313a4d654c5fab6b77a
+rasterio==1.4a2
 pdal==3.3.0
 rtree=1.2.0
 shapely==2.0.2
