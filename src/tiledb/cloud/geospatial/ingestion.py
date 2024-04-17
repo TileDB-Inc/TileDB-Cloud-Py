@@ -201,7 +201,7 @@ def load_geometry_metadata(
         raise ValueError("Input point cloud datasets required")
 
     with tiledb.scope_ctx(config):
-        tiledb.VFS()
+        vfs = tiledb.VFS()
         logger = get_logger_wrapper(verbose)
         with Profiler(array_uri=log_uri, id=id, trace=trace):
             # for geometries we need the maximum extents
@@ -209,7 +209,7 @@ def load_geometry_metadata(
             meta = []
             for pth in sources:
                 logger.debug("finding metadata for %r", pth)
-                with fiona.open(pth) as src:
+                with fiona.open(pth, opener=vfs.open) as src:
                     # 2.5 is supported internally but not needed for ingest
                     extents = BoundingBox(
                         minx=src.bounds[0],
@@ -367,13 +367,13 @@ def ingest_geometry_udf(
 
     with tiledb.scope_ctx(config):
         with Profiler(array_uri=log_uri, id=id, trace=trace):
-            tiledb.VFS()
+            vfs = tiledb.VFS()
             logger = get_logger_wrapper(verbose)
             try:
                 if append:
                     for f in sources:
                         logger.debug("ingesting geometry dataset %r", f)
-                        with fiona.open(f) as colxn:
+                        with fiona.open(f, opener=vfs.open) as colxn:
                             with fiona.open(
                                 dataset_uri, mode="a", STATS=stats, driver="TileDB"
                             ) as dst:
