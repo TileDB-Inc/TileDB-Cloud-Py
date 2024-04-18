@@ -90,6 +90,7 @@ def ingest_files_udf(
             logger.error(f"Error checking if {dataset_uri} is a Group. Bad namespace?")
             raise exc
 
+        add_to_group = []
         for file_uri in file_uris:
             filename = sanitize_filename(os.path.basename(file_uri))
             filestore_array_uri = f"{destination}/{filename}"
@@ -99,8 +100,8 @@ def ingest_files_udf(
             logger.debug(
                 f"""
                 ---------------------------------------------
-                - Filename: {filename}
-                - Namespace: {namespace}
+                - Input URI: {file_uri}
+                - Sanitized Filename: {filename}
                 - Destination URI: {filestore_array_uri}
                 ---------------------------------------------"""
             )
@@ -114,12 +115,17 @@ def ingest_files_udf(
                     access_credentials_name=acn,
                 )
 
-                if is_group:
-                    with tiledb.Group(dataset_uri, mode="w") as group:
-                        logger.debug(f"Adding to Group {dataset_uri}")
-                        group.add(f"tiledb://{namespace}/{filename}")
+                add_to_group.append(f"tiledb://{namespace}/{filename}")
             else:
                 logger.warning(f"Array '{filestore_array_uri}' already exists.")
+
+        if is_group:
+            with tiledb.Group(dataset_uri, mode="w") as group:
+                logger.debug(
+                    f"Adding to Group {dataset_uri} the following: {add_to_group}"
+                )
+                for uri in add_to_group:
+                    group.add(uri)
 
 
 def ingest_files(
@@ -137,7 +143,7 @@ def ingest_files(
     max_files: Optional[int] = None,
     resources: Optional[Mapping[str, Any]] = None,
     verbose: bool = False,
-) -> tiledb.cloud.dag.DAG:
+) -> str:
     """
     Ingest files into a dataset.
 
@@ -159,7 +165,7 @@ def ingest_files(
     :param resources: Configuration for node specs,
         defaults to {"cpu": "1", "memory": "2Gi"}
     :param verbose: Verbose logging, defaults to False
-    :return tiledb.cloud.dag.DAG: The resulting ingestion graph
+    :return str: The resulting TaskGraph's server UUID as string.
     """
     # Preparation and argument cleanup
     namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
@@ -190,6 +196,7 @@ def ingest_files(
                 max_files=max_files,
                 verbose=verbose,
                 name=f"Find file URIs ({idx})",
+                resources=resources,
                 access_credentials_name=acn,
             )
         )
@@ -201,6 +208,7 @@ def ingest_files(
         batch_size=batch_size,
         verbose=verbose,
         name="Break Found Files in Chunks",
+        resources=resources,
         access_credentials_name=acn,
     )
 
@@ -220,7 +228,9 @@ def ingest_files(
         access_credentials_name=acn,
     )
 
-    return graph
+    # Start the ingestion process
+    graph.compute()
+    return str(graph.server_graph_uuid)
 
 
 ingest = as_batch(ingest_files)
