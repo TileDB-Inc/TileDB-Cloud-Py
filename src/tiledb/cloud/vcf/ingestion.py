@@ -27,6 +27,7 @@ from tiledb.cloud.vcf.utils import create_index_file
 from tiledb.cloud.vcf.utils import find_index
 from tiledb.cloud.vcf.utils import get_record_count
 from tiledb.cloud.vcf.utils import get_sample_name
+from tiledb.cloud.vcf.utils import sort_and_bgzip
 
 # Array names
 LOG_ARRAY = "log"
@@ -727,6 +728,7 @@ def ingest_samples_udf(
     id: str = "samples",
     verbose: bool = False,
     trace_id: Optional[str] = None,
+    use_remote_tmp: bool = False,
 ) -> None:
     """
     Ingest samples into the dataset.
@@ -745,6 +747,8 @@ def ingest_samples_udf(
     :param id: profiler event id, defaults to "samples"
     :param verbose: verbose logging, defaults to False
     :param trace_id: trace ID for logging, defaults to None
+    :param use_remote_tmp: use remote tmp space if VCFs need to be bgzipped,
+        defaults to False (preferred for small VCFs)
     """
     import tiledbvcf
 
@@ -759,17 +763,53 @@ def ingest_samples_udf(
         ) as prof:
             prof.write("uris", str(len(sample_uris)), ",".join(sample_uris))
 
+            # Set tmp space to VCF store files if we need to sort and bgzip
+            if use_remote_tmp:
+                tmp_space = dataset_uri.rstrip("/") + "/tmp"
+            else:
+                tmp_space = "."
+            tmp_uris = []
+
+            def bgzip_worker(uri: str) -> str:
+                """
+                Sort and bgzip a VCF file, storing the result in the tmp space.
+
+                :param uri: URI of the VCF file
+                :return: URI of the bgzipped VCF
+                """
+                if uri.endswith(".vcf"):
+                    with tiledb.scope_ctx(config):
+                        logger.info("sort and bgzip %r", uri)
+                        try:
+                            uri = sort_and_bgzip(uri, tmp_space=tmp_space)
+                            tmp_uris.append(uri)
+                        except Exception as e:
+                            print(e)
+                            logger.fatal("Error bgzip and indexing %r", uri)
+                return uri
+
             def create_index_file_worker(uri: str) -> None:
+                """
+                Create a VCF index file in the current working directory.
+
+                :param uri: URI of the VCF file
+                """
                 with tiledb.scope_ctx(config):
                     if create_index or not find_index(uri):
                         logger.info("indexing %r", uri)
-                        create_index_file(uri)
+                        try:
+                            create_index_file(uri)
+                        except Exception as e:
+                            print(e)
+                            logger.fatal("Error creating index for %r", uri)
+
+            # Run sort and bgzip on uncompressed VCF files
+            with ThreadPool(threads) as pool:
+                sample_uris = pool.map(bgzip_worker, sample_uris)
 
             # Create index files
             with ThreadPool(threads) as pool:
                 pool.map(create_index_file_worker, sample_uris)
-
-            # TODO: Handle un-bgzipped files
 
             level = "debug" if verbose else "info"
             tiledbvcf.config_logging(level, "ingest.log")
@@ -790,6 +830,13 @@ def ingest_samples_udf(
             )
 
             prof.write("log", extra=read_file("ingest.log"))
+
+            # Cleanup tmp space
+            if use_remote_tmp and tmp_uris:
+                vfs = tiledb.VFS()
+                for uri in tmp_uris:
+                    logger.debug("removing %r", uri)
+                    vfs.remove_file(uri)
 
     logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
 
@@ -997,6 +1044,10 @@ def ingest_manifest_dag(
         namespace=namespace,
         mode=dag.Mode.BATCH,
         max_workers=workers,
+        retry_strategy=RetryStrategy(
+            limit=3,
+            retry_policy="Always",
+        ),
     )
 
     # Adjust batch size to ensure at least 20 samples per worker
@@ -1066,6 +1117,7 @@ def ingest_samples_dag(
     create_index: bool = True,
     trace_id: Optional[str] = None,
     consolidate_stats: bool = False,
+    use_remote_tmp: bool = False,
 ) -> None:
     """
     Create a DAG to ingest samples into the dataset.
@@ -1088,6 +1140,8 @@ def ingest_samples_dag(
     :param create_index: force creation of a local index file, defaults to True
     :param trace_id: trace ID for logging, defaults to None
     :param consolidate_stats: consolidate the stats arrays, defaults to False
+    :param use_remote_tmp: use remote tmp space if VCFs need to be bgzipped,
+        defaults to False (preferred for small VCFs)
     """
 
     logger = get_logger_wrapper(verbose)
@@ -1197,6 +1251,7 @@ def ingest_samples_dag(
             contigs_to_keep_separate=contigs_to_keep_separate,
             contig_fragment_merging=contig_fragment_merging,
             resume=resume,
+            use_remote_tmp=use_remote_tmp,
             id=f"vcf-ingest-{i}",
             verbose=verbose,
             create_index=create_index,
@@ -1445,6 +1500,7 @@ def ingest_vcf(
     trace_id: Optional[str] = None,
     consolidate_stats: bool = True,
     aws_find_mode: bool = False,
+    use_remote_tmp: bool = False,
 ) -> None:
     """
     Ingest samples into a dataset.
@@ -1491,6 +1547,8 @@ def ingest_vcf(
     :param trace_id: trace ID for logging, defaults to None
     :param consolidate_stats: consolidate the stats arrays, defaults to True
     :param aws_find_mode: use AWS CLI to find VCFs, defaults to False
+    :param use_remote_tmp: use remote tmp space if VCFs need to be sorted and bgzipped,
+        defaults to False (preferred for small VCFs)
     """
 
     # Validate user input
@@ -1552,6 +1610,7 @@ def ingest_vcf(
         create_index=create_index,
         trace_id=trace_id,
         consolidate_stats=consolidate_stats,
+        use_remote_tmp=use_remote_tmp,
     )
 
     # Register the dataset on TileDB Cloud

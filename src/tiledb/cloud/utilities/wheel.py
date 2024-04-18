@@ -12,7 +12,9 @@ def upload_wheel(
     *,
     wheel_path: str,
     storage_uri: str,
+    wheel_name: Optional[str] = None,
     config: Optional[Mapping[str, Any]] = None,
+    acn: Optional[str] = None,
     namespace: Optional[str] = None,
     register: bool = True,
 ):
@@ -36,7 +38,10 @@ def upload_wheel(
 
     :param wheel_path: path to the local wheel file
     :param storage_uri: URI of the TileDB Filestore to be created or updated
+    :param wheel_name: name of registered wheel, defaults to a name based on the
+        wheel file
     :param config: config dictionary, defaults to None
+    :param acn: TileDB Cloud access credentials name, defaults to None
     :param namespace: TileDB Cloud namespace, defaults to the user's default namespace
     :param register: register the wheel on TileDB Cloud, defaults to True
     """
@@ -45,7 +50,8 @@ def upload_wheel(
     # encoded URIs and array names. Replace the '+' with '.' in `wheel_file`, which
     # is used to create the storage URI and the array name. When installing the wheel,
     # the original wheel file name will be recovered from metadata.
-    wheel_file = os.path.basename(wheel_path).replace("+", ".")
+    wheel_file = wheel_name or os.path.basename(wheel_path)
+    wheel_file = wheel_file.replace("+", ".")
     array_uri = storage_uri.rstrip("/") + f"/{wheel_file}"
 
     with tiledb.scope_ctx(config):
@@ -58,6 +64,7 @@ def upload_wheel(
                     array_uri,
                     namespace=namespace,
                     array_name=wheel_file,
+                    access_credentials_name=acn,
                 )
 
                 namespace = (
@@ -104,10 +111,22 @@ def install_wheel(
                 cmd += ["--user"]
             cmd += [wheel_path]
 
-            res = subprocess.check_output(cmd, text=True)
+            # Capture stdout/stderr to reduce noise from pip for a successful install.
+            # (subprocess.check_output always displays stderr)
+            res = subprocess.run(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
 
-            if verbose:
-                print(res)
+            if res.returncode != 0:
+                print(f"Failed to install wheel '{wheel_path}'")
+                print(res.stdout)
+                print(res.stderr)
+            elif verbose:
+                print(res.stdout)
+                print(res.stderr)
 
             # Modify sys.path if the wheel was installed with --user
             if not in_venv and USER_SITE not in sys.path:

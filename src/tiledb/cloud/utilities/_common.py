@@ -7,6 +7,7 @@ import pathlib
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import wait
 from fnmatch import fnmatch
 from typing import (
     Any,
@@ -251,21 +252,31 @@ def max_memory_usage() -> int:
 def process_stream(
     uri: str,
     cmd: Sequence[str],
+    *,
+    output_uri: Optional[str] = None,
     read_size: int = 16 << 20,
-) -> Tuple[str, str]:
+    config: Optional[Mapping[str, Any]] = None,
+) -> Tuple[int, str, str]:
     """
-    Process a stream of data from VFS with a subprocess.
+    Process a stream of data from VFS with a subprocess. Optionally write the
+    subprocess stdout to the output_uri.
 
     If the file is large and the subprocess only reads a small amount of data,
     then reduce `read_size` to improve performance.
 
     :param uri: file URI
     :param cmd: command to run in the subprocess
+    :param output_uri: output file URI, defaults to None
     :param read_size: number of bytes to read per iteration, defaults to 16 MiB
-    :return: stdout and stderr from the subprocess
+    :param config: config dictionary, defaults to None
+    :return: (return code, stdout, stderr) from the subprocess
     """
 
-    with tiledb.VFS().open(uri) as fp:
+    vfs = tiledb.VFS(config=config)
+
+    output_fp = vfs.open(output_uri, "wb") if output_uri else None
+
+    with vfs.open(uri) as input_fp:
         with subprocess.Popen(
             cmd,
             stdin=subprocess.PIPE,
@@ -273,10 +284,10 @@ def process_stream(
             stderr=subprocess.PIPE,
         ) as process:
 
-            def writer():
+            def vfs_to_stdin() -> None:
                 """Read from VFS and write to the subprocess stdin."""
 
-                data = fp.read(read_size)
+                data = input_fp.read(read_size)
                 while data:
                     try:
                         process.stdin.write(data)
@@ -284,31 +295,51 @@ def process_stream(
                         # The subprocess has exited, stop reading.
                         # This is an expected situation.
                         break
-                    data = fp.read(read_size)
+                    data = input_fp.read(read_size)
                 try:
                     process.stdin.close()
                 except BrokenPipeError:
                     # Ignore broken pipe when closing stdin
                     pass
 
-            def reader(stream):
+            def output_to_str(stream) -> str:
                 """Return the stream contents as a string."""
 
                 return "".join(line.decode() for line in stream).strip()
+
+            def output_to_vfs(stream) -> str:
+                """Write the stream contents to the output URI."""
+
+                for line in stream:
+                    output_fp.write(line)
+
+                return ""
 
             # Create separate threads for writing and reading to drain the
             # subprocess output pipes. This prevents a deadlock if the
             # subprocess fills its output buffers.
             with ThreadPoolExecutor(max_workers=3) as executor:
-                executor.submit(writer)
-                stdout_future = executor.submit(reader, process.stdout)
-                stderr_future = executor.submit(reader, process.stderr)
+                input_future = executor.submit(vfs_to_stdin)
+                if output_uri:
+                    stdout_future = executor.submit(output_to_vfs, process.stdout)
+                else:
+                    stdout_future = executor.submit(output_to_str, process.stdout)
+                stderr_future = executor.submit(output_to_str, process.stderr)
+
+            # Wait for all threads to complete
+            wait([input_future, stdout_future, stderr_future])
+
+            # Get the return code from the subprocess
+            rc = process.wait()
 
             # Retrieve results
             stdout = stdout_future.result()
             stderr = stderr_future.result()
 
-            return stdout, stderr
+            if output_fp:
+                output_fp.close()
+
+            return rc, stdout, stderr
 
 
 def _filter_kwargs(function: Callable, kwargs: Mapping[str, Any]) -> Mapping[str, Any]:
