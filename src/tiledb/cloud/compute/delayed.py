@@ -49,7 +49,10 @@ class DelayedBase(Node):
         self.timeout = timeout
 
     def compute(
-        self, namespace: Optional[str] = None, name: Optional[str] = None
+        self,
+        namespace: Optional[str] = None,
+        name: Optional[str] = None,
+        max_workers: Optional[int] = None,
     ) -> Any:
         """
         Starts execution of all Delayed tasks associated with this node.
@@ -64,7 +67,7 @@ class DelayedBase(Node):
             if self.mode == Mode.LOCAL:
                 mode = Mode.REALTIME
             self.__set_all_parent_nodes_same_dag(
-                DAG(namespace=namespace, name=name, mode=mode)
+                DAG(namespace=namespace, name=name, mode=mode, max_workers=max_workers)
             )
         else:
             if namespace is not None:
