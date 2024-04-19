@@ -1,46 +1,33 @@
-import os
-import tempfile
 import unittest
 
 import tiledb
 from tiledb.cloud import client
 from tiledb.cloud import groups
 from tiledb.cloud._common import testonly
-from tiledb.cloud.array import deregister_array
+from tiledb.cloud.array import delete_array
+from tiledb.cloud.array import info
 from tiledb.cloud.file_ingestion import chunk_results_udf
 from tiledb.cloud.file_ingestion import ingest_files_udf
 from tiledb.cloud.file_ingestion import sanitize_filename
-from tiledb.vfs import VFS
 
 
 class TestFiles(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """Setup test files, group and destinations once before the file tests start."""
-        with tiledb.scope_ctx() as ctx:
-            cls.vfs = VFS(ctx=ctx)
+        cls.input_file_location = (
+            "s3://tiledb-unittest/groups/file_ingestion_test_files"
+        )
+        # Files with name "input_file_<n[0, 4]>.pdf" have already been placed
+        # in the "cls.input_file_location"
+        cls.input_file_names = [f"input_file_{i}.pdf" for i in range(5)]
+        cls.test_file_uris = [
+            f"{cls.input_file_location}/{fname}" for fname in cls.input_file_names
+        ]
 
         cls.namespace, cls.storage_path, cls.acn = groups._default_ns_path_cred()
         cls.namespace = cls.namespace.rstrip("/")
-        cls.storage_path = cls.storage_path.rstrip("/")
-        cls.input_file_location = (
-            f"{cls.storage_path}/{testonly.random_name('file_ingestion_test_input')}"
-        )
-        cls.destination = (
-            f"{cls.storage_path}/{testonly.random_name('file_ingestion_test')}"
-        )
-
-        cls.vfs.ls(cls.storage_path)
-
-        cls.input_file_names = []
-        for i in range(5):
-            with tempfile.TemporaryFile() as fp:
-                fp.write(f"Test file {1}".encode())
-                cls.input_file_names.append(f"in_file_{i}.txt")
-                with cls.vfs.open(
-                    f"{cls.input_file_location}/{cls.input_file_names[i]}", mode="wb"
-                ) as fp_out:
-                    fp_out.write(fp.read())
+        cls.destination = cls.storage_path.rstrip("/")
 
         group_name = testonly.random_name("file_ingestion_test_group")
         cls.group_uri = f"tiledb://{cls.namespace}/{group_name}"
@@ -52,19 +39,14 @@ class TestFiles(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         """Cleanup test and ingested files and folders after tests have finished."""
-        cls.vfs.remove_dir(cls.input_file_location)
-        cls.vfs.remove_dir(cls.group_destination)
-        cls.vfs.remove_dir(cls.destination)
-
         groups.deregister(cls.group_uri)
-
         return super().tearDownClass()
 
     def tearDown(self) -> None:
         """Cleanup registered arrays between tests"""
         for fname in self.input_file_names:
             try:
-                deregister_array(f"tiledb://{self.namespace}/{fname}")
+                delete_array(f"tiledb://{self.namespace}/{fname}")
             except Exception:
                 continue
 
@@ -125,50 +107,41 @@ class TestFiles(unittest.TestCase):
     def test_files_ingestion_udf(self):
         ingest_files_udf(
             dataset_uri=self.namespace,
-            file_uris=self.vfs.ls(self.input_file_location),
+            file_uris=self.test_file_uris,
             destination=self.destination,
             acn=self.acn,
             namespace=self.namespace,
         )
 
-        destination_files = [
-            os.path.basename(fpath)
-            for fpath in self.vfs.ls(self.destination)
-            if fpath.endswith(
-                ".txt"
-            )  # Remove some ls output to check if all the files are present.
-        ]
-        self.assertListEqual(destination_files, self.input_file_names)
+        for fname in self.input_file_names:
+            array_info = info(f"tiledb://{self.namespace}/{fname}")
+            self.assertEqual(array_info.name, fname)
+            self.assertEqual(array_info.namespace, self.namespace)
 
     def test_files_ingestion_udf_into_group(self):
         ingest_files_udf(
             dataset_uri=self.group_uri,
-            file_uris=self.vfs.ls(self.input_file_location),
+            file_uris=self.test_file_uris,
             destination=self.group_destination,
             acn=self.acn,
             namespace=self.namespace,
             config=client.Ctx().config().dict(),
         )
 
-        destination_files = [
-            os.path.basename(fpath)
-            for fpath in self.vfs.ls(self.group_destination)
-            if fpath.endswith(
-                ".txt"
-            )  # Remove some ls output to check if all the files are present.
-        ]
-        self.assertListEqual(destination_files, self.input_file_names)
+        group_info = groups.info(self.group_uri)
+        self.assertEqual(group_info.asset_count, len(self.test_file_uris))
 
-        group = groups.info(self.group_uri)
-        self.assertEqual(group.asset_count, len(self.input_file_names))
+        for fname in self.input_file_names:
+            array_info = info(f"tiledb://{self.namespace}/{fname}")
+            self.assertEqual(array_info.name, fname)
+            self.assertEqual(array_info.namespace, self.namespace)
 
     def test_files_ingestion_udf_into_bad_group_uri_raises(self):
         with self.assertRaises(tiledb.TileDBError):
             ingest_files_udf(
                 dataset_uri="tiledb://very-bad-namespace/bad-group",
-                file_uris=self.vfs.ls(self.input_file_location),
+                file_uris=self.test_file_uris,
                 destination=self.group_destination,
                 acn=self.acn,
                 namespace=self.namespace,
-                config=client.Ctx().config().dict(),
             )
