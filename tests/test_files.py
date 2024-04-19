@@ -21,6 +21,8 @@ class TestFiles(unittest.TestCase):
             cls.vfs = VFS(ctx=ctx)
 
         cls.namespace, cls.storage_path, cls.acn = groups._default_ns_path_cred()
+        cls.namespace = cls.namespace.rstrip("/")
+        cls.storage_path = cls.storage_path.rstrip("/")
         cls.input_file_location = (
             f"{cls.storage_path}/{testonly.random_name('file_ingestion_test_input')}"
         )
@@ -157,3 +159,14 @@ class TestFiles(unittest.TestCase):
 
         group = groups.info(self.group_uri)
         self.assertEqual(group.asset_count, len(self.input_file_names))
+
+    def test_files_ingestion_udf_into_bad_group_uri_raises(self):
+        with self.assertRaises(tiledb.TileDBError):
+            ingest_files_udf(
+                dataset_uri="tiledb://very-bad-namespace/bad-group",
+                file_uris=self.vfs.ls(self.input_file_location),
+                destination=self.group_destination,
+                acn=self.acn,
+                namespace=self.namespace,
+                config=client.Ctx().config().dict(),
+            )
