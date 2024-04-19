@@ -30,6 +30,8 @@ class TestFiles(unittest.TestCase):
             f"{cls.storage_path}/{testonly.random_name('file_ingestion_test')}"
         )
 
+        cls.vfs.ls(cls.storage_path)
+
         cls.input_file_names = []
         for i in range(5):
             with tempfile.TemporaryFile() as fp:
