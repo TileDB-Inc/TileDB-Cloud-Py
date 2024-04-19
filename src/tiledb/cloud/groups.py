@@ -205,7 +205,8 @@ def _default_ns_path_cred(namespace: Optional[str] = None) -> Tuple[str, str, st
         cred_name = storage.credentials_name
     if not path and not principal.default_s3_path:
         raise ValueError("No storage provider configured.")
-    path = path or (principal.default_s3_path + "/groups")
+    # Sanitize any extra trailing "/"
+    path = path.rstrip("/") or (principal.default_s3_path.rstrip("/") + "/groups")
     cred_name = cred_name or principal.default_s3_path_credentials_name
     return namespace, path, cred_name
 
