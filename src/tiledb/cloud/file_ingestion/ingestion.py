@@ -4,6 +4,7 @@ from typing import Any, List, Mapping, Optional, Sequence, Union
 
 import tiledb
 from tiledb.cloud import dag
+from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import get_logger_wrapper
@@ -93,6 +94,7 @@ def ingest_files_udf(
         add_to_group = []
         for file_uri in file_uris:
             filename = sanitize_filename(os.path.basename(file_uri))
+            array_uri = f"tiledb://{namespace}/{filename}"
             filestore_array_uri = f"{destination}/{filename}"
             namespace = (
                 namespace or tiledb.cloud.user_profile().default_namespace_charged
@@ -102,11 +104,12 @@ def ingest_files_udf(
                 ---------------------------------------------
                 - Input URI: {file_uri}
                 - Sanitized Filename: {filename}
+                - Array URI: {array_uri}
                 - Destination URI: {filestore_array_uri}
                 ---------------------------------------------"""
             )
 
-            if not tiledb.array_exists(filestore_array_uri):
+            try:
                 tiledb.cloud.file.create_file(
                     namespace=namespace,
                     name=filename,
@@ -115,9 +118,13 @@ def ingest_files_udf(
                     access_credentials_name=acn,
                 )
 
-                add_to_group.append(f"tiledb://{namespace}/{filename}")
-            else:
-                logger.warning(f"Array '{filestore_array_uri}' already exists.")
+                add_to_group.append(array_uri)
+            except tiledb_cloud_error.TileDBCloudError as exc:
+                if "array already exists at location - Code: 8003" in repr(exc):
+                    logger.warning(f"Array '{array_uri}' already exists.")
+                    continue
+                else:
+                    raise exc
 
         if is_group:
             with tiledb.Group(dataset_uri, mode="w") as group:
