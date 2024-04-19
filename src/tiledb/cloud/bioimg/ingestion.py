@@ -386,7 +386,8 @@ def ingest(
         )
     if compute:
         run_dag(graph, debug=verbose)
-    return graph
+    else:
+        return graph
 
 
 # Wrapper function for batch VCF ingestion
