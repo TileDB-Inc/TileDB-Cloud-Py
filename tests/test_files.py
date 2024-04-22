@@ -6,6 +6,7 @@ from tiledb.cloud import groups
 from tiledb.cloud._common import testonly
 from tiledb.cloud.array import delete_array
 from tiledb.cloud.array import info
+from tiledb.cloud.file_ingestion import add_arrays_to_group_udf
 from tiledb.cloud.file_ingestion import chunk_results_udf
 from tiledb.cloud.file_ingestion import ingest_files_udf
 from tiledb.cloud.file_ingestion import sanitize_filename
@@ -29,10 +30,10 @@ class TestFiles(unittest.TestCase):
         cls.namespace = cls.namespace.rstrip("/")
         cls.destination = cls.storage_path.rstrip("/")
 
-        group_name = testonly.random_name("file_ingestion_test_group")
-        cls.group_uri = f"tiledb://{cls.namespace}/{group_name}"
-        cls.group_destination = f"{cls.destination}/{testonly.random_name(group_name)}"
-        groups.create(group_name, storage_uri=cls.group_destination)
+        cls.group_name = testonly.random_name("file_ingestion_test_group")
+        cls.group_uri = f"tiledb://{cls.namespace}/{cls.group_name}"
+        cls.group_destination = f"{cls.destination}/{cls.group_name}"
+        groups.create(cls.group_name, storage_uri=cls.group_destination)
 
         return super().setUpClass()
 
@@ -105,13 +106,13 @@ class TestFiles(unittest.TestCase):
                 self.assertEqual(result, chunks_out)
 
     def test_files_ingestion_udf(self):
-        ingest_files_udf(
-            dataset_uri=self.namespace,
+        ingested_uris = ingest_files_udf(
+            dataset_uri=self.destination,
             file_uris=self.test_file_uris,
-            destination=self.destination,
             acn=self.acn,
             namespace=self.namespace,
         )
+        self.assertEqual(len(ingested_uris), len(self.input_file_names))
 
         for fname in self.input_file_names:
             array_info = info(f"tiledb://{self.namespace}/{fname}")
@@ -119,12 +120,18 @@ class TestFiles(unittest.TestCase):
             self.assertEqual(array_info.namespace, self.namespace)
 
     def test_files_ingestion_udf_into_group(self):
-        ingest_files_udf(
-            dataset_uri=self.group_uri,
+        ingested_uris = ingest_files_udf(
+            dataset_uri=self.group_destination,
             file_uris=self.test_file_uris,
-            destination=self.group_destination,
             acn=self.acn,
             namespace=self.namespace,
+        )
+        self.assertEqual(len(ingested_uris), len(self.input_file_names))
+
+        add_arrays_to_group_udf(
+            array_uris=ingested_uris,
+            namespace=self.namespace,
+            register_name=self.group_name,
             config=client.Ctx().config().dict(),
         )
 
@@ -138,10 +145,9 @@ class TestFiles(unittest.TestCase):
 
     def test_files_ingestion_udf_into_bad_group_uri_raises(self):
         with self.assertRaises(tiledb.TileDBError):
-            ingest_files_udf(
-                dataset_uri="tiledb://very-bad-namespace/bad-group",
-                file_uris=self.test_file_uris,
-                destination=self.group_destination,
-                acn=self.acn,
-                namespace=self.namespace,
+            add_arrays_to_group_udf(
+                array_uris=[f"tiledb://{self.namespace}/{self.input_file_names[0]}"],
+                namespace="very-bad-namespace",
+                register_name="bad-group",
+                config=client.Ctx().config().dict(),
             )
