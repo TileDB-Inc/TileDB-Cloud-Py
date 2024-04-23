@@ -77,6 +77,7 @@ def vcf_query_udf(
     attrs: Optional[Union[Sequence[str], str]] = None,
     regions: Optional[Union[Sequence[str], str, pd.DataFrame]] = None,
     bed_file: Optional[str] = None,
+    bed_array: Optional[str] = None,
     samples: Optional[Union[Sequence[str], str]] = None,
     region_partition: Optional[Tuple[int, int]] = None,
     sample_partition: Optional[Tuple[int, int]] = None,
@@ -95,6 +96,8 @@ def vcf_query_udf(
     :param attrs: attribute names to read, defaults to None
     :param regions: genomics regions to read, defaults to None
     :param bed_file: URI of a BED file containing genomics regions to read,
+        defaults to None
+    :param bed_array: URI of a BED array containing genomics regions to read,
         defaults to None
     :param samples: sample names to read, defaults to None
     :param region_partition: region partition tuple (0-based indexed, num_partitions),
@@ -161,6 +164,7 @@ def vcf_query_udf(
                 attrs=attrs,
                 regions=regions,
                 bed_file=bed_file,
+                bed_array=bed_array,
                 samples=samples,
                 set_af_filter=af_filter or "",
             )
@@ -247,6 +251,7 @@ def build_read_dag(
         ]
     ] = None,
     bed_file: Optional[str] = None,
+    bed_array: Optional[str] = None,
     num_region_partitions: int = 1,
     max_workers: int = MAX_WORKERS,
     samples: Optional[
@@ -277,6 +282,8 @@ def build_read_dag(
     :param regions: genomics regions to read, defaults to None
     :param bed_file: URI of a BED file containing genomics regions to read,
         defaults to None
+    :param bed_array: URI of a BED array containing genomics regions to read,
+        defaults to None
     :param num_region_partitions: number of region partitions, defaults to 1
     :param samples: sample names to read, defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
@@ -302,9 +309,9 @@ def build_read_dag(
             "set `samples=''`"
         )
 
-    if regions is None and bed_file is None:
+    if regions is None and bed_file is None and bed_array is None:
         raise ValueError(
-            "`regions` or `bed_file` must be provided in order to partition the query."
+            "`regions`, `bed_file` or `bed_array` must be provided in order to partition the query."
         )
 
     attrs = attrs or DEFAULT_ATTRS
@@ -362,6 +369,7 @@ def build_read_dag(
                     attrs=attrs,
                     regions=regions,
                     bed_file=bed_file,
+                    bed_array=bed_array,
                     region_partition=(region, num_region_partitions),
                     sample_partition=(sample, num_sample_partitions),
                     memory_budget_mb=memory_budget_mb,
@@ -409,6 +417,7 @@ def read(
         ]
     ] = None,
     bed_file: Optional[str] = None,
+    bed_array: Optional[str] = None,
     num_region_partitions: int = 1,
     max_workers: int = MAX_WORKERS,
     samples: Optional[
@@ -439,6 +448,8 @@ def read(
     :param regions: genomics regions to read, defaults to None
     :param bed_file: URI of a BED file containing genomics regions to read,
         defaults to None
+    :param bed_array: URI of a BED array containing genomics regions to read,
+        defaults to None
     :param num_region_partitions: number of region partitions, defaults to 1
     :param samples: sample names to read, defaults to None
     :param memory_budget_mb: VCF memory budget in MiB, defaults to 1024
@@ -460,6 +471,7 @@ def read(
         attrs=attrs,
         regions=regions,
         bed_file=bed_file,
+        bed_array=bed_array,
         num_region_partitions=num_region_partitions,
         max_workers=max_workers,
         samples=samples,
