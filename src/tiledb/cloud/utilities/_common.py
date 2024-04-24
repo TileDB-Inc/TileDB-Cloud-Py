@@ -287,31 +287,37 @@ def process_stream(
             def vfs_to_stdin() -> None:
                 """Read from VFS and write to the subprocess stdin."""
 
-                data = input_fp.read(read_size)
-                while data:
+                while True:
+                    data = input_fp.read(read_size)
+                    if not data:
+                        break
+
                     try:
                         process.stdin.write(data)
                     except BrokenPipeError:
                         # The subprocess has exited, stop reading.
                         # This is an expected situation.
                         break
-                    data = input_fp.read(read_size)
                 try:
                     process.stdin.close()
                 except BrokenPipeError:
                     # Ignore broken pipe when closing stdin
                     pass
 
-            def output_to_str(stream) -> str:
+            def output_to_str(stream: subprocess.PIPE) -> str:
                 """Return the stream contents as a string."""
 
                 return "".join(line.decode() for line in stream).strip()
 
-            def output_to_vfs(stream) -> str:
+            def output_to_vfs(stream: subprocess.PIPE) -> str:
                 """Write the stream contents to the output URI."""
 
-                for line in stream:
-                    output_fp.write(line)
+                while True:
+                    data = stream.read(read_size)
+                    if not data:
+                        break
+
+                    output_fp.write(data)
 
                 return ""
 
@@ -362,21 +368,18 @@ def as_batch(func: _CT) -> _CT:
     """
     Decorator to run a function as a batch UDF on TileDB Cloud.
 
+    optional kwargs:
+    - name: name of the node in the DAG, defaults to func.__name__
+    - namespace: TileDB Cloud namespace, defaults to the user's default namespace
+    - acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
+    - resources: resources to allocate for the UDF, defaults to None
+
     :param func: function to run
     """
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs) -> Dict[str, object]:
-        """
-        Run the function as a batch UDF on TileDB Cloud.
-
-        kwargs optionally includes:
-        - name: name of the node in the DAG, defaults to func.__name__
-        - namespace: TileDB Cloud namespace, defaults to the user's default namespace
-        - acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
-        - access_credentials_name: alias for acn, for backwards compatibility
-        - resources: resources to allocate for the UDF, defaults to None
-        """
+        """Run the function as a batch UDF on TileDB Cloud."""
 
         name = kwargs.get("name", func.__name__)
         namespace = kwargs.get("namespace", None)

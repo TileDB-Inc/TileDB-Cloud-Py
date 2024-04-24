@@ -81,6 +81,7 @@ def install_wheel(
     wheel_uri: str,
     config: Optional[Mapping[str, Any]] = None,
     verbose: bool = False,
+    no_deps: bool = True,
 ):
     """
     THIS IS AN EXPERIMENTAL API. IT MAY CHANGE IN THE FUTURE.
@@ -90,6 +91,7 @@ def install_wheel(
     :param wheel_uri: URI of the wheel file
     :param config: config dictionary, defaults to None
     :param verbose: verbose output, defaults to False
+    :param no_deps: do not install dependencies, defaults to True
     """
 
     with tiledb.scope_ctx(config):
@@ -109,6 +111,8 @@ def install_wheel(
             cmd = [sys.executable, "-m", "pip", "install", "--force-reinstall"]
             if not in_venv:
                 cmd += ["--user"]
+            if no_deps:
+                cmd += ["--no-deps"]
             cmd += [wheel_path]
 
             # Capture stdout/stderr to reduce noise from pip for a successful install.
