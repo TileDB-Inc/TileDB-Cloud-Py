@@ -61,7 +61,8 @@ class TestFiles(unittest.TestCase):
                 "test_filename_with_spaces.txt",
             ),
             "test_3": ("test,filename,with,commas.txt", "testfilenamewithcommas.txt"),
-            "test_4": ("test_mixed, file  name.pdf", "test_mixed_file__name.pdf"),
+            "test_4": ("test._m'ixed, file  .name.pdf", "test_mixed_file_name.pdf"),
+            "test_5": ("O'Reilly_-_Python_Cookbook.pdf", "OReilly_Python_Cookbook.pdf"),
         }
 
         for test_name, (fname, sanitized) in subjects.items():

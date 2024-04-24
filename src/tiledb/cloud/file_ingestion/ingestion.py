@@ -1,4 +1,5 @@
 import os
+import re
 from math import ceil
 from typing import Any, List, Mapping, Optional, Sequence, Union
 
@@ -22,7 +23,10 @@ def sanitize_filename(fname: str) -> str:
     :param fname: A filename to sanitize
     :return str: The sanitized string
     """
-    return fname.replace(",", "").replace(" ", "_")
+    name, suffix = os.path.splitext(fname)
+    name = re.sub(r"[^\w\s-]", "", name)
+    name = re.sub(r"[-_\s]+", "_", name).strip("-_")
+    return name + suffix
 
 
 def chunk_results_udf(
@@ -167,7 +171,7 @@ def ingest_files(
     namespace: Optional[str] = None,
     register_name: Optional[str] = None,
     taskgraph_name: Optional[str] = DEFAULT_FILE_INGESTION_NAME,
-    ingest_resources: Optional[Mapping[str, Any]] = None,
+    ingest_resources: Optional[Mapping[str, Any]] = DEFAULT_RESOURCES,
     verbose: bool = False,
 ) -> str:
     """
@@ -181,14 +185,14 @@ def ingest_files(
         defaults to None
     :param max_files: maximum number of File URIs to read/find,
         defaults to None (no limit)
-    :param batch_size: Batch size for file ingestion, defaults to 100
+    :param batch_size: Batch size for file ingestion, defaults to 100.
     :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
         defaults to None
     :param config: Config dictionary, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
     :param register_name: Name of an existing group to ingests files into,
         defaults to None
-    :param taskgraph_name: Optional name for taskgraph, defaults to "file-ingestion"
+    :param taskgraph_name: Optional name for taskgraph, defaults to "file-ingestion".
     :param ingest_resources: Configuration for node specs,
         defaults to {"cpu": "1", "memory": "2Gi"}
     :param verbose: Verbose logging, defaults to False
@@ -207,12 +211,31 @@ def ingest_files(
         dataset_uri = f"{dataset_uri}/{register_name}"
 
     namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
-    ingest_resources = ingest_resources or DEFAULT_RESOURCES
-    logger = get_logger_wrapper(verbose)
     if isinstance(search_uri, str):
         search_uri = [search_uri]
 
-    logger.debug("Build the file finding graph...")
+    logger = get_logger_wrapper(verbose)
+    logger.debug(
+        f"""
+        ----------------------------------------------
+        Build the file ingestion graph with arguments:
+        ----------------------------------------------
+        - Dataset URI: {dataset_uri}
+        - Search:
+            - URI: {search_uri}
+            - Patterns:
+                - Include: {pattern}
+                - Exclude: {ignore}
+            - Max Files: {max_files}
+            - Batch Size: {batch_size}
+        - Taskgraph Name: {taskgraph_name}
+        - Namespace: {namespace}
+        - Resources: {ingest_resources}
+        ----------------------------------------------
+        """
+    )
+
+    # Graph Setup
     graph = dag.DAG(
         name=f"{taskgraph_name}-ingestor",
         namespace=namespace,
