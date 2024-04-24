@@ -311,7 +311,8 @@ def build_read_dag(
 
     if regions is None and bed_file is None and bed_array is None:
         raise ValueError(
-            "`regions`, `bed_file` or `bed_array` must be provided in order to partition the query."
+            "`regions`, `bed_file` or `bed_array` must be provided "
+            "in order to partition the query."
         )
 
     attrs = attrs or DEFAULT_ATTRS
