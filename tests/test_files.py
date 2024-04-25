@@ -1,4 +1,5 @@
 import unittest
+from typing import List
 
 import tiledb
 from tiledb.cloud import client
@@ -40,18 +41,31 @@ class TestFiles(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         """Cleanup test and ingested files and folders after tests have finished."""
+        cls.__cleanup_residual_test_arrays(
+            array_uris=[
+                f"tiledb://{cls.namespace}/{fname}" for fname in cls.input_file_names
+            ]
+        )
         groups.deregister(cls.group_uri)
         return super().tearDownClass()
 
+    def setUp(self) -> None:
+        """Initialize between tests"""
+        self.ingested_array_uris = []
+        return super().setUp()
+
     def tearDown(self) -> None:
         """Cleanup registered arrays between tests"""
-        for fname in self.input_file_names:
+        self.__cleanup_residual_test_arrays(array_uris=self.ingested_array_uris)
+        return super().tearDown()
+
+    def __cleanup_residual_test_arrays(self, array_uris: List[str]) -> None:
+        """Deletes every array in a list"""
+        for array_uri in array_uris:
             try:
-                delete_array(f"tiledb://{self.namespace}/{fname}")
+                delete_array(array_uri)
             except Exception:
                 continue
-
-        return super().tearDown()
 
     def test_sanitize_filename(self):
         subjects = {
@@ -107,13 +121,13 @@ class TestFiles(unittest.TestCase):
                 self.assertEqual(result, chunks_out)
 
     def test_files_ingestion_udf(self):
-        ingested_uris = ingest_files_udf(
+        self.ingested_array_uris = ingest_files_udf(
             dataset_uri=self.destination,
             file_uris=self.test_file_uris,
             acn=self.acn,
             namespace=self.namespace,
         )
-        self.assertEqual(len(ingested_uris), len(self.input_file_names))
+        self.assertEqual(len(self.ingested_array_uris), len(self.input_file_names))
 
         for fname in self.input_file_names:
             array_info = info(f"tiledb://{self.namespace}/{fname}")
@@ -121,16 +135,16 @@ class TestFiles(unittest.TestCase):
             self.assertEqual(array_info.namespace, self.namespace)
 
     def test_files_ingestion_udf_into_group(self):
-        ingested_uris = ingest_files_udf(
+        self.ingested_array_uris = ingest_files_udf(
             dataset_uri=self.group_destination,
             file_uris=self.test_file_uris,
             acn=self.acn,
             namespace=self.namespace,
         )
-        self.assertEqual(len(ingested_uris), len(self.input_file_names))
+        self.assertEqual(len(self.ingested_array_uris), len(self.input_file_names))
 
         add_arrays_to_group_udf(
-            array_uris=ingested_uris,
+            array_uris=self.ingested_array_uris,
             namespace=self.namespace,
             register_name=self.group_uri,
             config=client.Ctx().config().dict(),

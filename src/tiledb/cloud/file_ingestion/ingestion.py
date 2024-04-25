@@ -161,8 +161,15 @@ def ingest_files_udf(
             array_info = info(array_uri)
             ingested.append(array_info.tiledb_uri)
         except tiledb_cloud_error.TileDBCloudError as exc:
-            if "array already exists at location - Code: 8003" in repr(exc):
+            error_msg = repr(exc)
+            if "array already exists at location - Code: 8003" in error_msg:
                 logger.warning(f"Array '{array_uri}' already exists.")
+                continue
+            elif f"array {array_uri} is not unique" in error_msg:
+                logger.warning(
+                    f"Array URI {array_uri} is not unique. "
+                    f"Skipping {filename} ingestion"
+                )
                 continue
             else:
                 raise exc
