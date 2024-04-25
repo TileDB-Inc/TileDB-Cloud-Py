@@ -59,7 +59,8 @@ class TestFiles(unittest.TestCase):
         self.__cleanup_residual_test_arrays(array_uris=self.ingested_array_uris)
         return super().tearDown()
 
-    def __cleanup_residual_test_arrays(self, array_uris: List[str]) -> None:
+    @staticmethod
+    def __cleanup_residual_test_arrays(array_uris: List[str]) -> None:
         """Deletes every array in a list"""
         for array_uri in array_uris:
             try:
