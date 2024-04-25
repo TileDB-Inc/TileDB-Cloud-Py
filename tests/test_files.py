@@ -132,7 +132,7 @@ class TestFiles(unittest.TestCase):
         add_arrays_to_group_udf(
             array_uris=ingested_uris,
             namespace=self.namespace,
-            register_name=self.group_name,
+            register_name=self.group_uri,
             config=client.Ctx().config().dict(),
         )
 
@@ -144,11 +144,20 @@ class TestFiles(unittest.TestCase):
             self.assertEqual(array_info.name, fname)
             self.assertEqual(array_info.namespace, self.namespace)
 
-    def test_files_ingestion_udf_into_bad_group_uri_raises(self):
+    def test_add_array_to_group_udf_raises_not_implemented_error(self):
+        with self.assertRaises(NotImplementedError):
+            add_arrays_to_group_udf(
+                array_uris=[f"tiledb://{self.namespace}/{self.input_file_names[0]}"],
+                namespace=self.namespace,
+                register_name="register-group-name",
+                config=client.Ctx().config().dict(),
+            )
+
+    def test_add_array_to_group_udf_raises_bad_namespace_error(self):
         with self.assertRaises(tiledb.TileDBError):
             add_arrays_to_group_udf(
                 array_uris=[f"tiledb://{self.namespace}/{self.input_file_names[0]}"],
                 namespace="very-bad-namespace",
-                register_name="bad-group",
+                register_name=self.group_uri,
                 config=client.Ctx().config().dict(),
             )
