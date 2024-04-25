@@ -276,7 +276,8 @@ def process_stream(
 
     output_fp = vfs.open(output_uri, "wb") if output_uri else None
 
-    with vfs.open(uri) as input_fp:
+    # Including output_fp in the context manager is needed when writing to s3
+    with vfs.open(uri) as input_fp, output_fp:
         with subprocess.Popen(
             cmd,
             stdin=subprocess.PIPE,
@@ -341,9 +342,6 @@ def process_stream(
             # Retrieve results
             stdout = stdout_future.result()
             stderr = stderr_future.result()
-
-            if output_fp:
-                output_fp.close()
 
             return rc, stdout, stderr
 
