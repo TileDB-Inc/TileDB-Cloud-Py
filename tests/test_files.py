@@ -29,11 +29,14 @@ class TestFiles(unittest.TestCase):
 
         cls.namespace, cls.storage_path, cls.acn = groups._default_ns_path_cred()
         cls.namespace = cls.namespace.rstrip("/")
-        cls.destination = cls.storage_path.rstrip("/")
+        cls.storage_path = cls.storage_path.rstrip("/")
+        cls.destination = (
+            f"{cls.storage_path}/{testonly.random_name('file_ingestion_test')}"
+        )
 
         cls.group_name = testonly.random_name("file_ingestion_test_group")
         cls.group_uri = f"tiledb://{cls.namespace}/{cls.group_name}"
-        cls.group_destination = f"{cls.destination}/{cls.group_name}"
+        cls.group_destination = f"{cls.storage_path}/{cls.group_name}"
         groups.create(cls.group_name, storage_uri=cls.group_destination)
 
         return super().setUpClass()
@@ -127,6 +130,7 @@ class TestFiles(unittest.TestCase):
             file_uris=self.test_file_uris,
             acn=self.acn,
             namespace=self.namespace,
+            verbose=True,
         )
         self.assertEqual(len(self.ingested_array_uris), len(self.input_file_names))
 
@@ -141,14 +145,15 @@ class TestFiles(unittest.TestCase):
             file_uris=self.test_file_uris,
             acn=self.acn,
             namespace=self.namespace,
+            verbose=True,
         )
         self.assertEqual(len(self.ingested_array_uris), len(self.input_file_names))
 
         add_arrays_to_group_udf(
             array_uris=self.ingested_array_uris,
-            namespace=self.namespace,
-            register_name=self.group_uri,
+            group_uri=self.group_uri,
             config=client.Ctx().config().dict(),
+            verbose=True,
         )
 
         group_info = groups.info(self.group_uri)
@@ -159,20 +164,20 @@ class TestFiles(unittest.TestCase):
             self.assertEqual(array_info.name, fname)
             self.assertEqual(array_info.namespace, self.namespace)
 
-    def test_add_array_to_group_udf_raises_not_implemented_error(self):
-        with self.assertRaises(NotImplementedError):
-            add_arrays_to_group_udf(
-                array_uris=[f"tiledb://{self.namespace}/{self.input_file_names[0]}"],
-                namespace=self.namespace,
-                register_name="register-group-name",
-                config=client.Ctx().config().dict(),
-            )
-
     def test_add_array_to_group_udf_raises_bad_namespace_error(self):
         with self.assertRaises(tiledb.TileDBError):
             add_arrays_to_group_udf(
                 array_uris=[f"tiledb://{self.namespace}/{self.input_file_names[0]}"],
-                namespace="very-bad-namespace",
-                register_name=self.group_uri,
+                group_uri=f"tiledb://very-bad-namespace/{self.group_name}",
                 config=client.Ctx().config().dict(),
+                verbose=True,
+            )
+
+    def test_add_array_to_group_udf_non_existing_group_raises_value_error(self):
+        with self.assertRaises(ValueError):
+            add_arrays_to_group_udf(
+                array_uris=[f"tiledb://{self.namespace}/{self.input_file_names[0]}"],
+                group_uri=f"tiledb://{self.namespace}/non-existing-group",
+                config=client.Ctx().config().dict(),
+                verbose=True,
             )

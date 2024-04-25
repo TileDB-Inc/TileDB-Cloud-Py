@@ -4,6 +4,7 @@ from math import ceil
 from typing import Any, List, Mapping, Optional, Sequence, Union
 
 import tiledb
+import tiledb.cloud
 from tiledb.cloud import dag
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud._common import utils
@@ -61,9 +62,8 @@ def chunk_results_udf(
 
 def add_arrays_to_group_udf(
     array_uris: Sequence[str],
+    group_uri: str,
     *,
-    namespace: Optional[str] = None,
-    register_name: Optional[str] = None,
     config: Optional[dict] = None,
     verbose: bool = False,
 ) -> None:
@@ -71,45 +71,34 @@ def add_arrays_to_group_udf(
     Add a list of TileDB array uris in a TileDB group.
 
     :param array_uris: An iterable of TileDB URIs.
-    :param namespace: TileDB-Cloud namespace, defaults to None
-    :param register_name: Name of an existing group to ingests files into,
-        defaults to None
+    :param group_uri: A TileDB Group URI.
     :param config: Config dictionary, defaults to None
     :param verbose: Verbose logging, defaults to False
     """
     logger = get_logger_wrapper(verbose)
 
-    try:
-        utils.split_uri(register_name)
-    except Exception:
-        logger.error(f"Register name: {register_name} is not in URI format")
-        raise NotImplementedError(
-            "Creating a group during file ingestion is not yet implemented"
-        )
-    else:
-        group_uri = register_name
-
     with tiledb.scope_ctx(config):
         try:
-            if group_uri:
-                is_group = tiledb.object_type(group_uri) == "group"
+            if tiledb.object_type(group_uri) == "group":
+                with tiledb.Group(group_uri, mode="w") as group:
+                    logger.debug(
+                        f"Adding to Group {group_uri} the following: {array_uris}"
+                    )
+                    for uri in array_uris:
+                        if not isinstance(uri, str):
+                            for array_uri in uri:
+                                group.add(array_uri)
+                        else:
+                            group.add(uri)
             else:
-                is_group = False
+                raise ValueError(
+                    f"Group URI: '{group_uri}' does not match any existing group."
+                )
         except Exception as exc:
             # tiledb.object_type raises an exception
             # if the namespace does not exist
             logger.error(f"Error checking if {group_uri} is a Group. Bad namespace?")
             raise exc
-
-        if is_group:
-            with tiledb.Group(group_uri, mode="w") as group:
-                logger.debug(f"Adding to Group {group_uri} the following: {array_uris}")
-                for uri in array_uris:
-                    if not isinstance(uri, str):
-                        for array_uri in uri:
-                            group.add(array_uri)
-                    else:
-                        group.add(uri)
 
 
 def ingest_files_udf(
@@ -188,7 +177,7 @@ def ingest_files(
     acn: Optional[str] = None,
     config: Optional[dict] = None,
     namespace: Optional[str] = None,
-    register_name: Optional[str] = None,
+    group_uri: Optional[str] = None,
     taskgraph_name: Optional[str] = DEFAULT_FILE_INGESTION_NAME,
     ingest_resources: Optional[Mapping[str, Any]] = DEFAULT_RESOURCES,
     verbose: bool = False,
@@ -209,8 +198,7 @@ def ingest_files(
         defaults to None
     :param config: Config dictionary, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
-    :param register_name: Name of an existing group to ingests files into,
-        defaults to None
+    :param group_uri: A TileDB Group URI, defaults to None.
     :param taskgraph_name: Optional name for taskgraph, defaults to "file-ingestion".
     :param ingest_resources: Configuration for node specs,
         defaults to {"cpu": "1", "memory": "2Gi"}
@@ -220,23 +208,20 @@ def ingest_files(
     # Argument Validation
     if not search_uri:
         raise ValueError("search_uri must be provided")
-    if register_name and not acn:
-        raise ValueError("acn must be provided to register the dataset")
 
     # Preparation and argument cleanup
     logger = get_logger_wrapper(verbose)
 
     dataset_uri = dataset_uri.rstrip("/")
-    if register_name:
+    if group_uri:
         try:
-            namespace, group_name = utils.split_uri(register_name)
+            namespace, group_name = utils.split_uri(group_uri)
             # Set the destination path to match the path of the group.
             dataset_uri = f"{dataset_uri}/{group_name}"
-        except Exception:
-            logger.error(f"Register name: {register_name} is not in URI format")
-            raise NotImplementedError(
-                "Creating a group during file ingestion is not yet implemented"
-            )
+        except Exception as exc:
+            error_msg = f"Group URI: '{group_uri}' is not correctly formatted"
+            logger.error(error_msg)
+            raise ValueError(error_msg) from exc
 
     namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
     if isinstance(search_uri, str):
@@ -255,9 +240,9 @@ def ingest_files(
                 - Exclude: {ignore}
             - Max Files: {max_files}
             - Batch Size: {batch_size}
-        - Register Name: {register_name}
-        - Taskgraph Name: {taskgraph_name}
         - Namespace: {namespace}
+        - Group URI: {group_uri}
+        - Taskgraph Name: {taskgraph_name}
         - Resources: {ingest_resources}
         ----------------------------------------------
         """
@@ -315,12 +300,11 @@ def ingest_files(
     )
 
     # Step 4 (Optional): Add the files into a group.
-    if register_name:
+    if group_uri:
         graph.submit(
             add_arrays_to_group_udf,
             array_uris=ingested,
-            namespace=namespace,
-            register_name=register_name,
+            group_uri=group_uri,
             config=config,
             verbose=verbose,
         ).depends_on(ingested)
