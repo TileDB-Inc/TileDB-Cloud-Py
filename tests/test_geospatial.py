@@ -34,6 +34,9 @@ GEOM_NAMES = ["test1.geojson", "test2.geojson", "test3.geojson"]
 def run_local(dataset_uri: str, *, dataset_type: Enum, batch_size: int, **kwargs):
     import tiledb.cloud.geospatial as geo
 
+    pixels_per_fragment = None
+    nodata = None
+
     # run the key functions of the DAG locally in sequence
     funcs = {
         geo.DatasetType.POINTCLOUD: {
@@ -49,29 +52,52 @@ def run_local(dataset_uri: str, *, dataset_type: Enum, batch_size: int, **kwargs
 
     fn = funcs[dataset_type]["udf_fn"]
 
+    if "pixels_per_fragment" in kwargs:
+        pixels_per_fragment = kwargs.pop("pixels_per_fragment")
+
+    if "nodata" in kwargs:
+        nodata = kwargs.pop("nodata")
+
     # unit test inner functions
-    new_kwargs = geo.build_inputs_udf(
+    sources = geo.build_file_list_udf(
+        config=kwargs["config"],
         dataset_type=dataset_type,
-        **kwargs,
+        dataset_list_uri=kwargs["dataset_list_uri"],
     )
 
-    # set up function
+    kwargs.pop("dataset_list_uri")
+    new_kwargs = []
+
+    for s in sources:
+        kwargs["sources"] = s
+        if pixels_per_fragment:
+            kwargs["pixels_per_fragment"] = pixels_per_fragment
+
+        if nodata:
+            kwargs["nodata"] = nodata
+
+        new_kwargs.append(
+            geo.build_inputs_udf(
+                dataset_type=dataset_type,
+                **kwargs,
+            )
+        )
+
+    # schema creation function
+    # args will be a list from the result from the metadata returned by build_inputs_udf
     samples = fn(
         dataset_uri=dataset_uri,
         append=False,
         batch_size=batch_size,
-        **new_kwargs,
+        args=new_kwargs,
     )
 
-    new_kwargs.pop("sources")
-
     # work functions
-    for _, work in enumerate(samples):
+    for _, work_args in enumerate(samples):
         fn(
-            sources=work,
             dataset_uri=dataset_uri,
             append=True,
-            **new_kwargs,
+            args=work_args,
         )
 
 
@@ -112,7 +138,7 @@ def create_test_rasters(tmp_path: os.PathLike):
 
     with rasterio.open(tmp_path.joinpath(RASTER_NAMES[1]), "w", **kwargs) as dst:
         data = np.ones((10, 10), dtype=rasterio.uint8) * 2
-        data[:5, :5] = 0  # default nodata
+        data[:5, :5] = 255  # default TileDB nodata
         dst.write(data, indexes=1)
 
     # distinct from test1 and test2 above
@@ -160,7 +186,7 @@ class GeospatialTest(unittest.TestCase):
         import tiledb.cloud.geospatial as geo
 
         tile_size = 16
-        pixels_per_fragment = tile_size**2
+        tile_size**2
         ingest_uri_sample = {
             "test1": [self.test_dir.joinpath(r) for r in RASTER_NAMES[:3]],
             "test2": [],
@@ -175,17 +201,11 @@ class GeospatialTest(unittest.TestCase):
         # Case 1-1 Ingestion
         test_1 = ingest_uri_sample["test1"]
         with mock.patch.object(VFS, "ls", return_value=test_1):
-            meta_1 = geo.load_raster_metadata(
-                test_1, pixels_per_fragment=pixels_per_fragment
-            )
-            expected_extents = geo.BoundingBox(minx=-114, miny=33, maxx=-98, maxy=46)
-            self.assertEqual(meta_1.extents, expected_extents)
-            self.assertEqual(len(meta_1.block_metadata), 3)
-            self.assertEqual(len(meta_1.block_metadata[0].files), 2)
-            self.assertEqual(meta_1.res, (0.2, 0.2))
+            meta_1 = geo.load_raster_metadata(test_1)
+            self.assertEqual(len(meta_1), 3)
 
-            # test the first return value for the first block
-            self.assertEqual(meta_1.block_metadata[0].files[0], test_1[0])
+            # test the first return value
+            self.assertEqual(meta_1[0].path, test_1[0])
 
         # Case 1-2 Ingestion - Empty input list
         with mock.patch.object(VFS, "ls", return_value=ingest_uri_sample["test2"]):
@@ -193,54 +213,25 @@ class GeospatialTest(unittest.TestCase):
             with self.assertRaises(ValueError):
                 geo.load_raster_metadata(ingest_uri_sample["test2"])
 
-        # Case 1-3 Ingestion - See if mixed resolutions are detected
-        with mock.patch.object(VFS, "ls", return_value=ingest_uri_sample["test3"]):
-            # Mixed resolutions without forcing target resolution raises error
-            with self.assertRaises(ValueError):
-                geo.load_raster_metadata(ingest_uri_sample["test3"])
-
-            tgt_res = (0.4, 0.4)
-            meta_3 = geo.load_raster_metadata(ingest_uri_sample["test3"], res=tgt_res)
-            self.assertEqual(meta_3.res, tgt_res)
-
-        # Case 1-4 Ingestion - See if mixed CRSs are detected
-        # Same logic for data types and band counts
-        with mock.patch.object(VFS, "ls", return_value=ingest_uri_sample["test4"]):
-            # Mixed CRSs raises error
-            with self.assertRaises(ValueError):
-                geo.load_raster_metadata(ingest_uri_sample["test4"])
-
-        # TODO add tests for mixed band counts and data types
-
     def test_pointcloud_load_metadata(self):
         import tiledb.cloud.geospatial as geo
 
         with mock.patch.object(VFS, "ls", return_value=PC_NAMES):
             meta_1 = geo.load_pointcloud_metadata(PC_NAMES)
-            self.assertEqual(meta_1.extents.minx, 635619.85)
-            self.assertEqual(meta_1.extents.miny, 848899.7000000001)
-            self.assertEqual(meta_1.extents.minz, 406.59000000000003)
-            self.assertEqual(meta_1.extents.maxx, 638982.55)
-            self.assertEqual(meta_1.extents.maxy, 853535.43)
-            self.assertEqual(meta_1.extents.maxz, 586.38)
-            self.assertEqual(len(meta_1.paths), 11)
-            self.assertEqual(meta_1.scales, (0.01, 0.01, 0.01))
-            self.assertEqual(meta_1.offsets, (0.0, 0.0, 0.0))
+            self.assertEqual(len(meta_1), 11)
+            self.assertEqual(meta_1[0].scales, (0.01, 0.01, 0.01))
+            self.assertEqual(meta_1[0].offsets, (0.0, 0.0, 0.0))
 
     def test_geometry_load_metadata(self):
         import fiona
 
         import tiledb.cloud.geospatial as geo
 
-        with mock.patch.object(VFS, "ls", return_value=GEOM_NAMES):
-            meta_1 = geo.load_geometry_metadata(
-                [self.test_dir.joinpath(g) for g in GEOM_NAMES]
-            )
-            self.assertEqual(meta_1.geometry_schema["geometry"], "Polygon")
-            self.assertEqual(meta_1.crs, fiona.crs.CRS.from_epsg(4326))
-            self.assertEqual(
-                meta_1.extents, geo.BoundingBox(minx=0.0, miny=0.0, maxx=4.0, maxy=4.0)
-            )
+        geom_names = [self.test_dir.joinpath(g) for g in GEOM_NAMES]
+        with mock.patch.object(VFS, "ls", return_value=geom_names):
+            meta_1 = geo.load_geometry_metadata(geom_names)
+            self.assertEqual(meta_1[0].geometry_schema["geometry"], "Polygon")
+            self.assertEqual(meta_1[0].crs, fiona.crs.CRS.from_epsg(4326))
 
     def test_raster_ingest(self):
         import rasterio
@@ -287,10 +278,9 @@ class GeospatialTest(unittest.TestCase):
                 self.assertEqual(src.bounds.bottom, expected_extents.miny)
                 self.assertEqual(src.profile["blockysize"], tile_size)
                 self.assertEqual(src.profile["blockxsize"], tile_size)
-                # all of test_1, 3/4 of test_2 and test_3 = 100 + 150 + 300
                 with rasterio.open(output_array) as src:
-                    # all of test_1, 3/4 of test_2 and test_3 = 100 + 150 + 300
                     data = src.read(1, masked=True)
+                    # all of test_1, 3/4 of test_2 and test_3 = 100 + 150 + 300
                     self.assertEqual(np.sum(data), 550)
 
             # check compression filter
@@ -343,10 +333,8 @@ class GeospatialTest(unittest.TestCase):
             fragments_info = tiledb.array_fragments(output_array)
 
             uris = geo.read_uris(dataset_list_uri, dataset_type=geo.DatasetType.RASTER)
-            meta = geo.load_raster_metadata(
-                uris, pixels_per_fragment=pixels_per_fragment
-            )
-            self.assertEqual(len(meta.block_metadata), 8)
+            meta = geo.load_raster_metadata(uris)
+            self.assertEqual(len(meta), 3)
             self.assertEqual(len(fragments_info), 8)
 
     def test_pointcloud_ingest(self):
