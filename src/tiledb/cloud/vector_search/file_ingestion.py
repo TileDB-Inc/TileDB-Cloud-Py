@@ -45,8 +45,8 @@ def ingest_files(
     """
     Ingest files into a vector search text index.
 
-    :param search_uri: Uri to load files from. This can be a directory URI or a FileStore
-       file URI.
+    :param search_uri: Uri to load files from. This can be a directory URI or
+       a FileStore file URI.
     :param index_uri: URI of the vector index to load files to.
     :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
         defaults to None.
@@ -199,8 +199,8 @@ def ingest_files(
                 index = object_index.ObjectIndex(
                     uri=index_uri,
                     environment_variables=environment_variables,
-                    # We don't want to perform any queries here. We open the index without
-                    # loading the embedding model, metadata and vector data.
+                    # We don't want to perform any queries here. We open the index
+                    # without loading the embedding model, metadata and vector data.
                     load_embedding=False,
                     load_metadata_in_memory=False,
                     # `memory_budget=1` avoids loading the array data in main memory.
