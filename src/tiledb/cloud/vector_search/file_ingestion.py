@@ -5,9 +5,8 @@ from tiledb.cloud.utilities import as_batch
 
 
 def ingest_files(
-    file_dir_uri: str,
+    search_uri: str,
     index_uri: str,
-    file_name: Optional[str] = None,
     acn: Optional[str] = None,
     config=None,
     environment_variables: Optional[Mapping[str, str]] = None,
@@ -38,18 +37,17 @@ def ingest_files(
     driver_image: Optional[str] = None,
     extra_driver_modules: Optional[List[str]] = None,
     max_tasks_per_stage: int = -1,
-    embeddings_generation_mode: dag.Mode = dag.Mode.LOCAL,
+    embeddings_generation_mode: dag.Mode = dag.Mode.BATCH,
     embeddings_generation_driver_mode: dag.Mode = dag.Mode.LOCAL,
-    vector_indexing_mode: dag.Mode = dag.Mode.LOCAL,
+    vector_indexing_mode: dag.Mode = dag.Mode.BATCH,
     index_update_kwargs: Optional[Dict] = None,
 ):
     """
     Ingest files into a vector search text index.
 
-    :param file_dir_uri: directory of the files to be loaded. For individual files,
-        also pass the `file_name` param.
+    :param search_uri: Uri to load files from. This can be a directory URI or a FileStore
+       file URI.
     :param index_uri: URI of the vector index to load files to.
-    :param file_name: Name of the file to be loaded.
     :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
         defaults to None.
     :param config: config dictionary, defaults to None.
@@ -62,9 +60,9 @@ def ingest_files(
     :param index_creation_kwargs: Arguments to be passed to the index creation
         method.
     # DirectoryTextReader params.
-    :param include: File pattern to iclude relative to `file_dir_uri`. By default
+    :param include: File pattern to iclude relative to `search_uri`. By default
         set to include all files.
-    :param exclude: File patterns to exclude relative to `file_dir_uri`. By default
+    :param exclude: File patterns to exclude relative to `search_uri`. By default
         set to ignore all hidden files.
     :param suffixes: Provide to keep only files with these suffixes
         Useful when wanting to keep files with different suffixes
@@ -133,9 +131,8 @@ def ingest_files(
     # --------------------------------------------------------------------
 
     def create_dataset_udf(
-        file_dir_uri: str,
+        search_uri: str,
         index_uri: str,
-        file_name: Optional[str] = None,
         config=None,
         environment_variables: Optional[Mapping[str, str]] = None,
         verbose: bool = False,
@@ -185,8 +182,8 @@ def ingest_files(
                 }
 
             reader = DirectoryTextReader(
-                search_uri=file_dir_uri,
-                include=file_name if file_name is not None else include,
+                search_uri=search_uri,
+                include=include,
                 exclude=exclude,
                 suffixes=suffixes,
                 max_files=max_files,
@@ -202,8 +199,11 @@ def ingest_files(
                 index = object_index.ObjectIndex(
                     uri=index_uri,
                     environment_variables=environment_variables,
+                    # We don't want to perform any queries here. We open the index without
+                    # loading the embedding model, metadata and vector data.
                     load_embedding=False,
                     load_metadata_in_memory=False,
+                    # `memory_budget=1` avoids loading the array data in main memory.
                     memory_budget=1,
                 )
                 index.update_object_reader(reader)
@@ -260,7 +260,11 @@ def ingest_files(
         index = object_index.ObjectIndex(
             uri=index_uri,
             environment_variables=environment_variables,
+            # We don't want to perform any queries here. We open the index without
+            # loading the embedding model, metadata and vector data.
+            load_embedding=False,
             load_metadata_in_memory=False,
+            # `memory_budget=1` avoids loading the array data in main memory.
             memory_budget=1,
         )
         index.update_index(
@@ -295,13 +299,12 @@ def ingest_files(
         mode=dag.Mode.BATCH,
     )
     if worker_resources is None:
-        driver_resources = {"cpu": "2", "memory": "8Gi"}
+        worker_resources = {"cpu": "2", "memory": "8Gi"}
 
     create_index_node = graph.submit(
         create_dataset_udf,
-        file_dir_uri=file_dir_uri,
+        search_uri=search_uri,
         index_uri=index_uri,
-        file_name=file_name,
         config=config,
         environment_variables=environment_variables,
         verbose=verbose,
@@ -331,7 +334,9 @@ def ingest_files(
         namespace=namespace,
         verbose=verbose,
         trace_id=trace_id,
+        index_timestamp=index_timestamp,
         workers=workers,
+        worker_resources=worker_resources,
         worker_image=worker_image,
         extra_worker_modules=extra_worker_modules,
         driver_resources=driver_resources,
