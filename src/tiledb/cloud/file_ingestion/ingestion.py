@@ -1,10 +1,14 @@
 import os
+import re
 from math import ceil
 from typing import Any, List, Mapping, Optional, Sequence, Union
 
 import tiledb
+import tiledb.cloud
 from tiledb.cloud import dag
 from tiledb.cloud import tiledb_cloud_error
+from tiledb.cloud._common import utils
+from tiledb.cloud.array import info
 from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import get_logger_wrapper
@@ -22,7 +26,10 @@ def sanitize_filename(fname: str) -> str:
     :param fname: A filename to sanitize
     :return str: The sanitized string
     """
-    return fname.replace(",", "").replace(" ", "_")
+    name, suffix = os.path.splitext(fname)
+    name = re.sub(r"[^\w\s-]", "", name)
+    name = re.sub(r"[-_\s]+", "_", name).strip("-_")
+    return name + suffix
 
 
 def chunk_results_udf(
@@ -55,9 +62,8 @@ def chunk_results_udf(
 
 def add_arrays_to_group_udf(
     array_uris: Sequence[str],
+    group_uri: str,
     *,
-    namespace: Optional[str] = None,
-    register_name: Optional[str] = None,
     config: Optional[dict] = None,
     verbose: bool = False,
 ) -> None:
@@ -65,36 +71,34 @@ def add_arrays_to_group_udf(
     Add a list of TileDB array uris in a TileDB group.
 
     :param array_uris: An iterable of TileDB URIs.
-    :param namespace: TileDB-Cloud namespace, defaults to None
-    :param register_name: Name of an existing group to ingests files into,
-        defaults to None
+    :param group_uri: A TileDB Group URI.
     :param config: Config dictionary, defaults to None
     :param verbose: Verbose logging, defaults to False
     """
     logger = get_logger_wrapper(verbose)
 
     with tiledb.scope_ctx(config):
-        group_uri = f"tiledb://{namespace}/{register_name}"
         try:
-            if group_uri:
-                is_group = tiledb.object_type(group_uri) == "group"
+            if tiledb.object_type(group_uri) == "group":
+                with tiledb.Group(group_uri, mode="w") as group:
+                    logger.debug(
+                        f"Adding to Group {group_uri} the following: {array_uris}"
+                    )
+                    for uri in array_uris:
+                        if not isinstance(uri, str):
+                            for array_uri in uri:
+                                group.add(array_uri)
+                        else:
+                            group.add(uri)
             else:
-                is_group = False
+                raise ValueError(
+                    f"Group URI: '{group_uri}' does not match any existing group."
+                )
         except Exception as exc:
             # tiledb.object_type raises an exception
             # if the namespace does not exist
             logger.error(f"Error checking if {group_uri} is a Group. Bad namespace?")
             raise exc
-
-        if is_group:
-            with tiledb.Group(group_uri, mode="w") as group:
-                logger.debug(f"Adding to Group {group_uri} the following: {array_uris}")
-                for uri in array_uris:
-                    if not isinstance(uri, str):
-                        for array_uri in uri:
-                            group.add(array_uri)
-                    else:
-                        group.add(uri)
 
 
 def ingest_files_udf(
@@ -143,10 +147,18 @@ def ingest_files_udf(
                 access_credentials_name=acn,
             )
 
-            ingested.append(array_uri)
+            array_info = info(array_uri)
+            ingested.append(array_info.tiledb_uri)
         except tiledb_cloud_error.TileDBCloudError as exc:
-            if "array already exists at location - Code: 8003" in repr(exc):
+            error_msg = repr(exc)
+            if "array already exists at location - Code: 8003" in error_msg:
                 logger.warning(f"Array '{array_uri}' already exists.")
+                continue
+            elif f"array {array_uri} is not unique" in error_msg:
+                logger.warning(
+                    f"Array URI {array_uri} is not unique. "
+                    f"Skipping {filename} ingestion"
+                )
                 continue
             else:
                 raise exc
@@ -165,9 +177,9 @@ def ingest_files(
     acn: Optional[str] = None,
     config: Optional[dict] = None,
     namespace: Optional[str] = None,
-    register_name: Optional[str] = None,
+    group_uri: Optional[str] = None,
     taskgraph_name: Optional[str] = DEFAULT_FILE_INGESTION_NAME,
-    ingest_resources: Optional[Mapping[str, Any]] = None,
+    ingest_resources: Optional[Mapping[str, Any]] = DEFAULT_RESOURCES,
     verbose: bool = False,
 ) -> str:
     """
@@ -181,14 +193,13 @@ def ingest_files(
         defaults to None
     :param max_files: maximum number of File URIs to read/find,
         defaults to None (no limit)
-    :param batch_size: Batch size for file ingestion, defaults to 100
+    :param batch_size: Batch size for file ingestion, defaults to 100.
     :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
         defaults to None
     :param config: Config dictionary, defaults to None
     :param namespace: TileDB-Cloud namespace, defaults to None
-    :param register_name: Name of an existing group to ingests files into,
-        defaults to None
-    :param taskgraph_name: Optional name for taskgraph, defaults to "file-ingestion"
+    :param group_uri: A TileDB Group URI, defaults to None.
+    :param taskgraph_name: Optional name for taskgraph, defaults to "file-ingestion".
     :param ingest_resources: Configuration for node specs,
         defaults to {"cpu": "1", "memory": "2Gi"}
     :param verbose: Verbose logging, defaults to False
@@ -197,22 +208,47 @@ def ingest_files(
     # Argument Validation
     if not search_uri:
         raise ValueError("search_uri must be provided")
-    if register_name and not acn:
-        raise ValueError("acn must be provided to register the dataset")
 
     # Preparation and argument cleanup
+    logger = get_logger_wrapper(verbose)
+
     dataset_uri = dataset_uri.rstrip("/")
-    if register_name:
-        # Set the destination path to match the path of the group.
-        dataset_uri = f"{dataset_uri}/{register_name}"
+    if group_uri:
+        try:
+            namespace, group_name = utils.split_uri(group_uri)
+            # Set the destination path to match the path of the group.
+            dataset_uri = f"{dataset_uri}/{group_name}"
+        except Exception as exc:
+            error_msg = f"Group URI: '{group_uri}' is not correctly formatted"
+            logger.error(error_msg)
+            raise ValueError(error_msg) from exc
 
     namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
-    ingest_resources = ingest_resources or DEFAULT_RESOURCES
-    logger = get_logger_wrapper(verbose)
     if isinstance(search_uri, str):
         search_uri = [search_uri]
 
-    logger.debug("Build the file finding graph...")
+    logger.debug(
+        f"""
+        ----------------------------------------------
+        Build the file ingestion graph with arguments:
+        ----------------------------------------------
+        - Dataset URI: {dataset_uri}
+        - Search:
+            - URI: {search_uri}
+            - Patterns:
+                - Include: {pattern}
+                - Exclude: {ignore}
+            - Max Files: {max_files}
+            - Batch Size: {batch_size}
+        - Namespace: {namespace}
+        - Group URI: {group_uri}
+        - Taskgraph Name: {taskgraph_name}
+        - Resources: {ingest_resources}
+        ----------------------------------------------
+        """
+    )
+
+    # Graph Setup
     graph = dag.DAG(
         name=f"{taskgraph_name}-ingestor",
         namespace=namespace,
@@ -264,12 +300,11 @@ def ingest_files(
     )
 
     # Step 4 (Optional): Add the files into a group.
-    if register_name:
+    if group_uri:
         graph.submit(
             add_arrays_to_group_udf,
             array_uris=ingested,
-            namespace=namespace,
-            register_name=register_name,
+            group_uri=group_uri,
             config=config,
             verbose=verbose,
         ).depends_on(ingested)

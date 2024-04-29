@@ -1,4 +1,5 @@
 import unittest
+from typing import List
 
 import tiledb
 from tiledb.cloud import client
@@ -28,11 +29,14 @@ class TestFiles(unittest.TestCase):
 
         cls.namespace, cls.storage_path, cls.acn = groups._default_ns_path_cred()
         cls.namespace = cls.namespace.rstrip("/")
-        cls.destination = cls.storage_path.rstrip("/")
+        cls.storage_path = cls.storage_path.rstrip("/")
+        cls.destination = (
+            f"{cls.storage_path}/{testonly.random_name('file_ingestion_test')}"
+        )
 
         cls.group_name = testonly.random_name("file_ingestion_test_group")
         cls.group_uri = f"tiledb://{cls.namespace}/{cls.group_name}"
-        cls.group_destination = f"{cls.destination}/{cls.group_name}"
+        cls.group_destination = f"{cls.storage_path}/{cls.group_name}"
         groups.create(cls.group_name, storage_uri=cls.group_destination)
 
         return super().setUpClass()
@@ -40,18 +44,32 @@ class TestFiles(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         """Cleanup test and ingested files and folders after tests have finished."""
+        cls.__cleanup_residual_test_arrays(
+            array_uris=[
+                f"tiledb://{cls.namespace}/{fname}" for fname in cls.input_file_names
+            ]
+        )
         groups.deregister(cls.group_uri)
         return super().tearDownClass()
 
+    def setUp(self) -> None:
+        """Initialize between tests"""
+        self.ingested_array_uris = []
+        return super().setUp()
+
     def tearDown(self) -> None:
         """Cleanup registered arrays between tests"""
-        for fname in self.input_file_names:
+        self.__cleanup_residual_test_arrays(array_uris=self.ingested_array_uris)
+        return super().tearDown()
+
+    @staticmethod
+    def __cleanup_residual_test_arrays(array_uris: List[str]) -> None:
+        """Deletes every array in a list"""
+        for array_uri in array_uris:
             try:
-                delete_array(f"tiledb://{self.namespace}/{fname}")
+                delete_array(array_uri)
             except Exception:
                 continue
-
-        return super().tearDown()
 
     def test_sanitize_filename(self):
         subjects = {
@@ -61,7 +79,8 @@ class TestFiles(unittest.TestCase):
                 "test_filename_with_spaces.txt",
             ),
             "test_3": ("test,filename,with,commas.txt", "testfilenamewithcommas.txt"),
-            "test_4": ("test_mixed, file  name.pdf", "test_mixed_file__name.pdf"),
+            "test_4": ("test._m'ixed, file  .name.pdf", "test_mixed_file_name.pdf"),
+            "test_5": ("O'Reilly_-_Python_Cookbook.pdf", "OReilly_Python_Cookbook.pdf"),
         }
 
         for test_name, (fname, sanitized) in subjects.items():
@@ -106,13 +125,14 @@ class TestFiles(unittest.TestCase):
                 self.assertEqual(result, chunks_out)
 
     def test_files_ingestion_udf(self):
-        ingested_uris = ingest_files_udf(
+        self.ingested_array_uris = ingest_files_udf(
             dataset_uri=self.destination,
             file_uris=self.test_file_uris,
             acn=self.acn,
             namespace=self.namespace,
+            verbose=True,
         )
-        self.assertEqual(len(ingested_uris), len(self.input_file_names))
+        self.assertEqual(len(self.ingested_array_uris), len(self.input_file_names))
 
         for fname in self.input_file_names:
             array_info = info(f"tiledb://{self.namespace}/{fname}")
@@ -120,19 +140,20 @@ class TestFiles(unittest.TestCase):
             self.assertEqual(array_info.namespace, self.namespace)
 
     def test_files_ingestion_udf_into_group(self):
-        ingested_uris = ingest_files_udf(
+        self.ingested_array_uris = ingest_files_udf(
             dataset_uri=self.group_destination,
             file_uris=self.test_file_uris,
             acn=self.acn,
             namespace=self.namespace,
+            verbose=True,
         )
-        self.assertEqual(len(ingested_uris), len(self.input_file_names))
+        self.assertEqual(len(self.ingested_array_uris), len(self.input_file_names))
 
         add_arrays_to_group_udf(
-            array_uris=ingested_uris,
-            namespace=self.namespace,
-            register_name=self.group_name,
+            array_uris=self.ingested_array_uris,
+            group_uri=self.group_uri,
             config=client.Ctx().config().dict(),
+            verbose=True,
         )
 
         group_info = groups.info(self.group_uri)
@@ -143,11 +164,20 @@ class TestFiles(unittest.TestCase):
             self.assertEqual(array_info.name, fname)
             self.assertEqual(array_info.namespace, self.namespace)
 
-    def test_files_ingestion_udf_into_bad_group_uri_raises(self):
+    def test_add_array_to_group_udf_raises_bad_namespace_error(self):
         with self.assertRaises(tiledb.TileDBError):
             add_arrays_to_group_udf(
                 array_uris=[f"tiledb://{self.namespace}/{self.input_file_names[0]}"],
-                namespace="very-bad-namespace",
-                register_name="bad-group",
+                group_uri=f"tiledb://very-bad-namespace/{self.group_name}",
                 config=client.Ctx().config().dict(),
+                verbose=True,
+            )
+
+    def test_add_array_to_group_udf_non_existing_group_raises_value_error(self):
+        with self.assertRaises(ValueError):
+            add_arrays_to_group_udf(
+                array_uris=[f"tiledb://{self.namespace}/{self.input_file_names[0]}"],
+                group_uri=f"tiledb://{self.namespace}/non-existing-group",
+                config=client.Ctx().config().dict(),
+                verbose=True,
             )
