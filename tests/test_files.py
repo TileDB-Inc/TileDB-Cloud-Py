@@ -7,10 +7,10 @@ from tiledb.cloud import groups
 from tiledb.cloud._common import testonly
 from tiledb.cloud.array import delete_array
 from tiledb.cloud.array import info
-from tiledb.cloud.file_ingestion import add_arrays_to_group_udf
-from tiledb.cloud.file_ingestion import chunk_results_udf
-from tiledb.cloud.file_ingestion import ingest_files_udf
-from tiledb.cloud.file_ingestion import sanitize_filename
+from tiledb.cloud.files import add_arrays_to_group_udf
+from tiledb.cloud.files import chunk_results_udf
+from tiledb.cloud.files import ingest_files_udf
+from tiledb.cloud.files import sanitize_filename
 
 
 class TestFiles(unittest.TestCase):
