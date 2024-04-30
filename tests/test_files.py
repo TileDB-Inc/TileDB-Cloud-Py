@@ -1,19 +1,25 @@
 import unittest
+from time import sleep
 from typing import List
 
 import tiledb
 from tiledb.cloud import client
 from tiledb.cloud import groups
 from tiledb.cloud._common import testonly
+from tiledb.cloud._common import utils
 from tiledb.cloud.array import delete_array
 from tiledb.cloud.array import info
+from tiledb.cloud.dag import server_logs
 from tiledb.cloud.file_ingestion import add_arrays_to_group_udf
 from tiledb.cloud.file_ingestion import chunk_results_udf
+from tiledb.cloud.file_ingestion import ingest_files
 from tiledb.cloud.file_ingestion import ingest_files_udf
 from tiledb.cloud.file_ingestion import sanitize_filename
+from tiledb.cloud.rest_api import ApiException
+from tiledb.cloud.rest_api import TaskGraphLogStatus
 
 
-class TestFiles(unittest.TestCase):
+class BaseFileIngestionTestClass(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """Setup test files, group and destinations once before the file tests start."""
@@ -47,7 +53,8 @@ class TestFiles(unittest.TestCase):
         cls.__cleanup_residual_test_arrays(
             array_uris=[
                 f"tiledb://{cls.namespace}/{fname}" for fname in cls.input_file_names
-            ]
+            ],
+            handle_not_unique=True,
         )
         groups.deregister(cls.group_uri)
         return super().tearDownClass()
@@ -63,14 +70,33 @@ class TestFiles(unittest.TestCase):
         return super().tearDown()
 
     @staticmethod
-    def __cleanup_residual_test_arrays(array_uris: List[str]) -> None:
+    def __cleanup_residual_test_arrays(
+        array_uris: List[str],
+        handle_not_unique: bool = False,
+    ) -> None:
         """Deletes every array in a list"""
+        not_unique = []
         for array_uri in array_uris:
             try:
                 delete_array(array_uri)
-            except Exception:
+            except Exception as exc:
+                error_msg = str(exc)
+                if "is not unique" in error_msg:
+                    not_unique += error_msg[
+                        error_msg.find("[") + 1 : error_msg.find("]")
+                    ].split(" ")
                 continue
 
+        if handle_not_unique and len(not_unique) > 0:
+            namespace, _ = utils.split_uri(array_uris[0])
+            for uid in not_unique:
+                try:
+                    delete_array(f"tiledb://{namespace}/{uid}")
+                except Exception:
+                    continue
+
+
+class TestFiles(BaseFileIngestionTestClass):
     def test_sanitize_filename(self):
         subjects = {
             "test_1": ("test_filename.txt", "test_filename.txt"),
@@ -134,9 +160,9 @@ class TestFiles(unittest.TestCase):
         )
         self.assertEqual(len(self.ingested_array_uris), len(self.input_file_names))
 
-        for fname in self.input_file_names:
-            array_info = info(f"tiledb://{self.namespace}/{fname}")
-            self.assertEqual(array_info.name, fname)
+        for uri in self.ingested_array_uris:
+            array_info = info(uri)
+            self.assertTrue(array_info.name in self.input_file_names)
             self.assertEqual(array_info.namespace, self.namespace)
 
     def test_files_ingestion_udf_into_group(self):
@@ -159,9 +185,9 @@ class TestFiles(unittest.TestCase):
         group_info = groups.info(self.group_uri)
         self.assertEqual(group_info.asset_count, len(self.test_file_uris))
 
-        for fname in self.input_file_names:
-            array_info = info(f"tiledb://{self.namespace}/{fname}")
-            self.assertEqual(array_info.name, fname)
+        for uri in self.ingested_array_uris:
+            array_info = info(uri)
+            self.assertTrue(array_info.name in self.input_file_names)
             self.assertEqual(array_info.namespace, self.namespace)
 
     def test_add_array_to_group_udf_raises_bad_namespace_error(self):
@@ -181,3 +207,57 @@ class TestFiles(unittest.TestCase):
                 config=client.Ctx().config().dict(),
                 verbose=True,
             )
+
+
+class TestFilesIngestionDAG(BaseFileIngestionTestClass):
+    def test_ingest_files(self):
+        dag_id = ingest_files(
+            dataset_uri=self.destination,
+            search_uri=self.input_file_location,
+            namespace=self.namespace,
+            acn=self.acn,
+            batch_size=(len(self.input_file_names) // 2) + 1,
+            taskgraph_name="test_ingest_files",
+        )
+        logs = server_logs(dag_or_id=dag_id, namespace=self.namespace)
+        self.assertEqual(len(logs.nodes), 3)
+        self.assertTrue("Find file URIs" in logs.nodes[0].name)
+        self.assertTrue("Break Found Files in Chunks" in logs.nodes[1].name)
+        self.assertTrue("Ingest file URIs" in logs.nodes[2].name)
+
+        while logs.status in [TaskGraphLogStatus.RUNNING, TaskGraphLogStatus.SUBMITTED]:
+            sleep(2)
+            logs = server_logs(dag_or_id=dag_id, namespace=self.namespace)
+        self.assertEqual(logs.status, TaskGraphLogStatus.SUCCEEDED)
+
+    def test_ingest_files_into_group(self):
+        dag_id = ingest_files(
+            dataset_uri=self.group_destination,
+            search_uri=self.input_file_location,
+            group_uri=self.group_uri,
+            namespace=self.namespace,
+            acn=self.acn,
+            batch_size=(len(self.input_file_names) // 2) + 1,
+            taskgraph_name="test_ingest_files_into_group",
+        )
+        logs = server_logs(dag_or_id=dag_id, namespace=self.namespace)
+        self.assertEqual(len(logs.nodes), 4)
+        self.assertTrue("Find file URIs" in logs.nodes[0].name)
+        self.assertTrue("Break Found Files in Chunks" in logs.nodes[1].name)
+        self.assertTrue("Ingest file URIs" in logs.nodes[2].name)
+        self.assertTrue("add_arrays_to_group_udf" in logs.nodes[3].name)
+
+        while logs.status in [TaskGraphLogStatus.RUNNING, TaskGraphLogStatus.SUBMITTED]:
+            sleep(2)
+            logs = server_logs(dag_or_id=dag_id, namespace=self.namespace)
+        self.assertEqual(logs.status, TaskGraphLogStatus.SUCCEEDED)
+
+    def test_bad_namespace_raises_api_exception(self):
+        with self.assertRaises(ApiException) as exc:
+            malformed_uri = f"tiledb://very-bad-namespace/{self.group_name}"
+            ingest_files(
+                dataset_uri=self.destination,
+                search_uri=self.input_file_location,
+                group_uri=malformed_uri,
+            )
+            self.assertEqual(404, exc.status)
