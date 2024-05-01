@@ -1,6 +1,4 @@
 import os
-import re
-from math import ceil
 from typing import Any, List, Mapping, Optional, Sequence, Union
 
 import tiledb
@@ -10,54 +8,13 @@ from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud._common import utils
 from tiledb.cloud.array import info
 from tiledb.cloud.dag.mode import Mode
+from tiledb.cloud.file import udfs as file_udfs
+from tiledb.cloud.file import utils as file_utils
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import get_logger_wrapper
-from tiledb.cloud.vcf.ingestion import find_uris_udf
 
 DEFAULT_RESOURCES = {"cpu": "1", "memory": "2Gi"}
 DEFAULT_FILE_INGESTION_NAME = "file-ingestion"
-DEFAULT_BATCH_SIZE = 100
-
-
-def sanitize_filename(fname: str) -> str:
-    """
-    Sanitizes a filename by removing invalid characters.
-
-    :param fname: A filename to sanitize
-    :return str: The sanitized string
-    """
-    name, suffix = os.path.splitext(fname)
-    name = re.sub(r"[^\w\s-]", "", name)
-    name = re.sub(r"[-_\s]+", "_", name).strip("-_")
-    return name + suffix
-
-
-def chunk_results_udf(
-    udf_results: Sequence[Sequence[str]],
-    batch_size: Optional[int] = DEFAULT_BATCH_SIZE,
-    verbose: bool = False,
-) -> List[List[str]]:
-    """
-    Flatten and break a list of udf results into batches of a specified size.
-
-    :param udf_results: An iterable of iterables containing UDF results.
-    :param batch_size: Resulting chunk size, defaults to 100.
-    :return List[List[str]]: A list of chunks as lists.
-    """
-    logger = get_logger_wrapper(verbose)
-
-    # Flatten the results into a list.
-    flattened_results = [result for udf_result in udf_results for result in udf_result]
-
-    # Reduce batch size if there are fewer sample URIs
-    batch_size = min(batch_size, len(flattened_results))
-    num_chunks = ceil(len(flattened_results) / batch_size)
-    logger.info(f"Splitting results into {num_chunks} chunks...")
-
-    return [
-        flattened_results[n * batch_size : (n + 1) * batch_size]
-        for n in range(num_chunks)
-    ]
 
 
 def add_arrays_to_group_udf(
@@ -124,7 +81,7 @@ def ingest_files_udf(
 
     ingested = []
     for file_uri in file_uris:
-        filename = sanitize_filename(os.path.basename(file_uri))
+        filename = file_utils.sanitize_filename(os.path.basename(file_uri))
         array_uri = f"tiledb://{namespace}/{filename}"
         filestore_array_uri = f"{dataset_uri}/{filename}"
         namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
@@ -139,7 +96,7 @@ def ingest_files_udf(
         )
 
         try:
-            tiledb.cloud.file.create_file(
+            file_utils.create_file(
                 namespace=namespace,
                 name=filename,
                 input_uri=file_uri,
@@ -173,7 +130,7 @@ def ingest_files(
     pattern: Optional[str] = None,
     ignore: Optional[str] = None,
     max_files: Optional[int] = None,
-    batch_size: Optional[int] = DEFAULT_BATCH_SIZE,
+    batch_size: Optional[int] = file_udfs.DEFAULT_BATCH_SIZE,
     acn: Optional[str] = None,
     config: Optional[dict] = None,
     namespace: Optional[str] = None,
@@ -260,7 +217,7 @@ def ingest_files(
     for idx, source_uri in enumerate(search_uri):
         results.append(
             graph.submit(
-                find_uris_udf,
+                file_udfs.find_uris_udf,
                 dataset_uri=dataset_uri,
                 search_uri=source_uri,
                 config=config,
@@ -276,7 +233,7 @@ def ingest_files(
 
     # Step 2: Break found files into chunks for ingestion.
     chunks = graph.submit(
-        chunk_results_udf,
+        file_udfs.chunk_udf,
         udf_results=results,
         batch_size=batch_size,
         verbose=verbose,
