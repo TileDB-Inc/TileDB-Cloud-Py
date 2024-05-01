@@ -234,8 +234,9 @@ def ingest_files(
     # Step 2: Break found files into chunks for ingestion.
     chunks = graph.submit(
         file_udfs.chunk_udf,
-        udf_results=results,
+        items=results,
         batch_size=batch_size,
+        flatten_items=True,
         verbose=verbose,
         name="Break Found Files in Chunks",
         resources=ingest_resources,
@@ -272,3 +273,18 @@ def ingest_files(
 
 
 ingest = as_batch(ingest_files)
+
+if __name__ == "__main__":
+    graph = ingest_files(
+        dataset_uri="s3://john.moutafis-test/my-test-group",
+        search_uri="s3://tiledb-seth/prospects/bankofgreece/genai/random_invoices/",
+        pattern="*.pdf",
+        namespace="john-moutafis",
+        batch_size=2,
+        max_files=5,
+        taskgraph_name="file-ingest-with-group",
+        acn="my_quicktest_role",
+        verbose=True,
+    )
+
+    print(graph)
