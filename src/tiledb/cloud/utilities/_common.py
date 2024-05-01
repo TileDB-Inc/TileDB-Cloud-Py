@@ -274,7 +274,9 @@ def process_stream(
 
     vfs = tiledb.VFS(config=config)
 
-    output_fp = vfs.open(output_uri, "wb") if output_uri else None
+    # If output_uri is defined, open the URI with VFS, otherwise open /dev/null.
+    # We need to open something to add to the following context manager.
+    output_fp = vfs.open(output_uri, "wb") if output_uri else open("/dev/null", "wb")
 
     # Including output_fp in the context manager is needed when writing to s3
     with vfs.open(uri) as input_fp, output_fp:
