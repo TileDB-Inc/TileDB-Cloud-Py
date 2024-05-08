@@ -218,7 +218,6 @@ def ingest_files(
         results.append(
             graph.submit(
                 file_udfs.find_uris_udf,
-                dataset_uri=dataset_uri,
                 search_uri=source_uri,
                 config=config,
                 include=pattern,
