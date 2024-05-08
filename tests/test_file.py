@@ -48,7 +48,7 @@ class TestFileUtils(unittest.TestCase):
 
         for test_name, (fname, sanitized) in subjects.items():
             with self.subTest(f"case: {test_name}"):
-                self.assertEqual(file_ingestion.sanitize_filename(fname), sanitized)
+                self.assertEqual(file_utils.sanitize_filename(fname), sanitized)
 
     def test_basename_match(self):
         test_fname = os.path.join(

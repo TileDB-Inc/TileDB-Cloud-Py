@@ -39,7 +39,7 @@ def add_arrays_to_group_udf(
             if tiledb.object_type(group_uri) == "group":
                 with tiledb.Group(group_uri, mode="w") as group:
                     logger.debug(
-                        f"Adding to Group {group_uri} the following: {array_uris}"
+                        "Adding to Group %s the following: %s" % (group_uri, array_uris)
                     )
                     for uri in array_uris:
                         if not isinstance(uri, str):
@@ -54,7 +54,9 @@ def add_arrays_to_group_udf(
         except Exception as exc:
             # tiledb.object_type raises an exception
             # if the namespace does not exist
-            logger.error(f"Error checking if {group_uri} is a Group. Bad namespace?")
+            logger.error(
+                "Error checking if '%s' is a Group. Bad namespace?" % group_uri
+            )
             raise exc
 
 
@@ -86,13 +88,14 @@ def ingest_files_udf(
         filestore_array_uri = f"{dataset_uri}/{filename}"
         namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
         logger.debug(
-            f"""
+            """
             ---------------------------------------------
-            - Input URI: {file_uri}
-            - Sanitized Filename: {filename}
-            - Array URI: {array_uri}
-            - Destination URI: {filestore_array_uri}
+            - Input URI: %s
+            - Sanitized Filename: %s
+            - Array URI: %s
+            - Destination URI: %s
             ---------------------------------------------"""
+            % (file_uri, filename, array_uri, filestore_array_uri)
         )
 
         try:
@@ -109,12 +112,12 @@ def ingest_files_udf(
         except tiledb_cloud_error.TileDBCloudError as exc:
             error_msg = repr(exc)
             if "array already exists at location - Code: 8003" in error_msg:
-                logger.warning(f"Array '{array_uri}' already exists.")
+                logger.warning("Array '%s' already exists." % array_uri)
                 continue
             elif f"array {array_uri} is not unique" in error_msg:
                 logger.warning(
-                    f"Array URI {array_uri} is not unique. "
-                    f"Skipping {filename} ingestion"
+                    "Array URI %s is not unique. Skipping %s ingestion"
+                    % (array_uri, filename)
                 )
                 continue
             else:
@@ -176,7 +179,7 @@ def ingest_files(
             # Set the destination path to match the path of the group.
             dataset_uri = f"{dataset_uri}/{group_name}"
         except Exception as exc:
-            error_msg = f"Group URI: '{group_uri}' is not correctly formatted"
+            error_msg = "Group URI: '%s' is not correctly formatted" % group_uri
             logger.error(error_msg)
             raise ValueError(error_msg) from exc
 
@@ -185,24 +188,36 @@ def ingest_files(
         search_uri = [search_uri]
 
     logger.debug(
-        f"""
+        """
         ----------------------------------------------
         Build the file ingestion graph with arguments:
         ----------------------------------------------
-        - Dataset URI: {dataset_uri}
+        - Dataset URI: %s
         - Search:
-            - URI: {search_uri}
+            - URI: %s
             - Patterns:
-                - Include: {pattern}
-                - Exclude: {ignore}
-            - Max Files: {max_files}
-            - Batch Size: {batch_size}
-        - Namespace: {namespace}
-        - Group URI: {group_uri}
-        - Taskgraph Name: {taskgraph_name}
-        - Resources: {ingest_resources}
+                - Include: %s
+                - Exclude: %s
+            - Max Files: %s
+            - Batch Size: %s
+        - Namespace: %s
+        - Group URI: %s
+        - Taskgraph Name: %s
+        - Resources: %s
         ----------------------------------------------
         """
+        % (
+            dataset_uri,
+            search_uri,
+            pattern,
+            ignore,
+            max_files,
+            batch_size,
+            namespace,
+            group_uri,
+            taskgraph_name,
+            ingest_resources,
+        )
     )
 
     # Graph Setup
