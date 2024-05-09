@@ -90,31 +90,34 @@ per_page = 56 # int | pagination limit (optional)
 
 All URIs are relative to _http://localhost_
 
-| Class             | Method                                                                                                       | HTTP request                                                | Description |
-| ----------------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- | ----------- |
-| _ArrayApi_        | [**array_activity_log**](docs/ArrayApi.md#array_activity_log)                                                | **GET** /v2/arrays/{namespace}/{array}/activity             |
-| _ArrayApi_        | [**get_array**](docs/ArrayApi.md#get_array)                                                                  | **POST** /v2/arrays/{namespace}/{array}                     |
-| _FilesApi_        | [**handle_upload_file**](docs/FilesApi.md#handle_upload_file)                                                | **POST** /v2/files/{namespace}/{array}/upload               |
-| _GroupsApi_       | [**create_group**](docs/GroupsApi.md#create_group)                                                           | **POST** /v2/groups/{group_namespace}                       |
-| _GroupsApi_       | [**deregister_group**](docs/GroupsApi.md#deregister_group)                                                   | **DELETE** /v2/groups/{group_namespace}/{group_name}        |
-| _GroupsApi_       | [**get_group_metadata**](docs/GroupsApi.md#get_group_metadata)                                               | **POST** /v2/groups/{group_namespace}/{group_name}/metadata |
-| _GroupsApi_       | [**groups_group_namespace_group_name_options**](docs/GroupsApi.md#groups_group_namespace_group_name_options) | **OPTIONS** /v2/groups/{group_namespace}/{group_name}       |
-| _GroupsApi_       | [**register_group**](docs/GroupsApi.md#register_group)                                                       | **PUT** /v2/groups/{group_namespace}                        |
-| _GroupsApi_       | [**retrieve_group**](docs/GroupsApi.md#retrieve_group)                                                       | **POST** /v2/groups/{group_namespace}/{group_name}          |
-| _GroupsApi_       | [**update_group_contents**](docs/GroupsApi.md#update_group_contents)                                         | **PATCH** /v2/groups/{group_namespace}/{group_name}         |
-| _GroupsApi_       | [**update_group_metadata**](docs/GroupsApi.md#update_group_metadata)                                         | **PUT** /v2/groups/{group_namespace}/{group_name}/metadata  |
-| _NotebooksApi_    | [**handle_upload_notebook**](docs/NotebooksApi.md#handle_upload_notebook)                                    | **POST** /v2/notebooks/{namespace}/{array}/upload           |
-| _OrganizationApi_ | [**add_credential**](docs/OrganizationApi.md#add_credential)                                                 | **POST** /v2/credentials/{namespace}                        |
-| _OrganizationApi_ | [**delete_credential**](docs/OrganizationApi.md#delete_credential)                                           | **DELETE** /v2/credentials/{namespace}/{name}               |
-| _OrganizationApi_ | [**get_credential**](docs/OrganizationApi.md#get_credential)                                                 | **GET** /v2/credentials/{namespace}/{name}                  |
-| _OrganizationApi_ | [**list_credentials**](docs/OrganizationApi.md#list_credentials)                                             | **GET** /v2/credentials/{namespace}                         |
-| _OrganizationApi_ | [**update_credential**](docs/OrganizationApi.md#update_credential)                                           | **PATCH** /v2/credentials/{namespace}/{name}                |
-| _QueryApi_        | [**submit_query**](docs/QueryApi.md#submit_query)                                                            | **POST** /v2/arrays/{namespace}/{array}/query/submit        |
-| _UserApi_         | [**add_credential**](docs/UserApi.md#add_credential)                                                         | **POST** /v2/credentials/{namespace}                        |
-| _UserApi_         | [**delete_credential**](docs/UserApi.md#delete_credential)                                                   | **DELETE** /v2/credentials/{namespace}/{name}               |
-| _UserApi_         | [**get_credential**](docs/UserApi.md#get_credential)                                                         | **GET** /v2/credentials/{namespace}/{name}                  |
-| _UserApi_         | [**list_credentials**](docs/UserApi.md#list_credentials)                                                     | **GET** /v2/credentials/{namespace}                         |
-| _UserApi_         | [**update_credential**](docs/UserApi.md#update_credential)                                                   | **PATCH** /v2/credentials/{namespace}/{name}                |
+| Class             | Method                                                                                                       | HTTP request                                                       | Description |
+| ----------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ | ----------- |
+| _ArrayApi_        | [**array_activity_log**](docs/ArrayApi.md#array_activity_log)                                                | **GET** /v2/arrays/{namespace}/{array}/activity                    |
+| _ArrayApi_        | [**get_array**](docs/ArrayApi.md#get_array)                                                                  | **POST** /v2/arrays/{namespace}/{array}                            |
+| _FilesApi_        | [**handle_upload_file**](docs/FilesApi.md#handle_upload_file)                                                | **POST** /v2/files/{namespace}/{array}/upload                      |
+| _GroupsApi_       | [**create_group**](docs/GroupsApi.md#create_group)                                                           | **POST** /v2/groups/{group_namespace}                              |
+| _GroupsApi_       | [**delete_group**](docs/GroupsApi.md#delete_group)                                                           | **DELETE** /v2/groups/{group_namespace}/{group_name}/delete        |
+| _GroupsApi_       | [**deregister_group**](docs/GroupsApi.md#deregister_group)                                                   | **DELETE** /v2/groups/{group_namespace}/{group_name}               |
+| _GroupsApi_       | [**get_group_content_activity**](docs/GroupsApi.md#get_group_content_activity)                               | **GET** /v2/groups/{group_namespace}/{group_name}/content_activity |
+| _GroupsApi_       | [**get_group_metadata**](docs/GroupsApi.md#get_group_metadata)                                               | **POST** /v2/groups/{group_namespace}/{group_name}/metadata        |
+| _GroupsApi_       | [**groups_group_namespace_group_name_options**](docs/GroupsApi.md#groups_group_namespace_group_name_options) | **OPTIONS** /v2/groups/{group_namespace}/{group_name}              |
+| _GroupsApi_       | [**list_group_activity**](docs/GroupsApi.md#list_group_activity)                                             | **GET** /v2/groups/{namespace}/{group}/activity                    |
+| _GroupsApi_       | [**register_group**](docs/GroupsApi.md#register_group)                                                       | **PUT** /v2/groups/{group_namespace}                               |
+| _GroupsApi_       | [**retrieve_group**](docs/GroupsApi.md#retrieve_group)                                                       | **POST** /v2/groups/{group_namespace}/{group_name}                 |
+| _GroupsApi_       | [**update_group_contents**](docs/GroupsApi.md#update_group_contents)                                         | **PATCH** /v2/groups/{group_namespace}/{group_name}                |
+| _GroupsApi_       | [**update_group_metadata**](docs/GroupsApi.md#update_group_metadata)                                         | **PUT** /v2/groups/{group_namespace}/{group_name}/metadata         |
+| _NotebooksApi_    | [**handle_upload_notebook**](docs/NotebooksApi.md#handle_upload_notebook)                                    | **POST** /v2/notebooks/{namespace}/{array}/upload                  |
+| _OrganizationApi_ | [**add_credential**](docs/OrganizationApi.md#add_credential)                                                 | **POST** /v2/credentials/{namespace}                               |
+| _OrganizationApi_ | [**delete_credential**](docs/OrganizationApi.md#delete_credential)                                           | **DELETE** /v2/credentials/{namespace}/{name}                      |
+| _OrganizationApi_ | [**get_credential**](docs/OrganizationApi.md#get_credential)                                                 | **GET** /v2/credentials/{namespace}/{name}                         |
+| _OrganizationApi_ | [**list_credentials**](docs/OrganizationApi.md#list_credentials)                                             | **GET** /v2/credentials/{namespace}                                |
+| _OrganizationApi_ | [**update_credential**](docs/OrganizationApi.md#update_credential)                                           | **PATCH** /v2/credentials/{namespace}/{name}                       |
+| _QueryApi_        | [**submit_query**](docs/QueryApi.md#submit_query)                                                            | **POST** /v2/arrays/{namespace}/{array}/query/submit               |
+| _UserApi_         | [**add_credential**](docs/UserApi.md#add_credential)                                                         | **POST** /v2/credentials/{namespace}                               |
+| _UserApi_         | [**delete_credential**](docs/UserApi.md#delete_credential)                                                   | **DELETE** /v2/credentials/{namespace}/{name}                      |
+| _UserApi_         | [**get_credential**](docs/UserApi.md#get_credential)                                                         | **GET** /v2/credentials/{namespace}/{name}                         |
+| _UserApi_         | [**list_credentials**](docs/UserApi.md#list_credentials)                                                     | **GET** /v2/credentials/{namespace}                                |
+| _UserApi_         | [**update_credential**](docs/UserApi.md#update_credential)                                                   | **PATCH** /v2/credentials/{namespace}/{name}                       |
 
 ## Documentation For Models
 
@@ -123,6 +126,8 @@ All URIs are relative to _http://localhost_
 - [AccessCredential](docs/AccessCredential.md)
 - [AccessCredentialCredential](docs/AccessCredentialCredential.md)
 - [AccessCredentialRole](docs/AccessCredentialRole.md)
+- [AccessCredentialToken](docs/AccessCredentialToken.md)
+- [AccessCredentialType](docs/AccessCredentialType.md)
 - [AccessCredentialsData](docs/AccessCredentialsData.md)
 - [ActivityEventType](docs/ActivityEventType.md)
 - [Array](docs/Array.md)
@@ -136,10 +141,12 @@ All URIs are relative to _http://localhost_
 - [ArraySchemaEntry](docs/ArraySchemaEntry.md)
 - [ArraySchemaMap](docs/ArraySchemaMap.md)
 - [ArrayType](docs/ArrayType.md)
+- [AssetType](docs/AssetType.md)
 - [Attribute](docs/Attribute.md)
 - [AttributeBufferHeader](docs/AttributeBufferHeader.md)
 - [AttributeBufferSize](docs/AttributeBufferSize.md)
 - [AzureCredential](docs/AzureCredential.md)
+- [AzureToken](docs/AzureToken.md)
 - [CloudProvider](docs/CloudProvider.md)
 - [Datatype](docs/Datatype.md)
 - [DeleteAndUpdateTileLocation](docs/DeleteAndUpdateTileLocation.md)
@@ -155,13 +162,22 @@ All URIs are relative to _http://localhost_
 - [FilterType](docs/FilterType.md)
 - [FloatScaleConfig](docs/FloatScaleConfig.md)
 - [FragmentMetadata](docs/FragmentMetadata.md)
+- [GCPInteroperabilityCredential](docs/GCPInteroperabilityCredential.md)
+- [GCPServiceAccountKey](docs/GCPServiceAccountKey.md)
 - [GenericTileOffsets](docs/GenericTileOffsets.md)
+- [GroupActivityEventType](docs/GroupActivityEventType.md)
+- [GroupActivityLog](docs/GroupActivityLog.md)
+- [GroupActivityLogResponse](docs/GroupActivityLogResponse.md)
+- [GroupContentActivity](docs/GroupContentActivity.md)
+- [GroupContentActivityAsset](docs/GroupContentActivityAsset.md)
+- [GroupContentActivityResponse](docs/GroupContentActivityResponse.md)
 - [GroupContentsChangesRequest](docs/GroupContentsChangesRequest.md)
 - [GroupContentsChangesRequestGroupChanges](docs/GroupContentsChangesRequestGroupChanges.md)
 - [GroupContentsRetrievalRequest](docs/GroupContentsRetrievalRequest.md)
 - [GroupContentsRetrievalResponse](docs/GroupContentsRetrievalResponse.md)
 - [GroupCreationRequest](docs/GroupCreationRequest.md)
 - [GroupCreationRequestGroupDetails](docs/GroupCreationRequestGroupDetails.md)
+- [GroupCreationResponse](docs/GroupCreationResponse.md)
 - [GroupMember](docs/GroupMember.md)
 - [GroupMemberAssetType](docs/GroupMemberAssetType.md)
 - [GroupMemberType](docs/GroupMemberType.md)

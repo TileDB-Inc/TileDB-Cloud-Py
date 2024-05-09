@@ -30,8 +30,9 @@ class CloudProvider(object):
     """
     AWS = "AWS"
     AZURE = "AZURE"
+    GCP = "GCP"
 
-    allowable_values = [AWS, AZURE]  # noqa: E501
+    allowable_values = [AWS, AZURE, GCP]  # noqa: E501
 
     """
     Attributes:

@@ -45,6 +45,7 @@ class Datatype(object):
     STRING_UTF32 = "STRING_UTF32"
     STRING_UCS2 = "STRING_UCS2"
     STRING_UCS4 = "STRING_UCS4"
+    ANY = "ANY"
     DATETIME_YEAR = "DATETIME_YEAR"
     DATETIME_MONTH = "DATETIME_MONTH"
     DATETIME_WEEK = "DATETIME_WEEK"
@@ -58,7 +59,17 @@ class Datatype(object):
     DATETIME_PS = "DATETIME_PS"
     DATETIME_FS = "DATETIME_FS"
     DATETIME_AS = "DATETIME_AS"
-    ANY = "ANY"
+    TIME_HR = "TIME_HR"
+    TIME_MIN = "TIME_MIN"
+    TIME_SEC = "TIME_SEC"
+    TIME_MS = "TIME_MS"
+    TIME_US = "TIME_US"
+    TIME_NS = "TIME_NS"
+    TIME_PS = "TIME_PS"
+    TIME_FS = "TIME_FS"
+    TIME_AS = "TIME_AS"
+    BLOB = "BLOB"
+    BOOL = "BOOL"
 
     allowable_values = [
         INT32,
@@ -78,6 +89,7 @@ class Datatype(object):
         STRING_UTF32,
         STRING_UCS2,
         STRING_UCS4,
+        ANY,
         DATETIME_YEAR,
         DATETIME_MONTH,
         DATETIME_WEEK,
@@ -91,7 +103,17 @@ class Datatype(object):
         DATETIME_PS,
         DATETIME_FS,
         DATETIME_AS,
-        ANY,
+        TIME_HR,
+        TIME_MIN,
+        TIME_SEC,
+        TIME_MS,
+        TIME_US,
+        TIME_NS,
+        TIME_PS,
+        TIME_FS,
+        TIME_AS,
+        BLOB,
+        BOOL,
     ]  # noqa: E501
 
     """

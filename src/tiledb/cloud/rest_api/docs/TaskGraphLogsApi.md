@@ -288,7 +288,7 @@ id = 'id_example' # str | The UUID of the task graph log entry.
 
 # **list_task_graph_logs**
 
-> TaskGraphLogsData list_task_graph_logs(namespace=namespace, created_by=created_by, search=search, start_time=start_time, end_time=end_time, page=page, per_page=per_page)
+> TaskGraphLogsData list_task_graph_logs(namespace=namespace, created_by=created_by, status=status, search=search, start_time=start_time, end_time=end_time, page=page, per_page=per_page)
 
 Fetch the task graph logs of a namespace the user has access to. The returned entries will include only summary data, and will not include information about the individual tasks that were executed. (This information is available when requesting an individual task graph log.) Entries in the response are ordered from newest to oldest. Pagination parameters work as in other API methods; see PaginationMetadata.
 
@@ -335,6 +335,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.TaskGraphLogsApi(api_client)
     namespace = 'namespace_example' # str | Include logs for this namespace. (optional)
 created_by = 'created_by_example' # str | Include logs from only this user. (optional)
+status = 'status_example' # str | Filter to only return these statuses (optional)
 search = 'search_example' # str | search string that will look at name. (optional)
 start_time = '2013-10-20T19:20:30+01:00' # datetime | Include logs created after this time. (optional)
 end_time = '2013-10-20T19:20:30+01:00' # datetime | Include logs created before this time. (optional)
@@ -342,7 +343,7 @@ page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
 
     try:
-        api_response = api_instance.list_task_graph_logs(namespace=namespace, created_by=created_by, search=search, start_time=start_time, end_time=end_time, page=page, per_page=per_page)
+        api_response = api_instance.list_task_graph_logs(namespace=namespace, created_by=created_by, status=status, search=search, start_time=start_time, end_time=end_time, page=page, per_page=per_page)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling TaskGraphLogsApi->list_task_graph_logs: %s\n" % e)
@@ -389,6 +390,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud.rest_api.TaskGraphLogsApi(api_client)
     namespace = 'namespace_example' # str | Include logs for this namespace. (optional)
 created_by = 'created_by_example' # str | Include logs from only this user. (optional)
+status = 'status_example' # str | Filter to only return these statuses (optional)
 search = 'search_example' # str | search string that will look at name. (optional)
 start_time = '2013-10-20T19:20:30+01:00' # datetime | Include logs created after this time. (optional)
 end_time = '2013-10-20T19:20:30+01:00' # datetime | Include logs created before this time. (optional)
@@ -396,7 +398,7 @@ page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
 
     try:
-        api_response = api_instance.list_task_graph_logs(namespace=namespace, created_by=created_by, search=search, start_time=start_time, end_time=end_time, page=page, per_page=per_page)
+        api_response = api_instance.list_task_graph_logs(namespace=namespace, created_by=created_by, status=status, search=search, start_time=start_time, end_time=end_time, page=page, per_page=per_page)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling TaskGraphLogsApi->list_task_graph_logs: %s\n" % e)
@@ -408,6 +410,7 @@ per_page = 56 # int | pagination limit (optional)
 | -------------- | ------------ | -------------------------------------- | ---------- |
 | **namespace**  | **str**      | Include logs for this namespace.       | [optional] |
 | **created_by** | **str**      | Include logs from only this user.      | [optional] |
+| **status**     | **str**      | Filter to only return these statuses   | [optional] |
 | **search**     | **str**      | search string that will look at name.  | [optional] |
 | **start_time** | **datetime** | Include logs created after this time.  | [optional] |
 | **end_time**   | **datetime** | Include logs created before this time. | [optional] |
@@ -846,7 +849,7 @@ id = 'id_example' # str | The UUID of the task graph execution (TaskGraphLog).
 
 # **stop_task_graph_execution**
 
-> TaskGraphLog stop_task_graph_execution(namespace, id)
+> stop_task_graph_execution(namespace, id)
 
 Stops a task graph execution in the given namespace using the associated associated execution id.
 
@@ -895,8 +898,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 id = 'id_example' # str | The UUID of the task graph execution (TaskGraphLog).
 
     try:
-        api_response = api_instance.stop_task_graph_execution(namespace, id)
-        pprint(api_response)
+        api_instance.stop_task_graph_execution(namespace, id)
     except ApiException as e:
         print("Exception when calling TaskGraphLogsApi->stop_task_graph_execution: %s\n" % e)
 ```
@@ -944,8 +946,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 id = 'id_example' # str | The UUID of the task graph execution (TaskGraphLog).
 
     try:
-        api_response = api_instance.stop_task_graph_execution(namespace, id)
-        pprint(api_response)
+        api_instance.stop_task_graph_execution(namespace, id)
     except ApiException as e:
         print("Exception when calling TaskGraphLogsApi->stop_task_graph_execution: %s\n" % e)
 ```
@@ -959,7 +960,7 @@ id = 'id_example' # str | The UUID of the task graph execution (TaskGraphLog).
 
 ### Return type
 
-[**TaskGraphLog**](TaskGraphLog.md)
+void (empty response body)
 
 ### Authorization
 
@@ -972,11 +973,11 @@ id = 'id_example' # str | The UUID of the task graph execution (TaskGraphLog).
 
 ### HTTP response details
 
-| Status code | Description                                 | Response headers |
-| ----------- | ------------------------------------------- | ---------------- |
-| **202**     | Information about the task graph execution. | -                |
-| **502**     | Bad Gateway                                 | -                |
-| **0**       | error response                              | -                |
+| Status code | Description                | Response headers |
+| ----------- | -------------------------- | ---------------- |
+| **204**     | Graph stopped successfully | -                |
+| **502**     | Bad Gateway                | -                |
+| **0**       | error response             | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
