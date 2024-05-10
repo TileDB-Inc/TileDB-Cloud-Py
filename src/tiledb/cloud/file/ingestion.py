@@ -1,6 +1,4 @@
 import os
-import re
-from math import ceil
 from typing import Any, List, Mapping, Optional, Sequence, Union
 
 import tiledb
@@ -10,54 +8,13 @@ from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud._common import utils
 from tiledb.cloud.array import info
 from tiledb.cloud.dag.mode import Mode
+from tiledb.cloud.file import udfs as file_udfs
+from tiledb.cloud.file import utils as file_utils
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import get_logger_wrapper
-from tiledb.cloud.vcf.ingestion import find_uris_udf
 
 DEFAULT_RESOURCES = {"cpu": "1", "memory": "2Gi"}
 DEFAULT_FILE_INGESTION_NAME = "file-ingestion"
-DEFAULT_BATCH_SIZE = 100
-
-
-def sanitize_filename(fname: str) -> str:
-    """
-    Sanitizes a filename by removing invalid characters.
-
-    :param fname: A filename to sanitize
-    :return str: The sanitized string
-    """
-    name, suffix = os.path.splitext(fname)
-    name = re.sub(r"[^\w\s-]", "", name)
-    name = re.sub(r"[-_\s]+", "_", name).strip("-_")
-    return name + suffix
-
-
-def chunk_results_udf(
-    udf_results: Sequence[Sequence[str]],
-    batch_size: Optional[int] = DEFAULT_BATCH_SIZE,
-    verbose: bool = False,
-) -> List[List[str]]:
-    """
-    Flatten and break a list of udf results into batches of a specified size.
-
-    :param udf_results: An iterable of iterables containing UDF results.
-    :param batch_size: Resulting chunk size, defaults to 100.
-    :return List[List[str]]: A list of chunks as lists.
-    """
-    logger = get_logger_wrapper(verbose)
-
-    # Flatten the results into a list.
-    flattened_results = [result for udf_result in udf_results for result in udf_result]
-
-    # Reduce batch size if there are fewer sample URIs
-    batch_size = min(batch_size, len(flattened_results))
-    num_chunks = ceil(len(flattened_results) / batch_size)
-    logger.info(f"Splitting results into {num_chunks} chunks...")
-
-    return [
-        flattened_results[n * batch_size : (n + 1) * batch_size]
-        for n in range(num_chunks)
-    ]
 
 
 def add_arrays_to_group_udf(
@@ -82,7 +39,7 @@ def add_arrays_to_group_udf(
             if tiledb.object_type(group_uri) == "group":
                 with tiledb.Group(group_uri, mode="w") as group:
                     logger.debug(
-                        f"Adding to Group {group_uri} the following: {array_uris}"
+                        "Adding to Group %s the following: %s" % (group_uri, array_uris)
                     )
                     for uri in array_uris:
                         if not isinstance(uri, str):
@@ -97,7 +54,9 @@ def add_arrays_to_group_udf(
         except Exception as exc:
             # tiledb.object_type raises an exception
             # if the namespace does not exist
-            logger.error(f"Error checking if {group_uri} is a Group. Bad namespace?")
+            logger.error(
+                "Error checking if '%s' is a Group. Bad namespace?" % group_uri
+            )
             raise exc
 
 
@@ -124,22 +83,23 @@ def ingest_files_udf(
 
     ingested = []
     for file_uri in file_uris:
-        filename = sanitize_filename(os.path.basename(file_uri))
+        filename = file_utils.sanitize_filename(os.path.basename(file_uri))
         array_uri = f"tiledb://{namespace}/{filename}"
         filestore_array_uri = f"{dataset_uri}/{filename}"
         namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
         logger.debug(
-            f"""
+            """
             ---------------------------------------------
-            - Input URI: {file_uri}
-            - Sanitized Filename: {filename}
-            - Array URI: {array_uri}
-            - Destination URI: {filestore_array_uri}
+            - Input URI: %s
+            - Sanitized Filename: %s
+            - Array URI: %s
+            - Destination URI: %s
             ---------------------------------------------"""
+            % (file_uri, filename, array_uri, filestore_array_uri)
         )
 
         try:
-            tiledb.cloud.file.create_file(
+            file_utils.create_file(
                 namespace=namespace,
                 name=filename,
                 input_uri=file_uri,
@@ -152,12 +112,12 @@ def ingest_files_udf(
         except tiledb_cloud_error.TileDBCloudError as exc:
             error_msg = repr(exc)
             if "array already exists at location - Code: 8003" in error_msg:
-                logger.warning(f"Array '{array_uri}' already exists.")
+                logger.warning("Array '%s' already exists." % array_uri)
                 continue
             elif f"array {array_uri} is not unique" in error_msg:
                 logger.warning(
-                    f"Array URI {array_uri} is not unique. "
-                    f"Skipping {filename} ingestion"
+                    "Array URI %s is not unique. Skipping %s ingestion"
+                    % (array_uri, filename)
                 )
                 continue
             else:
@@ -173,7 +133,7 @@ def ingest_files(
     pattern: Optional[str] = None,
     ignore: Optional[str] = None,
     max_files: Optional[int] = None,
-    batch_size: Optional[int] = DEFAULT_BATCH_SIZE,
+    batch_size: Optional[int] = file_udfs.DEFAULT_BATCH_SIZE,
     acn: Optional[str] = None,
     config: Optional[dict] = None,
     namespace: Optional[str] = None,
@@ -219,7 +179,7 @@ def ingest_files(
             # Set the destination path to match the path of the group.
             dataset_uri = f"{dataset_uri}/{group_name}"
         except Exception as exc:
-            error_msg = f"Group URI: '{group_uri}' is not correctly formatted"
+            error_msg = "Group URI: '%s' is not correctly formatted" % group_uri
             logger.error(error_msg)
             raise ValueError(error_msg) from exc
 
@@ -228,24 +188,36 @@ def ingest_files(
         search_uri = [search_uri]
 
     logger.debug(
-        f"""
+        """
         ----------------------------------------------
         Build the file ingestion graph with arguments:
         ----------------------------------------------
-        - Dataset URI: {dataset_uri}
+        - Dataset URI: %s
         - Search:
-            - URI: {search_uri}
+            - URI: %s
             - Patterns:
-                - Include: {pattern}
-                - Exclude: {ignore}
-            - Max Files: {max_files}
-            - Batch Size: {batch_size}
-        - Namespace: {namespace}
-        - Group URI: {group_uri}
-        - Taskgraph Name: {taskgraph_name}
-        - Resources: {ingest_resources}
+                - Include: %s
+                - Exclude: %s
+            - Max Files: %s
+            - Batch Size: %s
+        - Namespace: %s
+        - Group URI: %s
+        - Taskgraph Name: %s
+        - Resources: %s
         ----------------------------------------------
         """
+        % (
+            dataset_uri,
+            search_uri,
+            pattern,
+            ignore,
+            max_files,
+            batch_size,
+            namespace,
+            group_uri,
+            taskgraph_name,
+            ingest_resources,
+        )
     )
 
     # Graph Setup
@@ -260,8 +232,7 @@ def ingest_files(
     for idx, source_uri in enumerate(search_uri):
         results.append(
             graph.submit(
-                find_uris_udf,
-                dataset_uri=dataset_uri,
+                file_udfs.find_uris_udf,
                 search_uri=source_uri,
                 config=config,
                 include=pattern,
@@ -276,9 +247,10 @@ def ingest_files(
 
     # Step 2: Break found files into chunks for ingestion.
     chunks = graph.submit(
-        chunk_results_udf,
-        udf_results=results,
+        file_udfs.chunk_udf,
+        items=results,
         batch_size=batch_size,
+        flatten_items=True,
         verbose=verbose,
         name="Break Found Files in Chunks",
         resources=ingest_resources,

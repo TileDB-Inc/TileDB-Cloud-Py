@@ -1,4 +1,7 @@
+import os
+import re
 import warnings
+from fnmatch import fnmatch
 from typing import Optional, Tuple, Union
 
 import tiledb
@@ -8,6 +11,31 @@ from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
+
+
+def sanitize_filename(fname: str) -> str:
+    """
+    Sanitizes a filename by removing invalid characters.
+
+    :param fname: A filename to sanitize
+    :return str: The sanitized string
+    """
+    name, suffix = os.path.splitext(fname)
+    name = re.sub(r"[^\w\s-]", "", name)
+    name = re.sub(r"[-_\s]+", "_", name).strip("-_")
+    return name + suffix
+
+
+def basename_match(file_uri: str, pattern: Optional[str] = None) -> bool:
+    """
+    Checks if the basename of a given file uri matches
+    the given UNIX shell style pattern.
+
+    :param file_uri: A file URI.
+    :param pattern: A UNIX shell style pattern, defaults to None
+    :return bool: Pattern matches the file basename or not.
+    """
+    return pattern is not None and fnmatch(os.path.basename(file_uri), pattern)
 
 
 def create_file(
