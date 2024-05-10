@@ -24,10 +24,10 @@ def upload_wheel(
     Upload a local wheel file to a remote TileDB Filestore and optionally register
     it on TileDB Cloud.
 
-    If the wheel Filestore exists, it will be updated with the new wheel file.
+    If the wheel filestore exists, it will be updated with the new wheel file.
 
-    NOTE: The wheel file name must match the file name convention specified by the
-    python packaging specification:
+    NOTE: The local `wheel_path` must match the file name convention specified by
+    the python packaging specification:
     https://packaging.python.org/en/latest/specifications/binary-distribution-format
 
       {distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform tag}.whl
@@ -37,7 +37,7 @@ def upload_wheel(
       udflib-0.1-py3-none-any.whl
 
     :param wheel_path: path to the local wheel file
-    :param storage_uri: URI of the TileDB Filestore to be created or updated
+    :param storage_uri: URI where the wheel filestore will be created or updated
     :param wheel_name: name of registered wheel, defaults to a name based on the
         wheel file
     :param config: config dictionary, defaults to None
@@ -54,23 +54,41 @@ def upload_wheel(
     wheel_file = wheel_file.replace("+", ".")
     array_uri = storage_uri.rstrip("/") + f"/{wheel_file}"
 
-    with tiledb.scope_ctx(config):
-        # Create and register the array if it doesn't exist
-        if not tiledb.object_type(array_uri):
-            tiledb.Array.create(array_uri, tiledb.ArraySchema.from_file(wheel_path))
+    namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
+    tiledb_uri = f"tiledb://{namespace}/{wheel_file}"
 
-            if register:
+    with tiledb.scope_ctx(config):
+        # Create the array if it doesn't exist
+        object_type = tiledb.object_type(array_uri)
+        if object_type is None:
+            print(f"Creating wheel filestore - '{array_uri}'")
+            tiledb.Array.create(array_uri, tiledb.ArraySchema.from_file(wheel_path))
+        elif object_type == "group":
+            raise ValueError(f"A TileDB group exists at '{array_uri}'")
+
+        if register:
+            try:
+                info = tiledb.cloud.info(tiledb_uri)
+            except Exception as e:
+                if "602" in str(e):
+                    raise ValueError(f"Unrecognized namespace - '{namespace}'")
+                info = None
+
+            if info is None:
+                print(f"Registering wheel filestore - '{tiledb_uri}'")
                 tiledb.cloud.array.register_array(
                     array_uri,
                     namespace=namespace,
                     array_name=wheel_file,
                     access_credentials_name=acn,
                 )
-
-                namespace = (
-                    namespace or tiledb.cloud.user_profile().default_namespace_charged
+            elif info.uri != array_uri:
+                raise ValueError(
+                    f"Registered URI mismatch: '{tiledb_uri}' URI '{info.uri}' "
+                    f"does not match '{array_uri}'"
                 )
-                print(f"Registered wheel as 'tiledb://{namespace}/{wheel_file}'")
+            else:
+                print(f"Wheel filestore already registered - '{tiledb_uri}'")
 
         # Copy the wheel to the array
         tiledb.Filestore.copy_from(array_uri, wheel_path)
