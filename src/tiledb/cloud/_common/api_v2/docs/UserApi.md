@@ -12,7 +12,7 @@ All URIs are relative to _http://localhost_
 
 # **add_credential**
 
-> add_credential(namespace, access_credential, provider=provider, page=page, per_page=per_page)
+> add_credential(namespace, access_credential, provider=provider, type=type, page=page, per_page=per_page)
 
 Create a new credential for the namespace
 
@@ -60,11 +60,12 @@ with tiledb.cloud._common.api_v2.ApiClient(configuration) as api_client:
     namespace = 'namespace_example' # str | namespace
 access_credential = tiledb.cloud._common.api_v2.AccessCredential() # AccessCredential | The new credentials to be created.
 provider = 'provider_example' # str | Show only the credentials from this provider. This should be one of the CloudProvider enum values. (optional)
+type = 'type_example' # str | Show only the credentials of this type. This should be one of the AccessCredentialType enum values. (optional)
 page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
 
     try:
-        api_instance.add_credential(namespace, access_credential, provider=provider, page=page, per_page=per_page)
+        api_instance.add_credential(namespace, access_credential, provider=provider, type=type, page=page, per_page=per_page)
     except ApiException as e:
         print("Exception when calling UserApi->add_credential: %s\n" % e)
 ```
@@ -111,24 +112,26 @@ with tiledb.cloud._common.api_v2.ApiClient(configuration) as api_client:
     namespace = 'namespace_example' # str | namespace
 access_credential = tiledb.cloud._common.api_v2.AccessCredential() # AccessCredential | The new credentials to be created.
 provider = 'provider_example' # str | Show only the credentials from this provider. This should be one of the CloudProvider enum values. (optional)
+type = 'type_example' # str | Show only the credentials of this type. This should be one of the AccessCredentialType enum values. (optional)
 page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
 
     try:
-        api_instance.add_credential(namespace, access_credential, provider=provider, page=page, per_page=per_page)
+        api_instance.add_credential(namespace, access_credential, provider=provider, type=type, page=page, per_page=per_page)
     except ApiException as e:
         print("Exception when calling UserApi->add_credential: %s\n" % e)
 ```
 
 ### Parameters
 
-| Name                  | Type                                        | Description                                                                                        | Notes      |
-| --------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------- |
-| **namespace**         | **str**                                     | namespace                                                                                          |
-| **access_credential** | [**AccessCredential**](AccessCredential.md) | The new credentials to be created.                                                                 |
-| **provider**          | **str**                                     | Show only the credentials from this provider. This should be one of the CloudProvider enum values. | [optional] |
-| **page**              | **int**                                     | pagination offset                                                                                  | [optional] |
-| **per_page**          | **int**                                     | pagination limit                                                                                   | [optional] |
+| Name                  | Type                                        | Description                                                                                         | Notes      |
+| --------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------- |
+| **namespace**         | **str**                                     | namespace                                                                                           |
+| **access_credential** | [**AccessCredential**](AccessCredential.md) | The new credentials to be created.                                                                  |
+| **provider**          | **str**                                     | Show only the credentials from this provider. This should be one of the CloudProvider enum values.  | [optional] |
+| **type**              | **str**                                     | Show only the credentials of this type. This should be one of the AccessCredentialType enum values. | [optional] |
+| **page**              | **int**                                     | pagination offset                                                                                   | [optional] |
+| **per_page**          | **int**                                     | pagination limit                                                                                    | [optional] |
 
 ### Return type
 
@@ -425,7 +428,7 @@ name = 'name_example' # str | A URL-safe version of the credential's user-provid
 
 # **list_credentials**
 
-> AccessCredentialsData list_credentials(namespace, provider=provider, page=page, per_page=per_page)
+> AccessCredentialsData list_credentials(namespace, provider=provider, type=type, page=page, per_page=per_page)
 
 List the credentials available in the namespace
 
@@ -472,11 +475,12 @@ with tiledb.cloud._common.api_v2.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud._common.api_v2.UserApi(api_client)
     namespace = 'namespace_example' # str | namespace
 provider = 'provider_example' # str | Show only the credentials from this provider. This should be one of the CloudProvider enum values. (optional)
+type = 'type_example' # str | Show only the credentials of this type. This should be one of the AccessCredentialType enum values. (optional)
 page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
 
     try:
-        api_response = api_instance.list_credentials(namespace, provider=provider, page=page, per_page=per_page)
+        api_response = api_instance.list_credentials(namespace, provider=provider, type=type, page=page, per_page=per_page)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling UserApi->list_credentials: %s\n" % e)
@@ -523,11 +527,12 @@ with tiledb.cloud._common.api_v2.ApiClient(configuration) as api_client:
     api_instance = tiledb.cloud._common.api_v2.UserApi(api_client)
     namespace = 'namespace_example' # str | namespace
 provider = 'provider_example' # str | Show only the credentials from this provider. This should be one of the CloudProvider enum values. (optional)
+type = 'type_example' # str | Show only the credentials of this type. This should be one of the AccessCredentialType enum values. (optional)
 page = 56 # int | pagination offset (optional)
 per_page = 56 # int | pagination limit (optional)
 
     try:
-        api_response = api_instance.list_credentials(namespace, provider=provider, page=page, per_page=per_page)
+        api_response = api_instance.list_credentials(namespace, provider=provider, type=type, page=page, per_page=per_page)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling UserApi->list_credentials: %s\n" % e)
@@ -535,12 +540,13 @@ per_page = 56 # int | pagination limit (optional)
 
 ### Parameters
 
-| Name          | Type    | Description                                                                                        | Notes      |
-| ------------- | ------- | -------------------------------------------------------------------------------------------------- | ---------- |
-| **namespace** | **str** | namespace                                                                                          |
-| **provider**  | **str** | Show only the credentials from this provider. This should be one of the CloudProvider enum values. | [optional] |
-| **page**      | **int** | pagination offset                                                                                  | [optional] |
-| **per_page**  | **int** | pagination limit                                                                                   | [optional] |
+| Name          | Type    | Description                                                                                         | Notes      |
+| ------------- | ------- | --------------------------------------------------------------------------------------------------- | ---------- |
+| **namespace** | **str** | namespace                                                                                           |
+| **provider**  | **str** | Show only the credentials from this provider. This should be one of the CloudProvider enum values.  | [optional] |
+| **type**      | **str** | Show only the credentials of this type. This should be one of the AccessCredentialType enum values. | [optional] |
+| **page**      | **int** | pagination offset                                                                                   | [optional] |
+| **per_page**  | **int** | pagination limit                                                                                    | [optional] |
 
 ### Return type
 

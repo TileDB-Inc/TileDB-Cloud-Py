@@ -132,18 +132,41 @@ run_format() {
 apply_json_safe_patch() {
   git apply - <<EOF
 diff --git a/src/tiledb/cloud/rest_api/api_client.py b/src/tiledb/cloud/rest_api/api_client.py
-index 267385d..6d244a0 100644
+index 97319c27..f2307414 100644
 --- a/src/tiledb/cloud/rest_api/api_client.py
 +++ b/src/tiledb/cloud/rest_api/api_client.py
-@@ -25,6 +25,7 @@ from dateutil.parser import parse
+@@ -24,7 +24,8 @@ import six
+ from dateutil.parser import parse
  from six.moves.urllib.parse import quote
 
- import tiledb.cloud.rest_api.models
+-import tiledb.cloud.rest_api.models
 +from tiledb.cloud._common import json_safe
++from tiledb.cloud.rest_api import models
  from tiledb.cloud.rest_api import rest
  from tiledb.cloud.rest_api.configuration import Configuration
  from tiledb.cloud.rest_api.exceptions import ApiException
-@@ -251,6 +252,8 @@ class ApiClient(object):
+@@ -73,6 +74,7 @@ class ApiClient(object):
+         header_value=None,
+         cookie=None,
+         pool_threads=1,
++        _tdb_models_module=None,
+     ):
+         if configuration is None:
+             configuration = Configuration.get_default_copy()
+@@ -87,6 +89,12 @@ class ApiClient(object):
+         # Set default User-Agent.
+         self.user_agent = "OpenAPI-Generator/1.0.0/python"
+         self.client_side_validation = configuration.client_side_validation
++        self._tdb_models_module = _tdb_models_module or models
++        """The module to look up model names on when parsing messages.
++
++        This is needed to share the same API class between both this API version
++        and API version 2.  See __deserialize for use.
++        """
+
+     def __enter__(self):
+         return self
+@@ -250,6 +258,8 @@ class ApiClient(object):
          """
          if obj is None:
              return None
@@ -152,6 +175,15 @@ index 267385d..6d244a0 100644
          elif isinstance(obj, self.PRIMITIVE_TYPES):
              return obj
          elif isinstance(obj, list):
+@@ -326,7 +336,7 @@ class ApiClient(object):
+             if klass in self.NATIVE_TYPES_MAPPING:
+                 klass = self.NATIVE_TYPES_MAPPING[klass]
+             else:
+-                klass = getattr(tiledb.cloud.rest_api.models, klass)
++                klass = getattr(self._tdb_models_module, klass)
+
+         if klass in self.PRIMITIVE_TYPES:
+             return self.__deserialize_primitive(data, klass)
 EOF
 }
 

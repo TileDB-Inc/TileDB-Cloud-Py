@@ -8,10 +8,12 @@ All URIs are relative to _http://localhost_
 | [**cancel_join_organization**](InvitationApi.md#cancel_join_organization)         | **DELETE** /v1/invitations/{invitation}/{organization}/join                  |
 | [**cancel_share_array_by_invite**](InvitationApi.md#cancel_share_array_by_invite) | **DELETE** /v1/invitations/{invitation}/{namespace}/{array}/share            |
 | [**cancel_share_group_by_invite**](InvitationApi.md#cancel_share_group_by_invite) | **DELETE** /v1/invitations/group/{invitation}/{namespace}/{group_name}/share |
+| [**cancel_share_payment**](InvitationApi.md#cancel_share_payment)                 | **DELETE** /v1/invitations/share_payment/{namespace}/{target}                |
 | [**fetch_invitations**](InvitationApi.md#fetch_invitations)                       | **GET** /v1/invitations                                                      |
 | [**join_organization**](InvitationApi.md#join_organization)                       | **POST** /v1/invitations/{organization}/join                                 |
 | [**share_array_by_invite**](InvitationApi.md#share_array_by_invite)               | **POST** /v1/invitations/{namespace}/{array}/share                           |
 | [**share_group_by_invite**](InvitationApi.md#share_group_by_invite)               | **POST** /v1/invitations/group/{namespace}/{group}/share                     |
+| [**share_payment**](InvitationApi.md#share_payment)                               | **POST** /v1/invitations/share_payment/{namespace}                           |
 
 # **accept_invitation**
 
@@ -556,6 +558,140 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **cancel_share_payment**
+
+> cancel_share_payment(namespace, target)
+
+Revokes invitation from the source namespace to the target.
+
+### Example
+
+- Api Key Authentication (ApiKeyAuth):
+
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
+    namespace = 'namespace_example' # str | name or UUID of namespace sharing their payment info
+target = 'target_example' # str | name or UUID of recipient namespace
+
+    try:
+        api_instance.cancel_share_payment(namespace, target)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->cancel_share_payment: %s\n" % e)
+```
+
+- Basic Authentication (BasicAuth):
+
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
+    namespace = 'namespace_example' # str | name or UUID of namespace sharing their payment info
+target = 'target_example' # str | name or UUID of recipient namespace
+
+    try:
+        api_instance.cancel_share_payment(namespace, target)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->cancel_share_payment: %s\n" % e)
+```
+
+### Parameters
+
+| Name          | Type    | Description                                          | Notes |
+| ------------- | ------- | ---------------------------------------------------- | ----- |
+| **namespace** | **str** | name or UUID of namespace sharing their payment info |
+| **target**    | **str** | name or UUID of recipient namespace                  |
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description                       | Response headers |
+| ----------- | --------------------------------- | ---------------- |
+| **204**     | Invitation cancelled successfully | -                |
+| **404**     | No invitation was found to cancel | -                |
+| **0**       | error response                    | -                |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **fetch_invitations**
 
 > InvitationData fetch_invitations(organization=organization, array=array, group=group, start=start, end=end, page=page, per_page=per_page, type=type, status=status, orderby=orderby)
@@ -845,7 +981,8 @@ void (empty response body)
 | Status code | Description                                                 | Response headers |
 | ----------- | ----------------------------------------------------------- | ---------------- |
 | **204**     | Email sent successfully to user for email confirmation link | -                |
-| **404**     | Could not reach one or more recipients                      | -                |
+| **207**     | Only a portion of the invitations succeeded, some failed    | -                |
+| **500**     | Could not reach any recipients                              | -                |
 | **502**     | Bad Gateway                                                 | -                |
 | **0**       | error response                                              | -                |
 
@@ -983,7 +1120,8 @@ void (empty response body)
 | Status code | Description                                                 | Response headers |
 | ----------- | ----------------------------------------------------------- | ---------------- |
 | **204**     | Email sent successfully to user for email confirmation link | -                |
-| **404**     | Could not reach one or more recipients                      | -                |
+| **207**     | Only a portion of the invitations succeeded, some failed    | -                |
+| **500**     | Could not reach any recipients                              | -                |
 | **502**     | Bad Gateway                                                 | -                |
 | **0**       | error response                                              | -                |
 
@@ -1121,8 +1259,145 @@ void (empty response body)
 | Status code | Description                                                     | Response headers |
 | ----------- | --------------------------------------------------------------- | ---------------- |
 | **204**     | Email sent successfully to user with an email confirmation link | -                |
-| **404**     | Could not reach one or more recipients                          | -                |
+| **207**     | Only a portion of the invitations succeeded, some failed        | -                |
+| **500**     | Could not reach any recipients                                  | -                |
 | **502**     | Bad Gateway                                                     | -                |
 | **0**       | error response                                                  | -                |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **share_payment**
+
+> share_payment(namespace, email_invite=email_invite)
+
+Sends email to multiple recipients allowing them to use the payment instrument provided by the source namespace.
+
+### Example
+
+- Api Key Authentication (ApiKeyAuth):
+
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
+    namespace = 'namespace_example' # str | name or UUID of namespace sharing their payment info
+email_invite = None # object | Recipients of the invitation. These may only be namespaces, not email addresses.  (optional)
+
+    try:
+        api_instance.share_payment(namespace, email_invite=email_invite)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->share_payment: %s\n" % e)
+```
+
+- Basic Authentication (BasicAuth):
+
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
+    namespace = 'namespace_example' # str | name or UUID of namespace sharing their payment info
+email_invite = None # object | Recipients of the invitation. These may only be namespaces, not email addresses.  (optional)
+
+    try:
+        api_instance.share_payment(namespace, email_invite=email_invite)
+    except ApiException as e:
+        print("Exception when calling InvitationApi->share_payment: %s\n" % e)
+```
+
+### Parameters
+
+| Name             | Type       | Description                                                                      | Notes      |
+| ---------------- | ---------- | -------------------------------------------------------------------------------- | ---------- |
+| **namespace**    | **str**    | name or UUID of namespace sharing their payment info                             |
+| **email_invite** | **object** | Recipients of the invitation. These may only be namespaces, not email addresses. | [optional] |
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description                                                 | Response headers |
+| ----------- | ----------------------------------------------------------- | ---------------- |
+| **204**     | Email sent successfully to user for email confirmation link | -                |
+| **207**     | Only a portion of the invitations succeeded, some failed    | -                |
+| **500**     | Could not reach any recipients                              | -                |
+| **502**     | Bad Gateway                                                 | -                |
+| **0**       | error response                                              | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

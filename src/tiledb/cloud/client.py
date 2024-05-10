@@ -1,6 +1,7 @@
 import enum
 import os
 import threading
+import types
 import uuid
 import warnings
 from concurrent import futures
@@ -9,12 +10,13 @@ from typing import Callable, Optional, Sequence, TypeVar, Union
 import urllib3
 
 import tiledb
+import tiledb.cloud._common.api_v2.models as models_v2
+import tiledb.cloud.rest_api.models as models_v1
 from tiledb.cloud import config
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud.pool_manager_wrapper import _PoolManagerWrapper
 from tiledb.cloud.rest_api import ApiException as GenApiException
-from tiledb.cloud.rest_api import models
 
 _T = TypeVar("_T")
 
@@ -135,7 +137,7 @@ def login(
         )
 
 
-def default_user() -> models.User:
+def default_user() -> models_v1.User:
     """Returns the default user to be used.
 
     If :data:`config.user` is set, that is the default user. If unset, we fetch
@@ -531,7 +533,7 @@ def organization(organization, async_req=False):
 
 
 def find_organization_or_user_for_default_charges(
-    user: models.User,
+    user: models_v1.User,
     required_action: Optional[str] = None,
 ) -> str:
     """
@@ -630,11 +632,13 @@ class Client:
         self._pool_lock = threading.Lock()
         self._set_threads(pool_threads)
         self._retry_mode(retry_mode)
-        self._client = self._rebuild_client()
+        self._rebuild_clients()
 
     def build(self, builder: Callable[[rest_api.ApiClient], _T]) -> _T:
         """Builds an API client with the given config."""
-        return builder(self._client)
+        if builder.__module__.startswith("tiledb.cloud._common.api_v2"):
+            return builder(self._client_v2)
+        return builder(self._client_v1)
 
     def set_disable_retries(self):
         self.retry_mode(RetryMode.DISABLED)
@@ -648,18 +652,22 @@ class Client:
     def retry_mode(self, mode: RetryOrStr = RetryMode.DEFAULT) -> None:
         """Sets how we should retry requests and updates API instances."""
         self._retry_mode(mode)
-        self._client = self._rebuild_client()
+        self._rebuild_clients()
 
     def set_threads(self, threads: Optional[int] = None) -> None:
         """Updates the number of threads in the async thread pool."""
         self._set_threads(threads)
-        self._client = self._rebuild_client()
+        self._rebuild_clients()
 
     def _retry_mode(self, mode: RetryOrStr) -> None:
         mode = RetryMode.maybe_from(mode)
         config.config.retries = _RETRY_CONFIGS[mode]
 
-    def _rebuild_client(self):
+    def _rebuild_clients(self) -> None:
+        self._client_v1 = self._rebuild_client(models_v1)
+        self._client_v2 = self._rebuild_client(models_v2)
+
+    def _rebuild_client(self, module: types.ModuleType) -> rest_api.ApiClient:
         """
         Initialize api clients
         """
@@ -669,7 +677,7 @@ class Client:
         # mypy's warning here.)
         pool_size = self._thread_pool._max_workers  # type: ignore[attr-defined]
         config.config.connection_pool_maxsize = pool_size
-        client = rest_api.ApiClient(config.config)
+        client = rest_api.ApiClient(config.config, _tdb_models_module=module)
         client.rest_client.pool_manager = _PoolManagerWrapper(
             client.rest_client.pool_manager
         )

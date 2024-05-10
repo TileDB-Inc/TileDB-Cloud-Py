@@ -25,5 +25,6 @@ metadata of a group
 | **tags**                    | **list[str]**                             | optional tags for group                                                                   | [optional] |
 | **license_id**              | **str**                                   | License identifier from SPDX License List or Custom                                       | [optional] |
 | **license_text**            | **str**                                   | License text                                                                              | [optional] |
+| **created_at**              | **datetime**                              | Datetime the group was registered with tiledb                                             | [optional] |
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

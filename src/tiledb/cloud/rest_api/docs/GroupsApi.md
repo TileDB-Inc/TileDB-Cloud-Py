@@ -8,6 +8,7 @@ All URIs are relative to _http://localhost_
 | [**create_group**](GroupsApi.md#create_group)                                                                                     | **POST** /v1/groups/{namespace}/create                             |
 | [**delete_group**](GroupsApi.md#delete_group)                                                                                     | **DELETE** /v1/groups/{group_namespace}/{group_name}               |
 | [**get_group**](GroupsApi.md#get_group)                                                                                           | **GET** /v1/groups/{group_namespace}/{group_name}                  |
+| [**get_group_activity**](GroupsApi.md#get_group_activity)                                                                         | **GET** /v1/groups/{group_namespace}/{group_name}/content_activity |
 | [**get_group_contents**](GroupsApi.md#get_group_contents)                                                                         | **GET** /v1/groups/{group_namespace}/{group_name}/contents         |
 | [**get_group_sharing_policies**](GroupsApi.md#get_group_sharing_policies)                                                         | **GET** /v1/groups/{group_namespace}/{group_name}/share            |
 | [**groups_browser_owned_filters_get**](GroupsApi.md#groups_browser_owned_filters_get)                                             | **GET** /v1/groups/browser/owned/filters                           |
@@ -559,6 +560,148 @@ group_name = 'group_name_example' # str | The unique name or id of the group
 | **200**     | the group metadata | -                |
 | **502**     | Bad Gateway        | -                |
 | **0**       | error response     | -                |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **get_group_activity**
+
+> GroupContentActivityResponse get_group_activity(group_namespace, group_name, page=page, per_page=per_page)
+
+Returns the activity of group content
+
+### Example
+
+- Api Key Authentication (ApiKeyAuth):
+
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.GroupsApi(api_client)
+    group_namespace = 'group_namespace_example' # str | The namespace of the group
+group_name = 'group_name_example' # str | The unique name or id of the group
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
+
+    try:
+        api_response = api_instance.get_group_activity(group_namespace, group_name, page=page, per_page=per_page)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling GroupsApi->get_group_activity: %s\n" % e)
+```
+
+- Basic Authentication (BasicAuth):
+
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.GroupsApi(api_client)
+    group_namespace = 'group_namespace_example' # str | The namespace of the group
+group_name = 'group_name_example' # str | The unique name or id of the group
+page = 56 # int | pagination offset (optional)
+per_page = 56 # int | pagination limit (optional)
+
+    try:
+        api_response = api_instance.get_group_activity(group_namespace, group_name, page=page, per_page=per_page)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling GroupsApi->get_group_activity: %s\n" % e)
+```
+
+### Parameters
+
+| Name                | Type    | Description                        | Notes      |
+| ------------------- | ------- | ---------------------------------- | ---------- |
+| **group_namespace** | **str** | The namespace of the group         |
+| **group_name**      | **str** | The unique name or id of the group |
+| **page**            | **int** | pagination offset                  | [optional] |
+| **per_page**        | **int** | pagination limit                   | [optional] |
+
+### Return type
+
+[**GroupContentActivityResponse**](GroupContentActivityResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description                                                        | Response headers |
+| ----------- | ------------------------------------------------------------------ | ---------------- |
+| **200**     | Activity logs of group contents along with the pagination metadata | -                |
+| **502**     | Bad Gateway                                                        | -                |
+| **0**       | error response                                                     | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
