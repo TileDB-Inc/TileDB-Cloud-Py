@@ -82,7 +82,8 @@ def tasks(
         raise Exception("status must be one of ['FAILED', 'RUNNING', 'COMPLETED']")
 
     if array is not None:
-        (namespace, array) = utils.split_uri(array)
+        # API expects array as URI. Extracting namespace only for usage.
+        namespace, _ = utils.split_uri(array)
 
     try:
         args = {"async_req": async_req}

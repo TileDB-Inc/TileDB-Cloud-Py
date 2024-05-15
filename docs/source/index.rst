@@ -19,6 +19,7 @@ Welcome to TileDB-Cloud-Py's documentation!
    tiledb.cloud.dag
    tiledb.cloud.file
    tiledb.cloud.groups
+   tiledb.cloud.invites
    tiledb.cloud.notebook
    tiledb.cloud.pool_manager_wrapper
    tiledb.cloud.rest_api

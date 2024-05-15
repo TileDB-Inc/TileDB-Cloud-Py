@@ -1,11 +1,14 @@
 import base64
 import datetime
+import pathlib
 import pickle
+import tempfile
 import unittest
 
 import pytz  # Test-only dependency.
 
 from tiledb.cloud._common import utils
+from tiledb.cloud.utilities import find
 
 
 class UtilsTest(unittest.TestCase):
@@ -40,6 +43,31 @@ class UtilsTest(unittest.TestCase):
         for inval, expected in cases:
             with self.subTest(inval):
                 self.assertEqual(utils.datetime_to_msec(inval), expected)
+
+    def test_find(self):
+        with tempfile.TemporaryDirectory() as tmp_name:
+            tmp = pathlib.Path(tmp_name)
+            (tmp / "data.dat").write_text("test_data")
+            data_dir = tmp / "data"
+            data_dir.mkdir()
+            (data_dir / "xx1.txt").write_text("test_xx1")
+            (data_dir / "xx2.txt").write_text("test_xx2")
+
+            self.assertEqual(len(list(find(tmp))), 3)
+
+            for v in range(2):
+                max_count = v + 1
+                self.assertEqual(len(list(find(tmp, max_count=max_count))), max_count)
+
+            self.assertEqual(
+                len(list(find(tmp, include=lambda f: f.endswith(".txt")))), 2
+            )
+            self.assertEqual(
+                len(list(find(tmp, exclude=lambda f: f.endswith(".dat")))), 2
+            )
+            self.assertEqual(
+                len(list(find(tmp, include=lambda f: f.endswith(".dat")))), 1
+            )
 
 
 def _b64_unpickle(x):

@@ -1,5 +1,6 @@
 import enum
 import logging
+import os
 import subprocess
 import sys
 from collections import defaultdict
@@ -19,6 +20,7 @@ from tiledb.cloud.utilities import consolidate_fragments
 from tiledb.cloud.utilities import create_log_array
 from tiledb.cloud.utilities import get_logger
 from tiledb.cloud.utilities import max_memory_usage
+from tiledb.cloud.utilities import process_stream
 from tiledb.cloud.utilities import read_file
 from tiledb.cloud.utilities import run_dag
 from tiledb.cloud.utilities import set_aws_context
@@ -27,6 +29,7 @@ from tiledb.cloud.vcf.utils import create_index_file
 from tiledb.cloud.vcf.utils import find_index
 from tiledb.cloud.vcf.utils import get_record_count
 from tiledb.cloud.vcf.utils import get_sample_name
+from tiledb.cloud.vcf.utils import sort_and_bgzip
 
 # Array names
 LOG_ARRAY = "log"
@@ -295,10 +298,15 @@ def read_uris_udf(
 
     with tiledb.scope_ctx(config):
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY):
+            # Copy the list to a local file to improve performance. If the list is
+            # gzipped it will be decompressed on the fly.
+            local_list = os.path.basename(list_uri)
+            cmd = ("zcat", "-f")
+            process_stream(uri=list_uri, cmd=cmd, output_uri=local_list)
+
             result = []
-            vfs = tiledb.VFS()
-            for line in vfs.open(list_uri):
-                result.append(line.decode().strip())
+            for line in open(local_list):
+                result.append(line.strip())
                 if max_files and len(result) == max_files:
                     break
 
@@ -727,6 +735,7 @@ def ingest_samples_udf(
     id: str = "samples",
     verbose: bool = False,
     trace_id: Optional[str] = None,
+    use_remote_tmp: bool = False,
 ) -> None:
     """
     Ingest samples into the dataset.
@@ -745,6 +754,8 @@ def ingest_samples_udf(
     :param id: profiler event id, defaults to "samples"
     :param verbose: verbose logging, defaults to False
     :param trace_id: trace ID for logging, defaults to None
+    :param use_remote_tmp: use remote tmp space if VCFs need to be bgzipped,
+        defaults to False (preferred for small VCFs)
     """
     import tiledbvcf
 
@@ -759,17 +770,60 @@ def ingest_samples_udf(
         ) as prof:
             prof.write("uris", str(len(sample_uris)), ",".join(sample_uris))
 
-            def create_index_file_worker(uri: str) -> None:
+            # Set tmp space to VCF store files if we need to sort and bgzip
+            if use_remote_tmp:
+                tmp_space = dataset_uri.rstrip("/") + "/tmp"
+            else:
+                tmp_space = "."
+            tmp_uris = []
+
+            def bgzip_worker(uri: str) -> Optional[str]:
+                """
+                Sort and bgzip a VCF file, storing the result in the tmp space.
+
+                :param uri: URI of the VCF file
+                :return: URI of the bgzipped VCF
+                """
+                if uri.endswith(".vcf"):
+                    with tiledb.scope_ctx(config):
+                        logger.debug("sort and bgzip %r", uri)
+                        try:
+                            uri = sort_and_bgzip(uri, tmp_space=tmp_space)
+                            tmp_uris.append(uri)
+                        except Exception as e:
+                            logger.error("Error bgzipping %r: %s", uri, e)
+                            return None
+                return uri
+
+            def create_index_file_worker(uri: str) -> Optional[str]:
+                """
+                Create a VCF index file in the current working directory.
+
+                :param uri: URI of the VCF file
+                """
                 with tiledb.scope_ctx(config):
                     if create_index or not find_index(uri):
-                        logger.info("indexing %r", uri)
-                        create_index_file(uri)
+                        logger.debug("indexing %r", uri)
+                        try:
+                            create_index_file(uri)
+                        except Exception as e:
+                            logger.error("Error creating index for %r: %s", uri, e)
+                            return None
+                return uri
+
+            # Run sort and bgzip on uncompressed VCF files
+            with ThreadPool(threads) as pool:
+                sample_uris = pool.map(bgzip_worker, sample_uris)
+
+            # Filter out failed bgzip operations
+            sample_uris = [uri for uri in sample_uris if uri]
 
             # Create index files
             with ThreadPool(threads) as pool:
-                pool.map(create_index_file_worker, sample_uris)
+                sample_uris = pool.map(create_index_file_worker, sample_uris)
 
-            # TODO: Handle un-bgzipped files
+            # Filter out failed index operations
+            sample_uris = [uri for uri in sample_uris if uri]
 
             level = "debug" if verbose else "info"
             tiledbvcf.config_logging(level, "ingest.log")
@@ -790,6 +844,13 @@ def ingest_samples_udf(
             )
 
             prof.write("log", extra=read_file("ingest.log"))
+
+            # Cleanup tmp space
+            if use_remote_tmp and tmp_uris:
+                vfs = tiledb.VFS()
+                for uri in tmp_uris:
+                    logger.debug("removing %r", uri)
+                    vfs.remove_file(uri)
 
     logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
 
@@ -886,6 +947,7 @@ def ingest_manifest_dag(
     compression_level: Optional[int] = None,
     verbose: bool = False,
     aws_find_mode: bool = False,
+    disable_manifest: bool = False,
 ) -> None:
     """
     Create a DAG to load the manifest array.
@@ -911,6 +973,7 @@ def ingest_manifest_dag(
         defaults to None (uses the default level in TileDB-VCF)
     :param verbose: verbose logging, defaults to False
     :param aws_find_mode: use AWS CLI to find VCFs, defaults to False
+    :param disable_manifest: disable manifest creation, defaults to False
     """
 
     logger = get_logger()
@@ -933,6 +996,11 @@ def ingest_manifest_dag(
         name="Create VCF dataset",
         access_credentials_name=acn,
     )
+
+    # If manifest creation is disabled, return after creating the dataset
+    if disable_manifest:
+        run_dag(graph)
+        return
 
     if sample_list_uri:
         sample_uris = graph.submit(
@@ -997,6 +1065,10 @@ def ingest_manifest_dag(
         namespace=namespace,
         mode=dag.Mode.BATCH,
         max_workers=workers,
+        retry_strategy=RetryStrategy(
+            limit=3,
+            retry_policy="Always",
+        ),
     )
 
     # Adjust batch size to ensure at least 20 samples per worker
@@ -1066,9 +1138,14 @@ def ingest_samples_dag(
     create_index: bool = True,
     trace_id: Optional[str] = None,
     consolidate_stats: bool = False,
+    use_remote_tmp: bool = False,
+    sample_list_uri: Optional[str] = None,
 ) -> None:
     """
     Create a DAG to ingest samples into the dataset.
+
+    Note: If `sample_list_uri` is provided, the manifest is not checked for existing
+    samples.
 
     :param dataset_uri: dataset URI
     :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type),
@@ -1088,31 +1165,44 @@ def ingest_samples_dag(
     :param create_index: force creation of a local index file, defaults to True
     :param trace_id: trace ID for logging, defaults to None
     :param consolidate_stats: consolidate the stats arrays, defaults to False
+    :param use_remote_tmp: use remote tmp space if VCFs need to be bgzipped,
+        defaults to False (preferred for small VCFs)
+    :param sample_list_uri: URI with a list of VCF URIs, defaults to None
     """
 
     logger = get_logger_wrapper(verbose)
 
-    graph = dag.DAG(
-        name="vcf-filter-samples",
-        namespace=namespace,
-        mode=dag.Mode.BATCH,
-    )
+    if sample_list_uri:
+        local_list = os.path.basename(sample_list_uri)
+        cmd = ("zcat", "-f")
+        process_stream(uri=sample_list_uri, cmd=cmd, output_uri=local_list)
 
-    # Get list of sample uris that have not been ingested yet
-    # TODO: handle second pass resume
-    sample_uris = graph.submit(
-        filter_samples_udf,
-        dataset_uri,
-        config=config,
-        verbose=verbose,
-        name="Filter VCF samples",
-        resource_class="large",
-        access_credentials_name=acn,
-    )
+        sample_uris = []
+        for line in open(local_list):
+            sample_uris.append(line.strip())
 
-    run_dag(graph)
+    else:
+        graph = dag.DAG(
+            name="vcf-filter-samples",
+            namespace=namespace,
+            mode=dag.Mode.BATCH,
+        )
 
-    sample_uris = sample_uris.result()
+        # Get list of sample uris that have not been ingested yet
+        # TODO: handle second pass resume
+        sample_uris = graph.submit(
+            filter_samples_udf,
+            dataset_uri,
+            config=config,
+            verbose=verbose,
+            name="Filter VCF samples",
+            resource_class="large",
+            access_credentials_name=acn,
+        )
+
+        run_dag(graph)
+
+        sample_uris = sample_uris.result()
 
     if not sample_uris:
         logger.info("No new samples to ingest.")
@@ -1197,6 +1287,7 @@ def ingest_samples_dag(
             contigs_to_keep_separate=contigs_to_keep_separate,
             contig_fragment_merging=contig_fragment_merging,
             resume=resume,
+            use_remote_tmp=use_remote_tmp,
             id=f"vcf-ingest-{i}",
             verbose=verbose,
             create_index=create_index,
@@ -1445,6 +1536,8 @@ def ingest_vcf(
     trace_id: Optional[str] = None,
     consolidate_stats: bool = True,
     aws_find_mode: bool = False,
+    use_remote_tmp: bool = False,
+    disable_manifest: bool = False,
 ) -> None:
     """
     Ingest samples into a dataset.
@@ -1491,9 +1584,15 @@ def ingest_vcf(
     :param trace_id: trace ID for logging, defaults to None
     :param consolidate_stats: consolidate the stats arrays, defaults to True
     :param aws_find_mode: use AWS CLI to find VCFs, defaults to False
+    :param use_remote_tmp: use remote tmp space if VCFs need to be sorted and bgzipped,
+        defaults to False (preferred for small VCFs)
+    :param disable_manifest: disable manifest creation, defaults to False
     """
 
     # Validate user input
+    if disable_manifest and not sample_list_uri:
+        raise ValueError("disable_manifest requires sample_list_uri")
+
     if sum([bool(search_uri), bool(sample_list_uri), bool(metadata_uri)]) != 1:
         raise ValueError(
             "Exactly one of `search_uri`, `sample_list_uri`, or `metadata_uri`"
@@ -1533,6 +1632,7 @@ def ingest_vcf(
         compression_level=compression_level,
         verbose=verbose,
         aws_find_mode=aws_find_mode,
+        disable_manifest=disable_manifest,
     )
 
     # Ingest VCFs using URIs in the manifest
@@ -1552,6 +1652,8 @@ def ingest_vcf(
         create_index=create_index,
         trace_id=trace_id,
         consolidate_stats=consolidate_stats,
+        use_remote_tmp=use_remote_tmp,
+        sample_list_uri=sample_list_uri if disable_manifest else None,
     )
 
     # Register the dataset on TileDB Cloud

@@ -7,7 +7,20 @@ import pathlib
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Callable, Dict, Mapping, Optional, Sequence, Tuple, TypeVar
+from concurrent.futures import wait
+from fnmatch import fnmatch
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    Mapping,
+    Optional,
+    Sequence,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 import tiledb
 from tiledb.cloud import dag
@@ -100,6 +113,29 @@ def get_logger(level: int = logging.INFO, name: str = __name__) -> logging.Logge
     if not logger.handlers:
         logger.addHandler(sh)
         logger.setLevel(level)
+
+    return logger
+
+
+def get_logger_wrapper(
+    verbose: bool = False,
+) -> logging.Logger:
+    """
+    Get a logger instance and log version information.
+
+    :param verbose: verbose logging, defaults to False
+    :return: logger instance
+    """
+
+    level = logging.DEBUG if verbose else logging.INFO
+    logger = get_logger(level)
+
+    logger.debug(
+        "tiledb.cloud=%s, tiledb=%s, libtiledb=%s",
+        tiledb.cloud.__version__,
+        tiledb.version(),
+        tiledb.libtiledb.version(),
+    )
 
     return logger
 
@@ -216,21 +252,34 @@ def max_memory_usage() -> int:
 def process_stream(
     uri: str,
     cmd: Sequence[str],
+    *,
+    output_uri: Optional[str] = None,
     read_size: int = 16 << 20,
-) -> Tuple[str, str]:
+    config: Optional[Mapping[str, Any]] = None,
+) -> Tuple[int, str, str]:
     """
-    Process a stream of data from VFS with a subprocess.
+    Process a stream of data from VFS with a subprocess. Optionally write the
+    subprocess stdout to the output_uri.
 
     If the file is large and the subprocess only reads a small amount of data,
     then reduce `read_size` to improve performance.
 
     :param uri: file URI
     :param cmd: command to run in the subprocess
+    :param output_uri: output file URI, defaults to None
     :param read_size: number of bytes to read per iteration, defaults to 16 MiB
-    :return: stdout and stderr from the subprocess
+    :param config: config dictionary, defaults to None
+    :return: (return code, stdout, stderr) from the subprocess
     """
 
-    with tiledb.VFS().open(uri) as fp:
+    vfs = tiledb.VFS(config=config)
+
+    # If output_uri is defined, open the URI with VFS, otherwise open /dev/null.
+    # We need to open something to add to the following context manager.
+    output_fp = vfs.open(output_uri, "wb") if output_uri else open("/dev/null", "wb")
+
+    # Including output_fp in the context manager is needed when writing to s3
+    with vfs.open(uri) as input_fp, output_fp:
         with subprocess.Popen(
             cmd,
             stdin=subprocess.PIPE,
@@ -238,42 +287,65 @@ def process_stream(
             stderr=subprocess.PIPE,
         ) as process:
 
-            def writer():
+            def vfs_to_stdin() -> None:
                 """Read from VFS and write to the subprocess stdin."""
 
-                data = fp.read(read_size)
-                while data:
+                while True:
+                    data = input_fp.read(read_size)
+                    if not data:
+                        break
+
                     try:
                         process.stdin.write(data)
                     except BrokenPipeError:
                         # The subprocess has exited, stop reading.
                         # This is an expected situation.
                         break
-                    data = fp.read(read_size)
                 try:
                     process.stdin.close()
                 except BrokenPipeError:
                     # Ignore broken pipe when closing stdin
                     pass
 
-            def reader(stream):
+            def output_to_str(stream: subprocess.PIPE) -> str:
                 """Return the stream contents as a string."""
 
                 return "".join(line.decode() for line in stream).strip()
+
+            def output_to_vfs(stream: subprocess.PIPE) -> str:
+                """Write the stream contents to the output URI."""
+
+                while True:
+                    data = stream.read(read_size)
+                    if not data:
+                        break
+
+                    output_fp.write(data)
+
+                return ""
 
             # Create separate threads for writing and reading to drain the
             # subprocess output pipes. This prevents a deadlock if the
             # subprocess fills its output buffers.
             with ThreadPoolExecutor(max_workers=3) as executor:
-                executor.submit(writer)
-                stdout_future = executor.submit(reader, process.stdout)
-                stderr_future = executor.submit(reader, process.stderr)
+                input_future = executor.submit(vfs_to_stdin)
+                if output_uri:
+                    stdout_future = executor.submit(output_to_vfs, process.stdout)
+                else:
+                    stdout_future = executor.submit(output_to_str, process.stdout)
+                stderr_future = executor.submit(output_to_str, process.stderr)
+
+            # Wait for all threads to complete
+            wait([input_future, stdout_future, stderr_future])
+
+            # Get the return code from the subprocess
+            rc = process.wait()
 
             # Retrieve results
             stdout = stdout_future.result()
             stderr = stderr_future.result()
 
-            return stdout, stderr
+            return rc, stdout, stderr
 
 
 def _filter_kwargs(function: Callable, kwargs: Mapping[str, Any]) -> Mapping[str, Any]:
@@ -296,21 +368,18 @@ def as_batch(func: _CT) -> _CT:
     """
     Decorator to run a function as a batch UDF on TileDB Cloud.
 
+    optional kwargs:
+    - name: name of the node in the DAG, defaults to func.__name__
+    - namespace: TileDB Cloud namespace, defaults to the user's default namespace
+    - acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
+    - resources: resources to allocate for the UDF, defaults to None
+
     :param func: function to run
     """
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs) -> Dict[str, object]:
-        """
-        Run the function as a batch UDF on TileDB Cloud.
-
-        kwargs optionally includes:
-        - name: name of the node in the DAG, defaults to func.__name__
-        - namespace: TileDB Cloud namespace, defaults to the user's default namespace
-        - acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
-        - access_credentials_name: alias for acn, for backwards compatibility
-        - resources: resources to allocate for the UDF, defaults to None
-        """
+        """Run the function as a batch UDF on TileDB Cloud."""
 
         name = kwargs.get("name", func.__name__)
         namespace = kwargs.get("namespace", None)
@@ -347,3 +416,90 @@ def as_batch(func: _CT) -> _CT:
         return {"status": "started", "graph_id": str(graph.server_graph_uuid)}
 
     return wrapper
+
+
+def find(
+    uri: str,
+    *,
+    config: Optional[Mapping[str, Any]] = None,
+    include: Optional[Union[str, Callable]] = None,
+    exclude: Optional[Union[str, Callable]] = None,
+    max_count: Optional[int] = None,
+) -> Iterator[str]:
+    """Searches a path for files matching the include/exclude pattern using VFS.
+
+    :param uri: Input path to search
+    :param config: Optional dict configuration to pass on tiledb.VFS
+    :param include: Optional include pattern string
+    :param exclude: Optional exclude pattern string
+    :param max_count: Optional stop point when searching for files
+    """
+    with tiledb.scope_ctx(config):
+        vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
+        listing = vfs.ls(uri)
+        current_count = 0
+
+        def list_files(listing):
+            for f in listing:
+                # Avoid infinite recursion
+                if f == uri:
+                    continue
+
+                if vfs.is_dir(f):
+                    yield from list_files(
+                        vfs.ls(f),
+                    )
+                else:
+                    # Skip files that do not match the include pattern or match
+                    # the exclude pattern.
+                    if callable(include):
+                        if not include(f):
+                            continue
+                    else:
+                        if include and not fnmatch(f, include):
+                            continue
+
+                    if callable(exclude):
+                        if exclude(f):
+                            continue
+                    else:
+                        if exclude and fnmatch(f, exclude):
+                            continue
+                    yield f
+
+        for f in list_files(listing):
+            yield f
+
+            current_count += 1
+            if max_count and current_count == max_count:
+                return
+
+
+T = TypeVar("T")
+
+
+def chunk(items: Sequence[T], chunk_size: int) -> Iterator[Sequence[T]]:
+    """Chunks a sequence of objects and returns an iterator where
+    each return sequence is of length chunk_size.
+
+    :param items: Sequence to split into batches
+    :param chunk_size: Size of chunks of the sequence to return
+    """
+    # Iterator for providing batches of chunks
+    length = len(items)
+    for ndx in range(0, length, chunk_size):
+        yield items[ndx : min(ndx + chunk_size, length)]
+
+
+def serialize_filter(filter) -> dict:
+    """Serialize TileDB filter.
+
+    :param filter: TileDB filter to serialize
+    :return: dict, TileDB filter attributes
+    """
+    if isinstance(filter, tiledb.Filter):
+        filter_dict = filter._attrs_()
+        filter_dict["_type"] = type(filter).__name__
+        return filter_dict
+    else:
+        raise TypeError

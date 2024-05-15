@@ -2349,7 +2349,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name or ID
-organization_details = tiledb.cloud.rest_api.Organization() # Organization | organization details to update
+organization_details = tiledb.cloud.rest_api.OrganizationUpdate() # OrganizationUpdate | organization details to update
 
     try:
         api_instance.update_organization(organization, organization_details)
@@ -2397,7 +2397,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.OrganizationApi(api_client)
     organization = 'organization_example' # str | organization name or ID
-organization_details = tiledb.cloud.rest_api.Organization() # Organization | organization details to update
+organization_details = tiledb.cloud.rest_api.OrganizationUpdate() # OrganizationUpdate | organization details to update
 
     try:
         api_instance.update_organization(organization, organization_details)
@@ -2407,10 +2407,10 @@ organization_details = tiledb.cloud.rest_api.Organization() # Organization | org
 
 ### Parameters
 
-| Name                     | Type                                | Description                    | Notes |
-| ------------------------ | ----------------------------------- | ------------------------------ | ----- |
-| **organization**         | **str**                             | organization name or ID        |
-| **organization_details** | [**Organization**](Organization.md) | organization details to update |
+| Name                     | Type                                            | Description                    | Notes |
+| ------------------------ | ----------------------------------------------- | ------------------------------ | ----- |
+| **organization**         | **str**                                         | organization name or ID        |
+| **organization_details** | [**OrganizationUpdate**](OrganizationUpdate.md) | organization details to update |
 
 ### Return type
 

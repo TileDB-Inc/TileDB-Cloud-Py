@@ -41,6 +41,7 @@ class AccessCredential(object):
         "allowed_in_tasks": "bool",
         "credential": "AccessCredentialCredential",
         "role": "AccessCredentialRole",
+        "token": "AccessCredentialToken",
     }
 
     attribute_map = {
@@ -52,6 +53,7 @@ class AccessCredential(object):
         "allowed_in_tasks": "allowed_in_tasks",
         "credential": "credential",
         "role": "role",
+        "token": "token",
     }
 
     def __init__(
@@ -64,6 +66,7 @@ class AccessCredential(object):
         allowed_in_tasks=None,
         credential=None,
         role=None,
+        token=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """AccessCredential - a model defined in OpenAPI"""  # noqa: E501
@@ -79,6 +82,7 @@ class AccessCredential(object):
         self._allowed_in_tasks = None
         self._credential = None
         self._role = None
+        self._token = None
         self.discriminator = None
 
         if name is not None:
@@ -95,6 +99,8 @@ class AccessCredential(object):
             self.credential = credential
         if role is not None:
             self.role = role
+        if token is not None:
+            self.token = token
 
     @property
     def name(self):
@@ -273,6 +279,27 @@ class AccessCredential(object):
         """
 
         self._role = role
+
+    @property
+    def token(self):
+        """Gets the token of this AccessCredential.  # noqa: E501
+
+
+        :return: The token of this AccessCredential.  # noqa: E501
+        :rtype: AccessCredentialToken
+        """
+        return self._token
+
+    @token.setter
+    def token(self, token):
+        """Sets the token of this AccessCredential.
+
+
+        :param token: The token of this AccessCredential.  # noqa: E501
+        :type: AccessCredentialToken
+        """
+
+        self._token = token
 
     def to_dict(self):
         """Returns the model properties as a dict"""

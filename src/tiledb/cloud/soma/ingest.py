@@ -24,6 +24,7 @@ def run_ingest_workflow(
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
+    logging_level: int = logging.INFO,
     dry_run: bool = False,
 ) -> Dict[str, str]:
     """Starts a workflow to ingest H5AD data into SOMA.
@@ -73,12 +74,19 @@ def run_ingest_workflow(
         resources=resources,
         namespace=namespace,
         access_credentials_name=access_credentials_name,
+        logging_level=logging_level,
         dry_run=dry_run,
     )
     grf.compute()
+    # On discussion with the cloud team:
+    # * In batch mode this does add call latency beyond grf.server_graph_uuid
+    # * However, the cloud UI cannot populate a DAG candelabra without us doing so.
+    # This is a necessary choice.
+    the_node = next(iter(grf.nodes.values()))
+    real_graph_uuid = the_node.result()
     return {
         "status": "started",
-        "graph_id": str(grf.server_graph_uuid),
+        "graph_id": str(real_graph_uuid),
     }
 
 
@@ -94,6 +102,7 @@ def build_ingest_workflow_graph(
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
+    logging_level: int = logging.INFO,
     dry_run: bool = False,
 ) -> dag.DAG:
     """
@@ -101,13 +110,76 @@ def build_ingest_workflow_graph(
     directly.
     """
 
+    grf = dag.DAG(
+        name="ingest-h5ad-launcher",
+        mode=dag.Mode.BATCH,
+        namespace=namespace,
+    )
+    grf.submit(
+        _run_ingest_workflow_udf_byval,
+        output_uri=output_uri,
+        input_uri=input_uri,
+        measurement_name=measurement_name,
+        pattern=pattern,
+        extra_tiledb_config=extra_tiledb_config,
+        platform_config=platform_config,
+        ingest_mode=ingest_mode,
+        resources=resources,
+        namespace=namespace,
+        access_credentials_name=access_credentials_name,
+        carry_along={
+            "resources": _DEFAULT_RESOURCES if resources is None else resources,
+            "namespace": namespace,
+            "access_credentials_name": access_credentials_name,
+        },
+        logging_level=logging_level,
+        dry_run=dry_run,
+    )
+    return grf
+
+
+def run_ingest_workflow_udf(
+    *,
+    output_uri: str,
+    input_uri: str,
+    measurement_name: str,
+    # Some kwargs are eaten by the tiledb.cloud package, and won't reach
+    # our child. In order to propagate these to a _grandchild_ we need to
+    # package these up with different names. We use a dict as a single bag.
+    carry_along: Dict[str, Optional[str]],
+    pattern: Optional[str] = None,
+    extra_tiledb_config: Optional[Dict[str, object]] = None,
+    platform_config: Optional[Dict[str, object]] = None,
+    ingest_mode: str = "write",
+    resources: Optional[Dict[str, object]] = None,
+    namespace: Optional[str] = None,
+    access_credentials_name: Optional[str] = None,
+    logging_level: int = logging.INFO,
+    dry_run: bool = False,
+) -> Dict[str, str]:
+    """
+    This is the highest-level ingestor component that runs on-node. Only here
+    can we do VFS with access_credentials_name -- that does not work correctly
+    on the client.
+    """
+
+    logging.basicConfig(level=logging_level)
+    logging.debug("ENUMERATOR ENTER")
+    logging.debug("ENUMERATOR INPUT_URI  %s", input_uri)
+    logging.debug("ENUMERATOR OUTPUT_URI %s", output_uri)
+    logging.debug("ENUMERATOR DRY_RUN    %s", str(dry_run))
+
     vfs = tiledb.VFS(config=extra_tiledb_config)
 
     if vfs.is_file(input_uri):
+        logging.debug("ENUMERATOR VFS.IS_FILE")
+
+        name = ("dry-run" if dry_run else "ingest") + "-h5ad-file"
+
         grf = dag.DAG(
-            name="ingest-h5ad-file",
+            name=name,
             mode=dag.Mode.BATCH,
-            namespace=namespace,
+            namespace=carry_along["namespace"],
         )
         grf.submit(
             _ingest_h5ad_byval,
@@ -117,15 +189,22 @@ def build_ingest_workflow_graph(
             extra_tiledb_config=extra_tiledb_config,
             ingest_mode=ingest_mode,
             platform_config=platform_config,
-            resources=_DEFAULT_RESOURCES if resources is None else resources,
-            access_credentials_name=access_credentials_name,
+            resources=carry_along["resources"],
+            access_credentials_name=carry_along["access_credentials_name"],
+            logging_level=logging_level,
             dry_run=dry_run,
         )
-        return grf
 
-    if vfs.is_dir(input_uri):
+    elif vfs.is_dir(input_uri):
+        logging.debug("ENUMERATOR VFS.IS_DIR")
+
+        if dry_run:
+            name = "dry-run-h5ad-files"
+        else:
+            name = "ingest-h5ad-files"
+
         grf = dag.DAG(
-            name="ingest-h5ad-files",
+            name=name,
             mode=dag.Mode.BATCH,
             namespace=namespace,
         )
@@ -136,6 +215,7 @@ def build_ingest_workflow_graph(
         )
 
         for entry_input_uri in vfs.ls(input_uri):
+            logging.debug("ENUMERATOR ENTRY_INPUT_URI=%r", entry_input_uri)
             base = os.path.basename(entry_input_uri)
             base, _ = os.path.splitext(base)
 
@@ -143,8 +223,10 @@ def build_ingest_workflow_graph(
             if not output_uri.endswith("/"):
                 entry_output_uri += "/"
             entry_output_uri += base
+            logging.debug("ENUMERATOR ENTRY_OUTPUT_URI=%r", entry_output_uri)
 
             if pattern is not None and not re.match(pattern, entry_input_uri):
+                logging.debug("ENUMERATOR SKIP NO MATCH ON <<%r>>", pattern)
                 continue
 
             node = grf.submit(
@@ -155,15 +237,20 @@ def build_ingest_workflow_graph(
                 extra_tiledb_config=extra_tiledb_config,
                 ingest_mode=ingest_mode,
                 platform_config=platform_config,
-                resources=_DEFAULT_RESOURCES if resources is None else resources,
-                access_credentials_name=access_credentials_name,
+                resources=carry_along["resources"],
+                access_credentials_name=carry_along["access_credentials_name"],
+                logging_level=logging_level,
                 dry_run=dry_run,
             )
             collector.depends_on(node)
 
-        return grf
+    else:
+        raise ValueError("input_uri %r is neither file nor directory", input_uri)
 
-    raise ValueError(f"input_uri {input_uri!r} is neither file nor directory")
+    grf.compute()
+
+    logging.debug("ENUMERATOR EXIT server_graph_uuid = %r", grf.server_graph_uuid)
+    return grf.server_graph_uuid
 
 
 def _hack_patch_anndata() -> ContextManager[object]:
@@ -184,6 +271,7 @@ def ingest_h5ad(
     extra_tiledb_config: Optional[Dict[str, object]],
     platform_config: Optional[Dict[str, object]],
     ingest_mode: str,
+    logging_level: int = logging.INFO,
     dry_run: bool = False,
 ) -> None:
     """Performs the actual work of ingesting H5AD data into TileDB.
@@ -205,11 +293,16 @@ def ingest_h5ad(
 
     import anndata
     import tiledbsoma
-    import tiledbsoma.logging as somalog
+    import tiledbsoma.logging
     from tiledbsoma import io
 
-    logging.basicConfig(level=logging.INFO)
-    somalog.info()
+    # Oddly, "higher" debug levels (more verbose) are smaller numbers within
+    # the Python logging package.
+    logging.basicConfig(level=logging_level)
+    if logging_level <= logging.DEBUG:
+        tiledbsoma.logging.debug()
+    elif logging_level <= logging.INFO:
+        tiledbsoma.logging.info()
 
     # While h5ad supports any file-like object, annndata specifically
     # wants only an `os.PathLike` object. The only thing it does with
@@ -242,7 +335,7 @@ def ingest_h5ad(
 
     with tiledb.VFS(ctx=soma_ctx.tiledb_ctx).open(input_uri) as input_file:
         if dry_run:
-            logging.info("Dry run for %r to %r", input_uri, output_uri)
+            logging.info("Dry run for %s to %s", input_uri, output_uri)
             return
 
         with _hack_patch_anndata_byval():
@@ -255,7 +348,7 @@ def ingest_h5ad(
             ingest_mode=ingest_mode,
             platform_config=platform_config,
         )
-    logging.info("Successfully wrote data from %r to %r", input_uri, output_uri)
+    logging.info("Successfully wrote data from %s to %s", input_uri, output_uri)
 
 
 # Until we fully get this version of tiledb.cloud deployed server-side, we must
@@ -264,5 +357,6 @@ def ingest_h5ad(
 # checked into tiledb-cloud-py and deployed server-side. _All_ dev work _must_
 # use this idiom.
 _ingest_h5ad_byval = functions.to_register_by_value(ingest_h5ad)
-_run_ingest_workflow = functions.to_register_by_value(run_ingest_workflow)
+_run_ingest_workflow_byval = functions.to_register_by_value(run_ingest_workflow)
+_run_ingest_workflow_udf_byval = functions.to_register_by_value(run_ingest_workflow_udf)
 _hack_patch_anndata_byval = functions.to_register_by_value(_hack_patch_anndata)

@@ -31,8 +31,8 @@ def is_bgzipped(vcf_uri: str) -> bool:
     """
 
     cmd = ("file", "-b", "-")
-    stdout, stderr = process_stream(vcf_uri, cmd, read_size=1024)
-    if stderr:
+    rc, stdout, stderr = process_stream(vcf_uri, cmd, read_size=1024)
+    if rc != 0:
         raise RuntimeError(f"Failed to check file type: {stderr}")
     return "BGZF" in stdout
 
@@ -48,12 +48,12 @@ def get_sample_name(vcf_uri: str) -> str:
     """
 
     cmd = ("bcftools", "query", "-l")
-    stdout, stderr = process_stream(vcf_uri, cmd, read_size=1024)
-    # Ignore stderr if a result was returned to stdout. This avoids failing
-    # when bcftools prints a warning message to stderr.
-    if stdout:
-        return ",".join(stdout.splitlines())
-    raise RuntimeError(f"Failed to get sample names: {stderr}")
+    rc, stdout, stderr = process_stream(vcf_uri, cmd, read_size=1024)
+
+    if rc != 0:
+        raise RuntimeError(f"Failed to get sample name: {stderr}")
+
+    return ",".join(stdout.splitlines())
 
 
 def get_record_count(vcf_uri: str, index_uri: str) -> Optional[int]:
@@ -103,28 +103,38 @@ def create_index_file(vcf_uri: str) -> str:
     index_file = f"{os.path.basename(vcf_uri)}.csi"
 
     cmd = ("bcftools", "index", "-f", "-o", index_file)
-    _, stderr = process_stream(vcf_uri, cmd, read_size=64 << 20)
-    if stderr:
+    rc, _, stderr = process_stream(vcf_uri, cmd, read_size=64 << 20)
+
+    if rc != 0:
         raise RuntimeError(f"Failed to create index: {stderr}")
 
     return index_file
 
 
-def bgzip_and_index(vcf_uri: str) -> str:
+def sort_and_bgzip(
+    vcf_uri: str,
+    *,
+    tmp_space: str = ".",
+) -> str:
     """
-    Create a bgzipped VCF file and index file in the current working directory.
+    Sort and bgzip a VCF file storing the result in the tmp space.
 
     :param vcf_uri: URI of the VCF file
-    :return: bgzipped VCF file name
+    :param tmp_space: tmp space URI, defaults to the current directory
+    :return: URI of bgzipped VCF
     """
 
-    bgzip_file = f"{os.path.basename(vcf_uri)}.gz"
+    # Normalize the tmp space URI
+    tmp_space = tmp_space.rstrip("/") + "/"
 
-    cmd = ("bcftools", "view", "-Oz", "-o", bgzip_file)
-    _, stderr = process_stream(vcf_uri, cmd)
-    if stderr:
-        raise RuntimeError(f"Failed to bgzip: {stderr}")
+    bgzip_uri = f"{os.path.basename(vcf_uri)}.gz"
+    bgzip_uri = os.path.join(tmp_space, bgzip_uri)
 
-    create_index_file(bgzip_file)
+    # Sort and bgzip the VCF file to stdout
+    cmd = ("bcftools", "sort", "-Oz")
+    rc, stdout, stderr = process_stream(vcf_uri, cmd, output_uri=bgzip_uri)
 
-    return bgzip_file
+    if rc != 0:
+        raise RuntimeError(f"Failed to sort and bgzip: {stderr}")
+
+    return bgzip_uri

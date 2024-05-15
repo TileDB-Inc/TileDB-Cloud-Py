@@ -6,12 +6,12 @@ from .ingestion import ingest_annotations
 from .ingestion import register_dataset_udf as register_dataset
 from .query import build_read_dag
 from .query import read
-from .utils import bgzip_and_index
 from .utils import create_index_file
 from .utils import find_index
 from .utils import get_record_count
 from .utils import get_sample_name
 from .utils import is_bgzipped
+from .utils import sort_and_bgzip
 
 __all__ = [
     "Contigs",
@@ -22,7 +22,7 @@ __all__ = [
     "build_read_dag",
     "read",
     "read_allele_frequency",
-    "bgzip_and_index",
+    "sort_and_bgzip",
     "create_index_file",
     "find_index",
     "get_sample_name",

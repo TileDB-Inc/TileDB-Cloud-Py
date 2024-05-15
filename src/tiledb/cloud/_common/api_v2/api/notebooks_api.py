@@ -19,7 +19,7 @@ import six
 
 from tiledb.cloud._common.api_v2.api_client import ApiClient
 from tiledb.cloud._common.api_v2.exceptions import ApiTypeError  # noqa: F401
-from tiledb.cloud._common.api_v2.exceptions import ApiValueError
+from tiledb.cloud._common.api_v2.exceptions import ApiValueError  # noqa: F401
 
 
 class NotebooksApi(object):
