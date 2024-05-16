@@ -163,15 +163,16 @@ def build_collection_mapper_workflow_graph(
         Default: return all of the UDF-node outputs.
 
     TileDB configs:
-    :param extra_tiledb_config: TODO -- I am not using this in the code yet ...
-    :param platform_config: TODO -- I am not using this in the code yet ...
+    :param extra_tiledb_config: Currently unused; reserved for future use.
+    :param platform_config: Currently unused; reserved for future use.
 
     Cloud configs:
 
     :param namespace: TileDB namespace in which to run the UDFs.
     :param task_graph_name: Optional name for your task graph, so you can
         find it more easily among other runs.
-    :param counts_only: If specified, only return obs/var counts, not TODO
+    :param counts_only: If specified, only return obs/var counts, not the
+        result of the provided calback.
 
     Real-time vs batch modes:
     :param use_batch_mode: If false (which is the default), uses real-time UDFs.
@@ -181,12 +182,10 @@ def build_collection_mapper_workflow_graph(
     :param resources: Only valid when ``use_batch_mode`` is True.
         Example: ``resources={"cpu": "2", "memory": "8Gi"}``.
     :param access_credentials_name: Only valid when ``use_batch_mode`` is True.
-        TODO: hyperlink goes here.
 
     Return value:
     A ``DAG`` object. If you've named this ``dag``, you'll need to do
         ``dag.compute()``, ``dag.wait()``, and ``dag.end_results()``.
-        TODO: hyperlink goes here.
     """
 
     if use_batch_mode:
