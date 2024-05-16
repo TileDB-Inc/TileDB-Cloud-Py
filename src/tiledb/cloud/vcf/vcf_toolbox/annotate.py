@@ -78,7 +78,7 @@ def zygosity(gt: Tuple[int, int]) -> str:
 
 @df_transform
 def annotate(
-    vcf_df: str,
+    vcf_df: pd.DataFrame,
     *,
     ann_uri: str,
     ann_regions: Union[str, Sequence[str]],
@@ -98,14 +98,14 @@ def annotate(
         "pos_start": "pos",
     },
     verbose: bool = False,
-):
+) -> pd.DataFrame:
     """
     Annotate a VCF DataFrame with annotations from a TileDB array.
 
     Parameters
     ----------
     vcf_df
-        The input VCF DataFrame, passed in automatically by `tiledb.cloud.vcf.query`.
+        The input VCF DataFrame.
     ann_uri
         The URI of the annotation array.
     ann_regions
