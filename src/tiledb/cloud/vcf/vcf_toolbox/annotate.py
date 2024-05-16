@@ -1,6 +1,7 @@
 import logging
 import time
 from concurrent.futures import ThreadPoolExecutor
+from typing import Mapping, Optional, Sequence, Tuple, Union
 
 import pandas as pd
 
@@ -11,7 +12,17 @@ from tiledb.cloud.utilities import max_memory_usage
 from .transform import df_transform
 
 
-def split_region(region):
+def split_region(region: str) -> Tuple[str, slice]:
+    """
+    Split a region string into contig and slice.
+
+    The format of the region string is 'contig:start-end'.
+
+    :param region: region to split
+    :raises ValueError: if region is not in the format 'contig:start-end'
+    :return: contig and slice
+    """
+
     if not isinstance(region, str) or ":" not in region or "-" not in region:
         raise ValueError("Region must be in the format 'contig:start-end'")
     contig, range = region.split(":")
@@ -19,7 +30,15 @@ def split_region(region):
     return contig, slice(int(start), int(end))
 
 
-def split_regions(regions):
+def split_regions(regions: Union[str, Sequence[str]]) -> Tuple[str, Sequence[slice]]:
+    """
+    Split a region or list of regions into a contig and list of slices.
+
+    :param regions: regions to split
+    :raises ValueError: if regions are not in the same contig
+    :return: contig and list of slices
+    """
+
     if isinstance(regions, str):
         regions = [regions]
 
@@ -36,34 +55,49 @@ def split_regions(regions):
     return contig, ranges
 
 
-def zygosity(x):
-    if tuple(x) == tuple([0, 0]):
+def zygosity(gt: Tuple[int, int]) -> str:
+    """
+    Convert genotype to a zygosity string.
+
+    :param gt: genotype
+    :return: zygosity string
+    """
+    if tuple(gt) == tuple([0, 0]):
         return "HOM_REF"
-    if tuple(x) == tuple([".", "."]):
+    if tuple(gt) == tuple([".", "."]):
         return "UNKNOWN"
-    # check for any tuple where any element is 0
-    elif len(tuple(x)) == 2 and (tuple(x)[0] == 0 or tuple(x)[1] == 0):
+    elif len(tuple(gt)) == 2 and (tuple(gt)[0] == 0 or tuple(gt)[1] == 0):
         return "HET"
-    elif tuple(x)[0] != 0 and tuple(x)[1] != 0:
+    elif tuple(gt)[0] != 0 and tuple(gt)[1] != 0:
         return "HOM_ALT"
-    elif len(tuple(x)) == 1 and tuple(x)[0] != 0:
+    elif len(tuple(gt)) == 1 and tuple(gt)[0] != 0:
         return "HEMI"
     else:
-        return str(x)
+        return str(gt)
 
 
 @df_transform
 def annotate(
-    vcf_df,
+    vcf_df: str,
     *,
-    ann_uri,
-    ann_attrs,
-    ann_regions,
-    vcf_filter=None,
-    add_zygosity=False,
-    reorder=["sample_name", "contig", "pos_start", "ref", "alt"],
-    rename={"sample_name": "sample", "contig": "chrom", "pos_start": "pos"},
-    verbose=False,
+    ann_uri: str,
+    ann_regions: Union[str, Sequence[str]],
+    ann_attrs: Optional[Union[str, Sequence[str]]] = None,
+    vcf_filter: Optional[str] = None,
+    add_zygosity: bool = False,
+    reorder: Optional[Sequence[str]] = [
+        "sample_name",
+        "contig",
+        "pos_start",
+        "ref",
+        "alt",
+    ],
+    rename: Optional[Mapping[str, str]] = {
+        "sample_name": "sample",
+        "contig": "chrom",
+        "pos_start": "pos",
+    },
+    verbose: bool = False,
 ):
     """
     Annotate a VCF DataFrame with annotations from a TileDB array.
@@ -74,10 +108,10 @@ def annotate(
         The input VCF DataFrame, passed in automatically by `tiledb.cloud.vcf.query`.
     ann_uri
         The URI of the annotation array.
-    ann_attrs
-        The attributes to query.
     ann_regions
         The regions to query. All regions must be in the same chromosome/contig.
+    ann_attrs
+        The attributes to query.
     vcf_filter, optional
         A pandas filter to apply to the VCF DataFrame before annotation, by default None
     add_zygosity, optional

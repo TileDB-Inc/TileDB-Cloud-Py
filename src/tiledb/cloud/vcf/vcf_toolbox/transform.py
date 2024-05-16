@@ -1,9 +1,19 @@
 import functools
+from typing import Callable, TypeVar
 
 import pyarrow as pa
 
 
 def _df_transform_result(table: pa.Table, fn) -> pa.Table:
+    """
+    Transform the pyarrow table using a user-defined function that operates on
+    a pandas dataframe.
+
+    :param table: pyarrow table
+    :param fn: user-defined function to transform the pandas dataframe
+    :return: pyarrow table
+    """
+
     # Return if the table is empty
     if table.num_rows == 0:
         return table
@@ -33,7 +43,10 @@ def _df_transform_result(table: pa.Table, fn) -> pa.Table:
     return result
 
 
-def df_transform(fn):
+_CT = TypeVar("_CT", bound=Callable)
+
+
+def df_transform(fn: _CT) -> _CT:
     """
     A function decorator that allows users to create a user-defined function to
     transform a pandas dataframe. The decorated function can be passed directly
