@@ -177,6 +177,14 @@ def deregister(
     groups_api.deregister_group(group_namespace=namespace, group_name=name)
 
 
+def delete(uri: str, recursive: bool = False) -> None:
+    groups_api = client.build(api_v2.GroupsApi)
+    namespace, group_name = utils.split_uri(uri)
+    groups_api.delete_group(
+        group_namespace=namespace, group_name=group_name, recursive=recursive
+    )
+
+
 def _default_ns_path_cred(namespace: Optional[str] = None) -> Tuple[str, str, str]:
     principal: Union[rest_api.User, rest_api.Organization]
     if namespace:

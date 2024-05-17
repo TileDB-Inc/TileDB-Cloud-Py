@@ -191,54 +191,45 @@ class TestFileIngestion(unittest.TestCase):
         cls.group_destination = f"{cls.storage_path}/{cls.group_name}"
         groups.create(cls.group_name, storage_uri=cls.group_destination)
 
+        cls.cleanup_these_uris = []
         return super().setUpClass()
 
     @classmethod
     def tearDownClass(cls) -> None:
-        """Cleanup test and ingested files and folders after tests have finished."""
-        _cleanup_residual_test_arrays(
-            array_uris=[
-                f"tiledb://{cls.namespace}/{fname}" for fname in cls.input_file_names
-            ]
-        )
-        groups.deregister(cls.group_uri)
+        """Cleanup after the tests have run"""
+        _cleanup_residual_test_arrays(array_uris=cls.cleanup_these_uris)
+        groups.delete(cls.group_uri, recursive=True)
         return super().tearDownClass()
 
-    def setUp(self) -> None:
-        """Initialize between tests"""
-        self.ingested_array_uris = []
-        return super().setUp()
-
-    def tearDown(self) -> None:
-        """Cleanup registered arrays between tests"""
-        _cleanup_residual_test_arrays(array_uris=self.ingested_array_uris)
-        return super().tearDown()
-
     def test_files_ingestion_udf(self):
-        self.ingested_array_uris = file_ingestion.ingest_files_udf(
+        ingested_array_uris = file_ingestion.ingest_files_udf(
             dataset_uri=self.destination,
             file_uris=self.test_file_uris,
             acn=self.acn,
             namespace=self.namespace,
             verbose=True,
         )
+        self.cleanup_these_uris += ingested_array_uris
 
-        for uri in self.ingested_array_uris:
+        for uri in ingested_array_uris:
             array_info = info(uri)
             self.assertTrue(array_info.name in self.input_file_names)
             self.assertEqual(array_info.namespace, self.namespace)
+        # Clean up
+        _cleanup_residual_test_arrays(array_uris=ingested_array_uris)
 
     def test_files_ingestion_udf_into_group(self):
-        self.ingested_array_uris = file_ingestion.ingest_files_udf(
+        ingested_array_uris = file_ingestion.ingest_files_udf(
             dataset_uri=self.group_destination,
             file_uris=self.test_file_uris,
             acn=self.acn,
             namespace=self.namespace,
             verbose=True,
         )
+        self.cleanup_these_uris += ingested_array_uris
 
         file_ingestion.add_arrays_to_group_udf(
-            array_uris=self.ingested_array_uris,
+            array_uris=ingested_array_uris,
             group_uri=self.group_uri,
             config=client.Ctx().config().dict(),
             verbose=True,
@@ -247,10 +238,13 @@ class TestFileIngestion(unittest.TestCase):
         group_info = groups.info(self.group_uri)
         self.assertEqual(group_info.asset_count, len(self.test_file_uris))
 
-        for uri in self.ingested_array_uris:
+        for uri in ingested_array_uris:
             array_info = info(uri)
             self.assertTrue(array_info.name in self.input_file_names)
             self.assertEqual(array_info.namespace, self.namespace)
+
+        # Clean up
+        _cleanup_residual_test_arrays(array_uris=ingested_array_uris)
 
     def test_add_array_to_group_udf_raises_bad_namespace_error(self):
         with self.assertRaises(tiledb.TileDBError):
