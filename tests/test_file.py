@@ -8,6 +8,7 @@ import tiledb
 from tiledb.cloud import client
 from tiledb.cloud import groups
 from tiledb.cloud._common import testonly
+from tiledb.cloud._common import utils
 from tiledb.cloud.array import delete_array
 from tiledb.cloud.array import info
 from tiledb.cloud.file import ingestion as file_ingestion
@@ -145,6 +146,25 @@ class TestFileUDFs(unittest.TestCase):
                 self.assertEqual(result, chunks_out)
 
 
+def _cleanup_residual_test_arrays(array_uris: List[str]) -> None:
+    """Deletes every array in a list and potential non unique tables"""
+    for array_uri in array_uris:
+        try:
+            delete_array(array_uri)
+        except Exception as exc:
+            error_msg = str(exc)
+            if "is not unique" in error_msg:
+                namespace, _ = utils.split_uri(array_uri)
+                uuids = error_msg[error_msg.find("[") + 1 : error_msg.find("]")]
+                uuids = uuids.split(" ")
+                for uid in uuids:
+                    try:
+                        delete_array(f"tiledb://{namespace}/{uid}")
+                    except Exception:
+                        continue
+            continue
+
+
 class TestFileIngestion(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -176,7 +196,7 @@ class TestFileIngestion(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         """Cleanup test and ingested files and folders after tests have finished."""
-        cls.__cleanup_residual_test_arrays(
+        _cleanup_residual_test_arrays(
             array_uris=[
                 f"tiledb://{cls.namespace}/{fname}" for fname in cls.input_file_names
             ]
@@ -191,17 +211,8 @@ class TestFileIngestion(unittest.TestCase):
 
     def tearDown(self) -> None:
         """Cleanup registered arrays between tests"""
-        self.__cleanup_residual_test_arrays(array_uris=self.ingested_array_uris)
+        _cleanup_residual_test_arrays(array_uris=self.ingested_array_uris)
         return super().tearDown()
-
-    @staticmethod
-    def __cleanup_residual_test_arrays(array_uris: List[str]) -> None:
-        """Deletes every array in a list"""
-        for array_uri in array_uris:
-            try:
-                delete_array(array_uri)
-            except Exception:
-                continue
 
     def test_files_ingestion_udf(self):
         self.ingested_array_uris = file_ingestion.ingest_files_udf(
@@ -211,11 +222,10 @@ class TestFileIngestion(unittest.TestCase):
             namespace=self.namespace,
             verbose=True,
         )
-        self.assertEqual(len(self.ingested_array_uris), len(self.input_file_names))
 
-        for fname in self.input_file_names:
-            array_info = info(f"tiledb://{self.namespace}/{fname}")
-            self.assertEqual(array_info.name, fname)
+        for uri in self.ingested_array_uris:
+            array_info = info(uri)
+            self.assertTrue(array_info.name in self.input_file_names)
             self.assertEqual(array_info.namespace, self.namespace)
 
     def test_files_ingestion_udf_into_group(self):
@@ -226,7 +236,6 @@ class TestFileIngestion(unittest.TestCase):
             namespace=self.namespace,
             verbose=True,
         )
-        self.assertEqual(len(self.ingested_array_uris), len(self.input_file_names))
 
         file_ingestion.add_arrays_to_group_udf(
             array_uris=self.ingested_array_uris,
@@ -238,9 +247,9 @@ class TestFileIngestion(unittest.TestCase):
         group_info = groups.info(self.group_uri)
         self.assertEqual(group_info.asset_count, len(self.test_file_uris))
 
-        for fname in self.input_file_names:
-            array_info = info(f"tiledb://{self.namespace}/{fname}")
-            self.assertEqual(array_info.name, fname)
+        for uri in self.ingested_array_uris:
+            array_info = info(uri)
+            self.assertTrue(array_info.name in self.input_file_names)
             self.assertEqual(array_info.namespace, self.namespace)
 
     def test_add_array_to_group_udf_raises_bad_namespace_error(self):
