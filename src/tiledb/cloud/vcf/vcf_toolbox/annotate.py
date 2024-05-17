@@ -76,8 +76,7 @@ def zygosity(gt: Tuple[int, int]) -> str:
         return str(gt)
 
 
-@df_transform
-def annotate(
+def _annotate(
     vcf_df: pd.DataFrame,
     *,
     ann_uri: str,
@@ -223,3 +222,6 @@ def annotate(
     log_event("total annotation time", t_start)
 
     return vcf_df
+
+
+annotate = df_transform(_annotate)
