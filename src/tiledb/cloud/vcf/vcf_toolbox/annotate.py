@@ -107,8 +107,8 @@ def annotate(
         The URI of the annotation array.
     ann_regions
         The regions to query. All regions must be in the same chromosome/contig.
-    ann_attrs
-        The attributes to query.
+    ann_attrs, optional
+        The attributes to query, by default None which queries all attributes.
     vcf_filter, optional
         A pandas filter to apply to the VCF DataFrame before annotation, by default None
     split_multiallelic, optional
@@ -133,9 +133,10 @@ def annotate(
         ann_attrs = [ann_attrs]
 
     # Add attributes required for join
-    for attr in ["ref", "alt"]:
-        if attr not in ann_attrs:
-            ann_attrs.append(attr)
+    if ann_attrs is not None:
+        for attr in ["ref", "alt"]:
+            if attr not in ann_attrs:
+                ann_attrs.append(attr)
 
     level = logging.DEBUG if verbose else logging.INFO
     logger = get_logger(level)
@@ -153,7 +154,7 @@ def annotate(
     # Split regions
     contig, regions = split_regions(ann_regions)
 
-    # Start annotation query
+    # Start annotation query in a separate thread
     def read_ann():
         with tiledb.open(ann_uri) as A:
             df = A.query(attrs=ann_attrs).df[contig, regions]
@@ -177,13 +178,14 @@ def annotate(
     vcf_df = vcf_df.drop("alleles", axis=1)
     t_prev = log_event("split ref/alt", t_prev)
 
-    # Split multiallelic variants
     if split_multiallelic:
+        # Split multiallelic variants
         vcf_df = vcf_df.explode("alt")
-        vcf_df = vcf_df[vcf_df["alt"].notnull()]
         t_prev = log_event("split multiallelic", t_prev)
     else:
-        vcf_df["alt"] = vcf_df["alt"].apply(lambda x: ",".join(x))
+        # Convert alt to comma-separated string
+        vcf_df["alt"] = vcf_df["alt"].str.join(",")
+        t_prev = log_event("join multiallelic", t_prev)
 
     # Add zygosity
     if add_zygosity:
@@ -194,7 +196,7 @@ def annotate(
     ann_df = ann_future.result()
     t_prev = log_event("wait on annotation query", t_prev)
 
-    # Drop annotation duplicates
+    # Drop annotation duplicates (for annotations that were ingested multiple times)
     ann_df.drop_duplicates(inplace=True)
     t_prev = log_event("drop duplicate annotations", t_prev)
 

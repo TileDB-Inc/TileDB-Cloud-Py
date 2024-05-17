@@ -41,13 +41,20 @@ def test_vcf_transform():
     )
 
     assert vcf_table.num_rows == 336
+    assert vcf_table.num_columns == 8
 
 
 @pytest.mark.vcf
 @pytest.mark.parametrize(
-    "split_multiallelic,expected_rows", [(False, 336), (True, 340)]
+    "split_multiallelic,attr_list,expected_rows,expected_columns",
+    [(False, True, 336, 13), (True, False, 340, 51)],
 )
-def test_vcf_annotation(split_multiallelic, expected_rows):
+def test_vcf_annotation(
+    split_multiallelic,
+    attr_list,
+    expected_rows,
+    expected_columns,
+):
     vcf_uri = "tiledb://TileDB-Inc/vcf-1kg-dragen-v376"
 
     regions = [
@@ -75,15 +82,7 @@ def test_vcf_annotation(split_multiallelic, expected_rows):
     ann_uri = "tiledb://tiledb-genomics-dev/vep_20230726_6"
 
     # Annotation attributes to read
-    ann_attrs = [
-        "SYMBOL",
-        "Gene",
-        "Feature",
-        "VARIANT_CLASS",
-        "Consequence",
-        "Codons",
-        "Amino_acids",
-    ]
+    ann_attrs = ["Gene", "Feature", "VARIANT_CLASS"] if attr_list else None
 
     # Configure the annotation transform function
     transform_result = vtb.annotate(
@@ -105,3 +104,4 @@ def test_vcf_annotation(split_multiallelic, expected_rows):
     )
 
     assert vcf_table.num_rows == expected_rows
+    assert vcf_table.num_columns == expected_columns
