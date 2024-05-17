@@ -84,6 +84,7 @@ def annotate(
     ann_regions: Union[str, Sequence[str]],
     ann_attrs: Optional[Union[str, Sequence[str]]] = None,
     vcf_filter: Optional[str] = None,
+    split_multiallelic: bool = True,
     add_zygosity: bool = False,
     reorder: Optional[Sequence[str]] = [
         "sample_name",
@@ -92,11 +93,7 @@ def annotate(
         "ref",
         "alt",
     ],
-    rename: Optional[Mapping[str, str]] = {
-        "sample_name": "sample",
-        "contig": "chrom",
-        "pos_start": "pos",
-    },
+    rename: Optional[Mapping[str, str]] = {"sample_name": "sample"},
     verbose: bool = False,
 ) -> pd.DataFrame:
     """
@@ -114,6 +111,8 @@ def annotate(
         The attributes to query.
     vcf_filter, optional
         A pandas filter to apply to the VCF DataFrame before annotation, by default None
+    split_multiallelic, optional
+        Split multiallelic variants into separate rows, by default True
     add_zygosity, optional
         Add a zygosity column to the DataFrame, by default False
     reorder, optional
@@ -121,7 +120,7 @@ def annotate(
             ["sample_name", "contig", "pos_start", "ref", "alt"]
     rename, optional
         Dict of columns to rename, by default
-            {"sample_name": "sample", "contig": "chrom", "pos_start": "pos"}
+            {"sample_name": "sample"}
     verbose, optional
         Enable verbose logging, by default False
 
@@ -174,9 +173,17 @@ def annotate(
 
     # Split alleles into ref and alt
     vcf_df["ref"] = vcf_df["alleles"].str[0]
-    vcf_df["alt"] = vcf_df["alleles"].apply(lambda x: ",".join(x[1:]))
+    vcf_df["alt"] = vcf_df["alleles"].str[1:]
     vcf_df = vcf_df.drop("alleles", axis=1)
     t_prev = log_event("split ref/alt", t_prev)
+
+    # Split multiallelic variants
+    if split_multiallelic:
+        vcf_df = vcf_df.explode("alt")
+        vcf_df = vcf_df[vcf_df["alt"].notnull()]
+        t_prev = log_event("split multiallelic", t_prev)
+    else:
+        vcf_df["alt"] = vcf_df["alt"].apply(lambda x: ",".join(x))
 
     # Add zygosity
     if add_zygosity:
@@ -187,13 +194,15 @@ def annotate(
     ann_df = ann_future.result()
     t_prev = log_event("wait on annotation query", t_prev)
 
+    # Drop annotation duplicates
+    ann_df.drop_duplicates(inplace=True)
+    t_prev = log_event("drop duplicate annotations", t_prev)
+
     # Merge VCF and annotations
-    vcf_df = pd.merge(
+    vcf_df = vcf_df.merge(
         ann_df,
-        vcf_df,
-        how="inner",
-        left_on=["contig", "pos_start", "ref", "alt"],
-        right_on=["contig", "pos_start", "ref", "alt"],
+        how="left",
+        on=["contig", "pos_start", "ref", "alt"],
     )
     t_prev = log_event("join", t_prev)
 
