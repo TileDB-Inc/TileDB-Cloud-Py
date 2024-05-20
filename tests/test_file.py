@@ -318,27 +318,17 @@ class TestFileIndexing(unittest.TestCase):
         )
         return super().tearDown()
 
-    def test_create_dataset_udf(self):
-        with self.assertLogs(get_logger_wrapper()) as lg:
-            self.created_index_uri = file_indexing.create_dataset_udf(
-                search_uri=self.input_file_location,
-                index_uri=f"tiledb://{self.namespace}/{self.destination}",
-                config=client.Ctx().config().dict(),
-            )
-            self.assertTrue("Creating dataset" in lg.output[0])
-            index_group_info = groups.info(self.created_index_uri)
-            self.assertIsNotNone(index_group_info)
-            self.assertEqual(index_group_info.asset_count, 6)
-
-    def test_create_dataset_udf_update_existing(self):
+    def test_create_and_update_dataset_udf(self):
         with self.assertLogs(get_logger_wrapper()) as lg:
             # Create a vector search group with 1 file
             self.created_index_uri = file_indexing.create_dataset_udf(
                 search_uri=self.input_file_location,
                 index_uri=f"tiledb://{self.namespace}/{self.destination}",
                 config=client.Ctx().config().dict(),
-                max_files=1,
+                max_files=3,
             )
+            self.assertTrue("Creating dataset" in lg.output[0])
+
             # Update the group with all the available files
             file_indexing.create_dataset_udf(
                 search_uri=self.input_file_location,
