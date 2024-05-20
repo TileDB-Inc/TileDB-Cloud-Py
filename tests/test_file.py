@@ -11,9 +11,11 @@ from tiledb.cloud._common import testonly
 from tiledb.cloud._common import utils
 from tiledb.cloud.array import delete_array
 from tiledb.cloud.array import info
+from tiledb.cloud.files import indexing as file_indexing
 from tiledb.cloud.files import ingestion as file_ingestion
 from tiledb.cloud.files import udfs as file_udfs
 from tiledb.cloud.files import utils as file_utils
+from tiledb.cloud.utilities import get_logger_wrapper
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -263,3 +265,89 @@ class TestFileIngestion(unittest.TestCase):
                 config=client.Ctx().config().dict(),
                 verbose=True,
             )
+
+
+class TestFileIndexing(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        """Setup test files, group and destinations once before the file tests start."""
+        cls.input_file_location = (
+            "s3://tiledb-unittest/groups/file_ingestion_test_files"
+        )
+        # Files with name "input_file_<n[0, 4]>.pdf" have already been placed
+        # in the "cls.input_file_location"
+        cls.input_file_names = [f"input_file_{i}.pdf" for i in range(5)]
+        cls.test_file_uris = [
+            f"{cls.input_file_location}/{fname}" for fname in cls.input_file_names
+        ]
+
+        cls.namespace, cls.storage_path, cls.acn = groups._default_ns_path_cred()
+        cls.namespace = cls.namespace.rstrip("/")
+        cls.storage_path = cls.storage_path.rstrip("/")
+        cls.destination = (
+            f"{cls.storage_path}/{testonly.random_name('file-indexing-test')}"
+        )
+
+        # Ingest test files for testing
+        cls.ingested_array_uris = file_ingestion.ingest_files_udf(
+            dataset_uri=cls.destination,
+            file_uris=cls.test_file_uris,
+            acn=cls.acn,
+            namespace=cls.namespace,
+        )
+
+        return super().setUpClass()
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        """Remove index testing residuals"""
+        _cleanup_residual_test_arrays(array_uris=cls.ingested_array_uris)
+        return super().tearDownClass()
+
+    def tearDown(self) -> None:
+        """Cleanup indexing arrays between tests"""
+        groups.delete(self.created_index_uri, recursive=True)
+        # FIXME: Not a nice way to cleanup vector search residuals:
+        _cleanup_residual_test_arrays(
+            array_uris=[
+                f"tiledb://{self.namespace}/object_metadata",
+                f"tiledb://{self.namespace}/updates",
+                f"tiledb://{self.namespace}/shuffled_vectors",
+                f"tiledb://{self.namespace}/shuffled_vector_ids",
+                f"tiledb://{self.namespace}/partition_indexes",
+                f"tiledb://{self.namespace}/partition_centroids",
+            ]
+        )
+        return super().tearDown()
+
+    def test_create_dataset_udf(self):
+        with self.assertLogs(get_logger_wrapper()) as lg:
+            self.created_index_uri = file_indexing.create_dataset_udf(
+                search_uri=self.input_file_location,
+                index_uri=f"tiledb://{self.namespace}/{self.destination}",
+                config=client.Ctx().config().dict(),
+            )
+            self.assertTrue("Creating dataset" in lg.output[0])
+            index_group_info = groups.info(self.created_index_uri)
+            self.assertIsNotNone(index_group_info)
+            self.assertEqual(index_group_info.asset_count, 6)
+
+    def test_create_dataset_udf_update_existing(self):
+        with self.assertLogs(get_logger_wrapper()) as lg:
+            # Create a vector search group with 1 file
+            self.created_index_uri = file_indexing.create_dataset_udf(
+                search_uri=self.input_file_location,
+                index_uri=f"tiledb://{self.namespace}/{self.destination}",
+                config=client.Ctx().config().dict(),
+                max_files=1,
+            )
+            # Update the group with all the available files
+            file_indexing.create_dataset_udf(
+                search_uri=self.input_file_location,
+                index_uri=self.created_index_uri,
+                config=client.Ctx().config().dict(),
+            )
+            self.assertTrue("Updating reader" in lg.output[1])
+            index_group_info = groups.info(self.created_index_uri)
+            self.assertIsNotNone(index_group_info)
+            self.assertEqual(index_group_info.asset_count, 6)
