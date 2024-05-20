@@ -102,7 +102,8 @@ jobs:
             pytest-explicit \
             pytest-split \
             setuptools \
-            setuptools-scm
+            setuptools-scm \
+            tiledb-vector-search
 
       - name: Install pinned dependencies
         if: ${{ matrix.dependencies == 'pinned' }}
