@@ -102,8 +102,7 @@ jobs:
             pytest-explicit \
             pytest-split \
             setuptools \
-            setuptools-scm \
-            tiledb-vector-search
+            setuptools-scm
 
       - name: Install pinned dependencies
         if: ${{ matrix.dependencies == 'pinned' }}
@@ -113,6 +112,7 @@ jobs:
       - name: Install TileDB-Cloud-Py
         run: |
           pip install .[tests]
+          pip install tiledb-vector-search --no-deps
 
       # Tries to restore the .test_durations file from the cache to use for splitting tests into groups.
       - name: "Attempt to restore .test_durations from cache"
