@@ -271,12 +271,10 @@ class TestFileIndexing(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """Setup test files, group and destinations once before the file tests start."""
-        cls.input_file_location = (
-            "s3://tiledb-unittest/groups/file_ingestion_test_files"
-        )
+        cls.input_file_location = "s3://tiledb-unittest/groups/file_indexing_test_files"
         # Files with name "input_file_<n[0, 4]>.pdf" have already been placed
         # in the "cls.input_file_location"
-        cls.input_file_names = [f"input_file_{i}.pdf" for i in range(5)]
+        cls.input_file_names = [f"file_to_index_{i}.pdf" for i in range(5)]
         cls.test_file_uris = [
             f"{cls.input_file_location}/{fname}" for fname in cls.input_file_names
         ]
