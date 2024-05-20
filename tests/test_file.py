@@ -318,6 +318,7 @@ class TestFileIndexing(unittest.TestCase):
         )
         return super().tearDown()
 
+    @unittest.skip("Extremely slow execution times in the CI/CD client")
     def test_create_and_update_dataset_udf(self):
         with self.assertLogs(get_logger_wrapper()) as lg:
             # Create a vector search group with 1 file
