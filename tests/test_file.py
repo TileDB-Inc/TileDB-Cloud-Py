@@ -209,7 +209,6 @@ class TestFileIngestion(unittest.TestCase):
             namespace=self.namespace,
             verbose=True,
         )
-        self.cleanup_these_uris += ingested_array_uris
 
         for uri in ingested_array_uris:
             array_info = info(uri)
@@ -226,7 +225,6 @@ class TestFileIngestion(unittest.TestCase):
             namespace=self.namespace,
             verbose=True,
         )
-        self.cleanup_these_uris += ingested_array_uris
 
         file_ingestion.add_arrays_to_group_udf(
             array_uris=ingested_array_uris,

@@ -1,7 +1,9 @@
 import math
 import os
 from enum import Enum
+from functools import partial
 from typing import (
+    Any,
     Callable,
     Dict,
     Iterable,
@@ -17,6 +19,7 @@ from typing import (
 import attrs
 
 import tiledb
+from tiledb.cloud.file import utils as file_utils
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import chunk
@@ -46,9 +49,16 @@ XYTuple = Tuple[float, float]
 
 
 class DatasetType(Enum):
-    POINTCLOUD = 1
-    RASTER = 2
-    GEOMETRY = 3
+    POINTCLOUD = "POINTCLOUD"
+    RASTER = "RASTER"
+    GEOMETRY = "GEOMETRY"
+
+
+def _sanitize_dataset_type(value: Any) -> DatasetType:
+    try:
+        return DatasetType(value)
+    except ValueError:
+        raise ValueError(f"{value} is nto a valid Dataset Type")
 
 
 @attrs.define
@@ -1007,6 +1017,7 @@ def build_file_list_udf(
                 except ValueError:
                     return False
 
+            dataset_type = _sanitize_dataset_type(dataset_type)
             fns = {
                 DatasetType.POINTCLOUD: {
                     "pattern_fn": pointcloud_match,
@@ -1029,11 +1040,18 @@ def build_file_list_udf(
                 )
 
             if search_uri:
+                if pattern:
+                    pattern = partial(file_utils.basename_match, pattern=pattern)
+                else:
+                    pattern = fns[dataset_type]["pattern_fn"]
+                if ignore:
+                    ignore = partial(file_utils.basename_match, pattern=ignore)
+
                 sources = find(
                     search_uri,
                     config=config,
                     exclude=ignore,
-                    include=pattern if pattern else fns[dataset_type]["pattern_fn"],
+                    include=pattern,
                     max_count=max_files,
                 )
 
@@ -1084,6 +1102,7 @@ def build_inputs_udf(
     logger = get_logger_wrapper(verbose)
     with Profiler(array_uri=log_uri, id=id, trace=trace):
         try:
+            dataset_type = _sanitize_dataset_type(dataset_type)
             fns = {
                 DatasetType.POINTCLOUD: {
                     "meta_fn": load_pointcloud_metadata,
@@ -1204,6 +1223,7 @@ def ingest_datasets_dag(
     if log_uri:
         create_log_array(log_uri)
 
+    dataset_type = _sanitize_dataset_type(dataset_type)
     funcs = {
         DatasetType.POINTCLOUD: {
             "udf_fn": ingest_point_cloud_udf,
