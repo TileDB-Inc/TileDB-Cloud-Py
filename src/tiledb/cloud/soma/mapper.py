@@ -237,8 +237,8 @@ def build_collection_mapper_workflow_graph(
     # ----------------------------------------------------------------
     if soma_experiment_uris is None:
         logging.info(
-            "Retrieving SOMA Experiment URIs from SOMACollection"
-            f"{soma_collection_uri}"
+            "Retrieving SOMA Experiment URIs from SOMACollection %s"
+            % soma_collection_uri
         )
         with tiledbsoma.Collection.open(soma_collection_uri) as soco:
             soma_experiment_uris = {k: v.uri for k, v in soco.items()}
@@ -248,7 +248,7 @@ def build_collection_mapper_workflow_graph(
         soma_experiment_uris = {
             k: v for k, v in soma_experiment_uris.items() if k in experiment_names
         }
-    logging.info(f"Retrieved {len(soma_experiment_uris)} SOMA Experiment URIs")
+    logging.info("Retrieved %d SOMA Experiment URIs" % len(soma_experiment_uris))
 
     # ----------------------------------------------------------------
     # Set log formatting
@@ -284,13 +284,13 @@ def build_collection_mapper_workflow_graph(
             access_credentials_name=access_credentials_name,
             name=soma_experiment_uri,
         )
-        logging.info(f"A: node output is a {type(node_output)}")
+        logging.info("A: node output is a %s" % type(node_output))
 
         node_outputs[soma_experiment_uri] = node_output
 
     def collect(node_outputs):
         for node_name, node_output in node_outputs.items():
-            logging.info(f"B: node output {node_name} is a {type(node_output)}")
+            logging.info("B: node output %s is a %s" % (node_name, type(node_output)))
         return node_outputs
 
     grf.submit(
