@@ -33,7 +33,7 @@ def run_collection_mapper_workflow(
     platform_config: Optional[Dict[str, object]] = None,
     # Cloud configs:
     namespace: Optional[str] = None,
-    task_graph_name: Optional[str] = None,
+    task_graph_name: str = "SOMAExperiment Collection Mapper",
     counts_only: Optional[bool] = False,
     # Real-time vs batch modes:
     use_batch_mode: bool = False,
@@ -98,7 +98,7 @@ def build_collection_mapper_workflow_graph(
     platform_config: Optional[Dict[str, object]] = None,
     # Cloud configs:
     namespace: Optional[str] = None,
-    task_graph_name: Optional[str] = None,
+    task_graph_name: str = "SOMAExperiment Collection Mapper",
     counts_only: Optional[bool] = False,
     # Real-time vs batch modes:
     use_batch_mode: bool = False,
@@ -220,9 +220,7 @@ def build_collection_mapper_workflow_graph(
         raise Exception(
             "Need just one of soma_collection_uri or " "soma_experiment_uris"
         )
-    assert isinstance(task_graph_name, str) or task_graph_name is None
-    if task_graph_name is None:
-        task_graph_name = "SOMAExperiment Collection Mapper"
+    assert isinstance(task_graph_name, str)
 
     args_dict = args_dict or {}
     obs_attrs = obs_attrs or []
