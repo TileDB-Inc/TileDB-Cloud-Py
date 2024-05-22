@@ -119,15 +119,23 @@ def get_logger(level: int = logging.INFO, name: str = __name__) -> logging.Logge
 
 def get_logger_wrapper(
     verbose: bool = False,
+    level: Optional[int] = None,
 ) -> logging.Logger:
     """
     Get a logger instance and log version information.
 
+    Nominal use-case is a simple two-level approach: verbose or not.
+
+    Using ``level`` provides access to the ``logging`` package's levels.
+
     :param verbose: verbose logging, defaults to False
+    :param level: if provided, supersedes ``verbose`` and applies the
+      requested level.
     :return: logger instance
     """
 
-    level = logging.DEBUG if verbose else logging.INFO
+    if level is None:
+        level = logging.DEBUG if verbose else logging.INFO
     logger = get_logger(level)
 
     logger.debug(

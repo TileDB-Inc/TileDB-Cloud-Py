@@ -6,6 +6,7 @@ import tiledbsoma
 
 from tiledb.cloud import dag
 from tiledb.cloud._common import functions
+from tiledb.cloud.utilities import get_logger_wrapper
 
 _DEFAULT_RESOURCES = {"cpu": "8", "memory": "8Gi"}
 """Default resource size; equivalent to a "large" UDF container."""
@@ -230,11 +231,11 @@ def build_collection_mapper_workflow_graph(
     # cfg_dict = cfg_dict or {}
     # cfg_dict["rest.use_refactored_array_open"] = True
 
-    logging.basicConfig(level=logging.INFO)
+    logger = get_logger_wrapper(level=logging.INFO)
 
     # ----------------------------------------------------------------
     if soma_experiment_uris is None:
-        logging.info(
+        logger.info(
             "Retrieving SOMA Experiment URIs from SOMACollection %s"
             % soma_collection_uri
         )
@@ -242,16 +243,16 @@ def build_collection_mapper_workflow_graph(
             soma_experiment_uris = {k: v.uri for k, v in soco.items()}
 
     if experiment_names is not None:
-        logging.info("Filtering SOMA Experiment URIs for specified names")
+        logger.info("Filtering SOMA Experiment URIs for specified names")
         soma_experiment_uris = {
             k: v for k, v in soma_experiment_uris.items() if k in experiment_names
         }
-    logging.info("Retrieved %d SOMA Experiment URIs" % len(soma_experiment_uris))
+    logger.info("Retrieved %d SOMA Experiment URIs" % len(soma_experiment_uris))
 
     # ----------------------------------------------------------------
     # Set log formatting
 
-    logging.info("Constructing task graph")
+    logger.info("Constructing task graph")
 
     grf = dag.DAG(
         name=task_graph_name,
@@ -282,13 +283,13 @@ def build_collection_mapper_workflow_graph(
             access_credentials_name=access_credentials_name,
             name=soma_experiment_uri,
         )
-        logging.info("A: node output is a %s" % type(node_output))
+        logger.info("A: node output is a %s" % type(node_output))
 
         node_outputs[soma_experiment_uri] = node_output
 
     def collect(node_outputs):
         for node_name, node_output in node_outputs.items():
-            logging.info("B: node output %s is a %s" % (node_name, type(node_output)))
+            logger.info("B: node output %s is a %s" % (node_name, type(node_output)))
         return node_outputs
 
     grf.submit(
@@ -393,7 +394,6 @@ def function_for_node(
 
     # ctx = tiledb.Ctx(cfg_dict)
     # exp = tiledbsoma.Experiment.open(experiment_uri, ctx=ctx)
-    print("EXPERIMENT_URI IS", experiment_uri)
     exp = tiledbsoma.Experiment.open(experiment_uri)
     result = experiment_query_func(
         exp,
