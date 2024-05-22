@@ -29,22 +29,21 @@ viz-plotly = ["networkx>=2", "plotly>=4", "pydot"]
 all = ["networkx>=2", "plotly>=4", "pydot", "tiledb-plot-widget>=0.1.7"]
 
 dev = ["black", "pytest", "ruff"]
-tests = ["xarray", "pytest-split"]
+tests = ["xarray", "pytest-cov", "pytest-explicit", "pytest-split"]
 
 [project.urls]
 homepage = "https://tiledb.com"
 repository = "https://github.com/TileDB-Inc/TileDB-Cloud-Py"
 
-
 [build-system]
 requires = ["setuptools>=42", "wheel", "setuptools_scm>=6"]
 
 [tool.pytest.ini_options]
+explicit-only = ["geospatial"]
 markers = [
   "geospatial: tests that require the geospatial libraries",
 ]
 norecursedirs = ["tiledb/cloud"]
-
 
 [tool.setuptools]
 zip-safe = false
