@@ -13,5 +13,6 @@ def info(uri: str) -> object:
     """
     # Note: the URI can be either of the two forms, yes?
     # tiledb://namespace/name or tiledb://namespace/UUID.
-    mod = asset_type_map[tiledb.object_type(uri)]
+    ctx = tiledb.cloud.Ctx()
+    mod = asset_type_map[tiledb.object_type(uri, ctx=ctx)]
     return getattr(mod, "info")(uri)
