@@ -143,10 +143,10 @@ def build_collection_mapper_workflow_graph(
         ``'cell_type == "liver"'``.
     :param var_query_string: Optional query string for ``var``. For example:
         ``'n_cells > 100'``.
-    :param obs_attrs: Optional list of which ``obs`` attrs to return as query
-        output.  Default: all.
-    :param var_attrs: Optional list of which ``var`` attrs to return as query
-        output.  Default: all.
+    :param obs_attrs: Optional list of ``obs`` attributes to return as query
+        output. Default: all.
+    :param var_attrs: Optional list of ``var`` attributes to return as query
+        output. Default: all.
 
     Parameters for data processing:
     :param callback: Your code to run on each UDF node, one for each
