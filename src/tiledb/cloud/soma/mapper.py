@@ -183,7 +183,7 @@ def build_collection_mapper_workflow_graph(
     :param access_credentials_name: Only valid when ``use_batch_mode`` is True.
 
     Return value:
-    A ``DAG`` object. If you've named this ``dag``, you'll need to do
+    A ``DAG`` object. If you've named this ``dag``, you'll need to call
         ``dag.compute()``, ``dag.wait()``, and ``dag.end_results()``.
     """
 
