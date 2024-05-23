@@ -117,7 +117,7 @@ def build_collection_mapper_workflow_graph(
 
     For example, if the lambda maps an anndata object to its ``.shape``, then
     with SOMA experiments ``A`` and ``B``, the collector node might return the
-    dict ``{"A": (56868,43050), "B": (23539, 42044)}``.
+    dict ``{"A": (56868, 43050), "B": (23539, 42044)}``.
 
     Please
 
