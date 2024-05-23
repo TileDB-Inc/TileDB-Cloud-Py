@@ -108,8 +108,8 @@ def build_collection_mapper_workflow_graph(
     access_credentials_name: Optional[str] = None,  # only valid for batch mode
 ) -> dag.DAG:
     """
-    The is the primary entrypoint for the mapper module. The caller passes in
-    either a seqeunce of SOMAExperiment URIs, or, a SOMACollection which is
+     The primary entrypoint for the mapper module. The caller passes in
+    either a sequence of ``SOMAExperiment`` URIs or a ``SOMACollection``, which is
     simply a collection of SOMAExperiment objects. The caller also passes in
     query terms, and a callback lambda which will be called on the
     ``to_anndata`` of each experiment's query output. The top-level collector
