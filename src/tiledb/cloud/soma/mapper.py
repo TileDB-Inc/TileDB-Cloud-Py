@@ -152,7 +152,7 @@ def build_collection_mapper_workflow_graph(
     :param callback: Your code to run on each UDF node, one for each
         ``SOMAExperiment``.  On each node, ``tiledbsoma.AxisQuery`` is run,
         using parameters you specify as above, and then ``query.to_anndata`` is
-        run on that query output.  Then, your ``callback`` function receives
+        run on that query output. Your ``callback`` function receives
         that query-output AnnData object.  For example: ``lambda ad:
         ad.obs.shape``.
     :param args_dict: Optional additional arguments to be passed to your
