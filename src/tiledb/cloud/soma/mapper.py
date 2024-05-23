@@ -28,7 +28,6 @@ def run_collection_mapper_workflow(
     # Processing:
     callback: Callable = lambda x: x,
     args_dict: Optional[Dict[str, Any]] = None,
-    reducer: Callable = lambda x: x,
     # TileDB configs:
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
@@ -61,7 +60,6 @@ def run_collection_mapper_workflow(
         var_attrs=var_attrs,
         callback=callback,
         args_dict=args_dict,
-        reducer=reducer,
         namespace=namespace,
         extra_tiledb_config=extra_tiledb_config,
         platform_config=platform_config,
@@ -93,7 +91,6 @@ def build_collection_mapper_workflow_graph(
     # Processing:
     callback: Callable = lambda x: x,
     args_dict: Optional[Dict[str, Any]] = None,
-    reducer: Callable = lambda x: x,
     # TileDB configs:
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
@@ -158,8 +155,6 @@ def build_collection_mapper_workflow_graph(
     :param args_dict: Optional additional arguments to be passed to your
         callback.  If provided, this must be a dict from string experiment name,
         to dict of key-value pairs.
-    :param reducer: Your code to run on all the collected UDF-node outputs.
-        Default: return all of the UDF-node outputs.
 
     TileDB configs:
     :param extra_tiledb_config: Currently unused; reserved for future use.
