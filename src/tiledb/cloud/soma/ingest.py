@@ -7,6 +7,7 @@ from unittest import mock
 import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud._common import functions
+from tiledb.cloud.utilities import get_logger_wrapper
 
 _DEFAULT_RESOURCES = {"cpu": "8", "memory": "8Gi"}
 """Default resource size; equivalent to a "large" UDF container."""
@@ -163,16 +164,16 @@ def run_ingest_workflow_udf(
     on the client.
     """
 
-    logging.basicConfig(level=logging_level)
-    logging.debug("ENUMERATOR ENTER")
-    logging.debug("ENUMERATOR INPUT_URI  %s", input_uri)
-    logging.debug("ENUMERATOR OUTPUT_URI %s", output_uri)
-    logging.debug("ENUMERATOR DRY_RUN    %s", str(dry_run))
+    logger = get_logger_wrapper(level=logging_level)
+    logger.debug("ENUMERATOR ENTER")
+    logger.debug("ENUMERATOR INPUT_URI  %s", input_uri)
+    logger.debug("ENUMERATOR OUTPUT_URI %s", output_uri)
+    logger.debug("ENUMERATOR DRY_RUN    %s", str(dry_run))
 
     vfs = tiledb.VFS(config=extra_tiledb_config)
 
     if vfs.is_file(input_uri):
-        logging.debug("ENUMERATOR VFS.IS_FILE")
+        logger.debug("ENUMERATOR VFS.IS_FILE")
 
         name = ("dry-run" if dry_run else "ingest") + "-h5ad-file"
 
@@ -196,7 +197,7 @@ def run_ingest_workflow_udf(
         )
 
     elif vfs.is_dir(input_uri):
-        logging.debug("ENUMERATOR VFS.IS_DIR")
+        logger.debug("ENUMERATOR VFS.IS_DIR")
 
         if dry_run:
             name = "dry-run-h5ad-files"
@@ -215,7 +216,7 @@ def run_ingest_workflow_udf(
         )
 
         for entry_input_uri in vfs.ls(input_uri):
-            logging.debug("ENUMERATOR ENTRY_INPUT_URI=%r", entry_input_uri)
+            logger.debug("ENUMERATOR ENTRY_INPUT_URI=%r", entry_input_uri)
             base = os.path.basename(entry_input_uri)
             base, _ = os.path.splitext(base)
 
@@ -223,10 +224,10 @@ def run_ingest_workflow_udf(
             if not output_uri.endswith("/"):
                 entry_output_uri += "/"
             entry_output_uri += base
-            logging.debug("ENUMERATOR ENTRY_OUTPUT_URI=%r", entry_output_uri)
+            logger.debug("ENUMERATOR ENTRY_OUTPUT_URI=%r", entry_output_uri)
 
             if pattern is not None and not re.match(pattern, entry_input_uri):
-                logging.debug("ENUMERATOR SKIP NO MATCH ON <<%r>>", pattern)
+                logger.debug("ENUMERATOR SKIP NO MATCH ON <<%r>>", pattern)
                 continue
 
             node = grf.submit(
@@ -249,7 +250,7 @@ def run_ingest_workflow_udf(
 
     grf.compute()
 
-    logging.debug("ENUMERATOR EXIT server_graph_uuid = %r", grf.server_graph_uuid)
+    logger.debug("ENUMERATOR EXIT server_graph_uuid = %r", grf.server_graph_uuid)
     return grf.server_graph_uuid
 
 
