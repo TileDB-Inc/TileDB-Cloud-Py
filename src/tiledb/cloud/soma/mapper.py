@@ -111,10 +111,9 @@ def build_collection_mapper_workflow_graph(
      The primary entrypoint for the mapper module. The caller passes in
     either a sequence of ``SOMAExperiment`` URIs or a ``SOMACollection``, which is
     simply a collection of SOMAExperiment objects. The caller also passes in
-    query terms, and a callback lambda which will be called on the
-    ``to_anndata`` of each experiment's query output. The top-level collector
-    node will be simply a dict from experiment name to the
-    callback lambda's output, for each input experiment.
+    query terms and a callback lambda which will be called on the
+    ``to_anndata`` output of each experiment's query. The top-level collector
+    node will be a dictionary mapping experiment names to the callback lambda's output for each input experiment.
 
     For example, if the lambda maps an anndata object to its ``.shape``, then
     with SOMA experiments ``A`` and ``B``, the collector node might return the
