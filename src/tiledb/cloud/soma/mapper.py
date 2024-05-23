@@ -174,7 +174,7 @@ def build_collection_mapper_workflow_graph(
         result of the provided calback.
 
     Real-time vs batch modes:
-    :param use_batch_mode: If false (which is the default), uses real-time UDFs.
+    :param use_batch_mode: If false (the default), uses real-time UDFs.
         These have lower latency but fewer resource options.
     :param resource_class: ``"standard"`` or ``"large"``. Only valid when
         ``use_batch_mode`` is False.
