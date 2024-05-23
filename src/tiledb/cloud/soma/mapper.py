@@ -171,7 +171,7 @@ def build_collection_mapper_workflow_graph(
     :param task_graph_name: Optional name for your task graph, so you can
         find it more easily among other runs.
     :param counts_only: If specified, only return obs/var counts, not the
-        result of the provided calback.
+        result of the provided callback.
 
     Real-time vs batch modes:
     :param use_batch_mode: If false (the default), uses real-time UDFs.
