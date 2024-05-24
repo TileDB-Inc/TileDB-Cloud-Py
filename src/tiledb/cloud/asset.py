@@ -27,7 +27,7 @@ def delete(uri: str, recursive: bool = False) -> None:
 
 
 def info(uri: str) -> Union[ArrayInfo, GroupInfo]:
-    """Information about an asset.
+    """Retrieve information about an asset.
 
     :param uri: URI of the asset.
     :return: ArrayInfo or GroupInfo.
