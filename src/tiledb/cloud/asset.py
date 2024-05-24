@@ -1,22 +1,11 @@
 """An asset may be an array or a group."""
 
 from functools import partial
+from typing import Union
 
 import tiledb.cloud  # type: ignore
-
-
-def info(uri: str) -> object:
-    """Information about an asset.
-
-    :param uri: URI of the asset.
-    :return: object.
-    """
-    # Note: the URI can be either of the two forms, yes?
-    # tiledb://namespace/name or tiledb://namespace/UUID.
-    info_map = {"array": tiledb.cloud.array.info, "group": tiledb.cloud.groups.info}
-    ctx = tiledb.cloud.Ctx()
-    func = info_map[tiledb.object_type(uri, ctx=ctx)]
-    return func(uri)
+from tiledb.cloud.rest_api.models import ArrayInfo  # type: ignore
+from tiledb.cloud.rest_api.models import GroupInfo  # type: ignore
 
 
 def delete(uri: str, recursive: bool = False) -> None:
@@ -29,6 +18,20 @@ def delete(uri: str, recursive: bool = False) -> None:
         "array": tiledb.cloud.array.delete_array,
         "group": partial(tiledb.cloud.groups.delete, recursive=recursive),
     }
-    ctx = tiledb.cloud.Ctx()
-    func = delete_map[tiledb.object_type(uri, ctx=ctx)]
+    asset_type = tiledb.object_type(uri, ctx=tiledb.cloud.Ctx())
+    func = delete_map[asset_type]
+    return func(uri)
+
+
+def info(uri: str) -> Union[ArrayInfo, GroupInfo]:
+    """Information about an asset.
+
+    :param uri: URI of the asset.
+    :return: ArrayInfo or GroupInfo.
+    """
+    # Note: the URI can be either of the two forms, yes?
+    # tiledb://namespace/name or tiledb://namespace/UUID.
+    info_map = {"array": tiledb.cloud.array.info, "group": tiledb.cloud.groups.info}
+    asset_type = tiledb.object_type(uri, ctx=tiledb.cloud.Ctx())
+    func = info_map[asset_type]
     return func(uri)
