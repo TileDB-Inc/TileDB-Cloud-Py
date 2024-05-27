@@ -129,9 +129,9 @@ def index_files_udf(
     driver_image: Optional[str] = None,
     extra_driver_modules: Optional[List[str]] = None,
     max_tasks_per_stage: int = -1,
-    embeddings_generation_mode: dag.Mode = dag.Mode.LOCAL,
-    embeddings_generation_driver_mode: dag.Mode = dag.Mode.LOCAL,
-    vector_indexing_mode: dag.Mode = dag.Mode.LOCAL,
+    embeddings_generation_mode: dag.Mode = dag.Mode.BATCH,
+    embeddings_generation_driver_mode: dag.Mode = dag.Mode.BATCH,
+    vector_indexing_mode: dag.Mode = dag.Mode.BATCH,
     index_update_kwargs: Optional[Dict] = None,
 ):
     """
@@ -215,7 +215,7 @@ def ingest_files(
     extra_driver_modules: Optional[List[str]] = None,
     max_tasks_per_stage: int = -1,
     embeddings_generation_mode: dag.Mode = dag.Mode.BATCH,
-    embeddings_generation_driver_mode: dag.Mode = dag.Mode.LOCAL,
+    embeddings_generation_driver_mode: dag.Mode = dag.Mode.BATCH,
     vector_indexing_mode: dag.Mode = dag.Mode.BATCH,
     index_update_kwargs: Optional[Dict] = None,
 ):
