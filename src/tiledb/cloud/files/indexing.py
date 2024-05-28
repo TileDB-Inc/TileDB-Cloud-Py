@@ -1,8 +1,9 @@
 from enum import Enum
-from typing import Dict, List, Mapping, Optional, Sequence
+from typing import Any, Dict, List, Mapping, Optional, Sequence
 
 import tiledb
 from tiledb.cloud import dag
+from tiledb.cloud.file import DEFAULT_MIN_RESOURCES
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import get_logger_wrapper
 
@@ -193,6 +194,7 @@ def ingest_files(
     # Index creation params
     index_type: IndexTypes = IndexTypes.IVF_FLAT,
     index_creation_kwargs: Optional[Dict] = None,
+    index_dag_resources: Optional[Mapping[str, Any]] = DEFAULT_MIN_RESOURCES,
     # DirectoryTextReader params
     include: str = "*",
     exclude: Optional[Sequence[str]] = ("[.]*", "*/[.]*"),
@@ -218,6 +220,17 @@ def ingest_files(
     embeddings_generation_driver_mode: dag.Mode = dag.Mode.BATCH,
     vector_indexing_mode: dag.Mode = dag.Mode.BATCH,
     index_update_kwargs: Optional[Dict] = None,
+    ## Vector Search BATCH Embedding Resources
+    threads: str = "16",
+    ingest_resources: Optional[Dict] = None,
+    consolidate_partition_resources: Optional[Dict] = None,
+    copy_centroids_resources: Optional[Dict] = None,
+    random_sample_resources: Optional[Dict] = None,
+    kmeans_resources: Optional[Dict] = None,
+    compute_new_centroids_resources: Optional[Dict] = None,
+    assign_points_and_partial_new_centroids_resources: Optional[Dict] = None,
+    write_centroids_resources: Optional[Dict] = None,
+    partial_index_resources: Optional[Dict] = None,
 ):
     """
     Ingest files into a vector search text index.
@@ -236,6 +249,7 @@ def ingest_files(
     :param index_type: Vector search index type ("FLAT", "IVF_FLAT").
     :param index_creation_kwargs: Arguments to be passed to the index creation
         method.
+    :param index_dag_resources: Index creation Node Specs configuration.
     # DirectoryTextReader params.
     :param include: File pattern to include relative to `search_uri`. By default
         set to include all files.
@@ -271,22 +285,66 @@ def ingest_files(
         ingestion driver.
     :param vector_indexing_mode: TaskGraph execution mode for the vector indexing.
     :param index_update_kwargs: Extra arguments to pass to the index update job.
+        These can be any of the documented tiledb.vector_search.ingest method with the
+        exception of BATCH Embedding Resources (see next params):
+        https://tiledb-inc.github.io/TileDB-Vector-Search/documentation/reference/ingestion.html#tiledb.vector_search.ingestion.ingest
+        Also `files_per_partition: int` can be included (defaults to -1)
+    ## Vector Search BATCH Embedding Resources
+    ## These are only applicable if indexing update is executed in BATCH mode.
+    :param threads: Threads to be used in the Nodes, defaults to 16.
+    :param ingest_resources: Resources to request when performing vector ingestion.
+    :param consolidate_partition_resources: Resources to request when performing
+        consolidation of a partition.
+    :param copy_centroids_resources: Resources to request when performing copy
+        of centroids from input array to output array.
+    :param random_sample_resources: Resources to request when performing random
+        sample selection.
+    :param kmeans_resources: Resources to request when performing kmeans task.
+    :param compute_new_centroids_resources: Resources to request when performing
+        centroid computation.
+    :param assign_points_and_partial_new_centroids_resources: Resources to request
+        when performing the computation of partial centroids.
+    :param write_centroids_resources: Resources to request when performing the
+        write of centroids.
+    :param partial_index_resources: Resources to request when performing the
+        computation of partial indexing.
     """
 
     from tiledb.cloud.utilities import run_dag
 
+    # Argument preparation
     DEFAULT_IMG_NAME = "vectorsearch"
+    worker_resources = worker_resources or {"cpu": "2", "memory": "8Gi"}
+    driver_resources = driver_resources or {"cpu": "1", "memory": "4Gi"}
+    ## Vector Search BATCH Embedding Resources:
+    index_update_kwargs.update(
+        {
+            "ingest_resources": ingest_resources or {"cpu": threads, "memory": "16Gi"},
+            "consolidate_partition_resources": consolidate_partition_resources
+            or {"cpu": threads, "memory": "16Gi"},
+            "copy_centroids_resources": copy_centroids_resources
+            or DEFAULT_MIN_RESOURCES,
+            "random_sample_resources": random_sample_resources
+            or {"cpu": "2", "memory": "8Gi"},
+            "kmeans_resources": kmeans_resources or {"cpu": "8", "memory": "32Gi"},
+            "compute_new_centroids_resources": compute_new_centroids_resources
+            or {"cpu": "1", "memory": "8Gi"},
+            "assign_points_and_partial_new_centroids_resources": assign_points_and_partial_new_centroids_resources  # noqa
+            or {"cpu": threads, "memory": "12Gi"},
+            "write_centroids_resources": write_centroids_resources
+            or DEFAULT_MIN_RESOURCES,
+            "partial_index_resources": partial_index_resources or DEFAULT_MIN_RESOURCES,
+        }
+    )
+
     # --------------------------------------------------------------------
     # DAG
     # --------------------------------------------------------------------
-
     graph = dag.DAG(
         name="vector-search-file-indexing",
         namespace=namespace,
         mode=dag.Mode.BATCH,
     )
-    if worker_resources is None:
-        worker_resources = {"cpu": "2", "memory": "8Gi"}
 
     create_index_node = graph.submit(
         create_dataset_udf,
@@ -307,7 +365,7 @@ def ingest_files(
         embedding_kwargs=embedding_kwargs,
         name="Create Vector Search index",
         access_credentials_name=acn,
-        resources={"cpu": "1", "memory": "2Gi"},
+        resources=index_dag_resources,
         image_name=DEFAULT_IMG_NAME,
     )
 
