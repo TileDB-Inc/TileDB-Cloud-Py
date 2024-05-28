@@ -4,6 +4,8 @@ import re
 from typing import ContextManager, Dict, Optional
 from unittest import mock
 
+from tiledbsoma._types import IngestMode
+
 import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud._common import functions
@@ -21,7 +23,7 @@ def run_ingest_workflow(
     pattern: Optional[str] = None,
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
-    ingest_mode: str = "write",
+    ingest_mode: IngestMode = "write",
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
@@ -100,7 +102,7 @@ def build_ingest_workflow_graph(
     pattern: Optional[str] = None,
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
-    ingest_mode: str = "write",
+    ingest_mode: IngestMode = "write",
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
@@ -152,7 +154,7 @@ def run_ingest_workflow_udf(
     pattern: Optional[str] = None,
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
-    ingest_mode: str = "write",
+    ingest_mode: IngestMode = "write",
     namespace: Optional[str] = None,
     logging_level: int = logging.INFO,
     dry_run: bool = False,
@@ -270,7 +272,7 @@ def ingest_h5ad(
     measurement_name: str,
     extra_tiledb_config: Optional[Dict[str, object]],
     platform_config: Optional[Dict[str, object]],
-    ingest_mode: str,
+    ingest_mode: IngestMode,
     logging_level: int = logging.INFO,
     dry_run: bool = False,
 ) -> None:
