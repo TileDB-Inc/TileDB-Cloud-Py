@@ -113,7 +113,6 @@ def build_ingest_workflow_graph(
     Same signature as ``run_ingest_workflow``, but returns the graph object
     directly.
     """
-
     grf = dag.DAG(
         name="ingest-h5ad-launcher",
         mode=dag.Mode.BATCH,
@@ -164,6 +163,7 @@ def run_ingest_workflow_udf(
     can we do VFS with access_credentials_name -- that does not work correctly
     on the client.
     """
+    import tiledbsoma.io
 
     logger = get_logger_wrapper(level=logging_level)
     logger.debug("ENUMERATOR ENTER")
@@ -295,7 +295,6 @@ def ingest_h5ad(
     """
 
     import anndata
-    import tiledbsoma
     import tiledbsoma.logging
     from tiledbsoma import io
 
@@ -307,7 +306,7 @@ def ingest_h5ad(
     elif logging_level <= logging.INFO:
         tiledbsoma.logging.info()
 
-    # While h5ad supports any file-like object, annndata specifically
+    # While h5ad supports any file-like object, anndata specifically
     # wants only an `os.PathLike` object. The only thing it does with
     # the PathLike is to use it to get the filename.
     class _FSPathWrapper:
