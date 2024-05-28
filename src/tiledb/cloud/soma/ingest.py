@@ -57,6 +57,7 @@ def run_ingest_workflow(
     :param namespace: An alternate namespace to run the ingestion process under.
     :param access_credentials_name: If provided, the name of the credentials
         to pass to the executing UDF.
+    :param logging_level: The logging level to use for the ingestion process.
     :param dry_run: If provided and set to ``True``, does the input-path
         traversals without ingesting data.
     :return: A dictionary of ``{"status": "started", "graph_id": ...}``,
@@ -286,6 +287,7 @@ def ingest_h5ad(
         if any.
     :param ingest_mode: One of the ingest modes supported by
         ``tiledbsoma.io.read_h5ad``.
+    :param logging_level: The logging level to use for the ingestion process.
     :param dry_run: If provided and set to ``True``, does the input-path
         traversals without ingesting data.
     """
