@@ -3,7 +3,6 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence
 
 import tiledb
 from tiledb.cloud import dag
-from tiledb.cloud.file import DEFAULT_MIN_RESOURCES
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import get_logger_wrapper
 
@@ -194,7 +193,7 @@ def ingest_files(
     # Index creation params
     index_type: IndexTypes = IndexTypes.IVF_FLAT,
     index_creation_kwargs: Optional[Dict] = None,
-    index_dag_resources: Optional[Mapping[str, Any]] = DEFAULT_MIN_RESOURCES,
+    index_dag_resources: Optional[Mapping[str, Any]] = dag.MIN_BATCH_RESOURCES,
     # DirectoryTextReader params
     include: str = "*",
     exclude: Optional[Sequence[str]] = ("[.]*", "*/[.]*"),
@@ -323,7 +322,7 @@ def ingest_files(
             "consolidate_partition_resources": consolidate_partition_resources
             or {"cpu": threads, "memory": "16Gi"},
             "copy_centroids_resources": copy_centroids_resources
-            or DEFAULT_MIN_RESOURCES,
+            or dag.MIN_BATCH_RESOURCES,
             "random_sample_resources": random_sample_resources
             or {"cpu": "2", "memory": "8Gi"},
             "kmeans_resources": kmeans_resources or {"cpu": "8", "memory": "32Gi"},
@@ -332,8 +331,9 @@ def ingest_files(
             "assign_points_and_partial_new_centroids_resources": assign_points_and_partial_new_centroids_resources  # noqa
             or {"cpu": threads, "memory": "12Gi"},
             "write_centroids_resources": write_centroids_resources
-            or DEFAULT_MIN_RESOURCES,
-            "partial_index_resources": partial_index_resources or DEFAULT_MIN_RESOURCES,
+            or dag.MIN_BATCH_RESOURCES,
+            "partial_index_resources": partial_index_resources
+            or dag.MIN_BATCH_RESOURCES,
         }
     )
 

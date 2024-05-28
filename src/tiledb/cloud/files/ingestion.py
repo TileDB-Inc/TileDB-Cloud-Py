@@ -8,7 +8,6 @@ from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud._common import utils
 from tiledb.cloud.array import info
 from tiledb.cloud.dag.mode import Mode
-from tiledb.cloud.files import DEFAULT_MIN_RESOURCES
 from tiledb.cloud.files import udfs as file_udfs
 from tiledb.cloud.files import utils as file_utils
 from tiledb.cloud.utilities import as_batch
@@ -139,7 +138,7 @@ def ingest_files(
     namespace: Optional[str] = None,
     group_uri: Optional[str] = None,
     taskgraph_name: Optional[str] = DEFAULT_FILE_INGESTION_NAME,
-    ingest_resources: Optional[Mapping[str, Any]] = DEFAULT_MIN_RESOURCES,
+    ingest_resources: Optional[Mapping[str, Any]] = dag.MIN_BATCH_RESOURCES,
     verbose: bool = False,
 ) -> str:
     """
