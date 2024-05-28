@@ -152,9 +152,7 @@ def run_ingest_workflow_udf(
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
     ingest_mode: str = "write",
-    resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
-    access_credentials_name: Optional[str] = None,
     logging_level: int = logging.INFO,
     dry_run: bool = False,
 ) -> Dict[str, str]:
