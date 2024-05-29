@@ -118,5 +118,5 @@ def datetime_to_msec(t: Union[datetime.datetime, int, None]) -> Optional[int]:
 def sanitize_enum_argument(enum_class: Type[Enum], value: str) -> Type[Enum]:
     try:
         return enum_class(value)
-    except ValueError:
-        raise ValueError(f"{value} is not a valid {enum_class.__name__}")
+    except ValueError as exc:
+        raise ValueError(f"{value} is not a valid {enum_class.__name__}") from exc

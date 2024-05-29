@@ -50,10 +50,9 @@ def create_dataset_udf(
 
     # Check if the dataset already exists
     with tiledb.scope_ctx(config):
-        if environment_variables is None:
-            environment_variables = {}
-        if index_creation_kwargs is None:
-            index_creation_kwargs = {}
+        environment_variables = environment_variables or {}
+        index_creation_kwargs = index_creation_kwargs or {}
+
         if embedding_kwargs is None:
             embedding_kwargs = {
                 "dimensions": 1536,
@@ -317,24 +316,19 @@ def ingest_files(
     driver_resources = driver_resources or {"cpu": "1", "memory": "4Gi"}
     ## Vector Search BATCH Embedding Resources:
     index_update_kwargs.update(
-        {
-            "ingest_resources": ingest_resources or {"cpu": threads, "memory": "16Gi"},
-            "consolidate_partition_resources": consolidate_partition_resources
-            or {"cpu": threads, "memory": "16Gi"},
-            "copy_centroids_resources": copy_centroids_resources
-            or dag.MIN_BATCH_RESOURCES,
-            "random_sample_resources": random_sample_resources
-            or {"cpu": "2", "memory": "8Gi"},
-            "kmeans_resources": kmeans_resources or {"cpu": "8", "memory": "32Gi"},
-            "compute_new_centroids_resources": compute_new_centroids_resources
-            or {"cpu": "1", "memory": "8Gi"},
-            "assign_points_and_partial_new_centroids_resources": assign_points_and_partial_new_centroids_resources  # noqa
-            or {"cpu": threads, "memory": "12Gi"},
-            "write_centroids_resources": write_centroids_resources
-            or dag.MIN_BATCH_RESOURCES,
-            "partial_index_resources": partial_index_resources
-            or dag.MIN_BATCH_RESOURCES,
-        }
+        ingest_resources=ingest_resources or {"cpu": threads, "memory": "16Gi"},
+        consolidate_partition_resources=consolidate_partition_resources
+        or {"cpu": threads, "memory": "16Gi"},
+        copy_centroids_resources=copy_centroids_resources or dag.MIN_BATCH_RESOURCES,
+        random_sample_resources=random_sample_resources
+        or {"cpu": "2", "memory": "8Gi"},
+        kmeans_resources=kmeans_resources or {"cpu": "8", "memory": "32Gi"},
+        compute_new_centroids_resources=compute_new_centroids_resources
+        or {"cpu": "1", "memory": "8Gi"},
+        assign_points_and_partial_new_centroids_resources=assign_points_and_partial_new_centroids_resources  # noqa
+        or {"cpu": threads, "memory": "12Gi"},
+        write_centroids_resources=write_centroids_resources or dag.MIN_BATCH_RESOURCES,
+        partial_index_resources=partial_index_resources or dag.MIN_BATCH_RESOURCES,
     )
 
     # --------------------------------------------------------------------
