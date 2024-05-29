@@ -14,6 +14,8 @@ from .array import list_shared_with
 from .array import register_array
 from .array import share_array
 from .array import unshare_array
+from .asset import asset_info
+from .asset import delete_asset
 from .client import Config
 from .client import Ctx
 from .client import list_arrays
@@ -70,6 +72,8 @@ __all__ = (
     "list_shared_arrays",
     "list_shared_groups",
     "list_groups",
+    "asset_info",
+    "delete_asset",
     "login",
     "organization",
     "organizations",
