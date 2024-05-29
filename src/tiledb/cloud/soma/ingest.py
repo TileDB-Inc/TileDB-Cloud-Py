@@ -25,6 +25,8 @@ def run_ingest_workflow(
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
     ingest_mode: IngestMode = "write",
+    obs_field_name: str = "obs_id",
+    var_field_name: str = "var_id",
     appending: bool = False,
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
@@ -56,6 +58,8 @@ def run_ingest_workflow(
         if any.
     :param ingest_mode: One of the ingest modes supported by
         ``tiledbsoma.io.read_h5ad``.
+    :param obs_field_name: The name of the field in the H5AD file to use as the obs ID.
+    :param var_field_name: The name of the field in the H5AD file to use as the var ID.
     :param appending: TBD WRITE ME PLEASE
     :param resources: A specification for the amount of resources to provide
         to the UDF executing the ingestion process, to override the default.
@@ -78,6 +82,8 @@ def run_ingest_workflow(
         extra_tiledb_config=extra_tiledb_config,
         platform_config=platform_config,
         ingest_mode=ingest_mode,
+        obs_field_name=obs_field_name,
+        var_field_name=var_field_name,
         appending=appending,
         resources=resources,
         namespace=namespace,
@@ -107,6 +113,8 @@ def build_ingest_workflow_graph(
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
     ingest_mode: IngestMode = "write",
+    obs_field_name: str = "obs_id",
+    var_field_name: str = "var_id",
     appending: bool = False,
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
@@ -132,6 +140,8 @@ def build_ingest_workflow_graph(
         extra_tiledb_config=extra_tiledb_config,
         platform_config=platform_config,
         ingest_mode=ingest_mode,
+        obs_field_name=obs_field_name,
+        var_field_name=var_field_name,
         appending=appending,
         resources=resources,
         namespace=namespace,
@@ -160,6 +170,8 @@ def run_ingest_workflow_udf(
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
     ingest_mode: IngestMode = "write",
+    obs_field_name: str = "obs_id",
+    var_field_name: str = "var_id",
     appending: bool = False,
     namespace: Optional[str] = None,
     logging_level: int = logging.INFO,
@@ -192,8 +204,8 @@ def run_ingest_workflow_udf(
                 experiment_uri=output_uri,
                 h5ad_file_names=[input_uri],
                 measurement_name=measurement_name,
-                obs_field_name="obs_id",  # XXX NEEDS TO BE AN ARG
-                var_field_name="var_id",  # XXX NEEDS TO BE AN ARG
+                obs_field_name=obs_field_name,
+                var_field_name=var_field_name,
             )
 
         grf = dag.DAG(
@@ -208,6 +220,8 @@ def run_ingest_workflow_udf(
             measurement_name=measurement_name,
             extra_tiledb_config=extra_tiledb_config,
             ingest_mode=ingest_mode,
+            obs_id_name=obs_field_name,
+            var_id_name=var_field_name,
             registration_mapping=registration_mapping,
             platform_config=platform_config,
             resources=carry_along["resources"],
@@ -249,8 +263,8 @@ def run_ingest_workflow_udf(
                 experiment_uri=output_uri,
                 h5ad_file_names=input_paths,
                 measurement_name=measurement_name,
-                obs_field_name="obs_id",  # XXX NEEDS TO BE AN ARG
-                var_field_name="var_id",  # XXX NEEDS TO BE AN ARG
+                obs_field_name=obs_field_name,
+                var_field_name=var_field_name,
             )
 
         for input_path in input_paths:
@@ -268,6 +282,8 @@ def run_ingest_workflow_udf(
                 measurement_name=measurement_name,
                 extra_tiledb_config=extra_tiledb_config,
                 ingest_mode=ingest_mode,
+                obs_id_name=obs_field_name,
+                var_id_name=var_field_name,
                 registration_mapping=registration_mapping,
                 platform_config=platform_config,
                 resources=carry_along["resources"],
@@ -304,6 +320,8 @@ def ingest_h5ad(
     extra_tiledb_config: Optional[Dict[str, object]],
     platform_config: Optional[Dict[str, object]],
     ingest_mode: IngestMode,
+    obs_id_name: str = "obs_id",
+    var_id_name: str = "var_id",
     logging_level: int = logging.INFO,
     registration_mapping: Optional[
         "tiledbsoma.io._registration.ExperimentAmbientLabelMapping"  # noqa: F821
@@ -323,6 +341,8 @@ def ingest_h5ad(
         if any.
     :param ingest_mode: One of the ingest modes supported by
         ``tiledbsoma.io.read_h5ad``.
+    :param obs_id_name: The name of the field in the H5AD file to use as the obs ID.
+    :param var_id_name: The name of the field in the H5AD file to use as the var ID.
     :param logging_level: The logging level to use for the ingestion process.
     :param registration_mapping: If provided, precomputed mapping of input obs IDs to
         output soma_joinid's.
@@ -384,6 +404,8 @@ def ingest_h5ad(
             measurement_name=measurement_name,
             context=soma_ctx,
             ingest_mode=ingest_mode,
+            obs_id_name=obs_id_name,
+            var_id_name=var_id_name,
             registration_mapping=registration_mapping,
             platform_config=platform_config,
         )
