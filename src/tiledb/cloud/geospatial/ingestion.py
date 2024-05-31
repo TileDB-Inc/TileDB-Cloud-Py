@@ -962,13 +962,6 @@ def register_dataset_udf(
                 access_credentials_name=acn,
             )
 
-            # FIXME: This removes `dataset_type` metadata field for internal UI reasons
-            with tiledb.open(dataset_uri, mode="w") as array:
-                try:
-                    del array.meta["dataset_type"]
-                except KeyError:
-                    pass
-
 
 def build_file_list_udf(
     *,
@@ -1334,6 +1327,16 @@ def ingest_datasets_dag(
     )
     process_node.depends_on(ingest_node)
 
+    # FIXME: Temporary fix to remove array dataset_type
+    clean_dataset_type = graph.submit(
+        remove_dataset_type_from_array_meta,
+        dataset_uri,
+        verbose=verbose,
+        resources=DEFAULT_RESOURCES,
+        access_credentials_name=acn,
+    )
+    clean_dataset_type.depends_on(process_node)
+
     graph.submit(
         consolidate_meta,
         dataset_uri,
@@ -1343,7 +1346,7 @@ def ingest_datasets_dag(
         trace=trace,
         log_uri=log_uri,
         access_credentials_name=acn,
-    ).depends_on(process_node)
+    ).depends_on(clean_dataset_type)
 
     # Register the dataset on TileDB Cloud
     if register_name:
@@ -1355,7 +1358,7 @@ def ingest_datasets_dag(
             config=config,
             verbose=verbose,
             access_credentials_name=acn,
-        ).depends_on(process_node)
+        ).depends_on(clean_dataset_type)
 
     run_dag(graph, wait=False)
 
@@ -1407,6 +1410,30 @@ def consolidate_meta(
                     print(e)
 
     logger.info("max memory usage: %.3f GiB", max_memory_usage() / (1 << 30))
+
+
+def remove_dataset_type_from_array_meta(
+    dataset_uri: str,
+    *,
+    verbose: bool = False,
+):
+    """
+    Removes `dataset_type` meta if the ingested result is an array.
+    FIXME: This exists to fix an internal UI issue until formally fixed.
+
+    :param dataset_uri: dataset URI
+    :param verbose: verbose logging, defaults to False
+    """
+    logger = get_logger_wrapper(verbose)
+    if tiledb.object_type(dataset_uri) == "array":
+        logger.info(
+            "Ingested result is an array. " "Removing dataset_type from metadata..."
+        )
+        with tiledb.open(dataset_uri, mode="w") as array:
+            try:
+                del array.meta["dataset_type"]
+            except KeyError as exc:
+                logger.debug(f"Failed: {str(exc)}")
 
 
 def ingest_datasets(
@@ -1516,53 +1543,3 @@ def ingest_datasets(
 
 # Wrapper function for batch dataset ingestion
 ingest = as_batch(ingest_datasets)
-
-if __name__ == "__main__":
-    import datetime
-
-    date_mark = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    # date_mark = "1"
-    ingest_datasets(
-        dataset_uri="s3://john.moutafis-test/pointcloud-test-4",
-        dataset_type=DatasetType.POINTCLOUD,
-        acn="my_quicktest_role",
-        namespace="john-moutafis",
-        register_name="test-lidar-4",
-        search_uri="s3://tiledb-norman/deleteme/files/geospatial/lidar/MA_CentralEastern_2021_B21/",
-        stats=False,
-        # max_files=3,
-        verbose=True,
-        trace=True,
-        pattern="*.laz",
-    )
-
-# if __name__ == "__main__":
-#     import datetime
-
-#     from tiledb.cloud.utilities import serialize_filter
-
-#     date_mark = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-#     # date_mark = "1"
-
-#     tile_size = 1024
-#     pixels_per_fragment = (tile_size**2) * 100  # 100 tiles per fragment
-#     batch_size = 8
-#     zstd_filter = tiledb.ZstdFilter(level=7)
-
-#     ingest_datasets(
-#         dataset_uri=f"s3://tiledb-norman/deleteme/raster/raster_test/2024-03-08/test-{date_mark}",
-#         dataset_type=DatasetType.RASTER,
-#         batch_size=batch_size,
-#         tile_size=tile_size,
-#         pixels_per_fragment=pixels_per_fragment,
-#         nodata=0,
-#         compression_filter=serialize_filter(zstd_filter),
-#         acn="norman-cloud-sandbox-role",
-#         namespace="norman",
-#         register_name="test_landcover_small",
-#         search_uri="s3://tiledb-norman/deleteme/raster_test/small/",
-#         stats=False,
-#         verbose=True,
-#         trace=True,
-#         pattern="*.tif",
-#     )
