@@ -3,6 +3,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from typing import Mapping, Optional, Sequence, Tuple, Union
 
+import numpy as np
 import pandas as pd
 
 import tiledb
@@ -55,25 +56,28 @@ def split_regions(regions: Union[str, Sequence[str]]) -> Tuple[str, Sequence[sli
     return contig, ranges
 
 
-def zygosity(gt: Tuple[int, int]) -> str:
+def zygosity(gt: np.ndarray) -> str:
     """
     Convert genotype to a zygosity string.
 
     :param gt: genotype
     :return: zygosity string
     """
-    if tuple(gt) == tuple([0, 0]):
-        return "HOM_REF"
-    if tuple(gt) == tuple([".", "."]):
-        return "UNKNOWN"
-    elif len(tuple(gt)) == 2 and (tuple(gt)[0] == 0 or tuple(gt)[1] == 0):
-        return "HET"
-    elif tuple(gt)[0] != 0 and tuple(gt)[1] != 0:
-        return "HOM_ALT"
-    elif len(tuple(gt)) == 1 and tuple(gt)[0] != 0:
+    gt = list(gt)
+    if len(gt) == 1:
+        if gt[0] == 0:
+            return "HOM_REF"
         return "HEMI"
-    else:
-        return str(gt)
+    if len(gt) == 2:
+        if gt == [0, 0]:
+            return "HOM_REF"
+        if gt[0] == 0 or gt[1] == 0:
+            return "HET"
+        if gt[0] > 0 and gt[1] > 0:
+            return "HOM_ALT"
+        return "UNKNOWN"
+
+    return ",".join(map(str, gt))
 
 
 def _annotate(
@@ -85,51 +89,34 @@ def _annotate(
     vcf_filter: Optional[str] = None,
     split_multiallelic: bool = True,
     add_zygosity: bool = False,
-    reorder: Optional[Sequence[str]] = [
-        "sample_name",
-        "contig",
-        "pos_start",
-        "ref",
-        "alt",
-    ],
-    rename: Optional[Mapping[str, str]] = {"sample_name": "sample"},
+    reorder: Optional[Sequence[str]] = None,
+    rename: Optional[Mapping[str, str]] = None,
     verbose: bool = False,
 ) -> pd.DataFrame:
     """
     Annotate a VCF DataFrame with annotations from a TileDB array.
 
-    Parameters
-    ----------
-    vcf_df
-        The input VCF DataFrame.
-    ann_uri
-        The URI of the annotation array.
-    ann_regions
-        The regions to query. All regions must be in the same chromosome/contig.
-    ann_attrs, optional
-        The attributes to query, by default None which queries all attributes.
-    vcf_filter, optional
-        A pandas filter to apply to the VCF DataFrame before annotation, by default None
-    split_multiallelic, optional
-        Split multiallelic variants into separate rows, by default True
-    add_zygosity, optional
-        Add a zygosity column to the DataFrame, by default False
-    reorder, optional
-        List of columns to reorder, by default
-            ["sample_name", "contig", "pos_start", "ref", "alt"]
-    rename, optional
-        Dict of columns to rename, by default
-            {"sample_name": "sample"}
-    verbose, optional
-        Enable verbose logging, by default False
-
-    Returns
-    -------
-        The annotated VCF DataFrame.
+    :param vcf_df: VCF DataFrame to annotate
+    :param ann_uri: URI of the annotation array
+    :param ann_regions: regions to annotate. All regions must be in the same
+        chromosome/contig.
+    :param ann_attrs: annotation attributes to read,
+        defaults to None which queries all attributes.
+    :param vcf_filter: a pandas filter to apply to the VCF DataFrame before annotation,
+        defaults to None
+    :param split_multiallelic: split multiallelic variants into separate rows,
+        defaults to True
+    :param add_zygosity: add zygosity column to the DataFrame, defaults to False
+    :param reorder: list of columns to reorder (before renaming), defaults to None
+    :param rename: dict of columns to rename, defaults to None
+    :param verbose: enable verbose logging, defaults to False
+    :return: annotated VCF DataFrame
     """
 
     if isinstance(ann_attrs, str):
         ann_attrs = [ann_attrs]
+
+    rename = dict(rename or {})
 
     # Add attributes required for join
     if ann_attrs is not None:
@@ -174,12 +161,22 @@ def _annotate(
     # Split alleles into ref and alt
     vcf_df["ref"] = vcf_df["alleles"].str[0]
     vcf_df["alt"] = vcf_df["alleles"].str[1:]
-    vcf_df = vcf_df.drop("alleles", axis=1)
+    vcf_df.drop("alleles", axis=1, inplace=True)
     t_prev = log_event("split ref/alt", t_prev)
+
+    # Create an af column with the ALT IAF values
+    alt_af = "info_TILEDB_ALT_IAF"
+    if "info_TILEDB_IAF" in vcf_df:
+        vcf_df[alt_af] = vcf_df["info_TILEDB_IAF"].str[1:]
 
     if split_multiallelic:
         # Split multiallelic variants
-        vcf_df = vcf_df.explode("alt")
+        explode_cols = ["alt"]
+
+        if "af" in vcf_df:
+            explode_cols.append(alt_af)
+
+        vcf_df = vcf_df.explode(explode_cols)
         t_prev = log_event("split multiallelic", t_prev)
     else:
         # Convert alt to comma-separated string

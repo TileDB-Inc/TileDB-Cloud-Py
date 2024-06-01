@@ -1,10 +1,14 @@
-import functools
-from typing import Callable, TypeVar
+from typing import Callable
 
+import pandas as pd
 import pyarrow as pa
+from typing_extensions import Concatenate, ParamSpec
 
 
-def _df_transform_result(table: pa.Table, fn) -> pa.Table:
+def _df_transform_result(
+    table: pa.Table,
+    fn: Callable[[pd.DataFrame], pd.DataFrame],
+) -> pa.Table:
     """
     Transform the pyarrow table using a user-defined function that operates on
     a pandas dataframe.
@@ -43,32 +47,29 @@ def _df_transform_result(table: pa.Table, fn) -> pa.Table:
     return result
 
 
-_CT = TypeVar("_CT", bound=Callable)
+_PS = ParamSpec("_PS")
 
 
-def df_transform(fn: _CT) -> _CT:
+def df_transform(
+    fn: Callable[Concatenate[pd.DataFrame, _PS], pd.DataFrame]
+) -> Callable[_PS, Callable[[pa.Table], pa.Table]]:
     """
-    A function decorator that allows users to create a user-defined function to
-    transform a pandas dataframe. The decorated function can be passed directly
+    A function decorator that streamlines creation of a user-defined function that
+    transforms a pandas dataframe. The decorated function can be passed directly
     to the `transform_result` parameter of the `tiledb.cloud.vcf.query` function.
 
-    Parameters
-    ----------
-    fn
-        The user-defined function that takes a pandas dataframe as input and
-        returns a pandas dataframe.
-
-    Returns
-    -------
-        A function than can be passed to the `transform_result` parameter of the
-        `tiledb.cloud.vcf.query` function.
+    :param fn: user-defined function that takes a pandas dataframe as input and
+        returns a pandas dataframe
+    :return: a function that can be passed to the `transform_result` parameter of
+        the `tiledb.cloud.vcf.query` function
     """
 
-    @functools.wraps(fn)
-    def wrapper(*args, **kwargs):
-        return functools.partial(
-            _df_transform_result,
-            fn=functools.partial(fn, *args, **kwargs),
+    def wrapper(
+        *args: _PS.args, **kwargs: _PS.kwargs
+    ) -> Callable[[pa.Table], pa.Table]:
+        return lambda tbl: _df_transform_result(
+            tbl,
+            lambda df: fn(df, *args, **kwargs),
         )
 
     return wrapper
