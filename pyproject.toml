@@ -37,7 +37,6 @@ tests = [
     "pytest-explicit",
     "pytest-split",
     "tiledbsoma",
-    "tiledb-vector-search",
 ]
 
 [project.urls]
