@@ -1,3 +1,4 @@
+import io
 import os
 import re
 import warnings
@@ -11,6 +12,8 @@ from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import models
+
+from tiledb.cloud._common import api_v2
 
 
 def sanitize_filename(fname: str) -> str:
@@ -38,7 +41,53 @@ def basename_match(file_uri: str, pattern: Optional[str] = None) -> bool:
     return pattern is not None and fnmatch(os.path.basename(file_uri), pattern)
 
 
-def create_file(
+def upload_file_local(
+    namespace: str,
+    input_uri: str,
+    output_uri: str,
+    name: Optional[str] = None,
+    access_credentials_name: Optional[str] = None,
+    async_req: bool = False,
+) -> api_v2.FileUploaded:
+    try:
+        import magic
+
+        mime = magic.Magic(mime=True)
+
+        files_client = client.build(api_v2.FilesApi)
+
+        mimetype = mime.from_file(input_uri)
+        with open(input_uri, mode="rb") as f:
+            pos = f.tell()
+            f.seek(0, io.SEEK_END)
+            file_size = f.tell()
+            f.seek(pos)
+
+            kwargs = {}
+            if access_credentials_name is not None:
+                kwargs["x_tiledb_cloud_access_credentials_name"] = (
+                    access_credentials_name
+                )
+
+            if name is not None:
+                kwargs["name"] = name
+
+            return files_client.handle_upload_file(
+                namespace,
+                array=output_uri,
+                content_type="application/octet-stream",
+                filesize=file_size,
+                file=f.read(file_size),
+                async_req=async_req,
+                mimetype=mimetype,
+                filename=os.path.basename(input_uri),
+                **kwargs,
+            )
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
+
+
+def upload_file(
     namespace: str,
     input_uri: str,
     output_uri: str,
@@ -59,6 +108,7 @@ def create_file(
     :param async_req: return future instead of results for async support
     :return: FileCreated details, including file_uuid and output_uri
     """
+
     if access_credential_name is not None:
         if access_credentials_name is not None:
             raise ValueError(
@@ -73,6 +123,17 @@ def create_file(
         )
         access_credentials_name = access_credential_name
     del access_credential_name  # Make certain we don't use this later.
+
+    if input_uri.startswith("file://") or "://" not in output_uri:
+        return upload_file_local(
+            namespace=namespace,
+            input_uri=input_uri,
+            output_uri=output_uri,
+            name=name,
+            access_credentials_name=access_credentials_name,
+            async_req=async_req,
+        )
+
     try:
         api_instance = client.build(rest_api.FilesApi)
 
@@ -92,6 +153,8 @@ def create_file(
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
 
+
+create_file = upload_file
 
 def export_file_local(
     uri: str,
