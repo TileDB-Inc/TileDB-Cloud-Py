@@ -1420,6 +1420,7 @@ def remove_dataset_type_from_array_meta(
     """
     Removes `dataset_type` meta if the ingested result is an array.
     FIXME: This exists to fix an internal UI issue until formally fixed.
+    FIXME: Related ticket -> sc-48098
 
     :param dataset_uri: dataset URI
     :param verbose: verbose logging, defaults to False
@@ -1427,13 +1428,17 @@ def remove_dataset_type_from_array_meta(
     logger = get_logger_wrapper(verbose)
     if tiledb.object_type(dataset_uri) == "array":
         logger.info(
-            "Ingested result is an array. " "Removing dataset_type from metadata..."
+            "Removing non-standard dataset_type from ingested array metadata: "
+            "dataset_uri=%r",
+            dataset_uri,
         )
         with tiledb.open(dataset_uri, mode="w") as array:
             try:
                 del array.meta["dataset_type"]
             except KeyError as exc:
-                logger.debug(f"Failed: {str(exc)}")
+                logger.info(
+                    f"sc-48098: Failed to remove `dataset_type` key: {str(exc)}"
+                )
 
 
 def ingest_datasets(
