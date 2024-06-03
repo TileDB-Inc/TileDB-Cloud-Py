@@ -8,8 +8,8 @@ from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud._common import utils
 from tiledb.cloud.array import info
 from tiledb.cloud.dag.mode import Mode
-from tiledb.cloud.file import udfs as file_udfs
-from tiledb.cloud.file import utils as file_utils
+from tiledb.cloud.files import udfs as file_udfs
+from tiledb.cloud.files import utils as file_utils
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import get_logger_wrapper
 

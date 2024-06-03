@@ -3,7 +3,7 @@ from functools import partial
 from math import ceil
 from typing import Any, List, Mapping, Optional, Sequence, TypeVar
 
-from tiledb.cloud.file import utils as file_utils
+from tiledb.cloud.files import utils as file_utils
 from tiledb.cloud.utilities import chunk
 from tiledb.cloud.utilities import find
 from tiledb.cloud.utilities import get_logger_wrapper

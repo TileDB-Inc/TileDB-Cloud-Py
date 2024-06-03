@@ -19,7 +19,7 @@ from typing import (
 import attrs
 
 import tiledb
-from tiledb.cloud.file import utils as file_utils
+from tiledb.cloud.files import utils as file_utils
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import chunk
