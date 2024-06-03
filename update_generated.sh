@@ -187,6 +187,25 @@ index 97319c27..f2307414 100644
 EOF
 }
 
+# Patch rest.py to avoid deprecated urllib3 usage.
+apply_urllib3_patch() {
+  git apply - <<EOF
+diff --git a/src/tiledb/cloud/rest_api/rest.py b/src/tiledb/cloud/rest_api/rest.py
+index 8993ba69..be59d24b 100644
+--- a/src/tiledb/cloud/rest_api/rest.py
++++ b/src/tiledb/cloud/rest_api/rest.py
+@@ -44,7 +44,7 @@ class RESTResponse(io.IOBase):
+
+     def getheader(self, name, default=None):
+         """Returns a given response header."""
+-        return self.urllib3_response.getheader(name, default)
++        return self.urllib3_response.headers.get(name, default)
+
+
+ class RESTClientObject(object):
+EOF
+}
+
 ABSPATH="$(realpath "$1")"
 
 download_generator
@@ -194,4 +213,5 @@ generate_api "${ABSPATH%/}/openapi-v1.yaml" rest_api
 generate_api "${ABSPATH%/}/openapi-v2.yaml" _common.api_v2
 run_format
 apply_json_safe_patch
+apply_urllib3_patch
 cp "$ROOT/generator/openapi_overrides"/* "$TARGET_PATH/_common/api_v2"
