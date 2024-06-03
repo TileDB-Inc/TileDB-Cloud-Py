@@ -177,6 +177,7 @@ class RESTClientObject(object):
                         preload_content=_preload_content,
                         timeout=timeout,
                         headers=headers,
+                        chunked=True,
                     )
                 elif (
                     headers["Content-Type"] == "application/x-www-form-urlencoded"
@@ -189,6 +190,7 @@ class RESTClientObject(object):
                         preload_content=_preload_content,
                         timeout=timeout,
                         headers=headers,
+                        chunked=True,
                     )
                 elif headers["Content-Type"] == "multipart/form-data":
                     # must del headers['Content-Type'], or the correct
@@ -203,11 +205,13 @@ class RESTClientObject(object):
                         preload_content=_preload_content,
                         timeout=timeout,
                         headers=headers,
+                        chunked=True,
                     )
                 # Pass a `string` parameter directly in the body to support
                 # other content types than Json when `body` argument is
                 # provided in serialized form
                 elif isinstance(body, str) or isinstance(body, bytes):
+                    print("here")
                     request_body = body
                     r = self.pool_manager.request(
                         method,
@@ -216,6 +220,7 @@ class RESTClientObject(object):
                         preload_content=_preload_content,
                         timeout=timeout,
                         headers=headers,
+                        chunked=True,
                     )
                 else:
                     # Cannot generate the request from given parameters
