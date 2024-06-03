@@ -11,9 +11,9 @@ from tiledb.cloud._common import testonly
 from tiledb.cloud._common import utils
 from tiledb.cloud.array import delete_array
 from tiledb.cloud.array import info
-from tiledb.cloud.file import ingestion as file_ingestion
-from tiledb.cloud.file import udfs as file_udfs
-from tiledb.cloud.file import utils as file_utils
+from tiledb.cloud.files import ingestion as file_ingestion
+from tiledb.cloud.files import udfs as file_udfs
+from tiledb.cloud.files import utils as file_utils
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 

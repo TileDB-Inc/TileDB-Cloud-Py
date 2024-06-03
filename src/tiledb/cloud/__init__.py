@@ -3,6 +3,7 @@
 from . import compute
 from . import dag
 from . import file
+from . import files
 from . import groups
 from . import sql
 from . import udf
@@ -52,6 +53,7 @@ __all__ = (
     "compute",
     "dag",
     "file",
+    "files",
     "groups",
     "sql",
     "udf",
