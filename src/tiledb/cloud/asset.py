@@ -11,10 +11,10 @@ from .rest_api.models import ArrayInfo  # type: ignore
 from .rest_api.models import GroupInfo  # type: ignore
 
 
-def delete_asset(uri: str, recursive: bool = False) -> None:
+def delete(uri: str, recursive: bool = False) -> None:
     """Deregister the asset and remove its physical groups and arrays from storage.
 
-    :param uri: URI of the asset.
+    :param uri: tiledb URI of the asset.
     :return: None.
     """
     delete_map: Mapping[str, Callable] = {
@@ -26,10 +26,10 @@ def delete_asset(uri: str, recursive: bool = False) -> None:
     return func(uri)
 
 
-def asset_info(uri: str) -> Union[ArrayInfo, GroupInfo]:
+def info(uri: str) -> Union[ArrayInfo, GroupInfo]:
     """Retrieve information about an asset.
 
-    :param uri: URI of the asset.
+    :param uri: tiledb URI of the asset.
     :return: ArrayInfo or GroupInfo.
     """
     # Note: the URI can be either of the two forms, yes?

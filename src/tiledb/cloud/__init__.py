@@ -1,5 +1,7 @@
 # This file imports specifically to re-export.
 
+from . import array
+from . import asset
 from . import compute
 from . import dag
 from . import file
@@ -14,8 +16,6 @@ from .array import list_shared_with
 from .array import register_array
 from .array import share_array
 from .array import unshare_array
-from .asset import asset_info
-from .asset import delete_asset
 from .client import Config
 from .client import Ctx
 from .client import list_arrays
@@ -51,6 +51,8 @@ ResultFormat = models.ResultFormat
 UDFResultType = ResultFormat
 
 __all__ = (
+    "array",
+    "asset",
     "compute",
     "dag",
     "file",
@@ -72,8 +74,6 @@ __all__ = (
     "list_shared_arrays",
     "list_shared_groups",
     "list_groups",
-    "asset_info",
-    "delete_asset",
     "login",
     "organization",
     "organizations",
