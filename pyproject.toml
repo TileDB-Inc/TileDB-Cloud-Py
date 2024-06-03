@@ -20,7 +20,6 @@ dependencies = [
   # tblib transitively enabled, so this is needed for unpickling.
   "tblib~=1.7",
   "tiledb>=0.15.2",
-  "tiledbsoma",
   "typing-extensions",
   "urllib3>=1.26",
 ]
@@ -29,9 +28,10 @@ dependencies = [
 viz-tiledb = ["networkx>=2", "pydot", "tiledb-plot-widget>=0.1.7"]
 viz-plotly = ["networkx>=2", "plotly>=4", "pydot"]
 all = ["networkx>=2", "plotly>=4", "pydot", "tiledb-plot-widget>=0.1.7"]
+life-sciences = ["tiledbsoma"]
 
 dev = ["black", "pytest", "ruff"]
-tests = ["xarray", "pytest-cov", "pytest-explicit", "pytest-split"]
+tests = ["xarray", "pytest-cov", "pytest-explicit", "pytest-split", "tiledbsoma"]
 
 [project.urls]
 homepage = "https://tiledb.com"
