@@ -1,5 +1,7 @@
 # This file imports specifically to re-export.
 
+from . import array
+from . import asset
 from . import compute
 from . import dag
 from . import file
@@ -50,6 +52,8 @@ ResultFormat = models.ResultFormat
 UDFResultType = ResultFormat
 
 __all__ = (
+    "array",
+    "asset",
     "compute",
     "dag",
     "file",
