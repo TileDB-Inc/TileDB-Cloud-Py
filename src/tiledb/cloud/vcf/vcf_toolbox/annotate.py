@@ -173,7 +173,7 @@ def _annotate(
         # Split multiallelic variants
         explode_cols = ["alt"]
 
-        if "af" in vcf_df:
+        if "info_TILEDB_IAF" in vcf_df:
             explode_cols.append(alt_af)
 
         vcf_df = vcf_df.explode(explode_cols)
