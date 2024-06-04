@@ -14,11 +14,11 @@ import tiledb
 import tiledb.cloud
 from tiledb.cloud import array
 from tiledb.cloud import client
-from tiledb.cloud import groups
 from tiledb.cloud import tasks
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud._common import json_safe
 from tiledb.cloud._common import testonly
+from tiledb.services.api_v1 import groups as v1_groups
 
 
 class BasicTests(unittest.TestCase):
@@ -36,7 +36,7 @@ class BasicTests(unittest.TestCase):
 
     def test_info(self):
         self.assertIsNotNone(array.info("tiledb://TileDB-Inc/quickstart_sparse"))
-        self.assertIsNotNone(groups.info("tiledb://TileDB-Inc/TileDB_101"))
+        self.assertIsNotNone(v1_groups.info("tiledb://TileDB-Inc/TileDB_101"))
 
     def test_list_shared_with(self):
         self.needsUnittestUser()

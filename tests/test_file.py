@@ -6,13 +6,14 @@ from typing import List
 
 import tiledb
 from tiledb.cloud import client
-from tiledb.cloud import groups
 from tiledb.cloud._common import testonly
 from tiledb.cloud.array import delete_array
 from tiledb.cloud.array import info
 from tiledb.cloud.file import ingestion as file_ingestion
 from tiledb.cloud.file import udfs as file_udfs
 from tiledb.cloud.file import utils as file_utils
+from tiledb.services.api_v1 import groups as v1_groups
+from tiledb.services.api_v2 import groups as v2_groups
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -159,7 +160,7 @@ class TestFileIngestion(unittest.TestCase):
             f"{cls.input_file_location}/{fname}" for fname in cls.input_file_names
         ]
 
-        cls.namespace, cls.storage_path, cls.acn = groups._default_ns_path_cred()
+        cls.namespace, cls.storage_path, cls.acn = v2_groups._default_ns_path_cred()
         cls.namespace = cls.namespace.rstrip("/")
         cls.storage_path = cls.storage_path.rstrip("/")
         cls.destination = (
@@ -169,7 +170,7 @@ class TestFileIngestion(unittest.TestCase):
         cls.group_name = testonly.random_name("file_ingestion_test_group")
         cls.group_uri = f"tiledb://{cls.namespace}/{cls.group_name}"
         cls.group_destination = f"{cls.storage_path}/{cls.group_name}"
-        groups.create(cls.group_name, storage_uri=cls.group_destination)
+        v2_groups.create(cls.group_name, storage_uri=cls.group_destination)
 
         return super().setUpClass()
 
@@ -181,7 +182,7 @@ class TestFileIngestion(unittest.TestCase):
                 f"tiledb://{cls.namespace}/{fname}" for fname in cls.input_file_names
             ]
         )
-        groups.deregister(cls.group_uri)
+        v2_groups.deregister(cls.group_uri, recursive=True)
         return super().tearDownClass()
 
     def setUp(self) -> None:
@@ -235,7 +236,7 @@ class TestFileIngestion(unittest.TestCase):
             verbose=True,
         )
 
-        group_info = groups.info(self.group_uri)
+        group_info = v1_groups.info(self.group_uri)
         self.assertEqual(group_info.asset_count, len(self.test_file_uris))
 
         for fname in self.input_file_names:

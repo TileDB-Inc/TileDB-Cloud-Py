@@ -14,6 +14,7 @@ dependencies = [
     "pandas>=1.2.4",
     "pyarrow>=3.0.0",
     "python-dateutil",
+    "requests>=2.31.0",
     "six>=1.10",
     # Not directly used on the client, but some server-side environments have
     # tblib transitively enabled, so this is needed for unpickling.
@@ -41,9 +42,7 @@ requires = ["setuptools>=42", "wheel", "setuptools_scm>=6"]
 
 [tool.pytest.ini_options]
 explicit-only = ["geospatial"]
-markers = [
-  "geospatial: tests that require the geospatial libraries",
-]
+markers = ["geospatial: tests that require the geospatial libraries"]
 norecursedirs = ["tiledb/cloud"]
 
 
