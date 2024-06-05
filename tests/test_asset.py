@@ -4,7 +4,9 @@ from unittest import mock
 
 from tiledb.cloud import asset  # type: ignore
 from tiledb.cloud.rest_api.models import ArrayInfo  # type: ignore
+from tiledb.cloud.rest_api.models import ArraySharing  # type: ignore
 from tiledb.cloud.rest_api.models import GroupInfo  # type: ignore
+from tiledb.cloud.rest_api.models import GroupSharing  # type: ignore
 
 
 @mock.patch("tiledb.object_type", return_value="array")
@@ -77,3 +79,33 @@ def test_asset_share_group_dispatch(share_group, object_type):
     """Dispatch to groups.share when URI is a group."""
     asset.share("g", "public", "read")
     share_group.assert_called_once_with("g", "public", "read")
+
+
+@mock.patch("tiledb.object_type", return_value="group")
+@mock.patch("tiledb.cloud.groups.share_group")
+def test_asset_unshare_group_dispatch(share_group, object_type):
+    """Dispatch to groups.share when URI is a group."""
+    asset.unshare("g", "public")
+    share_group.assert_called_once_with("g", "public", [])
+
+
+@mock.patch("tiledb.object_type", return_value="array")
+@mock.patch(
+    "tiledb.cloud.array.list_shared_with", return_value=[ArraySharing(namespace="foo")]
+)
+def test_asset_list_shared_with_array_dispatch(array_sharing, object_type):
+    """Dispatch to array.list_shared_with when URI is an array."""
+    sharing = asset.list_shared_with("a")
+    assert isinstance(sharing[0], ArraySharing)
+    assert sharing[0].namespace == "foo"
+
+
+@mock.patch("tiledb.object_type", return_value="group")
+@mock.patch(
+    "tiledb.cloud.groups.list_shared_with", return_value=[GroupSharing(namespace="bar")]
+)
+def test_asset_list_shared_with_group_dispatch(group_sharing, object_type):
+    """Dispatch to groups.info when URI is a group."""
+    sharing = asset.list_shared_with("g")
+    assert isinstance(sharing[0], GroupSharing)
+    assert sharing[0].namespace == "bar"
