@@ -61,3 +61,19 @@ def test_public_group_asset_info():
     """Get info about a public production group."""
     info = asset.info("tiledb://TileDB-Inc/52165567-040c-4e75-bb89-a3d06017f650")
     assert info.name == "langchain_documentation_huggingface"
+
+
+@mock.patch("tiledb.object_type", return_value="array")
+@mock.patch("tiledb.cloud.array.share_array")
+def test_asset_share_array_dispatch(share_array, object_type):
+    """Dispatch to array.share_array when URI is an array."""
+    asset.share("a", "public", "read")
+    share_array.assert_called_once_with("a", "public", "read")
+
+
+@mock.patch("tiledb.object_type", return_value="group")
+@mock.patch("tiledb.cloud.groups.share_group")
+def test_asset_share_group_dispatch(share_group, object_type):
+    """Dispatch to groups.share when URI is a group."""
+    asset.share("g", "public", "read")
+    share_group.assert_called_once_with("g", "public", "read")
