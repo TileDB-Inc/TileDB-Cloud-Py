@@ -178,13 +178,17 @@ class TestFileIngestion(unittest.TestCase):
         cls.test_file_uris = [
             f"{cls.input_file_location}/{fname}" for fname in cls.input_file_names
         ]
+        # Files with name "group_input_file_<n[0, 4]>.pdf" have already been placed
+        # in the "cls.input_file_location"
+        cls.group_input_file_names = [f"group_input_file_{i}.pdf" for i in range(5)]
+        cls.group_test_file_uris = [
+            f"{cls.input_file_location}/{fname}" for fname in cls.group_input_file_names
+        ]
 
         cls.namespace, cls.storage_path, cls.acn = groups._default_ns_path_cred()
         cls.namespace = cls.namespace.rstrip("/")
         cls.storage_path = cls.storage_path.rstrip("/")
-        cls.destination = (
-            f"{cls.storage_path}/{testonly.random_name('file_ingestion_test')}"
-        )
+        cls.destination = f"{cls.storage_path}/{testonly.random_name('file_test')}"
 
         cls.group_name = testonly.random_name("file_ingestion_test_group")
         cls.group_uri = f"tiledb://{cls.namespace}/{cls.group_name}"
@@ -207,7 +211,6 @@ class TestFileIngestion(unittest.TestCase):
             file_uris=self.test_file_uris,
             acn=self.acn,
             namespace=self.namespace,
-            verbose=True,
         )
 
         for uri in ingested_array_uris:
@@ -220,10 +223,9 @@ class TestFileIngestion(unittest.TestCase):
     def test_files_ingestion_udf_into_group(self):
         ingested_array_uris = file_ingestion.ingest_files_udf(
             dataset_uri=self.group_destination,
-            file_uris=self.test_file_uris,
+            file_uris=self.group_test_file_uris,
             acn=self.acn,
             namespace=self.namespace,
-            verbose=True,
         )
 
         file_ingestion.add_arrays_to_group_udf(
@@ -234,11 +236,11 @@ class TestFileIngestion(unittest.TestCase):
         )
 
         group_info = groups.info(self.group_uri)
-        self.assertEqual(group_info.asset_count, len(self.test_file_uris))
+        self.assertEqual(group_info.asset_count, len(self.group_test_file_uris))
 
         for uri in ingested_array_uris:
             array_info = info(uri)
-            self.assertTrue(array_info.name in self.input_file_names)
+            self.assertTrue(array_info.name in self.group_input_file_names)
             self.assertEqual(array_info.namespace, self.namespace)
 
         # Clean up
