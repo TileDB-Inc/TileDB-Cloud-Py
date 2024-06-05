@@ -87,3 +87,22 @@ class GroupsTest(unittest.TestCase):
         # Cleanup
         groups.deregister(group_uri)
         self.assert_group_not_exists(group_name)
+
+    def test_group_sharing(self):
+        """Share a created group with 'public', unshare, then delete."""
+        group_name = testonly.random_name("test_group_sharing")
+        group_storage_name = testonly.random_name(group_name)
+        group_storage_path = f"{self.test_path}/{group_storage_name}"
+        group_uri = f"tiledb://{self.namespace}/{group_name}"
+        groups.create(group_name, storage_uri=group_storage_path)
+        self.assert_group_exists(group_name)
+
+        groups.share_group(group_uri, "public", "read")
+        sharing = groups.list_shared_with(group_uri)
+        self.assertEqual(len(sharing), 1)
+        self.assertEqual(sharing[0].namespace, "public")
+        groups.unshare_group(group_uri, "public")
+        sharing = groups.list_shared_with(group_uri)
+        self.assertEqual(len(sharing), 0)
+
+        groups.delete(group_uri)
