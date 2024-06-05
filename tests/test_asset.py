@@ -109,3 +109,21 @@ def test_asset_list_shared_with_group_dispatch(group_sharing, object_type):
     sharing = asset.list_shared_with("g")
     assert isinstance(sharing[0], GroupSharing)
     assert sharing[0].namespace == "bar"
+
+
+def test_public_array_sharing():
+    """Get a public production array's sharing policies."""
+    sharing = asset.list_shared_with(
+        "tiledb://TileDB-Inc/cd89a0d6-c262-4729-9e75-d942879e1d7d"
+    )
+    assert len(sharing) == 2
+    assert sharing[0].namespace == "public"
+
+
+def test_public_group_sharing():
+    """Get a public production group's sharing policies."""
+    sharing = asset.list_shared_with(
+        "tiledb://TileDB-Inc/52165567-040c-4e75-bb89-a3d06017f650"
+    )
+    assert len(sharing) == 1
+    assert sharing[0].namespace == "public"
