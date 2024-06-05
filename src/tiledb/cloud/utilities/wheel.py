@@ -11,18 +11,16 @@ import tiledb
 def upload_wheel(
     *,
     wheel_path: str,
-    storage_uri: str,
-    wheel_name: Optional[str] = None,
+    dest_uri: str,
     config: Optional[Mapping[str, Any]] = None,
-    acn: Optional[str] = None,
-    namespace: Optional[str] = None,
-    register: bool = True,
 ):
     """
     THIS IS AN EXPERIMENTAL API. IT MAY CHANGE IN THE FUTURE.
 
-    Upload a local wheel file to a remote TileDB Filestore and optionally register
-    it on TileDB Cloud.
+    Upload a local wheel file to a remote TileDB Filestore.
+
+    The filestore will be registered when `dest_uri` uses the
+    `tiledb://...s3://...` format.
 
     If the wheel filestore exists, it will be updated with the new wheel file.
 
@@ -37,62 +35,27 @@ def upload_wheel(
       udflib-0.1-py3-none-any.whl
 
     :param wheel_path: path to the local wheel file
-    :param storage_uri: URI where the wheel filestore will be created or updated
-    :param wheel_name: name of registered wheel, defaults to a name based on the
-        wheel file
+    :param dest_uri: URI where the wheel filestore will be created or updated
     :param config: config dictionary, defaults to None
-    :param acn: TileDB Cloud access credentials name, defaults to None
-    :param namespace: TileDB Cloud namespace, defaults to the user's default namespace
-    :param register: register the wheel on TileDB Cloud, defaults to True
     """
 
-    # The wheel path may contain '+' characters, which are not allowed in TileDB URL
-    # encoded URIs and array names. Replace the '+' with '.' in `wheel_file`, which
-    # is used to create the storage URI and the array name. When installing the wheel,
-    # the original wheel file name will be recovered from metadata.
-    wheel_file = wheel_name or os.path.basename(wheel_path)
-    wheel_file = wheel_file.replace("+", ".")
-    array_uri = storage_uri.rstrip("/") + f"/{wheel_file}"
-
-    namespace = namespace or tiledb.cloud.user_profile().default_namespace_charged
-    tiledb_uri = f"tiledb://{namespace}/{wheel_file}"
+    # Replace '+' characters, which are not allowed in TileDB URL encoded URIs.
+    # When installing the wheel, the original wheel file name will be recovered
+    # from metadata.
+    dest_uri = dest_uri.replace("+", ".")
 
     with tiledb.scope_ctx(config):
         # Create the array if it doesn't exist
-        object_type = tiledb.object_type(array_uri)
+        object_type = tiledb.object_type(dest_uri)
         if object_type is None:
-            print(f"Creating wheel filestore - '{array_uri}'")
-            tiledb.Array.create(array_uri, tiledb.ArraySchema.from_file(wheel_path))
+            tiledb.Array.create(dest_uri, tiledb.ArraySchema.from_file(wheel_path))
+            print(f"Created filestore at '{dest_uri}'")
         elif object_type == "group":
-            raise ValueError(f"A TileDB group exists at '{array_uri}'")
-
-        if register:
-            try:
-                info = tiledb.cloud.info(tiledb_uri)
-            except Exception as e:
-                if "602" in str(e):
-                    raise ValueError(f"Unrecognized namespace - '{namespace}'")
-                info = None
-
-            if info is None:
-                print(f"Registering wheel filestore - '{tiledb_uri}'")
-                tiledb.cloud.array.register_array(
-                    array_uri,
-                    namespace=namespace,
-                    array_name=wheel_file,
-                    access_credentials_name=acn,
-                )
-            elif info.uri != array_uri:
-                raise ValueError(
-                    f"Registered URI mismatch: '{tiledb_uri}' URI '{info.uri}' "
-                    f"does not match '{array_uri}'"
-                )
-            else:
-                print(f"Wheel filestore already registered - '{tiledb_uri}'")
+            raise ValueError(f"A TileDB group exists at '{dest_uri}'")
 
         # Copy the wheel to the array
-        tiledb.Filestore.copy_from(array_uri, wheel_path)
-        print(f"Uploaded '{wheel_path}' to '{array_uri}'")
+        tiledb.Filestore.copy_from(dest_uri, wheel_path)
+        print(f"Uploaded '{wheel_path}' to '{dest_uri}'")
 
 
 def install_wheel(
