@@ -92,7 +92,7 @@ def ephemeral_thread(func: _CT, name: Optional[str] = None) -> _CT:
     return wrapper  # type: ignore[return-value]
 
 
-def release_connection(resp: urllib3.HTTPResponse) -> None:
+def release_connection(resp: urllib3.BaseHTTPResponse) -> None:
     """Release the backing connection of this HTTPResponse to the pool.
 
     When a call is made with ``preload_content=False``, the response body is not

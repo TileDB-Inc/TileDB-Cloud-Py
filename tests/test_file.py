@@ -1,10 +1,12 @@
 import hashlib
 import os
+import pathlib
 import tempfile
 import unittest
 from typing import List
 
 import tiledb
+from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import groups
 from tiledb.cloud._common import testonly
@@ -165,6 +167,27 @@ def _cleanup_residual_test_arrays(array_uris: List[str]) -> None:
                     except Exception:
                         continue
             continue
+
+
+class UploadTest(unittest.TestCase):
+    def test_round_trip(self):
+        namespace = client.default_user().username
+        default_path = client.default_user().default_s3_path
+        output = f"{default_path}/{testonly.random_name('upload')}"
+        uri = file_utils.upload_file(
+            __file__,
+            f"tiledb://{namespace}/{output}",
+            content_type="text/plain",
+        )
+        try:
+            with tempfile.TemporaryDirectory() as tmpdir:
+                tmppath = pathlib.Path(tmpdir) / "output"
+                file_utils.export_file_local(uri, str(tmppath))
+                me = pathlib.Path(__file__).read_bytes()
+                downloaded = tmppath.read_bytes()
+                self.assertEqual(me, downloaded)
+        finally:
+            array.delete_array(uri)
 
 
 class TestFileIngestion(unittest.TestCase):
