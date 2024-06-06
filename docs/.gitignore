@@ -1,7 +1,7 @@
-_build
-_static
-#_templates
-build
-_autosummary
-
 /.quarto/
+_build
+reference
+
+# interlinks
+objects.json
+_sidebar.yml

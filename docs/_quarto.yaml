@@ -54,61 +54,61 @@ website:
       - section: Bio-Imaging
         contents:
           - text: "`exportation`"
-            href: reference/exportation.qmd
+            href: reference/bioimg.exportation.qmd
           - text: "`helpers`"
-            href: reference/helpers.qmd
+            href: reference/bioimg.helpers.qmd
           - text: "`ingestion`"
-            href: reference/ingestion.qmd
+            href: reference/bioimg.ingestion.qmd
       - section: Compute
         contents:
           - text: "`delayed`"
-            href: reference/delayed.qmd
+            href: reference/compute.delayed.qmd
       - section: DAG
         contents:
           - text: "`dag`"
-            href: reference/dag.qmd
+            href: reference/dag.dag.qmd
           - text: "`mode`"
-            href: reference/mode.qmd
+            href: reference/dag.mode.qmd
           - text: "`status`"
-            href: reference/status.qmd
+            href: reference/dag.status.qmd
           - text: "`visualization`"
-            href: reference/visualization.qmd
+            href: reference/dag.visualization.qmd
       - section: Files
         contents:
           - text: "`indexing`"
-            href: reference/indexing.qmd
+            href: reference/files.indexing.qmd
           - text: "`ingestion`"
-            href: reference/ingestion.qmd
+            href: reference/files.ingestion.qmd
           - text: "`udfs`"
-            href: reference/udfs.qmd
+            href: reference/files.udfs.qmd
           - text: "`utils`"
-            href: reference/utils.qmd
+            href: reference/files.utils.qmd
       - section: Geospatial
         contents:
           - text: "`ingestion`"
-            href: reference/ingestion.qmd
+            href: reference/geospatial.ingestion.qmd
       - section: SOMA
         contents:
           - text: "`ingest`"
-            href: reference/ingest.qmd
+            href: reference/soma.ingest.qmd
           - text: "`mapper`"
-            href: reference/mapper.qmd
+            href: reference/soma.mapper.qmd
       - section: VCF
         contents:
           - text: "`allele_frequency`"
-            href: reference/allele_frequency.qmd
+            href: reference/vcf.allele_frequency.qmd
           - text: "`ingestion`"
-            href: reference/ingestion.qmd
+            href: reference/vcf.ingestion.qmd
           - text: "`query`"
-            href: reference/query.qmd
+            href: reference/vcf.query.qmd
           - text: "`utils`"
-            href: reference/utils.qmd
+            href: reference/vcf.utils.qmd
       - section: Utilities
         contents:
           - text: "`consolidate`"
-            href: reference/consolidate.qmd
+            href: reference/utilities.consolidate.qmd
           - text: "`profiler`"
-            href: reference/profiler.qmd
+            href: reference/utilities.profiler.qmd
 
 quartodoc:
   style: pkgdown
@@ -119,7 +119,6 @@ quartodoc:
   sections:
     - title: Cloud Services
       desc: Cloud Interaction Services
-      package: tiledb.cloud
       contents:
         - array
         - asset
@@ -138,62 +137,54 @@ quartodoc:
 
     - title: bioimg
       desc: Bio imaging API
-      package: tiledb.cloud.bioimg
       contents:
-        - exportation
-        - helpers
-        - ingestion
+        - bioimg.exportation
+        - bioimg.helpers
+        - bioimg.ingestion
 
     - title: compute
       desc: Compute API
-      package: tiledb.cloud.compute
       contents:
-        - delayed
+        - compute.delayed
 
     - title: dag
       desc: DAG API
-      package: tiledb.cloud.dag
       contents:
-        - dag
-        - mode
-        - status
-        - visualization
+        - dag.dag
+        - dag.mode
+        - dag.status
+        - dag.visualization
 
     - title: files
       desc: File API.
-      package: tiledb.cloud.files
       contents:
-        - indexing
-        - ingestion
-        - udfs
-        - utils
+        - files.indexing
+        - files.ingestion
+        - files.udfs
+        - files.utils
 
     - title: geospatial
       desc: Geospatial API
-      package: tiledb.cloud.geospatial
       contents:
-        - ingestion
+        - geospatial.ingestion
 
     - title: soma
       desc: SOMA API
-      package: tiledb.cloud.soma
       contents:
-        - ingest
-        - mapper
+        - soma.ingest
+        - soma.mapper
 
     - title: vcf
       desc: VCF API
-      package: tiledb.cloud.vcf
       contents:
-        - allele_frequency
-        - ingestion
-        - query
-        - utils
+        - vcf.allele_frequency
+        - vcf.ingestion
+        - vcf.query
+        - vcf.utils
 
     - title: utilities
       desc: Common Utilities API
-      package: tiledb.cloud.utilities
       contents:
-        - consolidate
-        - profiler
+        - utilities.consolidate
+        - utilities.profiler
         # - wheel

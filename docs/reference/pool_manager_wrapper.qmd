@@ -1,3 +1,0 @@
-# pool_manager_wrapper { #tiledb.cloud.pool_manager_wrapper }
-
-`cloud.pool_manager_wrapper`

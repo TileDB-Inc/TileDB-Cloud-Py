@@ -1,5 +1,0 @@
-# utils { #tiledb.cloud.utils }
-
-`cloud.utils`
-
-General utilities that don't fit anywhere else.

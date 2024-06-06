@@ -1,3 +1,0 @@
-# status { #tiledb.cloud.dag.status }
-
-`cloud.dag.status`
