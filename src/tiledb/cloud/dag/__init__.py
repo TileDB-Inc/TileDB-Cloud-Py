@@ -1,6 +1,11 @@
+from types import MappingProxyType
+
 from tiledb.cloud.dag import dag
 from tiledb.cloud.dag import mode
 from tiledb.cloud.dag import status
+
+# Globals
+MIN_BATCH_RESOURCES = MappingProxyType({"cpu": "1", "memory": "2Gi"})
 
 # Re-exports.
 Mode = mode.Mode
@@ -13,6 +18,7 @@ server_logs = dag.server_logs
 
 __all__ = (
     "DAG",
+    "MIN_BATCH_RESOURCES",
     "Mode",
     "Node",
     "Status",

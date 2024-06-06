@@ -184,8 +184,14 @@ def deregister(
 
 
 def delete(uri: str, recursive: bool = False) -> None:
-    groups_api = client.build(api_v2.GroupsApi)
+    """
+    Deletes a group.
+
+    :param uri: TileDB Group URI.
+    :param recursive: Delete all off the group's contents, defaults to False
+    """
     namespace, group_name = utils.split_uri(uri)
+    groups_api = client.build(api_v2.GroupsApi)
     groups_api.delete_group(
         group_namespace=namespace, group_name=group_name, recursive=recursive
     )

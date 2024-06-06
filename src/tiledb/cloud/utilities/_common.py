@@ -387,13 +387,24 @@ def as_batch(func: _CT) -> _CT:
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs) -> Dict[str, object]:
-        """Run the function as a batch UDF on TileDB Cloud."""
+        """
+        Run the function as a batch UDF on TileDB Cloud.
+
+        kwargs optionally includes:
+        - name: name of the node in the DAG, defaults to func.__name__
+        - namespace: TileDB Cloud namespace, defaults to the user's default namespace
+        - acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
+        - access_credentials_name: alias for acn, for backwards compatibility
+        - resources: resources to allocate for the UDF, defaults to None
+        - image_name: Docker image_name to use for UDFs, defaults to None
+        """
 
         name = kwargs.get("name", func.__name__)
         namespace = kwargs.get("namespace", None)
         acn = kwargs.get("acn", kwargs.pop("access_credentials_name", None))
         kwargs["acn"] = acn  # for backwards compatibility
         resources = kwargs.pop("resources", None)
+        image_name = kwargs.pop("image_name", None)
 
         # Create a new DAG
         graph = dag.DAG(
@@ -409,6 +420,7 @@ def as_batch(func: _CT) -> _CT:
             name=name,
             access_credentials_name=acn,
             resources=resources,
+            image_name=image_name,
             **_filter_kwargs(func, kwargs),
         )
 

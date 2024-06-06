@@ -6,22 +6,22 @@ dynamic = ["version"]
 requires-python = ">=3.8"
 
 dependencies = [
-  "anndata",
-  "attrs>=21.4.0",
-  "certifi",
-  "cloudpickle>=1.4.1,<3",
-  "importlib-metadata",
-  "packaging",
-  "pandas>=1.2.4",
-  "pyarrow>=3.0.0",
-  "python-dateutil",
-  "six>=1.10",
-  # Not directly used on the client, but some server-side environments have
-  # tblib transitively enabled, so this is needed for unpickling.
-  "tblib~=1.7",
-  "tiledb>=0.15.2",
-  "typing-extensions",
-  "urllib3>=1.26",
+    "anndata",
+    "attrs>=21.4.0",
+    "certifi",
+    "cloudpickle>=1.4.1,<3",
+    "importlib-metadata",
+    "packaging",
+    "pandas>=1.2.4",
+    "pyarrow>=3.0.0",
+    "python-dateutil",
+    "six>=1.10",
+    # Not directly used on the client, but some server-side environments have
+    # tblib transitively enabled, so this is needed for unpickling.
+    "tblib~=1.7",
+    "tiledb>=0.15.2",
+    "typing-extensions",
+    "urllib3>=1.26",
 ]
 
 [project.optional-dependencies]
@@ -31,7 +31,13 @@ all = ["networkx>=2", "plotly>=4", "pydot", "tiledb-plot-widget>=0.1.7"]
 life-sciences = ["tiledbsoma"]
 
 dev = ["black", "pytest", "ruff"]
-tests = ["xarray", "pytest-cov", "pytest-explicit", "pytest-split", "tiledbsoma"]
+tests = [
+    "xarray",
+    "pytest-cov",
+    "pytest-explicit",
+    "pytest-split",
+    "tiledbsoma",
+]
 
 [project.urls]
 homepage = "https://tiledb.com"
@@ -43,8 +49,8 @@ requires = ["setuptools>=42", "wheel", "setuptools_scm>=6"]
 [tool.pytest.ini_options]
 explicit-only = ["geospatial", "vcf"]
 markers = [
-  "geospatial: tests that require the geospatial libraries",
-  "vcf: VCF tests that run on TileDB Cloud",
+    "geospatial: tests that require the geospatial libraries",
+    "vcf: VCF tests that run on TileDB Cloud",
 ]
 norecursedirs = ["tiledb/cloud"]
 
