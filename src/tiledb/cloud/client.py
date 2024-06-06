@@ -78,7 +78,8 @@ def login(
     :param token: api token for login
     :param username: username for login
     :param password: password for login
-    :param host: host to login to
+    :param host: host to login to. the tiledb.cloud.regions module contains
+        region-specific host constants.
     :param verify_ssl: Enable strict SSL verification
     :param no_session: don't create a session token on login,
         store instead username/password
