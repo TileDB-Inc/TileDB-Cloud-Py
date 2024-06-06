@@ -4,12 +4,11 @@ import os
 import subprocess
 import sys
 import tempfile
+from dataclasses import dataclass
 from site import USER_SITE
 from typing import Any, Mapping, Optional
-from dataclasses import dataclass
 
 import tiledb
-
 from tiledb.cloud.utilities import get_logger
 
 logger = get_logger()
@@ -95,11 +94,11 @@ class PipInstall:
             return True
         else:
             return False
-    
+
     def install(self, wheel: str) -> subprocess.CompletedProcess:
         """Install wheel.
-        
-        :param wheel: URI to registered wheel or name of library to install 
+
+        :param wheel: URI to registered wheel or name of library to install
             from PyPI.
         """
 
@@ -157,7 +156,9 @@ def install_wheel(
         with tiledb.scope_ctx(config):
             # Get the original wheel file name from metadata.
             with tiledb.open(wheel_uri) as A:
-                wheel_file = A.meta["original_file_name"] + "." + A.meta["file_extension"]
+                wheel_file = (
+                    A.meta["original_file_name"] + "." + A.meta["file_extension"]
+                )
 
             with tempfile.TemporaryDirectory() as tmpdir:
                 # Copy the wheel to a temporary directory
