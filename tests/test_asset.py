@@ -4,6 +4,8 @@ import time
 import unittest
 from unittest import mock
 
+import pytest
+
 from tiledb.cloud import asset  # type: ignore
 from tiledb.cloud import client
 from tiledb.cloud import groups
@@ -119,6 +121,7 @@ def test_asset_list_shared_with_group_dispatch(group_sharing, object_type):
     assert sharing[0].namespace == "bar"
 
 
+@pytest.mark.xfail(reason="Server error 610")
 def test_public_array_sharing():
     """Get a public production array's sharing policies."""
     sharing = asset.list_shared_with(
