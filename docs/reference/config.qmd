@@ -1,0 +1,11 @@
+# config { #tiledb.cloud.config }
+
+`cloud.config`
+
+
+
+## Attributes
+
+| Name | Description |
+| --- | --- |
+| [user](#tiledb.cloud.config.user) | The default user to use. |

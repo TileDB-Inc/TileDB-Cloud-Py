@@ -1,0 +1,154 @@
+# groups { #tiledb.cloud.groups }
+
+`cloud.groups`
+
+Functions for managing TileDB Cloud groups.
+
+## Functions
+
+| Name | Description |
+| --- | --- |
+| [create](#tiledb.cloud.groups.create) | Creates a new TileDB Cloud group. |
+| [delete](#tiledb.cloud.groups.delete) | Deletes a group. |
+| [deregister](#tiledb.cloud.groups.deregister) | Deregisters the given group from TileDB Cloud. |
+| [info](#tiledb.cloud.groups.info) | Gets metadata about the named TileDB Cloud group. |
+| [list_shared_with](#tiledb.cloud.groups.list_shared_with) | List a group's sharing policies. |
+| [register](#tiledb.cloud.groups.register) | Registers a pre-existing group. |
+| [share_group](#tiledb.cloud.groups.share_group) | Shares group with given namespace and permissions. |
+| [unshare_group](#tiledb.cloud.groups.unshare_group) | Removes sharing of a group from given namespace |
+| [update_info](#tiledb.cloud.groups.update_info) | Update Group Attributes |
+
+### create { #tiledb.cloud.groups.create }
+
+`cloud.groups.create(name, *, namespace=None, parent_uri=None, storage_uri=None, credentials_name=None)`
+
+Creates a new TileDB Cloud group.
+
+#### Parameters
+
+| Name               | Type            | Description                                                                                                                            | Default    |
+|--------------------|-----------------|----------------------------------------------------------------------------------------------------------------------------------------|------------|
+| `name`             | str             | The name of the group to create.                                                                                                       | _required_ |
+| `namespace`        | Optional\[str\] | The namespace to create the group in. If not provided, the current logged-in user will be used.                                        | `None`     |
+| `parent_uri`       | Optional\[str\] | The parent URI to add the group to, if desired.                                                                                        | `None`     |
+| `storage_uri`      | Optional\[str\] | The backend URI where the group will be stored. If not provided, uses the namespace's default storage path for groups.                 | `None`     |
+| `credentials_name` | Optional\[str\] | The name of the storage credential to use for creating the group. If not provided, uses the namespace's default credential for groups. | `None`     |
+
+### delete { #tiledb.cloud.groups.delete }
+
+`cloud.groups.delete(uri, recursive=False)`
+
+Deletes a group.
+
+#### Parameters
+
+| Name        | Type   | Description                                            | Default    |
+|-------------|--------|--------------------------------------------------------|------------|
+| `uri`       | str    | TileDB Group URI.                                      | _required_ |
+| `recursive` | bool   | Delete all off the group's contents, defaults to False | `False`    |
+
+### deregister { #tiledb.cloud.groups.deregister }
+
+`cloud.groups.deregister(uri, *, recursive=False)`
+
+Deregisters the given group from TileDB Cloud.
+
+#### Parameters
+
+| Name        | Type   | Description                                                                                                                                                                        | Default    |
+|-------------|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
+| `uri`       | str    | The URI of the group to deregister.                                                                                                                                                | _required_ |
+| `recursive` | bool   | If true, deregister the group recursively by deregistering all of the elements of the group (and all elements of those groups, recursively) before deregistering the group itself. | `False`    |
+
+### info { #tiledb.cloud.groups.info }
+
+`cloud.groups.info(uri)`
+
+Gets metadata about the named TileDB Cloud group.
+
+### list_shared_with { #tiledb.cloud.groups.list_shared_with }
+
+`cloud.groups.list_shared_with(uri, async_req=False)`
+
+List a group's sharing policies.
+
+#### Parameters
+
+| Name        | Type   | Description                                         | Default    |
+|-------------|--------|-----------------------------------------------------|------------|
+| `uri`       | str    | tiledb URI of the asset.                            | _required_ |
+| `async_req` |        | return future instead of results for async support. | `False`    |
+
+#### Returns
+
+| Type   | Description                     |
+|--------|---------------------------------|
+|        | a list of GroupSharing objects. |
+
+### register { #tiledb.cloud.groups.register }
+
+`cloud.groups.register(storage_uri, *, name=None, namespace=None, credentials_name=None, parent_uri=None)`
+
+Registers a pre-existing group.
+
+### share_group { #tiledb.cloud.groups.share_group }
+
+`cloud.groups.share_group(uri, namespace, permissions, async_req=False)`
+
+Shares group with given namespace and permissions.
+
+#### Parameters
+
+| Name          | Type      | Description                                         | Default    |
+|---------------|-----------|-----------------------------------------------------|------------|
+| `uri`         | str       | tiledb URI of the asset.                            | _required_ |
+| `namespace`   | str       |                                                     | _required_ |
+| `permissions` | list(str) |                                                     | _required_ |
+| `async_req`   |           | return future instead of results for async support. | `False`    |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        | None.         |
+
+### unshare_group { #tiledb.cloud.groups.unshare_group }
+
+`cloud.groups.unshare_group(uri, namespace, async_req=False)`
+
+Removes sharing of a group from given namespace
+
+#### Parameters
+
+| Name        | Type   | Description                                        | Default    |
+|-------------|--------|----------------------------------------------------|------------|
+| `namespace` | str    | namespace to remove shared access to the group     | _required_ |
+| `async_req` |        | return future instead of results for async support | `False`    |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        |               |
+
+### update_info { #tiledb.cloud.groups.update_info }
+
+`cloud.groups.update_info(uri, *, description=None, name=None, logo=None, tags=None)`
+
+Update Group Attributes
+
+#### Parameters
+
+| Name          | Type                    | Description                                                 | Default    |
+|---------------|-------------------------|-------------------------------------------------------------|------------|
+| `uri`         | str                     | URI of the group in the form 'tiledb://<namespace>/<group>' | _required_ |
+| `description` | Optional\[str\]         | Group description, defaults to None                         | `None`     |
+| `name`        | Optional\[str\]         | Group's name, defaults to None                              | `None`     |
+| `logo`        | Optional\[str\]         | Group's logo, defaults to None                              | `None`     |
+| `tags`        | Optional\[List\[str\]\] | Group tags, defaults to None                                | `None`     |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+| None   | None          |

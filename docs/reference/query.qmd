@@ -1,0 +1,150 @@
+# query { #tiledb.cloud.vcf.query }
+
+`cloud.vcf.query`
+
+
+
+## Functions
+
+| Name | Description |
+| --- | --- |
+| [build_read_dag](#tiledb.cloud.vcf.query.build_read_dag) | Build the DAG for a distributed read on a TileDB-VCF dataset. |
+| [concat_tables_udf](#tiledb.cloud.vcf.query.concat_tables_udf) | Concatenate a list of Arrow tables. |
+| [read](#tiledb.cloud.vcf.query.read) | Run a distributed read on a TileDB-VCF dataset. |
+| [setup](#tiledb.cloud.vcf.query.setup) | Set the default TileDB context, OS environment variables for AWS, |
+| [vcf_query_udf](#tiledb.cloud.vcf.query.vcf_query_udf) | Run a query on a TileDB-VCF dataset. |
+
+### build_read_dag { #tiledb.cloud.vcf.query.build_read_dag }
+
+`cloud.vcf.query.build_read_dag(dataset_uri, *, config=None, attrs=None, regions=None, bed_file=None, num_region_partitions=1, max_workers=MAX_WORKERS, samples=None, memory_budget_mb=1024, af_filter=None, transform_result=None, max_sample_batch_size=MAX_SAMPLE_BATCH_SIZE, log_uri=None, namespace=None, resource_class=None, verbose=False)`
+
+Build the DAG for a distributed read on a TileDB-VCF dataset.
+
+#### Parameters
+
+| Name                    | Type                                                                                                  | Description                                                                    | Default                 |
+|-------------------------|-------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|-------------------------|
+| `dataset_uri`           | str                                                                                                   | dataset URI                                                                    | _required_              |
+| `config`                | Optional\[Mapping\[str, Any\]\]                                                                       | config dictionary, defaults to None                                            | `None`                  |
+| `attrs`                 | Optional\[Union\[Sequence\[str\], str\]\]                                                             | attribute names to read, defaults to None                                      | `None`                  |
+| `regions`               | Optional\[Union\[Sequence\[str\], str, Delayed, DelayedArrayUDF, DelayedMultiArrayUDF, DelayedSQL\]\] | genomics regions to read, defaults to None                                     | `None`                  |
+| `bed_file`              | Optional\[str\]                                                                                       | URI of a BED file containing genomics regions to read, defaults to None        | `None`                  |
+| `num_region_partitions` | int                                                                                                   | number of region partitions, defaults to 1                                     | `1`                     |
+| `samples`               | Optional\[Union\[Sequence\[str\], str, Delayed, DelayedArrayUDF, DelayedMultiArrayUDF, DelayedSQL\]\] | sample names to read, defaults to None                                         | `None`                  |
+| `memory_budget_mb`      | int                                                                                                   | VCF memory budget in MiB, defaults to 1024                                     | `1024`                  |
+| `af_filter`             | Optional\[str\]                                                                                       | allele frequency filter, defaults to None                                      | `None`                  |
+| `transform_result`      | Optional\[Callable\[\[pa.Table\], pa.Table\]\]                                                        | function to apply to each partition; by default, does not transform the result | `None`                  |
+| `max_sample_batch_size` | int                                                                                                   | maximum number of samples to read in a single node, defaults to 500            | `MAX_SAMPLE_BATCH_SIZE` |
+| `log_uri`               | Optional\[str\]                                                                                       | log array URI for profiling, defaults to None                                  | `None`                  |
+| `namespace`             | Optional\[str\]                                                                                       | TileDB-Cloud namespace, defaults to None                                       | `None`                  |
+| `resource_class`        | Optional\[str\]                                                                                       | TileDB-Cloud resource class for UDFs, defaults to None                         | `None`                  |
+| `verbose`               | bool                                                                                                  | verbose logging, defaults to False                                             | `False`                 |
+
+#### Returns
+
+| Type                                                 | Description         |
+|------------------------------------------------------|---------------------|
+| Tuple\[tiledb.cloud.dag.DAG, tiledb.cloud.dag.Node\] | DAG and result Node |
+
+### concat_tables_udf { #tiledb.cloud.vcf.query.concat_tables_udf }
+
+`cloud.vcf.query.concat_tables_udf(tables, *, config=None, log_uri=None, verbose=False)`
+
+Concatenate a list of Arrow tables.
+
+#### Parameters
+
+| Name      | Type                            | Description                             | Default    |
+|-----------|---------------------------------|-----------------------------------------|------------|
+| `tables`  | List\[pa.Table\]                | Arrow tables                            | _required_ |
+| `config`  | Optional\[Mapping\[str, Any\]\] | config dictionary, defaults to None     | `None`     |
+| `log_uri` | Optional\[str\]                 | log URI for profiling, defaults to None | `None`     |
+| `verbose` | bool                            | verbose logging, defaults to False      | `False`    |
+
+#### Returns
+
+| Type     | Description              |
+|----------|--------------------------|
+| pa.table | concatenated Arrow table |
+
+### read { #tiledb.cloud.vcf.query.read }
+
+`cloud.vcf.query.read(dataset_uri, *, config=None, attrs=None, regions=None, bed_file=None, num_region_partitions=1, max_workers=MAX_WORKERS, samples=None, memory_budget_mb=1024, af_filter=None, transform_result=None, max_sample_batch_size=MAX_SAMPLE_BATCH_SIZE, log_uri=None, namespace=None, resource_class=None, verbose=False)`
+
+Run a distributed read on a TileDB-VCF dataset.
+
+#### Parameters
+
+| Name                    | Type                                                                                                  | Description                                                                    | Default                 |
+|-------------------------|-------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|-------------------------|
+| `dataset_uri`           | str                                                                                                   | dataset URI                                                                    | _required_              |
+| `config`                | Optional\[Mapping\[str, Any\]\]                                                                       | config dictionary, defaults to None                                            | `None`                  |
+| `attrs`                 | Optional\[Union\[Sequence\[str\], str\]\]                                                             | attribute names to read, defaults to None                                      | `None`                  |
+| `regions`               | Optional\[Union\[Sequence\[str\], str, Delayed, DelayedArrayUDF, DelayedMultiArrayUDF, DelayedSQL\]\] | genomics regions to read, defaults to None                                     | `None`                  |
+| `bed_file`              | Optional\[str\]                                                                                       | URI of a BED file containing genomics regions to read, defaults to None        | `None`                  |
+| `num_region_partitions` | int                                                                                                   | number of region partitions, defaults to 1                                     | `1`                     |
+| `samples`               | Optional\[Union\[Sequence\[str\], str, Delayed, DelayedArrayUDF, DelayedMultiArrayUDF, DelayedSQL\]\] | sample names to read, defaults to None                                         | `None`                  |
+| `memory_budget_mb`      | int                                                                                                   | VCF memory budget in MiB, defaults to 1024                                     | `1024`                  |
+| `af_filter`             | Optional\[str\]                                                                                       | allele frequency filter, defaults to None                                      | `None`                  |
+| `transform_result`      | Optional\[Callable\[\[pa.Table\], pa.Table\]\]                                                        | function to apply to each partition; by default, does not transform the result | `None`                  |
+| `max_sample_batch_size` | int                                                                                                   | maximum number of samples to read in a single node, defaults to 500            | `MAX_SAMPLE_BATCH_SIZE` |
+| `log_uri`               | Optional\[str\]                                                                                       | log array URI for profiling, defaults to None                                  | `None`                  |
+| `namespace`             | Optional\[str\]                                                                                       | TileDB-Cloud namespace, defaults to None                                       | `None`                  |
+| `resource_class`        | Optional\[str\]                                                                                       | TileDB-Cloud resource class for UDFs, defaults to None                         | `None`                  |
+| `verbose`               | bool                                                                                                  | verbose logging, defaults to False                                             | `False`                 |
+
+#### Returns
+
+| Type     | Description                              |
+|----------|------------------------------------------|
+| pa.Table | Arrow table containing the query results |
+
+### setup { #tiledb.cloud.vcf.query.setup }
+
+`cloud.vcf.query.setup(config=None, verbose=False)`
+
+Set the default TileDB context, OS environment variables for AWS,
+and return a logger instance.
+
+#### Parameters
+
+| Name     | Type                            | Description                         | Default   |
+|----------|---------------------------------|-------------------------------------|-----------|
+| `config` | Optional\[Mapping\[str, Any\]\] | config dictionary, defaults to None | `None`    |
+
+#### Returns
+
+| Type           | Description     |
+|----------------|-----------------|
+| logging.Logger | logger instance |
+
+### vcf_query_udf { #tiledb.cloud.vcf.query.vcf_query_udf }
+
+`cloud.vcf.query.vcf_query_udf(dataset_uri, *, config=None, attrs=None, regions=None, bed_file=None, samples=None, region_partition=None, sample_partition=None, memory_budget_mb=1024, af_filter=None, transform_result=None, log_uri=None, log_id='query', verbose=False)`
+
+Run a query on a TileDB-VCF dataset.
+
+#### Parameters
+
+| Name               | Type                                                    | Description                                                                      | Default    |
+|--------------------|---------------------------------------------------------|----------------------------------------------------------------------------------|------------|
+| `dataset_uri`      | str                                                     | dataset URI                                                                      | _required_ |
+| `config`           | Optional\[Mapping\[str, Any\]\]                         | config dictionary, defaults to None                                              | `None`     |
+| `attrs`            | Optional\[Union\[Sequence\[str\], str\]\]               | attribute names to read, defaults to None                                        | `None`     |
+| `regions`          | Optional\[Union\[Sequence\[str\], str, pd.DataFrame\]\] | genomics regions to read, defaults to None                                       | `None`     |
+| `bed_file`         | Optional\[str\]                                         | URI of a BED file containing genomics regions to read, defaults to None          | `None`     |
+| `samples`          | Optional\[Union\[Sequence\[str\], str\]\]               | sample names to read, defaults to None                                           | `None`     |
+| `region_partition` | Optional\[Tuple\[int, int\]\]                           | region partition tuple (0-based indexed, num_partitions), defaults to None       | `None`     |
+| `sample_partition` | Optional\[Tuple\[int, int\]\]                           | sample partition tuple (0-based indexed, num_partitions), defaults to None       | `None`     |
+| `memory_budget_mb` | int                                                     | VCF memory budget in MiB, defaults to 1024                                       | `1024`     |
+| `af_filter`        | Optional\[str\]                                         | allele frequency filter, defaults to None                                        | `None`     |
+| `transform_result` | Optional\[Callable\[\[pa.Table\], pa.Table\]\]          | function to apply to the result table; by default, does not transform the result | `None`     |
+| `log_uri`          | Optional\[str\]                                         | log array URI for profiling, defaults to None                                    | `None`     |
+| `log_id`           | str                                                     | profiler event ID, defaults to "query"                                           | `'query'`  |
+| `verbose`          | bool                                                    | verbose logging, defaults to False                                               | `False`    |
+
+#### Returns
+
+| Type     | Description                              |
+|----------|------------------------------------------|
+| pa.table | Arrow table containing the query results |

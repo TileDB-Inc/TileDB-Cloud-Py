@@ -1,0 +1,35 @@
+---
+title: Get started with TileDB Cloud for Python
+---
+
+This is a starting guide for the TileDB-Cloud-Py client.<br/>
+
+# Login
+
+To login programmatically you will need either
+
+- Username and Password [of your TileDB account](https://cloud.tiledb.com/).
+- Or an API Token [generated from your TileDB account](https://docs.tiledb.com/cloud/how-to/account/create-api-tokens).
+
+## Username and Password method
+
+```python
+import tiledb.cloud
+
+tiledb.cloud.login(
+    host=<tiledb.host>,
+    username=<username>,
+    password=<password>
+)
+```
+
+## Token method
+
+```python
+import tiledb.cloud
+
+tiledb.cloud.login(
+    host=<tiledb.host>,
+    token=<token>
+)
+```

@@ -1,0 +1,3 @@
+# tiledb_cloud_error { #tiledb.cloud.tiledb_cloud_error }
+
+`cloud.tiledb_cloud_error`

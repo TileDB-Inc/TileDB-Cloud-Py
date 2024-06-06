@@ -1,0 +1,321 @@
+# client { #tiledb.cloud.client }
+
+`cloud.client`
+
+
+
+## Functions
+
+| Name | Description |
+| --- | --- |
+| [Config](#tiledb.cloud.client.Config) | Builds a tiledb config setting the login parameters that exist for the cloud service |
+| [Ctx](#tiledb.cloud.client.Ctx) | Builds a TileDB Context that has the tiledb config parameters |
+| [default_charged_namespace](#tiledb.cloud.client.default_charged_namespace) | Returns the namespace :func:`default_user` charges to by default. |
+| [default_user](#tiledb.cloud.client.default_user) | Returns the default user to be used. |
+| [find_organization_or_user_for_default_charges](#tiledb.cloud.client.find_organization_or_user_for_default_charges) | Takes a user model and finds either the first non public organization |
+| [list_arrays](#tiledb.cloud.client.list_arrays) | List arrays in a user account |
+| [list_groups](#tiledb.cloud.client.list_groups) | List groups owned by a user. |
+| [list_public_arrays](#tiledb.cloud.client.list_public_arrays) | List public arrays |
+| [list_public_groups](#tiledb.cloud.client.list_public_groups) | List public groups owned by a user. |
+| [list_shared_arrays](#tiledb.cloud.client.list_shared_arrays) | List shared arrays |
+| [list_shared_groups](#tiledb.cloud.client.list_shared_groups) | List groups shared by/to specified namespaces. |
+| [login](#tiledb.cloud.client.login) | Login to cloud service |
+| [organization](#tiledb.cloud.client.organization) |  |
+| [organizations](#tiledb.cloud.client.organizations) |  |
+| [user_profile](#tiledb.cloud.client.user_profile) |  |
+
+### Config { #tiledb.cloud.client.Config }
+
+`cloud.client.Config(cfg_dict=None)`
+
+Builds a tiledb config setting the login parameters that exist for the cloud service
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        | tiledb.Config |
+
+### Ctx { #tiledb.cloud.client.Ctx }
+
+`cloud.client.Ctx(config=None)`
+
+Builds a TileDB Context that has the tiledb config parameters
+for tiledb cloud set from stored login
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        | tiledb.Ctx    |
+
+### default_charged_namespace { #tiledb.cloud.client.default_charged_namespace }
+
+`cloud.client.default_charged_namespace(required_action=None)`
+
+Returns the namespace :func:`default_user` charges to by default.
+
+If `required_action` is set then it checks amond the user
+organizations to find the first one that support this action.
+
+#### Parameters
+
+| Name              | Type            | Description                                                        | Default   |
+|-------------------|-----------------|--------------------------------------------------------------------|-----------|
+| `required_action` | Optional\[str\] | a namespace action, must be an enum from rest_api.NamespaceActions | `None`    |
+
+### default_user { #tiledb.cloud.client.default_user }
+
+`cloud.client.default_user()`
+
+Returns the default user to be used.
+
+If :data:`config.user` is set, that is the default user. If unset, we fetch
+the currently logged-in user with :func:`user_profile` and store that in
+:data:`config.user`.
+
+### find_organization_or_user_for_default_charges { #tiledb.cloud.client.find_organization_or_user_for_default_charges }
+
+`cloud.client.find_organization_or_user_for_default_charges(user, required_action=None)`
+
+Takes a user model and finds either the first non public organization
+    or the user itself
+
+#### Parameters
+
+| Name   | Type           | Description   | Default    |
+|--------|----------------|---------------|------------|
+| `user` | models_v1.User |               | _required_ |
+
+#### Returns
+
+| Type   | Description                                                                                |
+|--------|--------------------------------------------------------------------------------------------|
+| str    | namespace name to charge by default (organization or user if not part of any organization) |
+
+### list_arrays { #tiledb.cloud.client.list_arrays }
+
+`cloud.client.list_arrays(namespace=None, permissions=None, tag=None, exclude_tag=None, search=None, file_type=None, exclude_file_type=None, page=None, per_page=None, async_req=False)`
+
+List arrays in a user account
+
+#### Parameters
+
+| Name                | Type   | Description                                        | Default   |
+|---------------------|--------|----------------------------------------------------|-----------|
+| `namespace`         | str    | list arrays in single namespace                    | `None`    |
+| `permissions`       | str    | filter arrays for given permissions                | `None`    |
+| `tag`               | list   | zero or more tags to filter on                     | `None`    |
+| `exclude_tag`       | list   | zero or more tags to filter on                     | `None`    |
+| `search`            | str    | search string                                      | `None`    |
+| `file_type`         | list   | zero or more file_types to filter on               | `None`    |
+| `exclude_file_type` | list   | zero or more file_types to filter on               | `None`    |
+| `page`              | int    | optional page for pagination                       | `None`    |
+| `per_page`          | int    | optional per_page for pagination                   | `None`    |
+| `async_req`         |        | return future instead of results for async support | `False`   |
+
+#### Returns
+
+| Type   | Description                                                                |
+|--------|----------------------------------------------------------------------------|
+|        | list of all array metadata you have access to that meet the filter applied |
+
+### list_groups { #tiledb.cloud.client.list_groups }
+
+`cloud.client.list_groups(namespace=None, permission=None, group_type=None, tag=None, exclude_tag=None, search=None, flat=True, parent=None, page=None, per_page=None, async_req=False)`
+
+List groups owned by a user.
+
+#### Parameters
+
+| Name          | Type                                | Description                                                                                       | Default    |
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|------------|
+| `namespace`   | Optional\[str\]                     | The namespace whose owned groups should be returned.                                              | `None`     |
+| `permissions` |                                     | Filter arrays for the given permission.                                                           | _required_ |
+| `group_type`  | Optional\[str\]                     | If provided, return only groups of the given type.                                                | `None`     |
+| `tag`         | Union\[str, Sequence\[str\], None\] | If provided, include groups matching the given tags.                                              | `None`     |
+| `exclude_tag` | Union\[str, Sequence\[str\], None\] | If provided, exclude groups matching the given tags.                                              | `None`     |
+| `search`      | Optional\[str\]                     | A search string.                                                                                  | `None`     |
+| `flat`        | bool                                | If false (the default), return only "top-level" groups (i.e., no sub-groups within other groups). | `True`     |
+| `parent`      | Union\[None, str, uuid.UUID\]       | If provided, only show the children of the group with the given ID.                               | `None`     |
+| `page`        | Optional\[int\]                     | For pagination, which page to return (1-based).                                                   | `None`     |
+| `per_page`    | Optional\[int\]                     | For pagination, how many elements to return on a page.                                            | `None`     |
+| `async_req`   | bool                                | Run this asynchronously; return a Future of results.                                              | `False`    |
+
+### list_public_arrays { #tiledb.cloud.client.list_public_arrays }
+
+`cloud.client.list_public_arrays(namespace=None, permissions=None, tag=None, exclude_tag=None, search=None, file_type=None, exclude_file_type=None, page=None, per_page=None, async_req=False)`
+
+List public arrays
+
+#### Parameters
+
+| Name                | Type   | Description                                        | Default   |
+|---------------------|--------|----------------------------------------------------|-----------|
+| `namespace`         | str    | list arrays in single namespace                    | `None`    |
+| `permissions`       | str    | filter arrays for given permissions                | `None`    |
+| `tag`               | list   | zero or more tags to filter on                     | `None`    |
+| `exclude_tag`       | list   | zero or more tags to filter on                     | `None`    |
+| `search`            | str    | search string                                      | `None`    |
+| `file_type`         | list   | zero or more file_types to filter on               | `None`    |
+| `exclude_file_type` | list   | zero or more file_types to filter on               | `None`    |
+| `page`              | int    | optional page for pagination                       | `None`    |
+| `per_page`          | int    | optional per_page for pagination                   | `None`    |
+| `async_req`         |        | return future instead of results for async support | `False`   |
+
+#### Returns
+
+| Type   | Description                                                                |
+|--------|----------------------------------------------------------------------------|
+|        | list of all array metadata you have access to that meet the filter applied |
+
+### list_public_groups { #tiledb.cloud.client.list_public_groups }
+
+`cloud.client.list_public_groups(namespace=None, permission=None, group_type=None, tag=None, exclude_tag=None, search=None, flat=True, parent=None, page=None, per_page=None, async_req=False)`
+
+List public groups owned by a user.
+
+#### Parameters
+
+| Name          | Type                                | Description                                                                                       | Default    |
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|------------|
+| `namespace`   | Optional\[str\]                     | The namespace whose owned groups should be returned.                                              | `None`     |
+| `permissions` |                                     | Filter arrays for the given permission.                                                           | _required_ |
+| `group_type`  | Optional\[str\]                     | If provided, return only groups of the given type.                                                | `None`     |
+| `tag`         | Union\[str, Sequence\[str\], None\] | If provided, include groups matching the given tags.                                              | `None`     |
+| `exclude_tag` | Union\[str, Sequence\[str\], None\] | If provided, exclude groups matching the given tags.                                              | `None`     |
+| `search`      | Optional\[str\]                     | A search string.                                                                                  | `None`     |
+| `flat`        | bool                                | If false (the default), return only "top-level" groups (i.e., no sub-groups within other groups). | `True`     |
+| `parent`      | Union\[None, str, uuid.UUID\]       | If provided, only show the children of the group with the given ID.                               | `None`     |
+| `page`        | Optional\[int\]                     | For pagination, which page to return (1-based).                                                   | `None`     |
+| `per_page`    | Optional\[int\]                     | For pagination, how many elements to return on a page.                                            | `None`     |
+| `async_req`   | bool                                | Run this asynchronously; return a Future of results.                                              | `False`    |
+
+### list_shared_arrays { #tiledb.cloud.client.list_shared_arrays }
+
+`cloud.client.list_shared_arrays(namespace=None, permissions=None, tag=None, exclude_tag=None, search=None, file_type=None, exclude_file_type=None, page=None, per_page=None, async_req=False)`
+
+List shared arrays
+
+#### Parameters
+
+| Name                | Type   | Description                                        | Default   |
+|---------------------|--------|----------------------------------------------------|-----------|
+| `namespace`         | str    | list arrays in single namespace                    | `None`    |
+| `permissions`       | str    | filter arrays for given permissions                | `None`    |
+| `tag`               | list   | zero or more tags to filter on                     | `None`    |
+| `exclude_tag`       | list   | zero or more tags to filter on                     | `None`    |
+| `search`            | str    | search string                                      | `None`    |
+| `file_type`         | list   | zero or more file_types to filter on               | `None`    |
+| `exclude_file_type` | list   | zero or more file_types to filter on               | `None`    |
+| `page`              | int    | optional page for pagination                       | `None`    |
+| `per_page`          | int    | optional per_page for pagination                   | `None`    |
+| `async_req`         |        | return future instead of results for async support | `False`   |
+
+#### Returns
+
+| Type   | Description                                                                |
+|--------|----------------------------------------------------------------------------|
+|        | list of all array metadata you have access to that meet the filter applied |
+
+### list_shared_groups { #tiledb.cloud.client.list_shared_groups }
+
+`cloud.client.list_shared_groups(namespace=None, shared_to=None, permission=None, group_type=None, tag=None, exclude_tag=None, search=None, flat=True, parent=None, page=None, per_page=None, async_req=False)`
+
+List groups shared by/to specified namespaces.
+
+#### Parameters
+
+| Name          | Type                                | Description                                                                                       | Default    |
+|---------------|-------------------------------------|---------------------------------------------------------------------------------------------------|------------|
+| `namespace`   | Optional\[str\]                     | The namespace whose owned groups should be returned.                                              | `None`     |
+| `shared_to`   | Optional\[str\]                     | A target, to return groups shared to this namespace.                                              | `None`     |
+| `permissions` |                                     | Filter arrays for the given permission.                                                           | _required_ |
+| `group_type`  | Optional\[str\]                     | If provided, return only groups of the given type.                                                | `None`     |
+| `tag`         | Union\[str, Sequence\[str\], None\] | If provided, include groups matching the given tags.                                              | `None`     |
+| `exclude_tag` | Union\[str, Sequence\[str\], None\] | If provided, exclude groups matching the given tags.                                              | `None`     |
+| `search`      | Optional\[str\]                     | A search string.                                                                                  | `None`     |
+| `flat`        | bool                                | If false (the default), return only "top-level" groups (i.e., no sub-groups within other groups). | `True`     |
+| `parent`      | Union\[None, str, uuid.UUID\]       | If provided, only show the children of the group with the given ID.                               | `None`     |
+| `page`        | Optional\[int\]                     | For pagination, which page to return (1-based).                                                   | `None`     |
+| `per_page`    | Optional\[int\]                     | For pagination, how many elements to return on a page.                                            | `None`     |
+| `async_req`   | bool                                | Run this asynchronously; return a Future of results.                                              | `False`    |
+
+### login { #tiledb.cloud.client.login }
+
+`cloud.client.login(token=None, username=None, password=None, host=None, verify_ssl=None, no_session=False, threads=None)`
+
+Login to cloud service
+
+#### Parameters
+
+| Name         | Type   | Description                                                            | Default   |
+|--------------|--------|------------------------------------------------------------------------|-----------|
+| `token`      |        | api token for login                                                    | `None`    |
+| `username`   |        | username for login                                                     | `None`    |
+| `password`   |        | password for login                                                     | `None`    |
+| `host`       |        | host to login to                                                       | `None`    |
+| `verify_ssl` |        | Enable strict SSL verification                                         | `None`    |
+| `no_session` |        | don't create a session token on login, store instead username/password | `False`   |
+| `threads`    |        | number of threads to enable for concurrent requests                    | `None`    |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        |               |
+
+### organization { #tiledb.cloud.client.organization }
+
+`cloud.client.organization(organization, async_req=False)`
+
+
+
+#### Parameters
+
+| Name           | Type   | Description                                        | Default    |
+|----------------|--------|----------------------------------------------------|------------|
+| `organization` | str    | organization to fetct                              | _required_ |
+| `async_req`    |        | return future instead of results for async support | `False`    |
+
+#### Returns
+
+| Type   | Description                |
+|--------|----------------------------|
+|        | details about organization |
+
+### organizations { #tiledb.cloud.client.organizations }
+
+`cloud.client.organizations(async_req=False)`
+
+
+
+#### Parameters
+
+| Name        | Type   | Description                                        | Default   |
+|-------------|--------|----------------------------------------------------|-----------|
+| `async_req` |        | return future instead of results for async support | `False`   |
+
+#### Returns
+
+| Type   | Description                               |
+|--------|-------------------------------------------|
+|        | list of all organizations user is part of |
+
+### user_profile { #tiledb.cloud.client.user_profile }
+
+`cloud.client.user_profile(async_req=False)`
+
+
+
+#### Parameters
+
+| Name        | Type   | Description                                        | Default   |
+|-------------|--------|----------------------------------------------------|-----------|
+| `async_req` |        | return future instead of results for async support | `False`   |
+
+#### Returns
+
+| Type   | Description       |
+|--------|-------------------|
+|        | your user profile |

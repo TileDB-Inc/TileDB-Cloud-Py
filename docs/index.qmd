@@ -1,0 +1,25 @@
+# TileDB Cloud Py
+
+Welcome to TileDB's Cloud [Python client](https://github.com/TileDB-Inc/TileDB-Cloud-Py/).<br>
+This client offers programmatic access to [TileDB Cloud](https://docs.tiledb.com/cloud).
+
+# Installation
+
+You can install the Cloud-Py SDK client as follows:
+
+```python
+pip install tiledb-cloud
+```
+
+While the preferred method of running code samples and notebooks in this section is directly within TileDB Cloud (as all dependencies are installed for you), you can run most of the code samples and notebooks in this section locally. To run these code samples and notebooks locally, install the following dependencies:
+
+```python
+pip install ipykernel jupyterlab graphviz
+pip install tiledb-cloud[all]
+```
+
+For Life Science capabilities:
+
+```python
+pip install tiledb-cloud[life-sciences]
+```

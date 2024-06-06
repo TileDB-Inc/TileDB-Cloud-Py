@@ -1,0 +1,199 @@
+project:
+  type: website
+  output-dir: _build
+
+website:
+  title: "TileDB-Cloud-Py"
+  description: "TileDB's Cloud Client for Python"
+  repo-url: https://github.com/TileDB-Inc/TileDB-Cloud-Py/
+  page-navigation: true
+  navbar:
+    background: light
+    pinned: true
+    left:
+      - text: Get started
+        file: get_started.qmd
+      - text: API
+        file: reference/index.qmd
+
+  sidebar:
+    style: "floating"
+    collapse-level: 1
+    contents:
+      - API Reference
+      - section: Cloud Services
+        contents:
+          - text: "`array`"
+            href: reference/array.qmd
+          - text: "`asset`"
+            href: reference/asset.qmd
+          - text: "`client`"
+            href: reference/client.qmd
+          - text: "`cloudarray`"
+            href: reference/cloudarray.qmd
+          - text: "`config`"
+            href: reference/config.qmd
+          - text: "`file`"
+            href: reference/file.qmd
+          - text: "`groups`"
+            href: reference/groups.qmd
+          - text: "`invites`"
+            href: reference/invites.qmd
+          - text: "`notebook`"
+            href: reference/notebook.qmd
+          - text: "`pool_manager_wrapper`"
+            href: reference/pool_manager_wrapper.qmd
+          - text: "`tasks`"
+            href: reference/tasks.qmd
+          - text: "`tiledb_cloud_error`"
+            href: reference/tiledb_cloud_error.qmd
+          - text: "`udf`"
+            href: reference/udf.qmd
+          - text: "`utils`"
+            href: reference/utils.qmd
+      - section: Bio-Imaging
+        contents:
+          - text: "`exportation`"
+            href: reference/exportation.qmd
+          - text: "`helpers`"
+            href: reference/helpers.qmd
+          - text: "`ingestion`"
+            href: reference/ingestion.qmd
+      - section: Compute
+        contents:
+          - text: "`delayed`"
+            href: reference/delayed.qmd
+      - section: DAG
+        contents:
+          - text: "`dag`"
+            href: reference/dag.qmd
+          - text: "`mode`"
+            href: reference/mode.qmd
+          - text: "`status`"
+            href: reference/status.qmd
+          - text: "`visualization`"
+            href: reference/visualization.qmd
+      - section: Files
+        contents:
+          - text: "`indexing`"
+            href: reference/indexing.qmd
+          - text: "`ingestion`"
+            href: reference/ingestion.qmd
+          - text: "`udfs`"
+            href: reference/udfs.qmd
+          - text: "`utils`"
+            href: reference/utils.qmd
+      - section: Geospatial
+        contents:
+          - text: "`ingestion`"
+            href: reference/ingestion.qmd
+      - section: SOMA
+        contents:
+          - text: "`ingest`"
+            href: reference/ingest.qmd
+          - text: "`mapper`"
+            href: reference/mapper.qmd
+      - section: VCF
+        contents:
+          - text: "`allele_frequency`"
+            href: reference/allele_frequency.qmd
+          - text: "`ingestion`"
+            href: reference/ingestion.qmd
+          - text: "`query`"
+            href: reference/query.qmd
+          - text: "`utils`"
+            href: reference/utils.qmd
+      - section: Utilities
+        contents:
+          - text: "`consolidate`"
+            href: reference/consolidate.qmd
+          - text: "`profiler`"
+            href: reference/profiler.qmd
+
+quartodoc:
+  style: pkgdown
+  parser: sphinx
+  package: tiledb.cloud
+  title: API Reference
+
+  sections:
+    - title: Cloud Services
+      desc: Cloud Interaction Services
+      package: tiledb.cloud
+      contents:
+        - array
+        - asset
+        - client
+        - cloudarray
+        - config
+        - file
+        - groups
+        - invites
+        - notebook
+        - pool_manager_wrapper
+        - tasks
+        - tiledb_cloud_error
+        - udf
+        - utils
+
+    - title: bioimg
+      desc: Bio imaging API
+      package: tiledb.cloud.bioimg
+      contents:
+        - exportation
+        - helpers
+        - ingestion
+
+    - title: compute
+      desc: Compute API
+      package: tiledb.cloud.compute
+      contents:
+        - delayed
+
+    - title: dag
+      desc: DAG API
+      package: tiledb.cloud.dag
+      contents:
+        - dag
+        - mode
+        - status
+        - visualization
+
+    - title: files
+      desc: File API.
+      package: tiledb.cloud.files
+      contents:
+        - indexing
+        - ingestion
+        - udfs
+        - utils
+
+    - title: geospatial
+      desc: Geospatial API
+      package: tiledb.cloud.geospatial
+      contents:
+        - ingestion
+
+    - title: soma
+      desc: SOMA API
+      package: tiledb.cloud.soma
+      contents:
+        - ingest
+        - mapper
+
+    - title: vcf
+      desc: VCF API
+      package: tiledb.cloud.vcf
+      contents:
+        - allele_frequency
+        - ingestion
+        - query
+        - utils
+
+    - title: utilities
+      desc: Common Utilities API
+      package: tiledb.cloud.utilities
+      contents:
+        - consolidate
+        - profiler
+        # - wheel

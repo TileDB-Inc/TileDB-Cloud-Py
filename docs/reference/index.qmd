@@ -1,0 +1,99 @@
+# API Reference {.doc .doc-index}
+
+## bioimg
+
+Bio imaging API
+
+| | |
+| --- | --- |
+| [exportation](exportation.qmd#tiledb.cloud.bioimg.exportation) |  |
+| [helpers](helpers.qmd#tiledb.cloud.bioimg.helpers) |  |
+| [ingestion](ingestion.qmd#tiledb.cloud.bioimg.ingestion) |  |
+
+## compute
+
+Compute API
+
+| | |
+| --- | --- |
+| [delayed](delayed.qmd#tiledb.cloud.compute.delayed) |  |
+
+## dag
+
+DAG API
+
+| | |
+| --- | --- |
+| [dag](dag.qmd#tiledb.cloud.dag.dag) |  |
+| [mode](mode.qmd#tiledb.cloud.dag.mode) |  |
+| [status](status.qmd#tiledb.cloud.dag.status) |  |
+| [visualization](visualization.qmd#tiledb.cloud.dag.visualization) |  |
+
+## files
+
+File API.
+
+| | |
+| --- | --- |
+| [indexing](indexing.qmd#tiledb.cloud.files.indexing) |  |
+| [ingestion](ingestion.qmd#tiledb.cloud.files.ingestion) |  |
+| [udfs](udfs.qmd#tiledb.cloud.files.udfs) |  |
+| [utils](utils.qmd#tiledb.cloud.files.utils) |  |
+
+## geospatial
+
+Geospatial API
+
+| | |
+| --- | --- |
+| [ingestion](ingestion.qmd#tiledb.cloud.geospatial.ingestion) |  |
+
+## soma
+
+SOMA API
+
+| | |
+| --- | --- |
+| [ingest](ingest.qmd#tiledb.cloud.soma.ingest) |  |
+| [mapper](mapper.qmd#tiledb.cloud.soma.mapper) |  |
+
+## vcf
+
+VCF API
+
+| | |
+| --- | --- |
+| [allele_frequency](allele_frequency.qmd#tiledb.cloud.vcf.allele_frequency) |  |
+| [ingestion](ingestion.qmd#tiledb.cloud.vcf.ingestion) |  |
+| [query](query.qmd#tiledb.cloud.vcf.query) |  |
+| [utils](utils.qmd#tiledb.cloud.vcf.utils) |  |
+
+## utilities
+
+Common Utilities API
+
+| | |
+| --- | --- |
+| [consolidate](consolidate.qmd#tiledb.cloud.utilities.consolidate) |  |
+| [profiler](profiler.qmd#tiledb.cloud.utilities.profiler) |  |
+
+## Cloud Services
+
+Cloud Interaction Services
+
+| | |
+| --- | --- |
+| [array](array.qmd#tiledb.cloud.array) |  |
+| [asset](asset.qmd#tiledb.cloud.asset) | An asset may be an array or a group. |
+| [client](client.qmd#tiledb.cloud.client) |  |
+| [cloudarray](cloudarray.qmd#tiledb.cloud.cloudarray) |  |
+| [config](config.qmd#tiledb.cloud.config) |  |
+| [file](file.qmd#tiledb.cloud.file) |  |
+| [groups](groups.qmd#tiledb.cloud.groups) | Functions for managing TileDB Cloud groups. |
+| [invites](invites.qmd#tiledb.cloud.invites) |  |
+| [notebook](notebook.qmd#tiledb.cloud.notebook) | Python support for notebook I/O on Tiledb Cloud. All notebook JSON content |
+| [pool_manager_wrapper](pool_manager_wrapper.qmd#tiledb.cloud.pool_manager_wrapper) |  |
+| [tasks](tasks.qmd#tiledb.cloud.tasks) |  |
+| [tiledb_cloud_error](tiledb_cloud_error.qmd#tiledb.cloud.tiledb_cloud_error) |  |
+| [udf](udf.qmd#tiledb.cloud.udf) |  |
+| [utils](utils.qmd#tiledb.cloud.utils) | General utilities that don't fit anywhere else. |

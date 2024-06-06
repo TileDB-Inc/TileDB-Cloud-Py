@@ -1,0 +1,315 @@
+# udf { #tiledb.cloud.udf }
+
+`cloud.udf`
+
+
+
+## Functions
+
+| Name | Description |
+| --- | --- |
+| [delete](#tiledb.cloud.udf.delete) | Deletes a registered udf |
+| [exec](#tiledb.cloud.udf.exec) | Run a user defined function, synchronously, returning only the result. |
+| [exec_async](#tiledb.cloud.udf.exec_async) | Run a user defined function, asynchronously. |
+| [exec_base](#tiledb.cloud.udf.exec_base) | Run a user defined function, returning the result and metadata. |
+| [info](#tiledb.cloud.udf.info) | Fetch info on a registered udf |
+| [register_generic_udf](#tiledb.cloud.udf.register_generic_udf) |  |
+| [register_multi_array_udf](#tiledb.cloud.udf.register_multi_array_udf) |  |
+| [register_single_array_udf](#tiledb.cloud.udf.register_single_array_udf) |  |
+| [register_udf](#tiledb.cloud.udf.register_udf) |  |
+| [share](#tiledb.cloud.udf.share) | Share a registered udf |
+| [unshare](#tiledb.cloud.udf.unshare) | Share a registered udf |
+| [update_generic_udf](#tiledb.cloud.udf.update_generic_udf) |  |
+| [update_single_array_udf](#tiledb.cloud.udf.update_single_array_udf) |  |
+| [update_udf](#tiledb.cloud.udf.update_udf) |  |
+
+### delete { #tiledb.cloud.udf.delete }
+
+`cloud.udf.delete(name, namespace, async_req=False)`
+
+Deletes a registered udf
+
+#### Parameters
+
+| Name        | Type   | Description                                        | Default    |
+|-------------|--------|----------------------------------------------------|------------|
+| `name`      |        | name of udf                                        | _required_ |
+| `namespace` |        | namespace the udf belongs to                       | _required_ |
+| `async_req` |        | return future instead of results for async support | `False`    |
+
+#### Returns
+
+| Type   | Description         |
+|--------|---------------------|
+|        | deleted udf details |
+
+### exec { #tiledb.cloud.udf.exec }
+
+`cloud.udf.exec(*args, **kwargs)`
+
+Run a user defined function, synchronously, returning only the result.
+
+Arguments are exactly as in :func:`exec_base`.
+
+### exec_async { #tiledb.cloud.udf.exec_async }
+
+`cloud.udf.exec_async(*args, **kwargs)`
+
+Run a user defined function, asynchronously.
+
+Arguments are exactly as in :func:`exec_base`.
+
+### exec_base { #tiledb.cloud.udf.exec_base }
+
+`cloud.udf.exec_base(func, *args, name=None, namespace=None, image_name='default', http_compressor='deflate', include_source_lines=True, task_name=None, result_format='tiledb_json', result_format_version=None, store_results=False, stored_param_uuids=(), timeout=None, resource_class=None, _download_results=True, _server_graph_uuid=None, _client_node_uuid=None, access_credentials_name=None, **kwargs)`
+
+Run a user defined function, returning the result and metadata.
+
+#### Parameters
+
+| Name                    | Type                        | Description                                                                                                                                                                                         | Default         |
+|-------------------------|-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
+| `func`                  | Union\[str, Callable, Any\] | The function to call, either as a callable function, or as the name of a registered user-defined function. (If ``name`` is set, this is instead prepended to ``args`` for backwards compatibility.) | _required_      |
+| `args`                  | Any                         | The arguments to pass to the function.                                                                                                                                                              | `()`            |
+| `name`                  | Optional\[str\]             | DEPRECATED. If present, the name of the user-defined function to run.                                                                                                                               | `None`          |
+| `namespace`             | Optional\[str\]             | namespace to run udf under                                                                                                                                                                          | `None`          |
+| `image_name`            | str                         | udf image name to use, useful for testing beta features                                                                                                                                             | `'default'`     |
+| `http_compressor`       | Optional\[str\]             | set http compressor for results                                                                                                                                                                     | `'deflate'`     |
+| `include_source_lines`  | bool                        | True to send the source code of your UDF to the server with your request. (This means it can be shown to you in stack traces if an error occurs.) False to send only compiled Python bytecode.      | `True`          |
+| `task_name`             | str                         | optional name to assign the task for logging and audit purposes                                                                                                                                     | `None`          |
+| `result_format`         | ResultFormat                | result serialization format                                                                                                                                                                         | `'tiledb_json'` |
+| `result_format_version` | str                         | Deprecated and ignored.                                                                                                                                                                             | `None`          |
+| `store_results`         | bool                        | True to temporarily store results on the server side for later retrieval (in addition to downloading them).                                                                                         | `False`         |
+| `timeout`               | int                         | Timeout for UDF in seconds                                                                                                                                                                          | `None`          |
+| `resource_class`        | Optional\[str\]             | The name of the resource class to use. Resource classes define maximum limits for cpu and memory usage.                                                                                             | `None`          |
+| `_download_results`     | bool                        | True to download and parse results eagerly. False to not download results by default and only do so lazily (e.g. for an intermediate node in a graph).                                              | `True`          |
+| `_server_graph_uuid`    | Optional\[uuid.UUID\]       | If this function is being executed within a DAG, the server-generated ID of the graph's log. Otherwise, None.                                                                                       | `None`          |
+| `_client_node_uuid`     | Optional\[uuid.UUID\]       | If this function is being executed within a DAG, the ID of this function's node within the graph. Otherwise, None.                                                                                  | `None`          |
+| `kwargs`                |                             | named arguments to pass to function                                                                                                                                                                 | `{}`            |
+
+### info { #tiledb.cloud.udf.info }
+
+`cloud.udf.info(namespace=None, name=None, async_req=False)`
+
+Fetch info on a registered udf
+
+#### Parameters
+
+| Name        | Type   | Description                                        | Default   |
+|-------------|--------|----------------------------------------------------|-----------|
+| `namespace` |        | namespace to filter to                             | `None`    |
+| `name`      |        | name of udf to get info                            | `None`    |
+| `async_req` |        | return future instead of results for async support | `False`   |
+
+#### Returns
+
+| Type   | Description            |
+|--------|------------------------|
+|        | registered udf details |
+
+### register_generic_udf { #tiledb.cloud.udf.register_generic_udf }
+
+`cloud.udf.register_generic_udf(func, name, namespace=None, image_name=None, include_source_lines=True, async_req=False)`
+
+
+
+#### Parameters
+
+| Name                   | Type   | Description                                               | Default    |
+|------------------------|--------|-----------------------------------------------------------|------------|
+| `func`                 |        | function to register                                      | _required_ |
+| `name`                 |        | name of udf to register                                   | _required_ |
+| `namespace`            |        | namespace to register in                                  | `None`     |
+| `image_name`           |        | optional image name                                       | `None`     |
+| `include_source_lines` |        | disables sending sources lines of function along with udf | `True`     |
+| `async_req`            |        | return future instead of results for async support        | `False`    |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        |               |
+
+### register_multi_array_udf { #tiledb.cloud.udf.register_multi_array_udf }
+
+`cloud.udf.register_multi_array_udf(func, name, namespace=None, image_name=None, include_source_lines=True, async_req=False)`
+
+
+
+#### Parameters
+
+| Name                   | Type   | Description                                               | Default    |
+|------------------------|--------|-----------------------------------------------------------|------------|
+| `func`                 |        | function to register                                      | _required_ |
+| `name`                 |        | name of udf to register                                   | _required_ |
+| `namespace`            |        | namespace to register in                                  | `None`     |
+| `image_name`           |        | optional image name                                       | `None`     |
+| `include_source_lines` |        | disables sending sources lines of function along with udf | `True`     |
+| `async_req`            |        | return future instead of results for async support        | `False`    |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        |               |
+
+### register_single_array_udf { #tiledb.cloud.udf.register_single_array_udf }
+
+`cloud.udf.register_single_array_udf(func, name, namespace=None, image_name=None, include_source_lines=True, async_req=False)`
+
+
+
+#### Parameters
+
+| Name                   | Type   | Description                                               | Default    |
+|------------------------|--------|-----------------------------------------------------------|------------|
+| `func`                 |        | function to register                                      | _required_ |
+| `name`                 |        | name of udf to register                                   | _required_ |
+| `namespace`            |        | namespace to register in                                  | `None`     |
+| `image_name`           |        | optional image name                                       | `None`     |
+| `include_source_lines` |        | disables sending sources lines of function along with udf | `True`     |
+| `async_req`            |        | return future instead of results for async support        | `False`    |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        |               |
+
+### register_udf { #tiledb.cloud.udf.register_udf }
+
+`cloud.udf.register_udf(func, name, namespace=None, image_name=None, type=None, include_source_lines=True, async_req=False)`
+
+
+
+#### Parameters
+
+| Name                   | Type   | Description                                               | Default    |
+|------------------------|--------|-----------------------------------------------------------|------------|
+| `func`                 |        | function to register                                      | _required_ |
+| `name`                 |        | name of udf to register                                   | _required_ |
+| `namespace`            |        | namespace to register in                                  | `None`     |
+| `image_name`           |        | optional image name                                       | `None`     |
+| `type`                 |        | type of udf, generic or single_array                      | `None`     |
+| `include_source_lines` |        | disables sending sources lines of function along with udf | `True`     |
+| `async_req`            |        | return future instead of results for async support        | `False`    |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        |               |
+
+### share { #tiledb.cloud.udf.share }
+
+`cloud.udf.share(name=None, namespace=None, async_req=False)`
+
+Share a registered udf
+
+#### Parameters
+
+| Name        | Type   | Description                                        | Default   |
+|-------------|--------|----------------------------------------------------|-----------|
+| `name`      |        | name of udf in "namespace/name" format             | `None`    |
+| `namespace` |        | namespace to share array with                      | `None`    |
+| `async_req` |        | return future instead of results for async support | `False`   |
+
+#### Returns
+
+| Type   | Description            |
+|--------|------------------------|
+|        | registered udf details |
+
+### unshare { #tiledb.cloud.udf.unshare }
+
+`cloud.udf.unshare(name=None, namespace=None, async_req=False)`
+
+Share a registered udf
+
+#### Parameters
+
+| Name        | Type   | Description                                        | Default   |
+|-------------|--------|----------------------------------------------------|-----------|
+| `name`      |        | name of udf in "namespace/name" format             | `None`    |
+| `namespace` |        | namespace to share array with                      | `None`    |
+| `async_req` |        | return future instead of results for async support | `False`   |
+
+#### Returns
+
+| Type   | Description            |
+|--------|------------------------|
+|        | registered udf details |
+
+### update_generic_udf { #tiledb.cloud.udf.update_generic_udf }
+
+`cloud.udf.update_generic_udf(func, name, namespace=None, image_name=None, include_source_lines=True, async_req=False)`
+
+
+
+#### Parameters
+
+| Name                   | Type   | Description                                               | Default    |
+|------------------------|--------|-----------------------------------------------------------|------------|
+| `func`                 |        | function to register                                      | _required_ |
+| `name`                 |        | name of udf to register                                   | _required_ |
+| `namespace`            |        | namespace to register in                                  | `None`     |
+| `image_name`           |        | optional image name                                       | `None`     |
+| `include_source_lines` |        | disables sending sources lines of function along with udf | `True`     |
+| `async_req`            |        | return future instead of results for async support        | `False`    |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        |               |
+
+### update_single_array_udf { #tiledb.cloud.udf.update_single_array_udf }
+
+`cloud.udf.update_single_array_udf(func, name, namespace=None, image_name=None, include_source_lines=True, async_req=False)`
+
+
+
+#### Parameters
+
+| Name                   | Type   | Description                                               | Default    |
+|------------------------|--------|-----------------------------------------------------------|------------|
+| `func`                 |        | function to register                                      | _required_ |
+| `name`                 |        | name of udf to register                                   | _required_ |
+| `namespace`            |        | namespace to register in                                  | `None`     |
+| `image_name`           |        | optional image name                                       | `None`     |
+| `include_source_lines` |        | disables sending sources lines of function along with udf | `True`     |
+| `async_req`            |        | return future instead of results for async support        | `False`    |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        |               |
+
+### update_udf { #tiledb.cloud.udf.update_udf }
+
+`cloud.udf.update_udf(func, name, namespace=None, update_name=None, image_name=None, type=None, license_id=None, license_text=None, readme=None, include_source_lines=True, async_req=False)`
+
+
+
+#### Parameters
+
+| Name                   | Type   | Description                                                                            | Default    |
+|------------------------|--------|----------------------------------------------------------------------------------------|------------|
+| `func`                 |        | function to update register                                                            | _required_ |
+| `name`                 |        | name of udf to register                                                                | _required_ |
+| `namespace`            |        | namespace to register in                                                               | `None`     |
+| `update_name`          |        | new name for udf - physical folder will not be renamed, just the registered array name | `None`     |
+| `image_name`           |        | optional image name                                                                    | `None`     |
+| `type`                 |        | type of udf, generic or single_array                                                   | `None`     |
+| `license_id`           |        | license id for udf according to https://spdx.org/licenses/                             | `None`     |
+| `license_text`         |        | text of license for udf                                                                | `None`     |
+| `readme`               |        | readme of udf                                                                          | `None`     |
+| `include_source_lines` |        | disables sending sources lines of function along with udf                              | `True`     |
+| `async_req`            |        | return future instead of results for async support                                     | `False`    |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        |               |

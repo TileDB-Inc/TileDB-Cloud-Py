@@ -1,0 +1,54 @@
+# dag { #tiledb.cloud.dag.dag }
+
+`cloud.dag.dag`
+
+
+
+## Functions
+
+| Name | Description |
+| --- | --- |
+| [list_logs](#tiledb.cloud.dag.dag.list_logs) | Retrieves the list of task graph logs you can view. |
+| [replace_stored_params](#tiledb.cloud.dag.dag.replace_stored_params) | Descends into data structures and replaces Stored Params with results. |
+| [server_logs](#tiledb.cloud.dag.dag.server_logs) | Retrieves the full server-side logs for the given DAG. |
+
+### list_logs { #tiledb.cloud.dag.dag.list_logs }
+
+`cloud.dag.dag.list_logs(namespace=None, created_by=None, search=None, start_time=None, end_time=None, page=1, per_page=10)`
+
+Retrieves the list of task graph logs you can view.
+
+The returned graph logs will be "light" versions, meaning they will not
+include any details about the execution state of an individual DAG.
+To retrieve those, pass the ID to :func:`server_logs`.
+
+#### Parameters
+
+| Name         | Type                          | Description                                                                                                      | Default   |
+|--------------|-------------------------------|------------------------------------------------------------------------------------------------------------------|-----------|
+| `namespace`  | Optional\[str\]               | If present, include logs for only this namespace. If absent, include logs for all namespaces you have access to. | `None`    |
+| `created_by` | Optional\[str\]               | Include only logs from this user (if present).                                                                   | `None`    |
+| `search`     | Optional\[str\]               | A search string for the name of the task graph.                                                                  | `None`    |
+| `start_time` | Optional\[datetime.datetime\] | Include logs created after this time.                                                                            | `None`    |
+| `end_time`   | Optional\[datetime.datetime\] | Include logs created before this time.                                                                           | `None`    |
+| `page`       | int                           | The page number to use, starting from 1.                                                                         | `1`       |
+| `per_page`   | int                           | The number of items per page.                                                                                    | `10`      |
+
+### replace_stored_params { #tiledb.cloud.dag.dag.replace_stored_params }
+
+`cloud.dag.dag.replace_stored_params(tree, loader)`
+
+Descends into data structures and replaces Stored Params with results.
+
+### server_logs { #tiledb.cloud.dag.dag.server_logs }
+
+`cloud.dag.dag.server_logs(dag_or_id, namespace=None)`
+
+Retrieves the full server-side logs for the given DAG.
+
+The DAG can be provided as a DAG object, or the server-provided UUID of a
+DAG's execution log in either :class:`uuid.UUID` or string form.
+This can be used to access both completed DAGs and in-progress DAGs.
+The returned DAGs will include full data
+
+Will return None if called with a DAG object that has no server-side nodes.

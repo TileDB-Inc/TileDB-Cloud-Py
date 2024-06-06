@@ -3,3 +3,5 @@ _static
 #_templates
 build
 _autosummary
+
+/.quarto/

@@ -1,0 +1,336 @@
+# array { #tiledb.cloud.array }
+
+`cloud.array`
+
+
+
+## Functions
+
+| Name | Description |
+| --- | --- |
+| [apply](#tiledb.cloud.array.apply) | Apply a user defined function to an array, synchronously. |
+| [apply_async](#tiledb.cloud.array.apply_async) | Apply a user-defined function to an array, asynchronously. |
+| [apply_base](#tiledb.cloud.array.apply_base) | Apply a user-defined function to an array, and return data and metadata. |
+| [array_activity](#tiledb.cloud.array.array_activity) | Fetch array activity |
+| [delete_array](#tiledb.cloud.array.delete_array) | Deregister the array from the tiledb cloud service, |
+| [deregister_array](#tiledb.cloud.array.deregister_array) | Deregister the from the tiledb cloud service. |
+| [exec_multi_array_udf](#tiledb.cloud.array.exec_multi_array_udf) | Apply a user-defined function to multiple arrays, synchronously. |
+| [exec_multi_array_udf_async](#tiledb.cloud.array.exec_multi_array_udf_async) | Apply a user-defined function to multiple arrays, asynchronously. |
+| [exec_multi_array_udf_base](#tiledb.cloud.array.exec_multi_array_udf_base) |     Apply a user defined function to multiple arrays. |
+| [info](#tiledb.cloud.array.info) | Returns the cloud metadata |
+| [list_shared_with](#tiledb.cloud.array.list_shared_with) | Return array sharing policies |
+| [parse_ranges](#tiledb.cloud.array.parse_ranges) | Takes a list of the following objects per dimension: |
+| [register_array](#tiledb.cloud.array.register_array) | Register this array with the tiledb cloud service |
+| [share_array](#tiledb.cloud.array.share_array) | Shares array with give namespace and permissions |
+| [unshare_array](#tiledb.cloud.array.unshare_array) | Removes sharing of an array from given namespace |
+| [update_file_properties](#tiledb.cloud.array.update_file_properties) | Update an Array to indicate its a file and has given properties. |
+| [update_info](#tiledb.cloud.array.update_info) | Update an array's info |
+
+### apply { #tiledb.cloud.array.apply }
+
+`cloud.array.apply(*args, **kwargs)`
+
+Apply a user defined function to an array, synchronously.
+
+All arguments are exactly as in :func:`apply_base`, but this returns
+the data only.
+
+**Example:**
+
+>>> import tiledb, tiledb.cloud, numpy
+>>> def median(df):
+...   return numpy.median(df["a"])
+>>> # Open the array then run the UDF
+>>> tiledb.cloud.array.apply("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"])
+2.0
+
+### apply_async { #tiledb.cloud.array.apply_async }
+
+`cloud.array.apply_async(*args, **kwargs)`
+
+Apply a user-defined function to an array, asynchronously.
+
+All arguments are exactly as in :func:`apply_base`, but this returns
+the data as a future-like AsyncResponse.
+
+### apply_base { #tiledb.cloud.array.apply_base }
+
+`cloud.array.apply_base(uri, func=None, ranges=(), name=None, attrs=(), layout=None, image_name='default', http_compressor='deflate', include_source_lines=True, task_name=None, v2=None, result_format=models.ResultFormat.NATIVE, result_format_version=None, store_results=False, stored_param_uuids=(), timeout=None, resource_class=None, _download_results=True, namespace=None, _server_graph_uuid=None, _client_node_uuid=None, **kwargs)`
+
+Apply a user-defined function to an array, and return data and metadata.
+
+#### Parameters
+
+| Name                    | Type                         | Description                                                                                                                                                                                                                                                                                                              | Default                      |
+|-------------------------|------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------|
+| `uri`                   | str                          | The ``tiledb://...`` URI of the array to apply the function to.                                                                                                                                                                                                                                                          | _required_                   |
+| `func`                  | Union\[str, Callable, None\] | The function to run. This can be either a callable function, or the name of a registered user-defined function                                                                                                                                                                                                           | `None`                       |
+| `ranges`                | Sequence                     | ranges to issue query on                                                                                                                                                                                                                                                                                                 | `()`                         |
+| `name`                  | Optional\[str\]              | Deprecated. If ``func`` is ``None``, the name of the registered user-defined function to call.                                                                                                                                                                                                                           | `None`                       |
+| `attrs`                 | Sequence                     | list of attributes or dimensions to fetch in query                                                                                                                                                                                                                                                                       | `()`                         |
+| `layout`                | Optional\[str\]              | tiledb query layout                                                                                                                                                                                                                                                                                                      | `None`                       |
+| `image_name`            | str                          | udf image name to use, useful for testing beta features                                                                                                                                                                                                                                                                  | `'default'`                  |
+| `http_compressor`       | str                          | set http compressor for results                                                                                                                                                                                                                                                                                          | `'deflate'`                  |
+| `include_source_lines`  | bool                         | True to send the source code of your UDF to the server with your request. (This means it can be shown to you in stack traces if an error occurs.) False to send only compiled Python bytecode.                                                                                                                           | `True`                       |
+| `task_name`             | str                          | optional name to assign the task for logging and audit purposes                                                                                                                                                                                                                                                          | `None`                       |
+| `v2`                    |                              | Ignored.                                                                                                                                                                                                                                                                                                                 | `None`                       |
+| `result_format`         | ResultFormat                 | result serialization format                                                                                                                                                                                                                                                                                              | `models.ResultFormat.NATIVE` |
+| `result_format_version` |                              | Deprecated and ignored.                                                                                                                                                                                                                                                                                                  | `None`                       |
+| `store_results`         | bool                         | True to temporarily store results on the server side for later retrieval (in addition to downloading them).                                                                                                                                                                                                              | `False`                      |
+| `timeout`               | int                          | Timeout for UDF in seconds                                                                                                                                                                                                                                                                                               | `None`                       |
+| `resource_class`        | Optional\[str\]              | The name of the resource class to use. Resource classes define maximum limits for cpu and memory usage.                                                                                                                                                                                                                  | `None`                       |
+| `_download_results`     | bool                         | True to download and parse results eagerly. False to not download results by default and only do so lazily (e.g. for an intermediate node in a graph).                                                                                                                                                                   | `True`                       |
+| `namespace`             | Optional\[str\]              | The namespace to execute the UDF under.                                                                                                                                                                                                                                                                                  | `None`                       |
+| `_server_graph_uuid`    | Optional\[uuid.UUID\]        | If this function is being executed within a DAG, the server-generated ID of the graph's log. Otherwise, None.                                                                                                                                                                                                            | `None`                       |
+| `_client_node_uuid`     | Optional\[uuid.UUID\]        | If this function is being executed within a DAG, the ID of this function's node within the graph. Otherwise, None.                                                                                                                                                                                                       | `None`                       |
+| `kwargs`                | Any                          | named arguments to pass to function  **Example** >>> import tiledb, tiledb.cloud, numpy >>> def median(df): ...   return numpy.median(df["a"]) >>> # Open the array then run the UDF >>> tiledb.cloud.array.apply_base("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"]).result 2.0 | `{}`                         |
+
+### array_activity { #tiledb.cloud.array.array_activity }
+
+`cloud.array.array_activity(uri, async_req=False)`
+
+Fetch array activity
+
+#### Parameters
+
+| Name        | Type   | Description                                        | Default    |
+|-------------|--------|----------------------------------------------------|------------|
+| `uri`       |        |                                                    | _required_ |
+| `async_req` |        | return future instead of results for async support | `False`    |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        |               |
+
+### delete_array { #tiledb.cloud.array.delete_array }
+
+`cloud.array.delete_array(uri, *, async_req=False)`
+
+Deregister the array from the tiledb cloud service,
+then deletes physical array from disk.
+
+All access to the array and cloud metadata will be removed.
+
+#### Parameters
+
+| Name        | Type   | Description                                        | Default   |
+|-------------|--------|----------------------------------------------------|-----------|
+| `async_req` |        | return future instead of results for async support | `False`   |
+
+### deregister_array { #tiledb.cloud.array.deregister_array }
+
+`cloud.array.deregister_array(uri, async_req=False)`
+
+Deregister the from the tiledb cloud service.
+This does not physically delete the array, it will remain in your bucket.
+All access to the array and cloud metadata will be removed.
+
+#### Parameters
+
+| Name        | Type   | Description                                        | Default   |
+|-------------|--------|----------------------------------------------------|-----------|
+| `async_req` |        | return future instead of results for async support | `False`   |
+
+### exec_multi_array_udf { #tiledb.cloud.array.exec_multi_array_udf }
+
+`cloud.array.exec_multi_array_udf(*args, **kwargs)`
+
+Apply a user-defined function to multiple arrays, synchronously.
+
+All arguments are exactly as in :func:`exec_multi_array_udf_base`.
+
+### exec_multi_array_udf_async { #tiledb.cloud.array.exec_multi_array_udf_async }
+
+`cloud.array.exec_multi_array_udf_async(*args, **kwargs)`
+
+Apply a user-defined function to multiple arrays, asynchronously.
+
+All arguments are exactly as in :func:`exec_multi_array_udf_base`.
+
+### exec_multi_array_udf_base { #tiledb.cloud.array.exec_multi_array_udf_base }
+
+`cloud.array.exec_multi_array_udf_base(func=None, array_list=None, namespace=None, name=None, layout=None, image_name='default', http_compressor='deflate', include_source_lines=True, task_name=None, result_format=models.ResultFormat.NATIVE, result_format_version=None, store_results=False, stored_param_uuids=(), resource_class=None, _download_results=True, _server_graph_uuid=None, _client_node_uuid=None, **kwargs)`
+
+    Apply a user defined function to multiple arrays.
+
+    :param func: The function to run. This can be either a callable function,
+        or the name of a registered user-defined function
+    :param array_list: The list of arrays to run the function on,
+        as an already-built ArrayList object.
+    :param namespace: namespace to run udf under
+    :param layout: Ignored.
+    :param image_name: udf image name to use, useful for testing beta features
+    :param http_compressor: set http compressor for results
+    :param str task_name: optional name to assign the task
+        for logging and audit purposes
+    :param ResultFormat result_format: result serialization format
+    :param str result_format_version: Deprecated and ignored.
+    :param store_results: True to temporarily store results on the server side
+        for later retrieval (in addition to downloading them).
+    :param _server_graph_uuid: If this function is being executed within a DAG,
+        the server-generated ID of the graph's log. Otherwise, None.
+    :param _client_node_uuid: If this function is being executed within a DAG,
+        the ID of this function's node within the graph. Otherwise, None.
+    :param resource_class: The name of the resource class to use. Resource classes
+        define maximum limits for cpu and memory usage.
+    :param kwargs: named arguments to pass to function
+    :return: A future containing the results of the UDF.
+    >>> import numpy as np
+    >>> from tiledb.cloud import array
+    >>> import tiledb.cloud
+    >>> dense_array = "tiledb://andreas/quickstart_dense_local"
+    >>> sparse_array = "tiledb://andreas/quickstart_sparse_local"
+    >>> def median(numpy_ordered_dictionary):
+    ...    return np.median(numpy_ordered_dictionary[0]["a"]) + np.median(numpy_ordered_dictionary[1]["a"])
+    >>> array_list = array.ArrayList()
+    >>> array_list.add(dense_array, [(1, 4), (1, 4)], ["a"])
+    >>> array_list.add(sparse_array, [(1, 2), (1, 4)], ["a"])
+    >>> namespace = "namespace"
+    >>> res = array.exec_multi_array_udf(median, array_list, namespace)
+    >>> print("Median Multi UDF:
+{}
+".format(res))
+
+### info { #tiledb.cloud.array.info }
+
+`cloud.array.info(uri, async_req=False)`
+
+Returns the cloud metadata
+
+#### Parameters
+
+| Name        | Type   | Description                                        | Default   |
+|-------------|--------|----------------------------------------------------|-----------|
+| `async_req` |        | return future instead of results for async support | `False`   |
+
+#### Returns
+
+| Type   | Description     |
+|--------|-----------------|
+|        | metadata object |
+
+### list_shared_with { #tiledb.cloud.array.list_shared_with }
+
+`cloud.array.list_shared_with(uri, async_req=False)`
+
+Return array sharing policies
+
+### parse_ranges { #tiledb.cloud.array.parse_ranges }
+
+`cloud.array.parse_ranges(ranges)`
+
+Takes a list of the following objects per dimension:
+
+- scalar index
+- (start,end) tuple
+- list of either of the above types
+
+#### Parameters
+
+| Name      | Type   | Description                                     | Default    |
+|-----------|--------|-------------------------------------------------|------------|
+| `ranges`  |        | list of (scalar, tuple, list)                   | _required_ |
+| `builder` |        | function taking arguments (dim_idx, start, end) | _required_ |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        |               |
+
+### register_array { #tiledb.cloud.array.register_array }
+
+`cloud.array.register_array(uri, namespace=None, array_name=None, description=None, access_credentials_name=None, async_req=False)`
+
+Register this array with the tiledb cloud service
+
+#### Parameters
+
+| Name                      | Type   | Description                                                                                  | Default   |
+|---------------------------|--------|----------------------------------------------------------------------------------------------|-----------|
+| `namespace`               | str    | The user or organization to register the array under. If unset will default to the user      | `None`    |
+| `array_name`              | str    | name of array                                                                                | `None`    |
+| `description`             | str    | optional description                                                                         | `None`    |
+| `access_credentials_name` | str    | optional name of access credentials to use, if left blank default for namespace will be used | `None`    |
+| `async_req`               |        | return future instead of results for async support                                           | `False`   |
+
+### share_array { #tiledb.cloud.array.share_array }
+
+`cloud.array.share_array(uri, namespace, permissions, async_req=False)`
+
+Shares array with give namespace and permissions
+
+#### Parameters
+
+| Name          | Type      | Description                                        | Default    |
+|---------------|-----------|----------------------------------------------------|------------|
+| `namespace`   | str       |                                                    | _required_ |
+| `permissions` | list(str) |                                                    | _required_ |
+| `async_req`   |           | return future instead of results for async support | `False`    |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        |               |
+
+### unshare_array { #tiledb.cloud.array.unshare_array }
+
+`cloud.array.unshare_array(uri, namespace, async_req=False)`
+
+Removes sharing of an array from given namespace
+
+#### Parameters
+
+| Name        | Type   | Description                                        | Default    |
+|-------------|--------|----------------------------------------------------|------------|
+| `namespace` | str    | namespace to remove shared access to the array     | _required_ |
+| `async_req` |        | return future instead of results for async support | `False`    |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        |               |
+
+### update_file_properties { #tiledb.cloud.array.update_file_properties }
+
+`cloud.array.update_file_properties(uri, file_type=None, file_properties=None, async_req=False)`
+
+Update an Array to indicate its a file and has given properties.
+Any properties set are returned with the array info.
+
+#### Parameters
+
+| Name              | Type   | Description                     | Default    |
+|-------------------|--------|---------------------------------|------------|
+| `uri`             | str    | uri of array to update          | _required_ |
+| `file_type`       | str    | file type to set                | `None`     |
+| `file_properties` | dict   | dictionary of properties to set | `None`     |
+
+#### Returns
+
+| Type   | Description   |
+|--------|---------------|
+|        |               |
+
+### update_info { #tiledb.cloud.array.update_info }
+
+`cloud.array.update_info(uri, array_name=None, description=None, access_credentials_name=None, tags=None, async_req=False)`
+
+Update an array's info
+
+#### Parameters
+
+| Name                      | Type   | Description                                                                                | Default    |
+|---------------------------|--------|--------------------------------------------------------------------------------------------|------------|
+| `namespace`               | str    | The username or organization that owns the array. If unset, will use the logged-in user.   | _required_ |
+| `array_name`              | str    | name of array to rename to                                                                 | `None`     |
+| `description`             | str    | optional description                                                                       | `None`     |
+| `access_credentials_name` | str    | The access credentials to use when accessing the backing array. Leave unset to not change. | `None`     |
+| `tags`                    | list   | to update to                                                                               | `None`     |
+| `file_type`               | str    | array represents give file type                                                            | _required_ |
+| `file_properties`         | str    | set file properties on array                                                               | _required_ |
+| `async_req`               |        | return future instead of results for async support                                         | `False`    |

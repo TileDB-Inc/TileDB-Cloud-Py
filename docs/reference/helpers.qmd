@@ -1,0 +1,29 @@
+# helpers { #tiledb.cloud.bioimg.helpers }
+
+`cloud.bioimg.helpers`
+
+
+
+## Functions
+
+| Name | Description |
+| --- | --- |
+| [get_logger_wrapper](#tiledb.cloud.bioimg.helpers.get_logger_wrapper) | Get a logger instance and log version information. |
+
+### get_logger_wrapper { #tiledb.cloud.bioimg.helpers.get_logger_wrapper }
+
+`cloud.bioimg.helpers.get_logger_wrapper(verbose=False)`
+
+Get a logger instance and log version information.
+
+#### Parameters
+
+| Name      | Type   | Description                        | Default   |
+|-----------|--------|------------------------------------|-----------|
+| `verbose` | bool   | verbose logging, defaults to False | `False`   |
+
+#### Returns
+
+| Type           | Description     |
+|----------------|-----------------|
+| logging.Logger | logger instance |

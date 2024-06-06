@@ -1,0 +1,58 @@
+# udfs { #tiledb.cloud.files.udfs }
+
+`cloud.files.udfs`
+
+
+
+## Functions
+
+| Name | Description |
+| --- | --- |
+| [chunk_udf](#tiledb.cloud.files.udfs.chunk_udf) | Flatten and break an iterable into batches of a specified size. |
+| [find_uris_udf](#tiledb.cloud.files.udfs.find_uris_udf) | Find URIs matching a pattern in the `search_uri` path. |
+
+### chunk_udf { #tiledb.cloud.files.udfs.chunk_udf }
+
+`cloud.files.udfs.chunk_udf(items, batch_size=None, flatten_items=False, verbose=False)`
+
+Flatten and break an iterable into batches of a specified size.
+
+#### Parameters
+
+| Name            | Type            | Description                                                             | Default    |
+|-----------------|-----------------|-------------------------------------------------------------------------|------------|
+| `items`         | Sequence\[_T\]  | An iterable to be split into chunks.                                    | _required_ |
+| `batch_size`    | Optional\[int\] | Resulting chunk size, defaults to None.                                 | `None`     |
+| `flatten_items` | bool            | If set to True, it will flatten the `items` iterable, defaults to False | `False`    |
+| `verbose`       | bool            | Verbose logging, defaults to False                                      | `False`    |
+
+#### Returns
+
+| Type                | Description                |
+|---------------------|----------------------------|
+| List\[List\[str\]\] | A list of chunks as lists. |
+
+### find_uris_udf { #tiledb.cloud.files.udfs.find_uris_udf }
+
+`cloud.files.udfs.find_uris_udf(search_uri, *, config=None, include=None, exclude=None, max_files=None, verbose=False)`
+
+Find URIs matching a pattern in the `search_uri` path.
+
+`include` and `exclude` patterns are Unix shell style (see fnmatch module).
+
+#### Parameters
+
+| Name         | Type                            | Description                                                     | Default    |
+|--------------|---------------------------------|-----------------------------------------------------------------|------------|
+| `search_uri` | str                             | URI to search for files                                         | _required_ |
+| `config`     | Optional\[Mapping\[str, Any\]\] | config dictionary, defaults to None                             | `None`     |
+| `include`    | Optional\[str\]                 | include pattern used in the search, defaults to None            | `None`     |
+| `exclude`    | Optional\[str\]                 | exclude pattern applied to the search results, defaults to None | `None`     |
+| `max_files`  | Optional\[int\]                 | maximum number of URIs returned, defaults to None               | `None`     |
+| `verbose`    | bool                            | verbose logging, defaults to False                              | `False`    |
+
+#### Returns
+
+| Type            | Description   |
+|-----------------|---------------|
+| Sequence\[str\] | list of URIs  |
