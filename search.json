@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "get_started.html",
+    "href": "get_started.html",
+    "title": "Get started with TileDB Cloud for Python",
+    "section": "",
+    "text": "This is a starting guide for the TileDB-Cloud-Py client."
+  },
+  {
+    "objectID": "get_started.html#username-and-password-method",
+    "href": "get_started.html#username-and-password-method",
+    "title": "Get started with TileDB Cloud for Python",
+    "section": "Username and Password method",
+    "text": "Username and Password method\nimport tiledb.cloud\n\ntiledb.cloud.login(\n    host=&lt;tiledb.host&gt;,\n    username=&lt;username&gt;,\n    password=&lt;password&gt;\n)"
+  },
+  {
+    "objectID": "get_started.html#token-method",
+    "href": "get_started.html#token-method",
+    "title": "Get started with TileDB Cloud for Python",
+    "section": "Token method",
+    "text": "Token method\nimport tiledb.cloud\n\ntiledb.cloud.login(\n    host=&lt;tiledb.host&gt;,\n    token=&lt;token&gt;\n)"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Cloud-Py ",
+    "section": "",
+    "text": "Cloud-Py \nWelcome to TileDB’s Cloud Python client. This client offers programmatic access to TileDB Cloud.\n\n\nInstallation\nYou can install the Cloud-Py SDK client as follows:\npip install tiledb-cloud\nWhile the preferred method of running code samples and notebooks in this section is directly within TileDB Cloud (as all dependencies are installed for you), you can run most of the code samples and notebooks in this section locally. To run these code samples and notebooks locally, install the following dependencies:\npip install ipykernel jupyterlab graphviz\npip install tiledb-cloud[all]\nFor Life Science capabilities:\npip install tiledb-cloud[life-sciences]"
+  }
+]
