@@ -105,3 +105,11 @@ venv.bak/
 
 .idea
 src/tiledb/cloud/version.py
+
+# Quarto
+/.quarto/
+reference/
+_site/
+## Quarto interlinks
+objects.json
+_sidebar.yml
