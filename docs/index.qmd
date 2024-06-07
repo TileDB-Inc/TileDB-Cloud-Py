@@ -1,4 +1,4 @@
-# TileDB Cloud Py
+# Cloud-Py <a href="https://github.com/TileDB-Inc/TileDB-Cloud-Py/"><img src="TileDB_logo_primary.png" align="right" height="50"></a>
 
 Welcome to TileDB's Cloud [Python client](https://github.com/TileDB-Inc/TileDB-Cloud-Py/).<br>
 This client offers programmatic access to [TileDB Cloud](https://docs.tiledb.com/cloud).

@@ -3,15 +3,17 @@ project:
   output-dir: _build
 
 website:
-  title: "TileDB-Cloud-Py"
+  # title: "Cloud-Py"
   description: "TileDB's Cloud Client for Python"
   repo-url: https://github.com/TileDB-Inc/TileDB-Cloud-Py/
+  favicon: "t_favicon.png"
   page-navigation: true
   navbar:
     background: light
+    logo: "TileDB_logo_primary.png"
     pinned: true
     left:
-      - text: Get started
+      - text: Get Started
         file: get_started.qmd
       - text: API
         file: reference/index.qmd
@@ -20,7 +22,7 @@ website:
     style: "floating"
     collapse-level: 1
     contents:
-      - API Reference
+      - Cloud-Py
       - section: Cloud Services
         contents:
           - text: "`array`"
