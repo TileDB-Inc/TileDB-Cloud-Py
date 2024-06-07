@@ -1,1 +1,7 @@
 /.quarto/
+_build
+reference
+
+# interlinks
+objects.json
+_sidebar.yml

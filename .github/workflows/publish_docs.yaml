@@ -17,8 +17,6 @@ permissions:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -28,12 +26,18 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docs
+      - name: Install Quartodoc dependencies
+        run: pip install .[docs]
+
+      - name: Qartodoc Build
+        run: quartodoc build --config docs/_quarto.yam
+
+      - name: Render Docs
         uses: quarto-dev/quarto-actions/render@v2
         with:
           path: docs/
 
-      - name: Publish Docs
+      - name: Publish Rendered Docs
         # if: github.event_name == 'release'
         uses: quarto-dev/quarto-actions/publish@v2
         with:
