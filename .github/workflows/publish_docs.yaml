@@ -26,9 +26,22 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install Quartodoc dependencies
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install prerequisites
         run: |
-          pip install quartodoc
+          pip install --upgrade \
+            pip \
+            wheel \
+            setuptools \
+            setuptools-scm
+
+      - name: Install TileDB-Cloud-Py with doc dependencies
+        run: |
+          pip install .[docs]
 
       - name: Qartodoc Build
         run: |
