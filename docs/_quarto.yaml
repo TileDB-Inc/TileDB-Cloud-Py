@@ -1,6 +1,5 @@
 project:
   type: website
-  output-dir: _build
 
 website:
   # title: "Cloud-Py"
