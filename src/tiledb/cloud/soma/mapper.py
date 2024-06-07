@@ -256,7 +256,7 @@ def build_collection_mapper_workflow_graph(
 
     node_outputs = {}
 
-    for _, soma_experiment_uri in soma_experiment_uris.items():
+    for experiment_name, soma_experiment_uri in soma_experiment_uris.items():
         node_output = grf.submit(
             _function_for_node,
             soma_experiment_uri,
@@ -275,7 +275,7 @@ def build_collection_mapper_workflow_graph(
             resource_class=resource_class,
             # Eaten by UDF infra -- won't make it to our callee as kwarg:
             access_credentials_name=access_credentials_name,
-            name=soma_experiment_uri,
+            name=experiment_name,
         )
         logger.info("A: node output is a %s" % type(node_output))
 
