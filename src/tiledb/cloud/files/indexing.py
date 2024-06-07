@@ -258,8 +258,6 @@ def ingest_files(
         Suffixes must include the dot, e.g. ".txt"
     :param max_files: Maximum number of files to include.
     :param text_splitter_kwargs: Arguments for the splitter class.
-    # SentenceTransformersEmbedding params.
-    :param model_name_or_path: Huggingface SentenceTransformer model name or path
     # Index update params.
     :param index_timestamp: Timestamp to add index updates at.
     :param workers: If `embeddings_generation_mode=BATCH` this is the number of
@@ -306,6 +304,7 @@ def ingest_files(
         write of centroids.
     :param partial_index_resources: Resources to request when performing the
         computation of partial indexing.
+    :return str: The resulting TaskGraph's server UUID.
     """
 
     from tiledb.cloud.utilities import run_dag
@@ -393,7 +392,11 @@ def ingest_files(
     )
 
     ingest_files_node.depends_on(create_index_node)
+
+    # Start the indexing process
+    ## graph is waited by default using `run_dag`
     run_dag(graph, debug=verbose)
+    return str(graph.server_graph_uuid)
 
 
 index = as_batch(ingest_files)
