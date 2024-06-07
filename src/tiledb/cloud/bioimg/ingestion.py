@@ -17,6 +17,7 @@ DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-ingestion"
 _SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs", ".ndpi")
 _SUPPORTED_CONVERTERS = ("tiff", "zarr", "osd")
+OOM_EXPRESSION = "asInt(lastRetry.exitCode) != 137"
 
 
 def ingest(
@@ -327,6 +328,9 @@ def ingest(
         retry_strategy=RetryStrategy(
             limit=3,
             retry_policy="Always",
+            # Exclude retries when the last one returns a signal that
+            # container's memory exceeds the memory limit
+            expression=OOM_EXPRESSION,
         ),
     )
 
