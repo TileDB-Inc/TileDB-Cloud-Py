@@ -751,6 +751,34 @@ class DAGBatchModeTest(unittest.TestCase):
         d.wait(600)
         self.assertEqual(d.status, dag.Status.COMPLETED)
 
+    def test_batch_dag_retries_expression(self):
+        expression = "asInt(lastRetry.exitCode) != 137"
+
+        def specific_failure():
+            import os
+            import signal
+
+            # Will return 137
+            os.kill(os.getpid, signal.SIGKILL)
+
+        d = dag.DAG(
+            mode=Mode.BATCH,
+            retry_strategy=models.RetryStrategy(
+                limit=10,
+                retry_policy="Always",
+                expression=expression,
+            ),
+        )
+        d.submit(
+            specific_failure,
+            name="node",
+            resources={"cpu": "1", "memory": "500Mi"},
+        )
+
+        d.compute()
+        d.wait(600)
+        self.assertEqual(len(d.failed_nodes), 1)
+
     def test_batch_dag_deadline(self):
         d = dag.DAG(mode=Mode.BATCH, deadline=20)
         d.submit(
