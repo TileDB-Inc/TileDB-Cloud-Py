@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Get started with TileDB Cloud for Python</title>
+<title>dag.status</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,59 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./t_favicon.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../reference/dag.visualization.html" rel="next">
+<link href="../reference/dag.mode.html" rel="prev">
+<link href="../t_favicon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -111,8 +79,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./TileDB_logo_primary.png" alt="" class="navbar-logo">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../TileDB_logo_primary.png" alt="" class="navbar-logo">
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -122,11 +90,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./get_started.html" aria-current="page"> 
+    <a class="nav-link" href="../get_started.html"> 
 <span class="menu-text">Get Started</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./reference/index.html"> 
+    <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">API</span></a>
   </li>  
 </ul>
@@ -140,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Get started with TileDB Cloud for Python</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reference/dag.dag.html">DAG</a></li><li class="breadcrumb-item"><a href="../reference/dag.status.html"><code>status</code></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -166,85 +134,85 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/array.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/array.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>array</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/asset.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/asset.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>asset</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/client.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/client.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>client</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/cloudarray.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/cloudarray.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>cloudarray</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/config.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/config.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>config</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/file.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/file.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>file</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/groups.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/groups.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>groups</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/invites.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/invites.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>invites</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/notebook.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/notebook.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>notebook</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/pool_manager_wrapper.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/pool_manager_wrapper.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>pool_manager_wrapper</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/tasks.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/tasks.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>tasks</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/tiledb_cloud_error.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/tiledb_cloud_error.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>tiledb_cloud_error</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/udf.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/udf.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>udf</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/utils.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/utils.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>utils</code></span></a>
   </div>
 </li>
@@ -261,19 +229,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/bioimg.exportation.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/bioimg.exportation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>exportation</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/bioimg.helpers.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/bioimg.helpers.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>helpers</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/bioimg.ingestion.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/bioimg.ingestion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>ingestion</code></span></a>
   </div>
 </li>
@@ -290,7 +258,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/compute.delayed.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/compute.delayed.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>delayed</code></span></a>
   </div>
 </li>
@@ -298,34 +266,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
  <span class="menu-text">DAG</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/dag.dag.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/dag.dag.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>dag</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/dag.mode.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/dag.mode.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>mode</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/dag.status.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/dag.status.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><code>status</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/dag.visualization.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/dag.visualization.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>visualization</code></span></a>
   </div>
 </li>
@@ -342,25 +310,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/files.indexing.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/files.indexing.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>indexing</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/files.ingestion.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/files.ingestion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>ingestion</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/files.udfs.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/files.udfs.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>udfs</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/files.utils.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/files.utils.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>utils</code></span></a>
   </div>
 </li>
@@ -377,7 +345,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/geospatial.ingestion.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/geospatial.ingestion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>ingestion</code></span></a>
   </div>
 </li>
@@ -394,13 +362,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/soma.ingest.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/soma.ingest.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>ingest</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/soma.mapper.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/soma.mapper.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>mapper</code></span></a>
   </div>
 </li>
@@ -417,25 +385,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/vcf.allele_frequency.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/vcf.allele_frequency.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>allele_frequency</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/vcf.ingestion.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/vcf.ingestion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>ingestion</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/vcf.query.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/vcf.query.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>query</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/vcf.utils.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/vcf.utils.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>utils</code></span></a>
   </div>
 </li>
@@ -452,13 +420,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/utilities.consolidate.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/utilities.consolidate.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>consolidate</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./reference/utilities.profiler.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/utilities.profiler.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>profiler</code></span></a>
   </div>
 </li>
@@ -473,54 +441,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Get started with TileDB Cloud for Python</h1>
-</div>
 
 
 
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
+<section id="tiledb.cloud.dag.status" class="level1">
+<h1>dag.status</h1>
+<p><code>cloud.dag.status</code></p>
 
 
-</header>
-
-
-<p>This is a starting guide for the TileDB-Cloud-Py client.<br></p>
-<section id="login" class="level1">
-<h1>Login</h1>
-<p>To login programmatically you will need either</p>
-<ul>
-<li>Username and Password <a href="https://cloud.tiledb.com/">of your TileDB account</a>.</li>
-<li>Or an API Token <a href="https://docs.tiledb.com/cloud/how-to/account/create-api-tokens">generated from your TileDB account</a>.</li>
-</ul>
-<section id="username-and-password-method" class="level2">
-<h2 class="anchored" data-anchor-id="username-and-password-method">Username and Password method</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tiledb.cloud</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>tiledb.cloud.login(</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    host<span class="op">=&lt;</span>tiledb.host<span class="op">&gt;</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    username<span class="op">=&lt;</span>username<span class="op">&gt;</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    password<span class="op">=&lt;</span>password<span class="op">&gt;</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="token-method" class="level2">
-<h2 class="anchored" data-anchor-id="token-method">Token method</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tiledb.cloud</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>tiledb.cloud.login(</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    host<span class="op">=&lt;</span>tiledb.host<span class="op">&gt;</span>,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    token<span class="op">=&lt;</span>token<span class="op">&gt;</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -933,6 +861,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../reference/dag.mode.html" class="pagination-link" aria-label="`mode`">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>mode</code></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../reference/dag.visualization.html" class="pagination-link" aria-label="`visualization`">
+        <span class="nav-page-text"><code>visualization</code></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
 </div> <!-- /content -->
 
 

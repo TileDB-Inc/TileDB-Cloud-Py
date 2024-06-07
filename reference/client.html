@@ -1,0 +1,1922 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>client</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../reference/cloudarray.html" rel="next">
+<link href="../reference/asset.html" rel="prev">
+<link href="../t_favicon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../TileDB_logo_primary.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../get_started.html"> 
+<span class="menu-text">Get Started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../reference/index.html"> 
+<span class="menu-text">API</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reference/array.html">Cloud Services</a></li><li class="breadcrumb-item"><a href="../reference/client.html"><code>client</code></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+ <span class="menu-text">Cloud-Py</span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Cloud Services</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/array.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>array</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/asset.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>asset</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/client.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><code>client</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/cloudarray.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>cloudarray</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/config.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>config</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/file.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>file</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/groups.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>groups</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/invites.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>invites</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/notebook.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>notebook</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/pool_manager_wrapper.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>pool_manager_wrapper</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/tasks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>tasks</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/tiledb_cloud_error.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>tiledb_cloud_error</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/udf.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>udf</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/utils.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>utils</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+ <span class="menu-text">Bio-Imaging</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/bioimg.exportation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>exportation</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/bioimg.helpers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>helpers</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/bioimg.ingestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>ingestion</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+ <span class="menu-text">Compute</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/compute.delayed.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>delayed</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+ <span class="menu-text">DAG</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/dag.dag.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>dag</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/dag.mode.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>mode</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/dag.status.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>status</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/dag.visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>visualization</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+ <span class="menu-text">Files</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/files.indexing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>indexing</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/files.ingestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>ingestion</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/files.udfs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>udfs</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/files.utils.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>utils</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+ <span class="menu-text">Geospatial</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/geospatial.ingestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>ingestion</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false">
+ <span class="menu-text">SOMA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/soma.ingest.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>ingest</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/soma.mapper.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>mapper</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false">
+ <span class="menu-text">VCF</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/vcf.allele_frequency.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>allele_frequency</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/vcf.ingestion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>ingestion</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/vcf.query.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>query</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/vcf.utils.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>utils</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false">
+ <span class="menu-text">Utilities</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/utilities.consolidate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>consolidate</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/utilities.profiler.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>profiler</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="tiledb.cloud.client" class="level1">
+<h1>client</h1>
+<p><code>cloud.client</code></p>
+<section id="functions" class="level2">
+<h2 class="anchored" data-anchor-id="functions">Functions</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#tiledb.cloud.client.Config">Config</a></td>
+<td>Builds a tiledb config setting the login parameters that exist for the cloud service</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.client.Ctx">Ctx</a></td>
+<td>Builds a TileDB Context that has the tiledb config parameters</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.client.default_charged_namespace">default_charged_namespace</a></td>
+<td>Returns the namespace :func:<code>default_user</code> charges to by default.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.client.default_user">default_user</a></td>
+<td>Returns the default user to be used.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.client.find_organization_or_user_for_default_charges">find_organization_or_user_for_default_charges</a></td>
+<td>Takes a user model and finds either the first non public organization</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.client.list_arrays">list_arrays</a></td>
+<td>List arrays in a user account</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.client.list_groups">list_groups</a></td>
+<td>List groups owned by a user.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.client.list_public_arrays">list_public_arrays</a></td>
+<td>List public arrays</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.client.list_public_groups">list_public_groups</a></td>
+<td>List public groups owned by a user.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.client.list_shared_arrays">list_shared_arrays</a></td>
+<td>List shared arrays</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.client.list_shared_groups">list_shared_groups</a></td>
+<td>List groups shared by/to specified namespaces.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.client.login">login</a></td>
+<td>Login to cloud service</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.client.organization">organization</a></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.client.organizations">organizations</a></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.client.user_profile">user_profile</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<section id="tiledb.cloud.client.Config" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.Config">Config</h3>
+<p><code>cloud.client.Config(cfg_dict=None)</code></p>
+<p>Builds a tiledb config setting the login parameters that exist for the cloud service</p>
+<section id="returns" class="level4">
+<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>tiledb.Config</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.client.Ctx" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.Ctx">Ctx</h3>
+<p><code>cloud.client.Ctx(config=None)</code></p>
+<p>Builds a TileDB Context that has the tiledb config parameters for tiledb cloud set from stored login</p>
+<section id="returns-1" class="level4">
+<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>tiledb.Ctx</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.client.default_charged_namespace" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.default_charged_namespace">default_charged_namespace</h3>
+<p><code>cloud.client.default_charged_namespace(required_action=None)</code></p>
+<p>Returns the namespace :func:<code>default_user</code> charges to by default.</p>
+<p>If <code>required_action</code> is set then it checks amond the user organizations to find the first one that support this action.</p>
+<section id="parameters" class="level4">
+<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 14%">
+<col style="width: 59%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>required_action</code></td>
+<td>Optional[str]</td>
+<td>a namespace action, must be an enum from rest_api.NamespaceActions</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.client.default_user" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.default_user">default_user</h3>
+<p><code>cloud.client.default_user()</code></p>
+<p>Returns the default user to be used.</p>
+<p>If :data:<code>config.user</code> is set, that is the default user. If unset, we fetch the currently logged-in user with :func:<code>user_profile</code> and store that in :data:<code>config.user</code>.</p>
+</section>
+<section id="tiledb.cloud.client.find_organization_or_user_for_default_charges" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.find_organization_or_user_for_default_charges">find_organization_or_user_for_default_charges</h3>
+<p><code>cloud.client.find_organization_or_user_for_default_charges(user, required_action=None)</code></p>
+<p>Takes a user model and finds either the first non public organization or the user itself</p>
+<section id="parameters-1" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>user</code></td>
+<td>models_v1.User</td>
+<td></td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-2" class="level4">
+<h4 class="anchored" data-anchor-id="returns-2">Returns</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 92%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>str</td>
+<td>namespace name to charge by default (organization or user if not part of any organization)</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.client.list_arrays" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.list_arrays">list_arrays</h3>
+<p><code>cloud.client.list_arrays(namespace=None, permissions=None, tag=None, exclude_tag=None, search=None, file_type=None, exclude_file_type=None, page=None, per_page=None, async_req=False)</code></p>
+<p>List arrays in a user account</p>
+<section id="parameters-2" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 8%">
+<col style="width: 56%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>namespace</code></td>
+<td>str</td>
+<td>list arrays in single namespace</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>permissions</code></td>
+<td>str</td>
+<td>filter arrays for given permissions</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>tag</code></td>
+<td>list</td>
+<td>zero or more tags to filter on</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>exclude_tag</code></td>
+<td>list</td>
+<td>zero or more tags to filter on</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>search</code></td>
+<td>str</td>
+<td>search string</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>file_type</code></td>
+<td>list</td>
+<td>zero or more file_types to filter on</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>exclude_file_type</code></td>
+<td>list</td>
+<td>zero or more file_types to filter on</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>page</code></td>
+<td>int</td>
+<td>optional page for pagination</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>per_page</code></td>
+<td>int</td>
+<td>optional per_page for pagination</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>async_req</code></td>
+<td></td>
+<td>return future instead of results for async support</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-3" class="level4">
+<h4 class="anchored" data-anchor-id="returns-3">Returns</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 90%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>list of all array metadata you have access to that meet the filter applied</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.client.list_groups" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.list_groups">list_groups</h3>
+<p><code>cloud.client.list_groups(namespace=None, permission=None, group_type=None, tag=None, exclude_tag=None, search=None, flat=True, parent=None, page=None, per_page=None, async_req=False)</code></p>
+<p>List groups owned by a user.</p>
+<section id="parameters-3" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 22%">
+<col style="width: 60%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>namespace</code></td>
+<td>Optional[str]</td>
+<td>The namespace whose owned groups should be returned.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>permissions</code></td>
+<td></td>
+<td>Filter arrays for the given permission.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td><code>group_type</code></td>
+<td>Optional[str]</td>
+<td>If provided, return only groups of the given type.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>tag</code></td>
+<td>Union[str, Sequence[str], None]</td>
+<td>If provided, include groups matching the given tags.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>exclude_tag</code></td>
+<td>Union[str, Sequence[str], None]</td>
+<td>If provided, exclude groups matching the given tags.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>search</code></td>
+<td>Optional[str]</td>
+<td>A search string.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>flat</code></td>
+<td>bool</td>
+<td>If false (the default), return only “top-level” groups (i.e., no sub-groups within other groups).</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td><code>parent</code></td>
+<td>Union[None, str, uuid.UUID]</td>
+<td>If provided, only show the children of the group with the given ID.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>page</code></td>
+<td>Optional[int]</td>
+<td>For pagination, which page to return (1-based).</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>per_page</code></td>
+<td>Optional[int]</td>
+<td>For pagination, how many elements to return on a page.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>async_req</code></td>
+<td>bool</td>
+<td>Run this asynchronously; return a Future of results.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.client.list_public_arrays" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.list_public_arrays">list_public_arrays</h3>
+<p><code>cloud.client.list_public_arrays(namespace=None, permissions=None, tag=None, exclude_tag=None, search=None, file_type=None, exclude_file_type=None, page=None, per_page=None, async_req=False)</code></p>
+<p>List public arrays</p>
+<section id="parameters-4" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 8%">
+<col style="width: 56%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>namespace</code></td>
+<td>str</td>
+<td>list arrays in single namespace</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>permissions</code></td>
+<td>str</td>
+<td>filter arrays for given permissions</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>tag</code></td>
+<td>list</td>
+<td>zero or more tags to filter on</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>exclude_tag</code></td>
+<td>list</td>
+<td>zero or more tags to filter on</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>search</code></td>
+<td>str</td>
+<td>search string</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>file_type</code></td>
+<td>list</td>
+<td>zero or more file_types to filter on</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>exclude_file_type</code></td>
+<td>list</td>
+<td>zero or more file_types to filter on</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>page</code></td>
+<td>int</td>
+<td>optional page for pagination</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>per_page</code></td>
+<td>int</td>
+<td>optional per_page for pagination</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>async_req</code></td>
+<td></td>
+<td>return future instead of results for async support</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-4" class="level4">
+<h4 class="anchored" data-anchor-id="returns-4">Returns</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 90%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>list of all array metadata you have access to that meet the filter applied</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.client.list_public_groups" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.list_public_groups">list_public_groups</h3>
+<p><code>cloud.client.list_public_groups(namespace=None, permission=None, group_type=None, tag=None, exclude_tag=None, search=None, flat=True, parent=None, page=None, per_page=None, async_req=False)</code></p>
+<p>List public groups owned by a user.</p>
+<section id="parameters-5" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-5">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 22%">
+<col style="width: 60%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>namespace</code></td>
+<td>Optional[str]</td>
+<td>The namespace whose owned groups should be returned.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>permissions</code></td>
+<td></td>
+<td>Filter arrays for the given permission.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td><code>group_type</code></td>
+<td>Optional[str]</td>
+<td>If provided, return only groups of the given type.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>tag</code></td>
+<td>Union[str, Sequence[str], None]</td>
+<td>If provided, include groups matching the given tags.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>exclude_tag</code></td>
+<td>Union[str, Sequence[str], None]</td>
+<td>If provided, exclude groups matching the given tags.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>search</code></td>
+<td>Optional[str]</td>
+<td>A search string.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>flat</code></td>
+<td>bool</td>
+<td>If false (the default), return only “top-level” groups (i.e., no sub-groups within other groups).</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td><code>parent</code></td>
+<td>Union[None, str, uuid.UUID]</td>
+<td>If provided, only show the children of the group with the given ID.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>page</code></td>
+<td>Optional[int]</td>
+<td>For pagination, which page to return (1-based).</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>per_page</code></td>
+<td>Optional[int]</td>
+<td>For pagination, how many elements to return on a page.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>async_req</code></td>
+<td>bool</td>
+<td>Run this asynchronously; return a Future of results.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.client.list_shared_arrays" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.list_shared_arrays">list_shared_arrays</h3>
+<p><code>cloud.client.list_shared_arrays(namespace=None, permissions=None, tag=None, exclude_tag=None, search=None, file_type=None, exclude_file_type=None, page=None, per_page=None, async_req=False)</code></p>
+<p>List shared arrays</p>
+<section id="parameters-6" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-6">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 8%">
+<col style="width: 56%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>namespace</code></td>
+<td>str</td>
+<td>list arrays in single namespace</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>permissions</code></td>
+<td>str</td>
+<td>filter arrays for given permissions</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>tag</code></td>
+<td>list</td>
+<td>zero or more tags to filter on</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>exclude_tag</code></td>
+<td>list</td>
+<td>zero or more tags to filter on</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>search</code></td>
+<td>str</td>
+<td>search string</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>file_type</code></td>
+<td>list</td>
+<td>zero or more file_types to filter on</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>exclude_file_type</code></td>
+<td>list</td>
+<td>zero or more file_types to filter on</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>page</code></td>
+<td>int</td>
+<td>optional page for pagination</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>per_page</code></td>
+<td>int</td>
+<td>optional per_page for pagination</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>async_req</code></td>
+<td></td>
+<td>return future instead of results for async support</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-5" class="level4">
+<h4 class="anchored" data-anchor-id="returns-5">Returns</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 90%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>list of all array metadata you have access to that meet the filter applied</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.client.list_shared_groups" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.list_shared_groups">list_shared_groups</h3>
+<p><code>cloud.client.list_shared_groups(namespace=None, shared_to=None, permission=None, group_type=None, tag=None, exclude_tag=None, search=None, flat=True, parent=None, page=None, per_page=None, async_req=False)</code></p>
+<p>List groups shared by/to specified namespaces.</p>
+<section id="parameters-7" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-7">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 22%">
+<col style="width: 60%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>namespace</code></td>
+<td>Optional[str]</td>
+<td>The namespace whose owned groups should be returned.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>shared_to</code></td>
+<td>Optional[str]</td>
+<td>A target, to return groups shared to this namespace.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>permissions</code></td>
+<td></td>
+<td>Filter arrays for the given permission.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>group_type</code></td>
+<td>Optional[str]</td>
+<td>If provided, return only groups of the given type.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>tag</code></td>
+<td>Union[str, Sequence[str], None]</td>
+<td>If provided, include groups matching the given tags.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>exclude_tag</code></td>
+<td>Union[str, Sequence[str], None]</td>
+<td>If provided, exclude groups matching the given tags.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>search</code></td>
+<td>Optional[str]</td>
+<td>A search string.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>flat</code></td>
+<td>bool</td>
+<td>If false (the default), return only “top-level” groups (i.e., no sub-groups within other groups).</td>
+<td><code>True</code></td>
+</tr>
+<tr class="odd">
+<td><code>parent</code></td>
+<td>Union[None, str, uuid.UUID]</td>
+<td>If provided, only show the children of the group with the given ID.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>page</code></td>
+<td>Optional[int]</td>
+<td>For pagination, which page to return (1-based).</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>per_page</code></td>
+<td>Optional[int]</td>
+<td>For pagination, how many elements to return on a page.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>async_req</code></td>
+<td>bool</td>
+<td>Run this asynchronously; return a Future of results.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.client.login" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.login">login</h3>
+<p><code>cloud.client.login(token=None, username=None, password=None, host=None, verify_ssl=None, no_session=False, threads=None)</code></p>
+<p>Login to cloud service</p>
+<section id="parameters-8" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-8">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 7%">
+<col style="width: 68%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>token</code></td>
+<td></td>
+<td>api token for login</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>username</code></td>
+<td></td>
+<td>username for login</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>password</code></td>
+<td></td>
+<td>password for login</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>host</code></td>
+<td></td>
+<td>host to login to</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>verify_ssl</code></td>
+<td></td>
+<td>Enable strict SSL verification</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>no_session</code></td>
+<td></td>
+<td>don’t create a session token on login, store instead username/password</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>threads</code></td>
+<td></td>
+<td>number of threads to enable for concurrent requests</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-6" class="level4">
+<h4 class="anchored" data-anchor-id="returns-6">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.client.organization" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.organization">organization</h3>
+<p><code>cloud.client.organization(organization, async_req=False)</code></p>
+<section id="parameters-9" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-9">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 9%">
+<col style="width: 59%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>organization</code></td>
+<td>str</td>
+<td>organization to fetct</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>async_req</code></td>
+<td></td>
+<td>return future instead of results for async support</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-7" class="level4">
+<h4 class="anchored" data-anchor-id="returns-7">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>details about organization</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.client.organizations" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.organizations">organizations</h3>
+<p><code>cloud.client.organizations(async_req=False)</code></p>
+<section id="parameters-10" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-10">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 9%">
+<col style="width: 61%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>async_req</code></td>
+<td></td>
+<td>return future instead of results for async support</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-8" class="level4">
+<h4 class="anchored" data-anchor-id="returns-8">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>list of all organizations user is part of</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.client.user_profile" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.client.user_profile">user_profile</h3>
+<p><code>cloud.client.user_profile(async_req=False)</code></p>
+<section id="parameters-11" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-11">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 9%">
+<col style="width: 61%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>async_req</code></td>
+<td></td>
+<td>return future instead of results for async support</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-9" class="level4">
+<h4 class="anchored" data-anchor-id="returns-9">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>your user profile</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../reference/asset.html" class="pagination-link" aria-label="`asset`">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>asset</code></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../reference/cloudarray.html" class="pagination-link" aria-label="`cloudarray`">
+        <span class="nav-page-text"><code>cloudarray</code></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
