@@ -52,8 +52,9 @@ jobs:
         with:
           path: docs/
 
+      # Publish Docs only when a new release is created
       - name: Publish Rendered Docs
-        # if: github.event_name == 'release'
+        if: github.event_name == 'release'
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
@@ -61,9 +62,3 @@ jobs:
           render: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # uses: peaceiris/actions-gh-pages@v3
-        # with:
-        #   github_token: ${{ secrets.GITHUB_TOKEN }}
-        #   publish_dir: ./docs/_build
-        #   publish_branch: gh-pages
-        #   force_orphan: true
