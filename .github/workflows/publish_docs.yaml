@@ -7,6 +7,8 @@ on:
     branches:
       - main
   release:
+    types:
+      - created
 
 permissions:
   contents: write
@@ -33,9 +35,16 @@ jobs:
 
       - name: Publish Docs
         # if: github.event_name == 'release'
-        uses: peaceiris/actions-gh-pages@v3
+        uses: quarto-dev/quarto-actions/publish@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/_build
-          publish_branch: gh-pages
-          force_orphan: true
+          target: gh-pages
+          path: docs/
+          render: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # uses: peaceiris/actions-gh-pages@v3
+        # with:
+        #   github_token: ${{ secrets.GITHUB_TOKEN }}
+        #   publish_dir: ./docs/_build
+        #   publish_branch: gh-pages
+        #   force_orphan: true
