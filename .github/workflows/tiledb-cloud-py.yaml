@@ -129,16 +129,19 @@ jobs:
         # Test pinned dependencies on commit / tag and fresh installs on nightlies
         if: (matrix.dependencies == 'fresh') == (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         run: |
-          .github/scripts/retry 3 \
-            pytest -sv \
-            --last-failed \
+          pytest -sv \
             --tb short \
             --color yes \
             --splits ${{ env.PYTEST_SPLIT_GROUPS }} \
             --group ${{ matrix.pytest-split-group }} \
             --store-durations \
             --splitting-algorithm least_duration \
-            --clean-durations
+            --clean-durations \
+          || .github/scripts/retry 2 \
+            pytest -sv \
+            --last-failed \
+            --tb short \
+            --color yes
         env:
           TILEDB_REST_TOKEN: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
 
