@@ -477,6 +477,10 @@ ul.task-list li input[type="checkbox"] {
 <td><a href="#tiledb.cloud.files.utils.sanitize_filename">sanitize_filename</a></td>
 <td>Sanitizes a filename by removing invalid characters.</td>
 </tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.files.utils.upload_file">upload_file</a></td>
+<td>Uploads a file to TileDB Cloud.</td>
+</tr>
 </tbody>
 </table>
 <section id="tiledb.cloud.files.utils.basename_match" class="level3">
@@ -789,6 +793,79 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td>str</td>
 <td>The sanitized string</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.files.utils.upload_file" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.files.utils.upload_file">upload_file</h3>
+<p><code>cloud.files.utils.upload_file(input_uri, output_uri, *, filename=None, content_type='application/octet-stream', access_credentials_name=None)</code></p>
+<p>Uploads a file to TileDB Cloud.</p>
+<section id="parameters-5" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-5">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 8%">
+<col style="width: 62%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>input_uri</code></td>
+<td>str</td>
+<td>The URI or path of the input file. May be an ordinary path or any URI accessible via TileDB VFS.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>output_uri</code></td>
+<td>str</td>
+<td>The TileDB URI to write the file to.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td><code>filename</code></td>
+<td>Optional[str]</td>
+<td>If present, the value to store as the original filename.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>content_type</code></td>
+<td>str</td>
+<td>The MIME type of the file.</td>
+<td><code>'application/octet-stream'</code></td>
+</tr>
+<tr class="odd">
+<td><code>access_credentials_name</code></td>
+<td>Optional[str]</td>
+<td>If present, the name of the credentials to use when writing the uploaded file to backend storage instead of the defaults.</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-5" class="level4">
+<h4 class="anchored" data-anchor-id="returns-5">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>str</td>
+<td>The <code>tiledb://</code> URI of the uploaded file.</td>
 </tr>
 </tbody>
 </table>
