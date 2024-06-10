@@ -164,6 +164,9 @@ def run_ingest_workflow_udf(
     on the client.
     """
 
+    # For more information on "that does not work correctly on the client" please see
+    # https://github.com/TileDB-Inc/TileDB-Cloud-Py/pull/512
+
     logger = get_logger_wrapper(level=logging_level)
     logger.debug("ENUMERATOR ENTER")
     logger.debug("ENUMERATOR INPUT_URI  %s", input_uri)
