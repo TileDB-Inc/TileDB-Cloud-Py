@@ -4,13 +4,6 @@ from typing import Optional, Tuple, Union
 from tiledb.cloud.files import utils
 from tiledb.cloud.rest_api import models
 
-warning(
-    DeprecationWarning(
-        "Module `file` will be deprecated from version 0.12.15 onwards. "
-        "Use `tiledb.cloud.files.utils` instead."
-    ),
-)
-
 
 def create_file(
     namespace: str,
