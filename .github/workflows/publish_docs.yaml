@@ -1,0 +1,64 @@
+name: Build Documentation
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - created
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install prerequisites
+        run: |
+          pip install --upgrade \
+            pip \
+            wheel \
+            setuptools \
+            setuptools-scm
+
+      - name: Install TileDB-Cloud-Py with doc dependencies
+        run: |
+          pip install .[docs]
+
+      - name: Qartodoc Build
+        run: |
+          quartodoc build --config docs/_quarto.yaml
+
+      - name: Render Docs
+        uses: quarto-dev/quarto-actions/render@v2
+        with:
+          path: docs/
+
+      # Publish Docs only when a new release is created
+      - name: Publish Rendered Docs
+        if: github.event_name == 'release'
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+          path: docs/
+          render: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
