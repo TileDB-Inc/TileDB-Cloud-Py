@@ -184,6 +184,7 @@ def test_vcf_iaf():
 def test_vcf_zygosity_value():
     from tiledb.cloud.vcf.vcf_toolbox.annotate import zygosity
 
+    assert zygosity(np.array([])) == "MISSING"
     assert zygosity(np.array([0])) == "HOM_REF"
     assert zygosity(np.array([1])) == "HEMI"
     assert zygosity(np.array([2])) == "HEMI"
@@ -192,7 +193,7 @@ def test_vcf_zygosity_value():
     assert zygosity(np.array([1, 0])) == "HET"
     assert zygosity(np.array([2, 0])) == "HET"
     assert zygosity(np.array([1, 1])) == "HOM_ALT"
-    assert zygosity(np.array([1, 2])) == "HOM_ALT"
+    assert zygosity(np.array([1, 2])) == "HET"
     assert zygosity(np.array([2, 2])) == "HOM_ALT"
-    assert zygosity(np.array([-1, -1])) == "UNKNOWN"
-    assert zygosity(np.array([1, 2, 3])) == "1,2,3"
+    assert zygosity(np.array([-1, -1])) == "MISSING"
+    assert zygosity(np.array([1, 2, 3])) == "HET"
