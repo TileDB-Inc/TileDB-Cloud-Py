@@ -64,20 +64,23 @@ def zygosity(gt: np.ndarray) -> str:
     :return: zygosity string
     """
     gt = list(gt)
+
+    # All genotypes are missing
+    if len(gt) == 0 or all(allele == -1 for allele in gt):
+        return "MISSING"
+
+    # One allele
     if len(gt) == 1:
         if gt[0] == 0:
             return "HOM_REF"
         return "HEMI"
-    if len(gt) == 2:
-        if gt == [0, 0]:
-            return "HOM_REF"
-        if gt[0] == 0 or gt[1] == 0:
-            return "HET"
-        if gt[0] > 0 and gt[1] > 0:
-            return "HOM_ALT"
-        return "UNKNOWN"
 
-    return ",".join(map(str, gt))
+    # More than one allele
+    if all(allele == 0 for allele in gt):
+        return "HOM_REF"
+    if all(allele == gt[0] for allele in gt):
+        return "HOM_ALT"
+    return "HET"
 
 
 def _annotate(
