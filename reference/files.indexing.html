@@ -596,152 +596,163 @@ ul.task-list li input[type="checkbox"] {
 <tr class="even">
 <td><code>text_splitter_kwargs</code></td>
 <td>Optional[Dict]</td>
-<td>Arguments for the splitter class. # SentenceTransformersEmbedding params.</td>
+<td>Arguments for the splitter class. # Index update params.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
-<td><code>model_name_or_path</code></td>
-<td></td>
-<td>Huggingface SentenceTransformer model name or path # Index update params.</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
 <td><code>index_timestamp</code></td>
 <td>Optional[int]</td>
 <td>Timestamp to add index updates at.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>workers</code></td>
 <td>int</td>
 <td>If <code>embeddings_generation_mode=BATCH</code> this is the number of distributed workers to be used.</td>
 <td><code>-1</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>worker_resources</code></td>
 <td>Optional[Dict]</td>
 <td>If <code>embeddings_generation_mode=BATCH</code> this can be used to specify the worker resources.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>worker_image</code></td>
 <td>Optional[str]</td>
 <td>If <code>embeddings_generation_mode=BATCH</code> this can be used to specify the worker Docker image.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>extra_worker_modules</code></td>
 <td>Optional[List[str]]</td>
 <td>If <code>embeddings_generation_mode=BATCH</code> this can be used to install extra pip package to the image.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>driver_resources</code></td>
 <td>Optional[Dict]</td>
 <td>If <code>embeddings_generation_driver_mode=BATCH</code> this can be used to specify the driver resources.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>driver_image</code></td>
 <td>Optional[str]</td>
 <td>If <code>embeddings_generation_driver_mode=BATCH</code> this can be used to specify the driver Docker image.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>extra_driver_modules</code></td>
 <td>Optional[List[str]]</td>
 <td>If <code>embeddings_generation_driver_mode=BATCH</code> this can be used to install extra pip package to the image.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>max_tasks_per_stage</code></td>
 <td>int</td>
 <td>Number of maximum udf tasks per computation stage.</td>
 <td><code>-1</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>embeddings_generation_mode</code></td>
 <td>dag.Mode</td>
 <td>TaskGraph execution mode for embeddings generation.</td>
 <td><code>dag.Mode.BATCH</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>embeddings_generation_driver_mode</code></td>
 <td>dag.Mode</td>
 <td>TaskGraph execution mode for the ingestion driver.</td>
 <td><code>dag.Mode.BATCH</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>vector_indexing_mode</code></td>
 <td>dag.Mode</td>
 <td>TaskGraph execution mode for the vector indexing.</td>
 <td><code>dag.Mode.BATCH</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>index_update_kwargs</code></td>
 <td>Optional[Dict]</td>
 <td>Extra arguments to pass to the index update job. These can be any of the documented tiledb.vector_search.ingest method with the exception of BATCH Embedding Resources (see next params): https://tiledb-inc.github.io/TileDB-Vector-Search/documentation/reference/ingestion.html#tiledb.vector_search.ingestion.ingest Also <code>files_per_partition: int</code> can be included (defaults to -1) ## Vector Search BATCH Embedding Resources ## These are only applicable if indexing update is executed in BATCH mode.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>threads</code></td>
 <td>str</td>
 <td>Threads to be used in the Nodes, defaults to 16.</td>
 <td><code>'16'</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>ingest_resources</code></td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing vector ingestion.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>consolidate_partition_resources</code></td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing consolidation of a partition.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>copy_centroids_resources</code></td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing copy of centroids from input array to output array.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>random_sample_resources</code></td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing random sample selection.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>kmeans_resources</code></td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing kmeans task.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>compute_new_centroids_resources</code></td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing centroid computation.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>assign_points_and_partial_new_centroids_resources</code></td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing the computation of partial centroids.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>write_centroids_resources</code></td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing the write of centroids.</td>
 <td><code>None</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>partial_index_resources</code></td>
 <td>Optional[Dict]</td>
 <td>Resources to request when performing the computation of partial indexing.</td>
 <td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns" class="level4">
+<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>The resulting TaskGraph’s server UUID.</td>
 </tr>
 </tbody>
 </table>
