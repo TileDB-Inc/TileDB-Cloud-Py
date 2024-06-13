@@ -41,6 +41,8 @@ class TestSOMAIngestion(unittest.TestCase):
         self.assertEqual(array_info.namespace, self.namespace)
         tiledb.cloud.array.delete_array(array_uri)
 
+    # TODO: Allow test to run when VFS access is enabled
+    @unittest.skip("Fails until unittest user obtains VFS access.")
     def test_ingest_h5ad_dry_run(self):
         with self.assertLogs(level=logging.INFO) as lg:
             tiledb.cloud.soma.ingest_h5ad(
