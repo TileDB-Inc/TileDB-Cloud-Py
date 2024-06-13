@@ -1,3 +1,4 @@
+import logging
 import sys
 import unittest
 
@@ -5,7 +6,43 @@ import tiledb.cloud
 import tiledb.cloud.soma
 
 
-class SOMAMapperTest(unittest.TestCase):
+class TestSOMAIngestion(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.test_file_path = "s3://tiledb-unittest/soma-ingestion-test/pbmc3k.h5ad"
+
+        (
+            cls.namespace,
+            cls.storage_path,
+            cls.acn,
+        ) = tiledb.cloud.groups._default_ns_path_cred()
+        cls.namespace = cls.namespace.rstrip("/")
+        cls.storage_path = cls.storage_path.rstrip("/")
+        cls.array_name = tiledb.cloud._common.testonly.random_name("soma-test")
+        cls.destination = (
+            f"tiledb://{cls.namespace}/{cls.storage_path}/{cls.array_name}"
+        )
+
+        return super().setUpClass()
+
+    def test_ingest_workflow(self):
+        tiledb.cloud.soma.run_ingest_workflow(
+            output_uri=self.destination,
+            input_uri=self.test_file_path,
+            measurement_name="RNA",
+            namespace=self.namespace,
+            access_credentials_name=self.acn,
+            logging_level=logging.DEBUG,
+        )
+
+        array_uri = f"tiledb://{self.namespace}/{self.array_name}"
+        array_info = tiledb.cloud.array.info(array_uri)
+        self.assertEqual(array_info.name, self.array_name)
+        self.assertEqual(array_info.namespace, self.namespace)
+        tiledb.cloud.array.delete_array(array_uri)
+
+
+class TestSOMAMapper(unittest.TestCase):
     def __init__(self, foo):
         super().__init__(foo)
         self.maxDiff = None
