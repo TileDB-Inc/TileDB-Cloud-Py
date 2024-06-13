@@ -30,8 +30,6 @@ class TestSOMAIngestion(unittest.TestCase):
             output_uri=self.destination,
             input_uri=self.test_file_path,
             measurement_name="RNA",
-            namespace=self.namespace,
-            access_credentials_name=self.acn,
             logging_level=logging.DEBUG,
         )
 
