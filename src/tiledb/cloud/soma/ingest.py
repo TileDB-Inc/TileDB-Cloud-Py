@@ -147,9 +147,9 @@ def ingest_h5ad(
     output_uri: str,
     input_uri: str,
     measurement_name: str,
-    extra_tiledb_config: Optional[Dict[str, object]],
-    platform_config: Optional[Dict[str, object]],
-    ingest_mode: str,
+    extra_tiledb_config: Optional[Dict[str, object]] = None,
+    platform_config: Optional[Dict[str, object]] = None,
+    ingest_mode: str = "write",
     logging_level: int = logging.INFO,
     dry_run: bool = False,
 ) -> None:
