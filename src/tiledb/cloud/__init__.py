@@ -7,7 +7,6 @@ from . import dag
 from . import file
 from . import files
 from . import groups
-from . import soma
 from . import sql
 from . import udf
 from ._common import pickle_compat as _pickle_compat
@@ -60,7 +59,6 @@ __all__ = (
     "file",
     "files",
     "groups",
-    "soma",
     "sql",
     "udf",
     "array_activity",

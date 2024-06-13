@@ -25,6 +25,8 @@ class TestSOMAIngestion(unittest.TestCase):
 
         return super().setUpClass()
 
+    # TODO: Allow test to run when VFS access is enabled
+    @unittest.skip("Fails until unittest user obtains VFS access.")
     def test_ingest_h5ad(self):
         tiledb.cloud.soma.ingest_h5ad(
             output_uri=self.destination,
@@ -38,6 +40,19 @@ class TestSOMAIngestion(unittest.TestCase):
         self.assertEqual(array_info.name, self.array_name)
         self.assertEqual(array_info.namespace, self.namespace)
         tiledb.cloud.array.delete_array(array_uri)
+
+    def test_ingest_h5ad_dry_run(self):
+        with self.assertLogs(level=logging.INFO) as lg:
+            tiledb.cloud.soma.ingest_h5ad(
+                output_uri=self.destination,
+                input_uri=self.test_file_path,
+                measurement_name="RNA",
+                logging_level=logging.DEBUG,
+                dry_run=True,
+            )
+            self.assertEqual(
+                f"Dry run for {self.test_file_path} to {self.destination}", lg.output[0]
+            )
 
 
 class TestSOMAMapper(unittest.TestCase):
