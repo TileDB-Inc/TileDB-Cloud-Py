@@ -25,8 +25,8 @@ class TestSOMAIngestion(unittest.TestCase):
 
         return super().setUpClass()
 
-    def test_ingest_workflow(self):
-        tiledb.cloud.soma.run_ingest_workflow(
+    def test_ingest_h5ad(self):
+        tiledb.cloud.soma.ingest_h5ad(
             output_uri=self.destination,
             input_uri=self.test_file_path,
             measurement_name="RNA",
