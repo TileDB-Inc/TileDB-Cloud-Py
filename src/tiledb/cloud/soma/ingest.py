@@ -1,8 +1,11 @@
 import logging
-import os
 import re
+from os.path import basename
+from os.path import splitext
 from typing import ContextManager, Dict, Optional
 from unittest import mock
+
+from tiledbsoma._types import IngestMode
 
 import tiledb
 from tiledb.cloud import dag
@@ -21,7 +24,10 @@ def run_ingest_workflow(
     pattern: Optional[str] = None,
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
-    ingest_mode: str = "write",
+    ingest_mode: IngestMode = "write",
+    obs_field_name: str = "obs_id",
+    var_field_name: str = "var_id",
+    appending: bool = False,
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
@@ -52,11 +58,15 @@ def run_ingest_workflow(
         if any.
     :param ingest_mode: One of the ingest modes supported by
         ``tiledbsoma.io.read_h5ad``.
+    :param obs_field_name: The name of the field in the H5AD file to use as the obs ID.
+    :param var_field_name: The name of the field in the H5AD file to use as the var ID.
+    :param appending: TBD WRITE ME PLEASE
     :param resources: A specification for the amount of resources to provide
         to the UDF executing the ingestion process, to override the default.
     :param namespace: An alternate namespace to run the ingestion process under.
     :param access_credentials_name: If provided, the name of the credentials
         to pass to the executing UDF.
+    :param logging_level: The logging level to use for the ingestion process.
     :param dry_run: If provided and set to ``True``, does the input-path
         traversals without ingesting data.
     :return: A dictionary of ``{"status": "started", "graph_id": ...}``,
@@ -72,6 +82,9 @@ def run_ingest_workflow(
         extra_tiledb_config=extra_tiledb_config,
         platform_config=platform_config,
         ingest_mode=ingest_mode,
+        obs_field_name=obs_field_name,
+        var_field_name=var_field_name,
+        appending=appending,
         resources=resources,
         namespace=namespace,
         access_credentials_name=access_credentials_name,
@@ -99,7 +112,10 @@ def build_ingest_workflow_graph(
     pattern: Optional[str] = None,
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
-    ingest_mode: str = "write",
+    ingest_mode: IngestMode = "write",
+    obs_field_name: str = "obs_id",
+    var_field_name: str = "var_id",
+    appending: bool = False,
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     access_credentials_name: Optional[str] = None,
@@ -110,7 +126,6 @@ def build_ingest_workflow_graph(
     Same signature as ``run_ingest_workflow``, but returns the graph object
     directly.
     """
-
     grf = dag.DAG(
         name="ingest-h5ad-launcher",
         mode=dag.Mode.BATCH,
@@ -125,6 +140,9 @@ def build_ingest_workflow_graph(
         extra_tiledb_config=extra_tiledb_config,
         platform_config=platform_config,
         ingest_mode=ingest_mode,
+        obs_field_name=obs_field_name,
+        var_field_name=var_field_name,
+        appending=appending,
         resources=resources,
         namespace=namespace,
         access_credentials_name=access_credentials_name,
@@ -151,10 +169,11 @@ def run_ingest_workflow_udf(
     pattern: Optional[str] = None,
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
-    ingest_mode: str = "write",
-    resources: Optional[Dict[str, object]] = None,
+    ingest_mode: IngestMode = "write",
+    obs_field_name: str = "obs_id",
+    var_field_name: str = "var_id",
+    appending: bool = False,
     namespace: Optional[str] = None,
-    access_credentials_name: Optional[str] = None,
     logging_level: int = logging.INFO,
     dry_run: bool = False,
 ) -> Dict[str, str]:
@@ -163,6 +182,7 @@ def run_ingest_workflow_udf(
     can we do VFS with access_credentials_name -- that does not work correctly
     on the client.
     """
+    import tiledbsoma.io
 
     # For more information on "that does not work correctly on the client" please see
     # https://github.com/TileDB-Inc/TileDB-Cloud-Py/pull/512
@@ -175,10 +195,21 @@ def run_ingest_workflow_udf(
 
     vfs = tiledb.VFS(config=extra_tiledb_config)
 
+    # xxx appending ...
+
     if vfs.is_file(input_uri):
         logger.debug("ENUMERATOR VFS.IS_FILE")
 
         name = ("dry-run" if dry_run else "ingest") + "-h5ad-file"
+        registration_mapping = None
+        if appending:
+            registration_mapping = tiledbsoma.io.register_h5ads(
+                experiment_uri=output_uri,
+                h5ad_file_names=[input_uri],
+                measurement_name=measurement_name,
+                obs_field_name=obs_field_name,
+                var_field_name=var_field_name,
+            )
 
         grf = dag.DAG(
             name=name,
@@ -192,6 +223,9 @@ def run_ingest_workflow_udf(
             measurement_name=measurement_name,
             extra_tiledb_config=extra_tiledb_config,
             ingest_mode=ingest_mode,
+            obs_id_name=obs_field_name,
+            var_id_name=var_field_name,
+            registration_mapping=registration_mapping,
             platform_config=platform_config,
             resources=carry_along["resources"],
             access_credentials_name=carry_along["access_credentials_name"],
@@ -218,28 +252,42 @@ def run_ingest_workflow_udf(
             output_uri=output_uri,
         )
 
+        input_paths = []
         for entry_input_uri in vfs.ls(input_uri):
             logger.debug("ENUMERATOR ENTRY_INPUT_URI=%r", entry_input_uri)
-            base = os.path.basename(entry_input_uri)
-            base, _ = os.path.splitext(base)
-
-            entry_output_uri = output_uri + "/" + base
-            if not output_uri.endswith("/"):
-                entry_output_uri += "/"
-            entry_output_uri += base
-            logger.debug("ENUMERATOR ENTRY_OUTPUT_URI=%r", entry_output_uri)
-
             if pattern is not None and not re.match(pattern, entry_input_uri):
                 logger.debug("ENUMERATOR SKIP NO MATCH ON <<%r>>", pattern)
                 continue
+            input_paths.append(entry_input_uri)
+
+        registration_mapping = None
+        if appending:
+            registration_mapping = tiledbsoma.io.register_h5ads(
+                experiment_uri=output_uri,
+                h5ad_file_names=input_paths,
+                measurement_name=measurement_name,
+                obs_field_name=obs_field_name,
+                var_field_name=var_field_name,
+            )
+
+        for input_path in input_paths:
+            stem, _ = splitext(basename(input_path))
+            entry_output_uri = output_uri + "/" + stem
+            if not output_uri.endswith("/"):
+                entry_output_uri += "/"
+
+            logger.debug("ENUMERATOR ENTRY_OUTPUT_URI=%r", entry_output_uri)
 
             node = grf.submit(
                 _ingest_h5ad_byval,
                 output_uri=entry_output_uri,
-                input_uri=entry_input_uri,
+                input_uri=input_path,
                 measurement_name=measurement_name,
                 extra_tiledb_config=extra_tiledb_config,
                 ingest_mode=ingest_mode,
+                obs_id_name=obs_field_name,
+                var_id_name=var_field_name,
+                registration_mapping=registration_mapping,
                 platform_config=platform_config,
                 resources=carry_along["resources"],
                 access_credentials_name=carry_along["access_credentials_name"],
@@ -274,8 +322,13 @@ def ingest_h5ad(
     measurement_name: str,
     extra_tiledb_config: Optional[Dict[str, object]],
     platform_config: Optional[Dict[str, object]],
-    ingest_mode: str,
+    ingest_mode: IngestMode,
+    obs_id_name: str = "obs_id",
+    var_id_name: str = "var_id",
     logging_level: int = logging.INFO,
+    registration_mapping: Optional[
+        "tiledbsoma.io._registration.ExperimentAmbientLabelMapping"  # noqa: F821
+    ] = None,
     dry_run: bool = False,
 ) -> None:
     """Performs the actual work of ingesting H5AD data into TileDB.
@@ -291,12 +344,16 @@ def ingest_h5ad(
         if any.
     :param ingest_mode: One of the ingest modes supported by
         ``tiledbsoma.io.read_h5ad``.
+    :param obs_id_name: The name of the field in the H5AD file to use as the obs ID.
+    :param var_id_name: The name of the field in the H5AD file to use as the var ID.
+    :param logging_level: The logging level to use for the ingestion process.
+    :param registration_mapping: If provided, precomputed mapping of input obs IDs to
+        output soma_joinid's.
     :param dry_run: If provided and set to ``True``, does the input-path
         traversals without ingesting data.
     """
 
     import anndata
-    import tiledbsoma
     import tiledbsoma.logging
     from tiledbsoma import io
 
@@ -308,7 +365,7 @@ def ingest_h5ad(
     elif logging_level <= logging.INFO:
         tiledbsoma.logging.info()
 
-    # While h5ad supports any file-like object, annndata specifically
+    # While h5ad supports any file-like object, anndata specifically
     # wants only an `os.PathLike` object. The only thing it does with
     # the PathLike is to use it to get the filename.
     class _FSPathWrapper:
@@ -350,6 +407,9 @@ def ingest_h5ad(
             measurement_name=measurement_name,
             context=soma_ctx,
             ingest_mode=ingest_mode,
+            obs_id_name=obs_id_name,
+            var_id_name=var_id_name,
+            registration_mapping=registration_mapping,
             platform_config=platform_config,
         )
     logging.info("Successfully wrote data from %s to %s", input_uri, output_uri)
