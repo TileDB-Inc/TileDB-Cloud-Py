@@ -550,14 +550,26 @@ Delete a registered udf
 """
 
 
-def delete(name, namespace, async_req=False):
+def delete(
+    uri: str = None, *, namespace: str = None, name: str = None, async_req: bool = False
+):
     """
     Deletes a registered udf
-    :param name: name of udf
-    :param namespace: namespace the udf belongs to
-    :param async_req: return future instead of results for async support
+
+    :param uri: TileDB URI of the udf, defaults to None.
+    :param name: name of udf, defaults to None.
+    :param namespace: namespace the udf belongs to, defaults to None.
+    :param async_req: Return future instead of results for async support
     :return: deleted udf details
     """
+    if uri is None and (namespace is None and name is None):
+        raise RuntimeError(
+            "uri or namespace and name must be specified to delete a UDF"
+        )
+
+    if uri is not None:
+        (namespace, name) = utils.split_uri(uri)
+
     try:
         api_instance = client.build(rest_api.UdfApi)
 
@@ -568,6 +580,20 @@ def delete(name, namespace, async_req=False):
         )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
+
+
+def deregister(uri: str, *, async_req: bool = False):
+    """
+    De-registers a registered udf, by de-registering the array that it
+    is registered on.
+    This does not physically delete the array, it will remain in your bucket.
+    All access to the array and cloud metadata will be removed.
+
+    :param uri: TileDB URI of the array.
+    :param async_req: Return future instead of results for async support
+    :return success or error
+    """
+    return array.deregister_array(uri=uri, async_req=async_req)
 
 
 class _StoredParamJSONer(tiledb_json.Encoder):

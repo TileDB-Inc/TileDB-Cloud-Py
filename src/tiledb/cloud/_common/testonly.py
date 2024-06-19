@@ -32,7 +32,7 @@ def register_udf(func: Callable, func_name: Optional[str] = None) -> Iterator[st
     try:
         yield f"{ns}/{func_name}"
     finally:
-        udf.delete(func_name, ns)
+        udf.delete(uri=f"tiledb://{ns}/{func_name}")
 
 
 def random_name(name: str) -> str:
