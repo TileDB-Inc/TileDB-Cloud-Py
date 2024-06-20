@@ -118,6 +118,11 @@ quartodoc:
   package: tiledb.cloud
   title: API Reference
 
+  options:
+    include_classes: true
+    include_functions: true
+    include_attributes: true
+
   sections:
     - title: Cloud Services
       desc: Cloud Interaction Services

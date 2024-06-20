@@ -620,6 +620,13 @@ _RETRY_CONFIGS = {
 
 
 class Client:
+    """
+    TileDB Client.
+
+    :param pool_threads: Number of threads to use for http requests
+    :param retry_mode: Retry mode ["default", "forceful", "disabled"]
+    """
+
     def __init__(
         self,
         pool_threads: Optional[int] = None,
