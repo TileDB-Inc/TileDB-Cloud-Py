@@ -1,6 +1,7 @@
 import base64
 import uuid
 import warnings
+from logging import warning
 from typing import Any, Callable, Iterable, Optional, Union
 
 import cloudpickle
@@ -550,9 +551,23 @@ Delete a registered udf
 """
 
 
-def delete(
+def delete(name: str, namespace: str, async_req: bool = False) -> None:
+    """
+    DEPRECATION WARNING: This method will be replaced by delete_v2
+                         as delete from version 0.12.17 onwards
+    """
+    warning(
+        DeprecationWarning(
+            "This method will be replaced by the `delete_v2` method,",
+            "which will be renamed to `delete` from version 0.12.17.",
+        ),
+    )
+    delete_v2(name=name, namespace=namespace, async_req=async_req)
+
+
+def delete_v2(
     uri: str = None, *, namespace: str = None, name: str = None, async_req: bool = False
-):
+) -> None:
     """
     Deletes a registered udf
 
