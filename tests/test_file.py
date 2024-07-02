@@ -194,6 +194,9 @@ class TestFileIngestion(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """Setup test files, group and destinations once before the file tests start."""
+        vfs = tiledb.VFS()
+        print(vfs.ls("s3://tiledb-internal-ci/"))
+
         cls.input_file_location = (
             "s3://tiledb-unittest/groups/file_ingestion_test_files"
         )
@@ -295,9 +298,6 @@ class TestFileIndexing(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """Setup test files, group and destinations once before the file tests start."""
-        vfs = tiledb.VFS()
-        vfs.ls("s3://tiledb-internal-ci/")
-
         cls.input_file_location = "s3://tiledb-unittest/groups/file_indexing_test_files"
         # Files with name "input_file_<n[0, 4]>.pdf" have already been placed
         # in the "cls.input_file_location"
