@@ -194,6 +194,9 @@ class TestFileIngestion(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """Setup test files, group and destinations once before the file tests start."""
+        vfs = tiledb.VFS()
+        print(vfs.ls("s3://tiledb-internal-ci/"))
+
         cls.input_file_location = (
             "s3://tiledb-unittest/groups/file_ingestion_test_files"
         )
