@@ -44,7 +44,7 @@ def ingest(
 
     :param source: uri / iterable of uris of input files.
         If the uri points to a directory of files make sure it ends with a trailing '/'
-    :param output: uri / iterable of uris of input files.
+    :param output: uri / iterable of uris of output files.
         If the uri points to a directory of files make sure it ends with a trailing '/'
     :param config: dict configuration to pass on tiledb.VFS
     :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
