@@ -1,0 +1,32 @@
+stages:
+  - pull_request
+  - push
+
+image: ubuntu:latest
+
+variables:
+  AWS_REGION: "us-east-1"
+  AWS_ROLE_ARN: "arn:aws:iam::211125629230:role/TiledbCloudPyCIRole"
+  AWS_S3_BUCKET: "tiledb-cloud-py-ci"
+
+# Copied from official docs:
+# https://docs.gitlab.com/ee/ci/cloud_services/aws/#retrieve-temporary-credentials
+assume_role:
+  id_tokens:
+    OIDC_TOKEN:
+      aud: https://ecs.customerapp.com
+  script:
+    - >
+      export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s"
+      $(aws sts assume-role-with-web-identity
+      --role-arn ${AWS_ROLE_ARN}
+      --role-session-name "GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}"
+      --web-identity-token ${OIDC_TOKEN}
+      --duration-seconds 3600
+      --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]'
+      --output text))
+    - aws sts get-caller-identity
+
+check_assume_role:
+  script:
+    - aws s3 ls s3://${AWS_S3_BUCKET}

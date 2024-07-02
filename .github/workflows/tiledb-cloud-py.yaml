@@ -132,6 +132,7 @@ jobs:
           pytest -sv \
             --tb short \
             --color yes \
+            --ignore=tests/gitlab_tests \
             --splits ${{ env.PYTEST_SPLIT_GROUPS }} \
             --group ${{ matrix.pytest-split-group }} \
             --store-durations \
