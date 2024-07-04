@@ -15,6 +15,13 @@ on:
 env:
   PYTEST_SPLIT_GROUPS: 6 # How many parallel groups to create for the tests.
   PYTEST_TEST_DURATIONS_CACHE_KEY: "test_durations" # Test durations cache key prefix
+  # AWS Bucket Access
+  BUCKET_NAME: "tiledb-cloud-py-ci"
+  AWS_REGION: "us-east-1"
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
 
 jobs:
   format-check:
@@ -59,6 +66,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::211125629230:role/TiledbCloudPyCIRole
+          role-session-name: testrolesession
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Check AWS connection and S3 access
+        run: |
+          aws s3 ls s3://${{ env.BUCKET_NAME }}/
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
