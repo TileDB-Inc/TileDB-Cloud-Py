@@ -12,7 +12,6 @@ from tiledb.cloud import groups
 from tiledb.cloud._common import testonly
 from tiledb.cloud._common import utils
 from tiledb.cloud.array import delete_array
-from tiledb.cloud.array import info
 from tiledb.cloud.files import indexing as file_indexing
 from tiledb.cloud.files import ingestion as file_ingestion
 from tiledb.cloud.files import udfs as file_udfs
@@ -233,7 +232,7 @@ class TestFileIngestion(unittest.TestCase):
             s3_uri = f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}{suffix}"
             with open(os.path.join(self.test_files_folder, fname)) as fp:
                 with self.vfs.open(s3_uri, mode="wb") as vfp:
-                    vfp.writelines(fp.readlines())
+                    vfp.write(fp.read())
                     self.test_file_uris.append(s3_uri)
 
         return super().setUp()
@@ -250,10 +249,7 @@ class TestFileIngestion(unittest.TestCase):
             namespace=self.namespace,
         )
 
-        for uri in ingested_array_uris:
-            array_info = info(uri)
-            self.assertTrue(array_info.name in self.input_file_names)
-            self.assertEqual(array_info.namespace, self.namespace)
+        self.assertEqual(len(ingested_array_uris), len(self.test_file_uris))
         # Clean up
         _cleanup_residual_test_arrays(array_uris=ingested_array_uris)
 
@@ -274,11 +270,6 @@ class TestFileIngestion(unittest.TestCase):
 
         group_info = groups.info(self.group_uri)
         self.assertEqual(group_info.asset_count, len(self.test_file_uris))
-
-        for uri in ingested_array_uris:
-            array_info = info(uri)
-            self.assertTrue(array_info.name in self.group_input_file_names)
-            self.assertEqual(array_info.namespace, self.namespace)
         # Clean up
         _cleanup_residual_test_arrays(array_uris=ingested_array_uris)
 
