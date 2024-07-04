@@ -221,12 +221,20 @@ class TestFileIngestion(unittest.TestCase):
         self.s3_test_folder_uri = f"{self.s3_bucket}/{s3_test_folder}"
         self.vfs.create_dir(self.s3_test_folder_uri)
 
+        # VFS does not yet support copying across file systems.
+        # Therefore we write the files in the folder instead
+        # self.vfs.copy_file(
+        #     old_uri=os.path.join(self.test_files_folder, fname),
+        #     new_uri=f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}.{suffix}",
+        # )
         for fname in os.listdir(self.test_files_folder):
             fn, suffix = os.path.splitext(fname)
-            self.vfs.copy_file(
-                old_uri=os.path.join(self.test_files_folder, fname),
-                new_uri=f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}.{suffix}",
-            )
+            with open(os.path.join(self.test_files_folder, fname)) as fp:
+                with self.vfs.open(
+                    f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}.{suffix}",
+                    mode="wb",
+                ) as vfp:
+                    self.vfs.write(vfp, fp)
 
         return super().setUp()
 
