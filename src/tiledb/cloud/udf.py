@@ -551,39 +551,31 @@ Delete a registered udf
 """
 
 
-def delete(name: str, namespace: str, async_req: bool = False) -> None:
-    """
-    DEPRECATION WARNING: This method will be replaced by delete_v2
-                         as delete from version 0.12.17 onwards
-    """
-    warning(
-        DeprecationWarning(
-            "This method will be replaced by the `delete_v2` method,",
-            "which will be renamed to `delete` from version 0.12.17.",
-        ),
-    )
-    delete_v2(name=name, namespace=namespace, async_req=async_req)
-
-
-def delete_v2(
-    uri: str = None, *, namespace: str = None, name: str = None, async_req: bool = False
+def delete(
+    uri: str, namespace: Optional[str] = None, *, async_req: bool = False
 ) -> None:
     """
     Deletes a registered udf
 
     :param uri: TileDB URI of the udf, defaults to None.
-    :param name: name of udf, defaults to None.
     :param namespace: namespace the udf belongs to, defaults to None.
+        DEPRECATION WARNING: Will be deprecate from version 0.12.17
     :param async_req: Return future instead of results for async support
     :return: deleted udf details
     """
-    if uri is None and (namespace is None and name is None):
-        raise RuntimeError(
-            "uri or namespace and name must be specified to delete a UDF"
-        )
-
-    if uri is not None:
-        (namespace, name) = utils.split_uri(uri)
+    try:
+        namespace, name = utils.split_uri(uri)
+    except Exception as exc:
+        if str(exc).startswith("Incorrect"):
+            warning(
+                DeprecationWarning(
+                    "From version 0.12.17 the method will accept"
+                    "only `tiledb://<namespace>/<name>` URIs"
+                ),
+            )
+            name = uri
+        else:
+            raise exc
 
     try:
         api_instance = client.build(rest_api.UdfApi)
