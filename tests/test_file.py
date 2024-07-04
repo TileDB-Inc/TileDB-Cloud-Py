@@ -194,24 +194,9 @@ class TestFileIngestion(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """Setup test files, group and destinations once before the file tests start."""
-        vfs = tiledb.VFS()
-        print(vfs.ls("s3://tiledb-cloud-py-ci/"))
-
-        cls.input_file_location = (
-            "s3://tiledb-unittest/groups/file_ingestion_test_files"
-        )
-        # Files with name "input_file_<n[0, 4]>.pdf" have already been placed
-        # in the "cls.input_file_location"
-        cls.input_file_names = [f"input_file_{i}.pdf" for i in range(5)]
-        cls.test_file_uris = [
-            f"{cls.input_file_location}/{fname}" for fname in cls.input_file_names
-        ]
-        # Files with name "group_input_file_<n[0, 4]>.pdf" have already been placed
-        # in the "cls.input_file_location"
-        cls.group_input_file_names = [f"group_input_file_{i}.pdf" for i in range(5)]
-        cls.group_test_file_uris = [
-            f"{cls.input_file_location}/{fname}" for fname in cls.group_input_file_names
-        ]
+        cls.s3_bucket = os.getenv("BUCKET_NAME")
+        cls.vfs = tiledb.VFS()
+        cls.test_files_folder = os.path.join(CURRENT_DIR, "data", "file_ingestion")
 
         cls.namespace, cls.storage_path, cls.acn = groups._default_ns_path_cred()
         cls.namespace = cls.namespace.rstrip("/")
@@ -223,15 +208,31 @@ class TestFileIngestion(unittest.TestCase):
         cls.group_destination = f"{cls.storage_path}/{cls.group_name}"
         groups.create(cls.group_name, storage_uri=cls.group_destination)
 
-        cls.cleanup_these_uris = []
         return super().setUpClass()
 
     @classmethod
     def tearDownClass(cls) -> None:
         """Cleanup after the tests have run"""
-        _cleanup_residual_test_arrays(array_uris=cls.cleanup_these_uris)
         groups.delete(cls.group_uri, recursive=True)
         return super().tearDownClass()
+
+    def setUp(self) -> None:
+        s3_test_folder = testonly.random_name("file_ingestion_test_files")
+        self.s3_test_folder_uri = f"{self.s3_bucket}/{s3_test_folder}"
+        self.vfs.create_dir(self.s3_test_folder_uri)
+
+        for fname in os.listdir(self.test_files_folder):
+            fn, suffix = os.path.splitext(fname)
+            self.vfs.copy_file(
+                old_uri=os.path.join(self.test_files_folder, fname),
+                new_uri=f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}.{suffix}",
+            )
+
+        return super().setUp()
+
+    def tearDown(self) -> None:
+        self.vfs.remove_dir(self.s3_test_folder_uri)
+        return super().tearDown()
 
     def test_files_ingestion_udf(self):
         ingested_array_uris = file_ingestion.ingest_files_udf(
