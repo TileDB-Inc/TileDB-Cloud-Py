@@ -193,9 +193,9 @@ class UploadTest(unittest.TestCase):
 class TestFileIngestion(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        """Setup test files, group and destinations once before the file tests start."""
-        cls.s3_bucket = os.getenv("BUCKET_NAME")
+        """Setup group and destinations once before the file tests start."""
         cls.vfs = tiledb.VFS()
+        cls.s3_bucket = "s3://tiledb-cloud-py-ci"
         cls.test_files_folder = os.path.join(CURRENT_DIR, "data", "file_ingestion")
 
         cls.namespace, cls.storage_path, cls.acn = groups._default_ns_path_cred()
