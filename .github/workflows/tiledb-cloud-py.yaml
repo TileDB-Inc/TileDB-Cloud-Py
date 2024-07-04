@@ -76,6 +76,7 @@ jobs:
       - name: Check AWS connection and S3 access
         run: |
           aws s3 ls s3://${{ env.BUCKET_NAME }}/
+          aws s3 rm s3://${{ env.BUCKET_NAME }}/ --recursive
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
