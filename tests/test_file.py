@@ -221,6 +221,7 @@ class TestFileIngestion(unittest.TestCase):
         self.s3_test_folder_uri = f"{self.s3_bucket}/{s3_test_folder}"
         self.vfs.create_dir(self.s3_test_folder_uri)
 
+        self.test_file_uris = []
         # VFS does not yet support copying across file systems.
         # Therefore we write the files in the folder instead
         # self.vfs.copy_file(
@@ -229,12 +230,11 @@ class TestFileIngestion(unittest.TestCase):
         # )
         for fname in os.listdir(self.test_files_folder):
             fn, suffix = os.path.splitext(fname)
+            s3_uri = f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}.{suffix}"
             with open(os.path.join(self.test_files_folder, fname)) as fp:
-                with self.vfs.open(
-                    f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}.{suffix}",
-                    mode="wb",
-                ) as vfp:
+                with self.vfs.open(s3_uri, mode="wb") as vfp:
                     vfp.writelines(fp.readlines())
+                    self.test_file_uris.append(s3_uri)
 
         return super().setUp()
 
@@ -287,7 +287,7 @@ class TestFileIngestion(unittest.TestCase):
     def test_add_array_to_group_udf_raises_bad_namespace_error(self):
         with self.assertRaises(tiledb.TileDBError):
             file_ingestion.add_arrays_to_group_udf(
-                array_uris=[f"tiledb://{self.namespace}/{self.input_file_names[0]}"],
+                array_uris=[f"tiledb://{self.namespace}/{self.test_file_uris[0]}"],
                 group_uri=f"tiledb://very-bad-namespace/{self.group_name}",
                 config=client.Ctx().config().dict(),
                 verbose=True,
@@ -296,7 +296,7 @@ class TestFileIngestion(unittest.TestCase):
     def test_add_array_to_group_udf_non_existing_group_raises_value_error(self):
         with self.assertRaises(ValueError):
             file_ingestion.add_arrays_to_group_udf(
-                array_uris=[f"tiledb://{self.namespace}/{self.input_file_names[0]}"],
+                array_uris=[f"tiledb://{self.namespace}/{self.test_file_uris[0]}"],
                 group_uri=f"tiledb://{self.namespace}/non-existing-group",
                 config=client.Ctx().config().dict(),
                 verbose=True,
