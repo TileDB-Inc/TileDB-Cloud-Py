@@ -234,7 +234,7 @@ class TestFileIngestion(unittest.TestCase):
                     f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}.{suffix}",
                     mode="wb",
                 ) as vfp:
-                    self.vfs.write(vfp, fp)
+                    vfp.write(vfp, fp)
 
         return super().setUp()
 
