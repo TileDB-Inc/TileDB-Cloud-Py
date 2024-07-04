@@ -230,7 +230,7 @@ class TestFileIngestion(unittest.TestCase):
         # )
         for fname in os.listdir(self.test_files_folder):
             fn, suffix = os.path.splitext(fname)
-            s3_uri = f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}.{suffix}"
+            s3_uri = f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}{suffix}"
             with open(os.path.join(self.test_files_folder, fname)) as fp:
                 with self.vfs.open(s3_uri, mode="wb") as vfp:
                     vfp.writelines(fp.readlines())
@@ -260,7 +260,7 @@ class TestFileIngestion(unittest.TestCase):
     def test_files_ingestion_udf_into_group(self):
         ingested_array_uris = file_ingestion.ingest_files_udf(
             dataset_uri=self.group_destination,
-            file_uris=self.group_test_file_uris,
+            file_uris=self.test_file_uris,
             acn=self.acn,
             namespace=self.namespace,
         )
@@ -272,15 +272,13 @@ class TestFileIngestion(unittest.TestCase):
             verbose=True,
         )
 
-        groups.info(self.group_uri)
-        # FIXME: Uncomment when CI has vfs access.
-        # self.assertEqual(group_info.asset_count, len(self.group_test_file_uris))
+        group_info = groups.info(self.group_uri)
+        self.assertEqual(group_info.asset_count, len(self.test_file_uris))
 
         for uri in ingested_array_uris:
             array_info = info(uri)
             self.assertTrue(array_info.name in self.group_input_file_names)
             self.assertEqual(array_info.namespace, self.namespace)
-
         # Clean up
         _cleanup_residual_test_arrays(array_uris=ingested_array_uris)
 
