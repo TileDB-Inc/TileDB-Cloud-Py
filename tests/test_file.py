@@ -2,6 +2,7 @@ import hashlib
 import logging
 import os
 import pathlib
+import sys
 import tempfile
 import unittest
 from typing import List
@@ -193,6 +194,9 @@ class UploadTest(unittest.TestCase):
 class TestFileIngestion(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        logging.basicConfig(stream=sys.stderr)
+        logging.getLogger("testLog").setLevel(logging.DEBUG)
+
         """Setup group and destinations once before the file tests start."""
         cls.vfs = tiledb.VFS()
         cls.s3_bucket = "s3://tiledb-cloud-py-ci"
@@ -236,7 +240,8 @@ class TestFileIngestion(unittest.TestCase):
                     vfp.write(fp.read())
                     self.test_file_uris.append(s3_uri)
 
-        logging.debug(self.vfs.ls(self.s3_test_folder_uri))
+        log = logging.getLogger("testLog")
+        log.debug(self.vfs.ls(self.s3_test_folder_uri))
         return super().setUp()
 
     def tearDown(self) -> None:
