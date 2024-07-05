@@ -76,7 +76,7 @@ jobs:
       - name: Check S3 access
         # aws s3 rm s3://${{ env.BUCKET_NAME }}/ --recursive
         run: |
-          aws s3 ls s3://${{ env.BUCKET_NAME }}/zzz_unittest_file_ingestion_test_files_ZMydWpYvnJ/
+          aws s3 ls s3://${{ env.BUCKET_NAME }}/
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4

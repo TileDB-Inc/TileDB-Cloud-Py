@@ -1,4 +1,5 @@
 import hashlib
+import logging
 import os
 import pathlib
 import tempfile
@@ -235,6 +236,7 @@ class TestFileIngestion(unittest.TestCase):
                     vfp.write(fp.read())
                     self.test_file_uris.append(s3_uri)
 
+        logging.debug(self.vfs.ls(self.s3_test_folder_uri))
         return super().setUp()
 
     def tearDown(self) -> None:
