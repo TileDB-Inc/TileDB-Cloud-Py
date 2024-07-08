@@ -1,6 +1,7 @@
 import base64
 import uuid
 import warnings
+from logging import warning
 from typing import Any, Callable, Iterable, Optional, Union
 
 import cloudpickle
@@ -550,14 +551,32 @@ Delete a registered udf
 """
 
 
-def delete(name, namespace, async_req=False):
+def delete(
+    uri: str, namespace: Optional[str] = None, *, async_req: bool = False
+) -> None:
     """
     Deletes a registered udf
-    :param name: name of udf
-    :param namespace: namespace the udf belongs to
-    :param async_req: return future instead of results for async support
+
+    :param uri: TileDB URI of the udf, defaults to None.
+    :param namespace: namespace the udf belongs to, defaults to None.
+        DEPRECATION WARNING: Will be deprecate from version 0.12.17
+    :param async_req: Return future instead of results for async support
     :return: deleted udf details
     """
+    try:
+        namespace, name = utils.split_uri(uri)
+    except Exception as exc:
+        if str(exc).startswith("Incorrect"):
+            warning(
+                DeprecationWarning(
+                    "From version 0.12.17 the method will accept"
+                    "only `tiledb://<namespace>/<name>` URIs"
+                ),
+            )
+            name = uri
+        else:
+            raise exc
+
     try:
         api_instance = client.build(rest_api.UdfApi)
 
@@ -568,6 +587,20 @@ def delete(name, namespace, async_req=False):
         )
     except GenApiException as exc:
         raise tiledb_cloud_error.check_exc(exc) from None
+
+
+def deregister(uri: str, *, async_req: bool = False):
+    """
+    De-registers a registered udf, by de-registering the array that it
+    is registered on.
+    This does not physically delete the array, it will remain in your bucket.
+    All access to the array and cloud metadata will be removed.
+
+    :param uri: TileDB URI of the array.
+    :param async_req: Return future instead of results for async support
+    :return success or error
+    """
+    return array.deregister_array(uri=uri, async_req=async_req)
 
 
 class _StoredParamJSONer(tiledb_json.Encoder):
