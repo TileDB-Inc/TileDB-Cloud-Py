@@ -6,6 +6,7 @@ from unittest import mock
 
 import tiledb
 from tiledb.cloud import dag
+from tiledb.cloud._common import functions
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import get_logger_wrapper
 from tiledb.cloud.utilities import run_dag
@@ -61,7 +62,7 @@ def run_ingest_workflow_udf(
             namespace=carry_along["namespace"],
         )
         grf.submit(
-            ingest_h5ad,
+            _ingest_h5ad_byval,
             output_uri=output_uri,
             input_uri=input_uri,
             measurement_name=measurement_name,
@@ -109,7 +110,7 @@ def run_ingest_workflow_udf(
                 continue
 
             node = grf.submit(
-                ingest_h5ad,
+                _ingest_h5ad_byval,
                 output_uri=entry_output_uri,
                 input_uri=entry_input_uri,
                 measurement_name=measurement_name,
@@ -217,8 +218,9 @@ def ingest_h5ad(
             logging.info("Dry run for %s to %s", input_uri, output_uri)
             return
 
-        with _hack_patch_anndata():
+        with _hack_patch_anndata_byval():
             input_data = anndata.read_h5ad(_FSPathWrapper(input_file, input_uri), "r")
+
         output_uri = io.from_anndata(
             experiment_uri=output_uri,
             anndata=input_data,
@@ -290,7 +292,7 @@ def run_ingest_workflow(
 
     # Step 1: Ingest workflow UDF
     grf.submit(
-        run_ingest_workflow_udf,
+        _run_ingest_workflow_udf_byval,
         output_uri=output_uri,
         input_uri=input_uri,
         measurement_name=measurement_name,
@@ -323,4 +325,14 @@ def run_ingest_workflow(
     }
 
 
-ingest = as_batch(run_ingest_workflow)
+# FIXME: Until we fully get this version of tiledb.cloud deployed server-side,
+# we must refer to all functions by value rather than by reference
+# -- which is a fancy way of saying these functions _will not work at all_ until
+# and unless they are checked into tiledb-cloud-py and deployed server-side.
+# _All_ dev work _must_ use this idiom.
+_ingest_h5ad_byval = functions.to_register_by_value(ingest_h5ad)
+_run_ingest_workflow_byval = functions.to_register_by_value(run_ingest_workflow)
+_run_ingest_workflow_udf_byval = functions.to_register_by_value(run_ingest_workflow_udf)
+_hack_patch_anndata_byval = functions.to_register_by_value(_hack_patch_anndata)
+
+ingest = as_batch(_run_ingest_workflow_byval)
