@@ -291,13 +291,13 @@ def build_collection_mapper_workflow_graph(
             access_credentials_name=access_credentials_name,
             name=experiment_name,
         )
-        logger.info("A: node output is a %s" % type(node_output))
+        logger.debug("A: node output is a %s" % type(node_output))
 
         node_outputs[soma_experiment_uri] = node_output
 
     def collect(node_outputs):
         for node_name, node_output in node_outputs.items():
-            logger.info("B: node output %s is a %s" % (node_name, type(node_output)))
+            logger.debug("B: node output %s is a %s" % (node_name, type(node_output)))
         return node_outputs
 
     grf.submit(
