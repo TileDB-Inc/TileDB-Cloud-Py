@@ -180,6 +180,9 @@ def build_collection_mapper_workflow_graph(
         Example: ``resources={"cpu": "2", "memory": "8Gi"}``.
     :param access_credentials_name: Only valid when ``use_batch_mode`` is True.
 
+    Other:
+    :param verbose: If True, enable verbose logging. Default: False.
+
     Return value:
     A ``DAG`` object. If you've named this ``dag``, you'll need to call
         ``dag.compute()``, ``dag.wait()``, and ``dag.end_results()``.
