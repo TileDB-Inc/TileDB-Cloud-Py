@@ -66,6 +66,8 @@ def run_collection_mapper_workflow(
         platform_config=platform_config,
         task_graph_name=task_graph_name,
         counts_only=counts_only,
+        use_batch_mode=use_batch_mode,
+        resource_class=resource_class,
         resources=resources,
         access_credentials_name=access_credentials_name,
         verbose=verbose,
