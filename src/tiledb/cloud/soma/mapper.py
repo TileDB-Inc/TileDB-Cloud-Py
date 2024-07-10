@@ -2,6 +2,7 @@ import logging
 from typing import Any, Callable, Dict, Optional, Sequence, Tuple
 
 import anndata as ad
+import tiledb
 import tiledbsoma
 
 from tiledb.cloud import dag
@@ -233,8 +234,9 @@ def build_collection_mapper_workflow_graph(
             "Retrieving SOMA Experiment URIs from SOMACollection %s"
             % soma_collection_uri
         )
-        with tiledbsoma.Collection.open(soma_collection_uri) as soco:
-            soma_experiment_uris = {k: v.uri for k, v in soco.items()}
+
+        with tiledb.Group(soma_collection_uri) as grp:
+            soma_experiment_uris = {mbr.name: mbr.uri for mbr in grp}
 
     if experiment_names is not None:
         logger.info("Filtering SOMA Experiment URIs for specified names")
