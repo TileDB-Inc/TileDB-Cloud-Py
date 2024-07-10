@@ -1,4 +1,3 @@
-import logging
 from typing import Any, Callable, Dict, Optional, Sequence, Tuple
 
 import anndata as ad
@@ -40,7 +39,8 @@ def run_collection_mapper_workflow(
     use_batch_mode: bool = False,
     resource_class: Optional[str] = None,  # only valid for real-time mode
     resources: Optional[Dict[str, object]] = None,  # only valid for batch mode
-    access_credentials_name: Optional[str] = None,  # only valid for batch mode
+    access_credentials_name: Optional[str] = None,  # only valid for batch mode,
+    verbose: bool = False,
 ) -> Dict[str, str]:
     """
     This is an asynchronous entry point, which launches the task graph and returns
@@ -68,6 +68,7 @@ def run_collection_mapper_workflow(
         counts_only=counts_only,
         resources=resources,
         access_credentials_name=access_credentials_name,
+        verbose=verbose,
     )
     grf.compute()
     return {
@@ -103,7 +104,8 @@ def build_collection_mapper_workflow_graph(
     use_batch_mode: bool = False,
     resource_class: Optional[str] = None,  # only valid for real-time mode
     resources: Optional[Dict[str, object]] = None,  # only valid for batch mode
-    access_credentials_name: Optional[str] = None,  # only valid for batch mode
+    access_credentials_name: Optional[str] = None,  # only valid for batch mode,
+    verbose: bool = False,
 ) -> dag.DAG:
     """
     The primary entrypoint for the mapper module. The caller passes in either a
@@ -226,7 +228,8 @@ def build_collection_mapper_workflow_graph(
     # cfg_dict = cfg_dict or {}
     # cfg_dict["rest.use_refactored_array_open"] = True
 
-    logger = get_logger_wrapper(level=logging.INFO)
+    logger = get_logger_wrapper(verbose)
+    logger.debug("tiledbsoma=%s" % tiledbsoma.__version__)
 
     # ----------------------------------------------------------------
     if soma_experiment_uris is None:
