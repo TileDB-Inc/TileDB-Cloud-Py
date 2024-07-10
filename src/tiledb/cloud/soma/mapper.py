@@ -1,4 +1,3 @@
-import logging
 from typing import Any, Callable, Dict, Optional, Sequence, Tuple
 
 import anndata as ad
@@ -40,7 +39,8 @@ def run_collection_mapper_workflow(
     use_batch_mode: bool = False,
     resource_class: Optional[str] = None,  # only valid for real-time mode
     resources: Optional[Dict[str, object]] = None,  # only valid for batch mode
-    access_credentials_name: Optional[str] = None,  # only valid for batch mode
+    access_credentials_name: Optional[str] = None,  # only valid for batch mode,
+    verbose: bool = False,
 ) -> Dict[str, str]:
     """
     This is an asynchronous entry point, which launches the task graph and returns
@@ -66,8 +66,11 @@ def run_collection_mapper_workflow(
         platform_config=platform_config,
         task_graph_name=task_graph_name,
         counts_only=counts_only,
+        use_batch_mode=use_batch_mode,
+        resource_class=resource_class,
         resources=resources,
         access_credentials_name=access_credentials_name,
+        verbose=verbose,
     )
     grf.compute()
     return {
@@ -103,7 +106,8 @@ def build_collection_mapper_workflow_graph(
     use_batch_mode: bool = False,
     resource_class: Optional[str] = None,  # only valid for real-time mode
     resources: Optional[Dict[str, object]] = None,  # only valid for batch mode
-    access_credentials_name: Optional[str] = None,  # only valid for batch mode
+    access_credentials_name: Optional[str] = None,  # only valid for batch mode,
+    verbose: bool = False,
 ) -> dag.DAG:
     """
     The primary entrypoint for the mapper module. The caller passes in either a
@@ -157,18 +161,17 @@ def build_collection_mapper_workflow_graph(
     :param args_dict: Optional additional arguments to be passed to your
         callback.  If provided, this must be a dict from string experiment name,
         to dict of key-value pairs.
+    :param counts_only: If specified, only return obs/var counts, not the
+        result of the provided callback.
 
     TileDB configs:
     :param extra_tiledb_config: Currently unused; reserved for future use.
     :param platform_config: Currently unused; reserved for future use.
 
     Cloud configs:
-
     :param namespace: TileDB namespace in which to run the UDFs.
     :param task_graph_name: Optional name for your task graph, so you can
         find it more easily among other runs.
-    :param counts_only: If specified, only return obs/var counts, not the
-        result of the provided callback.
 
     Real-time vs batch modes:
     :param use_batch_mode: If false (the default), uses real-time UDFs.
@@ -178,6 +181,9 @@ def build_collection_mapper_workflow_graph(
     :param resources: Only valid when ``use_batch_mode`` is True.
         Example: ``resources={"cpu": "2", "memory": "8Gi"}``.
     :param access_credentials_name: Only valid when ``use_batch_mode`` is True.
+
+    Other:
+    :param verbose: If True, enable verbose logging. Default: False.
 
     Return value:
     A ``DAG`` object. If you've named this ``dag``, you'll need to call
@@ -226,7 +232,8 @@ def build_collection_mapper_workflow_graph(
     # cfg_dict = cfg_dict or {}
     # cfg_dict["rest.use_refactored_array_open"] = True
 
-    logger = get_logger_wrapper(level=logging.INFO)
+    logger = get_logger_wrapper(verbose)
+    logger.debug("tiledbsoma=%s" % tiledbsoma.__version__)
 
     # ----------------------------------------------------------------
     if soma_experiment_uris is None:
@@ -288,13 +295,13 @@ def build_collection_mapper_workflow_graph(
             access_credentials_name=access_credentials_name,
             name=experiment_name,
         )
-        logger.info("A: node output is a %s" % type(node_output))
+        logger.debug("A: node output is a %s" % type(node_output))
 
-        node_outputs[soma_experiment_uri] = node_output
+        node_outputs[experiment_name] = node_output
 
     def collect(node_outputs):
         for node_name, node_output in node_outputs.items():
-            logger.info("B: node output %s is a %s" % (node_name, type(node_output)))
+            logger.debug("B: node output %s is a %s" % (node_name, type(node_output)))
         return node_outputs
 
     grf.submit(
