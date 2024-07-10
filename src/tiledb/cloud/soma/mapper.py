@@ -297,7 +297,7 @@ def build_collection_mapper_workflow_graph(
         )
         logger.debug("A: node output is a %s" % type(node_output))
 
-        node_outputs[soma_experiment_uri] = node_output
+        node_outputs[experiment_name] = node_output
 
     def collect(node_outputs):
         for node_name, node_output in node_outputs.items():
