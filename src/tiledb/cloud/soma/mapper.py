@@ -159,18 +159,17 @@ def build_collection_mapper_workflow_graph(
     :param args_dict: Optional additional arguments to be passed to your
         callback.  If provided, this must be a dict from string experiment name,
         to dict of key-value pairs.
+    :param counts_only: If specified, only return obs/var counts, not the
+        result of the provided callback.
 
     TileDB configs:
     :param extra_tiledb_config: Currently unused; reserved for future use.
     :param platform_config: Currently unused; reserved for future use.
 
     Cloud configs:
-
     :param namespace: TileDB namespace in which to run the UDFs.
     :param task_graph_name: Optional name for your task graph, so you can
         find it more easily among other runs.
-    :param counts_only: If specified, only return obs/var counts, not the
-        result of the provided callback.
 
     Real-time vs batch modes:
     :param use_batch_mode: If false (the default), uses real-time UDFs.
