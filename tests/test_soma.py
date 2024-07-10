@@ -1,3 +1,4 @@
+import logging
 import sys
 import unittest
 
@@ -5,7 +6,58 @@ import tiledb.cloud
 import tiledb.cloud.soma
 
 
-class SOMAMapperTest(unittest.TestCase):
+class TestSOMAIngestion(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.test_file_path = "s3://tiledb-unittest/soma-ingestion-test/pbmc3k.h5ad"
+
+        (
+            cls.namespace,
+            cls.storage_path,
+            cls.acn,
+        ) = tiledb.cloud.groups._default_ns_path_cred()
+        cls.namespace = cls.namespace.rstrip("/")
+        cls.storage_path = cls.storage_path.rstrip("/")
+        cls.array_name = tiledb.cloud._common.testonly.random_name("soma-test")
+        cls.destination = (
+            f"tiledb://{cls.namespace}/{cls.storage_path}/{cls.array_name}"
+        )
+
+        return super().setUpClass()
+
+    # TODO: Allow test to run when VFS access is enabled
+    @unittest.skip("Fails until unittest user obtains VFS access.")
+    def test_ingest_h5ad(self):
+        tiledb.cloud.soma.ingest_h5ad(
+            output_uri=self.destination,
+            input_uri=self.test_file_path,
+            measurement_name="RNA",
+            logging_level=logging.DEBUG,
+        )
+
+        array_uri = f"tiledb://{self.namespace}/{self.array_name}"
+        array_info = tiledb.cloud.array.info(array_uri)
+        self.assertEqual(array_info.name, self.array_name)
+        self.assertEqual(array_info.namespace, self.namespace)
+        tiledb.cloud.array.delete_array(array_uri)
+
+    # TODO: Allow test to run when VFS access is enabled
+    @unittest.skip("Fails until unittest user obtains VFS access.")
+    def test_ingest_h5ad_dry_run(self):
+        with self.assertLogs(level=logging.INFO) as lg:
+            tiledb.cloud.soma.ingest_h5ad(
+                output_uri=self.destination,
+                input_uri=self.test_file_path,
+                measurement_name="RNA",
+                logging_level=logging.DEBUG,
+                dry_run=True,
+            )
+            self.assertEqual(
+                f"Dry run for {self.test_file_path} to {self.destination}", lg.output[0]
+            )
+
+
+class TestSOMAMapper(unittest.TestCase):
     def __init__(self, foo):
         super().__init__(foo)
         self.maxDiff = None

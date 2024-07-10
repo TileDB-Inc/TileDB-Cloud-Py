@@ -7,136 +7,12 @@ from unittest import mock
 import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud._common import functions
+from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import get_logger_wrapper
+from tiledb.cloud.utilities import run_dag
 
 _DEFAULT_RESOURCES = {"cpu": "8", "memory": "8Gi"}
 """Default resource size; equivalent to a "large" UDF container."""
-
-
-def run_ingest_workflow(
-    *,
-    output_uri: str,
-    input_uri: str,
-    measurement_name: str,
-    pattern: Optional[str] = None,
-    extra_tiledb_config: Optional[Dict[str, object]] = None,
-    platform_config: Optional[Dict[str, object]] = None,
-    ingest_mode: str = "write",
-    resources: Optional[Dict[str, object]] = None,
-    namespace: Optional[str] = None,
-    access_credentials_name: Optional[str] = None,
-    logging_level: int = logging.INFO,
-    dry_run: bool = False,
-) -> Dict[str, str]:
-    """Starts a workflow to ingest H5AD data into SOMA.
-
-    :param output_uri: The output URI to write to. This will probably look like
-        ``tiledb://namespace/some://storage/uri``.
-    :param input_uri: The URI of the H5AD file(s) to read from. These are read
-        using TileDB VFS, so any path supported (and accessible) will work.  If the
-        ``input_uri`` passes ``vfs.is_file``, it's ingested.  If the ``input_uri``
-        passes ``vfs.is_dir``, then all first-level entries are ingested .  In the
-        latter, directory case, an input file is skipped if ``pattern`` is provided
-        and doesn't match the input file. As well, in the directory case, each entry's
-        basename is appended to the ``output_uri`` to form the entry's output URI.
-        For example, if ``a.h5ad` and ``b.h5ad`` are present within ``input_uri`` of
-        ``s3://bucket/h5ads/`` and ``output_uri`` is
-        ``tiledb://namespace/s3://bucket/somas``, then
-        ``tiledb://namespace/s3://bucket/somas/a`` and
-        ``tiledb://namespace/s3://bucket/somas/b`` are written.
-    :param measurement_name: The name of the Measurement within the Experiment
-        to store the data.
-    :param pattern: As described for ``input_uri``.
-    :param extra_tiledb_config: Extra configuration for TileDB.
-    :param platform_config: The SOMA ``platform_config`` value to pass in,
-        if any.
-    :param ingest_mode: One of the ingest modes supported by
-        ``tiledbsoma.io.read_h5ad``.
-    :param resources: A specification for the amount of resources to provide
-        to the UDF executing the ingestion process, to override the default.
-    :param namespace: An alternate namespace to run the ingestion process under.
-    :param access_credentials_name: If provided, the name of the credentials
-        to pass to the executing UDF.
-    :param dry_run: If provided and set to ``True``, does the input-path
-        traversals without ingesting data.
-    :return: A dictionary of ``{"status": "started", "graph_id": ...}``,
-        with the UUID of the graph on the server side, which can be used to
-        manage execution and monitor progress.
-    """
-
-    grf = build_ingest_workflow_graph(
-        output_uri=output_uri,
-        input_uri=input_uri,
-        measurement_name=measurement_name,
-        pattern=pattern,
-        extra_tiledb_config=extra_tiledb_config,
-        platform_config=platform_config,
-        ingest_mode=ingest_mode,
-        resources=resources,
-        namespace=namespace,
-        access_credentials_name=access_credentials_name,
-        logging_level=logging_level,
-        dry_run=dry_run,
-    )
-    grf.compute()
-    # On discussion with the cloud team:
-    # * In batch mode this does add call latency beyond grf.server_graph_uuid
-    # * However, the cloud UI cannot populate a DAG candelabra without us doing so.
-    # This is a necessary choice.
-    the_node = next(iter(grf.nodes.values()))
-    real_graph_uuid = the_node.result()
-    return {
-        "status": "started",
-        "graph_id": str(real_graph_uuid),
-    }
-
-
-def build_ingest_workflow_graph(
-    *,
-    output_uri: str,
-    input_uri: str,
-    measurement_name: str,
-    pattern: Optional[str] = None,
-    extra_tiledb_config: Optional[Dict[str, object]] = None,
-    platform_config: Optional[Dict[str, object]] = None,
-    ingest_mode: str = "write",
-    resources: Optional[Dict[str, object]] = None,
-    namespace: Optional[str] = None,
-    access_credentials_name: Optional[str] = None,
-    logging_level: int = logging.INFO,
-    dry_run: bool = False,
-) -> dag.DAG:
-    """
-    Same signature as ``run_ingest_workflow``, but returns the graph object
-    directly.
-    """
-
-    grf = dag.DAG(
-        name="ingest-h5ad-launcher",
-        mode=dag.Mode.BATCH,
-        namespace=namespace,
-    )
-    grf.submit(
-        _run_ingest_workflow_udf_byval,
-        output_uri=output_uri,
-        input_uri=input_uri,
-        measurement_name=measurement_name,
-        pattern=pattern,
-        extra_tiledb_config=extra_tiledb_config,
-        platform_config=platform_config,
-        ingest_mode=ingest_mode,
-        resources=resources,
-        namespace=namespace,
-        access_credentials_name=access_credentials_name,
-        carry_along={
-            "resources": _DEFAULT_RESOURCES if resources is None else resources,
-            "namespace": namespace,
-            "access_credentials_name": access_credentials_name,
-        },
-        logging_level=logging_level,
-        dry_run=dry_run,
-    )
-    return grf
 
 
 def run_ingest_workflow_udf(
@@ -272,9 +148,9 @@ def ingest_h5ad(
     output_uri: str,
     input_uri: str,
     measurement_name: str,
-    extra_tiledb_config: Optional[Dict[str, object]],
-    platform_config: Optional[Dict[str, object]],
-    ingest_mode: str,
+    extra_tiledb_config: Optional[Dict[str, object]] = None,
+    platform_config: Optional[Dict[str, object]] = None,
+    ingest_mode: str = "write",
     logging_level: int = logging.INFO,
     dry_run: bool = False,
 ) -> None:
@@ -344,6 +220,7 @@ def ingest_h5ad(
 
         with _hack_patch_anndata_byval():
             input_data = anndata.read_h5ad(_FSPathWrapper(input_file, input_uri), "r")
+
         output_uri = io.from_anndata(
             experiment_uri=output_uri,
             anndata=input_data,
@@ -355,12 +232,107 @@ def ingest_h5ad(
     logging.info("Successfully wrote data from %s to %s", input_uri, output_uri)
 
 
-# Until we fully get this version of tiledb.cloud deployed server-side, we must
-# refer to all functions by value rather than by reference -- which is a fancy way
-# of saying these functions _will not work at all_ until and unless they are
-# checked into tiledb-cloud-py and deployed server-side. _All_ dev work _must_
-# use this idiom.
+def run_ingest_workflow(
+    *,
+    output_uri: str,
+    input_uri: str,
+    measurement_name: str,
+    pattern: Optional[str] = None,
+    extra_tiledb_config: Optional[Dict[str, object]] = None,
+    platform_config: Optional[Dict[str, object]] = None,
+    ingest_mode: str = "write",
+    resources: Optional[Dict[str, object]] = None,
+    namespace: Optional[str] = None,
+    access_credentials_name: Optional[str] = None,
+    logging_level: int = logging.INFO,
+    dry_run: bool = False,
+) -> Dict[str, str]:
+    """Starts a workflow to ingest H5AD data into SOMA.
+
+    :param output_uri: The output URI to write to. This will probably look like
+        ``tiledb://namespace/some://storage/uri``.
+    :param input_uri: The URI of the H5AD file(s) to read from. These are read
+        using TileDB VFS, so any path supported (and accessible) will work.  If the
+        ``input_uri`` passes ``vfs.is_file``, it's ingested.  If the ``input_uri``
+        passes ``vfs.is_dir``, then all first-level entries are ingested .  In the
+        latter, directory case, an input file is skipped if ``pattern`` is provided
+        and doesn't match the input file. As well, in the directory case, each entry's
+        basename is appended to the ``output_uri`` to form the entry's output URI.
+        For example, if ``a.h5ad` and ``b.h5ad`` are present within ``input_uri`` of
+        ``s3://bucket/h5ads/`` and ``output_uri`` is
+        ``tiledb://namespace/s3://bucket/somas``, then
+        ``tiledb://namespace/s3://bucket/somas/a`` and
+        ``tiledb://namespace/s3://bucket/somas/b`` are written.
+    :param measurement_name: The name of the Measurement within the Experiment
+        to store the data.
+    :param pattern: As described for ``input_uri``.
+    :param extra_tiledb_config: Extra configuration for TileDB.
+    :param platform_config: The SOMA ``platform_config`` value to pass in,
+        if any.
+    :param ingest_mode: One of the ingest modes supported by
+        ``tiledbsoma.io.read_h5ad``.
+    :param resources: A specification for the amount of resources to provide
+        to the UDF executing the ingestion process, to override the default.
+    :param namespace: An alternate namespace to run the ingestion process under.
+    :param access_credentials_name: If provided, the name of the credentials
+        to pass to the executing UDF.
+    :param dry_run: If provided and set to ``True``, does the input-path
+        traversals without ingesting data.
+    :return: A dictionary of ``{"status": "started", "graph_id": ...}``,
+        with the UUID of the graph on the server side, which can be used to
+        manage execution and monitor progress.
+    """
+
+    # Graph init
+    grf = dag.DAG(
+        name="ingest-h5ad-launcher",
+        namespace=namespace,
+        mode=dag.Mode.BATCH,
+    )
+
+    # Step 1: Ingest workflow UDF
+    grf.submit(
+        _run_ingest_workflow_udf_byval,
+        output_uri=output_uri,
+        input_uri=input_uri,
+        measurement_name=measurement_name,
+        pattern=pattern,
+        extra_tiledb_config=extra_tiledb_config,
+        platform_config=platform_config,
+        ingest_mode=ingest_mode,
+        resources=resources,
+        namespace=namespace,
+        access_credentials_name=access_credentials_name,
+        carry_along={
+            "resources": _DEFAULT_RESOURCES if resources is None else resources,
+            "namespace": namespace,
+            "access_credentials_name": access_credentials_name,
+        },
+        logging_level=logging_level,
+        dry_run=dry_run,
+    )
+
+    # Start the ingestion process
+    verbose = logging_level == logging.DEBUG
+    run_dag(grf, debug=verbose)
+
+    # Get the initial graph node UUID
+    the_node = next(iter(grf.nodes.values()))
+    real_graph_uuid = the_node.result()
+    return {
+        "status": "started",
+        "graph_id": str(real_graph_uuid),
+    }
+
+
+# FIXME: Until we fully get this version of tiledb.cloud deployed server-side,
+# we must refer to all functions by value rather than by reference
+# -- which is a fancy way of saying these functions _will not work at all_ until
+# and unless they are checked into tiledb-cloud-py and deployed server-side.
+# _All_ dev work _must_ use this idiom.
 _ingest_h5ad_byval = functions.to_register_by_value(ingest_h5ad)
 _run_ingest_workflow_byval = functions.to_register_by_value(run_ingest_workflow)
 _run_ingest_workflow_udf_byval = functions.to_register_by_value(run_ingest_workflow_udf)
 _hack_patch_anndata_byval = functions.to_register_by_value(_hack_patch_anndata)
+
+ingest = as_batch(_run_ingest_workflow_byval)
