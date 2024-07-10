@@ -235,6 +235,15 @@ def build_collection_mapper_workflow_graph(
             % soma_collection_uri
         )
 
+        # Alternative:
+        #
+        # with tiledbsoma.Collection.open(soma_collection_uri) as soco:
+        #     soma_experiment_uris = {k: v.uri for k, v in soco.items()}
+        #
+        # -- however, that opens all the members sequentially, and we don't need
+        # that overhead here in the launcher node.
+        #
+        # See also: sc-49443
         with tiledb.Group(soma_collection_uri) as grp:
             soma_experiment_uris = {mbr.name: mbr.uri for mbr in grp}
 
