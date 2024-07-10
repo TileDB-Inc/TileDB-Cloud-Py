@@ -103,21 +103,21 @@ class TestSOMAMapper(unittest.TestCase):
             g.end_results_by_name(),
             {
                 "collector": {
-                    "tiledb://unittest/3c0e8956-12d1-463d-87c4-16f644c204c9": [
+                    "stack1": [
                         3,
                         5,
                     ],
-                    "tiledb://unittest/53109d02-4145-4860-9c86-349bb5b8c588": [
-                        3,
-                        6,
-                    ],
-                    "tiledb://unittest/c5cdcdcd-2ce4-4c1d-bed5-b90232568977": [
-                        3,
-                        5,
-                    ],
-                    "tiledb://unittest/a0b92925-a0da-41d4-aa55-f9c3e526ff2d": [
+                    "stack2": [
                         3,
                         4,
+                    ],
+                    "stack3": [
+                        3,
+                        5,
+                    ],
+                    "stack4": [
+                        3,
+                        6,
                     ],
                 }
             },
