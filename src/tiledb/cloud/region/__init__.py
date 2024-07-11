@@ -2,10 +2,10 @@ class AWS:
     """
     The AWS cloud regions that are currently supported.
 
-    US_EAST_1 = North America, United States (Virginia)
-    US_WEST_2 = North America, United States (Oregon)
-    EU_WEST_1 = Europe, Ireland
-    EU_WEST_2 = Europe, London
+    US_EAST_1 = North America, United States (Virginia)  
+    US_WEST_2 = North America, United States (Oregon)  
+    EU_WEST_1 = Europe, Ireland  
+    EU_WEST_2 = Europe, London  
     AP_SOUTHEAST_1 = Asia, Singapore
     """
 
