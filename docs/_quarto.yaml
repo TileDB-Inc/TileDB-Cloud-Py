@@ -73,6 +73,10 @@ website:
             href: reference/dag.status.qmd
           - text: "`visualization`"
             href: reference/dag.visualization.qmd
+      - section: Region
+        contents:
+          - text: "`region`"
+            href: reference/region.qmd
       - section: Files
         contents:
           - text: "`indexing`"
@@ -158,6 +162,11 @@ quartodoc:
         - dag.mode
         - dag.status
         - dag.visualization
+
+    - title: region
+      desc: Cloud regions
+      contents:
+        - region
 
     - title: files
       desc: File API.
