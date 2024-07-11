@@ -14,6 +14,7 @@ from typing import (
     Deque,
     Dict,
     FrozenSet,
+    Hashable,
     List,
     Optional,
     Sequence,
@@ -92,6 +93,17 @@ class ParentFailedError(futures.CancelledError):
 
 
 class Node(futures.FutureLike[_T]):
+    """Representation of a function to run in a DAG.
+
+    :param id: UUID for instance.
+    :param dag: Dag this node is associated with.
+    :param mode: Mode the node is to run in.
+    :param parents: Parent Node instances.
+    :param children: Children Node instances.
+    :param args: position args for Node.
+    :param kwargs: key-word args for Node.
+    """
+
     def __init__(
         self,
         func: Callable[..., _T],
@@ -104,28 +116,29 @@ class Node(futures.FutureLike[_T]):
         _internal_prewrapped_func: Callable[..., "results.Result[_T]"] = None,
         _internal_accepts_stored_params: bool = True,
         **kwargs,
-    ):
+    ) -> None:
         """
-        Node is a class that represents a function to run in a DAG
-        :param func: function to run
-        :param args: tuple of arguments to run
-        :param name: optional name of dag
-        :param dag: dag this node is associated with
+        :param func: function to run.
+        :param args: tuple of arguments to run.
+        :param name: optional name of dag.
+        :param dag: dag this node is associated with.
         :param mode: Mode the node is to run in.
+        :param expand_node_output: Node to expand processes upon.
         :param _download_results: An optional boolean to override default
             result-downloading behavior. If True, will always download the
             results of the function immediately upon completion.
             If False, will not download the results of the function immediately,
             but will be downloaded when ``.result()`` is called.
-        :param _prewrapped_func: For internal use only. A function that returns
+        :param _internal_prewrapped_func: For internal use only. A function that returns
             something that is already a Result, which does not require wrapping.
             We assume that all prewrapped functions make server calls.
-        :param _accepts_stored_params: For internal use only.
+        :param _internal_accepts_stored_params: For internal use only.
             Applies only when ``_prewrapped_func`` is used.
             ``True`` if ``_prewrapped_func`` can accept stored parameters.
             ``False`` if it cannot, and all parameters must be serialized.
         :param kwargs: dictionary for keyword arguments
         """
+
         self.id = uuid.uuid4()
         self._name = name
 
@@ -177,13 +190,13 @@ class Node(futures.FutureLike[_T]):
         self._check_resources_and_mode()
         self._find_deps()
 
-    def __hash__(self):
+    def __hash__(self) -> Hashable:
         return hash(self.id)
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return type(self) == type(other) and self.id == other.id
 
-    def __ne__(self, other):
+    def __ne__(self, other) -> bool:
         return not (self == other)
 
     @property
@@ -194,9 +207,9 @@ class Node(futures.FutureLike[_T]):
     def name(self, to: Optional[str]) -> None:
         self._name = to
 
-    def _check_resources_and_mode(self):
-        """
-        Check if the user has set the resource options correctly for the mode
+    def _check_resources_and_mode(self) -> None:
+        """Check if the user has set the resource options correctly
+        for the mode.
         """
 
         resources_set = self._resources is not None
@@ -220,7 +233,7 @@ class Node(futures.FutureLike[_T]):
                 "Resource class cannot be set for locally-executed nodes."
             )
 
-    def _find_deps(self):
+    def _find_deps(self) -> None:
         """Finds Nodes this depends on and adds them to our dependency list."""
         parents = _find_parent_nodes((self.args, self.kwargs))
         for dep in parents:
@@ -241,7 +254,7 @@ class Node(futures.FutureLike[_T]):
                         " in a subsequent DAG if they are already complete."
                     ) from e
 
-    def depends_on(self, node: "Node"):
+    def depends_on(self, node: "Node") -> None:
         """
         Create dependency chain for node, useful when there is a dependency
         that does not rely directly on passing results from one to another
@@ -362,7 +375,7 @@ class Node(futures.FutureLike[_T]):
             return None
         return sp.task_id
 
-    def wait(self, timeout: Optional[float] = None):
+    def wait(self, timeout: Optional[float] = None) -> None:
         """
         Wait for node to be completed
         :param timeout: optional timeout in seconds to wait for DAG to be completed
@@ -390,7 +403,7 @@ class Node(futures.FutureLike[_T]):
     def _callbacks(self):
         return tuple(self._cb_list)
 
-    def _wait(self, timeout: Optional[float]):
+    def _wait(self, timeout: Optional[float]) -> None:
         futures.wait_for(self._lifecycle_condition, self._done, timeout)
 
     def _done(self) -> bool:
@@ -576,6 +589,28 @@ class Node(futures.FutureLike[_T]):
 
 
 class DAG:
+    """Low-level API for creating and managing direct acyclic graphs
+    as TileDB Cloud Task Graphs.
+
+    :param id: UUID for DAG instance.
+    :param nodes: Mapping of Node UUIDs to Node instances.
+    :param nodes_by_name: Mapping of Node names to Node instances.
+    :param namespace: Namespace to execute DAG in.
+    :param name: Human-readable name for DAG to be showin in Task Graph logs.
+    :param server_graph_uuid: Server-side UUID.
+    :param max_workers: Number of works to allocated to execute DAG.
+    :param retry_strategy: K8S retry policy to be applied to each Node.
+    :param workflow_retry_strategy: K8S retry policy to be applied to DAG.
+    :param deadline: Duration (sec) DAG allowed to execute before timeout.
+    :param mode: Mode the DAG is to run in, valid options are: Mode.REALTIME, Mode.BATCH
+    :param visualization: Visualization metadata.
+    :param completed_nodes: Completed Nodes.
+    :param failed_nodes: Failed Nodes.
+    :param running_nodes: Running Nodes.
+    :param not_started_nodes: Queued Nodes.
+    :param cancelled_nodes: Cancelled Nodes.
+    """
+
     def __init__(
         self,
         max_workers: Optional[int] = None,
@@ -588,9 +623,8 @@ class DAG:
         retry_strategy: Optional[models.RetryStrategy] = None,
         workflow_retry_strategy: Optional[models.RetryStrategy] = None,
         deadline: Optional[int] = None,
-    ):
+    ) -> None:
         """
-        DAG is a class for creating and managing direct acyclic graphs
         :param max_workers: how many workers should be used to execute the dag
         :param use_processes: if true will use processes instead of threads,
             defaults to threads
@@ -669,13 +703,13 @@ class DAG:
 
         self._tried_setup: bool = False
 
-    def __hash__(self):
+    def __hash__(self) -> Hashable:
         return hash(self.id)
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return type(self) == type(other) and self.id == other.id
 
-    def __ne__(self, other):
+    def __ne__(self, other) -> bool:
         return not (self == other)
 
     @property
@@ -683,7 +717,7 @@ class DAG:
         with self._lifecycle_condition:
             return self._status
 
-    def initial_setup(self):
+    def initial_setup(self) -> uuid.UUID:
         """Performs one-time server-side setup tasks.
 
         Can safely be called multiple times.
@@ -1540,7 +1574,7 @@ class DAG:
                 func = node_args.pop(0)
                 kwargs["executable_code"] = codecs.PickleCodec.encode_base64(func)
                 kwargs["source_text"] = functions.getsourcelines(func)
-            if type(node.args[0]) == str:
+            if isinstance(node.args[0], str):
                 func = node_args.pop(0)
                 kwargs["registered_udf_name"] = func
 
