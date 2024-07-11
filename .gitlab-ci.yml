@@ -1,6 +1,7 @@
 stages:
   - pull_request
   - push
+  # TODO: Find how to trigger on merges to `main`
 
 image: ubuntu:latest
 
