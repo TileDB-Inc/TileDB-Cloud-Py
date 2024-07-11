@@ -13,7 +13,7 @@ dependencies = [
     "importlib-metadata",
     "packaging",
     "pandas>=1.2.4",
-    "pyarrow>=3.0.0",
+    "pyarrow==15.0.0",
     "python-dateutil",
     "six>=1.10",
     # Not directly used on the client, but some server-side environments have
