@@ -35,8 +35,6 @@ website:
             href: reference/cloudarray.qmd
           - text: "`config`"
             href: reference/config.qmd
-          - text: "`file`"
-            href: reference/file.qmd
           - text: "`groups`"
             href: reference/groups.qmd
           - text: "`invites`"
