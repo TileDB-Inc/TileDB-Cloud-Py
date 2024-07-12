@@ -1,7 +1,6 @@
 import base64
 import uuid
 import warnings
-from logging import warning
 from typing import Any, Callable, Iterable, Optional, Union
 
 import cloudpickle
@@ -551,33 +550,16 @@ Delete a registered udf
 """
 
 
-def delete(
-    uri: str, namespace: Optional[str] = None, *, async_req: bool = False
-) -> None:
+def delete(uri: str, *, async_req: bool = False) -> None:
     """
     Deletes a registered udf
 
     :param uri: TileDB URI of the udf, defaults to None.
-    :param namespace: namespace the udf belongs to, defaults to None.
-        DEPRECATION WARNING: Will be deprecate from version 0.12.17
     :param async_req: Return future instead of results for async support
     :return: deleted udf details
     """
     try:
         namespace, name = utils.split_uri(uri)
-    except Exception as exc:
-        if str(exc).startswith("Incorrect"):
-            warning(
-                DeprecationWarning(
-                    "From version 0.12.17 the method will accept"
-                    "only `tiledb://<namespace>/<name>` URIs"
-                ),
-            )
-            name = uri
-        else:
-            raise exc
-
-    try:
         api_instance = client.build(rest_api.UdfApi)
 
         return api_instance.delete_udf_info(
