@@ -95,13 +95,25 @@ class ParentFailedError(futures.CancelledError):
 class Node(futures.FutureLike[_T]):
     """Representation of a function to run in a DAG.
 
-    :param id: UUID for instance.
-    :param dag: Dag this node is associated with.
-    :param mode: Mode the node is to run in.
-    :param parents: Parent Node instances.
-    :param children: Children Node instances.
-    :param args: position args for Node.
-    :param kwargs: key-word args for Node.
+    :param func: Function to run as UDF task.
+    :param *args: Positional arguments to pass to UDF.
+    :param name: Human-readable name of Node task.
+    :param dag: DAG this node is associated with.
+    :param mode: Mode the Node is to run in.
+    :param expand_node_output: Node to expand processes upon.
+    :param _download_results: An optional boolean to override default
+        result-downloading behavior. If True, will always download the
+        results of the function immediately upon completion.
+        If False, will not download the results of the function immediately,
+        but will be downloaded when ``.result()`` is called.
+    :param _internal_prewrapped_func: For internal use only. A function that returns.
+        something that is already a Result, which does not require wrapping.
+        We assume that all prewrapped functions make server calls.
+    :param _internal_accepts_stored_params: For internal use only.
+        Applies only when ``_prewrapped_func`` is used.
+        ``True`` if ``_prewrapped_func`` can accept stored parameters.
+        ``False`` if it cannot, and all parameters must be serialized.
+    :param **kwargs: dictionary for keyword arguments
     """
 
     def __init__(
@@ -115,33 +127,12 @@ class Node(futures.FutureLike[_T]):
         _download_results: Optional[bool] = None,
         _internal_prewrapped_func: Callable[..., "results.Result[_T]"] = None,
         _internal_accepts_stored_params: bool = True,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
-        """
-        :param func: function to run.
-        :param args: tuple of arguments to run.
-        :param name: optional name of dag.
-        :param dag: dag this node is associated with.
-        :param mode: Mode the node is to run in.
-        :param expand_node_output: Node to expand processes upon.
-        :param _download_results: An optional boolean to override default
-            result-downloading behavior. If True, will always download the
-            results of the function immediately upon completion.
-            If False, will not download the results of the function immediately,
-            but will be downloaded when ``.result()`` is called.
-        :param _internal_prewrapped_func: For internal use only. A function that returns
-            something that is already a Result, which does not require wrapping.
-            We assume that all prewrapped functions make server calls.
-        :param _internal_accepts_stored_params: For internal use only.
-            Applies only when ``_prewrapped_func`` is used.
-            ``True`` if ``_prewrapped_func`` can accept stored parameters.
-            ``False`` if it cannot, and all parameters must be serialized.
-        :param kwargs: dictionary for keyword arguments
-        """
-
         self.id = uuid.uuid4()
+        """UUID for Node instance."""
         self._name = name
-
+        """Name of Node instances."""
         self._lifecycle_condition = threading.Condition(threading.Lock())
         self._status = Status.NOT_STARTED
         self._starting = False
@@ -152,7 +143,9 @@ class Node(futures.FutureLike[_T]):
         self._cb_list: List[Callable[["Node[_T]"], None]] = []
 
         self.dag = dag
+        """DAG this Node is pinned to."""
         self.mode: Mode = mode
+        """Processing mode of Node."""
         self._expand_node_output: Optional[Node] = expand_node_output
 
         self._resource_class = kwargs.pop("resource_class", None)
@@ -182,11 +175,14 @@ class Node(futures.FutureLike[_T]):
         self._download_results = _download_results
 
         self.parents: Dict[uuid.UUID, Node] = {}
+        """Parent Nodes (Nodes this Node is dependent on)."""
         self.children: Dict[uuid.UUID, Node] = {}
-
+        """Child Nodes (Nodes dependent on this Node)."""
         self._has_node_args = False
         self.args: Tuple[Any, ...] = args
+        """Positional args to pass into UDF."""
         self.kwargs: Dict[str, Any] = kwargs
+        """Keyword args to pass into UDF."""
         self._check_resources_and_mode()
         self._find_deps()
 
@@ -201,6 +197,7 @@ class Node(futures.FutureLike[_T]):
 
     @property
     def name(self) -> str:
+        """The human-readable name of Node."""
         return self._name or str(self.id)
 
     @name.setter
@@ -235,6 +232,7 @@ class Node(futures.FutureLike[_T]):
 
     def _find_deps(self) -> None:
         """Finds Nodes this depends on and adds them to our dependency list."""
+
         parents = _find_parent_nodes((self.args, self.kwargs))
         for dep in parents:
             self._has_node_args = True
@@ -255,12 +253,12 @@ class Node(futures.FutureLike[_T]):
                     ) from e
 
     def depends_on(self, node: "Node") -> None:
-        """
-        Create dependency chain for node, useful when there is a dependency
-        that does not rely directly on passing results from one to another
+        """Create dependency chain for node, useful when there is a dependency
+        that does not rely directly on passing results from one to another.
+
         :param node: node to mark as a dependency of this node
-        :return:
         """
+
         with self._lifecycle_condition:
             if self._status is not Status.NOT_STARTED:
                 raise RuntimeError("Cannot add dependency to an already-started node.")
@@ -273,6 +271,8 @@ class Node(futures.FutureLike[_T]):
     # FutureLike methods.
 
     def cancel(self) -> bool:
+        """Cancel Node."""
+
         with self._lifecycle_condition:
             if self._status is not Status.NOT_STARTED:
                 return False
@@ -287,14 +287,20 @@ class Node(futures.FutureLike[_T]):
             return self._done()
 
     def cancelled(self) -> bool:
+        """Whether Node is cancelled."""
+
         with self._lifecycle_condition:
             return self._status is Status.CANCELLED
 
     def running(self) -> bool:
+        """Whether Node is actively running."""
+
         with self._lifecycle_condition:
             return self._status is Status.RUNNING
 
     def result(self, timeout: Optional[float] = None) -> _T:
+        """Fetch Node return."""
+
         if self.mode == Mode.BATCH:
             with self._lifecycle_condition:
                 self._wait(timeout)
@@ -316,6 +322,8 @@ class Node(futures.FutureLike[_T]):
             return result.get()
 
     def exception(self, timeout: Optional[float] = None) -> Optional[BaseException]:
+        """Return execption if one was raised."""
+
         with self._lifecycle_condition:
             self._wait(timeout)
             if self._lifecycle_exception:
@@ -323,6 +331,10 @@ class Node(futures.FutureLike[_T]):
             return self._exception
 
     def add_done_callback(self, fn: Callable[["Node[_T]"], None]) -> None:
+        """Add callback function to execute at Node completion.
+
+        :param fn: Callaback to execute."""
+
         with self._lifecycle_condition:
             self._cb_list.append(fn)
             if not self._done():
@@ -343,14 +355,20 @@ class Node(futures.FutureLike[_T]):
 
     @property
     def status(self) -> st.Status:
+        """Node status."""
+
         with self._lifecycle_condition:
             return self._status
 
     @property
     def error(self) -> Optional[Exception]:
+        """Return Node error if encountered."""
+
         return self._error()
 
     def retry(self) -> bool:
+        """Retry Node."""
+
         if not self.dag:
             return False
         with self._lifecycle_condition:
@@ -362,8 +380,9 @@ class Node(futures.FutureLike[_T]):
     def task_id(self) -> Optional[uuid.UUID]:
         """Gets the server-side Task ID of this node.
 
-        Returns None if this has no task ID (as it was run on the client side).
+        :return: None if this has no task ID (as it was run on the client side).
         """
+
         try:
             with self._lifecycle_condition:
                 if not self._result:
@@ -376,11 +395,12 @@ class Node(futures.FutureLike[_T]):
         return sp.task_id
 
     def wait(self, timeout: Optional[float] = None) -> None:
+        """Wait for node to be completed.
+
+        :param timeout: optional timeout in seconds to wait for DAG to be completed.
+        :return: None or raises TimeoutError if timeout occurs.
         """
-        Wait for node to be completed
-        :param timeout: optional timeout in seconds to wait for DAG to be completed
-        :return: None or raises TimeoutError if timeout occurs
-        """
+
         with self._lifecycle_condition:
             self._wait(timeout)
 
@@ -592,23 +612,19 @@ class DAG:
     """Low-level API for creating and managing direct acyclic graphs
     as TileDB Cloud Task Graphs.
 
-    :param id: UUID for DAG instance.
-    :param nodes: Mapping of Node UUIDs to Node instances.
-    :param nodes_by_name: Mapping of Node names to Node instances.
+    :param max_workers: Number of works to allocate to execute DAG.
+    :param use_processes: If true will use processes instead of threads.
+    :param done_callback: Optional call back function to register for
+        when dag is completed. Function will be passed reference to this DAG.
+    :param update_callback: Optional call back function to register for
+        when dag status is updated. Function will be passed reference to this DAG.
     :param namespace: Namespace to execute DAG in.
     :param name: Human-readable name for DAG to be showin in Task Graph logs.
-    :param server_graph_uuid: Server-side UUID.
-    :param max_workers: Number of works to allocated to execute DAG.
+    :param mode: Mode the DAG is to run in, valid options are: Mode.REALTIME,
+        Mode.BATCH.
     :param retry_strategy: K8S retry policy to be applied to each Node.
     :param workflow_retry_strategy: K8S retry policy to be applied to DAG.
     :param deadline: Duration (sec) DAG allowed to execute before timeout.
-    :param mode: Mode the DAG is to run in, valid options are: Mode.REALTIME, Mode.BATCH
-    :param visualization: Visualization metadata.
-    :param completed_nodes: Completed Nodes.
-    :param failed_nodes: Failed Nodes.
-    :param running_nodes: Running Nodes.
-    :param not_started_nodes: Queued Nodes.
-    :param cancelled_nodes: Cancelled Nodes.
     """
 
     def __init__(
@@ -624,50 +640,39 @@ class DAG:
         workflow_retry_strategy: Optional[models.RetryStrategy] = None,
         deadline: Optional[int] = None,
     ) -> None:
-        """
-        :param max_workers: how many workers should be used to execute the dag
-        :param use_processes: if true will use processes instead of threads,
-            defaults to threads
-        :param done_callback: optional call back function to register for
-            when dag is completed. Function will be passed reference to this dag
-        :param update_callback: optional call back function to register for
-            when dag status is updated. Function will be passed reference to this dag
-        :param namespace: optional namespace to use for all tasks in DAG
-        :param name: A human-readable name used to identify this task graph
-            in logs. Does not need to be unique.
-        :param mode: Mode the DAG is to run in, valid options are
-            Mode.REALTIME, Mode.BATCH
-        :param retry_strategy: RetryStrategy to be applied on every node of the DAG.
-        :param workflow_retry_strategy: RetryStrategy to use to retry the entire DAG.
-        :param deadline: Duration in seconds relative to the workflow start time
-            which the workflow is allowed to run before it gets terminated.
-        """
-        self.id = uuid.uuid4()
+        self.id: uuid.UUID = uuid.uuid4()
+        """UUID for DAG instance."""
         self.nodes: Dict[uuid.UUID, Node] = {}
+        """Mapping of Node UUIDs to Node instances."""
         self.nodes_by_name: Dict[str, Node] = {}
-
-        self.namespace = namespace or client.default_charged_namespace(
+        """Mapping of Node names to Node instances."""
+        self.namespace: str = namespace or client.default_charged_namespace(
             required_action=rest_api.NamespaceActions.RUN_JOB
         )
-        self.name = name
+        """Namespace to execute DAG in."""
+        self.name: Optional[str] = name
+        """Human-readable name for DAG to be showin in Task Graph logs."""
         self.server_graph_uuid: Optional[uuid.UUID] = None
-        self.max_workers = max_workers
-        self.retry_strategy = retry_strategy
-        self.workflow_retry_strategy = workflow_retry_strategy
-        self.deadline = deadline
-
-        self._update_batch_status_thread: Optional[threading.Thread] = None
-        """The thread that is updating the status of Batch execution."""
-        self.mode: Mode = mode
-
         """The server-generated UUID of this graph, used for logging.
-
         Will be ``None`` until :meth:`initial_setup` is called. If submitting
         the log works, will be the UUID; otherwise, will be None.
         """
-
+        self.max_workers: Optional[int] = max_workers
+        """Number of works to allocate to execute DAG."""
+        self.retry_strategy: Optional[models.RetryStrategy] = retry_strategy
+        """K8S retry policy to be applied to each Node."""
+        self.workflow_retry_strategy: Optional[
+            models.RetryStrategy
+        ] = workflow_retry_strategy
+        """K8S retry policy to be applied to DAG."""
+        self.deadline: Optional[str] = deadline
+        """Duration (sec) DAG allowed to execute before timeout."""
+        self._update_batch_status_thread: Optional[threading.Thread] = None
+        """The thread that is updating the status of Batch execution."""
+        self.mode: Mode = mode
+        """Mode the DAG is to run in."""
         self.visualization = None
-
+        """Visualization metadata."""
         self._udf_executor: futures.Executor
         """The executor that is used to make server calls and run local UDFs."""
         if use_processes:
@@ -682,15 +687,17 @@ class DAG:
             max_workers=max_workers,
         )
         """The thread pool that is used to execute nodes' exec functions."""
-
         self._lifecycle_condition = threading.Condition(threading.Lock())
-
         self.completed_nodes: Dict[uuid.UUID, Node] = {}
+        """Completed Nodes."""
         self.failed_nodes: Dict[uuid.UUID, Node] = {}
+        """Failed Nodes."""
         self.running_nodes: Dict[uuid.UUID, Node] = {}
+        """Running Nodes."""
         self.not_started_nodes: Dict[uuid.UUID, Node] = {}
+        """Queued Nodes."""
         self.cancelled_nodes: Dict[uuid.UUID, Node] = {}
-
+        """Cancelled Nodes."""
         self._status = st.Status.NOT_STARTED
 
         self._done_callbacks = []
@@ -714,6 +721,8 @@ class DAG:
 
     @property
     def status(self):
+        """Get DAG status."""
+
         with self._lifecycle_condition:
             return self._status
 
@@ -722,6 +731,7 @@ class DAG:
 
         Can safely be called multiple times.
         """
+
         with self._lifecycle_condition:
             if not self._tried_setup:
                 log_structure = self._build_log_structure()
@@ -859,6 +869,7 @@ class DAG:
         :param name: name
         :return: Node that is created
         """
+
         mode = Mode.LOCAL if local_mode else Mode.REALTIME
 
         return self._add_raw_node(
@@ -938,14 +949,15 @@ class DAG:
             )
             return self._add_node_internal(node)
 
-    def submit_array_udf(self, func, *args, **kwargs):
+    def submit_array_udf(self, func: Callable, *args: Any, **kwargs: Any):
+        """Submit a function that will be executed in the cloud serverlessly.
+
+        :param func: Function to execute in UDF task.
+        :param *args: Postional arguments to pass into Node instantation.
+        :param **kwargs: Keyword args to pass into Node instantiation.
+        :return: Node that is created.
         """
-        Submit a function that will be executed in the cloud serverlessly
-        :param func: function to execute
-        :param args: arguments for function execution
-        :param name: name
-        :return: Node that is created
-        """
+
         return self._add_prewrapped_node(
             array.apply_base,
             func,
@@ -954,24 +966,25 @@ class DAG:
             **kwargs,
         )
 
-    def submit_local(self, func, *args, **kwargs):
-        """
-        Submit a function that will run locally
-        :param func: function to execute
-        :param args: arguments for function execution
-        :param name: name
+    def submit_local(self, func: Callable, *args: Any, **kwargs):
+        """Submit a function that will run locally.
+
+        :param func: Function to execute in UDF task.
+        :param *args: Postional arguments to pass into Node instantation.
+        :param **kwargs: Keyword args to pass into Node instantiation.
         :return: Node that is created
         """
+
         kwargs.setdefault("name", functions.full_name(func))
         return self._add_raw_node(func, *args, mode=Mode.LOCAL, **kwargs)
 
-    def submit_udf(self, func, *args, **kwargs):
-        """
-        Submit a function that will be executed in the cloud serverlessly
-        :param func: function to execute
-        :param args: arguments for function execution
-        :param name: name
-        :return: Node that is created
+    def submit_udf(self, func: Callable, *args, **kwargs):
+        """Submit a function that will be executed in the cloud serverlessly.
+
+        :param func: Function to execute in UDF task.
+        :param *args: Postional arguments to pass into Node instantation.
+        :param **kwargs: Keyword args to pass into Node instantiation.
+        :return: Node that is created.
         """
 
         if "local_mode" in kwargs:
@@ -994,16 +1007,38 @@ class DAG:
     submit = submit_udf
 
     def submit_udf_stage(
-        self, func, *args, expand_node_output: Optional[Node] = None, **kwargs
-    ):
-        """
-        Submit a function that will be executed in the cloud serverlessly
-        :param func: function to execute
-        :param args: arguments for function execution
-        :param expand_node_output: the Node that we want to expand the output of.
+        self,
+        func: Callable,
+        *args: Any,
+        expand_node_output: Optional[Node] = None,
+        **kwargs: Any,
+    ) -> Node:
+        """Submit a function that will be executed in the cloud serverlessly.
+
+        Expand on node output simply means to dynamically allocate works to this UDF
+        stage based on the output of the node indicated via the `expand_node_output`
+        arg.
+
+        For example, if a node, `NodeA` (`NodeA = DAG.submit(...)`), returns a list
+        of str values and `NodeA` is passed to `expand_node_output`, along with an
+        arg in the `func` passed to `submit_udf_stage` that accepts a str is also
+        passed `NodeA`, a node will spawn in parallel for each str value in the
+        result of `NodeA`.
+
+        ```python
+        graph = DAG(...)
+
+        NodeA = graph.submit()
+
+        NodeB = graph.submit_udf_stage(..., expand_node_output=NodeA, str_arg=NodeA)
+        ```
+
+        :param func: Function to execute in UDF task.
+        :param *args: Postional arguments to pass into Node instantation.
+        :param expand_node_output: Node that we want to expand the output of.
             The output of the node should be a JSON encoded list.
-        :param name: name
-        :return: Node that is created
+        :param **kwargs: Keyword args to pass into Node instantiation.
+        :return: Node that is created.
         """
 
         if "local_mode" in kwargs or self.mode != Mode.BATCH:
@@ -1020,14 +1055,15 @@ class DAG:
             **kwargs,
         )
 
-    def submit_sql(self, *args, **kwargs):
-        """
-        Submit a sql query to run serverlessly in the cloud
-        :param sql: query to execute
-        :param args: arguments for function execution
-        :param name: name
+    def submit_sql(self, *args: Any, **kwargs: Any) -> Node:
+        """Submit a sql query to run serverlessly in the cloud.
+
+        :param sql: Query to execute.
+        :param *args: Postional arguments to pass into Node instantation.
+        :param **kwargs: Keyword args to pass into Node instantiation.
         :return: Node that is created
         """
+
         return self._add_prewrapped_node(
             _sql_exec.exec_base,
             *args,
@@ -1058,12 +1094,12 @@ class DAG:
         elif new_status is Status.CANCELLED:
             self.cancelled_nodes[node.id] = node
 
-    def report_node_complete(self, node: Node):
+    def report_node_complete(self, node: Node) -> None:
+        """Report a node as complete.
+
+        :param node: Node to mark as complete.
         """
-        Report a node as complete
-        :param node: to mark as complete
-        :return
-        """
+
         to_report: Optional[str] = None
         """The client-side event to report to the server, if needed.
 
@@ -1073,6 +1109,7 @@ class DAG:
         the graph information on the server can know about these failed nodes
         even though there will be no ArrayTask for them in our database.
         """
+
         with self._lifecycle_condition:
             # A node may be either "running" or "not started" depending upon
             # whether it failed or was cancelled.
@@ -1161,11 +1198,12 @@ class DAG:
         self._status = st
         self._lifecycle_condition.notify_all()
 
-    def _find_root_nodes(self):
+    def _find_root_nodes(self) -> List[Node]:
+        """Find all root nodes.
+
+        :return: list of root nodes.
         """
-        Find all root nodes
-        :return: list of root nodes
-        """
+
         roots = []
         for node in self.nodes.values():
             if node.parents is None or len(node.parents) == 0:
@@ -1173,18 +1211,17 @@ class DAG:
 
         return roots
 
-    def _find_leaf_nodes(self):
-        """
-        Find all leaf nodes
+    def _find_leaf_nodes(self) -> List[Node]:
+        """Find all leaf nodes.
+
         :return: list of leaf nodes
         """
+
         return [n for n in self.nodes.values() if not n.children]
 
-    def compute(self):
-        """
-        Start the DAG by executing root nodes
-        :return:
-        """
+    def compute(self) -> None:
+        """Start the DAG by executing root nodes."""
+
         with self._lifecycle_condition:
             if self._status is not Status.NOT_STARTED:
                 return
@@ -1225,8 +1262,8 @@ class DAG:
             del self.not_started_nodes[node.id]
 
     def wait(self, timeout: Optional[float] = None) -> None:
-        """
-        Wait for DAG to be completed
+        """Wait for DAG to be completed.
+
         :param timeout: optional timeout in seconds to wait for DAG to be completed
         :return: None or raises TimeoutError if timeout occurs
         """
@@ -1245,7 +1282,9 @@ class DAG:
             assert exc
             raise exc
 
-    def cancel(self):
+    def cancel(self) -> None:
+        """Cancel DAG."""
+
         if self.mode == Mode.BATCH:
             client.build(rest_api.TaskGraphLogsApi).stop_task_graph_execution(
                 namespace=self.namespace, id=self.server_graph_uuid
@@ -1264,6 +1303,7 @@ class DAG:
 
     def retry_all(self) -> None:
         """Retries all failed and cancelled nodes."""
+
         if self.mode == Mode.BATCH:
             for node in frozenset(self.failed_nodes.values()).union(
                 self.cancelled_nodes.values()
@@ -1297,9 +1337,9 @@ class DAG:
             for n in to_retry:
                 n.retry()
 
-    def find_end_nodes(self):
-        """
-        Find all end nodes
+    def find_end_nodes(self) -> List[Node]:
+        """Find all end nodes.
+
         :return: list of end nodes
         """
         end = []
@@ -1309,7 +1349,12 @@ class DAG:
 
         return end
 
-    def stats(self):
+    def stats(self) -> Dict[str, Union[int, float]]:
+        """Get DAG node statistics.
+
+        :return: All node stats.
+        """
+
         return {
             "percent_complete": len(self.completed_nodes) / len(self.nodes) * 100,
             "running": len(self.running_nodes),
@@ -1333,11 +1378,12 @@ class DAG:
 
         return graph
 
-    def get_tiledb_plot_node_details(self):
+    def get_tiledb_plot_node_details(self) -> Dict[str, Dict[str, str]]:
+        """Build list of details needed for tiledb node graph
+
+        :return: Node summary
         """
-        Build list of details needed for tiledb node graph
-        :return:
-        """
+
         node_details = {}
 
         for node in self.nodes.values():
@@ -1372,14 +1418,14 @@ class DAG:
         )
 
     def visualize(self, notebook=True, auto_update=True, force_plotly=False):
-        """
-        Build and render a tree diagram of the DAG.
+        """Build and render a tree diagram of the DAG.
+
         :param notebook: Is the visualization inside a jupyter notebook?
-            If so we'll use a widget
-        :param auto_update: Should the diagram be auto updated with each status change
+            If so we'll use a widget.
+        :param auto_update: Should the diagram be auto updated with each status change.
         :param force_plotly: Force the use of plotly graphs instead of
-            TileDB Plot Widget
-        :return: returns figure
+            TileDB Plot Widget.
+        :return: returns figure.
         """
         if not notebook or force_plotly:
             return self._visualize_plotly(notebook=notebook, auto_update=auto_update)
@@ -1419,7 +1465,7 @@ class DAG:
         return fig
 
     def _visualize_plotly(self, notebook=True, auto_update=True):
-        """
+        """Visualize figure.
 
         :param notebook: Is the visualization inside a jupyter notebook?
             If so we'll use a widget
@@ -1505,7 +1551,7 @@ class DAG:
 
     def end_nodes(self):
         """
-        Find all ends nodes
+        Find all end nodes
 
         dag = DAG()
         dag.add_node(Node())
