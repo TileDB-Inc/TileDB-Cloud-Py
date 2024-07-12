@@ -5,12 +5,16 @@ import posixpath
 import urllib.parse
 from typing import Iterable, List, Optional, Tuple, Union
 
-import tiledb.cloud.tiledb_cloud_error as tce
-from tiledb.cloud import client
-from tiledb.cloud import rest_api
-from tiledb.cloud._common import api_v2
-from tiledb.cloud._common import utils
-from tiledb.cloud.rest_api.models import group_update
+from . import client
+from . import rest_api
+from . import tiledb_cloud_error
+from ._common import api_v2
+from ._common import utils
+from .rest_api import ApiException as GenApiException
+from .rest_api import models
+from .rest_api.models import group_update
+
+split_uri = utils.split_uri
 
 
 def create(
@@ -130,7 +134,7 @@ def update_info(
     try:
         return groups_v1_client.update_group(namespace, group_name, group_update=info)
     except rest_api.ApiException as exc:
-        raise tce.check_exc(exc)
+        raise tiledb_cloud_error.check_exc(exc)
 
 
 def deregister(
@@ -173,8 +177,24 @@ def deregister(
                     grp: rest_api.GroupInfo = m.group
                     deregister(grp.tiledb_uri, recursive=recursive)
                 else:
-                    raise tce.TileDBCloudError("unexpected group member type")
+                    raise tiledb_cloud_error.TileDBCloudError(
+                        "unexpected group member type"
+                    )
     groups_api.deregister_group(group_namespace=namespace, group_name=name)
+
+
+def delete(uri: str, recursive: bool = False) -> None:
+    """
+    Deletes a group.
+
+    :param uri: TileDB Group URI.
+    :param recursive: Delete all off the group's contents, defaults to False
+    """
+    namespace, group_name = utils.split_uri(uri)
+    groups_api = client.build(api_v2.GroupsApi)
+    groups_api.delete_group(
+        group_namespace=namespace, group_name=group_name, recursive=recursive
+    )
 
 
 def _default_ns_path_cred(namespace: Optional[str] = None) -> Tuple[str, str, str]:
@@ -205,7 +225,8 @@ def _default_ns_path_cred(namespace: Optional[str] = None) -> Tuple[str, str, st
         cred_name = storage.credentials_name
     if not path and not principal.default_s3_path:
         raise ValueError("No storage provider configured.")
-    path = path or (principal.default_s3_path + "/groups")
+    # Sanitize any extra trailing "/"
+    path = path or (principal.default_s3_path.rstrip("/") + "/groups")
     cred_name = cred_name or principal.default_s3_path_credentials_name
     return namespace, path, cred_name
 
@@ -227,3 +248,70 @@ def _add_to(*, namespace: str, name: str, parent_uri: str) -> None:
             ),
         ),
     )
+
+
+def list_shared_with(uri, async_req=False):
+    """List a group's sharing policies.
+
+    :param str uri: tiledb URI of the asset.
+    :param async_req: return future instead of results for async support.
+    :return: a list of GroupSharing objects.
+    """
+    (group_namespace, group_name) = split_uri(uri)
+    api_instance = client.build(rest_api.GroupsApi)
+
+    try:
+        return api_instance.get_group_sharing_policies(
+            group_namespace=group_namespace, group_name=group_name, async_req=async_req
+        )
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
+
+
+def share_group(uri, namespace, permissions, async_req=False):
+    """Shares group with given namespace and permissions.
+
+    :param str uri: tiledb URI of the asset.
+    :param str namespace:
+    :param list(str) permissions:
+    :param async_req: return future instead of results for async support.
+    :return: None.
+    """
+
+    if not isinstance(permissions, list):
+        permissions = [permissions]
+
+    if set([perm.lower() for perm in permissions]) - {
+        models.GroupActions.READ,
+        models.GroupActions.WRITE,
+    }:
+        raise Exception("Only read or write permissions are accepted")
+
+    (group_namespace, group_name) = split_uri(uri)
+    api_instance = client.build(rest_api.GroupsApi)
+
+    try:
+        return api_instance.share_group(
+            group_namespace=group_namespace,
+            group_name=group_name,
+            group_sharing_request=models.GroupSharingRequest(
+                namespace=namespace,
+                group_actions=permissions,
+                array_actions=permissions,
+            ),
+            async_req=async_req,
+        )
+    except GenApiException as exc:
+        raise tiledb_cloud_error.check_exc(exc) from None
+
+
+def unshare_group(uri, namespace, async_req=False):
+    """
+    Removes sharing of a group from given namespace
+
+    :param str namespace: namespace to remove shared access to the group
+    :param async_req: return future instead of results for async support
+    :return:
+    :raises: :py:exc:
+    """
+    return share_group(uri, namespace, list(), async_req=async_req)

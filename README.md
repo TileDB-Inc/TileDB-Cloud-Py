@@ -16,6 +16,17 @@ See [Quickstart](https://docs.tiledb.com/cloud/quickstart) section of the docs.
 
 See https://tiledb-inc.github.io/TileDB-Cloud-Py/
 
+#### Contribute to documentation
+
+Documentation uses [Quarto](https://quarto.org/) style documentation.
+
+- Install [Quarto for your OS](https://quarto.org/docs/get-started/)
+- Install documentation dependencies: `pip install .[docs]`
+- Update the [docs/\_quarto.yaml](docs/_quarto.yaml) file accordingly ([read the quartodoc documentation on how to do that](https://quarto.org/docs/get-started/))
+- Build the docs: `quartodoc build --config docs/_quarto.yaml`
+- Preview the generated docs: `quarto preview docs/`
+- Create a relevant PR
+
 ### Testing
 
 - Selection:

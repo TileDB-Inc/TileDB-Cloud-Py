@@ -1,4 +1,5 @@
 import logging
+import warnings
 from typing import Any, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
@@ -23,7 +24,7 @@ def ingest(
     output: Union[Sequence[str], str],
     config: Mapping[str, Any],
     *args: Any,
-    access_credentials_name: str,
+    acn: str = "",
     taskgraph_name: Optional[str] = None,
     num_batches: Optional[int] = None,
     threads: Optional[int] = 0,
@@ -36,16 +37,17 @@ def ingest(
     exclude_metadata: bool = False,
     converter: Optional[str] = None,
     output_ext: str = "",
-    tile_scale: int = 1,
+    tile_scale: int = 128,
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
     """The function ingests microscopy images into TileDB arrays
 
     :param source: uri / iterable of uris of input files.
         If the uri points to a directory of files make sure it ends with a trailing '/'
-    :param output: uri / iterable of uris of input files.
+    :param output: uri / iterable of uris of output files.
         If the uri points to a directory of files make sure it ends with a trailing '/'
     :param config: dict configuration to pass on tiledb.VFS
+    :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
     :param taskgraph_name: Optional name for taskgraph, defaults to None
     :param num_batches: Number of graph nodes to spawn.
         Performs it sequentially if default, defaults to 1
@@ -68,12 +70,30 @@ def ingest(
     :param output_ext: extension for the output images in tiledb
     :param tile_scale: The scaling factor applied to each tile during I/O.
         Larger scale factors will result in less I/O operations.
-    :param access_credentials_name: Access Credentials Name (ACN) registered
-        in TileDB Cloud (ARN type)
+    :param access_credentials_name: [TBDeprecated] Access Credentials Name (ACN)
+        registered in TileDB Cloud (ARN type) if ``acn`` is not set.
     """
 
     logger = get_logger_wrapper(verbose)
     max_workers = None if num_batches else 20  # Default picked heuristically.
+
+    # Demand for mutual exclusion of the two arguments and existence.
+    access_credentials_name = kwargs.pop("access_credentials_name", None)
+    if bool(acn) == bool(access_credentials_name):
+        raise ValueError(
+            "Ingestion graph requires 'access_credentials_name'"
+            "or 'acn' mutually exclusively to be set."
+        )
+    # Backwards compatibility: Assign when only access_credentials_name is set
+    if not acn:
+        acn = access_credentials_name
+        warnings.warn(
+            DeprecationWarning(
+                "The 'access_credentials_name' parameter is about to be"
+                "deprecated and will be removed in future versions."
+                "Please use the 'acn' parameter instead."
+            )
+        )
 
     def build_io_uris_ingestion(
         source: Sequence[str],
@@ -313,10 +333,6 @@ def ingest(
         ),
     )
 
-    if not access_credentials_name:
-        raise ValueError(
-            "Ingestion graph requires `access_credentials_name` to be set."
-        )
     # The lister doesn't need many resources.
     input_list_node = graph.submit(
         build_input_batches,
@@ -353,7 +369,7 @@ def ingest(
         image_name=DEFAULT_IMG_NAME,
         max_workers=threads,
         compressor=compressor_serial,
-        access_credentials_name=access_credentials_name,
+        access_credentials_name=acn,
         **kwargs,
     )
 
@@ -363,17 +379,19 @@ def ingest(
             ingest_list_node,
             config=config,
             verbose=verbose,
-            acn=access_credentials_name,
+            acn=acn,
             namespace=namespace,
             name=f"{dag_name} registrator ",
             expand_node_output=ingest_list_node,
             resources=DEFAULT_RESOURCES if resources is None else resources,
             image_name=DEFAULT_IMG_NAME,
+            access_credentials_name=acn,
             **kwargs,
         )
     if compute:
         run_dag(graph, debug=verbose)
-    return graph
+    else:
+        return graph
 
 
 # Wrapper function for batch VCF ingestion

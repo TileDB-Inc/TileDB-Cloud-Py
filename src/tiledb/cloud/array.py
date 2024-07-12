@@ -25,12 +25,12 @@ split_uri = utils.split_uri
 
 
 class ArrayList:
+    """
+    This class incrementally builds a list of UDFArrayDetails
+    for use in multi array UDFs `list[UDFArrayDetails]`
+    """
+
     def __init__(self):
-        """
-        This class incrementally builds a list of UDFArrayDetails for use in
-        multi array UDFs
-        """
-        """list[UDFArrayDetails]"""
         self.arrayList = []
 
     def add(self, uri=None, ranges=None, buffers=None, layout=None):

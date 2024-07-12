@@ -31,6 +31,7 @@ All URIs are relative to _http://localhost_
 | [**get_arrays_in_namespace**](ArrayApi.md#get_arrays_in_namespace)                                     | **GET** /v1/arrays/{namespace}                                |
 | [**get_fragment_end_timestamp**](ArrayApi.md#get_fragment_end_timestamp)                               | **GET** /v1/arrays/{namespace}/{array}/fragment_end_timestamp |
 | [**get_last_accessed_arrays**](ArrayApi.md#get_last_accessed_arrays)                                   | **GET** /v1/arrays/last_accessed                              |
+| [**load_enumerations**](ArrayApi.md#load_enumerations)                                                 | **POST** /v1/arrays/{namespace}/{array}/enumerations          |
 | [**register_array**](ArrayApi.md#register_array)                                                       | **POST** /v1/arrays/{namespace}/{array}/register              |
 | [**share_array**](ArrayApi.md#share_array)                                                             | **PATCH** /v1/arrays/{namespace}/{array}/share                |
 | [**update_array_metadata**](ArrayApi.md#update_array_metadata)                                         | **PATCH** /v1/arrays/{namespace}/{array}/metadata             |
@@ -239,7 +240,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 per_page = 56 # int | pagination limit (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 namespace = 'namespace_example' # str | namespace (optional)
-orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
+orderby = 'orderby_example' # str | sort by which field valid values include size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
 tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
@@ -297,7 +298,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 per_page = 56 # int | pagination limit (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 namespace = 'namespace_example' # str | namespace (optional)
-orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
+orderby = 'orderby_example' # str | sort by which field valid values include size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
 tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
@@ -320,7 +321,7 @@ file_property = ['file_property_example'] # list[str] | file_property key-value 
 | **per_page**          | **int**                 | pagination limit                                                                                            | [optional] |
 | **search**            | **str**                 | search string that will look at name, namespace or description fields                                       | [optional] |
 | **namespace**         | **str**                 | namespace                                                                                                   | [optional] |
-| **orderby**           | **str**                 | sort by which field valid values include last_accessed, size, name                                          | [optional] |
+| **orderby**           | **str**                 | sort by which field valid values include size, name                                                         | [optional] |
 | **permissions**       | **str**                 | permissions valid values include read, read_write, write, admin                                             | [optional] |
 | **tag**               | [**list[str]**](str.md) | tag to search for, more than one can be included                                                            | [optional] |
 | **exclude_tag**       | [**list[str]**](str.md) | tags to exclude matching array in results, more than one can be included                                    | [optional] |
@@ -541,7 +542,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 per_page = 56 # int | pagination limit (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 namespace = 'namespace_example' # str | namespace (optional)
-orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
+orderby = 'orderby_example' # str | sort by which field valid values include size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
 tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
@@ -599,7 +600,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 per_page = 56 # int | pagination limit (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 namespace = 'namespace_example' # str | namespace (optional)
-orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
+orderby = 'orderby_example' # str | sort by which field valid values include size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
 tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
@@ -622,7 +623,7 @@ file_property = ['file_property_example'] # list[str] | file_property key-value 
 | **per_page**          | **int**                 | pagination limit                                                                                            | [optional] |
 | **search**            | **str**                 | search string that will look at name, namespace or description fields                                       | [optional] |
 | **namespace**         | **str**                 | namespace                                                                                                   | [optional] |
-| **orderby**           | **str**                 | sort by which field valid values include last_accessed, size, name                                          | [optional] |
+| **orderby**           | **str**                 | sort by which field valid values include size, name                                                         | [optional] |
 | **permissions**       | **str**                 | permissions valid values include read, read_write, write, admin                                             | [optional] |
 | **tag**               | [**list[str]**](str.md) | tag to search for, more than one can be included                                                            | [optional] |
 | **exclude_tag**       | [**list[str]**](str.md) | tags to exclude matching array in results, more than one can be included                                    | [optional] |
@@ -843,7 +844,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 per_page = 56 # int | pagination limit (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 namespace = 'namespace_example' # str | namespace (optional)
-orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
+orderby = 'orderby_example' # str | sort by which field valid values include size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
 tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
@@ -902,7 +903,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 per_page = 56 # int | pagination limit (optional)
 search = 'search_example' # str | search string that will look at name, namespace or description fields (optional)
 namespace = 'namespace_example' # str | namespace (optional)
-orderby = 'orderby_example' # str | sort by which field valid values include last_accessed, size, name (optional)
+orderby = 'orderby_example' # str | sort by which field valid values include size, name (optional)
 permissions = 'permissions_example' # str | permissions valid values include read, read_write, write, admin (optional)
 tag = ['tag_example'] # list[str] | tag to search for, more than one can be included (optional)
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
@@ -926,7 +927,7 @@ shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of 
 | **per_page**          | **int**                 | pagination limit                                                                                            | [optional] |
 | **search**            | **str**                 | search string that will look at name, namespace or description fields                                       | [optional] |
 | **namespace**         | **str**                 | namespace                                                                                                   | [optional] |
-| **orderby**           | **str**                 | sort by which field valid values include last_accessed, size, name                                          | [optional] |
+| **orderby**           | **str**                 | sort by which field valid values include size, name                                                         | [optional] |
 | **permissions**       | **str**                 | permissions valid values include read, read_write, write, admin                                             | [optional] |
 | **tag**               | [**list[str]**](str.md) | tag to search for, more than one can be included                                                            | [optional] |
 | **exclude_tag**       | [**list[str]**](str.md) | tags to exclude matching array in results, more than one can be included                                    | [optional] |
@@ -3854,6 +3855,146 @@ This endpoint does not need any parameter.
 | **200**     | gets last accessed arrays | -                |
 | **502**     | Bad Gateway               | -                |
 | **0**       | error response            | -                |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **load_enumerations**
+
+> LoadEnumerationsResponse load_enumerations(namespace, array, load_enumerations_request)
+
+request to get the enumerations of the arrays' attributes
+
+### Example
+
+- Api Key Authentication (ApiKeyAuth):
+
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+load_enumerations_request = tiledb.cloud.rest_api.LoadEnumerationsRequest() # LoadEnumerationsRequest | Load Enumerations Request
+
+    try:
+        api_response = api_instance.load_enumerations(namespace, array, load_enumerations_request)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ArrayApi->load_enumerations: %s\n" % e)
+```
+
+- Basic Authentication (BasicAuth):
+
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+load_enumerations_request = tiledb.cloud.rest_api.LoadEnumerationsRequest() # LoadEnumerationsRequest | Load Enumerations Request
+
+    try:
+        api_response = api_instance.load_enumerations(namespace, array, load_enumerations_request)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ArrayApi->load_enumerations: %s\n" % e)
+```
+
+### Parameters
+
+| Name                          | Type                                                      | Description                                                         | Notes |
+| ----------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------- | ----- |
+| **namespace**                 | **str**                                                   | namespace array is in (an organization name or user&#39;s username) |
+| **array**                     | **str**                                                   | name/uri of array that is url-encoded                               |
+| **load_enumerations_request** | [**LoadEnumerationsRequest**](LoadEnumerationsRequest.md) | Load Enumerations Request                                           |
+
+### Return type
+
+[**LoadEnumerationsResponse**](LoadEnumerationsResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description                                                         | Response headers |
+| ----------- | ------------------------------------------------------------------- | ---------------- |
+| **200**     | enumerations returned successfully                                  | -                |
+| **404**     | Array does not exist or user does not have permissions to access it | -                |
+| **502**     | Bad Gateway                                                         | -                |
+| **0**       | error response                                                      | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

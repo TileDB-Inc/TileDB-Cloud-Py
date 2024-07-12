@@ -5,7 +5,8 @@ import logging
 import sys
 import threading
 import urllib.parse
-from typing import Any, Callable, Optional, TypeVar, Union
+from enum import Enum
+from typing import Any, Callable, Optional, Type, TypeVar, Union
 
 import cloudpickle
 import urllib3
@@ -91,7 +92,7 @@ def ephemeral_thread(func: _CT, name: Optional[str] = None) -> _CT:
     return wrapper  # type: ignore[return-value]
 
 
-def release_connection(resp: urllib3.HTTPResponse) -> None:
+def release_connection(resp: "urllib3.BaseHTTPResponse") -> None:
     """Release the backing connection of this HTTPResponse to the pool.
 
     When a call is made with ``preload_content=False``, the response body is not
@@ -112,3 +113,10 @@ def release_connection(resp: urllib3.HTTPResponse) -> None:
 
 def datetime_to_msec(t: Union[datetime.datetime, int, None]) -> Optional[int]:
     return int(t.timestamp() * 1000) if isinstance(t, datetime.datetime) else t
+
+
+def sanitize_enum_argument(enum_class: Type[Enum], value: str) -> Type[Enum]:
+    try:
+        return enum_class(value)
+    except ValueError as exc:
+        raise ValueError(f"{value} is not a valid {enum_class.__name__}") from exc

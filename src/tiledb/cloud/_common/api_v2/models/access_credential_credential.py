@@ -32,12 +32,16 @@ class AccessCredentialCredential(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"aws": "AWSCredential", "azure": "AzureCredential"}
+    openapi_types = {
+        "aws": "AWSCredential",
+        "azure": "AzureCredential",
+        "gcp": "GCPInteroperabilityCredential",
+    }
 
-    attribute_map = {"aws": "aws", "azure": "azure"}
+    attribute_map = {"aws": "aws", "azure": "azure", "gcp": "gcp"}
 
     def __init__(
-        self, aws=None, azure=None, local_vars_configuration=None
+        self, aws=None, azure=None, gcp=None, local_vars_configuration=None
     ):  # noqa: E501
         """AccessCredentialCredential - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
@@ -46,10 +50,12 @@ class AccessCredentialCredential(object):
 
         self._aws = None
         self._azure = None
+        self._gcp = None
         self.discriminator = None
 
         self.aws = aws
         self.azure = azure
+        self.gcp = gcp
 
     @property
     def aws(self):
@@ -92,6 +98,27 @@ class AccessCredentialCredential(object):
         """
 
         self._azure = azure
+
+    @property
+    def gcp(self):
+        """Gets the gcp of this AccessCredentialCredential.  # noqa: E501
+
+
+        :return: The gcp of this AccessCredentialCredential.  # noqa: E501
+        :rtype: GCPInteroperabilityCredential
+        """
+        return self._gcp
+
+    @gcp.setter
+    def gcp(self, gcp):
+        """Sets the gcp of this AccessCredentialCredential.
+
+
+        :param gcp: The gcp of this AccessCredentialCredential.  # noqa: E501
+        :type: GCPInteroperabilityCredential
+        """
+
+        self._gcp = gcp
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -19,7 +19,7 @@ import six
 
 from tiledb.cloud._common.api_v2.api_client import ApiClient
 from tiledb.cloud._common.api_v2.exceptions import ApiTypeError  # noqa: F401
-from tiledb.cloud._common.api_v2.exceptions import ApiValueError
+from tiledb.cloud._common.api_v2.exceptions import ApiValueError  # noqa: F401
 
 
 class UserApi(object):
@@ -47,6 +47,7 @@ class UserApi(object):
         :param str namespace: namespace (required)
         :param AccessCredential access_credential: The new credentials to be created. (required)
         :param str provider: Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+        :param str type: Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
         :param int page: pagination offset
         :param int per_page: pagination limit
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -80,6 +81,7 @@ class UserApi(object):
         :param str namespace: namespace (required)
         :param AccessCredential access_credential: The new credentials to be created. (required)
         :param str provider: Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+        :param str type: Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
         :param int page: pagination offset
         :param int per_page: pagination limit
         :param _return_http_data_only: response data without head status code
@@ -98,7 +100,14 @@ class UserApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace", "access_credential", "provider", "page", "per_page"]
+        all_params = [
+            "namespace",
+            "access_credential",
+            "provider",
+            "type",
+            "page",
+            "per_page",
+        ]
         all_params.extend(
             [
                 "async_req",
@@ -146,6 +155,10 @@ class UserApi(object):
             query_params.append(
                 ("provider", local_var_params["provider"])
             )  # noqa: E501
+        if (
+            "type" in local_var_params and local_var_params["type"] is not None
+        ):  # noqa: E501
+            query_params.append(("type", local_var_params["type"]))  # noqa: E501
         if (
             "page" in local_var_params and local_var_params["page"] is not None
         ):  # noqa: E501
@@ -482,6 +495,7 @@ class UserApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace (required)
         :param str provider: Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+        :param str type: Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
         :param int page: pagination offset
         :param int per_page: pagination limit
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -510,6 +524,7 @@ class UserApi(object):
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace (required)
         :param str provider: Show only the credentials from this provider. This should be one of the CloudProvider enum values.
+        :param str type: Show only the credentials of this type. This should be one of the AccessCredentialType enum values.
         :param int page: pagination offset
         :param int per_page: pagination limit
         :param _return_http_data_only: response data without head status code
@@ -528,7 +543,7 @@ class UserApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace", "provider", "page", "per_page"]
+        all_params = ["namespace", "provider", "type", "page", "per_page"]
         all_params.extend(
             [
                 "async_req",
@@ -568,6 +583,10 @@ class UserApi(object):
             query_params.append(
                 ("provider", local_var_params["provider"])
             )  # noqa: E501
+        if (
+            "type" in local_var_params and local_var_params["type"] is not None
+        ):  # noqa: E501
+            query_params.append(("type", local_var_params["type"]))  # noqa: E501
         if (
             "page" in local_var_params and local_var_params["page"] is not None
         ):  # noqa: E501

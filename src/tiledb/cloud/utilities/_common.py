@@ -7,6 +7,7 @@ import pathlib
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import wait
 from fnmatch import fnmatch
 from typing import (
     Any,
@@ -118,15 +119,23 @@ def get_logger(level: int = logging.INFO, name: str = __name__) -> logging.Logge
 
 def get_logger_wrapper(
     verbose: bool = False,
+    level: Optional[int] = None,
 ) -> logging.Logger:
     """
     Get a logger instance and log version information.
 
+    Nominal use-case is a simple two-level approach: verbose or not.
+
+    Using ``level`` provides access to the ``logging`` package's levels.
+
     :param verbose: verbose logging, defaults to False
+    :param level: if provided, supersedes ``verbose`` and applies the
+      requested level.
     :return: logger instance
     """
 
-    level = logging.DEBUG if verbose else logging.INFO
+    if level is None:
+        level = logging.DEBUG if verbose else logging.INFO
     logger = get_logger(level)
 
     logger.debug(
@@ -251,21 +260,34 @@ def max_memory_usage() -> int:
 def process_stream(
     uri: str,
     cmd: Sequence[str],
+    *,
+    output_uri: Optional[str] = None,
     read_size: int = 16 << 20,
-) -> Tuple[str, str]:
+    config: Optional[Mapping[str, Any]] = None,
+) -> Tuple[int, str, str]:
     """
-    Process a stream of data from VFS with a subprocess.
+    Process a stream of data from VFS with a subprocess. Optionally write the
+    subprocess stdout to the output_uri.
 
     If the file is large and the subprocess only reads a small amount of data,
     then reduce `read_size` to improve performance.
 
     :param uri: file URI
     :param cmd: command to run in the subprocess
+    :param output_uri: output file URI, defaults to None
     :param read_size: number of bytes to read per iteration, defaults to 16 MiB
-    :return: stdout and stderr from the subprocess
+    :param config: config dictionary, defaults to None
+    :return: (return code, stdout, stderr) from the subprocess
     """
 
-    with tiledb.VFS().open(uri) as fp:
+    vfs = tiledb.VFS(config=config)
+
+    # If output_uri is defined, open the URI with VFS, otherwise open /dev/null.
+    # We need to open something to add to the following context manager.
+    output_fp = vfs.open(output_uri, "wb") if output_uri else open("/dev/null", "wb")
+
+    # Including output_fp in the context manager is needed when writing to s3
+    with vfs.open(uri) as input_fp, output_fp:
         with subprocess.Popen(
             cmd,
             stdin=subprocess.PIPE,
@@ -273,42 +295,65 @@ def process_stream(
             stderr=subprocess.PIPE,
         ) as process:
 
-            def writer():
+            def vfs_to_stdin() -> None:
                 """Read from VFS and write to the subprocess stdin."""
 
-                data = fp.read(read_size)
-                while data:
+                while True:
+                    data = input_fp.read(read_size)
+                    if not data:
+                        break
+
                     try:
                         process.stdin.write(data)
                     except BrokenPipeError:
                         # The subprocess has exited, stop reading.
                         # This is an expected situation.
                         break
-                    data = fp.read(read_size)
                 try:
                     process.stdin.close()
                 except BrokenPipeError:
                     # Ignore broken pipe when closing stdin
                     pass
 
-            def reader(stream):
+            def output_to_str(stream: subprocess.PIPE) -> str:
                 """Return the stream contents as a string."""
 
                 return "".join(line.decode() for line in stream).strip()
+
+            def output_to_vfs(stream: subprocess.PIPE) -> str:
+                """Write the stream contents to the output URI."""
+
+                while True:
+                    data = stream.read(read_size)
+                    if not data:
+                        break
+
+                    output_fp.write(data)
+
+                return ""
 
             # Create separate threads for writing and reading to drain the
             # subprocess output pipes. This prevents a deadlock if the
             # subprocess fills its output buffers.
             with ThreadPoolExecutor(max_workers=3) as executor:
-                executor.submit(writer)
-                stdout_future = executor.submit(reader, process.stdout)
-                stderr_future = executor.submit(reader, process.stderr)
+                input_future = executor.submit(vfs_to_stdin)
+                if output_uri:
+                    stdout_future = executor.submit(output_to_vfs, process.stdout)
+                else:
+                    stdout_future = executor.submit(output_to_str, process.stdout)
+                stderr_future = executor.submit(output_to_str, process.stderr)
+
+            # Wait for all threads to complete
+            wait([input_future, stdout_future, stderr_future])
+
+            # Get the return code from the subprocess
+            rc = process.wait()
 
             # Retrieve results
             stdout = stdout_future.result()
             stderr = stderr_future.result()
 
-            return stdout, stderr
+            return rc, stdout, stderr
 
 
 def _filter_kwargs(function: Callable, kwargs: Mapping[str, Any]) -> Mapping[str, Any]:
@@ -331,6 +376,12 @@ def as_batch(func: _CT) -> _CT:
     """
     Decorator to run a function as a batch UDF on TileDB Cloud.
 
+    optional kwargs:
+    - name: name of the node in the DAG, defaults to func.__name__
+    - namespace: TileDB Cloud namespace, defaults to the user's default namespace
+    - acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
+    - resources: resources to allocate for the UDF, defaults to None
+
     :param func: function to run
     """
 
@@ -345,6 +396,7 @@ def as_batch(func: _CT) -> _CT:
         - acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
         - access_credentials_name: alias for acn, for backwards compatibility
         - resources: resources to allocate for the UDF, defaults to None
+        - image_name: Docker image_name to use for UDFs, defaults to None
         """
 
         name = kwargs.get("name", func.__name__)
@@ -352,6 +404,7 @@ def as_batch(func: _CT) -> _CT:
         acn = kwargs.get("acn", kwargs.pop("access_credentials_name", None))
         kwargs["acn"] = acn  # for backwards compatibility
         resources = kwargs.pop("resources", None)
+        image_name = kwargs.pop("image_name", None)
 
         # Create a new DAG
         graph = dag.DAG(
@@ -367,6 +420,7 @@ def as_batch(func: _CT) -> _CT:
             name=name,
             access_credentials_name=acn,
             resources=resources,
+            image_name=image_name,
             **_filter_kwargs(func, kwargs),
         )
 

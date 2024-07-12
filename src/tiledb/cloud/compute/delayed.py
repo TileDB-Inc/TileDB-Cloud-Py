@@ -14,6 +14,10 @@ from tiledb.cloud.udf import exec as udf_exec
 
 
 class DelayedBase(Node):
+    """
+    Base Delayed interface class
+    """
+
     def __init__(
         self,
         func,
@@ -129,6 +133,12 @@ class DelayedBase(Node):
 
 
 class Delayed(DelayedBase):
+    """
+    Serverless Python function execution as a future.
+
+    Extends [DelayedBase](#tiledb.cloud.compute.delayed.DelayedBase)
+    """
+
     def __init__(self, func_exec, *args, local=False, mode=Mode.REALTIME, **kwargs):
         functions.check_funcable(func_exec=func_exec)
         self.func_exec = func_exec
@@ -152,6 +162,13 @@ class Delayed(DelayedBase):
 
 
 class DelayedSQL(DelayedBase):
+    """
+    Serverless SQL query on a registered Array called with the
+    [Delayed API](#tiledb.cloud.compute.delayed.Delayed)
+
+    Extends [DelayedBase](#tiledb.cloud.compute.delayed.DelayedBase)
+    """
+
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("name", "SQL query" + _random_suffix())
 
@@ -159,6 +176,13 @@ class DelayedSQL(DelayedBase):
 
 
 class DelayedArrayUDF(DelayedBase):
+    """
+    Serverless Array UDF called with the
+    [Delayed API](#tiledb.cloud.compute.delayed.Delayed)
+
+    Extends [DelayedBase](#tiledb.cloud.compute.delayed.DelayedBase)
+    """
+
     def __init__(self, uri, func_exec, *args, **kwargs):
         functions.check_funcable(func_exec=func_exec)
         self.func_exec = func_exec
@@ -169,6 +193,13 @@ class DelayedArrayUDF(DelayedBase):
 
 
 class DelayedMultiArrayUDF(DelayedBase):
+    """
+    Serverless Multi-Array UDF called with the
+    [Delayed API](#tiledb.cloud.compute.delayed.Delayed)
+
+    Extends [DelayedBase](#tiledb.cloud.compute.delayed.DelayedBase)
+    """
+
     def __init__(
         self,
         func: Union[str, Callable],

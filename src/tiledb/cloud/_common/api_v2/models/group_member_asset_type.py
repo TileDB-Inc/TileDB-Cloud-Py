@@ -35,6 +35,13 @@ class GroupMemberAssetType(object):
     USER_DEFINED_FUNCTION = "user_defined_function"
     ML_MODEL = "ml_model"
     FILE = "file"
+    BIOIMG = "bioimg"
+    SOMA = "soma"
+    VCF = "vcf"
+    POINTCLOUD = "pointcloud"
+    RASTER = "raster"
+    GEOMETRY = "geometry"
+    VECTOR_SEARCH = "vector_search"
 
     allowable_values = [
         GROUP,
@@ -44,6 +51,13 @@ class GroupMemberAssetType(object):
         USER_DEFINED_FUNCTION,
         ML_MODEL,
         FILE,
+        BIOIMG,
+        SOMA,
+        VCF,
+        POINTCLOUD,
+        RASTER,
+        GEOMETRY,
+        VECTOR_SEARCH,
     ]  # noqa: E501
 
     """

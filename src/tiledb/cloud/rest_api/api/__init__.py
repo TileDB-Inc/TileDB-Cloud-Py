@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+# flake8: noqa
+
 # import apis into api package
 from tiledb.cloud.rest_api.api.array_api import ArrayApi
 from tiledb.cloud.rest_api.api.array_tasks_api import ArrayTasksApi
@@ -19,5 +21,3 @@ from tiledb.cloud.rest_api.api.task_graphs_api import TaskGraphsApi
 from tiledb.cloud.rest_api.api.tasks_api import TasksApi
 from tiledb.cloud.rest_api.api.udf_api import UdfApi
 from tiledb.cloud.rest_api.api.user_api import UserApi
-
-# flake8: noqa

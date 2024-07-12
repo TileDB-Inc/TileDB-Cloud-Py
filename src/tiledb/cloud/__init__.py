@@ -1,7 +1,11 @@
 # This file imports specifically to re-export.
 
+from . import array
+from . import asset
 from . import compute
 from . import dag
+from . import file
+from . import files
 from . import groups
 from . import sql
 from . import udf
@@ -25,8 +29,6 @@ from .client import login
 from .client import organization
 from .client import organizations
 from .client import user_profile
-from .file import create_file
-from .file import export_file
 from .notebook import download_notebook_contents
 from .notebook import download_notebook_to_file
 from .notebook import rename_notebook
@@ -50,8 +52,12 @@ ResultFormat = models.ResultFormat
 UDFResultType = ResultFormat
 
 __all__ = (
+    "array",
+    "asset",
     "compute",
     "dag",
+    "file",
+    "files",
     "groups",
     "sql",
     "udf",
@@ -74,8 +80,6 @@ __all__ = (
     "organization",
     "organizations",
     "user_profile",
-    "create_file",
-    "export_file",
     "rename_notebook",
     "upload_notebook_from_file",
     "upload_notebook_contents",
