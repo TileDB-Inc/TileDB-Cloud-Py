@@ -130,7 +130,6 @@ quartodoc:
         - client
         - cloudarray
         - config
-        - file
         - groups
         - invites
         - notebook
