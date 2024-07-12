@@ -299,7 +299,11 @@ class Node(futures.FutureLike[_T]):
             return self._status is Status.RUNNING
 
     def result(self, timeout: Optional[float] = None) -> _T:
-        """Fetch Node return."""
+        """Fetch Node return.
+
+        :param timeout: Time to wait to fetch result.
+        :return: Results of Node processing.
+        """
 
         if self.mode == Mode.BATCH:
             with self._lifecycle_condition:
@@ -765,7 +769,6 @@ class DAG:
         Add a callback for when DAG status is updated
         :param func: Function to call when DAG status is updated.
             The function will be passed reference to this dag
-        :return:
         """
         if not callable(func):
             raise TypeError("func to add_update_callback must be callable")
@@ -778,7 +781,6 @@ class DAG:
         Add a callback for when DAG is completed
         :param func: Function to call when DAG status is updated.
             The function will be passed reference to this dag
-        :return:
         """
         if not callable(func):
             raise TypeError("func to add_done_callback must be callable")
@@ -837,17 +839,19 @@ class DAG:
         with self._lifecycle_condition:
             return self._done()
 
-    def add_node_obj(self, node):
-        """
-        Add node to DAG
+    def add_node_obj(self, node) -> Node:
+        """Add node to DAG.
+
         :param node: to add to dag
-        :return: node
+        :return: Node instance.
         """
+
         with self._lifecycle_condition:
             return self._add_node_internal(node)
 
     def _add_node_internal(self, node: Node) -> Node:
         """Add node implementation. Must hold lifecycle condition."""
+
         if self._status is not Status.NOT_STARTED:
             raise RuntimeError("Cannot add nodes to a running graph")
         self.nodes[node.id] = node
@@ -859,8 +863,7 @@ class DAG:
         return node
 
     def add_node(self, func_exec, *args, name=None, local_mode=True, **kwargs):
-        """
-        Create and add a node.
+        """Create and add a node.
 
         DEPRECATED. Use `submit_local` instead.
 
