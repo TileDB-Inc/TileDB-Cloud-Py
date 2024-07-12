@@ -113,7 +113,7 @@ class Node(futures.FutureLike[_T]):
         Applies only when ``_prewrapped_func`` is used.
         ``True`` if ``_prewrapped_func`` can accept stored parameters.
         ``False`` if it cannot, and all parameters must be serialized.
-    :param **kwargs: dictionary for keyword arguments
+    :param **kwargs: Keyword arguments to pass to UDF.
     """
 
     def __init__(
