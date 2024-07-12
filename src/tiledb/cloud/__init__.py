@@ -4,7 +4,6 @@ from . import array
 from . import asset
 from . import compute
 from . import dag
-from . import file
 from . import files
 from . import groups
 from . import sql
@@ -56,7 +55,6 @@ __all__ = (
     "asset",
     "compute",
     "dag",
-    "file",
     "files",
     "groups",
     "sql",
