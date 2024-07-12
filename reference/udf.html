@@ -515,16 +515,16 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.udf.delete" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.udf.delete">delete</h3>
-<p><code>cloud.udf.delete(uri, namespace=None, *, async_req=False)</code></p>
+<p><code>cloud.udf.delete(uri, *, async_req=False)</code></p>
 <p>Deletes a registered udf</p>
 <section id="parameters" class="level4">
 <h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 8%">
-<col style="width: 11%">
-<col style="width: 72%">
-<col style="width: 7%">
+<col style="width: 15%">
+<col style="width: 9%">
+<col style="width: 61%">
+<col style="width: 14%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -542,12 +542,6 @@ ul.task-list li input[type="checkbox"] {
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>namespace</code></td>
-<td>Optional[str]</td>
-<td>namespace the udf belongs to, defaults to None. DEPRECATION WARNING: Will be deprecate from version 0.12.17</td>
-<td><code>None</code></td>
-</tr>
-<tr class="odd">
 <td><code>async_req</code></td>
 <td>bool</td>
 <td>Return future instead of results for async support</td>
