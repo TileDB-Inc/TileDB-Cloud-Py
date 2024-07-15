@@ -618,6 +618,7 @@ class DAG:
         self.name = name
         self.server_graph_uuid: Optional[uuid.UUID] = None
         self.max_workers = max_workers
+        self.use_processes = use_processes
         self.retry_strategy = retry_strategy
         self.workflow_retry_strategy = workflow_retry_strategy
         self.deadline = deadline
@@ -634,20 +635,14 @@ class DAG:
 
         self.visualization = None
 
-        self._udf_executor: futures.Executor
+        """
+        The following executors are initialized by calling
+        self._init_executors on demand
+        """
         """The executor that is used to make server calls and run local UDFs."""
-        if use_processes:
-            self._udf_executor = futures.ProcessPoolExecutor(max_workers=max_workers)
-        else:
-            self._udf_executor = futures.ThreadPoolExecutor(
-                thread_name_prefix=f"dag-{self.name or self.id}-worker",
-                max_workers=max_workers,
-            )
-        self._node_executor = futures.ThreadPoolExecutor(
-            thread_name_prefix=f"dag-{self.name or self.id}-nodes",
-            max_workers=max_workers,
-        )
+        self._udf_executor: futures.Executor
         """The thread pool that is used to execute nodes' exec functions."""
+        self._node_executor: futures.Executor
 
         self._lifecycle_condition = threading.Condition(threading.Lock())
 
@@ -747,6 +742,24 @@ class DAG:
             func(self)
         except Exception:
             pass
+
+    def _init_executors(self) -> None:
+        """
+        Initializes the executors, based on the initial params
+        """
+        if self.use_processes:
+            self._udf_executor = futures.ProcessPoolExecutor(
+                max_workers=self.max_workers
+            )
+        else:
+            self._udf_executor = futures.ThreadPoolExecutor(
+                thread_name_prefix=f"dag-{self.name or self.id}-worker",
+                max_workers=self.max_workers,
+            )
+        self._node_executor = futures.ThreadPoolExecutor(
+            thread_name_prefix=f"dag-{self.name or self.id}-nodes",
+            max_workers=self.max_workers,
+        )
 
     def _submit_retry(self, node: Node) -> None:
         with self._lifecycle_condition:
@@ -1151,6 +1164,9 @@ class DAG:
         Start the DAG by executing root nodes
         :return:
         """
+        # Initialize the executors just before computing
+        self._init_executors()
+
         with self._lifecycle_condition:
             if self._status is not Status.NOT_STARTED:
                 return
