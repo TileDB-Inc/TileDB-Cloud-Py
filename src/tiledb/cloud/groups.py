@@ -175,7 +175,8 @@ def deregister(
                     )
                 elif m.group:
                     grp: rest_api.GroupInfo = m.group
-                    deregister(grp.tiledb_uri, recursive=recursive)
+                    # Server expects recursive: "true"/"false".
+                    deregister(grp.tiledb_uri, recursive=str(bool(recursive)).lower())
                 else:
                     raise tiledb_cloud_error.TileDBCloudError(
                         "unexpected group member type"
@@ -192,8 +193,11 @@ def delete(uri: str, recursive: bool = False) -> None:
     """
     namespace, group_name = utils.split_uri(uri)
     groups_api = client.build(api_v2.GroupsApi)
+    # Server expects recursive: "true"/"false".
     groups_api.delete_group(
-        group_namespace=namespace, group_name=group_name, recursive=recursive
+        group_namespace=namespace,
+        group_name=group_name,
+        recursive=str(bool(recursive)).lower(),
     )
 
 
