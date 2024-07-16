@@ -12,4 +12,4 @@ Bug fixes:
 
 - Ensure that boolean recursive parameters in tiledb.cloud.asset and
   tiledb.cloud.groups are converted to "true" or "false" before server requests
-  are made (gh-).
+  are made (gh-605).
