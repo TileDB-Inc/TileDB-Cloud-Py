@@ -3,7 +3,7 @@
 import inspect
 import posixpath
 import urllib.parse
-from typing import Iterable, List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 from . import client
 from . import rest_api
@@ -150,38 +150,13 @@ def deregister(
         recursively) before deregistering the group itself.
     """
     namespace, name = utils.split_uri(uri)
-
-    array_api = client.build(rest_api.ArrayApi)
     groups_api = client.build(api_v2.GroupsApi)
-    groups_api_v1 = client.build(rest_api.GroupsApi)
-    if recursive:
-        while True:
-            contents: rest_api.GroupContents = groups_api_v1.get_group_contents(
-                group_namespace=namespace,
-                group_name=name,
-                page=1,
-                per_page=100,
-            )
-            pm: rest_api.PaginationMetadata = contents.pagination_metadata
-            if not pm.total_items:
-                break  # Zero total items remain -> we're done.
-            members: Iterable[rest_api.GroupEntry] = contents.entries
-            for m in members:
-                if m.array:
-                    arr: rest_api.ArrayInfo = m.array
-                    array_api.deregister_array(
-                        namespace=arr.namespace,
-                        array=arr.id,
-                    )
-                elif m.group:
-                    grp: rest_api.GroupInfo = m.group
-                    # Server expects recursive: "true"/"false".
-                    deregister(grp.tiledb_uri, recursive=str(bool(recursive)).lower())
-                else:
-                    raise tiledb_cloud_error.TileDBCloudError(
-                        "unexpected group member type"
-                    )
-    groups_api.deregister_group(group_namespace=namespace, group_name=name)
+    # Server expects recursive: "true"/"false".
+    groups_api.deregister_group(
+        group_namespace=namespace,
+        group_name=name,
+        recursive=str(bool(recursive)).lower(),
+    )
 
 
 def delete(uri: str, recursive: bool = False) -> None:
