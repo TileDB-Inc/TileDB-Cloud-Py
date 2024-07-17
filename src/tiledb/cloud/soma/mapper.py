@@ -272,10 +272,9 @@ def build_collection_mapper_workflow_graph(
         namespace=namespace,
     )
 
-    node_outputs = {}
-
     for experiment_name, soma_experiment_uri in soma_experiment_uris.items():
-        node_output = grf.submit(
+        logger.debug(f"Processing experiment '{experiment_name}'")
+        grf.submit(
             _function_for_node,
             soma_experiment_uri,
             measurement_name=measurement_name,
@@ -295,20 +294,6 @@ def build_collection_mapper_workflow_graph(
             access_credentials_name=access_credentials_name,
             name=experiment_name,
         )
-        logger.debug("A: node output is a %s" % type(node_output))
-
-        node_outputs[experiment_name] = node_output
-
-    def collect(node_outputs):
-        for node_name, node_output in node_outputs.items():
-            logger.debug("B: node output %s is a %s" % (node_name, type(node_output)))
-        return node_outputs
-
-    grf.submit(
-        collect,
-        node_outputs,
-        name="collector",
-    )
 
     return grf
 
