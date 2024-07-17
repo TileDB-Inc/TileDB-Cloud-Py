@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -441,6 +475,1488 @@ ul.task-list li input[type="checkbox"] {
 <section id="tiledb.cloud.dag.dag" class="level1">
 <h1>dag.dag</h1>
 <p><code>cloud.dag.dag</code></p>
+<section id="classes" class="level2">
+<h2 class="anchored" data-anchor-id="classes">Classes</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG">DAG</a></td>
+<td>Low-level API for creating and managing direct acyclic graphs</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.Node">Node</a></td>
+<td>Representation of a function to run in a DAG.</td>
+</tr>
+</tbody>
+</table>
+<section id="tiledb.cloud.dag.dag.DAG" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG">DAG</h3>
+<p><code>cloud.dag.dag.DAG(self, max_workers=None, use_processes=False, done_callback=None, update_callback=None, namespace=None, name=None, mode=Mode.REALTIME, retry_strategy=None, workflow_retry_strategy=None, deadline=None)</code></p>
+<p>Low-level API for creating and managing direct acyclic graphs as TileDB Cloud Task Graphs.</p>
+<section id="parameters" class="level4">
+<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 19%">
+<col style="width: 59%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>max_workers</code></td>
+<td>Optional[int]</td>
+<td>Number of works to allocate to execute DAG.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>use_processes</code></td>
+<td>bool</td>
+<td>If true will use processes instead of threads.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="odd">
+<td><code>done_callback</code></td>
+<td>Optional[Callable[[DAG], None]]</td>
+<td>Optional call back function to register for when dag is completed. Function will be passed reference to this DAG.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>update_callback</code></td>
+<td>Optional[Callable[[DAG], None]]</td>
+<td>Optional call back function to register for when dag status is updated. Function will be passed reference to this DAG.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>namespace</code></td>
+<td>Optional[str]</td>
+<td>Namespace to execute DAG in.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>name</code></td>
+<td>Optional[str]</td>
+<td>Human-readable name for DAG to be showin in Task Graph logs.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>mode</code></td>
+<td>Mode</td>
+<td>Mode the DAG is to run in, valid options are: Mode.REALTIME, Mode.BATCH.</td>
+<td><code>Mode.REALTIME</code></td>
+</tr>
+<tr class="even">
+<td><code>retry_strategy</code></td>
+<td>Optional[models.RetryStrategy]</td>
+<td>K8S retry policy to be applied to each Node.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>workflow_retry_strategy</code></td>
+<td>Optional[models.RetryStrategy]</td>
+<td>K8S retry policy to be applied to DAG.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>deadline</code></td>
+<td>Optional[int]</td>
+<td>Duration (sec) DAG allowed to execute before timeout.</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attributes" class="level4">
+<h4 class="anchored" data-anchor-id="attributes">Attributes</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.cancelled_nodes">cancelled_nodes</a></td>
+<td>Cancelled Nodes.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.completed_nodes">completed_nodes</a></td>
+<td>Completed Nodes.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.deadline">deadline</a></td>
+<td>Duration (sec) DAG allowed to execute before timeout.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.failed_nodes">failed_nodes</a></td>
+<td>Failed Nodes.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.id">id</a></td>
+<td>UUID for DAG instance.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.max_workers">max_workers</a></td>
+<td>Flag. If true will use processes instead of threads.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.mode">mode</a></td>
+<td>Mode the DAG is to run in.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.name">name</a></td>
+<td>Human-readable name for DAG to be showin in Task Graph logs.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.namespace">namespace</a></td>
+<td>Namespace to execute DAG in.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.nodes">nodes</a></td>
+<td>Mapping of Node UUIDs to Node instances.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.nodes_by_name">nodes_by_name</a></td>
+<td>Mapping of Node names to Node instances.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.not_started_nodes">not_started_nodes</a></td>
+<td>Queued Nodes.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.retry_strategy">retry_strategy</a></td>
+<td>K8S retry policy to be applied to each Node.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.running_nodes">running_nodes</a></td>
+<td>Running Nodes.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.server_graph_uuid">server_graph_uuid</a></td>
+<td>The server-generated UUID of this graph, used for logging.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.status">status</a></td>
+<td>Get DAG status.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.use_processes">use_processes</a></td>
+<td>Number of works to allocate to execute DAG.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.visualization">visualization</a></td>
+<td>The following executors are initialized by calling</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.workflow_retry_strategy">workflow_retry_strategy</a></td>
+<td>K8S retry policy to be applied to DAG.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="methods" class="level4">
+<h4 class="anchored" data-anchor-id="methods">Methods</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.add_done_callback">add_done_callback</a></td>
+<td>Add a callback for when DAG is completed</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.add_node">add_node</a></td>
+<td>Create and add a node.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.add_node_obj">add_node_obj</a></td>
+<td>Add node to DAG.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.add_update_callback">add_update_callback</a></td>
+<td>Add a callback for when DAG status is updated</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.cancel">cancel</a></td>
+<td>Cancel DAG.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.compute">compute</a></td>
+<td>Start the DAG by executing root nodes.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.end_nodes">end_nodes</a></td>
+<td>Find all end nodes</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.end_results">end_results</a></td>
+<td>Get all end results, will block if all results are not ready</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.end_results_by_name">end_results_by_name</a></td>
+<td>Get all end results, will block if all results are not ready</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.find_end_nodes">find_end_nodes</a></td>
+<td>Find all end nodes.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.get_tiledb_plot_node_details">get_tiledb_plot_node_details</a></td>
+<td>Build list of details needed for tiledb node graph</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.initial_setup">initial_setup</a></td>
+<td>Performs one-time server-side setup tasks.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.report_node_complete">report_node_complete</a></td>
+<td>Report a node as complete.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.retry_all">retry_all</a></td>
+<td>Retries all failed and cancelled nodes.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.stats">stats</a></td>
+<td>Get DAG node statistics.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.submit_array_udf">submit_array_udf</a></td>
+<td>Submit a function that will be executed in the cloud serverlessly.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.submit_local">submit_local</a></td>
+<td>Submit a function that will run locally.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.submit_sql">submit_sql</a></td>
+<td>Submit a sql query to run serverlessly in the cloud.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.submit_udf">submit_udf</a></td>
+<td>Submit a function that will be executed in the cloud serverlessly.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.submit_udf_stage">submit_udf_stage</a></td>
+<td>Submit a function that will be executed in the cloud serverlessly.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.DAG.visualize">visualize</a></td>
+<td>Build and render a tree diagram of the DAG.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.DAG.wait">wait</a></td>
+<td>Wait for DAG to be completed.</td>
+</tr>
+</tbody>
+</table>
+<section id="tiledb.cloud.dag.dag.DAG.add_done_callback" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.add_done_callback">add_done_callback</h5>
+<p><code>cloud.dag.dag.DAG.add_done_callback(func)</code></p>
+<p>Add a callback for when DAG is completed</p>
+<section id="parameters-1" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-1">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 77%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>func</code></td>
+<td></td>
+<td>Function to call when DAG status is updated. The function will be passed reference to this dag</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.add_node" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.add_node">add_node</h5>
+<p><code>cloud.dag.dag.DAG.add_node(func_exec, *args, name=None, local_mode=True, **kwargs)</code></p>
+<p>Create and add a node.</p>
+<p>DEPRECATED. Use <code>submit_local</code> instead.</p>
+<section id="parameters-2" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-2">Parameters</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>func_exec</code></td>
+<td></td>
+<td>function to execute</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>args</code></td>
+<td></td>
+<td>arguments for function execution</td>
+<td><code>()</code></td>
+</tr>
+<tr class="odd">
+<td><code>name</code></td>
+<td></td>
+<td>name</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns" class="level6">
+<h6 class="anchored" data-anchor-id="returns">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>Node that is created</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.add_node_obj" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.add_node_obj">add_node_obj</h5>
+<p><code>cloud.dag.dag.DAG.add_node_obj(node)</code></p>
+<p>Add node to DAG.</p>
+<section id="parameters-3" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-3">Parameters</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>node</code></td>
+<td></td>
+<td>to add to dag</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-1" class="level6">
+<h6 class="anchored" data-anchor-id="returns-1">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Node</td>
+<td>Node instance.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.add_update_callback" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.add_update_callback">add_update_callback</h5>
+<p><code>cloud.dag.dag.DAG.add_update_callback(func)</code></p>
+<p>Add a callback for when DAG status is updated</p>
+<section id="parameters-4" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-4">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 77%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>func</code></td>
+<td></td>
+<td>Function to call when DAG status is updated. The function will be passed reference to this dag</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.cancel" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.cancel">cancel</h5>
+<p><code>cloud.dag.dag.DAG.cancel()</code></p>
+<p>Cancel DAG.</p>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.compute" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.compute">compute</h5>
+<p><code>cloud.dag.dag.DAG.compute()</code></p>
+<p>Start the DAG by executing root nodes.</p>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.end_nodes" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.end_nodes">end_nodes</h5>
+<p><code>cloud.dag.dag.DAG.end_nodes()</code></p>
+<p>Find all end nodes</p>
+<p>dag = DAG() dag.add_node(Node())</p>
+<p>end_nodes = dag.end_nodes()</p>
+<section id="returns-2" class="level6">
+<h6 class="anchored" data-anchor-id="returns-2">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>list of root nodes</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.end_results" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.end_results">end_results</h5>
+<p><code>cloud.dag.dag.DAG.end_results()</code></p>
+<p>Get all end results, will block if all results are not ready</p>
+<p>dag = DAG() dag.add_node(Node())</p>
+<p>end_results = dag.end_results()</p>
+<section id="returns-3" class="level6">
+<h6 class="anchored" data-anchor-id="returns-3">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>map of results by node ID</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.end_results_by_name" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.end_results_by_name">end_results_by_name</h5>
+<p><code>cloud.dag.dag.DAG.end_results_by_name()</code></p>
+<p>Get all end results, will block if all results are not ready</p>
+<p>dag = DAG() dag.add_node(Node())</p>
+<p>end_results = dag.end_results_by_name()</p>
+<section id="returns-4" class="level6">
+<h6 class="anchored" data-anchor-id="returns-4">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>map of results by node name</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.find_end_nodes" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.find_end_nodes">find_end_nodes</h5>
+<p><code>cloud.dag.dag.DAG.find_end_nodes()</code></p>
+<p>Find all end nodes.</p>
+<section id="returns-5" class="level6">
+<h6 class="anchored" data-anchor-id="returns-5">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>List[Node]</td>
+<td>list of end nodes</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.get_tiledb_plot_node_details" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.get_tiledb_plot_node_details">get_tiledb_plot_node_details</h5>
+<p><code>cloud.dag.dag.DAG.get_tiledb_plot_node_details()</code></p>
+<p>Build list of details needed for tiledb node graph</p>
+<section id="returns-6" class="level6">
+<h6 class="anchored" data-anchor-id="returns-6">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dict[str, Dict[str, str]]</td>
+<td>Node summary</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.initial_setup" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.initial_setup">initial_setup</h5>
+<p><code>cloud.dag.dag.DAG.initial_setup()</code></p>
+<p>Performs one-time server-side setup tasks.</p>
+<p>Can safely be called multiple times.</p>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.report_node_complete" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.report_node_complete">report_node_complete</h5>
+<p><code>cloud.dag.dag.DAG.report_node_complete(node)</code></p>
+<p>Report a node as complete.</p>
+<section id="parameters-5" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-5">Parameters</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>node</code></td>
+<td>Node</td>
+<td>Node to mark as complete.</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.retry_all" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.retry_all">retry_all</h5>
+<p><code>cloud.dag.dag.DAG.retry_all()</code></p>
+<p>Retries all failed and cancelled nodes.</p>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.stats" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.stats">stats</h5>
+<p><code>cloud.dag.dag.DAG.stats()</code></p>
+<p>Get DAG node statistics.</p>
+<section id="returns-7" class="level6">
+<h6 class="anchored" data-anchor-id="returns-7">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dict[str, Union[int, float]]</td>
+<td>All node stats.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.submit_array_udf" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.submit_array_udf">submit_array_udf</h5>
+<p><code>cloud.dag.dag.DAG.submit_array_udf(func, *args, **kwargs)</code></p>
+<p>Submit a function that will be executed in the cloud serverlessly.</p>
+<section id="parameters-6" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-6">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 11%">
+<col style="width: 60%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>func</code></td>
+<td>Callable</td>
+<td>Function to execute in UDF task.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>*args</code></td>
+<td>Any</td>
+<td>Postional arguments to pass into Node instantation.</td>
+<td><code>()</code></td>
+</tr>
+<tr class="odd">
+<td><code>**kwargs</code></td>
+<td>Any</td>
+<td>Keyword args to pass into Node instantiation.</td>
+<td><code>{}</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-8" class="level6">
+<h6 class="anchored" data-anchor-id="returns-8">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>Node that is created.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.submit_local" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.submit_local">submit_local</h5>
+<p><code>cloud.dag.dag.DAG.submit_local(func, *args, **kwargs)</code></p>
+<p>Submit a function that will run locally.</p>
+<section id="parameters-7" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-7">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 11%">
+<col style="width: 60%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>func</code></td>
+<td>Callable</td>
+<td>Function to execute in UDF task.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>*args</code></td>
+<td>Any</td>
+<td>Postional arguments to pass into Node instantation.</td>
+<td><code>()</code></td>
+</tr>
+<tr class="odd">
+<td><code>**kwargs</code></td>
+<td></td>
+<td>Keyword args to pass into Node instantiation.</td>
+<td><code>{}</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-9" class="level6">
+<h6 class="anchored" data-anchor-id="returns-9">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>Node that is created</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.submit_sql" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.submit_sql">submit_sql</h5>
+<p><code>cloud.dag.dag.DAG.submit_sql(*args, **kwargs)</code></p>
+<p>Submit a sql query to run serverlessly in the cloud.</p>
+<section id="parameters-8" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-8">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 9%">
+<col style="width: 62%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sql</code></td>
+<td></td>
+<td>Query to execute.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>*args</code></td>
+<td>Any</td>
+<td>Postional arguments to pass into Node instantation.</td>
+<td><code>()</code></td>
+</tr>
+<tr class="odd">
+<td><code>**kwargs</code></td>
+<td>Any</td>
+<td>Keyword args to pass into Node instantiation.</td>
+<td><code>{}</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-10" class="level6">
+<h6 class="anchored" data-anchor-id="returns-10">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Node</td>
+<td>Node that is created</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.submit_udf" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.submit_udf">submit_udf</h5>
+<p><code>cloud.dag.dag.DAG.submit_udf(func, *args, **kwargs)</code></p>
+<p>Submit a function that will be executed in the cloud serverlessly.</p>
+<section id="parameters-9" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-9">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 11%">
+<col style="width: 60%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>func</code></td>
+<td>Callable</td>
+<td>Function to execute in UDF task.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>*args</code></td>
+<td></td>
+<td>Postional arguments to pass into Node instantation.</td>
+<td><code>()</code></td>
+</tr>
+<tr class="odd">
+<td><code>**kwargs</code></td>
+<td></td>
+<td>Keyword args to pass into Node instantiation.</td>
+<td><code>{}</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-11" class="level6">
+<h6 class="anchored" data-anchor-id="returns-11">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>Node that is created.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.submit_udf_stage" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.submit_udf_stage">submit_udf_stage</h5>
+<p><code>cloud.dag.dag.DAG.submit_udf_stage(func, *args, expand_node_output=None, **kwargs)</code></p>
+<p>Submit a function that will be executed in the cloud serverlessly.</p>
+<p>Expand on node output simply means to dynamically allocate works to this UDF stage based on the output of the node indicated via the <code>expand_node_output</code> arg.</p>
+<p>For example, if a node, <code>NodeA</code> (<code>NodeA = DAG.submit(...)</code>), returns a list of str values and <code>NodeA</code> is passed to <code>expand_node_output</code>, along with an arg in the <code>func</code> passed to <code>submit_udf_stage</code> that accepts a str is also passed <code>NodeA</code>, a node will spawn in parallel for each str value in the result of <code>NodeA</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>graph <span class="op">=</span> DAG(...)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>NodeA <span class="op">=</span> graph.submit()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>NodeB <span class="op">=</span> graph.submit_udf_stage(..., expand_node_output<span class="op">=</span>NodeA, str_arg<span class="op">=</span>NodeA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="parameters-10" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-10">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 65%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>func</code></td>
+<td>Callable</td>
+<td>Function to execute in UDF task.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>*args</code></td>
+<td>Any</td>
+<td>Postional arguments to pass into Node instantation.</td>
+<td><code>()</code></td>
+</tr>
+<tr class="odd">
+<td><code>expand_node_output</code></td>
+<td>Optional[Node]</td>
+<td>Node that we want to expand the output of. The output of the node should be a JSON encoded list.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>**kwargs</code></td>
+<td>Any</td>
+<td>Keyword args to pass into Node instantiation.</td>
+<td><code>{}</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-12" class="level6">
+<h6 class="anchored" data-anchor-id="returns-12">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Node</td>
+<td>Node that is created.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.visualize" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.visualize">visualize</h5>
+<p><code>cloud.dag.dag.DAG.visualize(notebook=True, auto_update=True, force_plotly=False)</code></p>
+<p>Build and render a tree diagram of the DAG.</p>
+<section id="parameters-11" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-11">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 7%">
+<col style="width: 68%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>notebook</code></td>
+<td></td>
+<td>Is the visualization inside a jupyter notebook? If so we’ll use a widget.</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td><code>auto_update</code></td>
+<td></td>
+<td>Should the diagram be auto updated with each status change.</td>
+<td><code>True</code></td>
+</tr>
+<tr class="odd">
+<td><code>force_plotly</code></td>
+<td></td>
+<td>Force the use of plotly graphs instead of TileDB Plot Widget.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-13" class="level6">
+<h6 class="anchored" data-anchor-id="returns-13">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>returns figure.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.DAG.wait" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.DAG.wait">wait</h5>
+<p><code>cloud.dag.dag.DAG.wait(timeout=None)</code></p>
+<p>Wait for DAG to be completed.</p>
+<section id="parameters-12" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-12">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 18%">
+<col style="width: 59%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>timeout</code></td>
+<td>Optional[float]</td>
+<td>optional timeout in seconds to wait for DAG to be completed</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-14" class="level6">
+<h6 class="anchored" data-anchor-id="returns-14">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>None</td>
+<td>None or raises TimeoutError if timeout occurs</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.Node" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node">Node</h3>
+<p><code>cloud.dag.dag.Node(self, func, *args, name=None, dag=None, mode=Mode.REALTIME, expand_node_output=None, _download_results=None, _internal_prewrapped_func=None, _internal_accepts_stored_params=True, **kwargs)</code></p>
+<p>Representation of a function to run in a DAG.</p>
+<section id="parameters-13" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-13">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 10%">
+<col style="width: 75%">
+<col style="width: 4%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>func</code></td>
+<td>Callable[…, _T]</td>
+<td>Function to run as UDF task.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>*args</code></td>
+<td>Any</td>
+<td>Positional arguments to pass to UDF.</td>
+<td><code>()</code></td>
+</tr>
+<tr class="odd">
+<td><code>name</code></td>
+<td>Optional[str]</td>
+<td>Human-readable name of Node task.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>dag</code></td>
+<td>Optional[DAG]</td>
+<td>DAG this node is associated with.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>mode</code></td>
+<td>Mode</td>
+<td>Mode the Node is to run in.</td>
+<td><code>Mode.REALTIME</code></td>
+</tr>
+<tr class="even">
+<td><code>expand_node_output</code></td>
+<td>Optional[Node]</td>
+<td>Node to expand processes upon.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>_download_results</code></td>
+<td>Optional[bool]</td>
+<td>An optional boolean to override default result-downloading behavior. If True, will always download the results of the function immediately upon completion. If False, will not download the results of the function immediately, but will be downloaded when <code>.result()</code> is called.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>_internal_prewrapped_func</code></td>
+<td>Callable[…, results.Result[_T]]</td>
+<td>For internal use only. A function that returns. something that is already a Result, which does not require wrapping. We assume that all prewrapped functions make server calls.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>_internal_accepts_stored_params</code></td>
+<td>bool</td>
+<td>For internal use only. Applies only when <code>_prewrapped_func</code> is used. <code>True</code> if <code>_prewrapped_func</code> can accept stored parameters. <code>False</code> if it cannot, and all parameters must be serialized.</td>
+<td><code>True</code></td>
+</tr>
+<tr class="even">
+<td><code>**kwargs</code></td>
+<td>Any</td>
+<td>Keyword arguments to pass to UDF.</td>
+<td><code>{}</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attributes-1" class="level4">
+<h4 class="anchored" data-anchor-id="attributes-1">Attributes</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.Node.args">args</a></td>
+<td>Positional args to pass into UDF.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.Node.children">children</a></td>
+<td>Child Nodes (Nodes dependent on this Node).</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.Node.dag">dag</a></td>
+<td>DAG this Node is pinned to.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.Node.error">error</a></td>
+<td>Return Node error if encountered.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.Node.future">future</a></td>
+<td>Returns something that pretends to be a Future.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.Node.id">id</a></td>
+<td>UUID for Node instance.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.Node.kwargs">kwargs</a></td>
+<td>Keyword args to pass into UDF.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.Node.mode">mode</a></td>
+<td>Processing mode of Node.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.Node.name">name</a></td>
+<td>The human-readable name of Node.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.Node.parents">parents</a></td>
+<td>Parent Nodes (Nodes this Node is dependent on).</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.Node.status">status</a></td>
+<td>Node status.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="methods-1" class="level4">
+<h4 class="anchored" data-anchor-id="methods-1">Methods</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.Node.add_done_callback">add_done_callback</a></td>
+<td>Add callback function to execute at Node completion.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.Node.cancel">cancel</a></td>
+<td>Cancel Node.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.Node.cancelled">cancelled</a></td>
+<td>Whether Node is cancelled.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.Node.depends_on">depends_on</a></td>
+<td>Create dependency chain for node, useful when there is a dependency</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.Node.exception">exception</a></td>
+<td>Return execption if one was raised.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.Node.result">result</a></td>
+<td>Fetch Node return.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.Node.retry">retry</a></td>
+<td>Retry Node.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.Node.running">running</a></td>
+<td>Whether Node is actively running.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.dag.dag.Node.task_id">task_id</a></td>
+<td>Gets the server-side Task ID of this node.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.dag.dag.Node.wait">wait</a></td>
+<td>Wait for node to be completed.</td>
+</tr>
+</tbody>
+</table>
+<section id="tiledb.cloud.dag.dag.Node.add_done_callback" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.add_done_callback">add_done_callback</h5>
+<p><code>cloud.dag.dag.Node.add_done_callback(fn)</code></p>
+<p>Add callback function to execute at Node completion.</p>
+<section id="parameters-14" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-14">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 44%">
+<col style="width: 29%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>fn</code></td>
+<td>Callable[[Node[_T]], None]</td>
+<td>Callaback to execute.</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.Node.cancel" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.cancel">cancel</h5>
+<p><code>cloud.dag.dag.Node.cancel()</code></p>
+<p>Cancel Node.</p>
+</section>
+<section id="tiledb.cloud.dag.dag.Node.cancelled" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.cancelled">cancelled</h5>
+<p><code>cloud.dag.dag.Node.cancelled()</code></p>
+<p>Whether Node is cancelled.</p>
+</section>
+<section id="tiledb.cloud.dag.dag.Node.depends_on" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.depends_on">depends_on</h5>
+<p><code>cloud.dag.dag.Node.depends_on(node)</code></p>
+<p>Create dependency chain for node, useful when there is a dependency that does not rely directly on passing results from one to another.</p>
+<section id="parameters-15" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-15">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 60%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>node</code></td>
+<td>Node</td>
+<td>node to mark as a dependency of this node</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.Node.exception" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.exception">exception</h5>
+<p><code>cloud.dag.dag.Node.exception(timeout=None)</code></p>
+<p>Return execption if one was raised.</p>
+</section>
+<section id="tiledb.cloud.dag.dag.Node.result" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.result">result</h5>
+<p><code>cloud.dag.dag.Node.result(timeout=None)</code></p>
+<p>Fetch Node return.</p>
+<section id="parameters-16" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-16">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 26%">
+<col style="width: 43%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>timeout</code></td>
+<td>Optional[float]</td>
+<td>Time to wait to fetch result.</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-15" class="level6">
+<h6 class="anchored" data-anchor-id="returns-15">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>_T</td>
+<td>Results of Node processing.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.Node.retry" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.retry">retry</h5>
+<p><code>cloud.dag.dag.Node.retry()</code></p>
+<p>Retry Node.</p>
+</section>
+<section id="tiledb.cloud.dag.dag.Node.running" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.running">running</h5>
+<p><code>cloud.dag.dag.Node.running()</code></p>
+<p>Whether Node is actively running.</p>
+</section>
+<section id="tiledb.cloud.dag.dag.Node.task_id" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.task_id">task_id</h5>
+<p><code>cloud.dag.dag.Node.task_id()</code></p>
+<p>Gets the server-side Task ID of this node.</p>
+<section id="returns-16" class="level6">
+<h6 class="anchored" data-anchor-id="returns-16">Returns</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 73%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Optional[uuid.UUID]</td>
+<td>None if this has no task ID (as it was run on the client side).</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.dag.dag.Node.wait" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.dag.dag.Node.wait">wait</h5>
+<p><code>cloud.dag.dag.Node.wait(timeout=None)</code></p>
+<p>Wait for node to be completed.</p>
+<section id="parameters-17" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-17">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 18%">
+<col style="width: 60%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>timeout</code></td>
+<td>Optional[float]</td>
+<td>optional timeout in seconds to wait for DAG to be completed.</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-17" class="level6">
+<h6 class="anchored" data-anchor-id="returns-17">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>None</td>
+<td>None or raises TimeoutError if timeout occurs.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+</section>
+</section>
 <section id="functions" class="level2">
 <h2 class="anchored" data-anchor-id="functions">Functions</h2>
 <table class="caption-top table">
@@ -470,8 +1986,8 @@ ul.task-list li input[type="checkbox"] {
 <p><code>cloud.dag.dag.list_logs(namespace=None, created_by=None, search=None, start_time=None, end_time=None, page=1, per_page=10)</code></p>
 <p>Retrieves the list of task graph logs you can view.</p>
 <p>The returned graph logs will be “light” versions, meaning they will not include any details about the execution state of an individual DAG. To retrieve those, pass the ID to :func:<code>server_logs</code>.</p>
-<section id="parameters" class="level4">
-<h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<section id="parameters-18" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-18">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 8%">

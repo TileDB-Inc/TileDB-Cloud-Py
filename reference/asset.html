@@ -454,20 +454,120 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td><a href="#tiledb.cloud.asset.delete">delete</a></td>
-<td>Deregister the asset and remove its physical groups and arrays from storage.</td>
+<td>Deregister an asset and remove its objects from storage.</td>
 </tr>
 <tr class="even">
+<td><a href="#tiledb.cloud.asset.deregister">deregister</a></td>
+<td>Deregister an asset.</td>
+</tr>
+<tr class="odd">
 <td><a href="#tiledb.cloud.asset.info">info</a></td>
 <td>Retrieve information about an asset.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.asset.list_shared_with">list_shared_with</a></td>
+<td>List an asset’s sharing policies.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.asset.register">register</a></td>
+<td>Register stored objects as an asset.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.asset.share">share</a></td>
+<td>Give another namespace permission to access an asset.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.asset.unshare">unshare</a></td>
+<td>Remove access permissions for another namespace.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.asset.update_info">update_info</a></td>
+<td>Update asset info settings.</td>
 </tr>
 </tbody>
 </table>
 <section id="tiledb.cloud.asset.delete" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.delete">delete</h3>
-<p><code>cloud.asset.delete(uri, recursive=False)</code></p>
-<p>Deregister the asset and remove its physical groups and arrays from storage.</p>
+<p><code>cloud.asset.delete(uri, *, recursive=False)</code></p>
+<p>Deregister an asset and remove its objects from storage.</p>
 <section id="parameters" class="level4">
 <h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 15%">
+<col style="width: 63%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>uri</code></td>
+<td>str</td>
+<td>tiledb URI of the asset.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>recursive</code></td>
+<td>Optional[bool]</td>
+<td>if True, contents of an asset will be recursively deleted. Default: False.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.asset.deregister" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.asset.deregister">deregister</h3>
+<p><code>cloud.asset.deregister(uri, *, recursive=False)</code></p>
+<p>Deregister an asset.</p>
+<section id="parameters-1" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 14%">
+<col style="width: 65%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>uri</code></td>
+<td>str</td>
+<td>tiledb URI of the asset.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>recursive</code></td>
+<td>Optional[bool]</td>
+<td>if True, contents of an asset will be recursively deregistered Default: False.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.asset.info" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.asset.info">info</h3>
+<p><code>cloud.asset.info(uri)</code></p>
+<p>Retrieve information about an asset.</p>
+<section id="parameters-2" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -498,19 +598,19 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td>None</td>
-<td>None.</td>
+<td>Union[ArrayInfo, GroupInfo]</td>
+<td>ArrayInfo or GroupInfo.</td>
 </tr>
 </tbody>
 </table>
 </section>
 </section>
-<section id="tiledb.cloud.asset.info" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.asset.info">info</h3>
-<p><code>cloud.asset.info(uri)</code></p>
-<p>Retrieve information about an asset.</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="tiledb.cloud.asset.list_shared_with" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.asset.list_shared_with">list_shared_with</h3>
+<p><code>cloud.asset.list_shared_with(uri)</code></p>
+<p>List an asset’s sharing policies.</p>
+<section id="parameters-3" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -541,8 +641,202 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td>Union[ArrayInfo, GroupInfo]</td>
-<td>ArrayInfo or GroupInfo.</td>
+<td>None</td>
+<td>a list of ArraySharing or GroupSharing objects.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.asset.register" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.asset.register">register</h3>
+<p><code>cloud.asset.register(storage_uri, type, *, name=None, namespace=None, credentials_name=None, parent_uri=None)</code></p>
+<p>Register stored objects as an asset.</p>
+<section id="parameters-4" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 10%">
+<col style="width: 69%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>storage_uri</code></td>
+<td>str</td>
+<td>S3, for example, URI of the data to be registered.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>type</code></td>
+<td>str</td>
+<td>The type of asset, “array” or “group”.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td><code>namespace</code></td>
+<td>Optional[str]</td>
+<td>The user or organization to register the asset under. If unset will default to the logged-in user’s namespace.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>name</code></td>
+<td>Optional[str]</td>
+<td>Name of asset.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>description</code></td>
+<td>str</td>
+<td>Optional description.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>credentials_name</code></td>
+<td>Optional[str]</td>
+<td>Optional name of access credentials to use. If omitted, the default for namespace will be used.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>parent_uri</code></td>
+<td>Optional[str]</td>
+<td>Optional parent URI for group type assets.</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.asset.share" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.asset.share">share</h3>
+<p><code>cloud.asset.share(uri, namespace, permissions='read')</code></p>
+<p>Give another namespace permission to access an asset.</p>
+<section id="parameters-5" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-5">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 36%">
+<col style="width: 37%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>uri</code></td>
+<td>str</td>
+<td>tiledb URI of the asset.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>namespace</code></td>
+<td>str</td>
+<td>the target namespace.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td><code>permissions</code></td>
+<td>Optional[Union[str, list[str]]]</td>
+<td>‘read’, ‘write’, or [‘read’, ‘write’].</td>
+<td><code>'read'</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.asset.unshare" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.asset.unshare">unshare</h3>
+<p><code>cloud.asset.unshare(uri, namespace)</code></p>
+<p>Remove access permissions for another namespace.</p>
+<section id="parameters-6" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-6">Parameters</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>uri</code></td>
+<td>str</td>
+<td>tiledb URI of the asset.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>namespace</code></td>
+<td>str</td>
+<td>the target namespace.</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.asset.update_info" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.asset.update_info">update_info</h3>
+<p><code>cloud.asset.update_info(uri, *, description=None, name=None, tags=None, access_credentials_name=None)</code></p>
+<p>Update asset info settings.</p>
+<section id="parameters-7" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-7">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 28%">
+<col style="width: 41%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>uri</code></td>
+<td>str</td>
+<td>tiledb URI of the asset.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>description</code></td>
+<td>Optional[str]</td>
+<td>Asset description, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>name</code></td>
+<td>Optional[str]</td>
+<td>Asset name, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>tags</code></td>
+<td>Optional[list[str]]</td>
+<td>Asset tags, defaults to None</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
