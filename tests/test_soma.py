@@ -102,23 +102,21 @@ class TestSOMAMapper(unittest.TestCase):
         self.assertEqual(
             g.end_results_by_name(),
             {
-                "collector": {
-                    "stack1": [
-                        3,
-                        5,
-                    ],
-                    "stack2": [
-                        3,
-                        4,
-                    ],
-                    "stack3": [
-                        3,
-                        5,
-                    ],
-                    "stack4": [
-                        3,
-                        6,
-                    ],
-                }
+                "stack1": [
+                    3,
+                    5,
+                ],
+                "stack2": [
+                    3,
+                    4,
+                ],
+                "stack3": [
+                    3,
+                    5,
+                ],
+                "stack4": [
+                    3,
+                    6,
+                ],
             },
         )
