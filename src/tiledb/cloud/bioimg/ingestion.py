@@ -46,7 +46,7 @@ def ingest(
         If the uri points to a directory of files make sure it ends with a trailing '/'
     :param output: uri / iterable of uris of output files.
         If the uri points to a directory of files make sure it ends with a trailing '/'
-    :param config: dict configuration to pass on tiledb.VFS
+    :param config: dict configuration to pass on tiledb.VFS for the source's resolution
     :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
     :param taskgraph_name: Optional name for taskgraph, defaults to None
     :param num_batches: Number of graph nodes to spawn.
@@ -72,6 +72,8 @@ def ingest(
         Larger scale factors will result in less I/O operations.
     :param access_credentials_name: [TBDeprecated] Access Credentials Name (ACN)
         registered in TileDB Cloud (ARN type) if ``acn`` is not set.
+    :param dest_config: dict configuration to pass on tiledb.VFS for the destination's
+        resolution
     """
 
     logger = get_logger_wrapper(verbose)
