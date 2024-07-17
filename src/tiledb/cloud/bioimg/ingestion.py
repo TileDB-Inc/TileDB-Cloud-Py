@@ -217,21 +217,18 @@ def ingest(
             else:
                 raise ValueError
 
-        write_context = tiledb.Ctx(config)
-        vfs = tiledb.VFS(ctx=write_context)
-
         for input, output in io_uris:
-            with vfs.open(input) as src:
-                with tiledb.scope_ctx(ctx_or_config=write_context):
-                    from_bioimg(
-                        src,
-                        output,
-                        converter=user_converter,
-                        exclude_metadata=exclude_metadata,
-                        verbose=verbose,
-                        tile_scale=tile_scale,
-                        **kwargs,
-                    )
+            from_bioimg(
+                input,
+                output,
+                converter=user_converter,
+                exclude_metadata=exclude_metadata,
+                verbose=verbose,
+                tile_scale=tile_scale,
+                source_config=config,
+                dest_config=kwargs.get("dest_config", None),
+                **kwargs,
+            )
         return io_uris
 
     def register_dataset_udf(
