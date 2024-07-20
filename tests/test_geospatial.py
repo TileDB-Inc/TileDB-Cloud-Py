@@ -289,6 +289,53 @@ class GeospatialTest(unittest.TestCase):
                 self.assertIsInstance(fltr, tiledb.ZstdFilter)
                 self.assertEqual(fltr.level, 7)
 
+    def test_rgb_raster_ingest(self):
+        """RGB raster is ingested."""
+        import rasterio
+
+        import tiledb.cloud.geospatial as geo
+
+        tile_size = 256
+        pixels_per_fragment = 256**2
+        zstd_filter = tiledb.ZstdFilter(level=7)
+        test_files = [
+            "tests/data/rgb1.tif",
+            "tests/data/rgb2.tif",
+            "tests/data/rgb3.tif",
+            "tests/data/rgb4.tif",
+        ]
+
+        with mock.patch.object(VFS, "ls", return_value=test_files):
+            output_array = str(self.test_dir.joinpath("rgb_raster_output_array"))
+            dataset_list_uri = self.test_dir.joinpath("manifest.txt")
+
+            with open(dataset_list_uri, "w") as f:
+                for img in test_files:
+                    f.write(f"{img}\n")
+
+            run_local(
+                dataset_uri=output_array,
+                dataset_type=geo.DatasetType.RASTER,
+                config={},
+                dataset_list_uri=dataset_list_uri,
+                compression_filter=utils.serialize_filter(zstd_filter),
+                nodata=255,
+                batch_size=1,
+                tile_size=tile_size,
+                pixels_per_fragment=pixels_per_fragment,
+            )
+
+            with rasterio.open(output_array) as src:
+                self.assertEqual(src.profile["blockysize"], tile_size)
+                self.assertEqual(src.profile["blockxsize"], tile_size)
+                assert src.count == 3
+
+            # check compression filter
+            with tiledb.open(output_array) as src:
+                fltr = src.schema.attr(0).filters[0]
+                self.assertIsInstance(fltr, tiledb.ZstdFilter)
+                self.assertEqual(fltr.level, 7)
+
     def test_raster_fragments(self):
         import rasterio
 
