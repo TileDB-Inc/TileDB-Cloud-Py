@@ -25,9 +25,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-viz-tiledb = ["networkx>=2", "pydot", "tiledb-plot-widget>=0.1.7"]
-viz-plotly = ["networkx>=2", "plotly>=4", "pydot"]
-all = ["networkx>=2", "plotly>=4", "pydot", "tiledb-plot-widget>=0.1.7"]
+viz-tiledb = ["networkx>=2", "pydot<3", "tiledb-plot-widget>=0.1.7"]
+viz-plotly = ["networkx>=2", "plotly>=4", "pydot<3"]
+all = ["networkx>=2", "plotly>=4", "pydot<3", "tiledb-plot-widget>=0.1.7"]
 life-sciences = ["tiledbsoma"]
 docs = ["quartodoc"]
 dev = ["black", "pytest", "ruff"]
