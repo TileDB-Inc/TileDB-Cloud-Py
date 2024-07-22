@@ -289,8 +289,14 @@ class GeospatialTest(unittest.TestCase):
                 self.assertIsInstance(fltr, tiledb.ZstdFilter)
                 self.assertEqual(fltr.level, 7)
 
+    @pytest.mark.skipif(
+        not pathlib.Path("tests/data/rgb1.tif").exists(),
+        reason="Test requires data not included with this project. Run "
+        "'curl -L --remote-name-all https://github.com/rasterio/rasterio/raw/main/tests/data/rgb{1..4}.tif' "
+        "from this project's tests/data directory to get necessary files.",
+    )
     def test_rgb_raster_ingest(self):
-        """RGB raster is ingested."""
+        """Real-world RGB raster is ingested correctly."""
         import rasterio
 
         import tiledb.cloud.geospatial as geo

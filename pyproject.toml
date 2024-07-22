@@ -80,3 +80,4 @@ single-line-exclusions = ["typing", "typing_extensions"]
 
 # Certain tests have long JSON strings and deep structures.
 "tests/taskgraphs/test_builder.py" = ["E501"]
+"tests/test_geospatial.py" = ["E501"]
