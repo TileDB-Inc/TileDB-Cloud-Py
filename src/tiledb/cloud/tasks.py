@@ -34,7 +34,7 @@ def task(id, async_req=False):
         return api_instance.task_id_get(id=id, async_req=async_req)
 
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def tasks(
@@ -105,7 +105,7 @@ def tasks(
         return api_instance.tasks_get(**args)
 
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def last_sql_task():

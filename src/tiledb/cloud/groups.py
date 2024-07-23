@@ -134,7 +134,7 @@ def update_info(
     try:
         return groups_v1_client.update_group(namespace, group_name, group_update=info)
     except rest_api.ApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc)
+        raise tiledb_cloud_error.maybe_wrap(exc)
 
 
 def deregister(
@@ -244,7 +244,7 @@ def list_shared_with(uri, async_req=False):
             group_namespace=group_namespace, group_name=group_name, async_req=async_req
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def share_group(uri, namespace, permissions, async_req=False):
@@ -281,7 +281,7 @@ def share_group(uri, namespace, permissions, async_req=False):
             async_req=async_req,
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def unshare_group(uri, namespace, async_req=False):

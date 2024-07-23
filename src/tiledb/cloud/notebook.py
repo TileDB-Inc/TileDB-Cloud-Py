@@ -60,7 +60,7 @@ def rename_notebook(
             async_req=async_req,
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def download_notebook_to_file(
@@ -272,7 +272,7 @@ def _create_notebook_array(
             # Retry other TileDB errors
             tries -= 1
             if tries <= 0:
-                raise tiledb_cloud_error.check_exc(e) from None
+                raise tiledb_cloud_error.maybe_wrap(e) from None
 
 
 def _create_notebook_array_retry_helper(
