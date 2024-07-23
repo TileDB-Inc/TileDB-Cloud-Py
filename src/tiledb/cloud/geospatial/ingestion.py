@@ -845,12 +845,16 @@ def ingest_raster_udf(
                                 chunk_window, dst.transform
                             )
 
-                            chunk_arr, _ = rasterio.merge.merge(
-                                input_datasets,
-                                bounds=chunk_bounds,
-                                nodata=nodata,
-                            )
-                            dst.write(chunk_arr, window=chunk_window)
+                            for bidx in dst.indexes:
+                                chunk_arr, _ = rasterio.merge.merge(
+                                    input_datasets,
+                                    bounds=chunk_bounds,
+                                    nodata=nodata,
+                                    indexes=[bidx],
+                                )
+                                dst.write(
+                                    chunk_arr, indexes=[bidx], window=chunk_window
+                                )
 
                             logger.debug(
                                 "Written %r coords %r bounds to %r",
