@@ -6,6 +6,7 @@ import unittest
 from typing import List
 
 import tiledb
+import tiledb.cloud
 from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import groups
@@ -190,10 +191,15 @@ class UploadTest(unittest.TestCase):
             array.delete_array(uri)
 
 
+# FIXME: Will be fixed with #595 implementation
+# Disable until then.
+@unittest.skip("Skip until fixed VFS access")
 class TestFileIngestion(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        """Setup test files, group and destinations once before the file tests start."""
+        """
+        Setup test files, group and destinations once before the file tests start.
+        """
         cls.input_file_location = (
             "s3://tiledb-unittest/groups/file_ingestion_test_files"
         )
@@ -226,6 +232,13 @@ class TestFileIngestion(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         """Cleanup after the tests have run"""
+        cls.cleanup_these_uris += [
+            f"tiledb://{cls.namespace}/{gifn}" for gifn in cls.group_input_file_names
+        ]
+        cls.cleanup_these_uris += [
+            f"tiledb://{cls.namespace}/{ifn}" for ifn in cls.input_file_names
+        ]
+
         _cleanup_residual_test_arrays(array_uris=cls.cleanup_these_uris)
         groups.delete(cls.group_uri, recursive=True)
         return super().tearDownClass()
@@ -271,6 +284,11 @@ class TestFileIngestion(unittest.TestCase):
 
         # Clean up
         _cleanup_residual_test_arrays(array_uris=ingested_array_uris)
+        _cleanup_residual_test_arrays(
+            array_uris=[
+                f"tiledb://{self.namespace}/{iau}" for iau in ingested_array_uris
+            ]
+        )
 
     def test_add_array_to_group_udf_raises_bad_namespace_error(self):
         with self.assertRaises(tiledb.TileDBError):
@@ -291,10 +309,13 @@ class TestFileIngestion(unittest.TestCase):
             )
 
 
+@unittest.skip("Skip until fixed VFS access")
 class TestFileIndexing(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        """Setup test files, group and destinations once before the file tests start."""
+        """
+        Setup test files, group and destinations once before the file tests start.
+        """
         cls.input_file_location = "s3://tiledb-unittest/groups/file_indexing_test_files"
         # Files with name "input_file_<n[0, 4]>.pdf" have already been placed
         # in the "cls.input_file_location"
