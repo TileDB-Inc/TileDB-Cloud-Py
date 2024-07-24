@@ -1,19 +1,37 @@
 import json
+from typing import Dict, Optional
 
-from tiledb import TileDBError
+import tiledb
 from tiledb.cloud import rest_api
 
 
-class TileDBCloudError(TileDBError):
-    pass
+class TileDBCloudError(tiledb.TileDBError):
+    def __init__(
+        self,
+        http_status: Optional[int] = None,
+        *,
+        json_data: Optional[Dict[str, object]] = None,
+        body: Optional[str] = None,
+    ) -> None:
+        super().__init__()
+        self.json_data = json_data
+        self.http_status = http_status
+        self.body = body
+
+    def __str__(self) -> str:
+        if self.json_data:
+            json_data = dict(self.json_data)
+            msg = json_data.pop("message", None)
+            code = json_data.pop("code", None)
+            extra = f" - Extra details: {json_data!r}" if json_data else ""
+            return f"{msg} - Code: {code}{extra}"
+        if self.http_status == 404:
+            return "HTTP 404: resource not found"
+        return f"Unknown HTTP {self.http_status} error; response body: {self.body!r}"
 
 
-def check_exc(exc):
-    internal_err_msg = (
-        "[InternalError: failed to parse or message missing from ApiException]"
-    )
-
-    # Make sure exc.status and exc.body exist before dereferncing them.
+def maybe_wrap(exc: Exception) -> TileDBCloudError:
+    """Tries to extract useful information from an API exception."""
     if not isinstance(exc, rest_api.ApiException):
         # If this isn't an ApiException, something non–API-related happened.
         # We shouldn't try to wrap it.
@@ -22,15 +40,8 @@ def check_exc(exc):
         # within an exception handler.
         raise
 
-    if exc.status == 404 and len(exc.body) == 0:
-        return TileDBCloudError("Array or Namespace Not found")
-
     try:
-        body = json.loads(exc.body)
-        new_exc = TileDBCloudError(
-            "{} - Code: {}".format(body["message"], body["code"])
-        )
+        body_data = json.loads(exc.body)
     except Exception:
-        raise TileDBCloudError(internal_err_msg) from exc
-
-    return new_exc
+        raise TileDBCloudError(exc.status, body=exc.body) from exc
+    return TileDBCloudError(exc.status, json_data=body_data)

@@ -176,7 +176,7 @@ def fetch_remote(
             _preload_content=False,
         )
     except rest_api.ApiException as exc:
-        raise tce.check_exc(exc) from None
+        raise tce.maybe_wrap(exc) from None
     if decoder is None:
         return codecs.BinaryBlob.from_response(resp).decode()
     try:

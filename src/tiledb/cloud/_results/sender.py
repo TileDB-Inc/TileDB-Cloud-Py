@@ -56,7 +56,7 @@ def send_udf_call(
     except rest_api.ApiException as exc:
         if id_callback:
             id_callback(results.extract_task_id(exc))
-        raise tce.check_exc(exc) from None
+        raise tce.maybe_wrap(exc) from None
 
     try:
         task_id = results.extract_task_id(http_response)

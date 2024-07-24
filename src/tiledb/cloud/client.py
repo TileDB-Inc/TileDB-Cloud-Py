@@ -223,7 +223,7 @@ def list_public_arrays(
         return res
 
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def list_shared_arrays(
@@ -283,7 +283,7 @@ def list_shared_arrays(
         return res
 
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def list_arrays(
@@ -344,7 +344,7 @@ def list_arrays(
         return res
 
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def list_groups(
@@ -497,7 +497,7 @@ def user_profile(async_req=False):
     try:
         return api_instance.get_user(async_req=async_req)
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def organizations(async_req=False):
@@ -512,7 +512,7 @@ def organizations(async_req=False):
     try:
         return api_instance.get_all_organizations(async_req=async_req)
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def organization(organization, async_req=False):
@@ -530,7 +530,7 @@ def organization(organization, async_req=False):
             organization=organization, async_req=async_req
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def find_organization_or_user_for_default_charges(
