@@ -1,12 +1,16 @@
-"""Install and access Python packages via wheel path or from PyPI."""
+"""Install and upload Python packages via a wheel path or from PyPI.
+
+Please be aware, this module is experimental as we explore installing
+private Python wheels at runtime.
+"""
 
 import os
 import subprocess
 import sys
 import tempfile
 from dataclasses import dataclass
-from site import USER_SITE
-from typing import Any, Mapping, Optional
+from dataclasses import field
+from typing import Any, List, Mapping, Optional, Sequence
 
 import tiledb
 from tiledb.cloud.utilities import get_logger
@@ -22,10 +26,9 @@ def upload_wheel(
     config: Optional[Mapping[str, Any]] = None,
     overwrite: bool = False,
 ) -> None:
-    """
-    THIS IS AN EXPERIMENTAL API. IT MAY CHANGE IN THE FUTURE.
+    """Upload a local wheel to TileDB Filestore.
 
-    Upload a local wheel file to a remote TileDB Filestore.
+    Note: THIS IS AN EXPERIMENTAL API. IT MAY CHANGE IN THE FUTURE.
 
     The filestore will be registered when `dest_uri` uses the
     `tiledb://...s3://...` format.
@@ -42,10 +45,10 @@ def upload_wheel(
 
       udflib-0.1-py3-none-any.whl
 
-    :param wheel_path: path to the local wheel file
-    :param dest_uri: URI where the wheel filestore will be created or updated
-    :param config: config dictionary, defaults to None
-    :param overwrite: whether to overwrite a registered wheel if one exists.
+    :param wheel_path: Path to the local wheel file.
+    :param dest_uri: URI where the wheel filestore will be created or updated.
+    :param config: TileDB config.
+    :param overwrite: Whether to overwrite a registered wheel if one exists.
     """
 
     # Replace '+' characters, which are not allowed in TileDB URL encoded URIs.
@@ -82,12 +85,20 @@ class PipInstall:
     """Whether in an active env."""
     no_deps: bool = True
     """Whether to install dependencies."""
-    runtime: str = sys.executable
+    runtime: str = field(init=False)
     """Path to python runtime exec."""
+
+    def __post_init__(self) -> None:
+        from sys import executable
+
+        self.runtime = executable
 
     @property
     def wheel_ext(self) -> bool:
-        """Does self.wheel have proper wheel extension?"""
+        """Verify self.wheel has proper wheel extension.
+
+        :returns: Whether wheel is formatted properly.
+        """
 
         parsed = os.path.splitext(self.wheel)
         if parsed[-1] in (".whl", ".wheel"):
@@ -95,11 +106,44 @@ class PipInstall:
         else:
             return False
 
-    def install(self, wheel: str) -> subprocess.CompletedProcess:
+    @staticmethod
+    def rm_from_cache(cached_libs: Sequence[str]) -> List[str]:
+        """Libraries to remove from Python cache after install.
+
+        In cases where the interpreter cannot be refreshed between install
+        and execution (UDFs, task graphs), cached Python libraries
+        from the image they were installed in during build will be
+        prioritized over libraries installed as part of this class. This method To
+        removes these libraries so that a cached library does not conflict with a
+        new library installed at runtime.
+
+        :param cached_libs: Libraries in cache to remove.
+        :returns: Libraries that were found and deleted from Python cache.
+        """
+
+        deleted = []
+        for lib in cached_libs:
+            try:
+                del sys.modules[lib]
+                deleted.append(lib)
+            except KeyError:
+                logger.debug(f"{lib} not in cache, skipping cache removal.")
+                continue
+
+        logger.info("Cached libraries removed:\n\t> %s" % "\n\t> ".join(deleted))
+
+        return deleted
+
+    def install(
+        self,
+        wheel: str,
+        deps_to_refresh: Optional[Sequence[str]] = None,
+    ) -> subprocess.CompletedProcess:
         """Install wheel.
 
         :param wheel: URI to registered wheel or name of library to install
             from PyPI.
+        :returns: Completed process signature.
         """
 
         cmd = [
@@ -126,6 +170,8 @@ class PipInstall:
             text=True,
         )
 
+        PipInstall.rm_from_cache(cached_libs=deps_to_refresh)
+
         return res
 
 
@@ -134,16 +180,21 @@ def install_wheel(
     config: Optional[Mapping[str, Any]] = None,
     verbose: bool = False,
     no_deps: bool = True,
+    deps_to_refresh: Optional[Sequence[str]] = None,
 ) -> None:
-    """
-    THIS IS AN EXPERIMENTAL API. IT MAY CHANGE IN THE FUTURE.
+    """Install at runtime a Python wheel from TiileDB Filestore or PyPI.
 
-    Install a wheel file from a TileDB Filestore in the current Python environment.
+    Note: THIS IS AN EXPERIMENTAL API. IT MAY CHANGE IN THE FUTURE.
 
-    :param wheel_uri: URI of the wheel file
-    :param config: config dictionary, defaults to None
-    :param verbose: verbose output, defaults to False
-    :param no_deps: do not install dependencies, defaults to True
+    Attempt to install a wheel file from a TileDB Filestore. If `wheel_uri`
+    does not point to a .wheel file, assume it is the name of a public
+    Python library and attempt to install from PyPI.
+
+    :param wheel_uri: URI of the wheel file or name of library in PyPI.
+    :param config: TileDB Config.
+    :param verbose: Verbose output, defaults to False.
+    :param no_deps: Do not install dependencies, defaults to True.
+    :param deps_to_refresh: Dependencies to refresh from cache.
     """
 
     installer = PipInstall(
@@ -163,13 +214,16 @@ def install_wheel(
             with tempfile.TemporaryDirectory() as tmpdir:
                 # Copy the wheel to a temporary directory
                 wheel_path = os.path.join(tmpdir, wheel_file)
-
                 tiledb.Filestore.copy_to(wheel_uri, wheel_path)
-                res = installer.install(wheel=wheel_path)
 
     # attempt to install from PyPI, assume library name given
     else:
-        res = installer.install(wheel=wheel_uri)
+        wheel_path = None
+
+    res = installer.install(
+        wheel=wheel_path or wheel_uri,
+        deps_to_refresh=deps_to_refresh,
+    )
 
     if res.returncode != 0:
         logger.info(f"Failed to install wheel '{wheel_uri}'")
@@ -180,5 +234,8 @@ def install_wheel(
         print(res.stderr)
 
     # Modify sys.path if the wheel was installed with --user
-    if not installer.in_venv and USER_SITE not in sys.path:
+    from site import USER_SITE
+
+    if not installer.in_venv:
+        logger.debug(f"Inserting {USER_SITE} into sys.path")
         sys.path.insert(0, USER_SITE)
