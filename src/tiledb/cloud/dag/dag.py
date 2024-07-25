@@ -224,8 +224,7 @@ class Node(futures.FutureLike[_T]):
             # suffix and request "2" instead of "2Gi". Anything less than 10 Mb
             # (written in bytes) was probably a user error.
             if resources_set and "memory" in self._resources:
-                pattern = re.compile("^[0-9]{1,7}$")
-                if pattern.match(self._resources["memory"]) is not None:
+                if re.match(r"^[0-9]{1,7}$", self._resources["memory"]):
                     raise tce.TileDBCloudError(
                         "The `memory` key in `resources` is missing a"
                         " unit suffix. Did you forget to append 'Mi' or 'Gi'?"
