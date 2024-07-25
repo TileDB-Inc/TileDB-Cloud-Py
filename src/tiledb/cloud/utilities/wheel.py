@@ -170,7 +170,8 @@ class PipInstall:
             text=True,
         )
 
-        PipInstall.rm_from_cache(cached_libs=deps_to_refresh)
+        if deps_to_refresh:
+            PipInstall.rm_from_cache(cached_libs=deps_to_refresh)
 
         return res
 
@@ -236,6 +237,6 @@ def install_wheel(
     # Modify sys.path if the wheel was installed with --user
     from site import USER_SITE
 
-    if not installer.in_venv:
+    if not installer.in_venv and sys.path[0] != USER_SITE:
         logger.debug(f"Inserting {USER_SITE} into sys.path")
         sys.path.insert(0, USER_SITE)
