@@ -85,7 +85,7 @@ def split_one_sample(
     output_uri: str,
     config: Mapping[str, str],
 ) -> str:
-    """Split a sample for aggregate VCF.
+    """Split one sample from multi-sample VCF.
 
     Args:
         vcf_uri:
