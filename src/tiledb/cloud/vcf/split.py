@@ -1,4 +1,4 @@
-"""Split sample-level VCFs from aggregate VCF."""
+"""Split samples from multi-sample VCF."""
 
 from typing import Mapping, Optional, Sequence
 
