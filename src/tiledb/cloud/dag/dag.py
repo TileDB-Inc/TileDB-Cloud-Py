@@ -678,9 +678,9 @@ class DAG:
         """Number of works to allocate to execute DAG."""
         self.retry_strategy: Optional[models.RetryStrategy] = retry_strategy
         """K8S retry policy to be applied to each Node."""
-        self.workflow_retry_strategy: Optional[models.RetryStrategy] = (
-            workflow_retry_strategy
-        )
+        self.workflow_retry_strategy: Optional[
+            models.RetryStrategy
+        ] = workflow_retry_strategy
         """K8S retry policy to be applied to DAG."""
         self.deadline: Optional[str] = deadline
         """Duration (sec) DAG allowed to execute before timeout."""
