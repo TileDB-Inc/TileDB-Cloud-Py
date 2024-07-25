@@ -3,6 +3,7 @@ import datetime
 import itertools
 import json
 import numbers
+import re
 import threading
 import time
 import uuid
@@ -219,6 +220,16 @@ class Node(futures.FutureLike[_T]):
                     )
             elif not resources_set:
                 self._resource_class = "standard"
+            # Validate the memory string because it's easy to forget the unit
+            # suffix and request "2" instead of "2Gi". Anything less than 10 Mb
+            # (written in bytes) was probably a user error.
+            if resources_set and "memory" in self._resources:
+                pattern = re.compile("^[0-9]{1,7}$")
+                if pattern.match(self._resources["memory"]) is not None:
+                    raise tce.TileDBCloudError(
+                        "The `memory` key in `resources` is missing a"
+                        " unit suffix. Did you forget to append 'Mi' or 'Gi'?"
+                    )
         elif resources_set:
             raise tce.TileDBCloudError(
                 "Cannot set resources for REALTIME task graphs,"
@@ -667,9 +678,9 @@ class DAG:
         """Number of works to allocate to execute DAG."""
         self.retry_strategy: Optional[models.RetryStrategy] = retry_strategy
         """K8S retry policy to be applied to each Node."""
-        self.workflow_retry_strategy: Optional[
-            models.RetryStrategy
-        ] = workflow_retry_strategy
+        self.workflow_retry_strategy: Optional[models.RetryStrategy] = (
+            workflow_retry_strategy
+        )
         """K8S retry policy to be applied to DAG."""
         self.deadline: Optional[str] = deadline
         """Duration (sec) DAG allowed to execute before timeout."""
