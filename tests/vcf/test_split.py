@@ -1,6 +1,7 @@
 """Unit tests for tiledb.cloud.vcf.split module."""
 
 import os
+from unittest.mock import MagicMock
 from unittest.mock import patch
 
 import tiledb.cloud
@@ -15,7 +16,7 @@ _output_uri = "output"
 
 @patch("tiledb.VFS")
 @patch("gzip.GzipFile")
-def test_ls_samples(mocked_gz_file, mocked_vfs) -> None:
+def test_ls_samples(mocked_gz_file: MagicMock, mocked_vfs: MagicMock) -> None:
     """Test tiledb.cloud.vcf.split.ls_samples"""
 
     expected = ["SampleA", "SampleB"]
@@ -31,8 +32,10 @@ def test_ls_samples(mocked_gz_file, mocked_vfs) -> None:
 
 
 @patch("tiledb.cloud.utilities.process_stream")
-def test_split_one_sample(mock_process_stream) -> None:
+def test_split_one_sample(mock_process_stream: MagicMock) -> None:
     """Test tiledb.cloud.vcf.split.split_one_sample"""
+
+    print(type(mock_process_stream))
 
     sample = "SampleA"
     mock_process_stream.return_value = (
@@ -50,7 +53,7 @@ def test_split_one_sample(mock_process_stream) -> None:
 
 
 @patch.object(tiledb.cloud.dag.DAG, "submit")
-def test_split_vcf(mock_submit_1) -> None:
+def test_split_vcf(mock_submit_1: MagicMock) -> None:
     """Test tiledb.cloud.vcf.split.split_vcf
 
     Pretty basic function that just prepares the DAG.
