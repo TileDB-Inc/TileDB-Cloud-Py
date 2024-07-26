@@ -81,8 +81,8 @@ def ingest(
     access_credentials_name = kwargs.pop("access_credentials_name", None)
     if bool(acn) == bool(access_credentials_name):
         raise ValueError(
-            "Ingestion graph requires 'access_credentials_name'"
-            "or 'acn' mutually exclusively to be set."
+            "Ingestion graph requires either 'acn' or 'access_credentials_name'"
+            " (deprecated), cannot decipher correct credential when both specified."
         )
     # Backwards compatibility: Assign when only access_credentials_name is set
     if not acn:
@@ -344,7 +344,7 @@ def ingest(
         *args,
         verbose=verbose,
         config=config,
-        access_credentials_name=access_credentials_name,
+        access_credentials_name=acn,
         name=f"{dag_name} input collector",
         result_format="json",
     )
