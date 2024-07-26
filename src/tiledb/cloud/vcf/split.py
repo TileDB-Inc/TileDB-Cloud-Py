@@ -7,18 +7,13 @@ from tiledb.cloud.dag import DAG
 
 def ls_samples(
     vcf_uri: str,
-    config: Mapping[str, str],
+    config: Optional[Mapping[str, str]] = None,
 ) -> list[str]:
     """List samples in an aggregate VCF.
 
-    Args:
-        vcf_uri:
-            S3 path to aggregate VCF.
-        config:
-            TileDB config params.
-
-    Returns:
-        Samples included in VCF.
+    :param vcf_uri: S3 path to aggregate VCF.
+    :param config: TileDB config params.
+    :return: Samples included in VCF.
     """
 
     import gzip
@@ -56,8 +51,7 @@ def ls_samples(
 
             Size conscience to limit memory use.
 
-            Returns:
-                Samples included in aggregate VCF.
+            :return: Samples included in aggregate VCF.
             """
 
             with self.vfs.open(self.source, mode="rb") as op_gz:
@@ -83,22 +77,15 @@ def split_one_sample(
     vcf_uri: str,
     sample: str,
     output_uri: str,
-    config: Mapping[str, str],
+    config: Optional[Mapping[str, str]] = None,
 ) -> str:
     """Split one sample from multi-sample VCF.
 
-    Args:
-        vcf_uri:
-            URI of VCF to isolate from.
-        sample:
-            Sample name to isolate.
-        output_uri:
-            URI to deposit isolated VCF.
-        config:
-            TileDB config object.
-
-    Returns:
-        URI of isolated sample.
+    :param vcf_uri: URI of VCF to isolate from.
+    :param sample: Sample name to isolate.
+    :param output_uri: URI to deposit isolated VCF.
+    :param config: TileDB config object.
+    :return: URI of isolated sample.
     """
 
     import os
@@ -137,15 +124,10 @@ def split_one_sample(
         ) -> str:
             """Run bcftools on (remote) URI.
 
-            Args:
-                args:
-                    Arguments to pass to bcftools. Don't include bcftools
-                    in this command.
-                output_uri:
-                    URI to write results.
-
-            Returns:
-                return code, stdout, stderr
+            :param args: Arguments to pass to bcftools. Don't include bcftools
+                in this command.
+            :param output_uri: URI to write results.
+            :return: return code, stdout, stderr
             """
 
             cmd = [self.bcftools] + args
@@ -156,14 +138,9 @@ def split_one_sample(
         def isolate(self, sample: str, output_uri: str) -> str:
             """Isolate a single sample from a multi-sample VCF.
 
-            Args:
-                sample:
-                    Sample name to isolate from VCF.
-                output_uri:
-                    URI to write results.
-
-            Returns:
-                URI to isolated VCF.
+            :param sample: Sample name to isolate from VCF.
+            :param output_uri: URI to write results.
+            :return: URI to isolated VCF.
             """
 
             # write directly to file if given
@@ -210,34 +187,24 @@ def split_vcf(
     """Split individual sample VCFs from an aggreate VCF.
 
     Given an aggregate VCF file containing multiple samples, split
-        all samples into isolated VCFs, one per sample. Alternatively,
-        specify sample(s) to split apart from VCF if not all isolated
-        VCFs are needed.
+    all samples into isolated VCFs, one per sample. Alternatively,
+    specify sample(s) to split apart from VCF if not all isolated
+    VCFs are needed.
 
-    Args:
-        vcf_uri:
-            Aggregate VCF URI.
-        output_uri:
-            Output URI to write isolated VCFs.
-        namespace:
-            TileDB Cloud namespace to process task graph.
-        acn:
-            Access credential friendly name to auth storage i/o.
-        resources:
-            Resources applied to splitting UDF (start with default).
-        compute:
-            Whether to execute DAG.
-        verbose:
-            Logging verbosity.
-        samples:
-            Indicate a batch of sample names within `vcf_uri` to isolate
-            if it is undesired to isolate all samples (default).
-        config:
-            TileDB configuration parameters used to configure virtual
-            filesystem handler.
-
-    Returns:
-        DAG instantiated as specified.
+    :param vcf_uri: Aggregate VCF URI.
+    :param output_uri: Output URI to write isolated VCFs.
+    :param namespace: TileDB Cloud namespace to process task graph.
+    :param acn: Access credential friendly name to auth storage i/o.
+    :param resources: Resources applied to splitting UDF (start with default).
+    :param compute: Whether to execute DAG.
+    :param verbose: Logging verbosity.
+    :param samples: Indicate a batch of sample names within `vcf_uri` to isolate
+        if it is undesired to isolate all samples (default).
+    :param retry_count: Number of Node retries.
+    :param max_workers: Max workers to engage simultaneously.
+    :param config: TileDB configuration parameters used to configure virtual
+        filesystem handler.
+    :return: DAG instantiated as specified.
     """
 
     import logging
@@ -325,19 +292,3 @@ def split_vcf(
     logger.debug(f"Returning DAG: {graph.name}")
 
     return graph
-
-
-if __name__ == "__main__":
-    import tiledb.cloud
-
-    tiledb.cloud.client.config.config.host = "https://us-west-2.aws.api.tiledb.com"
-
-    graph = split_vcf(
-        vcf_uri="s3://tiledb-spencer/projects/horses/raw/thesis_intersect_pub.decomposed.vcf.gz",
-        output_uri="s3://tiledb-spencer/projects/vcf-isolate-dev/isolated-singles",
-        config={"vfs.s3.region": "us-west-2"},
-        samples=["A1543"],
-        namespace="TileDB-Inc",
-        acn="tiledb-cloud-sandbox-role",
-        compute=True,
-    )
