@@ -34,9 +34,12 @@ from .notebook import rename_notebook
 from .notebook import upload_notebook_contents
 from .notebook import upload_notebook_from_file
 from .rest_api import models
+from .tasks import fetch_results
+from .tasks import fetch_results_pandas
 from .tasks import last_sql_task
 from .tasks import last_udf_task
 from .tasks import task
+from .tasks import tasks
 from .tiledb_cloud_error import TileDBCloudError
 
 _pickle_compat.patch_cloudpickle()
@@ -86,5 +89,8 @@ __all__ = (
     "last_sql_task",
     "last_udf_task",
     "task",
+    "tasks",
+    "fetch_results",
+    "fetch_results_pandas",
     "TileDBCloudError",
 )
