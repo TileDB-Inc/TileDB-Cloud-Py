@@ -7,7 +7,7 @@ from collections import defaultdict
 from fnmatch import fnmatch
 from math import ceil
 from multiprocessing.pool import ThreadPool
-from typing import Any, Mapping, Optional, Sequence, Union
+from typing import Any, Callable, Mapping, Optional, Sequence, Union
 
 import numpy as np
 
@@ -382,59 +382,64 @@ def find_uris_udf(
 
     with tiledb.scope_ctx(config):
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
-            vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
 
             def find(
                 uri: str,
                 *,
-                include: Optional[str] = None,
-                exclude: Optional[str] = None,
+                config: Optional[Mapping[str, Any]] = None,
+                include: Optional[Union[str, Callable]] = None,
+                exclude: Optional[Union[str, Callable]] = None,
                 max_count: Optional[int] = None,
-            ):
-                logger.debug("Searching %r", uri)
-                listing = vfs.ls(uri)
-                logger.debug("  %d items", len(listing))
+            ) -> Sequence[str]:
+                """Searches a path for files matching the include/exclude pattern.
 
-                results = []
-                for f in listing:
-                    # Avoid infinite recursion
-                    if f == uri:
-                        continue
+                :param uri: Input path to search
+                :param config: Optional dict configuration to pass on tiledb.VFS
+                :param include: Optional include pattern string
+                :param exclude: Optional exclude pattern string
+                :param max_count: Optional stop point when searching for files
+                """
+                with tiledb.scope_ctx(config):
+                    vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
 
-                    if vfs.is_dir(f):
-                        next_max_count = (
-                            max_count - len(results) if max_count is not None else None
-                        )
-                        results += find(
-                            f,
-                            include=include,
-                            exclude=exclude,
-                            max_count=next_max_count,
-                        )
+                    uris = []
 
-                    else:
-                        # Skip files that do not match the include pattern or match
-                        # the exclude pattern.
-                        if include and not fnmatch(f, include):
-                            continue
-                        if exclude and fnmatch(f, exclude):
-                            continue
+                    def callback(uri, size_bytes):
+                        """Process each file found by the VFS.ls_recursive call"""
 
-                        results.append(f)
-                        logger.debug("  found %r", f)
+                        # Skip files that do not match the include pattern or
+                        # match the exclude pattern.
+                        if callable(include) and not include(uri):
+                            return True
+                        if include and not fnmatch(uri, include):
+                            return True
+                        if callable(exclude) and exclude(uri):
+                            return True
+                        if exclude and fnmatch(uri, exclude):
+                            return True
 
-                    # Stop if we have found max_count files
-                    if max_count is not None and len(results) >= max_count:
-                        results = results[:max_count]
-                        break
+                        # Add to the list of URIs found
+                        uris.append(uri)
 
-                return results
+                        # Stop `ls_recursive` if the maximum count is reached.
+                        if max_count and len(uris) >= max_count:
+                            return False
+
+                        return True
+
+                    vfs.ls_recursive(uri, callback=callback)
+
+                    return uris
 
             # Add one trailing slash to search_uri
             search_uri = search_uri.rstrip("/") + "/"
 
             results = find(
-                search_uri, include=include, exclude=exclude, max_count=max_files
+                search_uri,
+                config=config,
+                include=include,
+                exclude=exclude,
+                max_count=max_files,
             )
 
             logger.info("Found %d VCF files.", len(results))
