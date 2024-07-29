@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>utilities.profiler</title>
+<title>utilities.wheel</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -29,8 +29,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../reference/utilities.wheel.html" rel="next">
-<link href="../reference/utilities.consolidate.html" rel="prev">
+<link href="../reference/utilities.profiler.html" rel="prev">
 <link href="../t_favicon.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -108,7 +107,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reference/utilities.consolidate.html">Utilities</a></li><li class="breadcrumb-item"><a href="../reference/utilities.profiler.html"><code>profiler</code></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reference/utilities.consolidate.html">Utilities</a></li><li class="breadcrumb-item"><a href="../reference/utilities.wheel.html"><code>wheel</code></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -437,13 +436,13 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/utilities.profiler.html" class="sidebar-item-text sidebar-link active">
+  <a href="../reference/utilities.profiler.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>profiler</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/utilities.wheel.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/utilities.wheel.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><code>wheel</code></span></a>
   </div>
 </li>
@@ -461,9 +460,11 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="tiledb.cloud.utilities.profiler" class="level1">
-<h1>utilities.profiler</h1>
-<p><code>cloud.utilities.profiler</code></p>
+<section id="tiledb.cloud.utilities.wheel" class="level1">
+<h1>utilities.wheel</h1>
+<p><code>cloud.utilities.wheel</code></p>
+<p>Install and upload Python packages via a wheel path or from PyPI.</p>
+<p>Please be aware, this module is experimental as we explore installing private Python wheels at runtime.</p>
 <section id="classes" class="level2">
 <h2 class="anchored" data-anchor-id="classes">Classes</h2>
 <table class="caption-top table">
@@ -475,29 +476,48 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="#tiledb.cloud.utilities.profiler.Profiler">Profiler</a></td>
-<td>A context manager–based profiler to log events and CPU and memory usage</td>
+<td><a href="#tiledb.cloud.utilities.wheel.PipInstall">PipInstall</a></td>
+<td>Pip installer.</td>
 </tr>
 </tbody>
 </table>
-<section id="tiledb.cloud.utilities.profiler.Profiler" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.profiler.Profiler">Profiler</h3>
-<p><code>cloud.utilities.profiler.Profiler(self, *, array_uri=None, group_uri=None, group_member=None, id=None, period_sec=5, trace=False)</code></p>
-<p>A context manager–based profiler to log events and CPU and memory usage to a TileDB array.</p>
-<p>If the <code>trace</code> parameter is <code>True</code>, CPU and memory usage will be logged to the array every <code>period_sec</code> seconds. This is useful for profiling jobs that are OOM killed.</p>
-<p>Examples:</p>
-<pre><code># Basic usage
-with Profiler(array_uri="tiledb://array-uri..."):
-    # code to profile
-
-# Write custom events
-with Profiler(group_uri="tiledb://group-uri...", group_member="log") as prof:
-    # code to profile
-
-    # write custom event
-    prof.write("my-op", "my-data", "my-extra-data")
-
-    # more code to profile</code></pre>
+<section id="tiledb.cloud.utilities.wheel.PipInstall" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.wheel.PipInstall">PipInstall</h3>
+<p><code>cloud.utilities.wheel.PipInstall(self, wheel, in_venv, no_deps=True)</code></p>
+<p>Pip installer.</p>
+<section id="attributes" class="level4">
+<h4 class="anchored" data-anchor-id="attributes">Attributes</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#tiledb.cloud.utilities.wheel.PipInstall.in_venv">in_venv</a></td>
+<td>Whether in an active env.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.utilities.wheel.PipInstall.no_deps">no_deps</a></td>
+<td>Whether to install dependencies.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.utilities.wheel.PipInstall.runtime">runtime</a></td>
+<td>Path to python runtime exec.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.utilities.wheel.PipInstall.wheel">wheel</a></td>
+<td>Wheel URI or alternatively library name.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.utilities.wheel.PipInstall.wheel_ext">wheel_ext</a></td>
+<td>Verify self.wheel has proper wheel extension.</td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="methods" class="level4">
 <h4 class="anchored" data-anchor-id="methods">Methods</h4>
 <table class="caption-top table">
@@ -509,19 +529,28 @@ with Profiler(group_uri="tiledb://group-uri...", group_member="log") as prof:
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="#tiledb.cloud.utilities.profiler.Profiler.write">write</a></td>
-<td>Write an event to the log array.</td>
+<td><a href="#tiledb.cloud.utilities.wheel.PipInstall.install">install</a></td>
+<td>Install wheel.</td>
+</tr>
+<tr class="even">
+<td><a href="#tiledb.cloud.utilities.wheel.PipInstall.rm_from_cache">rm_from_cache</a></td>
+<td>Libraries to remove from Python cache after install.</td>
 </tr>
 </tbody>
 </table>
-<section id="tiledb.cloud.utilities.profiler.Profiler.write" class="level5">
-<h5 class="anchored" data-anchor-id="tiledb.cloud.utilities.profiler.Profiler.write">write</h5>
-<p><code>cloud.utilities.profiler.Profiler.write(op='', data='', extra='')</code></p>
-<p>Write an event to the log array.</p>
-<p>When writing large amounts of data, store the data in the <code>extra</code> parameter to improve query performance when the <code>extra</code> data is not needed.</p>
+<section id="tiledb.cloud.utilities.wheel.PipInstall.install" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.utilities.wheel.PipInstall.install">install</h5>
+<p><code>cloud.utilities.wheel.PipInstall.install(wheel, deps_to_refresh=None)</code></p>
+<p>Install wheel.</p>
 <section id="parameters" class="level6">
 <h6 class="anchored" data-anchor-id="parameters">Parameters</h6>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 69%">
+<col style="width: 12%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Name</th>
@@ -532,22 +561,81 @@ with Profiler(group_uri="tiledb://group-uri...", group_member="log") as prof:
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>op</code></td>
+<td><code>wheel</code></td>
 <td>str</td>
-<td>event op, defaults to “”</td>
-<td><code>''</code></td>
+<td>URI to registered wheel or name of library to install from PyPI.</td>
+<td><em>required</em></td>
 </tr>
-<tr class="even">
-<td><code>data</code></td>
-<td>str</td>
-<td>event data, defaults to “”</td>
-<td><code>''</code></td>
+</tbody>
+</table>
+</section>
+<section id="returns" class="level6">
+<h6 class="anchored" data-anchor-id="returns">Returns</h6>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr class="odd">
-<td><code>extra</code></td>
-<td>str</td>
-<td>event extra data, defaults to “”</td>
-<td><code>''</code></td>
+<td>subprocess.CompletedProcess</td>
+<td>Completed process signature.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.utilities.wheel.PipInstall.rm_from_cache" class="level5">
+<h5 class="anchored" data-anchor-id="tiledb.cloud.utilities.wheel.PipInstall.rm_from_cache">rm_from_cache</h5>
+<p><code>cloud.utilities.wheel.PipInstall.rm_from_cache(cached_libs)</code></p>
+<p>Libraries to remove from Python cache after install.</p>
+<p>In cases where the interpreter cannot be refreshed between install and execution (UDFs, task graphs), cached Python libraries from the image they were installed in during build will be prioritized over libraries installed as part of this class. This method To removes these libraries so that a cached library does not conflict with a new library installed at runtime.</p>
+<section id="parameters-1" class="level6">
+<h6 class="anchored" data-anchor-id="parameters-1">Parameters</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 22%">
+<col style="width: 41%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cached_libs</code></td>
+<td>Sequence[str]</td>
+<td>Libraries in cache to remove.</td>
+<td><em>required</em></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="returns-1" class="level6">
+<h6 class="anchored" data-anchor-id="returns-1">Returns</h6>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 81%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>List[str]</td>
+<td>Libraries that were found and deleted from Python cache.</td>
 </tr>
 </tbody>
 </table>
@@ -567,54 +655,29 @@ with Profiler(group_uri="tiledb://group-uri...", group_member="log") as prof:
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="#tiledb.cloud.utilities.profiler.create_log_array">create_log_array</a></td>
-<td>Create an array to hold log events.</td>
+<td><a href="#tiledb.cloud.utilities.wheel.install_wheel">install_wheel</a></td>
+<td>Install at runtime a Python wheel from TiileDB Filestore or PyPI.</td>
 </tr>
 <tr class="even">
-<td><a href="#tiledb.cloud.utilities.profiler.write_log_event">write_log_event</a></td>
-<td>Write an event to the log array.</td>
+<td><a href="#tiledb.cloud.utilities.wheel.upload_wheel">upload_wheel</a></td>
+<td>Upload a local wheel to TileDB Filestore.</td>
 </tr>
 </tbody>
 </table>
-<section id="tiledb.cloud.utilities.profiler.create_log_array" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.profiler.create_log_array">create_log_array</h3>
-<p><code>cloud.utilities.profiler.create_log_array(uri)</code></p>
-<p>Create an array to hold log events.</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>uri</code></td>
-<td>str</td>
-<td>array URI</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.utilities.profiler.write_log_event" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.profiler.write_log_event">write_log_event</h3>
-<p><code>cloud.utilities.profiler.write_log_event(uri, id, op='', data='', extra='')</code></p>
-<p>Write an event to the log array.</p>
-<p>When writing large amounts of data, store the data in the <code>extra</code> parameter to improve query performance when the <code>extra</code> data is not needed.</p>
+<section id="tiledb.cloud.utilities.wheel.install_wheel" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.wheel.install_wheel">install_wheel</h3>
+<p><code>cloud.utilities.wheel.install_wheel(wheel_uri, config=None, verbose=False, no_deps=True, deps_to_refresh=None)</code></p>
+<p>Install at runtime a Python wheel from TiileDB Filestore or PyPI.</p>
+<p>Note: THIS IS AN EXPERIMENTAL API. IT MAY CHANGE IN THE FUTURE.</p>
+<p>Attempt to install a wheel file from a TileDB Filestore. If <code>wheel_uri</code> does not point to a .wheel file, assume it is the name of a public Python library and attempt to install from PyPI.</p>
 <section id="parameters-2" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 12%">
-<col style="width: 23%">
-<col style="width: 47%">
 <col style="width: 16%">
+<col style="width: 28%">
+<col style="width: 44%">
+<col style="width: 10%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -626,34 +689,91 @@ with Profiler(group_uri="tiledb://group-uri...", group_member="log") as prof:
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>uri</code></td>
+<td><code>wheel_uri</code></td>
 <td>str</td>
-<td>array URI</td>
+<td>URI of the wheel file or name of library in PyPI.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>id</code></td>
+<td><code>config</code></td>
+<td>Optional[Mapping[str, Any]]</td>
+<td>TileDB Config.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>verbose</code></td>
+<td>bool</td>
+<td>Verbose output, defaults to False.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>no_deps</code></td>
+<td>bool</td>
+<td>Do not install dependencies, defaults to True.</td>
+<td><code>True</code></td>
+</tr>
+<tr class="odd">
+<td><code>deps_to_refresh</code></td>
+<td>Optional[Sequence[str]]</td>
+<td>Dependencies to refresh from cache.</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.utilities.wheel.upload_wheel" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.wheel.upload_wheel">upload_wheel</h3>
+<p><code>cloud.utilities.wheel.upload_wheel(wheel_path, dest_uri, config=None, overwrite=False)</code></p>
+<p>Upload a local wheel to TileDB Filestore.</p>
+<p>Note: THIS IS AN EXPERIMENTAL API. IT MAY CHANGE IN THE FUTURE.</p>
+<p>The filestore will be registered when <code>dest_uri</code> uses the <code>tiledb://...s3://...</code> format.</p>
+<p>If the wheel filestore exists, it will be updated with the new wheel file.</p>
+<p>NOTE: The local <code>wheel_path</code> must match the file name convention specified by the python packaging specification: https://packaging.python.org/en/latest/specifications/binary-distribution-format</p>
+<p>{distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform tag}.whl</p>
+<p>For example, a pure python wheel compatible with python 3:</p>
+<p>udflib-0.1-py3-none-any.whl</p>
+<section id="parameters-3" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 27%">
+<col style="width: 50%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>wheel_path</code></td>
 <td>str</td>
-<td>event id</td>
+<td>Path to the local wheel file.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>dest_uri</code></td>
+<td>str</td>
+<td>URI where the wheel filestore will be created or updated.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="odd">
-<td><code>op</code></td>
-<td>Optional[str]</td>
-<td>event operation, defaults to “”</td>
-<td><code>''</code></td>
+<td><code>config</code></td>
+<td>Optional[Mapping[str, Any]]</td>
+<td>TileDB config.</td>
+<td><code>None</code></td>
 </tr>
 <tr class="even">
-<td><code>data</code></td>
-<td>Optional[str]</td>
-<td>event data, defaults to “”</td>
-<td><code>''</code></td>
-</tr>
-<tr class="odd">
-<td><code>extra</code></td>
-<td>Optional[str]</td>
-<td>event extra data, defaults to “”</td>
-<td><code>''</code></td>
+<td><code>overwrite</code></td>
+<td>bool</td>
+<td>Whether to overwrite a registered wheel if one exists.</td>
+<td><code>False</code></td>
 </tr>
 </tbody>
 </table>
@@ -1087,14 +1207,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../reference/utilities.consolidate.html" class="pagination-link" aria-label="`consolidate`">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>consolidate</code></span>
+      <a href="../reference/utilities.profiler.html" class="pagination-link" aria-label="`profiler`">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>profiler</code></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../reference/utilities.wheel.html" class="pagination-link" aria-label="`wheel`">
-        <span class="nav-page-text"><code>wheel</code></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->

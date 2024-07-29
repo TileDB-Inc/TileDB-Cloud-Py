@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>utilities.profiler</title>
+<title>region</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -29,8 +29,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../reference/utilities.wheel.html" rel="next">
-<link href="../reference/utilities.consolidate.html" rel="prev">
+<link href="../reference/files.indexing.html" rel="next">
+<link href="../reference/dag.visualization.html" rel="prev">
 <link href="../t_favicon.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -108,7 +108,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reference/utilities.consolidate.html">Utilities</a></li><li class="breadcrumb-item"><a href="../reference/utilities.profiler.html"><code>profiler</code></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reference/region.html">Region</a></li><li class="breadcrumb-item"><a href="../reference/region.html"><code>region</code></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -295,16 +295,16 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Region</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/region.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/region.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><code>region</code></span></a>
   </div>
 </li>
@@ -422,13 +422,13 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
  <span class="menu-text">Utilities</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../reference/utilities.consolidate.html" class="sidebar-item-text sidebar-link">
@@ -437,7 +437,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/utilities.profiler.html" class="sidebar-item-text sidebar-link active">
+  <a href="../reference/utilities.profiler.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>profiler</code></span></a>
   </div>
 </li>
@@ -461,9 +461,9 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="tiledb.cloud.utilities.profiler" class="level1">
-<h1>utilities.profiler</h1>
-<p><code>cloud.utilities.profiler</code></p>
+<section id="tiledb.cloud.region" class="level1">
+<h1>region</h1>
+<p><code>cloud.region</code></p>
 <section id="classes" class="level2">
 <h2 class="anchored" data-anchor-id="classes">Classes</h2>
 <table class="caption-top table">
@@ -475,191 +475,22 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="#tiledb.cloud.utilities.profiler.Profiler">Profiler</a></td>
-<td>A context manager–based profiler to log events and CPU and memory usage</td>
+<td><a href="#tiledb.cloud.region.AWS">AWS</a></td>
+<td>The AWS cloud regions that are currently supported.</td>
 </tr>
 </tbody>
 </table>
-<section id="tiledb.cloud.utilities.profiler.Profiler" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.profiler.Profiler">Profiler</h3>
-<p><code>cloud.utilities.profiler.Profiler(self, *, array_uri=None, group_uri=None, group_member=None, id=None, period_sec=5, trace=False)</code></p>
-<p>A context manager–based profiler to log events and CPU and memory usage to a TileDB array.</p>
-<p>If the <code>trace</code> parameter is <code>True</code>, CPU and memory usage will be logged to the array every <code>period_sec</code> seconds. This is useful for profiling jobs that are OOM killed.</p>
-<p>Examples:</p>
-<pre><code># Basic usage
-with Profiler(array_uri="tiledb://array-uri..."):
-    # code to profile
-
-# Write custom events
-with Profiler(group_uri="tiledb://group-uri...", group_member="log") as prof:
-    # code to profile
-
-    # write custom event
-    prof.write("my-op", "my-data", "my-extra-data")
-
-    # more code to profile</code></pre>
-<section id="methods" class="level4">
-<h4 class="anchored" data-anchor-id="methods">Methods</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#tiledb.cloud.utilities.profiler.Profiler.write">write</a></td>
-<td>Write an event to the log array.</td>
-</tr>
-</tbody>
-</table>
-<section id="tiledb.cloud.utilities.profiler.Profiler.write" class="level5">
-<h5 class="anchored" data-anchor-id="tiledb.cloud.utilities.profiler.Profiler.write">write</h5>
-<p><code>cloud.utilities.profiler.Profiler.write(op='', data='', extra='')</code></p>
-<p>Write an event to the log array.</p>
-<p>When writing large amounts of data, store the data in the <code>extra</code> parameter to improve query performance when the <code>extra</code> data is not needed.</p>
-<section id="parameters" class="level6">
-<h6 class="anchored" data-anchor-id="parameters">Parameters</h6>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>op</code></td>
-<td>str</td>
-<td>event op, defaults to “”</td>
-<td><code>''</code></td>
-</tr>
-<tr class="even">
-<td><code>data</code></td>
-<td>str</td>
-<td>event data, defaults to “”</td>
-<td><code>''</code></td>
-</tr>
-<tr class="odd">
-<td><code>extra</code></td>
-<td>str</td>
-<td>event extra data, defaults to “”</td>
-<td><code>''</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-</section>
-</section>
-</section>
-<section id="functions" class="level2">
-<h2 class="anchored" data-anchor-id="functions">Functions</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#tiledb.cloud.utilities.profiler.create_log_array">create_log_array</a></td>
-<td>Create an array to hold log events.</td>
-</tr>
-<tr class="even">
-<td><a href="#tiledb.cloud.utilities.profiler.write_log_event">write_log_event</a></td>
-<td>Write an event to the log array.</td>
-</tr>
-</tbody>
-</table>
-<section id="tiledb.cloud.utilities.profiler.create_log_array" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.profiler.create_log_array">create_log_array</h3>
-<p><code>cloud.utilities.profiler.create_log_array(uri)</code></p>
-<p>Create an array to hold log events.</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>uri</code></td>
-<td>str</td>
-<td>array URI</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.utilities.profiler.write_log_event" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.profiler.write_log_event">write_log_event</h3>
-<p><code>cloud.utilities.profiler.write_log_event(uri, id, op='', data='', extra='')</code></p>
-<p>Write an event to the log array.</p>
-<p>When writing large amounts of data, store the data in the <code>extra</code> parameter to improve query performance when the <code>extra</code> data is not needed.</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 12%">
-<col style="width: 23%">
-<col style="width: 47%">
-<col style="width: 16%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>uri</code></td>
-<td>str</td>
-<td>array URI</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>id</code></td>
-<td>str</td>
-<td>event id</td>
-<td><em>required</em></td>
-</tr>
-<tr class="odd">
-<td><code>op</code></td>
-<td>Optional[str]</td>
-<td>event operation, defaults to “”</td>
-<td><code>''</code></td>
-</tr>
-<tr class="even">
-<td><code>data</code></td>
-<td>Optional[str]</td>
-<td>event data, defaults to “”</td>
-<td><code>''</code></td>
-</tr>
-<tr class="odd">
-<td><code>extra</code></td>
-<td>Optional[str]</td>
-<td>event extra data, defaults to “”</td>
-<td><code>''</code></td>
-</tr>
-</tbody>
-</table>
+<section id="tiledb.cloud.region.AWS" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.region.AWS">AWS</h3>
+<p><code>cloud.region.AWS()</code></p>
+<p>The AWS cloud regions that are currently supported.</p>
+<p>US_EAST_1 = North America, United States (Virginia)</p>
+<p>US_WEST_2 = North America, United States (Oregon)</p>
+<p>EU_WEST_1 = Europe, Ireland</p>
+<p>EU_WEST_2 = Europe, London</p>
+<p>AP_SOUTHEAST_1 = Asia, Singapore</p>
 
 
-</section>
 </section>
 </section>
 </section>
@@ -1087,13 +918,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../reference/utilities.consolidate.html" class="pagination-link" aria-label="`consolidate`">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>consolidate</code></span>
+      <a href="../reference/dag.visualization.html" class="pagination-link" aria-label="`visualization`">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>visualization</code></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../reference/utilities.wheel.html" class="pagination-link" aria-label="`wheel`">
-        <span class="nav-page-text"><code>wheel</code></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../reference/files.indexing.html" class="pagination-link" aria-label="`indexing`">
+        <span class="nav-page-text"><code>indexing</code></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
