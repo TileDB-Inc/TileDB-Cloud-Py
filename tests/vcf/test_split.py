@@ -35,8 +35,6 @@ def test_ls_samples(mocked_gz_file: MagicMock, mocked_vfs: MagicMock) -> None:
 def test_split_one_sample(mock_process_stream: MagicMock) -> None:
     """Test tiledb.cloud.vcf.split.split_one_sample"""
 
-    print(type(mock_process_stream))
-
     sample = "SampleA"
     mock_process_stream.return_value = (
         0,
