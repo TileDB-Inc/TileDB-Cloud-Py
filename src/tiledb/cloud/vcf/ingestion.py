@@ -98,11 +98,12 @@ def get_logger_wrapper(
     return logger
 
 
-def create_manifest(dataset_uri: str) -> None:
+def create_manifest(dataset_uri: str, group: tiledb.Group) -> None:
     """
     Create a manifest array in the dataset.
 
     :param dataset_uri: dataset URI
+    :param group: dataset group
     """
 
     manifest_uri = f"{dataset_uri}/{MANIFEST_ARRAY}"
@@ -140,9 +141,10 @@ def create_manifest(dataset_uri: str) -> None:
 
     tiledb.Array.create(manifest_uri, schema)
 
-    group = tiledb.Group(dataset_uri, "w")
-    group.add(MANIFEST_ARRAY, name=MANIFEST_ARRAY, relative=True)
-    group.close()
+    if dataset_uri.startswith("tiledb://"):
+        group.add(manifest_uri, name=MANIFEST_ARRAY, relative=False)
+    else:
+        group.add(MANIFEST_ARRAY, name=MANIFEST_ARRAY, relative=True)
 
 
 # --------------------------------------------------------------------
@@ -207,14 +209,17 @@ def create_dataset_udf(
             log_uri = f"{dataset_uri}/{LOG_ARRAY}"
             create_log_array(log_uri)
             with tiledb.Group(dataset_uri, "w") as group:
-                group.add(LOG_ARRAY, name=LOG_ARRAY, relative=True)
+                if dataset_uri.startswith("tiledb://"):
+                    group.add(log_uri, name=LOG_ARRAY, relative=False)
+                else:
+                    group.add(LOG_ARRAY, name=LOG_ARRAY, relative=True)
+
+                # Create manifest array and add it to the dataset group if
+                # not creating an annotation dataset.
+                if not annotation_dataset:
+                    create_manifest(dataset_uri, group)
 
             write_log_event(log_uri, "create_dataset_udf", "create", data=dataset_uri)
-
-            # Create manifest array and add it to the dataset group if
-            # not creating an annotation dataset.
-            if not annotation_dataset:
-                create_manifest(dataset_uri)
         else:
             logger.info("Using existing dataset: %r", dataset_uri)
 
@@ -897,16 +902,17 @@ def consolidate_dataset_udf(
             for member in group:
                 uri = member.uri
                 name = member.name
+                is_remote = uri.startswith("tiledb://")
 
                 # Skip excluded and non-included arrays
                 if (exclude and name in exclude) or (include and name not in include):
                     continue
 
                 # NOTE: REST currently only supports fragment_meta, commits, metadata
-                modes = ["commits", "fragment_meta", "array_meta"]
+                modes = ["commits", "fragment_meta"]
 
                 # Consolidate fragments for selected arrays
-                if name in [LOG_ARRAY, MANIFEST_ARRAY, "vcf_headers"]:
+                if not is_remote and name in [LOG_ARRAY, MANIFEST_ARRAY, "vcf_headers"]:
                     modes += ["fragments"]
 
                 for mode in modes:
