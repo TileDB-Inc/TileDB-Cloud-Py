@@ -722,7 +722,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.vcf.ingestion.create_manifest" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.ingestion.create_manifest">create_manifest</h3>
-<p><code>cloud.vcf.ingestion.create_manifest(dataset_uri)</code></p>
+<p><code>cloud.vcf.ingestion.create_manifest(dataset_uri, group)</code></p>
 <p>Create a manifest array in the dataset.</p>
 <section id="parameters-2" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
@@ -740,6 +740,12 @@ ul.task-list li input[type="checkbox"] {
 <td><code>dataset_uri</code></td>
 <td>str</td>
 <td>dataset URI</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>group</code></td>
+<td>tiledb.Group</td>
+<td>dataset group</td>
 <td><em>required</em></td>
 </tr>
 </tbody>
