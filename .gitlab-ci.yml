@@ -1,7 +1,6 @@
 stages:
-  - pull_request
-  - push
-  # TODO: Find how to trigger on merges to `main`
+  - assume_role
+  - check_assume_role
 
 image: ubuntu:latest
 
