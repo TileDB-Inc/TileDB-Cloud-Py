@@ -372,7 +372,7 @@ def _filter_kwargs(function: Callable, kwargs: Mapping[str, Any]) -> Mapping[str
 _CT = TypeVar("_CT", bound=Callable)
 
 
-def as_batch(func: _CT) -> _CT:
+def as_batch(func: Union[_CT, str]) -> _CT:
     """
     Decorator to run a function as a batch UDF on TileDB Cloud.
 
@@ -382,8 +382,19 @@ def as_batch(func: _CT) -> _CT:
     - acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
     - resources: resources to allocate for the UDF, defaults to None
 
-    :param func: function to run
+    :param func: function to run or name of registered UDF
     """
+
+    if isinstance(func, str):
+        remote_udf = True
+        registered_udf = func
+
+        def func():
+            return None
+
+        func.__name__ = registered_udf
+    else:
+        remote_udf = False
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs) -> Dict[str, object]:
@@ -399,10 +410,9 @@ def as_batch(func: _CT) -> _CT:
         - image_name: Docker image_name to use for UDFs, defaults to None
         """
 
-        name = kwargs.get("name", func.__name__)
-        namespace = kwargs.get("namespace", None)
-        acn = kwargs.get("acn", kwargs.pop("access_credentials_name", None))
-        kwargs["acn"] = acn  # for backwards compatibility
+        name = kwargs.pop("name", func.__name__)
+        namespace = kwargs.pop("namespace", None)
+        acn = kwargs.pop("acn", kwargs.pop("access_credentials_name", None))
         resources = kwargs.pop("resources", None)
         image_name = kwargs.pop("image_name", None)
 
@@ -413,15 +423,23 @@ def as_batch(func: _CT) -> _CT:
             mode=dag.Mode.BATCH,
         )
 
+        if remote_udf:
+            submission = func.__name__
+
+        else:
+            submission = func
+            # can only filter when in-memory fxn having parameters attr
+            kwargs = _filter_kwargs(func, kwargs)
+
         # Submit the function as a batch UDF
         graph.submit(
-            func,
+            submission,
             *args,
             name=name,
             access_credentials_name=acn,
             resources=resources,
             image_name=image_name,
-            **_filter_kwargs(func, kwargs),
+            **kwargs,
         )
 
         # Run the DAG asynchronously

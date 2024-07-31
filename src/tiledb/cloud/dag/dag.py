@@ -114,6 +114,13 @@ class Node(futures.FutureLike[_T]):
         Applies only when ``_prewrapped_func`` is used.
         ``True`` if ``_prewrapped_func`` can accept stored parameters.
         ``False`` if it cannot, and all parameters must be serialized.
+    :param namespace: TileDB Cloud namespace, defaults to the user's default namespace.
+    :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type).
+    :param access_credentials_name: Alias for acn, for backwards compatibility.
+    :param resources: Resources to allocate for the UDF (e.g. {"cpu": "2", "memory":
+        "10Gi"}, defaults to None.
+    :param image_name: Docker image_name to use for UDFs, defaults to default
+        image (see docs).
     :param **kwargs: Keyword arguments to pass to UDF.
     """
 
