@@ -4,7 +4,7 @@ import re
 import urllib.parse
 import warnings
 from fnmatch import fnmatch
-from typing import Dict, List, Mapping, Optional, Tuple, Union
+from typing import Dict, List, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
 import tiledb.cloud
@@ -274,7 +274,7 @@ def upload_folder(
     output_uri: str,
     *,
     group_uri: Optional[str] = None,
-    exclude_files: Optional[List[str]] = None,
+    exclude_files: Optional[Sequence[str]] = None,
     flatten: bool = False,
     access_credentials_name: Optional[str] = None,
     config: Optional[dict] = None,
@@ -313,9 +313,10 @@ def upload_folder(
     namespace, name = utils.split_uri(output_uri)
     _, sp, acn = groups._default_ns_path_cred(namespace=namespace)
 
-    storage_path = name if name.startswith("s3://") else sp
+    # If `name` is a URL, assume it points to a cloud storage
+    storage_path = name if "://" in name else sp
     storage_path = f"{storage_path.strip('/')}/{base_dir}"
-    logger.debug("Output storage path: %s" % storage_path)
+    logger.debug("Output storage path: %s", storage_path)
 
     access_credentials_name = access_credentials_name or acn
 
@@ -337,7 +338,7 @@ def upload_folder(
             credentials_name=access_credentials_name,
         )
         group_created = True
-        logger.debug("Group URI: '%s' created" % group_uri)
+        logger.debug("Group URI: '%r' created", group_uri)
 
     logger.info(
         """
@@ -392,6 +393,10 @@ def upload_folder(
                 )
                 uploaded += 1
             except Exception as exc:
+                logger.exception(
+                    "File '%s' while uploading to '%s' raised an exception"
+                    % (filename, out_path)
+                )
                 upload_errors[fname] = str(exc)
 
     return {
