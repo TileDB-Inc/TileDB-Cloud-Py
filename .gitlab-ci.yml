@@ -12,6 +12,7 @@ stages:
 # Copied from official docs:
 # https://docs.gitlab.com/ee/ci/cloud_services/aws/#retrieve-temporary-credentials
 assume_role:
+  stage: assume_role
   id_tokens:
     OIDC_TOKEN:
       aud: https://ecs.customerapp.com
@@ -28,6 +29,7 @@ assume_role:
     - aws sts get-caller-identity
 
 check_assume_role:
+  stage: check_assume_role
   image:
     name: "amazon/aws-cli:latest"
     entrypoint: [""]
