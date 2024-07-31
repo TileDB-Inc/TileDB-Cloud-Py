@@ -900,6 +900,10 @@ def consolidate_dataset_udf(
             group = tiledb.Group(dataset_uri)
 
             for member in group:
+                # Skip non-array members
+                if member.type != tiledb.Array:
+                    continue
+
                 uri = member.uri
                 name = member.name
                 is_remote = uri.startswith("tiledb://")
@@ -916,6 +920,7 @@ def consolidate_dataset_udf(
                     modes += ["fragments"]
 
                 for mode in modes:
+                    logger.debug("Consolidating %r in %r (%s)", mode, uri, name)
                     config = tiledb.Config({"sm.consolidation.mode": mode})
                     try:
                         tiledb.consolidate(uri, config=config)
@@ -923,6 +928,7 @@ def consolidate_dataset_udf(
                         print(e)
 
                 for mode in modes:
+                    logger.debug("Vacuuming %r in %r (%s)", mode, uri, name)
                     config = tiledb.Config({"sm.vacuum.mode": mode})
                     try:
                         tiledb.vacuum(uri, config=config)
@@ -1315,7 +1321,9 @@ def ingest_samples_dag(
             consolidate.depends_on(ingest)
 
     # Consolidate fragments in the stats arrays, if enabled
-    if consolidate_stats:
+    # TODO: remove when remote fragment consolidation is supported
+    is_remote = dataset_uri.startswith("tiledb://")
+    if consolidate_stats and not is_remote:
 
         def group_member_uri(group_uri, group_member, config):
             with tiledb.scope_ctx(config):
