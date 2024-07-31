@@ -1,7 +1,3 @@
-stages:
-  - assume_role
-  - check_assume_role
-
 image: ubuntu:latest
 
 variables:
@@ -9,9 +5,13 @@ variables:
   AWS_ROLE_ARN: "arn:aws:iam::211125629230:role/TiledbCloudPyCIRole"
   AWS_S3_BUCKET: "tiledb-cloud-py-ci"
 
+stages:
+  - assume_role
+  - check_assume_role
+
 # Copied from official docs:
 # https://docs.gitlab.com/ee/ci/cloud_services/aws/#retrieve-temporary-credentials
-assume_role:
+assume role:
   id_tokens:
     OIDC_TOKEN:
       aud: https://ecs.customerapp.com
@@ -28,5 +28,8 @@ assume_role:
     - aws sts get-caller-identity
 
 check_assume_role:
+  image:
+    name: "amazon/aws-cli:latest"
+    entrypoint: [""]
   script:
     - aws s3 ls s3://${AWS_S3_BUCKET}
