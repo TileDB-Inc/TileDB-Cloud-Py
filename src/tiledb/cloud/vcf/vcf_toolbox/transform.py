@@ -1,3 +1,4 @@
+from functools import wraps
 from typing import Callable
 
 import pandas as pd
@@ -64,6 +65,7 @@ def df_transform(
         the `tiledb.cloud.vcf.query` function
     """
 
+    @wraps(fn)
     def wrapper(
         *args: _PS.args, **kwargs: _PS.kwargs
     ) -> Callable[[pa.Table], pa.Table]:
