@@ -11,7 +11,7 @@ stages:
 
 # Copied from official docs:
 # https://docs.gitlab.com/ee/ci/cloud_services/aws/#retrieve-temporary-credentials
-assume role:
+assume_role:
   id_tokens:
     OIDC_TOKEN:
       aud: https://ecs.customerapp.com
