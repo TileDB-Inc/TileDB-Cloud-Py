@@ -323,7 +323,7 @@ def upload_folder(
     # Group check and/or creation
     if not group_uri:
         logger.debug("No group_uri provided. Choosing one...")
-        if not name.startswith("s3://"):
+        if "://" not in name:
             group_uri = f"tiledb://{namespace}/{base_dir}"
         else:
             group_uri = output_uri
