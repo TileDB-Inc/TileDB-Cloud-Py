@@ -101,6 +101,7 @@ def consolidate_and_vacuum(
     logger = get_logger()
 
     with tiledb.scope_ctx(config):
+        # TODO: remove when remote fragment consolidation is supported
         is_remote = array_uri.startswith("tiledb://")
         if not is_remote and vacuum_fragments:
             logger.info("Vacuuming fragments")
