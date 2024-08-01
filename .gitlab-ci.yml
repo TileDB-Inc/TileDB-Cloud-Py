@@ -13,6 +13,9 @@ stages:
 # https://docs.gitlab.com/ee/ci/cloud_services/aws/#retrieve-temporary-credentials
 assume_role:
   stage: assume_role
+  image:
+    name: "amazon/aws-cli:latest"
+    entrypoint: [""]
   id_tokens:
     OIDC_TOKEN:
       aud: https://ecs.customerapp.com
