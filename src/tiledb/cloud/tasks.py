@@ -37,7 +37,7 @@ def task(id, async_req=False):
         raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
-def tasks(
+def fetch_tasks(
     namespace=None,
     array=None,
     start=None,
@@ -48,7 +48,7 @@ def tasks(
     async_req=False,
 ):
     """
-    Fetch all tasks a user has access too
+    Fetch all tasks a user has access too.
     :param str namespace: optional filter by namespace
     :param str array: optional limit tasks to specific array
     :param datetime start: optional start time for listing of tasks,
