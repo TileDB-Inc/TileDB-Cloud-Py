@@ -22,14 +22,20 @@ aws-oidc-credentials:
   id_tokens:
     OIDC_TOKEN:
       aud: https://ecs.customerapp.com
-  variables:
-    AWS_PROFILE: oidc
-  before_script:
-    - mkdir -p ~/.aws
-    - echo "${OIDC_TOKEN}" > /tmp/web_identity_token
-    - echo -e "[profile oidc]\nrole_arn=${AWS_ROLE_ARN}\nweb_identity_token_file=/tmp/web_identity_token" > ~/.aws/config
   script:
+    - >
+      printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s"
+      $(aws sts assume-role-with-web-identity
+      --role-arn ${AWS_ROLE_ARN}
+      --role-session-name "GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}"
+      --web-identity-token ${OIDC_TOKEN}
+      --duration-seconds 3600
+      --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]'
+      --output text) > aws.env
     - aws sts get-caller-identity
+  artifacts:
+    reports:
+      dotenv: aws.env
 
 check-aws-credentials:
   stage: check-aws-credentials
