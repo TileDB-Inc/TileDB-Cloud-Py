@@ -36,10 +36,13 @@ aws-oidc-credentials:
   artifacts:
     reports:
       dotenv: aws.env
+    expire_in: 30min
 
 check-aws-credentials:
   stage: check-aws-credentials
-  needs: [aws-oidc-credentials]
+  # needs: [aws-oidc-credentials]
   extends: .aws-cli
+  dependencies:
+    - aws-oidc-credentials
   script:
     - aws s3 ls s3://${AWS_S3_BUCKET}
