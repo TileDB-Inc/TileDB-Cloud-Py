@@ -233,6 +233,7 @@ def register_array(
     description=None,
     access_credentials_name=None,
     async_req=False,
+    dest_uri: Optional[str] = None,
 ):
     """
     Register this array with the tiledb cloud service
@@ -243,8 +244,13 @@ def register_array(
     :param str access_credentials_name: optional name of access credentials to use,
         if left blank default for namespace will be used
     :param async_req: return future instead of results for async support
+    :param dest_uri: If set, the ``tiledb://`` URI of the destination.
     """
     api_instance = client.build(rest_api.ArrayApi)
+
+    namespace, array_name = utils.canonicalize_ns_name_uri(
+        namespace=namespace, array_name=array_name, dest_uri=dest_uri
+    )
 
     namespace = namespace or client.default_user().username
 

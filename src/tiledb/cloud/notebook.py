@@ -106,8 +106,9 @@ def download_notebook_contents(
 def upload_notebook_from_file(
     ipynb_file_name: str,
     *,
+    dest_uri: Optional[str] = None,
     namespace: Optional[str] = None,
-    array_name: str,
+    array_name: Optional[str] = None,
     storage_path: Optional[str] = None,
     storage_credential_name: Optional[str] = None,
     on_exists: OnExists = OnExists.FAIL,
@@ -116,8 +117,11 @@ def upload_notebook_from_file(
     Uploads a local-disk notebook file to TileDB Cloud.
     :param ipnyb_file_name: such as "./mycopy.ipynb". Must be local; no S3 URI
       support at present.
+    :param dest_uri: The destination URI to upload the notebook to,
+      such as ``tiledb://janedoe/testing-upload``. If this is set,
+      ``namespace`` and ``array_name`` may not be set.
     :param namespace: such as "janedoe".
-    :param array_name : name to be seen in the UI, such as "testing-upload".
+    :param array_name: name to be seen in the UI, such as "testing-upload".
     :param storage_path: such as "s3://acmecorp-janedoe", typically from the
       user's account settings.
     :param storage_credential_name: such as "janedoe-creds", typically from the
@@ -134,6 +138,7 @@ def upload_notebook_from_file(
         str(ipynb_file_contents, "utf-8"),
         namespace=namespace,
         array_name=array_name,
+        dest_uri=dest_uri,
         storage_path=storage_path,
         storage_credential_name=storage_credential_name,
         on_exists=on_exists,
@@ -143,8 +148,9 @@ def upload_notebook_from_file(
 def upload_notebook_contents(
     ipynb_file_contents: str,
     *,
+    dest_uri: Optional[str] = None,
     namespace: Optional[str] = None,
-    array_name: str,
+    array_name: Optional[str] = None,
     storage_path: Optional[str] = None,
     storage_credential_name: Optional[str] = None,
     on_exists: OnExists,
@@ -153,6 +159,9 @@ def upload_notebook_contents(
     Uploads a notebook file to TileDB Cloud.
     :param ipynb_file_contents: The contents of the notebook file as a string,
       nominally in JSON format.
+    :param dest_uri: The destination URI to upload the notebook to,
+      such as ``tiledb://janedoe/testing-upload``. If this is set,
+      ``namespace`` and ``array_name`` may not be set.
     :param storage_path: such as "s3://acmecorp-janedoe", typically from the
       user's account settings.
     :param array_name : name to be seen in the UI, such as "testing-upload"
@@ -162,6 +171,10 @@ def upload_notebook_contents(
     :param on_exists: such as OnExists.FAIL (default), OVERWRITE or AUTO-INCREMENT
     :return: TileDB array name, such as "tiledb://janedoe/testing-upload".
     """
+
+    namespace, array_name = utils.canonicalize_ns_name_uri(
+        namespace=namespace, array_name=array_name, dest_uri=dest_uri
+    )
 
     storage_credential_name = storage_credential_name or (
         client.default_user().default_s3_path_credentials_name

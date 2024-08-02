@@ -170,7 +170,11 @@ def test_asset_register_array_dispatch(register_array, object_type):
     """Dispatch to array.register_array when URI is an array."""
     asset.register("a", "array", name="foo", credentials_name="bar")
     register_array.assert_called_once_with(
-        "a", namespace=None, array_name="foo", access_credentials_name="bar"
+        "a",
+        namespace=None,
+        array_name="foo",
+        access_credentials_name="bar",
+        dest_uri=None,
     )
 
 
@@ -180,7 +184,12 @@ def test_asset_register_group_dispatch(register_group, object_type):
     """Dispatch to groups.register when URI is a group."""
     asset.register("a", "group", name="foo", credentials_name="bar")
     register_group.assert_called_once_with(
-        "a", name="foo", namespace=None, credentials_name="bar", parent_uri=None
+        "a",
+        name="foo",
+        namespace=None,
+        credentials_name="bar",
+        parent_uri=None,
+        dest_uri=None,
     )
 
 

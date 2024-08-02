@@ -3,7 +3,7 @@
 from functools import partial
 from typing import Callable, List, Mapping, Optional, Union
 
-import tiledb  # type: ignore
+import tiledb
 
 from . import array  # type: ignore
 from . import groups  # type: ignore
@@ -15,6 +15,7 @@ def register(
     storage_uri: str,
     type: str,
     *,
+    dest_uri: Optional[str] = None,
     name: Optional[str] = None,
     namespace: Optional[str] = None,
     credentials_name: Optional[str] = None,
@@ -56,6 +57,7 @@ def register(
             namespace=namespace,
             array_name=name,
             access_credentials_name=credentials_name,
+            dest_uri=dest_uri,
         )
     elif type == "group":
         groups.register(
@@ -64,9 +66,10 @@ def register(
             namespace=namespace,
             credentials_name=credentials_name,
             parent_uri=parent_uri,
+            dest_uri=dest_uri,
         )
     else:
-        raise tiledb.TileDBError(f"Invalid asset type '{type}'")
+        raise ValueError(f"Invalid asset type {type!r}")
 
 
 def deregister(uri: str, *, recursive: Optional[bool] = False) -> None:
