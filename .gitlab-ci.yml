@@ -6,35 +6,43 @@ variables:
   AWS_S3_BUCKET: "tiledb-cloud-py-ci"
 
 stages:
-  - assume_role
-  - check_assume_role
+  - aws-oidc-credentials
+  - check-aws-credentials
 
-# Copied from official docs:
-# https://docs.gitlab.com/ee/ci/cloud_services/aws/#retrieve-temporary-credentials
-assume_role:
-  stage: assume_role
+.aws-cli:
   image:
     name: "amazon/aws-cli:latest"
     entrypoint: [""]
+
+# Copied from official docs:
+# https://docs.gitlab.com/ee/ci/cloud_services/aws/#retrieve-temporary-credentials
+aws-oidc-credentials:
+  stage: aws-oidc-credentials
+  extends: .aws-cli
   id_tokens:
     OIDC_TOKEN:
       aud: https://ecs.customerapp.com
   script:
     - >
       export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s"
-      $(aws sts assume-role-with-web-identity
+      STS=($(aws sts assume-role-with-web-identity
       --role-arn ${AWS_ROLE_ARN}
       --role-session-name "GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}"
       --web-identity-token ${OIDC_TOKEN}
       --duration-seconds 3600
       --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]'
-      --output text))
+      --output text)))
     - aws sts get-caller-identity
+    - echo "AWS_ACCESS_KEY_ID=${STS[0]}" >> aws-credentials.env
+    - echo "AWS_SECRET_ACCESS_KEY=${STS[1]}" >> aws-credentials.env
+    - echo "AWS_SESSION_TOKEN=${STS[2]}" >> aws-credentials.env
+  artifacts:
+    reports:
+      dotenv: aws-credentials.env
 
-check_assume_role:
-  stage: check_assume_role
-  image:
-    name: "amazon/aws-cli:latest"
-    entrypoint: [""]
+check-aws-credentials:
+  stage: check-aws-credentials
+  needs: [aws-oidc-credentials]
+  extends: .aws-cli
   script:
     - aws s3 ls s3://${AWS_S3_BUCKET}
