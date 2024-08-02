@@ -26,7 +26,7 @@ aws-oidc-credentials:
     AWS_PROFILE: oidc
   before_script:
     - mkdir -p ~/.aws
-    - echo "${CI_JOB_JWT_V2}" > /tmp/web_identity_token
+    - echo "${OIDC_TOKEN}" > /tmp/web_identity_token
     - echo -e "[profile oidc]\nrole_arn=${AWS_ROLE_ARN}\nweb_identity_token_file=/tmp/web_identity_token" > ~/.aws/config
   script:
     - aws sts get-caller-identity
