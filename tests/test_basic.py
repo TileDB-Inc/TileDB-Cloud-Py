@@ -49,7 +49,7 @@ class BasicTests(unittest.TestCase):
             array.array_activity("tiledb://TileDB-Inc/quickstart_sparse")
 
     def test_tasks(self):
-        self.assertIsNotNone(tasks.tasks(page=1, per_page=100))
+        self.assertIsNotNone(tasks.fetch_tasks(page=1, per_page=100))
 
     def test_list_arrays(self):
         self.assertIsNotNone(client.list_arrays().arrays)

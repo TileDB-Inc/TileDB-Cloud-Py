@@ -34,6 +34,9 @@ from .notebook import rename_notebook
 from .notebook import upload_notebook_contents
 from .notebook import upload_notebook_from_file
 from .rest_api import models
+from .tasks import fetch_results
+from .tasks import fetch_results_pandas
+from .tasks import fetch_tasks
 from .tasks import last_sql_task
 from .tasks import last_udf_task
 from .tasks import task
@@ -86,5 +89,8 @@ __all__ = (
     "last_sql_task",
     "last_udf_task",
     "task",
+    "fetch_tasks",
+    "fetch_results",
+    "fetch_results_pandas",
     "TileDBCloudError",
 )
