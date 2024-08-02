@@ -217,14 +217,17 @@ def install_wheel(
                 wheel_path = os.path.join(tmpdir, wheel_file)
                 tiledb.Filestore.copy_to(wheel_uri, wheel_path)
 
+                res = installer.install(
+                    wheel=wheel_path,
+                    deps_to_refresh=deps_to_refresh,
+                )
+
     # attempt to install from PyPI, assume library name given
     else:
-        wheel_path = None
-
-    res = installer.install(
-        wheel=wheel_path or wheel_uri,
-        deps_to_refresh=deps_to_refresh,
-    )
+        res = installer.install(
+            wheel=wheel_uri,
+            deps_to_refresh=deps_to_refresh,
+        )
 
     if res.returncode != 0:
         logger.info(f"Failed to install wheel '{wheel_uri}'")
