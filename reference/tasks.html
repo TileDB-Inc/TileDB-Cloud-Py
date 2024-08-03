@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.55">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -483,20 +483,20 @@ ul.task-list li input[type="checkbox"] {
 <td>Fetches the results of a previously-executed UDF or SQL query.</td>
 </tr>
 <tr class="odd">
+<td><a href="#tiledb.cloud.tasks.fetch_tasks">fetch_tasks</a></td>
+<td>Fetch all tasks a user has access too.</td>
+</tr>
+<tr class="even">
 <td><a href="#tiledb.cloud.tasks.last_sql_task">last_sql_task</a></td>
 <td>Fetch the last run sql array task</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="#tiledb.cloud.tasks.last_udf_task">last_udf_task</a></td>
 <td>Fetch the last run udf task</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="#tiledb.cloud.tasks.task">task</a></td>
 <td>Fetch a single array task</td>
-</tr>
-<tr class="even">
-<td><a href="#tiledb.cloud.tasks.tasks">tasks</a></td>
-<td>Fetch all tasks a user has access too</td>
 </tr>
 </tbody>
 </table>
@@ -510,117 +510,18 @@ ul.task-list li input[type="checkbox"] {
 <p><code>cloud.tasks.fetch_results_pandas(task_id, *, result_format=models.ResultFormat.NATIVE)</code></p>
 <p>Fetches the results of a previously-executed UDF or SQL query.</p>
 </section>
-<section id="tiledb.cloud.tasks.last_sql_task" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.tasks.last_sql_task">last_sql_task</h3>
-<p><code>cloud.tasks.last_sql_task()</code></p>
-<p>Fetch the last run sql array task</p>
-<section id="returns" class="level4">
-<h4 class="anchored" data-anchor-id="returns">Returns</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td></td>
-<td>object with task details</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.tasks.last_udf_task" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.tasks.last_udf_task">last_udf_task</h3>
-<p><code>cloud.tasks.last_udf_task()</code></p>
-<p>Fetch the last run udf task</p>
-<section id="returns-1" class="level4">
-<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td></td>
-<td>object with task details</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.tasks.task" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.tasks.task">task</h3>
-<p><code>cloud.tasks.task(id, async_req=False)</code></p>
-<p>Fetch a single array task</p>
+<section id="tiledb.cloud.tasks.fetch_tasks" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.tasks.fetch_tasks">fetch_tasks</h3>
+<p><code>cloud.tasks.fetch_tasks(namespace=None, array=None, start=None, end=datetime.datetime.now(datetime.timezone.utc), status=None, page=None, per_page=None, async_req=False)</code></p>
+<p>Fetch all tasks a user has access too.</p>
 <section id="parameters" class="level4">
 <h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 15%">
-<col style="width: 9%">
-<col style="width: 61%">
-<col style="width: 14%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>id</code></td>
-<td>str</td>
-<td>id to lookup</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>async_req</code></td>
-<td></td>
-<td>return future instead of results for async support</td>
-<td><code>False</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns-2" class="level4">
-<h4 class="anchored" data-anchor-id="returns-2">Returns</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td></td>
-<td>object with task details</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.tasks.tasks" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.tasks.tasks">tasks</h3>
-<p><code>cloud.tasks.tasks(namespace=None, array=None, start=None, end=datetime.datetime.utcnow(), status=None, page=None, per_page=None, async_req=False)</code></p>
-<p>Fetch all tasks a user has access too</p>
-<section id="parameters-1" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 10%">
-<col style="width: 7%">
-<col style="width: 58%">
-<col style="width: 23%">
+<col style="width: 8%">
+<col style="width: 6%">
+<col style="width: 51%">
+<col style="width: 32%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -653,7 +554,7 @@ ul.task-list li input[type="checkbox"] {
 <td><code>end</code></td>
 <td>datetime</td>
 <td>optional end time for listing of tasks defaults to now</td>
-<td><code>datetime.datetime.utcnow()</code></td>
+<td><code>datetime.datetime.now(datetime.timezone.utc)</code></td>
 </tr>
 <tr class="odd">
 <td><code>status</code></td>
@@ -682,6 +583,109 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
+<section id="returns" class="level4">
+<h4 class="anchored" data-anchor-id="returns">Returns</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 48%">
+<col style="width: 51%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dict[str, Sequence[Dict[str, Any]]]</td>
+<td>Mapping of task data organized by task type.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.tasks.last_sql_task" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.tasks.last_sql_task">last_sql_task</h3>
+<p><code>cloud.tasks.last_sql_task()</code></p>
+<p>Fetch the last run sql array task</p>
+<section id="returns-1" class="level4">
+<h4 class="anchored" data-anchor-id="returns-1">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>object with task details</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.tasks.last_udf_task" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.tasks.last_udf_task">last_udf_task</h3>
+<p><code>cloud.tasks.last_udf_task()</code></p>
+<p>Fetch the last run udf task</p>
+<section id="returns-2" class="level4">
+<h4 class="anchored" data-anchor-id="returns-2">Returns</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>object with task details</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.tasks.task" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.tasks.task">task</h3>
+<p><code>cloud.tasks.task(id, async_req=False)</code></p>
+<p>Fetch a single array task</p>
+<section id="parameters-1" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 9%">
+<col style="width: 61%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>id</code></td>
+<td>str</td>
+<td>id to lookup</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>async_req</code></td>
+<td></td>
+<td>return future instead of results for async support</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="returns-3" class="level4">
 <h4 class="anchored" data-anchor-id="returns-3">Returns</h4>
 <table class="caption-top table">
@@ -694,7 +698,7 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td></td>
-<td></td>
+<td>object with task details</td>
 </tr>
 </tbody>
 </table>

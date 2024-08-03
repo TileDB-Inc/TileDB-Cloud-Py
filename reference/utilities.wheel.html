@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.55">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -540,35 +540,8 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.utilities.wheel.PipInstall.install" class="level5">
 <h5 class="anchored" data-anchor-id="tiledb.cloud.utilities.wheel.PipInstall.install">install</h5>
-<p><code>cloud.utilities.wheel.PipInstall.install(wheel, deps_to_refresh=None)</code></p>
+<p><code>cloud.utilities.wheel.PipInstall.install(deps_to_refresh=None)</code></p>
 <p>Install wheel.</p>
-<section id="parameters" class="level6">
-<h6 class="anchored" data-anchor-id="parameters">Parameters</h6>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 8%">
-<col style="width: 69%">
-<col style="width: 12%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>wheel</code></td>
-<td>str</td>
-<td>URI to registered wheel or name of library to install from PyPI.</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
-</table>
-</section>
 <section id="returns" class="level6">
 <h6 class="anchored" data-anchor-id="returns">Returns</h6>
 <table class="caption-top table">
@@ -592,8 +565,8 @@ ul.task-list li input[type="checkbox"] {
 <p><code>cloud.utilities.wheel.PipInstall.rm_from_cache(cached_libs)</code></p>
 <p>Libraries to remove from Python cache after install.</p>
 <p>In cases where the interpreter cannot be refreshed between install and execution (UDFs, task graphs), cached Python libraries from the image they were installed in during build will be prioritized over libraries installed as part of this class. This method To removes these libraries so that a cached library does not conflict with a new library installed at runtime.</p>
-<section id="parameters-1" class="level6">
-<h6 class="anchored" data-anchor-id="parameters-1">Parameters</h6>
+<section id="parameters" class="level6">
+<h6 class="anchored" data-anchor-id="parameters">Parameters</h6>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 20%">
@@ -666,18 +639,18 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.utilities.wheel.install_wheel" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.wheel.install_wheel">install_wheel</h3>
-<p><code>cloud.utilities.wheel.install_wheel(wheel_uri, config=None, verbose=False, no_deps=True, deps_to_refresh=None)</code></p>
+<p><code>cloud.utilities.wheel.install_wheel(wheel_uri, config=None, verbose=False, no_deps=True, deps_to_refresh=None, in_venv=True)</code></p>
 <p>Install at runtime a Python wheel from TiileDB Filestore or PyPI.</p>
 <p>Note: THIS IS AN EXPERIMENTAL API. IT MAY CHANGE IN THE FUTURE.</p>
 <p>Attempt to install a wheel file from a TileDB Filestore. If <code>wheel_uri</code> does not point to a .wheel file, assume it is the name of a public Python library and attempt to install from PyPI.</p>
-<section id="parameters-2" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-1" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 16%">
-<col style="width: 28%">
-<col style="width: 44%">
-<col style="width: 10%">
+<col style="width: 13%">
+<col style="width: 22%">
+<col style="width: 56%">
+<col style="width: 8%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -718,6 +691,12 @@ ul.task-list li input[type="checkbox"] {
 <td>Dependencies to refresh from cache.</td>
 <td><code>None</code></td>
 </tr>
+<tr class="even">
+<td><code>in_venv</code></td>
+<td>bool</td>
+<td>Whether to install to venv runtime. For conda, likely want default, in_ven=True.</td>
+<td><code>True</code></td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -733,8 +712,8 @@ ul.task-list li input[type="checkbox"] {
 <p>{distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform tag}.whl</p>
 <p>For example, a pure python wheel compatible with python 3:</p>
 <p>udflib-0.1-py3-none-any.whl</p>
-<section id="parameters-3" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
+<section id="parameters-2" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 11%">
