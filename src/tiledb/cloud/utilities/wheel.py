@@ -57,8 +57,16 @@ def upload_wheel(
     dest_uri = dest_uri.replace("+", ".")
 
     with tiledb.scope_ctx(config):
+        # catch edge case if array registered, but array deleted from storage backend
+        try:
+            object_type = tiledb.object_type(dest_uri)
+        except tiledb.TileDBError:
+            raise FileNotFoundError(
+                "Array registered in TileDB Cloud, but cannot find array in "
+                "'Original URI'."
+            )
+
         # Create the array if it doesn't exist
-        object_type = tiledb.object_type(dest_uri)
         if object_type is None:
             tiledb.Array.create(dest_uri, tiledb.ArraySchema.from_file(wheel_path))
             logger.info(f"Created filestore at '{dest_uri}'")
@@ -121,6 +129,8 @@ class PipInstall:
         :returns: Libraries that were found and deleted from Python cache.
         """
 
+        cached_libs = [cached_libs] if isinstance(cached_libs, str) else cached_libs
+
         deleted = []
         for lib in cached_libs:
             try:
@@ -136,13 +146,10 @@ class PipInstall:
 
     def install(
         self,
-        wheel: str,
         deps_to_refresh: Optional[Sequence[str]] = None,
     ) -> subprocess.CompletedProcess:
         """Install wheel.
 
-        :param wheel: URI to registered wheel or name of library to install
-            from PyPI.
         :returns: Completed process signature.
         """
 
@@ -159,7 +166,7 @@ class PipInstall:
         if self.no_deps:
             cmd += ["--no-deps"]
 
-        cmd += [wheel]
+        cmd += [self.wheel]
 
         # Capture stdout/stderr to reduce noise from pip for a successful install.
         # (subprocess.check_output always displays stderr)
@@ -182,6 +189,7 @@ def install_wheel(
     verbose: bool = False,
     no_deps: bool = True,
     deps_to_refresh: Optional[Sequence[str]] = None,
+    in_venv: bool = True,
 ) -> None:
     """Install at runtime a Python wheel from TiileDB Filestore or PyPI.
 
@@ -196,11 +204,13 @@ def install_wheel(
     :param verbose: Verbose output, defaults to False.
     :param no_deps: Do not install dependencies, defaults to True.
     :param deps_to_refresh: Dependencies to refresh from cache.
+    :param in_venv: Whether to install to venv runtime. For conda,
+        likely want default, in_ven=True.
     """
 
     installer = PipInstall(
         wheel=wheel_uri,
-        in_venv=sys.prefix != sys.base_prefix,
+        in_venv=in_venv,
         no_deps=no_deps,
     )
 
@@ -217,14 +227,13 @@ def install_wheel(
                 wheel_path = os.path.join(tmpdir, wheel_file)
                 tiledb.Filestore.copy_to(wheel_uri, wheel_path)
 
+                # update to tiledb:// URI
+                installer.wheel = wheel_path
+                res = installer.install(deps_to_refresh=deps_to_refresh)
+
     # attempt to install from PyPI, assume library name given
     else:
-        wheel_path = None
-
-    res = installer.install(
-        wheel=wheel_path or wheel_uri,
-        deps_to_refresh=deps_to_refresh,
-    )
+        res = installer.install(deps_to_refresh=deps_to_refresh)
 
     if res.returncode != 0:
         logger.info(f"Failed to install wheel '{wheel_uri}'")
