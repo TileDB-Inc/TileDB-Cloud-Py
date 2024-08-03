@@ -16,7 +16,7 @@ _LOCAL_WHEEL = "tests/utilities/data/fake_unittest_wheel-0.1.0-py3-none-any.whl"
 _ARRAY_NAME = os.path.basename(_LOCAL_WHEEL)
 _S3_BUCKET = "tiledb-spencer"
 _S3_OBJECT_PATH = "unittests/tiledb-cloud/utilities/wheel"
-_NAMESPACE = "spencerseale"
+_NAMESPACE = "TileDB-Inc"
 _FULL_URI = os.path.join(
     "tiledb://",
     _NAMESPACE,
