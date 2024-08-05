@@ -1,8 +1,21 @@
 """Split samples from multi-sample VCF."""
 
+import gzip
+import logging
+import os
 from typing import Mapping, Optional, Sequence
 
+from attrs import define
+from attrs import field
+
+import tiledb
 from tiledb.cloud.dag import DAG
+from tiledb.cloud.dag import Mode
+from tiledb.cloud.rest_api import RetryStrategy
+from tiledb.cloud.utilities import get_logger
+from tiledb.cloud.utilities import process_stream
+from tiledb.cloud.utilities import run_dag
+from tiledb.cloud.version import version
 
 
 def ls_samples(
@@ -16,15 +29,7 @@ def ls_samples(
     :return: Samples included in VCF.
     """
 
-    import gzip
-
-    from attrs import define
-    from attrs import field
-
-    import tiledb
-    from tiledb.cloud import utilities
-
-    logger = utilities.get_logger()
+    logger = get_logger()
 
     @define
     class FindSamples:
@@ -62,13 +67,16 @@ def ls_samples(
                         samples = line[
                             line.index(self.search_key) + len(self.search_key) :
                         ].split()
-                        logger.info(
-                            f"{len(samples)} samples aggregated in {self.source}."
-                        )
                         return samples
 
     finder = FindSamples(source=vcf_uri, config=config)
     all_samples = finder.sample_names()
+
+    if all_samples:
+        pretty_log = "\n\t>>> ".join(all_samples)
+        logger.info(f"Samples Identified:\n\t>>> {pretty_log}")
+
+    logger.info(f"\n{len(all_samples)} samples aggregated in {finder.source}.")
 
     return all_samples
 
@@ -87,16 +95,6 @@ def split_one_sample(
     :param config: TileDB config object.
     :return: URI of isolated sample.
     """
-
-    import os
-    from typing import Mapping, Sequence
-
-    from attrs import define
-    from attrs import field
-
-    import tiledb
-    from tiledb.cloud.utilities import get_logger
-    from tiledb.cloud.utilities import process_stream
 
     logger = get_logger()
 
@@ -133,6 +131,9 @@ def split_one_sample(
             cmd = [self.bcftools] + args
 
             stream = process_stream(self.source, cmd, output_uri=output_uri)
+            print("STREAM", stream)
+            if stream[0] != 0:
+                raise RuntimeError(f"bcftools command error: {stream[2]}")
             return stream[1]
 
         def isolate(self, sample: str, output_uri: str) -> str:
@@ -206,16 +207,6 @@ def split_vcf(
         filesystem handler.
     :return: DAG instantiated as specified.
     """
-
-    import logging
-
-    import tiledb
-    from tiledb.cloud.dag import DAG
-    from tiledb.cloud.dag import Mode
-    from tiledb.cloud.rest_api import RetryStrategy
-    from tiledb.cloud.utilities import get_logger
-    from tiledb.cloud.utilities import run_dag
-    from tiledb.cloud.version import version
 
     logger = get_logger(level=logging.DEBUG if verbose else logging.INFO)
 

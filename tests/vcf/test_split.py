@@ -31,7 +31,7 @@ def test_ls_samples(mocked_gz_file: MagicMock, mocked_vfs: MagicMock) -> None:
     assert observed == expected
 
 
-@patch("tiledb.cloud.utilities.process_stream")
+@patch("tiledb.cloud.vcf.split.process_stream")
 def test_split_one_sample(mock_process_stream: MagicMock) -> None:
     """Test tiledb.cloud.vcf.split.split_one_sample"""
 
@@ -39,6 +39,7 @@ def test_split_one_sample(mock_process_stream: MagicMock) -> None:
     mock_process_stream.return_value = (
         0,
         "stream output",
+        "stream err",
     )
 
     observed = split_one_sample(
@@ -50,7 +51,7 @@ def test_split_one_sample(mock_process_stream: MagicMock) -> None:
     assert observed == os.path.join(_output_uri, sample + ".vcf.gz")
 
 
-@patch.object(tiledb.cloud.dag.DAG, "submit")
+@patch.object(tiledb.cloud.vcf.split.DAG, "submit")
 def test_split_vcf(mock_submit_1: MagicMock) -> None:
     """Test tiledb.cloud.vcf.split.split_vcf
 
@@ -76,7 +77,8 @@ def test_split_vcf(mock_submit_1: MagicMock) -> None:
 
     # call again with two samples
     # have to init a new mock
-    with patch.object(tiledb.cloud.dag.DAG, "submit") as mock_submit_2:
+    # with patch.object(tiledb.cloud.dag.DAG, "submit") as mock_submit_2:
+    with patch.object(tiledb.cloud.vcf.split.DAG, "submit") as mock_submit_2:
         obs = split_vcf(
             vcf_uri=_vcf_uri,
             output_uri=_output_uri,
@@ -90,9 +92,11 @@ def test_split_vcf(mock_submit_1: MagicMock) -> None:
 
     # test without any samples for dynamic sample discovery
     with (
-        patch.object(tiledb.cloud.dag.DAG, "submit") as mock_submit_3,
-        patch.object(tiledb.cloud.dag.DAG, "submit_udf_stage") as mock_submit_udf_stage,
-        patch("tiledb.cloud.utilities.run_dag") as mock_run_dag,
+        patch.object(tiledb.cloud.vcf.split.DAG, "submit") as mock_submit_3,
+        patch.object(
+            tiledb.cloud.vcf.split.DAG, "submit_udf_stage"
+        ) as mock_submit_udf_stage,
+        patch("tiledb.cloud.vcf.split.run_dag") as mock_run_dag,
     ):
         # also testing with compute == True
         obs = split_vcf(
