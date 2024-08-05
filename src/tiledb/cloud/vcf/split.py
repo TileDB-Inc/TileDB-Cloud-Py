@@ -131,7 +131,7 @@ def split_one_sample(
             cmd = [self.bcftools] + args
 
             stream = process_stream(self.source, cmd, output_uri=output_uri)
-            print("STREAM", stream)
+
             if stream[0] != 0:
                 raise RuntimeError(f"bcftools command error: {stream[2]}")
             return stream[1]
