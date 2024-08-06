@@ -4,9 +4,8 @@ import functools
 import logging
 import sys
 import threading
-import urllib.parse
 from enum import Enum
-from typing import Any, Callable, Optional, Type, TypeVar, Union
+from typing import Any, Callable, Optional, Tuple, Type, TypeVar, Union
 
 import cloudpickle
 import urllib3
@@ -21,18 +20,85 @@ PYTHON_VERSION = ".".join(map(str, sys.version_info[:3]))
 logger = logging.getLogger("tiledb.cloud")
 
 
-def split_uri(uri):
+def canonicalize_ns_name_uri(
+    **ns_name_uri: Optional[str],
+) -> Tuple[Optional[str], Optional[str]]:
+    """Canonicalizes the namespace/name pair for functions also accepting URIs.
+
+    Pass three named arguments to this function (in the order namespace, name,
+    URI) and it will return a tuple of (namespace, name) to actually use.
+    The arguments are named to generate relevant error messages for the caller::
+
+        def some_func(
+            namespace: Optional[str] = None,
+            array_name: Optional[str] = None,
+            destination_uri: Optional[str] = None,
+            # ...
+        ) -> ...:
+            ns, name = canonicalize_ns_name_uri(
+                namespace=namespace,
+                array_name=array_name,
+                destination_uri=destination_uri,
+            )
+
+    If ``destination_uri`` is set, but ``namespace`` or ``array_name`` is too,
+    the user will get a :class:`ValueError` with the correct parameter names
+    in the message.
+
+    This works because keyword-argument dicts (and dicts in general) in Python
+    remember insertion order.
+    """
+    try:
+        ns_pair, name_pair, uri_pair = ns_name_uri.items()
+    except ValueError as ve:
+        # This is an internal error that should never be hit by users;
+        # we only call this function directly ourselves.
+        raise AssertionError(
+            f"Internal error: canonicalize only got {len(ns_name_uri)} params"
+        ) from ve
+    ns_param, ns = ns_pair
+    name_param, name = name_pair
+    uri_param, uri = uri_pair
+    if uri:
+        if ns or name:
+            raise ValueError(
+                f"{ns_param}/{name_param} or {uri_param} may be set, but not both"
+            )
+        return split_uri(uri)
+    return ns, name
+
+
+def canonicalize_nameuri_namespace(
+    name: str, namespace: Optional[str]
+) -> Tuple[Optional[str], str]:
+    """Returns the canonical namespace and name given a name/uri and namespace.
+
+    This takes a ``name`` parameter which may be either a bare array name
+    or a ``tiledb://`` URI, and a ``namespace`` parameter and returns the
+    actual namespace and name to use.
+    """
+    try:
+        namespace, name = split_uri(name)
+    except ValueError:
+        pass  # It's not a URI. Just use the params as-is.
+    else:
+        if namespace:
+            raise ValueError("If `name` is a URI, `namespace` must not be set.")
+    return namespace, name
+
+
+def split_uri(uri: str) -> Tuple[str, str]:
     """
     Split a URI into namespace and array name
 
     :param uri: uri to split into namespace and array name
-    :param async_req: return future instead of results for async support
     :return: tuple (namespace, array_name)
     """
-    parsed = urllib.parse.urlparse(uri)
-    if not parsed.scheme == "tiledb":
-        raise Exception("Incorrect array uri, must be in tiledb:// scheme")
-    return parsed.netloc, parsed.path[1:]
+    post_tiledb = uri.removeprefix("tiledb://")
+    if post_tiledb == uri:  # prefix was not removed
+        raise ValueError("Incorrect array uri, must be in tiledb:// scheme")
+    ns, _, name = post_tiledb.partition("/")
+    return ns, name
 
 
 def b64_pickle(obj: Any) -> str:
