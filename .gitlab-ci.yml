@@ -14,8 +14,6 @@ stages:
     name: "amazon/aws-cli:latest"
     entrypoint: [""]
 
-# Copied from official docs:
-# https://docs.gitlab.com/ee/ci/cloud_services/aws/#retrieve-temporary-credentials
 aws-credentials:
   stage: aws-credentials
   extends: .aws-cli
@@ -23,7 +21,7 @@ aws-credentials:
     - >
       export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s"
       $(aws sts assume-role
-      --role-arn ${AWS_ROLE_ARN}
+      --role-arn gitlab-runners-role
       --role-session-name "GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}"
       --duration-seconds 3600
       --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]'
