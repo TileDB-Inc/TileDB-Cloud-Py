@@ -6,18 +6,14 @@ variables:
   AWS_CLOUD_CI_S3_BUCKET: "tiledb-cloud-py-ci"
 
 stages:
-  - aws-credentials
-  - check-aws-credentials
+  - aws-check-role-access
 
-.aws-cli:
+.aws-assume-role:
+  # Assume role and override AWS ev variables
   image:
     name: "amazon/aws-cli:latest"
     entrypoint: [""]
-
-aws-credentials:
-  stage: aws-credentials
-  extends: .aws-cli
-  script:
+  before_script:
     - >
       export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s"
       $(aws sts assume-role
@@ -26,15 +22,9 @@ aws-credentials:
       --duration-seconds 3600
       --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]'
       --output text))
-    # - aws sts get-caller-identity
+
+aws-check-role-access:
+  stage: aws-check-role-access
+  extends: .aws-assume-role
+  script:
     - aws s3 ls s3://${AWS_CLOUD_CI_S3_BUCKET}
-  # artifacts:
-  #   reports:
-  #     dotenv: aws.env
-  #   expire_in: 30min
-# check-aws-credentials:
-#   stage: check-aws-credentials
-#   extends: .aws-cli
-#   dependencies:
-#     - aws-credentials
-#   script:
