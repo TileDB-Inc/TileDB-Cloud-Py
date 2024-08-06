@@ -2,7 +2,7 @@ image: ubuntu:latest
 
 variables:
   AWS_REGION: "us-east-1"
-  AWS_ROLE_ARN: "arn:aws:iam::211125629230:role/TiledbCloudPyCIRole"
+  AWS_CLOUD_CI_ROLE_ARN: "arn:aws:iam::211125629230:role/TiledbCloudPyCIRole"
   AWS_S3_BUCKET: "tiledb-cloud-py-ci"
 
 stages:
@@ -19,8 +19,7 @@ aws-credentials:
   extends: .aws-cli
   script:
     - >
-      export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s"
-      $(aws sts assume-role
+      aws sts assume-role
       --role-arn arn:aws:iam::980565428655:role/gitlab-runners-role
       --role-session-name "GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}"
       --duration-seconds 3600
