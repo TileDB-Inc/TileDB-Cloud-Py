@@ -23,8 +23,6 @@ aws-credentials:
       --role-arn ${AWS_CLOUD_CI_ROLE_ARN}
       --role-session-name "GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}"
       --duration-seconds 3600
-      --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]'
-      --output text
     - aws sts get-caller-identity
   # artifacts:
   #   reports:
@@ -33,7 +31,6 @@ aws-credentials:
 
 check-aws-credentials:
   stage: check-aws-credentials
-  # needs: [aws-oidc-credentials]
   extends: .aws-cli
   dependencies:
     - aws-credentials
