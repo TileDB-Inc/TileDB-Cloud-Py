@@ -3,7 +3,7 @@ image: ubuntu:latest
 variables:
   AWS_REGION: "us-east-1"
   AWS_CLOUD_CI_ROLE_ARN: "arn:aws:iam::211125629230:role/TiledbCloudPyCIRole"
-  AWS_S3_BUCKET: "tiledb-cloud-py-ci"
+  AWS_CLOUD_CI_S3_BUCKET: "tiledb-cloud-py-ci"
 
 stages:
   - aws-credentials
@@ -23,16 +23,15 @@ aws-credentials:
       --role-arn ${AWS_CLOUD_CI_ROLE_ARN}
       --role-session-name "GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}"
       --duration-seconds 3600
-    - aws sts get-caller-identity
+    # - aws sts get-caller-identity
+    - aws s3 ls s3://${AWS_CLOUD_CI_S3_BUCKET}
   # artifacts:
   #   reports:
   #     dotenv: aws.env
   #   expire_in: 30min
-
-check-aws-credentials:
-  stage: check-aws-credentials
-  extends: .aws-cli
-  dependencies:
-    - aws-credentials
-  script:
-    - aws s3 ls s3://${AWS_S3_BUCKET}
+# check-aws-credentials:
+#   stage: check-aws-credentials
+#   extends: .aws-cli
+#   dependencies:
+#     - aws-credentials
+#   script:
