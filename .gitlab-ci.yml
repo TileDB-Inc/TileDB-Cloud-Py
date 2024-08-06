@@ -6,7 +6,7 @@ variables:
   AWS_S3_BUCKET: "tiledb-cloud-py-ci"
 
 stages:
-  - aws-oidc-credentials
+  - aws-credentials
   - check-aws-credentials
 
 .aws-cli:
@@ -16,19 +16,15 @@ stages:
 
 # Copied from official docs:
 # https://docs.gitlab.com/ee/ci/cloud_services/aws/#retrieve-temporary-credentials
-aws-oidc-credentials:
-  stage: aws-oidc-credentials
+aws-credentials:
+  stage: aws-credentials
   extends: .aws-cli
-  id_tokens:
-    AWS_WEB_IDENTITY_TOKEN:
-      aud: sts.amazonaws.com
   script:
     - >
       export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s"
-      $(aws sts assume-role-with-web-identity
+      $(aws sts assume-role
       --role-arn ${AWS_ROLE_ARN}
       --role-session-name "GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}"
-      --web-identity-token ${AWS_WEB_IDENTITY_TOKEN}
       --duration-seconds 3600
       --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]'
       --output text))
