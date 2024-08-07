@@ -7,6 +7,7 @@ variables:
 
 stages:
   - aws-check-role-access
+  - run-tests
 
 .aws-assume-role:
   # Assume role and override AWS ev variables
@@ -28,3 +29,17 @@ aws-check-role-access:
   extends: .aws-assume-role
   script:
     - aws s3 ls s3://${AWS_CLOUD_CI_S3_BUCKET}
+
+run-tests:
+  stage: run-tests
+  extends: .aws-assume-role
+  image: python:3.9-slim
+  before_script:
+    - pip install --upgrade pip wheel setuptools setuptools-scm
+    - pip install .[tests]
+    - pip install tiledb-vector-search --no-deps
+  script:
+    - >
+      pytest -sv tests/gitlab_tests
+      --tb short
+      --color yes
