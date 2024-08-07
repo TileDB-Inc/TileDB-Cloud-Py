@@ -55,7 +55,7 @@ def upload_wheel(
     # When installing the wheel, the original wheel file name will be recovered
     # from metadata.
     dest_uri = dest_uri.replace("+", ".")
-
+    config = config or tiledb.cloud.Config()
     with tiledb.scope_ctx(config):
         # catch edge case if array registered, but array deleted from storage backend
         try:
@@ -215,6 +215,7 @@ def install_wheel(
     )
 
     if installer.wheel_ext:
+        config = config or tiledb.cloud.Config()
         with tiledb.scope_ctx(config):
             # Get the original wheel file name from metadata.
             with tiledb.open(wheel_uri) as A:
