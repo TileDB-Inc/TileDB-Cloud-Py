@@ -24,6 +24,7 @@ aws-assume-role:
       --output text))
   script:
     - aws s3 ls s3://${AWS_CLOUD_CI_S3_BUCKET}
+    # Write AWS ENV Variables to run-tests.env for use in the next stages
     - echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> run-tests.env
     - echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> run-tests.env
     - echo "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN" >> run-tests.env
@@ -42,13 +43,10 @@ run-tests:
     - pip install --upgrade pip wheel setuptools setuptools-scm
     - pip install .[tests]
     - pip install tiledb-vector-search --no-deps
+    # Export ENV Variables from aws-assume-role stage
     - export "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
     - export "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
     - export "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN"
-    - |
-      echo $AWS_ACCESS_KEY_ID
-      echo $AWS_SECRET_ACCESS_KEY
-      echo $AWS_SESSION_TOKEN
   script:
     - >
       pytest -sv tests/gitlab_tests

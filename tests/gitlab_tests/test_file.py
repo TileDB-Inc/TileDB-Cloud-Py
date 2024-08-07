@@ -1,11 +1,16 @@
+import logging
 import os
+import sys
 import unittest
 from typing import List
 
 import tiledb
 import tiledb.vfs
+from tiledb.cloud import groups
+from tiledb.cloud._common import testonly
 from tiledb.cloud._common import utils
 from tiledb.cloud.array import delete_array
+from tiledb.cloud.files import ingestion as file_ingestion
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -30,81 +35,72 @@ def _cleanup_residual_test_arrays(array_uris: List[str]) -> None:
 
 
 class TestFileIngestion(unittest.TestCase):
-    def test_vfs(self):
-        vfs = tiledb.VFS()
+    @classmethod
+    def setUpClass(cls) -> None:
+        logging.basicConfig(stream=sys.stderr)
+        logging.getLogger("testLog").setLevel(logging.DEBUG)
 
-        vfs.create_dir("s3://tiledb-cloud-py-ci/test-dir/")
-        self.assertTrue(vfs.is_dir("s3://tiledb-cloud-py-ci/test-dir"))
-        vfs.remove_dir("s3://tiledb-cloud-py-ci/test-dir/")
+        """Setup group and destinations once before the file tests start."""
+        cls.vfs = tiledb.VFS()
+        cls.s3_bucket = "s3://tiledb-cloud-py-ci"
+        cls.test_files_folder = os.path.join(CURRENT_DIR, "data", "file_ingestion")
 
+        cls.namespace, cls.storage_path, cls.acn = groups._default_ns_path_cred()
+        cls.namespace = cls.namespace.rstrip("/")
+        cls.storage_path = cls.storage_path.rstrip("/")
+        cls.destination = f"{cls.storage_path}/{testonly.random_name('file_test')}"
 
-#     @classmethod
-#     def setUpClass(cls) -> None:
-#         logging.basicConfig(stream=sys.stderr)
-#         logging.getLogger("testLog").setLevel(logging.DEBUG)
+        cls.group_name = testonly.random_name("file_ingestion_test_group")
+        cls.group_uri = f"tiledb://{cls.namespace}/{cls.group_name}"
+        cls.group_destination = f"{cls.storage_path}/{cls.group_name}"
+        groups.create(cls.group_name, storage_uri=cls.group_destination)
 
-#         """Setup group and destinations once before the file tests start."""
-#         cls.vfs = tiledb.VFS()
-#         cls.s3_bucket = "s3://tiledb-cloud-py-ci"
-#         cls.test_files_folder = os.path.join(CURRENT_DIR, "data", "file_ingestion")
+        return super().setUpClass()
 
-#         cls.namespace, cls.storage_path, cls.acn = groups._default_ns_path_cred()
-#         cls.namespace = cls.namespace.rstrip("/")
-#         cls.storage_path = cls.storage_path.rstrip("/")
-#         cls.destination = f"{cls.storage_path}/{testonly.random_name('file_test')}"
+    @classmethod
+    def tearDownClass(cls) -> None:
+        """Cleanup after the tests have run"""
+        groups.delete(cls.group_uri, recursive=True)
+        return super().tearDownClass()
 
-#         cls.group_name = testonly.random_name("file_ingestion_test_group")
-#         cls.group_uri = f"tiledb://{cls.namespace}/{cls.group_name}"
-#         cls.group_destination = f"{cls.storage_path}/{cls.group_name}"
-#         groups.create(cls.group_name, storage_uri=cls.group_destination)
+    def setUp(self) -> None:
+        s3_test_folder = testonly.random_name("file_ingestion_test_files")
+        self.s3_test_folder_uri = f"{self.s3_bucket}/{s3_test_folder}"
+        self.vfs.create_dir(self.s3_test_folder_uri)
 
-#         return super().setUpClass()
+        self.test_file_uris = []
+        # VFS does not yet support copying across file systems.
+        # Therefore we write the files in the folder instead
+        # self.vfs.copy_file(
+        #     old_uri=os.path.join(self.test_files_folder, fname),
+        #     new_uri=f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}.{suffix}",
+        # )
+        for fname in os.listdir(self.test_files_folder):
+            fn, suffix = os.path.splitext(fname)
+            s3_uri = f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}{suffix}"
+            with open(os.path.join(self.test_files_folder, fname)) as fp:
+                with self.vfs.open(s3_uri, mode="wb") as vfp:
+                    vfp.write(fp.read())
+                    self.test_file_uris.append(s3_uri)
 
-#     @classmethod
-#     def tearDownClass(cls) -> None:
-#         """Cleanup after the tests have run"""
-#         groups.delete(cls.group_uri, recursive=True)
-#         return super().tearDownClass()
+        log = logging.getLogger("testLog")
+        log.debug(self.vfs.ls(self.s3_test_folder_uri))
+        return super().setUp()
 
-#     def setUp(self) -> None:
-#         s3_test_folder = testonly.random_name("file_ingestion_test_files")
-#         self.s3_test_folder_uri = f"{self.s3_bucket}/{s3_test_folder}"
-#         self.vfs.create_dir(self.s3_test_folder_uri)
+    def tearDown(self) -> None:
+        self.vfs.remove_dir(self.s3_test_folder_uri)
+        return super().tearDown()
 
-#         self.test_file_uris = []
-# VFS does not yet support copying across file systems.
-# Therefore we write the files in the folder instead
-# self.vfs.copy_file(
-#     old_uri=os.path.join(self.test_files_folder, fname),
-#     new_uri=f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}.{suffix}",
-# )
-#         for fname in os.listdir(self.test_files_folder):
-#             fn, suffix = os.path.splitext(fname)
-#             s3_uri = f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}{suffix}"
-#             with open(os.path.join(self.test_files_folder, fname)) as fp:
-#                 with self.vfs.open(s3_uri, mode="wb") as vfp:
-#                     vfp.write(fp.read())
-#                     self.test_file_uris.append(s3_uri)
+    def test_files_ingestion_udf(self):
+        ingested_array_uris = file_ingestion.ingest_files_udf(
+            dataset_uri=self.destination,
+            file_uris=self.test_file_uris,
+            acn=self.acn,
+            namespace=self.namespace,
+        )
 
-#         log = logging.getLogger("testLog")
-#         log.debug(self.vfs.ls(self.s3_test_folder_uri))
-#         return super().setUp()
+        self.assertEqual(len(ingested_array_uris), len(self.test_file_uris))
 
-#     def tearDown(self) -> None:
-#         self.vfs.remove_dir(self.s3_test_folder_uri)
-#         return super().tearDown()
-
-#     def test_files_ingestion_udf(self):
-#         ingested_array_uris = file_ingestion.ingest_files_udf(
-#             dataset_uri=self.destination,
-#             file_uris=self.test_file_uris,
-#             acn=self.acn,
-#             namespace=self.namespace,
-#         )
-
-#         self.assertEqual(len(ingested_array_uris), len(self.test_file_uris))
-#         # Clean up
-#         _cleanup_residual_test_arrays(array_uris=ingested_array_uris)
 
 #     def test_files_ingestion_udf_into_group(self):
 #         ingested_array_uris = file_ingestion.ingest_files_udf(
