@@ -35,7 +35,7 @@ run-tests:
   extends: .aws-assume-role
   image: python:3.9-slim
   before_script:
-    - apt-get install git -y
+    - apt-get update && apt-get install -y git
     - pip install --upgrade pip wheel setuptools setuptools-scm
     - pip install .[tests]
     - pip install tiledb-vector-search --no-deps
