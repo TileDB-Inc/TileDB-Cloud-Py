@@ -155,6 +155,6 @@ def test_install_wheel(pip_install_tdb):
 
     install_wheel(wheel_uri=_TDB_URI, verbose=True)
 
-    import fake_unittest_wheel  # ruff: noqa
+    import fake_unittest_wheel  # noqa: F401
 
     assert "fake_unittest_wheel" in sys.modules
