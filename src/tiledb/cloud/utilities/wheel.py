@@ -13,6 +13,7 @@ from dataclasses import field
 from typing import Any, List, Mapping, Optional, Sequence
 
 import tiledb
+from tiledb.cloud.client import Config
 from tiledb.cloud.utilities import get_logger
 
 logger = get_logger()
@@ -47,6 +48,8 @@ def upload_wheel(
 
     :param wheel_path: Path to the local wheel file.
     :param dest_uri: URI where the wheel filestore will be created or updated.
+        Ensure wheel file includes extension '.whl' or '.wheel' for it to work
+        with `install_wheel`.
     :param config: TileDB config.
     :param overwrite: Whether to overwrite a registered wheel if one exists.
     """
@@ -55,7 +58,7 @@ def upload_wheel(
     # When installing the wheel, the original wheel file name will be recovered
     # from metadata.
     dest_uri = dest_uri.replace("+", ".")
-    config = config or tiledb.cloud.Config()
+    config = config or Config()
     with tiledb.scope_ctx(config):
         # catch edge case if array registered, but array deleted from storage backend
         try:
@@ -215,7 +218,7 @@ def install_wheel(
     )
 
     if installer.wheel_ext:
-        config = config or tiledb.cloud.Config()
+        config = config or Config()
         with tiledb.scope_ctx(config):
             # Get the original wheel file name from metadata.
             with tiledb.open(wheel_uri) as A:
