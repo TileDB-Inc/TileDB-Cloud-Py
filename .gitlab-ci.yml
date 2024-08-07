@@ -36,7 +36,7 @@ run-tests:
   image: python:3.9-slim
   before_script:
     - pip install --upgrade pip wheel setuptools setuptools-scm
-    - pip install .[tests]
+    - pip install pytest pytest-cov pytest-explicit xarray
     - pip install tiledb-vector-search --no-deps
   script:
     - >
