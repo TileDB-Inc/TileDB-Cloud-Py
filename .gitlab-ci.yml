@@ -32,7 +32,7 @@ aws-check-role-access:
 
 run-tests:
   stage: run-tests
-  extends: .aws-assume-role
+  # extends: .aws-assume-role
   image: python:3.9-slim
   before_script:
     - apt-get update && apt-get install -y git
@@ -40,6 +40,7 @@ run-tests:
     - pip install .[tests]
     - pip install tiledb-vector-search --no-deps
   script:
+    - !reference [.aws-assume-role, before_script]
     - >
       pytest -sv tests/gitlab_tests
       --tb short
