@@ -17,6 +17,7 @@ from typing import (
     FrozenSet,
     Hashable,
     List,
+    Mapping,
     Optional,
     Sequence,
     Set,
@@ -2082,3 +2083,76 @@ def array_task_status_to_status(status: models.ArrayTaskStatus) -> Status:
 
 def task_graph_log_status_to_status(status: models.TaskGraphLogStatus) -> Status:
     return _TASK_GRAPH_LOG_STATUS_TO_STATUS_MAP.get(status, Status.NOT_STARTED)
+
+
+def exec_batch_udf(
+    func: Union[callable, str],
+    *args: Any,
+    name: Optional[str] = None,
+    namespace: Optional[str] = None,
+    acn: Optional[str] = None,
+    resources: Optional[Mapping[str, str]] = None,
+    image_name: Optional[str] = None,
+    **kwargs: Any,
+) -> DAG:
+    """Run a function as a batch UDF on TileDB Cloud.
+
+    A batch UDF is a single task, Task Graph run in `dag.Mode.BATCH` mode. This
+    allows specifying custom resources to a UDF and passing in an access credential
+    name for accessing underingly storage backends with `tiledb.VFS`
+
+    optional kwargs:
+    - name: Name of the node in the DAG, defaults to registered_name.
+    - namespace: TileDB Cloud namespace, defaults to the user's default namespace
+    - acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
+    - resources: Resources to allocate for the UDF, defaults to None
+    - image_name: Docker image name to run in Node.
+
+    :param registered_udf_name: name of registered UDF
+        (e.g. <namespace>/<registered_name>)
+    :param **args: Positional args to pass to batch UDF callable.
+    :param **kwargs: Keyword args to pass to batch UDF.
+    :return: Running DAG.
+    """
+
+    try:
+        name = name or func.__name__
+    except AttributeError:
+        name = func
+
+    acn = acn or kwargs.pop("access_credentials_name", None)
+
+    graph = DAG(
+        name=f"batch->{name}",
+        namespace=namespace,
+        mode=Mode.BATCH,
+    )
+
+    graph.submit(
+        func,
+        *args,
+        name=name,
+        access_credentials_name=acn,
+        resources=resources,
+        image_name=image_name,
+        **kwargs,
+    )
+
+    # Run the DAG asynchronously
+    graph.compute()
+
+    print(
+        "TileDB Cloud task submitted - https://cloud.tiledb.com/activity/taskgraphs/{}/{}".format(
+            graph.namespace,
+            graph.server_graph_uuid,
+        )
+    )
+
+    return graph
+
+
+if __name__ == "__main__":
+    batched_ls = exec_batch_udf(
+        "TileDB-Inc/ls_uri",
+        uri="s3://bucket/projects",
+    )
