@@ -28,6 +28,7 @@ aws-assume-role:
     - echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> run-tests.env
     - echo "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN" >> run-tests.env
   artifacts:
+    expire_in: "30 min"
     reports:
       dotenv: run-tests.env
 
@@ -41,10 +42,13 @@ run-tests:
     - pip install --upgrade pip wheel setuptools setuptools-scm
     - pip install .[tests]
     - pip install tiledb-vector-search --no-deps
+    - export "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
+    - export "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+    - export "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN"
     - |
-      export "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
-      export "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
-      export "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN"
+      echo $AWS_ACCESS_KEY_ID
+      echo $AWS_SECRET_ACCESS_KEY
+      echo $AWS_SESSION_TOKEN
   script:
     - >
       pytest -sv tests/gitlab_tests

@@ -33,9 +33,9 @@ class TestFileIngestion(unittest.TestCase):
     def test_vfs(self):
         vfs = tiledb.VFS()
 
-        vfs.create_dir("s3://tiledb-cloud-py-ci/test-dir")
+        vfs.create_dir("s3://tiledb-cloud-py-ci/test-dir/")
         self.assertTrue(vfs.is_dir("s3://tiledb-cloud-py-ci/test-dir"))
-        vfs.remove_dir("s3://tiledb-cloud-py-ci/test-dir")
+        vfs.remove_dir("s3://tiledb-cloud-py-ci/test-dir/")
 
 
 #     @classmethod
