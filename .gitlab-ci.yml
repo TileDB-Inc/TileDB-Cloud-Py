@@ -51,6 +51,18 @@ run-tests:
       echo "========================="
       ls
       echo "-------------------------"
+      ls tests
+      echo "-------------------------"
+      ls tests/data/file_ingestion
+      echo "-------------------------"
+    - |
+      echo "======BUILDS============="
+      ls builds/TileDB-Inc/TileDB-Cloud-Py
+      echo "-------------------------"
+      ls builds/TileDB-Inc/TileDB-Cloud-Py/tests
+      echo "-------------------------"
+      ls builds/TileDB-Inc/TileDB-Cloud-Py/tests/data/file_ingestion
+      echo "-------------------------"
   script:
     - >
       pytest -sv tests/gitlab_tests
