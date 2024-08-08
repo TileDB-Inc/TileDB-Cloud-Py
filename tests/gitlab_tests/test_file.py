@@ -6,6 +6,7 @@ from tqdm import tqdm
 
 import tiledb
 import tiledb.vfs
+from tiledb.cloud import client
 from tiledb.cloud import groups
 from tiledb.cloud._common import testonly
 from tiledb.cloud._common import utils
@@ -98,6 +99,7 @@ class TestFileIngestion(unittest.TestCase):
             dataset_uri=self.destination,
             file_uris=self.test_file_uris,
             acn=self.acn,
+            config=client.Ctx().config().dict(),
             namespace=self.namespace,
         )
 
