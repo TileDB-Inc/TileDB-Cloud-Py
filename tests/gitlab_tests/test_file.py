@@ -1,8 +1,8 @@
-import logging
 import os
-import sys
 import unittest
 from typing import List
+
+from tqdm import tqdm
 
 import tiledb
 import tiledb.vfs
@@ -13,20 +13,25 @@ from tiledb.cloud.array import delete_array
 from tiledb.cloud.files import ingestion as file_ingestion
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
+print(os.getcwd())
 
 
 def _cleanup_residual_test_arrays(array_uris: List[str]) -> None:
     """Deletes every array in a list and potential non unique tables"""
     for array_uri in array_uris:
         try:
+            print(f"Deleting array: {array_uri}")
             delete_array(array_uri)
         except Exception as exc:
             error_msg = str(exc)
+            print(f"-- {error_msg}")
             if "is not unique" in error_msg:
                 namespace, _ = utils.split_uri(array_uri)
                 uuids = error_msg[error_msg.find("[") + 1 : error_msg.find("]")]
                 uuids = uuids.split(" ")
-                for uid in uuids:
+                for uid in tqdm(
+                    uuids, desc=f"Deleting multiple arrays with URI: {array_uri}"
+                ):
                     try:
                         delete_array(f"tiledb://{namespace}/{uid}")
                     except Exception:
@@ -37,9 +42,6 @@ def _cleanup_residual_test_arrays(array_uris: List[str]) -> None:
 class TestFileIngestion(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        logging.basicConfig(stream=sys.stderr)
-        logging.getLogger("testLog").setLevel(logging.DEBUG)
-
         """Setup group and destinations once before the file tests start."""
         cls.vfs = tiledb.VFS()
         cls.s3_bucket = "s3://tiledb-cloud-py-ci"
@@ -65,16 +67,17 @@ class TestFileIngestion(unittest.TestCase):
 
     def setUp(self) -> None:
         s3_test_folder = testonly.random_name("file_ingestion_test_files")
+        self.cleanup_arrays = []
         self.s3_test_folder_uri = f"{self.s3_bucket}/{s3_test_folder}"
         self.vfs.create_dir(self.s3_test_folder_uri)
 
-        self.test_file_uris = []
         # VFS does not yet support copying across file systems.
         # Therefore we write the files in the folder instead
         # self.vfs.copy_file(
         #     old_uri=os.path.join(self.test_files_folder, fname),
         #     new_uri=f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}.{suffix}",
         # )
+        self.test_file_uris = []
         for fname in os.listdir(self.test_files_folder):
             fn, suffix = os.path.splitext(fname)
             s3_uri = f"{self.s3_test_folder_uri}/{testonly.random_name(fn)}{suffix}"
@@ -83,11 +86,11 @@ class TestFileIngestion(unittest.TestCase):
                     vfp.write(fp.read())
                     self.test_file_uris.append(s3_uri)
 
-        log = logging.getLogger("testLog")
-        log.debug(self.vfs.ls(self.s3_test_folder_uri))
         return super().setUp()
 
     def tearDown(self) -> None:
+        """Clean up ingested arrays and tmp file folder from s3"""
+        _cleanup_residual_test_arrays(array_uris=self.cleanup_arrays)
         self.vfs.remove_dir(self.s3_test_folder_uri)
         return super().tearDown()
 
@@ -100,6 +103,8 @@ class TestFileIngestion(unittest.TestCase):
         )
 
         self.assertEqual(len(ingested_array_uris), len(self.test_file_uris))
+        # Add arrays for cleanup on tearDown
+        self.cleanup_arrays += ingested_array_uris
 
 
 #     def test_files_ingestion_udf_into_group(self):

@@ -49,7 +49,9 @@ run-tests:
     - export "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN"
   script:
     - pwd
-    - ls
+    - ls tests
+    - ls tests/gitlab_tests
+    - ls tests/gitlab_tests/data
     - >
       pytest -sv tests/gitlab_tests
       --tb short
