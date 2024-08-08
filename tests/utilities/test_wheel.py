@@ -144,6 +144,8 @@ def test_pip_install_install(pip_install_pypi):
         logger.info("django already imported, either manually delete or ignore")
     except ModuleNotFoundError:
         pip_install_pypi.install()
+        import django  # noqa: F401
+
         assert "django" in sys.modules
         pip_install_pypi.install(deps_to_refresh="django")
         assert "django" not in sys.modules
