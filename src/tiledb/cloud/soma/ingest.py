@@ -5,8 +5,6 @@ import warnings
 from typing import ContextManager, Dict, Optional
 from unittest import mock
 
-from typing_extensions import NotRequired, TypedDict
-
 import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud._common import functions
@@ -16,12 +14,6 @@ from tiledb.cloud.utilities import run_dag
 
 _DEFAULT_RESOURCES = {"cpu": "8", "memory": "8Gi"}
 """Default resource size; equivalent to a "large" UDF container."""
-
-
-class CarryAlongDict(TypedDict):
-    resources: NotRequired[Dict]
-    namespace: NotRequired[str]
-    access_credentials_name: NotRequired[str]
 
 
 def run_ingest_workflow_udf(
@@ -45,28 +37,11 @@ def run_ingest_workflow_udf(
     can we do VFS with access_credentials_name -- that does not work correctly
     on the client.
     """
-    # Demand for mutual exclusion of the two arguments and existence.
-    access_credentials_name = kwargs.pop("access_credentials_name", None)
-    if bool(acn) == bool(access_credentials_name):
-        raise ValueError(
-            "Ingestion graph requires either 'acn' or 'access_credentials_name'"
-            " (deprecated), cannot decipher correct credential when both specified."
-        )
-    # Backwards compatibility: Assign when only access_credentials_name is set
-    if not acn:
-        acn = access_credentials_name
-        warnings.warn(
-            DeprecationWarning(
-                "The 'access_credentials_name' parameter is about to be"
-                "deprecated and will be removed in future versions."
-                "Please use the 'acn' parameter instead."
-            )
-        )
 
     # Some kwargs are eaten by the tiledb.cloud package, and won't reach
     # our child. In order to propagate these to a _grandchild_ we need to
     # package these up with different names. We use a dict as a single bag.
-    carry_along: CarryAlongDict = kwargs.pop("carry_along", CarryAlongDict())
+    carry_along: Dict[str, str] = kwargs.pop("carry_along", {})
 
     # For more information on "that does not work correctly on the client" please see
     # https://github.com/TileDB-Inc/TileDB-Cloud-Py/pull/512
@@ -336,7 +311,7 @@ def run_ingest_workflow(
     )
 
     # Step 1: Ingest workflow UDF
-    carry_along: CarryAlongDict = {
+    carry_along: Dict[str, str] = {
         "resources": _DEFAULT_RESOURCES if resources is None else resources,
         "namespace": namespace,
         "access_credentials_name": acn,
