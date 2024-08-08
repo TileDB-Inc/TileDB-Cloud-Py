@@ -13,7 +13,6 @@ from tiledb.cloud.array import delete_array
 from tiledb.cloud.files import ingestion as file_ingestion
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-print(os.getcwd())
 
 
 def _cleanup_residual_test_arrays(array_uris: List[str]) -> None:
