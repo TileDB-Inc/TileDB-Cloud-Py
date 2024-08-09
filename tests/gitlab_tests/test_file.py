@@ -42,9 +42,16 @@ class TestFileIngestion(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """Setup group and destinations once before the file tests start."""
-        cls.vfs = tiledb.VFS()
-        print(cls.vfs.ctx().config().dict())
-        cls.s3_bucket = "s3://tiledb-cloud-py-ci"
+        cls.config = tiledb.Config()
+        cls.config["vfs.s3.region"] = os.environ["AWS_REGION"]
+        cls.config["vfs.s3.aws_access_key_id"] = os.environ["AWS_ACCESS_KEY_ID"]
+        cls.config["vfs.s3.aws_secret_access_key"] = os.environ["AWS_SECRET_ACCESS_KEY"]
+        cls.config["vfs.s3.aws_session_token"] = os.environ["AWS_SESSION_TOKEN"]
+
+        cls.vfs = tiledb.VFS(config=cls.config)
+        print(cls.vfs.ctx().config())
+
+        cls.s3_bucket = f"s3://{os.environ['AWS_CLOUD_CI_S3_BUCKET']}"
         cls.test_files_folder = os.path.join(CURRENT_DIR, "data", "file_ingestion")
 
         cls.namespace, cls.storage_path, cls.acn = groups._default_ns_path_cred()
