@@ -522,8 +522,8 @@ ul.task-list li input[type="checkbox"] {
 <table class="caption-top table">
 <colgroup>
 <col style="width: 10%">
-<col style="width: 9%">
-<col style="width: 73%">
+<col style="width: 8%">
+<col style="width: 74%">
 <col style="width: 6%">
 </colgroup>
 <thead>
@@ -538,13 +538,13 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td><code>name</code></td>
 <td>str</td>
-<td>The name of the group to create.</td>
+<td>The name of the group to create, or its URI.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
 <td><code>namespace</code></td>
 <td>Optional[str]</td>
-<td>The namespace to create the group in. If not provided, the current logged-in user will be used.</td>
+<td>The namespace to create the group in. If <code>name</code> is a URI, this must not be provided. If not provided, the current logged-in user will be used.</td>
 <td><code>None</code></td>
 </tr>
 <tr class="odd">
@@ -707,7 +707,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.groups.register" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.groups.register">register</h3>
-<p><code>cloud.groups.register(storage_uri, *, name=None, namespace=None, credentials_name=None, parent_uri=None)</code></p>
+<p><code>cloud.groups.register(storage_uri, *, dest_uri=None, name=None, namespace=None, credentials_name=None, parent_uri=None)</code></p>
 <p>Registers a pre-existing group.</p>
 </section>
 <section id="tiledb.cloud.groups.share_group" class="level3">

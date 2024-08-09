@@ -1058,15 +1058,15 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.array.register_array" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.array.register_array">register_array</h3>
-<p><code>cloud.array.register_array(uri, namespace=None, array_name=None, description=None, access_credentials_name=None, async_req=False)</code></p>
+<p><code>cloud.array.register_array(uri, namespace=None, array_name=None, description=None, access_credentials_name=None, async_req=False, dest_uri=None)</code></p>
 <p>Register this array with the tiledb cloud service</p>
 <section id="parameters-6" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-6">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 19%">
-<col style="width: 5%">
-<col style="width: 67%">
+<col style="width: 18%">
+<col style="width: 11%">
+<col style="width: 63%">
 <col style="width: 7%">
 </colgroup>
 <thead>
@@ -1107,6 +1107,12 @@ ul.task-list li input[type="checkbox"] {
 <td></td>
 <td>return future instead of results for async support</td>
 <td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>dest_uri</code></td>
+<td>Optional[str]</td>
+<td>If set, the <code>tiledb://</code> URI of the destination.</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
