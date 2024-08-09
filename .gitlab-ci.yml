@@ -48,6 +48,7 @@ run-tests:
     - export "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
     - export "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN"
   script:
+    - printenv
     - >
       pytest -sv tests/gitlab_tests
       --tb short
