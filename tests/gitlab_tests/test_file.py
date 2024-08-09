@@ -43,7 +43,7 @@ class TestFileIngestion(unittest.TestCase):
     def setUpClass(cls) -> None:
         """Setup group and destinations once before the file tests start."""
         cls.vfs = tiledb.VFS()
-        print(cls.vfs.config())
+        print(cls.vfs.config().dict())
         cls.s3_bucket = "s3://tiledb-cloud-py-ci"
         cls.test_files_folder = os.path.join(CURRENT_DIR, "data", "file_ingestion")
 
