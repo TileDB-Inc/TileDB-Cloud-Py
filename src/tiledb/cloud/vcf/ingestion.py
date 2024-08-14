@@ -7,7 +7,7 @@ from collections import defaultdict
 from fnmatch import fnmatch
 from math import ceil
 from multiprocessing.pool import ThreadPool
-from typing import Any, Mapping, Optional, Sequence, Union
+from typing import Any, Callable, Mapping, Optional, Sequence, Union
 
 import numpy as np
 
@@ -98,11 +98,12 @@ def get_logger_wrapper(
     return logger
 
 
-def create_manifest(dataset_uri: str) -> None:
+def create_manifest(dataset_uri: str, group: tiledb.Group) -> None:
     """
     Create a manifest array in the dataset.
 
     :param dataset_uri: dataset URI
+    :param group: dataset group
     """
 
     manifest_uri = f"{dataset_uri}/{MANIFEST_ARRAY}"
@@ -140,9 +141,10 @@ def create_manifest(dataset_uri: str) -> None:
 
     tiledb.Array.create(manifest_uri, schema)
 
-    group = tiledb.Group(dataset_uri, "w")
-    group.add(MANIFEST_ARRAY, name=MANIFEST_ARRAY, relative=True)
-    group.close()
+    if dataset_uri.startswith("tiledb://"):
+        group.add(manifest_uri, name=MANIFEST_ARRAY, relative=False)
+    else:
+        group.add(MANIFEST_ARRAY, name=MANIFEST_ARRAY, relative=True)
 
 
 # --------------------------------------------------------------------
@@ -207,14 +209,17 @@ def create_dataset_udf(
             log_uri = f"{dataset_uri}/{LOG_ARRAY}"
             create_log_array(log_uri)
             with tiledb.Group(dataset_uri, "w") as group:
-                group.add(LOG_ARRAY, name=LOG_ARRAY, relative=True)
+                if dataset_uri.startswith("tiledb://"):
+                    group.add(log_uri, name=LOG_ARRAY, relative=False)
+                else:
+                    group.add(LOG_ARRAY, name=LOG_ARRAY, relative=True)
+
+                # Create manifest array and add it to the dataset group if
+                # not creating an annotation dataset.
+                if not annotation_dataset:
+                    create_manifest(dataset_uri, group)
 
             write_log_event(log_uri, "create_dataset_udf", "create", data=dataset_uri)
-
-            # Create manifest array and add it to the dataset group if
-            # not creating an annotation dataset.
-            if not annotation_dataset:
-                create_manifest(dataset_uri)
         else:
             logger.info("Using existing dataset: %r", dataset_uri)
 
@@ -382,59 +387,64 @@ def find_uris_udf(
 
     with tiledb.scope_ctx(config):
         with Profiler(group_uri=dataset_uri, group_member=LOG_ARRAY) as prof:
-            vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
 
             def find(
                 uri: str,
                 *,
-                include: Optional[str] = None,
-                exclude: Optional[str] = None,
+                config: Optional[Mapping[str, Any]] = None,
+                include: Optional[Union[str, Callable]] = None,
+                exclude: Optional[Union[str, Callable]] = None,
                 max_count: Optional[int] = None,
-            ):
-                logger.debug("Searching %r", uri)
-                listing = vfs.ls(uri)
-                logger.debug("  %d items", len(listing))
+            ) -> Sequence[str]:
+                """Searches a path for files matching the include/exclude pattern.
 
-                results = []
-                for f in listing:
-                    # Avoid infinite recursion
-                    if f == uri:
-                        continue
+                :param uri: Input path to search
+                :param config: Optional dict configuration to pass on tiledb.VFS
+                :param include: Optional include pattern string
+                :param exclude: Optional exclude pattern string
+                :param max_count: Optional stop point when searching for files
+                """
+                with tiledb.scope_ctx(config):
+                    vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
 
-                    if vfs.is_dir(f):
-                        next_max_count = (
-                            max_count - len(results) if max_count is not None else None
-                        )
-                        results += find(
-                            f,
-                            include=include,
-                            exclude=exclude,
-                            max_count=next_max_count,
-                        )
+                    uris = []
 
-                    else:
-                        # Skip files that do not match the include pattern or match
-                        # the exclude pattern.
-                        if include and not fnmatch(f, include):
-                            continue
-                        if exclude and fnmatch(f, exclude):
-                            continue
+                    def callback(uri, size_bytes):
+                        """Process each file found by the VFS.ls_recursive call"""
 
-                        results.append(f)
-                        logger.debug("  found %r", f)
+                        # Skip files that do not match the include pattern or
+                        # match the exclude pattern.
+                        if callable(include) and not include(uri):
+                            return True
+                        if include and not fnmatch(uri, include):
+                            return True
+                        if callable(exclude) and exclude(uri):
+                            return True
+                        if exclude and fnmatch(uri, exclude):
+                            return True
 
-                    # Stop if we have found max_count files
-                    if max_count is not None and len(results) >= max_count:
-                        results = results[:max_count]
-                        break
+                        # Add to the list of URIs found
+                        uris.append(uri)
 
-                return results
+                        # Stop `ls_recursive` if the maximum count is reached.
+                        if max_count and len(uris) >= max_count:
+                            return False
+
+                        return True
+
+                    vfs.ls_recursive(uri, callback=callback)
+
+                    return uris
 
             # Add one trailing slash to search_uri
             search_uri = search_uri.rstrip("/") + "/"
 
             results = find(
-                search_uri, include=include, exclude=exclude, max_count=max_files
+                search_uri,
+                config=config,
+                include=include,
+                exclude=exclude,
+                max_count=max_files,
             )
 
             logger.info("Found %d VCF files.", len(results))
@@ -890,21 +900,27 @@ def consolidate_dataset_udf(
             group = tiledb.Group(dataset_uri)
 
             for member in group:
+                # Skip non-array members
+                if member.type != tiledb.Array:
+                    continue
+
                 uri = member.uri
                 name = member.name
+                is_remote = uri.startswith("tiledb://")
 
                 # Skip excluded and non-included arrays
                 if (exclude and name in exclude) or (include and name not in include):
                     continue
 
                 # NOTE: REST currently only supports fragment_meta, commits, metadata
-                modes = ["commits", "fragment_meta", "array_meta"]
+                modes = ["commits", "fragment_meta"]
 
                 # Consolidate fragments for selected arrays
-                if name in [LOG_ARRAY, MANIFEST_ARRAY, "vcf_headers"]:
+                if not is_remote and name in [LOG_ARRAY, MANIFEST_ARRAY, "vcf_headers"]:
                     modes += ["fragments"]
 
                 for mode in modes:
+                    logger.debug("Consolidating %r in %r (%s)", mode, uri, name)
                     config = tiledb.Config({"sm.consolidation.mode": mode})
                     try:
                         tiledb.consolidate(uri, config=config)
@@ -912,6 +928,7 @@ def consolidate_dataset_udf(
                         print(e)
 
                 for mode in modes:
+                    logger.debug("Vacuuming %r in %r (%s)", mode, uri, name)
                     config = tiledb.Config({"sm.vacuum.mode": mode})
                     try:
                         tiledb.vacuum(uri, config=config)
@@ -1304,7 +1321,9 @@ def ingest_samples_dag(
             consolidate.depends_on(ingest)
 
     # Consolidate fragments in the stats arrays, if enabled
-    if consolidate_stats:
+    # TODO: remove when remote fragment consolidation is supported
+    is_remote = dataset_uri.startswith("tiledb://")
+    if consolidate_stats and not is_remote:
 
         def group_member_uri(group_uri, group_member, config):
             with tiledb.scope_ctx(config):

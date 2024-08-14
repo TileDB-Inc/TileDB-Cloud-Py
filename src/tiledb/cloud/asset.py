@@ -1,9 +1,9 @@
 """An asset may be an array or a group."""
 
 from functools import partial
-from typing import Callable, Mapping, Optional, Union
+from typing import Callable, List, Mapping, Optional, Union
 
-import tiledb  # type: ignore
+import tiledb
 
 from . import array  # type: ignore
 from . import groups  # type: ignore
@@ -15,6 +15,7 @@ def register(
     storage_uri: str,
     type: str,
     *,
+    dest_uri: Optional[str] = None,
     name: Optional[str] = None,
     namespace: Optional[str] = None,
     credentials_name: Optional[str] = None,
@@ -56,6 +57,7 @@ def register(
             namespace=namespace,
             array_name=name,
             access_credentials_name=credentials_name,
+            dest_uri=dest_uri,
         )
     elif type == "group":
         groups.register(
@@ -64,9 +66,10 @@ def register(
             namespace=namespace,
             credentials_name=credentials_name,
             parent_uri=parent_uri,
+            dest_uri=dest_uri,
         )
     else:
-        raise tiledb.TileDBError(f"Invalid asset type '{type}'")
+        raise ValueError(f"Invalid asset type {type!r}")
 
 
 def deregister(uri: str, *, recursive: Optional[bool] = False) -> None:
@@ -125,7 +128,7 @@ def update_info(
     *,
     description: Optional[str] = None,
     name: Optional[str] = None,
-    tags: Optional[list[str]] = None,
+    tags: Optional[List[str]] = None,
     access_credentials_name: Optional[str] = None,
 ) -> None:
     """
@@ -138,7 +141,7 @@ def update_info(
     :param name: Asset name, defaults to None
     :type name: str
     :param tags: Asset tags, defaults to None
-    :type tags: list[str]
+    :type tags: List[str]
 
     For example, to update only the description of an asset, call update_info()
     with only a 'description' keyword argument:
@@ -182,7 +185,7 @@ def list_shared_with(uri: str) -> None:
 
 
 def share(
-    uri: str, namespace: str, permissions: Optional[Union[str, list[str]]] = "read"
+    uri: str, namespace: str, permissions: Optional[Union[str, List[str]]] = "read"
 ) -> None:
     """Give another namespace permission to access an asset.
 
@@ -191,7 +194,7 @@ def share(
     :param namespace: the target namespace.
     :type namespace: str
     :param permissions: 'read', 'write', or ['read', 'write'].
-    :type permissions: str or list[str]
+    :type permissions: str or List[str]
 
     For example, to make an asset readable by all, share it with the
     "public" namespace:

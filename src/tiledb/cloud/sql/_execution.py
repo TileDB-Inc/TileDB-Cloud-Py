@@ -173,7 +173,7 @@ def exec_and_fetch(*args, **kwargs):
         return tiledb.DenseArray(output_uri, ctx=client.Ctx())
 
     except rest_api.ApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 @functions.signature_of(exec_base)

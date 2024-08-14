@@ -3,6 +3,7 @@ import datetime
 import itertools
 import json
 import numbers
+import re
 import threading
 import time
 import uuid
@@ -219,6 +220,15 @@ class Node(futures.FutureLike[_T]):
                     )
             elif not resources_set:
                 self._resource_class = "standard"
+            # Validate the memory string because it's easy to forget the unit
+            # suffix and request "2" instead of "2Gi". Anything less than 10 Mb
+            # (written in bytes) was probably a user error.
+            if resources_set and "memory" in self._resources:
+                if re.match(r"^[0-9]{1,7}$", self._resources["memory"]):
+                    raise tce.TileDBCloudError(
+                        "The `memory` key in `resources` is missing a"
+                        " unit suffix. Did you forget to append 'Mi' or 'Gi'?"
+                    )
         elif resources_set:
             raise tce.TileDBCloudError(
                 "Cannot set resources for REALTIME task graphs,"

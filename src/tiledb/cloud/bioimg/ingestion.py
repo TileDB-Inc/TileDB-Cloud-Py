@@ -46,7 +46,7 @@ def ingest(
         If the uri points to a directory of files make sure it ends with a trailing '/'
     :param output: uri / iterable of uris of output files.
         If the uri points to a directory of files make sure it ends with a trailing '/'
-    :param config: dict configuration to pass on tiledb.VFS
+    :param config: dict configuration to pass on tiledb.VFS for the source's resolution
     :param acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
     :param taskgraph_name: Optional name for taskgraph, defaults to None
     :param num_batches: Number of graph nodes to spawn.
@@ -72,6 +72,8 @@ def ingest(
         Larger scale factors will result in less I/O operations.
     :param access_credentials_name: [TBDeprecated] Access Credentials Name (ACN)
         registered in TileDB Cloud (ARN type) if ``acn`` is not set.
+    :param dest_config: dict configuration to pass on tiledb.VFS for the destination's
+        resolution
     """
 
     logger = get_logger_wrapper(verbose)
@@ -81,8 +83,8 @@ def ingest(
     access_credentials_name = kwargs.pop("access_credentials_name", None)
     if bool(acn) == bool(access_credentials_name):
         raise ValueError(
-            "Ingestion graph requires 'access_credentials_name'"
-            "or 'acn' mutually exclusively to be set."
+            "Ingestion graph requires either 'acn' or 'access_credentials_name'"
+            " (deprecated), cannot decipher correct credential when both specified."
         )
     # Backwards compatibility: Assign when only access_credentials_name is set
     if not acn:
@@ -217,21 +219,18 @@ def ingest(
             else:
                 raise ValueError
 
-        write_context = tiledb.Ctx(config)
-        vfs = tiledb.VFS(ctx=write_context)
-
         for input, output in io_uris:
-            with vfs.open(input) as src:
-                with tiledb.scope_ctx(ctx_or_config=write_context):
-                    from_bioimg(
-                        src,
-                        output,
-                        converter=user_converter,
-                        exclude_metadata=exclude_metadata,
-                        verbose=verbose,
-                        tile_scale=tile_scale,
-                        **kwargs,
-                    )
+            from_bioimg(
+                input,
+                output,
+                converter=user_converter,
+                exclude_metadata=exclude_metadata,
+                verbose=verbose,
+                tile_scale=tile_scale,
+                source_config=config,
+                dest_config=kwargs.get("dest_config", None),
+                **kwargs,
+            )
         return io_uris
 
     def register_dataset_udf(
@@ -344,7 +343,7 @@ def ingest(
         *args,
         verbose=verbose,
         config=config,
-        access_credentials_name=access_credentials_name,
+        access_credentials_name=acn,
         name=f"{dag_name} input collector",
         result_format="json",
     )

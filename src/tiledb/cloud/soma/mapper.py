@@ -114,12 +114,11 @@ def build_collection_mapper_workflow_graph(
     sequence of ``SOMAExperiment`` URIs or a ``SOMACollection``, which is simply
     a collection of SOMAExperiment objects. The caller also passes in query
     terms and a callback lambda which will be called on the ``to_anndata``
-    output of each experiment's query. The top-level collector node will be a
-    dictionary mapping experiment names to the callback lambda's output for each
-    input experiment.
+    output of each experiment's query. The result will be a dictionary mapping
+    experiment names to the callback lambda's output for each input experiment.
 
     For example, if the lambda maps an anndata object to its ``.shape``, then
-    with SOMA experiments ``A`` and ``B``, the collector node might return the
+    with SOMA experiments ``A`` and ``B``, the task graph would return the
     dict ``{"A": (56868, 43050), "B": (23539, 42044)}``.
 
 
@@ -272,10 +271,9 @@ def build_collection_mapper_workflow_graph(
         namespace=namespace,
     )
 
-    node_outputs = {}
-
     for experiment_name, soma_experiment_uri in soma_experiment_uris.items():
-        node_output = grf.submit(
+        logger.debug(f"Processing experiment '{experiment_name}'")
+        grf.submit(
             _function_for_node,
             soma_experiment_uri,
             measurement_name=measurement_name,
@@ -295,20 +293,6 @@ def build_collection_mapper_workflow_graph(
             access_credentials_name=access_credentials_name,
             name=experiment_name,
         )
-        logger.debug("A: node output is a %s" % type(node_output))
-
-        node_outputs[experiment_name] = node_output
-
-    def collect(node_outputs):
-        for node_name, node_output in node_outputs.items():
-            logger.debug("B: node output %s is a %s" % (node_name, type(node_output)))
-        return node_outputs
-
-    grf.submit(
-        collect,
-        node_outputs,
-        name="collector",
-    )
 
     return grf
 

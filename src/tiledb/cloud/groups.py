@@ -27,8 +27,9 @@ def create(
 ) -> None:
     """Creates a new TileDB Cloud group.
 
-    :param name: The name of the group to create.
+    :param name: The name of the group to create, or its URI.
     :param namespace: The namespace to create the group in.
+        If ``name`` is a URI, this must not be provided.
         If not provided, the current logged-in user will be used.
     :param parent_uri: The parent URI to add the group to, if desired.
     :param storage_uri: The backend URI where the group will be stored.
@@ -37,6 +38,7 @@ def create(
         creating the group. If not provided, uses the namespace's default
         credential for groups.
     """
+    namespace, name = utils.canonicalize_nameuri_namespace(name, namespace)
     if not (namespace and storage_uri and credentials_name):
         namespace, default_path, default_cred = _default_ns_path_cred(namespace)
         storage_uri = storage_uri or (default_path + "/" + name)
@@ -60,12 +62,16 @@ def create(
 def register(
     storage_uri: str,
     *,
+    dest_uri: Optional[str] = None,
     name: Optional[str] = None,
     namespace: Optional[str] = None,
     credentials_name: Optional[str] = None,
     parent_uri: Optional[str] = None,
 ):
     """Registers a pre-existing group."""
+    namespace, name = utils.canonicalize_ns_name_uri(
+        namespace=namespace, name=name, dest_uri=dest_uri
+    )
     if not (namespace and credentials_name):
         namespace, _, default_cred = _default_ns_path_cred(namespace)
         credentials_name = credentials_name or default_cred
@@ -134,7 +140,7 @@ def update_info(
     try:
         return groups_v1_client.update_group(namespace, group_name, group_update=info)
     except rest_api.ApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc)
+        raise tiledb_cloud_error.maybe_wrap(exc)
 
 
 def deregister(
@@ -244,7 +250,7 @@ def list_shared_with(uri, async_req=False):
             group_namespace=group_namespace, group_name=group_name, async_req=async_req
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def share_group(uri, namespace, permissions, async_req=False):
@@ -281,7 +287,7 @@ def share_group(uri, namespace, permissions, async_req=False):
             async_req=async_req,
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def unshare_group(uri, namespace, async_req=False):

@@ -225,7 +225,7 @@ def register_udf(
         )
 
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def register_generic_udf(
@@ -387,7 +387,7 @@ def update_udf(
         )
 
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def update_generic_udf(
@@ -473,7 +473,7 @@ def info(namespace=None, name=None, async_req=False):
             namespace=namespace, name=name, async_req=async_req
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 """
@@ -511,7 +511,7 @@ def share(name=None, namespace=None, async_req=False):
             async_req=async_req,
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def unshare(name=None, namespace=None, async_req=False):
@@ -542,7 +542,7 @@ def unshare(name=None, namespace=None, async_req=False):
             async_req=async_req,
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 """
@@ -568,7 +568,7 @@ def delete(uri: str, *, async_req: bool = False) -> None:
             async_req=async_req,
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def deregister(uri: str, *, async_req: bool = False):

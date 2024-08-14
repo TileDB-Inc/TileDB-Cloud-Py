@@ -26,7 +26,7 @@ def accept_invitation(invitation_id: str) -> None:
     try:
         return invitation_api.accept_invitation(invitation=invitation_id)
     except rest_api.ApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc)
+        raise tiledb_cloud_error.maybe_wrap(exc)
 
 
 def fetch_invitations(**filters):
@@ -50,7 +50,7 @@ def fetch_invitations(**filters):
     try:
         return invitation_api.fetch_invitations(**filters)
     except rest_api.ApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc)
+        raise tiledb_cloud_error.maybe_wrap(exc)
 
 
 def invite_to_organization(
@@ -70,7 +70,7 @@ def invite_to_organization(
     try:
         return invitation_api.join_organization(organization, email_invite)
     except rest_api.ApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc)
+        raise tiledb_cloud_error.maybe_wrap(exc)
 
 
 def cancel_invite_to_organization(organization: str, *, invitation_id: str) -> None:
@@ -85,7 +85,7 @@ def cancel_invite_to_organization(organization: str, *, invitation_id: str) -> N
     try:
         return invitation_api.cancel_join_organization(invitation_id, organization)
     except rest_api.ApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc)
+        raise tiledb_cloud_error.maybe_wrap(exc)
 
 
 def invite_to_array(
@@ -105,7 +105,7 @@ def invite_to_array(
     try:
         return invitation_api.share_array_by_invite(namespace, uri, email_invite)
     except rest_api.ApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc)
+        raise tiledb_cloud_error.maybe_wrap(exc)
 
 
 def cancel_invite_to_array(uri: str, *, invitation_id: str) -> None:
@@ -123,7 +123,7 @@ def cancel_invite_to_array(uri: str, *, invitation_id: str) -> None:
             namespace, invitation_id, uri
         )
     except rest_api.ApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc)
+        raise tiledb_cloud_error.maybe_wrap(exc)
 
 
 def invite_to_group(
@@ -148,7 +148,7 @@ def invite_to_group(
     try:
         return invitation_api.share_group_by_invite(namespace, uri, email_invite)
     except rest_api.ApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc)
+        raise tiledb_cloud_error.maybe_wrap(exc)
 
 
 def cancel_invite_to_group(uri: str, *, invitation_id: str) -> None:
@@ -166,4 +166,4 @@ def cancel_invite_to_group(uri: str, *, invitation_id: str) -> None:
             namespace, invitation_id, uri
         )
     except rest_api.ApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc)
+        raise tiledb_cloud_error.maybe_wrap(exc)

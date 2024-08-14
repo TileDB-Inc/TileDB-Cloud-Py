@@ -196,6 +196,9 @@ class DAGClassTest(unittest.TestCase):
             grf.submit_local(repr, None, resources={"x": "y"})
         with self.assertRaises(tce.TileDBCloudError):
             grf.submit_local(repr, None, resource_class="hello")
+        grf = dag.DAG(mode=Mode.BATCH)
+        with self.assertRaises(tce.TileDBCloudError):
+            grf.submit(repr, None, resources={"memory": "100"})
 
     def test_kwargs(self):
         d = dag.DAG()

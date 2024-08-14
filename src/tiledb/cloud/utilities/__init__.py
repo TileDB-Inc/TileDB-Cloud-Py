@@ -16,6 +16,8 @@ from .consolidate import group_fragments
 from .profiler import Profiler
 from .profiler import create_log_array
 from .profiler import write_log_event
+from .wheel import install_wheel
+from .wheel import upload_wheel
 
 __all__ = [
     "as_batch",
@@ -36,4 +38,6 @@ __all__ = [
     "Profiler",
     "create_log_array",
     "write_log_event",
+    "upload_wheel",
+    "install_wheel",
 ]

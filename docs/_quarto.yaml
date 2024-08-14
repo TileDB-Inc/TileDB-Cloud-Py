@@ -73,6 +73,10 @@ website:
             href: reference/dag.status.qmd
           - text: "`visualization`"
             href: reference/dag.visualization.qmd
+      - section: Region
+        contents:
+          - text: "`region`"
+            href: reference/region.qmd
       - section: Files
         contents:
           - text: "`indexing`"
@@ -109,6 +113,8 @@ website:
             href: reference/utilities.consolidate.qmd
           - text: "`profiler`"
             href: reference/utilities.profiler.qmd
+          - text: "`wheel`"
+            href: reference/utilities.wheel.qmd
 
 quartodoc:
   style: pkgdown
@@ -159,6 +165,11 @@ quartodoc:
         - dag.status
         - dag.visualization
 
+    - title: region
+      desc: Cloud regions
+      contents:
+        - region
+
     - title: files
       desc: File API.
       contents:
@@ -191,4 +202,4 @@ quartodoc:
       contents:
         - utilities.consolidate
         - utilities.profiler
-        # - wheel
+        - utilities.wheel

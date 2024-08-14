@@ -102,7 +102,7 @@ def create_file(
             namespace, file_create, async_req=async_req, **kwargs
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 _EXPORT_CHUNK_SIZE = 512 * 1024 * 1024
@@ -146,7 +146,7 @@ def export_file_local(
         return models.FileExported(output_uri=output_uri)
 
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def export_file(
@@ -182,7 +182,7 @@ def export_file(
             async_req=async_req,
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def upload_file(

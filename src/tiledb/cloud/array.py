@@ -97,7 +97,7 @@ def info(uri, async_req=False):
             namespace=namespace, array=array_name, async_req=async_req
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def list_shared_with(uri, async_req=False):
@@ -110,7 +110,7 @@ def list_shared_with(uri, async_req=False):
             namespace=namespace, array=array_name, async_req=async_req
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def share_array(uri, namespace, permissions, async_req=False):
@@ -144,7 +144,7 @@ def share_array(uri, namespace, permissions, async_req=False):
             async_req=async_req,
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def unshare_array(uri, namespace, async_req=False):
@@ -197,7 +197,7 @@ def update_info(
             async_req=async_req,
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def update_file_properties(uri, file_type=None, file_properties=None, async_req=False):
@@ -223,7 +223,7 @@ def update_file_properties(uri, file_type=None, file_properties=None, async_req=
             async_req=async_req,
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def register_array(
@@ -233,6 +233,7 @@ def register_array(
     description=None,
     access_credentials_name=None,
     async_req=False,
+    dest_uri: Optional[str] = None,
 ):
     """
     Register this array with the tiledb cloud service
@@ -243,8 +244,13 @@ def register_array(
     :param str access_credentials_name: optional name of access credentials to use,
         if left blank default for namespace will be used
     :param async_req: return future instead of results for async support
+    :param dest_uri: If set, the ``tiledb://`` URI of the destination.
     """
     api_instance = client.build(rest_api.ArrayApi)
+
+    namespace, array_name = utils.canonicalize_ns_name_uri(
+        namespace=namespace, array_name=array_name, dest_uri=dest_uri
+    )
 
     namespace = namespace or client.default_user().username
 
@@ -261,7 +267,7 @@ def register_array(
             async_req=async_req,
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def deregister_array(uri, async_req=False):
@@ -283,7 +289,7 @@ def deregister_array(uri, async_req=False):
             namespace=namespace, array=array_name, async_req=async_req
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def delete_array(uri, *, async_req=False):
@@ -309,7 +315,7 @@ def delete_array(uri, *, async_req=False):
             async_req=async_req,
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def array_activity(uri, async_req=False):
@@ -328,7 +334,7 @@ def array_activity(uri, async_req=False):
             namespace=namespace, array=array_name, async_req=async_req
         )
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
 def parse_ranges(ranges):

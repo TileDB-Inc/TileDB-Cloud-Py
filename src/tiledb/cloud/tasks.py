@@ -1,6 +1,6 @@
 import datetime
 import uuid
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence
 
 from tiledb.cloud import array
 from tiledb.cloud import client
@@ -34,21 +34,21 @@ def task(id, async_req=False):
         return api_instance.task_id_get(id=id, async_req=async_req)
 
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
-def tasks(
+def fetch_tasks(
     namespace=None,
     array=None,
     start=None,
-    end=datetime.datetime.utcnow(),
+    end=datetime.datetime.now(datetime.timezone.utc),
     status=None,
     page=None,
     per_page=None,
     async_req=False,
-):
+) -> Dict[str, Sequence[Dict[str, Any]]]:
     """
-    Fetch all tasks a user has access too
+    Fetch all tasks a user has access too.
     :param str namespace: optional filter by namespace
     :param str array: optional limit tasks to specific array
     :param datetime start: optional start time for listing of tasks,
@@ -59,8 +59,9 @@ def tasks(
     :param int page: optional page for pagenating results
     :param int per_page: optional records to return per page
     :param async_req: return future instead of results for async support
-    :return:
+    :return: Mapping of task data organized by task type.
     """
+
     api_instance = client.build(rest_api.TasksApi)
 
     if end is not None:
@@ -105,7 +106,11 @@ def tasks(
         return api_instance.tasks_get(**args)
 
     except GenApiException as exc:
-        raise tiledb_cloud_error.check_exc(exc) from None
+        raise tiledb_cloud_error.maybe_wrap(exc) from None
+
+
+# maintain backwards compatibility for tiledb.cloud.tasks.tasks
+tasks = fetch_tasks
 
 
 def last_sql_task():
