@@ -2,10 +2,12 @@ import hashlib
 import os
 import pathlib
 import tempfile
+import time
 import unittest
 from typing import List
 
 import tiledb
+import tiledb.cloud
 from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import groups
@@ -188,6 +190,91 @@ class UploadTest(unittest.TestCase):
                 self.assertEqual(me, downloaded)
         finally:
             array.delete_array(uri)
+
+
+class UploadFolderTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.ASSERT_EXIST_TRIES = 5
+        cls.folder_basename = "upload_folder_test"
+        cls.test_folder = os.path.join(CURRENT_DIR, "data", cls.folder_basename)
+        cls.namespace, cls.storage_path, cls.acn = groups._default_ns_path_cred()
+        return super().setUpClass()
+
+    def setUp(self):
+        self.group_uri = (
+            f"tiledb://{self.namespace}/{testonly.random_name('upload_folder')}"
+        )
+        return super().setUp()
+
+    def tearDown(self):
+        tiledb.cloud.groups.delete(self.group_uri, recursive=True)
+        return super().tearDown()
+
+    def group_info(self, uri: str):
+        for _ in range(self.ASSERT_EXIST_TRIES):
+            try:
+                return groups.info(uri)
+            except Exception:
+                pass
+            time.sleep(1)
+        self.fail(f"Group '{uri}' does not exist")
+
+    def test_upload_folder(self):
+        report = file_utils.upload_folder(
+            input_uri=self.test_folder,
+            output_uri=self.group_uri,
+            access_credentials_name=self.acn,
+            serializable=True,
+        )
+
+        info = self.group_info(self.group_uri)
+        self.assertEqual(info.size, 4)  # 2 sub-folders, 2 files
+
+        base_storage_uri = f"{self.storage_path}/{self.folder_basename}"
+        info = self.group_info(f"tiledb://{self.namespace}/nested_folder_1")
+        self.assertEqual(info.size, 2)  # 2 files
+        self.assertEqual(info.uri, f"{base_storage_uri}/nested_folder_1")
+
+        info = self.group_info(f"tiledb://{self.namespace}/nested_folder_2")
+        self.assertEqual(info.size, 3)  # 1 sub-folder, 2 files
+        self.assertEqual(info.uri, f"{base_storage_uri}/nested_folder_2")
+
+        info = self.group_info(f"tiledb://{self.namespace}/double_nested_folder")
+        self.assertEqual(info.size, 2)  # 2 files
+        self.assertEqual(
+            info.uri, f"{base_storage_uri}/nested_folder_2/double_nested_folder"
+        )
+
+        self.assertDictEqual(
+            report,
+            {
+                "directory": self.folder_basename,
+                "report": "Uploaded 2/2 files",
+                "errors": {},
+                "sub_folders": [
+                    {
+                        "directory": "nested_folder_1",
+                        "report": "Uploaded 2/2 files",
+                        "errors": {},
+                        "sub_folders": [],
+                    },
+                    {
+                        "directory": "nested_folder_2",
+                        "report": "Uploaded 2/2 files",
+                        "errors": {},
+                        "sub_folders": [
+                            {
+                                "directory": "double_nested_folder",
+                                "report": "Uploaded 2/2 files",
+                                "errors": {},
+                                "sub_folders": [],
+                            }
+                        ],
+                    },
+                ],
+            },
+        )
 
 
 class TestFileIngestion(unittest.TestCase):
