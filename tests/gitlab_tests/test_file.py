@@ -54,7 +54,8 @@ class TestFileIngestion(unittest.TestCase):
         cls.s3_bucket = f"s3://{os.environ['AWS_CLOUD_CI_S3_BUCKET']}"
         cls.test_files_folder = os.path.join(CURRENT_DIR, "data", "file_ingestion")
 
-        cls.namespace, cls.storage_path, cls.acn = groups._default_ns_path_cred()
+        cls.namespace, cls.storage_path, _ = groups._default_ns_path_cred()
+        cls.acn = "tiledb-unittest-ci-bucket"
         cls.namespace = cls.namespace.rstrip("/")
         cls.storage_path = cls.storage_path.rstrip("/")
         cls.destination = f"{cls.storage_path}/{testonly.random_name('file_test')}"
