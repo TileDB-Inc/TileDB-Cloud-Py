@@ -296,7 +296,7 @@ def upload_folder(
     Uploads a folder to TileDB Cloud.
     By default respects the initial folder structure in the destination.
 
-    :param input_uri: The URI or path of the input file. May be an ordinary path
+    :param input_uri: The URI or path of the input folder. May be an ordinary path
         or any URI accessible via TileDB VFS.
     :param output_uri: The TileDB URI to write the folder into.
     :param parent_group_uri: A TileDB Group URI to add folder under,
