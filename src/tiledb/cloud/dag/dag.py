@@ -2,12 +2,14 @@ import collections
 import datetime
 import itertools
 import json
+import logging
 import numbers
 import re
 import threading
 import time
 import uuid
 import warnings
+import webbrowser
 from typing import (
     Any,
     Callable,
@@ -46,6 +48,8 @@ from ..taskgraphs import _results as _tg_results
 from . import status as st
 from . import visualization as viz
 from .mode import Mode
+
+logger = logging.getLogger(__name__)
 
 Status = st.Status  # Re-export for compabitility.
 _T = TypeVar("_T")
@@ -2093,26 +2097,31 @@ def exec_batch_udf(
     acn: Optional[str] = None,
     resources: Optional[Mapping[str, str]] = None,
     image_name: Optional[str] = None,
+    compute: bool = True,
+    retry_limit: int = 0,
+    open_browser: bool = False,
     **kwargs: Any,
 ) -> DAG:
     """Run a function as a batch UDF on TileDB Cloud.
 
-    A batch UDF is a single task, Task Graph run in `dag.Mode.BATCH` mode. This
+    A batch UDF is a single task, task graph run in `dag.Mode.BATCH` mode. This
     allows specifying custom resources to a UDF and passing in an access credential
     name for accessing underingly storage backends with `tiledb.VFS`
 
-    optional kwargs:
-    - name: Name of the node in the DAG, defaults to registered_name.
-    - namespace: TileDB Cloud namespace, defaults to the user's default namespace
-    - acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
-    - resources: Resources to allocate for the UDF, defaults to None
-    - image_name: Docker image name to run in Node.
-
-    :param registered_udf_name: name of registered UDF
-        (e.g. <namespace>/<registered_name>)
-    :param **args: Positional args to pass to batch UDF callable.
+    :param func: Name of registered UDF (e.g. <namespace>/<registered_name>)
+        or in-memory callable.
+    :param **args: Positional args to pass to batch UDF.
+    :param name: Server-side task name.
+    :param namespace: TileDB Cloud namespace to execute in.
+    :param acn: TileDB Cloud access credential name.
+    :param resources: Resources to allocate to task (e.g.
+        {"cpu": "2", "memory": "10Gi"}).
+    :param image_name: UDF image name.
+    :param compute: Whether to execute batch UDF.
+    :param retry_limit: Maximum retry attempts.
+    :param open_browser: Whether to open browser to batch UDF.
     :param **kwargs: Keyword args to pass to batch UDF.
-    :return: Running DAG.
+    :return: DAG instance, either running or not depending on `compute` arg.
     """
 
     try:
@@ -2120,12 +2129,18 @@ def exec_batch_udf(
     except AttributeError:
         name = func
 
-    acn = acn or kwargs.pop("access_credentials_name", None)
+    # extract acn from deprecated 'access_credentials_name' only if not found in acn
+    acn_legacy = kwargs.pop("access_credentials_name", None)
+    acn = acn or acn_legacy
 
     graph = DAG(
         name=f"batch->{name}",
         namespace=namespace,
         mode=Mode.BATCH,
+        retry_strategy=models.RetryStrategy(
+            limit=retry_limit,
+            retry_policy="Always",
+        ),
     )
 
     graph.submit(
@@ -2138,21 +2153,20 @@ def exec_batch_udf(
         **kwargs,
     )
 
-    # Run the DAG asynchronously
-    graph.compute()
+    if compute:
+        graph.compute()
 
-    print(
-        "TileDB Cloud task submitted - https://cloud.tiledb.com/activity/taskgraphs/{}/{}".format(
+        task_uri = "https://cloud.tiledb.com/activity/taskgraphs/{}/{}".format(
             graph.namespace,
             graph.server_graph_uuid,
         )
-    )
+
+        logger.info(f"TileDB Cloud task submitted - {task_uri}")
+
+        if open_browser:
+            try:
+                webbrowser.open_new_tab(task_uri)
+            except webbrowser.Error:
+                logger.debug("Unable to access webrowser.")
 
     return graph
-
-
-if __name__ == "__main__":
-    batched_ls = exec_batch_udf(
-        "TileDB-Inc/ls_uri",
-        uri="s3://bucket/projects",
-    )
