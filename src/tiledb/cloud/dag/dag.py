@@ -2111,7 +2111,7 @@ def exec_batch_udf(
     :param func: Name of registered UDF (e.g. <namespace>/<registered_name>)
         or in-memory callable.
     :param **args: Positional args to pass to batch UDF.
-    :param name: Server-side task name.
+    :param name: Task name.
     :param namespace: TileDB Cloud namespace to execute in.
     :param acn: TileDB Cloud access credential name.
     :param resources: Resources to allocate to task (e.g.
@@ -2121,7 +2121,7 @@ def exec_batch_udf(
     :param retry_limit: Maximum retry attempts.
     :param open_browser: Whether to open browser to batch UDF.
     :param **kwargs: Keyword args to pass to batch UDF.
-    :return: DAG instance, either running or not depending on `compute` arg.
+    :return: DAG instance, either running or not started depending on `compute` arg.
     """
 
     try:
