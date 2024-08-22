@@ -82,8 +82,8 @@ def test_exec_batch_udf_mock(mock_dag: MagicMock, mock_open_new_tab: MagicMock) 
 def test_exec_batch_udf() -> None:
     """Test actual loading of DAG.
 
-    Here, concerned with DAG is instantiated appropriately as specified
-    by exec_batch_udf.
+    Concerned primarily that DAG is instantiated appropriately as
+    specified by exec_batch_udf.
 
     Previous unit test for exec_batch_udf already tested compute method is called
     when the 'compute' arg is True. So not actually executing batch UDF, as
