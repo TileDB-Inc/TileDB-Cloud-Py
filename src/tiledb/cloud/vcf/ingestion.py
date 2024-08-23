@@ -705,13 +705,13 @@ def ingest_manifest_udf(
                             i += 1
 
                     # Check for index issues
-                    index_uri = find_index(vcf_uri)
+                    index_uri = find_index(vcf_uri, vfs)
                     if not index_uri:
                         status = "" if status == "ok" else status + ","
                         status += "missing index"
                         records = 0
                     else:
-                        records = get_record_count(vcf_uri, index_uri)
+                        records = get_record_count(vcf_uri, index_uri, vfs)
                         if records is None:
                             status = "" if status == "ok" else status + ","
                             status += "bad index"
@@ -779,6 +779,7 @@ def ingest_samples_udf(
             group_uri=dataset_uri, group_member=LOG_ARRAY, id=id, trace=trace
         ) as prof:
             prof.write("uris", str(len(sample_uris)), ",".join(sample_uris))
+            vfs = tiledb.VFS()
 
             # Set tmp space to VCF store files if we need to sort and bgzip
             if use_remote_tmp:
@@ -812,7 +813,7 @@ def ingest_samples_udf(
                 :param uri: URI of the VCF file
                 """
                 with tiledb.scope_ctx(config):
-                    if create_index or not find_index(uri):
+                    if create_index or not find_index(uri, vfs):
                         logger.debug("indexing %r", uri)
                         try:
                             create_index_file(uri)
@@ -857,7 +858,6 @@ def ingest_samples_udf(
 
             # Cleanup tmp space
             if use_remote_tmp and tmp_uris:
-                vfs = tiledb.VFS()
                 for uri in tmp_uris:
                     logger.debug("removing %r", uri)
                     vfs.remove_file(uri)

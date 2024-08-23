@@ -7,17 +7,19 @@ import tiledb
 from tiledb.cloud.utilities import process_stream
 
 
-def find_index(vcf_uri: str) -> Optional[str]:
+def find_index(vcf_uri: str, vfs: Optional[tiledb.VFS] = None) -> Optional[str]:
     """
     Find the index file for a VCF file or None if not found.
 
     :param vcf_uri: URI of the VCF file
+    :param vfs: Optional preallocated VFS object to use
     :return: URI of the index file
     """
 
+    vfs = vfs or tiledb.VFS()
     for ext in ["tbi", "csi"]:
         index = f"{vcf_uri}.{ext}"
-        if tiledb.VFS().is_file(index):
+        if vfs.is_file(index):
             return index
     return None
 
@@ -56,12 +58,13 @@ def get_sample_name(vcf_uri: str) -> str:
     return ",".join(stdout.splitlines())
 
 
-def get_record_count(vcf_uri: str, index_uri: str) -> Optional[int]:
+def get_record_count(vcf_uri: str, index_uri: str, vfs: Optional[tiledb.VFS]) -> Optional[int]:
     """
     Return the record count in a VCF file.
 
     :param vcf_uri: URI of the VCF file
     :param index_uri: URI of the VCF index file
+    :param vfs: Optional preallocated VFS object to use
     :return: record count or None if there is an error
     """
 
@@ -72,7 +75,7 @@ def get_record_count(vcf_uri: str, index_uri: str) -> Optional[int]:
 
     # Make a local copy of the index file
     local_file = os.path.basename(index_uri)
-    with tiledb.VFS().open(index_uri) as infile:
+    with (vfs or tiledb.VFS()).open(index_uri) as infile:
         with open(local_file, "wb") as outfile:
             shutil.copyfileobj(infile, outfile, length=16 << 20)
 
