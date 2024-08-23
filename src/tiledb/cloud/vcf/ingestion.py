@@ -822,15 +822,14 @@ def ingest_samples_udf(
                             return None
                 return uri
 
-            # Run sort and bgzip on uncompressed VCF files
             with ThreadPool(threads) as pool:
+                # Run sort and bgzip on uncompressed VCF files
                 sample_uris = pool.map(bgzip_worker, sample_uris)
 
-            # Filter out failed bgzip operations
-            sample_uris = [uri for uri in sample_uris if uri]
+                # Filter out failed bgzip operations
+                sample_uris = [uri for uri in sample_uris if uri]
 
-            # Create index files
-            with ThreadPool(threads) as pool:
+                # Create index files
                 sample_uris = pool.map(create_index_file_worker, sample_uris)
 
             # Filter out failed index operations
