@@ -49,7 +49,6 @@ class TestFileIngestion(unittest.TestCase):
         cls.config["vfs.s3.aws_session_token"] = os.environ["AWS_SESSION_TOKEN"]
 
         cls.vfs = tiledb.VFS(config=cls.config)
-        print(cls.vfs.ctx().config())
 
         cls.s3_bucket = f"s3://{os.environ['AWS_CLOUD_CI_S3_BUCKET']}"
         cls.test_files_folder = os.path.join(CURRENT_DIR, "data", "file_ingestion")
