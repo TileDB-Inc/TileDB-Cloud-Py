@@ -58,7 +58,9 @@ def get_sample_name(vcf_uri: str) -> str:
     return ",".join(stdout.splitlines())
 
 
-def get_record_count(vcf_uri: str, index_uri: str, vfs: Optional[tiledb.VFS]) -> Optional[int]:
+def get_record_count(
+    vcf_uri: str, index_uri: str, vfs: Optional[tiledb.VFS]
+) -> Optional[int]:
     """
     Return the record count in a VCF file.
 
