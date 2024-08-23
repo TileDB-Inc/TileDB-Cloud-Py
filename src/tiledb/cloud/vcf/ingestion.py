@@ -788,15 +788,16 @@ def ingest_samples_udf(
                 tmp_space = "."
             tmp_uris = []
 
-            def bgzip_worker(uri: str) -> Optional[str]:
+            def worker(uri: str) -> Optional[str]:
                 """
-                Sort and bgzip a VCF file, storing the result in the tmp space.
+                Sort and bgzip a VCF file, storing the result in the tmp space,
+                and creates a VCF index file in the working directory.
 
                 :param uri: URI of the VCF file
                 :return: URI of the bgzipped VCF
                 """
-                if uri.endswith(".vcf"):
-                    with tiledb.scope_ctx(config):
+                with tiledb.scope_ctx(config):
+                    if uri.endswith(".vcf"):
                         logger.debug("sort and bgzip %r", uri)
                         try:
                             uri = sort_and_bgzip(uri, tmp_space=tmp_space)
@@ -804,15 +805,7 @@ def ingest_samples_udf(
                         except Exception as e:
                             logger.error("Error bgzipping %r: %s", uri, e)
                             return None
-                return uri
 
-            def create_index_file_worker(uri: str) -> Optional[str]:
-                """
-                Create a VCF index file in the current working directory.
-
-                :param uri: URI of the VCF file
-                """
-                with tiledb.scope_ctx(config):
                     if create_index or not find_index(uri, vfs):
                         logger.debug("indexing %r", uri)
                         try:
@@ -823,16 +816,10 @@ def ingest_samples_udf(
                 return uri
 
             with ThreadPool(threads) as pool:
-                # Run sort and bgzip on uncompressed VCF files
-                sample_uris = pool.map(bgzip_worker, sample_uris)
+                # Run sort and bgzip on uncompressed VCF files and create index files
+                sample_uris = pool.map(worker, sample_uris)
 
-                # Filter out failed bgzip operations
-                sample_uris = [uri for uri in sample_uris if uri]
-
-                # Create index files
-                sample_uris = pool.map(create_index_file_worker, sample_uris)
-
-            # Filter out failed index operations
+            # Filter out failed operations
             sample_uris = [uri for uri in sample_uris if uri]
 
             level = "debug" if verbose else "info"
