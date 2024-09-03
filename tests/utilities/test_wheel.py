@@ -1,5 +1,6 @@
 import os
 import sys
+import uuid
 
 import pytest
 
@@ -13,7 +14,7 @@ from tiledb.cloud.utilities.wheel import PipInstall
 logger = get_logger()
 
 _LOCAL_WHEEL = "tests/utilities/data/fake_unittest_wheel-0.1.0-py3-none-any.whl"
-_ARRAY_NAME = os.path.basename(_LOCAL_WHEEL)
+_ARRAY_NAME = os.path.basename(_LOCAL_WHEEL) + "-" + str(uuid.uuid4())
 _NAMESPACE = tiledb.cloud.client.default_user().username
 _S3_OBJECT_PATH = tiledb.cloud.client.default_user().default_s3_path
 _FULL_URI = os.path.join(
