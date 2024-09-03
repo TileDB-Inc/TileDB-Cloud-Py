@@ -787,46 +787,29 @@ def ingest_samples_udf(
                 tmp_space = "."
             tmp_uris = []
 
-            def bgzip_worker(uri: str) -> Optional[str]:
-                """
-                Sort and bgzip a VCF file, storing the result in the tmp space.
-
-                :param uri: URI of the VCF file
-                :return: URI of the bgzipped VCF
-                """
-                if uri.endswith(".vcf"):
-                    with tiledb.scope_ctx(config):
-                        logger.debug("sort and bgzip %r", uri)
-                        try:
-                            uri = sort_and_bgzip(uri, tmp_space=tmp_space)
-                            tmp_uris.append(uri)
-                        except Exception as e:
-                            logger.error("Error bgzipping %r: %s", uri, e)
-                            return None
-                return uri
-
             def create_index_file_worker(uri: str) -> Optional[str]:
                 """
-                Create a VCF index file in the current working directory.
+                Create a VCF index file in the current working directory. If the VCF
+                file cannot be indexed, try to sort and bgzip the VCF file first.
 
                 :param uri: URI of the VCF file
                 """
                 with tiledb.scope_ctx(config):
                     if create_index or not find_index(uri):
-                        logger.debug("indexing %r", uri)
+                        logger.info("indexing %r", uri)
                         try:
                             create_index_file(uri)
                         except Exception as e:
-                            logger.error("Error creating index for %r: %s", uri, e)
-                            return None
+                            logger.warning("%r: %s", uri, e)
+                            logger.info("sort, bgzip, and index %r", uri)
+                            try:
+                                uri = sort_and_bgzip(uri, tmp_space=tmp_space)
+                                tmp_uris.append(uri)
+                                create_index_file(uri)
+                            except Exception as e:
+                                logger.error("%r: %s", uri, e)
+                                return None
                 return uri
-
-            # Run sort and bgzip on uncompressed VCF files
-            with ThreadPool(threads) as pool:
-                sample_uris = pool.map(bgzip_worker, sample_uris)
-
-            # Filter out failed bgzip operations
-            sample_uris = [uri for uri in sample_uris if uri]
 
             # Create index files
             with ThreadPool(threads) as pool:
