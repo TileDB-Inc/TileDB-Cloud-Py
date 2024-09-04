@@ -141,7 +141,7 @@ class AsyncResult(Generic[_T]):
         except rest_api.ApiException as exc:
             with self._id_lock:
                 self._task_id = extract_task_id(exc)
-        except:  # noqa: E722 We don't care about other exceptions, period.
+        except Exception:  # We don't care about other exceptions, period.
             pass
         else:
             with self._id_lock:
