@@ -17,13 +17,10 @@ import json
 import logging
 import re
 import ssl
+from urllib.parse import urlencode
 
 import certifi
-
-# python 2 and python 3 compatibility library
-import six
 import urllib3
-from six.moves.urllib.parse import urlencode
 
 from tiledb.cloud.rest_api.exceptions import ApiException
 from tiledb.cloud.rest_api.exceptions import ApiValueError
@@ -147,9 +144,7 @@ class RESTClientObject(object):
 
         timeout = None
         if _request_timeout:
-            if isinstance(
-                _request_timeout, (int,) if six.PY3 else (int, long)
-            ):  # noqa: F821
+            if isinstance(_request_timeout, int):
                 timeout = urllib3.Timeout(total=_request_timeout)
             elif isinstance(_request_timeout, tuple) and len(_request_timeout) == 2:
                 timeout = urllib3.Timeout(

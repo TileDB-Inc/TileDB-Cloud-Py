@@ -75,8 +75,6 @@ single-line-exclusions = ["typing", "typing_extensions"]
 # Generated files have long line lengths.
 "src/tiledb/cloud/_common/api_v2/*" = ["E501"]
 "src/tiledb/cloud/rest_api/*" = ["E501"]
-# This file includes generated Python 2 code with `long`.
-"src/tiledb/cloud/rest_api/rest.py" = ["F821"]
 
 # Certain tests have long JSON strings and deep structures.
 "tests/taskgraphs/test_builder.py" = ["E501"]
