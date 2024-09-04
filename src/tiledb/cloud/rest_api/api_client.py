@@ -30,7 +30,7 @@ from tiledb.cloud.rest_api.exceptions import ApiException
 from tiledb.cloud.rest_api.exceptions import ApiValueError
 
 
-class ApiClient(object):
+class ApiClient:
     """Generic API client for OpenAPI client library builds.
 
     OpenAPI generic API client. This client handles the client-

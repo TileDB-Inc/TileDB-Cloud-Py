@@ -3,7 +3,7 @@ from tiledb.cloud._common import functions
 from tiledb.cloud._results import results
 
 
-class CloudArray(object):
+class CloudArray:
     """Array cloud interface."""
 
     @functions.signature_of(array.apply_async)
