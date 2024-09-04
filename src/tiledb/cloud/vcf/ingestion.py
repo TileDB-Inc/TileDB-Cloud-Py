@@ -799,15 +799,15 @@ def ingest_samples_udf(
                         logger.info("indexing %r", uri)
                         try:
                             create_index_file(uri)
-                        except Exception as e:
-                            logger.warning("%r: %s", uri, e)
+                        except RuntimeError as exc:
+                            logger.warning("%r: %s", uri, exc)
                             logger.info("sort, bgzip, and index %r", uri)
                             try:
                                 uri = sort_and_bgzip(uri, tmp_space=tmp_space)
                                 tmp_uris.append(uri)
                                 create_index_file(uri)
-                            except Exception as e:
-                                logger.error("%r: %s", uri, e)
+                            except RuntimeError as exc:
+                                logger.error("%r: %s", uri, exc)
                                 return None
                 return uri
 

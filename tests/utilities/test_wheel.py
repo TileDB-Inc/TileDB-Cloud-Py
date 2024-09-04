@@ -1,6 +1,5 @@
 import os
 import sys
-import uuid
 
 import pytest
 
@@ -14,7 +13,7 @@ from tiledb.cloud.utilities.wheel import PipInstall
 logger = get_logger()
 
 _LOCAL_WHEEL = "tests/utilities/data/fake_unittest_wheel-0.1.0-py3-none-any.whl"
-_ARRAY_NAME = os.path.basename(_LOCAL_WHEEL) + "-" + str(uuid.uuid4())
+_ARRAY_NAME = os.path.basename(_LOCAL_WHEEL)
 _NAMESPACE = tiledb.cloud.client.default_user().username
 _S3_OBJECT_PATH = tiledb.cloud.client.default_user().default_s3_path
 _FULL_URI = os.path.join(
@@ -39,8 +38,18 @@ def array_teardown():
 
     try:
         tiledb.Array.delete_array(_FULL_URI, ctx=ctx)
-    except tiledb.TileDBError:
-        pass
+    except tiledb.TileDBError as exc:
+        # Delete by UUID if there are multiple registered arrays with the same name
+        error_msg = str(exc)
+        if "is not unique" in error_msg:
+            uuids = error_msg[error_msg.find("[") + 1 : error_msg.find("]")]
+            uuids = uuids.split(" ")
+            for uuid in uuids:
+                try:
+                    uri = os.path.join("tiledb://", _NAMESPACE, uuid)
+                    tiledb.Array.delete_array(uri, ctx=ctx)
+                except Exception:
+                    pass
 
     yield None
 
