@@ -138,7 +138,10 @@ from tiledb.cloud.rest_api.models.ml_model_favorite import MLModelFavorite
 from tiledb.cloud.rest_api.models.ml_model_favorites_data import MLModelFavoritesData
 from tiledb.cloud.rest_api.models.max_buffer_sizes import MaxBufferSizes
 from tiledb.cloud.rest_api.models.multi_array_udf import MultiArrayUDF
-from tiledb.cloud.rest_api.models.namespace_actions import NamespaceActions
+from tiledb.cloud.rest_api.models.namespace_actions import (
+    NamespaceAction,
+    NamespaceActions,
+)
 from tiledb.cloud.rest_api.models.non_empty_domain import NonEmptyDomain
 from tiledb.cloud.rest_api.models.notebook_copied import NotebookCopied
 from tiledb.cloud.rest_api.models.notebook_copy import NotebookCopy
@@ -146,7 +149,10 @@ from tiledb.cloud.rest_api.models.notebook_favorite import NotebookFavorite
 from tiledb.cloud.rest_api.models.notebook_favorites_data import NotebookFavoritesData
 from tiledb.cloud.rest_api.models.notebook_status import NotebookStatus
 from tiledb.cloud.rest_api.models.organization import Organization
-from tiledb.cloud.rest_api.models.organization_roles import OrganizationRoles
+from tiledb.cloud.rest_api.models.organization_roles import (
+    OrganizationRole,
+    OrganizationRoles,
+)
 from tiledb.cloud.rest_api.models.organization_update import OrganizationUpdate
 from tiledb.cloud.rest_api.models.organization_user import OrganizationUser
 from tiledb.cloud.rest_api.models.pagination_metadata import PaginationMetadata

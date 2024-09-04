@@ -12,10 +12,13 @@
 
 import pprint
 import re  # noqa: F401
+from typing import Literal
 
 import six
 
 from tiledb.cloud.rest_api.configuration import Configuration
+
+OrganizationRole = Literal["owner", "admin", "read_write", "read_only"]
 
 
 class OrganizationRoles(object):

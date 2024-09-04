@@ -4,6 +4,8 @@ from tiledb.cloud import client
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud._common import utils
+from tiledb.cloud.rest_api import NamespaceAction
+from tiledb.cloud.rest_api import OrganizationRole
 from tiledb.cloud.rest_api.models.invitation_array_share_email import (
     InvitationArrayShareEmail,
 )
@@ -57,8 +59,8 @@ def invite_to_organization(
     organization: str,
     *,
     recipients: Sequence[str],
-    role: str,
-    actions: Optional[Sequence[str]] = None,
+    role: OrganizationRole,
+    actions: Optional[Sequence[NamespaceAction]] = None,
 ) -> None:
     """
     Sends email to multiple recipients with joining information

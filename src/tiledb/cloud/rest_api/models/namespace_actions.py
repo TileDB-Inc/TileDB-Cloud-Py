@@ -12,10 +12,26 @@
 
 import pprint
 import re  # noqa: F401
+from typing import Literal
 
 import six
 
 from tiledb.cloud.rest_api.configuration import Configuration
+
+NamespaceAction = Literal[
+    "read",
+    "write",
+    "create",
+    "delete",
+    "edit",
+    "read_array_logs",
+    "read_job_logs",
+    "read_object_logs",
+    "run_job",
+    "delete_organization",
+    "edit_organization",
+    "edit_billing",
+]
 
 
 class NamespaceActions(object):
