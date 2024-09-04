@@ -469,7 +469,7 @@ def apply_base(
     >>> # Open the array then run the UDF
     >>> tiledb.cloud.array.apply_base("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"]).result
     2.0
-    """  # noqa: E501
+    """
     del v2  # unused
 
     if result_format_version:
@@ -563,7 +563,7 @@ def apply(*args, **kwargs) -> Any:
     >>> # Open the array then run the UDF
     >>> tiledb.cloud.array.apply("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"])
     2.0
-    """  # noqa: E501
+    """
     return apply_base(*args, **kwargs).get()
 
 
@@ -634,7 +634,7 @@ def exec_multi_array_udf_base(
     >>> namespace = "namespace"
     >>> res = array.exec_multi_array_udf(median, array_list, namespace)
     >>> print("Median Multi UDF:\n{}\n".format(res))
-    """  # noqa: E501
+    """
     if layout:
         warnings.warn(DeprecationWarning("layout is unused."))
     if result_format_version:

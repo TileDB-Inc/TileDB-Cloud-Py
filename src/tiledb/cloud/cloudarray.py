@@ -32,5 +32,5 @@ class CloudArray(object):
             # Open the array then run the UDF
             with tiledb.SparseArray("tiledb://TileDB-Inc/quickstart_dense", ctx=tiledb.cloud.ctx()) as A:
                 A.apply(median, [(0,5), (0,5)], attrs=["a", "b", "c"])
-        """  # noqa: E501
+        """
         return array.apply(self.uri, *args, **kwargs)  # pylint: disable=E1101

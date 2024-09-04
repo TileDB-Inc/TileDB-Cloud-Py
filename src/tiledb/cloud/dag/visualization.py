@@ -128,7 +128,7 @@ def hierarchy_pos(
     **leaf_vs_root_factor**
 
     xcenter: horizontal location of root
-    """  # noqa: E501
+    """
     import networkx as nx
 
     if not nx.is_tree(G):
