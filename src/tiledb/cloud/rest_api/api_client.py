@@ -18,11 +18,9 @@ import os
 import re
 import tempfile
 from multiprocessing.pool import ThreadPool
+from urllib.parse import quote
 
-# python 2 and python 3 compatibility library
-import six
 from dateutil.parser import parse
-from six.moves.urllib.parse import quote
 
 from tiledb.cloud._common import json_safe
 from tiledb.cloud.rest_api import models
@@ -54,7 +52,7 @@ class ApiClient(object):
         to the API. More threads means more concurrent API requests.
     """
 
-    PRIMITIVE_TYPES = (float, bool, bytes, six.text_type) + six.integer_types
+    PRIMITIVE_TYPES = (float, bool, bytes, str, int)
     NATIVE_TYPES_MAPPING = {
         "int": int,
         "long": int,
@@ -212,7 +210,7 @@ class ApiClient(object):
                 _request_timeout=_request_timeout,
             )
         except ApiException as e:
-            e.body = e.body.decode("utf-8") if six.PY3 else e.body
+            e.body = e.body.decode("utf-8")
             raise e
 
         content_type = response_data.getheader("content-type")
@@ -224,7 +222,7 @@ class ApiClient(object):
         if not _preload_content:
             return return_data
 
-        if six.PY3 and response_type not in ["file", "bytes"]:
+        if response_type not in ["file", "bytes"]:
             match = None
             if content_type is not None:
                 match = re.search(r"charset=([a-zA-Z\-\d]+)[\s\;]?", content_type)
@@ -668,7 +666,7 @@ class ApiClient(object):
         try:
             return klass(data)
         except UnicodeEncodeError:
-            return six.text_type(data)
+            return str(data)
         except TypeError:
             return data
 
