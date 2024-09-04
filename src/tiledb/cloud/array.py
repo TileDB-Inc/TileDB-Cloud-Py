@@ -467,7 +467,12 @@ def apply_base(
     >>> def median(df):
     ...   return numpy.median(df["a"])
     >>> # Open the array then run the UDF
-    >>> tiledb.cloud.array.apply_base("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"]).result
+    >>> tiledb.cloud.array.apply_base(
+    ...     "tiledb://TileDB-Inc/quickstart_dense",
+    ...     median,
+    ...     [(0,5), (0,5)],
+    ...     attrs=["a", "b", "c"]
+    ... ).result
     2.0
     """
     del v2  # unused
@@ -561,7 +566,12 @@ def apply(*args, **kwargs) -> Any:
     >>> def median(df):
     ...   return numpy.median(df["a"])
     >>> # Open the array then run the UDF
-    >>> tiledb.cloud.array.apply("tiledb://TileDB-Inc/quickstart_dense", median, [(0,5), (0,5)], attrs=["a", "b", "c"])
+    >>> tiledb.cloud.array.apply(
+    ...     "tiledb://TileDB-Inc/quickstart_dense",
+    ...     median,
+    ...     [(0,5), (0,5)],
+    ...     attrs=["a", "b", "c"]
+    ... )
     2.0
     """
     return apply_base(*args, **kwargs).get()
@@ -627,7 +637,10 @@ def exec_multi_array_udf_base(
     >>> dense_array = "tiledb://andreas/quickstart_dense_local"
     >>> sparse_array = "tiledb://andreas/quickstart_sparse_local"
     >>> def median(numpy_ordered_dictionary):
-    ...    return np.median(numpy_ordered_dictionary[0]["a"]) + np.median(numpy_ordered_dictionary[1]["a"])
+    ...     return (
+    ...         np.median(numpy_ordered_dictionary[0]["a"]) +
+    ...         np.median(numpy_ordered_dictionary[1]["a"])
+    ...     )
     >>> array_list = array.ArrayList()
     >>> array_list.add(dense_array, [(1, 4), (1, 4)], ["a"])
     >>> array_list.add(sparse_array, [(1, 2), (1, 4)], ["a"])

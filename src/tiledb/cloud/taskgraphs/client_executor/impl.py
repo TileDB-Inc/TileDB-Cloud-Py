@@ -325,7 +325,9 @@ class LocalExecutor(_base.IClientExecutor):
         # Using an explicit annotation here because, while collections.abc–based
         # sets accept any iterable in __and__, that can't be reflected in
         # typeshed because the `set` builtin does not do so.
-        eligible: ordered.Set[Node] = self._unstarted_nodes & self._active_deps.roots()  # type: ignore[assignment,operator]
+        eligible: ordered.Set[Node] = (
+            self._unstarted_nodes & self._active_deps.roots()
+        )  # type: ignore[assignment,operator]
         for node in eligible:
             self._maybe_start(node)
 
