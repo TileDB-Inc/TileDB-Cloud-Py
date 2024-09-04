@@ -1,6 +1,6 @@
 """Re-exporting the ``api_client`` namespace."""
 
-from tiledb.cloud.rest_api.api_client import *  # noqa: F401,F403
+from tiledb.cloud.rest_api.api_client import *  # noqa: F403
 
 _ApiClientCls = ApiClient  # noqa: F405
 
