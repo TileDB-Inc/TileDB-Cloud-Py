@@ -12,14 +12,12 @@
 
 from __future__ import absolute_import
 
-import re  # noqa: F401
-
 # python 2 and python 3 compatibility library
 import six
 
 from tiledb.cloud.rest_api.api_client import ApiClient
-from tiledb.cloud.rest_api.exceptions import ApiTypeError  # noqa: F401
-from tiledb.cloud.rest_api.exceptions import ApiValueError  # noqa: F401
+from tiledb.cloud.rest_api.exceptions import ApiTypeError
+from tiledb.cloud.rest_api.exceptions import ApiValueError
 
 
 class FavoritesApi(object):

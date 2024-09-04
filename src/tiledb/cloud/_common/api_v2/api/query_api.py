@@ -12,14 +12,12 @@
 
 from __future__ import absolute_import
 
-import re  # noqa: F401
-
 # python 2 and python 3 compatibility library
 import six
 
 from tiledb.cloud._common.api_v2.api_client import ApiClient
-from tiledb.cloud._common.api_v2.exceptions import ApiTypeError  # noqa: F401
-from tiledb.cloud._common.api_v2.exceptions import ApiValueError  # noqa: F401
+from tiledb.cloud._common.api_v2.exceptions import ApiTypeError
+from tiledb.cloud._common.api_v2.exceptions import ApiValueError
 
 
 class QueryApi(object):

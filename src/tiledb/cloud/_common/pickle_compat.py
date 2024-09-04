@@ -238,7 +238,7 @@ def patch_pandas() -> None:
     # pandas._libs.arrays is used by certain pickles that use storage
     # backed by NumPy NDArrays.
     try:
-        import pandas._libs.arrays as _unused_pla  # noqa: F401
+        pass
     except ImportError:
         import pandas._libs as pdlibs
 
