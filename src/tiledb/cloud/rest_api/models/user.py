@@ -13,8 +13,6 @@
 import pprint
 import re
 
-import six
-
 from tiledb.cloud.rest_api.configuration import Configuration
 
 
@@ -641,7 +639,7 @@ class User(object):
         """Returns the model properties as a dict"""
         result = {}
 
-        for attr, _ in six.iteritems(self.openapi_types):
+        for attr, _ in self.openapi_types.items():
             value = getattr(self, attr)
             if isinstance(value, list):
                 result[attr] = list(

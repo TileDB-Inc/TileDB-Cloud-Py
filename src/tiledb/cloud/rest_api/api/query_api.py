@@ -13,8 +13,6 @@
 from __future__ import absolute_import
 
 # python 2 and python 3 compatibility library
-import six
-
 from tiledb.cloud.rest_api.api_client import ApiClient
 from tiledb.cloud.rest_api.exceptions import ApiTypeError
 from tiledb.cloud.rest_api.exceptions import ApiValueError
@@ -118,7 +116,7 @@ class QueryApi(object):
             ]
         )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in local_var_params["kwargs"].items():
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
@@ -308,7 +306,7 @@ class QueryApi(object):
             ]
         )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in local_var_params["kwargs"].items():
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
@@ -478,7 +476,7 @@ class QueryApi(object):
             ]
         )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in local_var_params["kwargs"].items():
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
@@ -641,7 +639,7 @@ class QueryApi(object):
             ]
         )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in local_var_params["kwargs"].items():
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
@@ -817,7 +815,7 @@ class QueryApi(object):
             ]
         )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in local_var_params["kwargs"].items():
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"

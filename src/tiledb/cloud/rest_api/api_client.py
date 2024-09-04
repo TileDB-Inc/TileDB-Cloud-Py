@@ -279,13 +279,12 @@ class ApiClient(object):
             # model definition for request.
             obj_dict = {
                 obj.attribute_map[attr]: getattr(obj, attr)
-                for attr, _ in six.iteritems(obj.openapi_types)
+                for attr, _ in obj.openapi_types.items()
                 if getattr(obj, attr) is not None
             }
 
         return {
-            key: self.sanitize_for_serialization(val)
-            for key, val in six.iteritems(obj_dict)
+            key: self.sanitize_for_serialization(val) for key, val in obj_dict.items()
         }
 
     def deserialize(self, response, response_type):
@@ -328,9 +327,7 @@ class ApiClient(object):
 
             if klass.startswith("dict("):
                 sub_kls = re.match(r"dict\(([^,]*), (.*)\)", klass).group(2)
-                return {
-                    k: self.__deserialize(v, sub_kls) for k, v in six.iteritems(data)
-                }
+                return {k: self.__deserialize(v, sub_kls) for k, v in data.items()}
 
             # convert str to class
             if klass in self.NATIVE_TYPES_MAPPING:
@@ -535,7 +532,7 @@ class ApiClient(object):
         new_params = []
         if collection_formats is None:
             collection_formats = {}
-        for k, v in six.iteritems(params) if isinstance(params, dict) else params:
+        for k, v in params.items() if isinstance(params, dict) else params:
             if k in collection_formats:
                 collection_format = collection_formats[k]
                 if collection_format == "multi":
@@ -563,7 +560,7 @@ class ApiClient(object):
         params = []
 
         if files:
-            for k, v in six.iteritems(files):
+            for k, v in files.items():
                 if not v:
                     continue
                 file_names = v if type(v) is list else [v]
@@ -738,7 +735,7 @@ class ApiClient(object):
             and klass.openapi_types is not None
             and isinstance(data, (list, dict))
         ):
-            for attr, attr_type in six.iteritems(klass.openapi_types):
+            for attr, attr_type in klass.openapi_types.items():
                 if klass.attribute_map[attr] in data:
                     value = data[klass.attribute_map[attr]]
                     kwargs[attr] = self.__deserialize(value, attr_type)
