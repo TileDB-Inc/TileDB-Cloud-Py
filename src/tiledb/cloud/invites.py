@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Optional, Sequence
 
 from tiledb.cloud import client
 from tiledb.cloud import rest_api
@@ -54,7 +54,11 @@ def fetch_invitations(**filters):
 
 
 def invite_to_organization(
-    organization: str, *, recipients: Sequence[str], role: str
+    organization: str,
+    *,
+    recipients: Sequence[str],
+    role: str,
+    actions: Optional[Sequence[str]] = None,
 ) -> None:
     """
     Sends email to multiple recipients with joining information
@@ -66,7 +70,9 @@ def invite_to_organization(
     :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
-    email_invite = InvitationOrganizationJoinEmail(role, recipients)
+    email_invite = InvitationOrganizationJoinEmail(
+        actions=actions, organization_role=role, invitee_email=recipients
+    )
     try:
         return invitation_api.join_organization(organization, email_invite)
     except rest_api.ApiException as exc:
