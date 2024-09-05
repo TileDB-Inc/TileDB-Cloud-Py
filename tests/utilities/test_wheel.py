@@ -1,4 +1,5 @@
 import os
+import shutil
 import sys
 import uuid
 
@@ -13,14 +14,13 @@ from tiledb.cloud.utilities.wheel import PipInstall
 
 logger = get_logger()
 
-_LOCAL_WHEEL = "tests/utilities/data/fake_unittest_wheel-0.1.0-py3-none-any.whl"
+_TAG = str(uuid.uuid4())[-8:]
+_LOCAL_WHEEL_ORIG = "tests/utilities/data/fake_unittest_wheel-0.1.0-py3-none-any.whl"
+# Add random tag to avoid collisions between concurrent tests
+_LOCAL_WHEEL = f"tests/utilities/data/fake_unittest_wheel-0.1.0-{_TAG}-py3-none-any.whl"
 _ARRAY_NAME = os.path.basename(_LOCAL_WHEEL)
 _NAMESPACE = tiledb.cloud.client.default_user().username
-# Add random suffix to avoid collisions between concurrent tests
-_S3_OBJECT_PATH = (
-    tiledb.cloud.client.default_user().default_s3_path
-    + f"/test-wheel-{str(uuid.uuid4())[-8:]}"
-)
+_S3_OBJECT_PATH = tiledb.cloud.client.default_user().default_s3_path
 _FULL_URI = os.path.join(
     "tiledb://",
     _NAMESPACE,
@@ -29,6 +29,19 @@ _FULL_URI = os.path.join(
 )
 _TDB_URI = os.path.join("tiledb://", _NAMESPACE, _ARRAY_NAME)
 _CONFIG = tiledb.cloud.Config()
+
+
+@pytest.fixture(scope="module", autouse=True)
+def tag_wheel():
+    """Make a tagged copy of the wheel before running tests."""
+
+    logger.info(f"Copying {_LOCAL_WHEEL_ORIG} to {_LOCAL_WHEEL}")
+    shutil.copy(_LOCAL_WHEEL_ORIG, _LOCAL_WHEEL)
+
+    yield None
+
+    logger.info(f"Removing {_LOCAL_WHEEL}")
+    os.remove(_LOCAL_WHEEL)
 
 
 @pytest.fixture
