@@ -32,8 +32,13 @@ _CONFIG = tiledb.cloud.Config()
 
 
 @pytest.fixture(scope="module", autouse=True)
-def tag_wheel():
+def tag_wheel(tmp_path_factory):
     """Make a tagged copy of the wheel before running tests."""
+
+    global _LOCAL_WHEEL
+
+    tmp_path = tmp_path_factory.mktemp("wheel")
+    _LOCAL_WHEEL = os.path.join(tmp_path, os.path.basename(_LOCAL_WHEEL))
 
     logger.info(f"Copying {_LOCAL_WHEEL_ORIG} to {_LOCAL_WHEEL}")
     shutil.copy(_LOCAL_WHEEL_ORIG, _LOCAL_WHEEL)
