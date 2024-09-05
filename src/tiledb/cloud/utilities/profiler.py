@@ -81,7 +81,7 @@ def write_log_event(
         }
 
 
-class Profiler(object):
+class Profiler:
     """
     A context manager–based profiler to log events and CPU and memory usage
     to a TileDB array.

@@ -145,7 +145,7 @@ index 97319c27..f2307414 100644
  from tiledb.cloud.rest_api import rest
  from tiledb.cloud.rest_api.configuration import Configuration
  from tiledb.cloud.rest_api.exceptions import ApiException
-@@ -73,6 +74,7 @@ class ApiClient(object):
+@@ -73,6 +74,7 @@ class ApiClient:
          header_value=None,
          cookie=None,
          pool_threads=1,
@@ -153,7 +153,7 @@ index 97319c27..f2307414 100644
      ):
          if configuration is None:
              configuration = Configuration.get_default_copy()
-@@ -87,6 +89,12 @@ class ApiClient(object):
+@@ -87,6 +89,12 @@ class ApiClient:
          # Set default User-Agent.
          self.user_agent = "OpenAPI-Generator/1.0.0/python"
          self.client_side_validation = configuration.client_side_validation
@@ -166,7 +166,7 @@ index 97319c27..f2307414 100644
 
      def __enter__(self):
          return self
-@@ -250,6 +258,8 @@ class ApiClient(object):
+@@ -250,6 +258,8 @@ class ApiClient:
          """
          if obj is None:
              return None
@@ -175,7 +175,7 @@ index 97319c27..f2307414 100644
          elif isinstance(obj, self.PRIMITIVE_TYPES):
              return obj
          elif isinstance(obj, list):
-@@ -326,7 +336,7 @@ class ApiClient(object):
+@@ -326,7 +336,7 @@ class ApiClient:
              if klass in self.NATIVE_TYPES_MAPPING:
                  klass = self.NATIVE_TYPES_MAPPING[klass]
              else:
