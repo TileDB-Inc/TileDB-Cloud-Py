@@ -129,16 +129,18 @@ jobs:
         run: |
           if [ -f .test_durations ]; then
             echo ".test_durations file exists."
-            cat .test_durations
+            file_content=$(cat .test_durations)
+            echo $file_content
+            if [ "$file_content" = "null" ]; then
+              echo "Removing 'null' .test_durations file."
+              rm .test_durations
+            fi
           else
             echo ".test_durations file does not exist."
           fi
 
       - name: Run tests
         # Test pinned dependencies on commit / tag and fresh installs on nightlies
-        # TODO: restore the spltting algorithm after debugging
-        #            --splitting-algorithm least_duration \
-
         if: (matrix.dependencies == 'fresh') == (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         run: |
           pytest -sv \
@@ -147,6 +149,7 @@ jobs:
             --splits ${{ env.PYTEST_SPLIT_GROUPS }} \
             --group ${{ matrix.pytest-split-group }} \
             --store-durations \
+            --splitting-algorithm least_duration \
             --clean-durations \
           || .github/scripts/retry 2 \
             pytest -sv \
