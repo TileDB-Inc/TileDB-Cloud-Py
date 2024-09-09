@@ -231,9 +231,7 @@ def upload_file(
         namespace = urllib.parse.quote(namespace)
         name = urllib.parse.quote(name, safe="")
 
-        request_url = (
-            f"{config.config.host}/v2/notebooks/{namespace}/{name}/upload?{query}"
-        )
+        request_url = f"{config.config.host}/v2/files/{namespace}/{name}/upload?{query}"
 
         while True:
             resp = pool.request(

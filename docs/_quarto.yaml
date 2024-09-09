@@ -107,6 +107,8 @@ website:
             href: reference/vcf.query.qmd
           - text: "`utils`"
             href: reference/vcf.utils.qmd
+          - text: "`split`"
+            href: reference/vcf.split.qmd
       - section: Utilities
         contents:
           - text: "`consolidate`"
@@ -196,6 +198,7 @@ quartodoc:
         - vcf.ingestion
         - vcf.query
         - vcf.utils
+        - vcf.split
 
     - title: utilities
       desc: Common Utilities API
