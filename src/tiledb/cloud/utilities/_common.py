@@ -445,7 +445,7 @@ def find(
     include: Optional[Union[str, Callable]] = None,
     exclude: Optional[Union[str, Callable]] = None,
     max_count: Optional[int] = None,
-) -> Iterator[str]:
+) -> Sequence[str]:
     """Searches a path for files matching the include/exclude pattern using VFS.
 
     :param uri: Input path to search
@@ -455,44 +455,42 @@ def find(
     :param max_count: Optional stop point when searching for files
     """
     with tiledb.scope_ctx(config):
-        vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
-        listing = vfs.ls(uri)
-        current_count = 0
+        vfs = tiledb.VFS()
 
-        def list_files(listing):
-            for f in listing:
-                # Avoid infinite recursion
-                if f == uri:
-                    continue
+        uris = []
 
-                if vfs.is_dir(f):
-                    yield from list_files(
-                        vfs.ls(f),
-                    )
-                else:
-                    # Skip files that do not match the include pattern or match
-                    # the exclude pattern.
-                    if callable(include):
-                        if not include(f):
-                            continue
-                    else:
-                        if include and not fnmatch(f, include):
-                            continue
+        def callback(uri, size_bytes):
+            """Process each file found by the VFS.ls_recursive call"""
 
-                    if callable(exclude):
-                        if exclude(f):
-                            continue
-                    else:
-                        if exclude and fnmatch(f, exclude):
-                            continue
-                    yield f
+            # Return True to continue searching for files without adding `uri`
+            # to the list of URIs found.
+            if include:
+                if not callable(include) and not fnmatch(uri, include):
+                    return True
+                elif callable(include) and not include(uri):
+                    return True
+            if exclude:
+                if not callable(exclude) and fnmatch(uri, exclude):
+                    return True
+                elif callable(exclude) and exclude(uri):
+                    return True
 
-        for f in list_files(listing):
-            yield f
+            # Skip directories and continue searching.
+            if vfs.is_dir(uri):
+                return True
 
-            current_count += 1
-            if max_count and current_count == max_count:
-                return
+            # Add to the list of URIs found
+            uris.append(uri)
+
+            # Stop `ls_recursive` if the maximum count is reached.
+            if max_count and len(uris) >= max_count:
+                return False
+
+            return True
+
+        vfs.ls_recursive(uri, callback=callback)
+
+        return uris
 
 
 T = TypeVar("T")
