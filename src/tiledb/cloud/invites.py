@@ -67,6 +67,7 @@ def invite_to_organization(
     :param organization: name or UUID of organization.
     :param recipients: list of recipient emails/usernames.
     :param role: role assigned to the recipient.
+    :param actions: an optional sequence of actions.
     :return: None
     """
     invitation_api = client.build(rest_api.InvitationApi)
