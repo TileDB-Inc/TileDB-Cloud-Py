@@ -455,7 +455,7 @@ def find(
     :param max_count: Optional stop point when searching for files
     """
     with tiledb.scope_ctx(config):
-        vfs = tiledb.VFS()
+        vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
 
         uris = []
 
