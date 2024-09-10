@@ -8,6 +8,7 @@ import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import wait
+from concurrent.futures._base import TimeoutError
 from fnmatch import fnmatch
 from typing import (
     Any,
@@ -193,6 +194,74 @@ def run_dag(
             _print_logs(graph, debug=debug)
             raise
     _print_logs(graph, debug=debug)
+
+
+def submit_taskgraph(
+    graph: dag.DAG,
+    *,
+    wait: bool = True,
+    update_sec: int = 10,
+) -> Mapping[str, str]:
+    """
+    Submit a taskgraph and optionally wait for completion.
+
+    :param graph: taskgraph to submit
+    :param wait: wait for the taskgraph to complete, defaults to True
+    :param update_sec: interval in seconds to update the progress bar, defaults to 10
+    :return: dictionary with status and graph_id
+    """
+
+    # Try to import tqdm, if not available, stub it out
+    try:
+        from tqdm import tqdm
+    except ImportError:
+
+        class tqdm:
+            def __init__(self, *args, **kwargs):
+                print("Please install tqdm to display a progress timer.")
+
+            def set_description_str(self, *args, **kwargs):
+                pass
+
+    graph.compute()
+
+    # Display a link to the log in TileDB, if available
+    if graph.server_graph_uuid:
+        print(
+            f"Taskgraph submitted to TileDB - https://cloud.tiledb.com/activity/taskgraphs/{graph.namespace}/{graph.server_graph_uuid}",
+        )
+
+    if wait:
+        # Display the progress bar in stdout, so the output is not red in a notebook
+        pbar = tqdm(
+            desc="Not Started",
+            bar_format="{desc}: {elapsed} (min:sec)",
+            file=sys.stdout,
+        )
+        cancelled = False
+
+        while True:
+            try:
+                graph.wait(update_sec)
+            except TimeoutError:
+                # Still running
+                pbar.set_description_str(str(graph.status))
+                continue
+            except RuntimeError as e:
+                if "No executions found for done Node" in str(e):
+                    cancelled = True
+            except StopIteration:
+                cancelled = True
+
+            if cancelled:
+                pbar.set_description("Cancelled")
+                return {"status": "Cancelled", "graph_id": str(graph.server_graph_uuid)}
+
+            # The taskgraph is done, break the loop
+            pbar.set_description_str(str(graph.status))
+            break
+
+    return {"status": str(graph.status), "graph_id": str(graph.server_graph_uuid)}
 
 
 def _print_logs(

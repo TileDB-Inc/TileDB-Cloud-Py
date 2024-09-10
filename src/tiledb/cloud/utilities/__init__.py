@@ -10,6 +10,7 @@ from ._common import read_file
 from ._common import run_dag
 from ._common import serialize_filter
 from ._common import set_aws_context
+from ._common import submit_taskgraph
 from .consolidate import consolidate_and_vacuum
 from .consolidate import consolidate_fragments
 from .consolidate import group_fragments
@@ -31,6 +32,7 @@ __all__ = [
     "read_file",
     "run_dag",
     "set_aws_context",
+    "submit_taskgraph",
     "consolidate_fragments",
     "consolidate_and_vacuum",
     "group_fragments",
