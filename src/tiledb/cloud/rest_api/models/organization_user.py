@@ -36,6 +36,8 @@ class OrganizationUser(object):
         "user_id": "str",
         "organization_id": "str",
         "username": "str",
+        "user_full_name": "str",
+        "user_email": "str",
         "organization_name": "str",
         "role": "OrganizationRoles",
         "allowed_actions": "list[NamespaceActions]",
@@ -45,6 +47,8 @@ class OrganizationUser(object):
         "user_id": "user_id",
         "organization_id": "organization_id",
         "username": "username",
+        "user_full_name": "user_full_name",
+        "user_email": "user_email",
         "organization_name": "organization_name",
         "role": "role",
         "allowed_actions": "allowed_actions",
@@ -55,6 +59,8 @@ class OrganizationUser(object):
         user_id=None,
         organization_id=None,
         username=None,
+        user_full_name=None,
+        user_email=None,
         organization_name=None,
         role=None,
         allowed_actions=None,
@@ -68,6 +74,8 @@ class OrganizationUser(object):
         self._user_id = None
         self._organization_id = None
         self._username = None
+        self._user_full_name = None
+        self._user_email = None
         self._organization_name = None
         self._role = None
         self._allowed_actions = None
@@ -79,6 +87,10 @@ class OrganizationUser(object):
             self.organization_id = organization_id
         if username is not None:
             self.username = username
+        if user_full_name is not None:
+            self.user_full_name = user_full_name
+        if user_email is not None:
+            self.user_email = user_email
         if organization_name is not None:
             self.organization_name = organization_name
         if role is not None:
@@ -154,6 +166,52 @@ class OrganizationUser(object):
         """
 
         self._username = username
+
+    @property
+    def user_full_name(self):
+        """Gets the user_full_name of this OrganizationUser.  # noqa: E501
+
+        full name of the user; available to organization admins  # noqa: E501
+
+        :return: The user_full_name of this OrganizationUser.  # noqa: E501
+        :rtype: str
+        """
+        return self._user_full_name
+
+    @user_full_name.setter
+    def user_full_name(self, user_full_name):
+        """Sets the user_full_name of this OrganizationUser.
+
+        full name of the user; available to organization admins  # noqa: E501
+
+        :param user_full_name: The user_full_name of this OrganizationUser.  # noqa: E501
+        :type: str
+        """
+
+        self._user_full_name = user_full_name
+
+    @property
+    def user_email(self):
+        """Gets the user_email of this OrganizationUser.  # noqa: E501
+
+        email address of the user; available to organization admins  # noqa: E501
+
+        :return: The user_email of this OrganizationUser.  # noqa: E501
+        :rtype: str
+        """
+        return self._user_email
+
+    @user_email.setter
+    def user_email(self, user_email):
+        """Sets the user_email of this OrganizationUser.
+
+        email address of the user; available to organization admins  # noqa: E501
+
+        :param user_email: The user_email of this OrganizationUser.  # noqa: E501
+        :type: str
+        """
+
+        self._user_email = user_email
 
     @property
     def organization_name(self):

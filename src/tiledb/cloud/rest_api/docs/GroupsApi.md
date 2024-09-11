@@ -1538,7 +1538,7 @@ group_name = 'group_name_example' # str | The unique name or id of the group
 
 # **list_owned_groups**
 
-> GroupBrowserData list_owned_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+> GroupBrowserData list_owned_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, with_metadata=with_metadata)
 
 Returns one page of owned groups.
 
@@ -1594,9 +1594,10 @@ tag = ['tag_example'] # list[str] | tag to search for, more than one can be incl
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 flat = True # bool | if true, ignores the nesting of groups and searches all of them (optional)
 parent = 'parent_example' # str | search only the children of the groups with this uuid (optional)
+with_metadata = True # bool | include the metadata of the groups (optional)
 
     try:
-        api_response = api_instance.list_owned_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+        api_response = api_instance.list_owned_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, with_metadata=with_metadata)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->list_owned_groups: %s\n" % e)
@@ -1652,9 +1653,10 @@ tag = ['tag_example'] # list[str] | tag to search for, more than one can be incl
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 flat = True # bool | if true, ignores the nesting of groups and searches all of them (optional)
 parent = 'parent_example' # str | search only the children of the groups with this uuid (optional)
+with_metadata = True # bool | include the metadata of the groups (optional)
 
     try:
-        api_response = api_instance.list_owned_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+        api_response = api_instance.list_owned_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, with_metadata=with_metadata)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->list_owned_groups: %s\n" % e)
@@ -1662,19 +1664,20 @@ parent = 'parent_example' # str | search only the children of the groups with th
 
 ### Parameters
 
-| Name            | Type                    | Description                                                              | Notes      |
-| --------------- | ----------------------- | ------------------------------------------------------------------------ | ---------- |
-| **page**        | **int**                 | pagination offset                                                        | [optional] |
-| **per_page**    | **int**                 | pagination limit                                                         | [optional] |
-| **group_type**  | **str**                 | filter by a specific group type                                          | [optional] |
-| **search**      | **str**                 | search string that will look at name, namespace or description fields    | [optional] |
-| **namespace**   | **str**                 | namespace                                                                | [optional] |
-| **orderby**     | **str**                 | sort by which field valid values include last_accessed, size, name       | [optional] |
-| **permissions** | **str**                 | permissions valid values include read, read_write, write, admin          | [optional] |
-| **tag**         | [**list[str]**](str.md) | tag to search for, more than one can be included                         | [optional] |
-| **exclude_tag** | [**list[str]**](str.md) | tags to exclude matching array in results, more than one can be included | [optional] |
-| **flat**        | **bool**                | if true, ignores the nesting of groups and searches all of them          | [optional] |
-| **parent**      | **str**                 | search only the children of the groups with this uuid                    | [optional] |
+| Name              | Type                    | Description                                                              | Notes      |
+| ----------------- | ----------------------- | ------------------------------------------------------------------------ | ---------- |
+| **page**          | **int**                 | pagination offset                                                        | [optional] |
+| **per_page**      | **int**                 | pagination limit                                                         | [optional] |
+| **group_type**    | **str**                 | filter by a specific group type                                          | [optional] |
+| **search**        | **str**                 | search string that will look at name, namespace or description fields    | [optional] |
+| **namespace**     | **str**                 | namespace                                                                | [optional] |
+| **orderby**       | **str**                 | sort by which field valid values include last_accessed, size, name       | [optional] |
+| **permissions**   | **str**                 | permissions valid values include read, read_write, write, admin          | [optional] |
+| **tag**           | [**list[str]**](str.md) | tag to search for, more than one can be included                         | [optional] |
+| **exclude_tag**   | [**list[str]**](str.md) | tags to exclude matching array in results, more than one can be included | [optional] |
+| **flat**          | **bool**                | if true, ignores the nesting of groups and searches all of them          | [optional] |
+| **parent**        | **str**                 | search only the children of the groups with this uuid                    | [optional] |
+| **with_metadata** | **bool**                | include the metadata of the groups                                       | [optional] |
 
 ### Return type
 
@@ -1701,7 +1704,7 @@ parent = 'parent_example' # str | search only the children of the groups with th
 
 # **list_public_groups**
 
-> GroupBrowserData list_public_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+> GroupBrowserData list_public_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, with_metadata=with_metadata)
 
 Returns one page of public groups.
 
@@ -1757,9 +1760,10 @@ tag = ['tag_example'] # list[str] | tag to search for, more than one can be incl
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 flat = True # bool | if true, ignores the nesting of groups and searches all of them (optional)
 parent = 'parent_example' # str | search only the children of the groups with this uuid (optional)
+with_metadata = True # bool | include the metadata of the groups (optional)
 
     try:
-        api_response = api_instance.list_public_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+        api_response = api_instance.list_public_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, with_metadata=with_metadata)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->list_public_groups: %s\n" % e)
@@ -1815,9 +1819,10 @@ tag = ['tag_example'] # list[str] | tag to search for, more than one can be incl
 exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching array in results, more than one can be included (optional)
 flat = True # bool | if true, ignores the nesting of groups and searches all of them (optional)
 parent = 'parent_example' # str | search only the children of the groups with this uuid (optional)
+with_metadata = True # bool | include the metadata of the groups (optional)
 
     try:
-        api_response = api_instance.list_public_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent)
+        api_response = api_instance.list_public_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, with_metadata=with_metadata)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->list_public_groups: %s\n" % e)
@@ -1825,19 +1830,20 @@ parent = 'parent_example' # str | search only the children of the groups with th
 
 ### Parameters
 
-| Name            | Type                    | Description                                                              | Notes      |
-| --------------- | ----------------------- | ------------------------------------------------------------------------ | ---------- |
-| **page**        | **int**                 | pagination offset                                                        | [optional] |
-| **per_page**    | **int**                 | pagination limit                                                         | [optional] |
-| **group_type**  | **str**                 | filter by a specific group type                                          | [optional] |
-| **search**      | **str**                 | search string that will look at name, namespace or description fields    | [optional] |
-| **namespace**   | **str**                 | namespace                                                                | [optional] |
-| **orderby**     | **str**                 | sort by which field valid values include last_accessed, size, name       | [optional] |
-| **permissions** | **str**                 | permissions valid values include read, read_write, write, admin          | [optional] |
-| **tag**         | [**list[str]**](str.md) | tag to search for, more than one can be included                         | [optional] |
-| **exclude_tag** | [**list[str]**](str.md) | tags to exclude matching array in results, more than one can be included | [optional] |
-| **flat**        | **bool**                | if true, ignores the nesting of groups and searches all of them          | [optional] |
-| **parent**      | **str**                 | search only the children of the groups with this uuid                    | [optional] |
+| Name              | Type                    | Description                                                              | Notes      |
+| ----------------- | ----------------------- | ------------------------------------------------------------------------ | ---------- |
+| **page**          | **int**                 | pagination offset                                                        | [optional] |
+| **per_page**      | **int**                 | pagination limit                                                         | [optional] |
+| **group_type**    | **str**                 | filter by a specific group type                                          | [optional] |
+| **search**        | **str**                 | search string that will look at name, namespace or description fields    | [optional] |
+| **namespace**     | **str**                 | namespace                                                                | [optional] |
+| **orderby**       | **str**                 | sort by which field valid values include last_accessed, size, name       | [optional] |
+| **permissions**   | **str**                 | permissions valid values include read, read_write, write, admin          | [optional] |
+| **tag**           | [**list[str]**](str.md) | tag to search for, more than one can be included                         | [optional] |
+| **exclude_tag**   | [**list[str]**](str.md) | tags to exclude matching array in results, more than one can be included | [optional] |
+| **flat**          | **bool**                | if true, ignores the nesting of groups and searches all of them          | [optional] |
+| **parent**        | **str**                 | search only the children of the groups with this uuid                    | [optional] |
+| **with_metadata** | **bool**                | include the metadata of the groups                                       | [optional] |
 
 ### Return type
 
@@ -1864,7 +1870,7 @@ parent = 'parent_example' # str | search only the children of the groups with th
 
 # **list_shared_groups**
 
-> GroupBrowserData list_shared_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to)
+> GroupBrowserData list_shared_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to, with_metadata=with_metadata)
 
 Returns one page of shared groups.
 
@@ -1921,9 +1927,10 @@ exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching arr
 flat = True # bool | if true, ignores the nesting of groups and searches all of them (optional)
 parent = 'parent_example' # str | search only the children of the groups with this uuid (optional)
 shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of where there groups were shared to (optional)
+with_metadata = True # bool | include the metadata of the groups (optional)
 
     try:
-        api_response = api_instance.list_shared_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to)
+        api_response = api_instance.list_shared_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to, with_metadata=with_metadata)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->list_shared_groups: %s\n" % e)
@@ -1980,9 +1987,10 @@ exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching arr
 flat = True # bool | if true, ignores the nesting of groups and searches all of them (optional)
 parent = 'parent_example' # str | search only the children of the groups with this uuid (optional)
 shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of where there groups were shared to (optional)
+with_metadata = True # bool | include the metadata of the groups (optional)
 
     try:
-        api_response = api_instance.list_shared_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to)
+        api_response = api_instance.list_shared_groups(page=page, per_page=per_page, group_type=group_type, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, flat=flat, parent=parent, shared_to=shared_to, with_metadata=with_metadata)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling GroupsApi->list_shared_groups: %s\n" % e)
@@ -1990,20 +1998,21 @@ shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of 
 
 ### Parameters
 
-| Name            | Type                    | Description                                                              | Notes      |
-| --------------- | ----------------------- | ------------------------------------------------------------------------ | ---------- |
-| **page**        | **int**                 | pagination offset                                                        | [optional] |
-| **per_page**    | **int**                 | pagination limit                                                         | [optional] |
-| **group_type**  | **str**                 | filter by a specific group type                                          | [optional] |
-| **search**      | **str**                 | search string that will look at name, namespace or description fields    | [optional] |
-| **namespace**   | **str**                 | namespace                                                                | [optional] |
-| **orderby**     | **str**                 | sort by which field valid values include last_accessed, size, name       | [optional] |
-| **permissions** | **str**                 | permissions valid values include read, read_write, write, admin          | [optional] |
-| **tag**         | [**list[str]**](str.md) | tag to search for, more than one can be included                         | [optional] |
-| **exclude_tag** | [**list[str]**](str.md) | tags to exclude matching array in results, more than one can be included | [optional] |
-| **flat**        | **bool**                | if true, ignores the nesting of groups and searches all of them          | [optional] |
-| **parent**      | **str**                 | search only the children of the groups with this uuid                    | [optional] |
-| **shared_to**   | [**list[str]**](str.md) | namespaces to filter results of where there groups were shared to        | [optional] |
+| Name              | Type                    | Description                                                              | Notes      |
+| ----------------- | ----------------------- | ------------------------------------------------------------------------ | ---------- |
+| **page**          | **int**                 | pagination offset                                                        | [optional] |
+| **per_page**      | **int**                 | pagination limit                                                         | [optional] |
+| **group_type**    | **str**                 | filter by a specific group type                                          | [optional] |
+| **search**        | **str**                 | search string that will look at name, namespace or description fields    | [optional] |
+| **namespace**     | **str**                 | namespace                                                                | [optional] |
+| **orderby**       | **str**                 | sort by which field valid values include last_accessed, size, name       | [optional] |
+| **permissions**   | **str**                 | permissions valid values include read, read_write, write, admin          | [optional] |
+| **tag**           | [**list[str]**](str.md) | tag to search for, more than one can be included                         | [optional] |
+| **exclude_tag**   | [**list[str]**](str.md) | tags to exclude matching array in results, more than one can be included | [optional] |
+| **flat**          | **bool**                | if true, ignores the nesting of groups and searches all of them          | [optional] |
+| **parent**        | **str**                 | search only the children of the groups with this uuid                    | [optional] |
+| **shared_to**     | [**list[str]**](str.md) | namespaces to filter results of where there groups were shared to        | [optional] |
+| **with_metadata** | **bool**                | include the metadata of the groups                                       | [optional] |
 
 ### Return type
 

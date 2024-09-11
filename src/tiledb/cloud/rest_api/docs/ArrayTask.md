@@ -35,5 +35,7 @@ Synchronous Task to Run
 | **result_format**     | [**ResultFormat**](ResultFormat.md)               |                                                                         | [optional] |
 | **task_graph_uuid**   | **str**                                           | If set, the ID of the log for the task graph that this was part of.     | [optional] |
 | **client_node_uuid**  | **str**                                           | If set, the client-defined ID of the node within this task&#39;s graph. | [optional] |
+| **cloud_provider**    | **str**                                           | The name of the cloud provider where this task executed.                | [optional] |
+| **cloud_region**      | **str**                                           | The region of the cloud provider where this task executed.              | [optional] |
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

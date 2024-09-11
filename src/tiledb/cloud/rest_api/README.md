@@ -117,6 +117,7 @@ All URIs are relative to _http://localhost_
 | _ArrayApi_                | [**get_arrays_in_namespace**](docs/ArrayApi.md#get_arrays_in_namespace)                                                                | **GET** /v1/arrays/{namespace}                                               |
 | _ArrayApi_                | [**get_fragment_end_timestamp**](docs/ArrayApi.md#get_fragment_end_timestamp)                                                          | **GET** /v1/arrays/{namespace}/{array}/fragment_end_timestamp                |
 | _ArrayApi_                | [**get_last_accessed_arrays**](docs/ArrayApi.md#get_last_accessed_arrays)                                                              | **GET** /v1/arrays/last_accessed                                             |
+| _ArrayApi_                | [**load_array_schema**](docs/ArrayApi.md#load_array_schema)                                                                            | **POST** /v1/arrays/{namespace}/{array}/schema                               |
 | _ArrayApi_                | [**load_enumerations**](docs/ArrayApi.md#load_enumerations)                                                                            | **POST** /v1/arrays/{namespace}/{array}/enumerations                         |
 | _ArrayApi_                | [**register_array**](docs/ArrayApi.md#register_array)                                                                                  | **POST** /v1/arrays/{namespace}/{array}/register                             |
 | _ArrayApi_                | [**share_array**](docs/ArrayApi.md#share_array)                                                                                        | **PATCH** /v1/arrays/{namespace}/{array}/share                               |
@@ -124,6 +125,8 @@ All URIs are relative to _http://localhost_
 | _ArrayApi_                | [**update_array_metadata_capnp**](docs/ArrayApi.md#update_array_metadata_capnp)                                                        | **POST** /v1/arrays/{namespace}/{array}/array_metadata                       |
 | _ArrayApi_                | [**vacuum_array**](docs/ArrayApi.md#vacuum_array)                                                                                      | **POST** /v1/arrays/{namespace}/{array}/vacuum                               |
 | _ArrayTasksApi_           | [**get_array_tasks_sidebar**](docs/ArrayTasksApi.md#get_array_tasks_sidebar)                                                           | **GET** /v1/tasks/sidebar                                                    |
+| _AssetsApi_               | [**list_assets**](docs/AssetsApi.md#list_assets)                                                                                       | **GET** /v1/assets/{namespace}                                               |
+| _AssetsApi_               | [**list_public_assets**](docs/AssetsApi.md#list_public_assets)                                                                         | **GET** /v1/public_assets                                                    |
 | _FavoritesApi_            | [**add_array_favorite**](docs/FavoritesApi.md#add_array_favorite)                                                                      | **POST** /v1/arrays/favorites/{namespace}/{name}                             |
 | _FavoritesApi_            | [**add_ml_model_favorite**](docs/FavoritesApi.md#add_ml_model_favorite)                                                                | **POST** /v1/ml_models/favorites/{namespace}/{name}                          |
 | _FavoritesApi_            | [**add_notebook_favorite**](docs/FavoritesApi.md#add_notebook_favorite)                                                                | **POST** /v1/notebooks/favorites/{namespace}/{name}                          |
@@ -294,7 +297,11 @@ All URIs are relative to _http://localhost_
 - [ArrayTaskType](docs/ArrayTaskType.md)
 - [ArrayType](docs/ArrayType.md)
 - [ArrayVacuumRequest](docs/ArrayVacuumRequest.md)
+- [AssetBackingType](docs/AssetBackingType.md)
+- [AssetInfo](docs/AssetInfo.md)
+- [AssetListResponse](docs/AssetListResponse.md)
 - [AssetLocations](docs/AssetLocations.md)
+- [AssetOwnershipLevel](docs/AssetOwnershipLevel.md)
 - [AssetType](docs/AssetType.md)
 - [Attribute](docs/Attribute.md)
 - [AttributeBufferHeader](docs/AttributeBufferHeader.md)
@@ -349,6 +356,7 @@ All URIs are relative to _http://localhost_
 - [GroupTypeMetadataKey](docs/GroupTypeMetadataKey.md)
 - [GroupUpdate](docs/GroupUpdate.md)
 - [InlineObject](docs/InlineObject.md)
+- [InlineObject1](docs/InlineObject1.md)
 - [InlineResponse200](docs/InlineResponse200.md)
 - [Invitation](docs/Invitation.md)
 - [InvitationArrayShareEmail](docs/InvitationArrayShareEmail.md)
@@ -360,11 +368,15 @@ All URIs are relative to _http://localhost_
 - [InvitationType](docs/InvitationType.md)
 - [LastAccessedArray](docs/LastAccessedArray.md)
 - [Layout](docs/Layout.md)
+- [LoadArraySchemaRequest](docs/LoadArraySchemaRequest.md)
+- [LoadArraySchemaResponse](docs/LoadArraySchemaResponse.md)
 - [LoadEnumerationsRequest](docs/LoadEnumerationsRequest.md)
 - [LoadEnumerationsResponse](docs/LoadEnumerationsResponse.md)
 - [MLModelFavorite](docs/MLModelFavorite.md)
 - [MLModelFavoritesData](docs/MLModelFavoritesData.md)
 - [MaxBufferSizes](docs/MaxBufferSizes.md)
+- [MetadataStringified](docs/MetadataStringified.md)
+- [MetadataStringifiedEntry](docs/MetadataStringifiedEntry.md)
 - [MultiArrayUDF](docs/MultiArrayUDF.md)
 - [NamespaceActions](docs/NamespaceActions.md)
 - [NonEmptyDomain](docs/NonEmptyDomain.md)

@@ -138,7 +138,6 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 | Status code | Description                | Response headers |
 | ----------- | -------------------------- | ---------------- |
 | **200**     | status of running notebook | -                |
-| **202**     | Notebook server is pending | -                |
 | **402**     | Payment required           | -                |
 | **404**     | Notebook is not running    | -                |
 | **502**     | Bad Gateway                | -                |

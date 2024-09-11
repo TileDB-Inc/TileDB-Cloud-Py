@@ -31,7 +31,6 @@ class TaskGraphLogStatus(object):
     SUBMITTED = "submitted"
     RUNNING = "running"
     IDLE = "idle"
-    UNFINISHED = "unfinished"
     ABANDONED = "abandoned"
     SUCCEEDED = "succeeded"
     FAILED = "failed"
@@ -41,7 +40,6 @@ class TaskGraphLogStatus(object):
         SUBMITTED,
         RUNNING,
         IDLE,
-        UNFINISHED,
         ABANDONED,
         SUCCEEDED,
         FAILED,

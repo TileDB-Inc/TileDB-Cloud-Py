@@ -44,7 +44,11 @@ from tiledb.cloud.rest_api.models.array_task_status import ArrayTaskStatus
 from tiledb.cloud.rest_api.models.array_task_type import ArrayTaskType
 from tiledb.cloud.rest_api.models.array_type import ArrayType
 from tiledb.cloud.rest_api.models.array_vacuum_request import ArrayVacuumRequest
+from tiledb.cloud.rest_api.models.asset_backing_type import AssetBackingType
+from tiledb.cloud.rest_api.models.asset_info import AssetInfo
+from tiledb.cloud.rest_api.models.asset_list_response import AssetListResponse
 from tiledb.cloud.rest_api.models.asset_locations import AssetLocations
+from tiledb.cloud.rest_api.models.asset_ownership_level import AssetOwnershipLevel
 from tiledb.cloud.rest_api.models.asset_type import AssetType
 from tiledb.cloud.rest_api.models.attribute import Attribute
 from tiledb.cloud.rest_api.models.attribute_buffer_header import AttributeBufferHeader
@@ -109,6 +113,7 @@ from tiledb.cloud.rest_api.models.group_type import GroupType
 from tiledb.cloud.rest_api.models.group_type_metadata_key import GroupTypeMetadataKey
 from tiledb.cloud.rest_api.models.group_update import GroupUpdate
 from tiledb.cloud.rest_api.models.inline_object import InlineObject
+from tiledb.cloud.rest_api.models.inline_object1 import InlineObject1
 from tiledb.cloud.rest_api.models.inline_response200 import InlineResponse200
 from tiledb.cloud.rest_api.models.invitation import Invitation
 from tiledb.cloud.rest_api.models.invitation_array_share_email import (
@@ -128,6 +133,12 @@ from tiledb.cloud.rest_api.models.invitation_status import InvitationStatus
 from tiledb.cloud.rest_api.models.invitation_type import InvitationType
 from tiledb.cloud.rest_api.models.last_accessed_array import LastAccessedArray
 from tiledb.cloud.rest_api.models.layout import Layout
+from tiledb.cloud.rest_api.models.load_array_schema_request import (
+    LoadArraySchemaRequest,
+)
+from tiledb.cloud.rest_api.models.load_array_schema_response import (
+    LoadArraySchemaResponse,
+)
 from tiledb.cloud.rest_api.models.load_enumerations_request import (
     LoadEnumerationsRequest,
 )
@@ -137,6 +148,10 @@ from tiledb.cloud.rest_api.models.load_enumerations_response import (
 from tiledb.cloud.rest_api.models.ml_model_favorite import MLModelFavorite
 from tiledb.cloud.rest_api.models.ml_model_favorites_data import MLModelFavoritesData
 from tiledb.cloud.rest_api.models.max_buffer_sizes import MaxBufferSizes
+from tiledb.cloud.rest_api.models.metadata_stringified import MetadataStringified
+from tiledb.cloud.rest_api.models.metadata_stringified_entry import (
+    MetadataStringifiedEntry,
+)
 from tiledb.cloud.rest_api.models.multi_array_udf import MultiArrayUDF
 from tiledb.cloud.rest_api.models.namespace_actions import NamespaceActions
 from tiledb.cloud.rest_api.models.non_empty_domain import NonEmptyDomain

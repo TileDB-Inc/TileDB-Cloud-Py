@@ -31,6 +31,7 @@ All URIs are relative to _http://localhost_
 | [**get_arrays_in_namespace**](ArrayApi.md#get_arrays_in_namespace)                                     | **GET** /v1/arrays/{namespace}                                |
 | [**get_fragment_end_timestamp**](ArrayApi.md#get_fragment_end_timestamp)                               | **GET** /v1/arrays/{namespace}/{array}/fragment_end_timestamp |
 | [**get_last_accessed_arrays**](ArrayApi.md#get_last_accessed_arrays)                                   | **GET** /v1/arrays/last_accessed                              |
+| [**load_array_schema**](ArrayApi.md#load_array_schema)                                                 | **POST** /v1/arrays/{namespace}/{array}/schema                |
 | [**load_enumerations**](ArrayApi.md#load_enumerations)                                                 | **POST** /v1/arrays/{namespace}/{array}/enumerations          |
 | [**register_array**](ArrayApi.md#register_array)                                                       | **POST** /v1/arrays/{namespace}/{array}/register              |
 | [**share_array**](ArrayApi.md#share_array)                                                             | **PATCH** /v1/arrays/{namespace}/{array}/share                |
@@ -191,7 +192,7 @@ has_task_id = True # bool | Excludes activity log results that do not contain an
 
 # **arrays_browser_owned_get**
 
-> ArrayBrowserData arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
+> ArrayBrowserData arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, with_metadata=with_metadata)
 
 Fetch a list of all arrays that are owned directly by user or user's organizations
 
@@ -247,9 +248,10 @@ exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching arr
 file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
 exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
 file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
+with_metadata = True # bool | include the metadata of the array (optional)
 
     try:
-        api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
+        api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, with_metadata=with_metadata)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_owned_get: %s\n" % e)
@@ -305,9 +307,10 @@ exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching arr
 file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
 exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
 file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
+with_metadata = True # bool | include the metadata of the array (optional)
 
     try:
-        api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
+        api_response = api_instance.arrays_browser_owned_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, with_metadata=with_metadata)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_owned_get: %s\n" % e)
@@ -328,6 +331,7 @@ file_property = ['file_property_example'] # list[str] | file_property key-value 
 | **file_type**         | [**list[str]**](str.md) | file_type to search for, more than one can be included                                                      | [optional] |
 | **exclude_file_type** | [**list[str]**](str.md) | file_type to exclude matching array in results, more than one can be included                               | [optional] |
 | **file_property**     | [**list[str]**](str.md) | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included | [optional] |
+| **with_metadata**     | **bool**                | include the metadata of the array                                                                           | [optional] |
 
 ### Return type
 
@@ -493,7 +497,7 @@ file_property = ['file_property_example'] # list[str] | file_property key-value 
 
 # **arrays_browser_public_get**
 
-> ArrayBrowserData arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
+> ArrayBrowserData arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, with_metadata=with_metadata)
 
 Fetch a list of all arrays that have been shared publically
 
@@ -549,9 +553,10 @@ exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching arr
 file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
 exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
 file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
+with_metadata = True # bool | include the metadata of the array (optional)
 
     try:
-        api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
+        api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, with_metadata=with_metadata)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_public_get: %s\n" % e)
@@ -607,9 +612,10 @@ exclude_tag = ['exclude_tag_example'] # list[str] | tags to exclude matching arr
 file_type = ['file_type_example'] # list[str] | file_type to search for, more than one can be included (optional)
 exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
 file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
+with_metadata = True # bool | include the metadata of the array (optional)
 
     try:
-        api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property)
+        api_response = api_instance.arrays_browser_public_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, with_metadata=with_metadata)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_public_get: %s\n" % e)
@@ -630,6 +636,7 @@ file_property = ['file_property_example'] # list[str] | file_property key-value 
 | **file_type**         | [**list[str]**](str.md) | file_type to search for, more than one can be included                                                      | [optional] |
 | **exclude_file_type** | [**list[str]**](str.md) | file_type to exclude matching array in results, more than one can be included                               | [optional] |
 | **file_property**     | [**list[str]**](str.md) | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included | [optional] |
+| **with_metadata**     | **bool**                | include the metadata of the array                                                                           | [optional] |
 
 ### Return type
 
@@ -795,7 +802,7 @@ file_property = ['file_property_example'] # list[str] | file_property key-value 
 
 # **arrays_browser_shared_get**
 
-> ArrayBrowserData arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, shared_to=shared_to)
+> ArrayBrowserData arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, shared_to=shared_to, with_metadata=with_metadata)
 
 Fetch a list of all arrays that have been shared with the user
 
@@ -852,9 +859,10 @@ file_type = ['file_type_example'] # list[str] | file_type to search for, more th
 exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
 file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
 shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of where there arrays were shared to (optional)
+with_metadata = True # bool | include the metadata of the array (optional)
 
     try:
-        api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, shared_to=shared_to)
+        api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, shared_to=shared_to, with_metadata=with_metadata)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_shared_get: %s\n" % e)
@@ -911,9 +919,10 @@ file_type = ['file_type_example'] # list[str] | file_type to search for, more th
 exclude_file_type = ['exclude_file_type_example'] # list[str] | file_type to exclude matching array in results, more than one can be included (optional)
 file_property = ['file_property_example'] # list[str] | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included (optional)
 shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of where there arrays were shared to (optional)
+with_metadata = True # bool | include the metadata of the array (optional)
 
     try:
-        api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, shared_to=shared_to)
+        api_response = api_instance.arrays_browser_shared_get(page=page, per_page=per_page, search=search, namespace=namespace, orderby=orderby, permissions=permissions, tag=tag, exclude_tag=exclude_tag, file_type=file_type, exclude_file_type=exclude_file_type, file_property=file_property, shared_to=shared_to, with_metadata=with_metadata)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->arrays_browser_shared_get: %s\n" % e)
@@ -935,6 +944,7 @@ shared_to = ['shared_to_example'] # list[str] | namespaces to filter results of 
 | **exclude_file_type** | [**list[str]**](str.md) | file_type to exclude matching array in results, more than one can be included                               | [optional] |
 | **file_property**     | [**list[str]**](str.md) | file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included | [optional] |
 | **shared_to**         | [**list[str]**](str.md) | namespaces to filter results of where there arrays were shared to                                           | [optional] |
+| **with_metadata**     | **bool**                | include the metadata of the array                                                                           | [optional] |
 
 ### Return type
 
@@ -3461,7 +3471,7 @@ array = 'array_example' # str | name/uri of array that is url-encoded
 
 # **get_arrays_in_namespace**
 
-> list[ArrayInfo] get_arrays_in_namespace(namespace)
+> list[ArrayInfo] get_arrays_in_namespace(namespace, with_metadata=with_metadata)
 
 get metadata on all arrays in a namespace
 
@@ -3507,9 +3517,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+with_metadata = True # bool | include the metadata of the arrays (optional)
 
     try:
-        api_response = api_instance.get_arrays_in_namespace(namespace)
+        api_response = api_instance.get_arrays_in_namespace(namespace, with_metadata=with_metadata)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->get_arrays_in_namespace: %s\n" % e)
@@ -3555,9 +3566,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
     namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+with_metadata = True # bool | include the metadata of the arrays (optional)
 
     try:
-        api_response = api_instance.get_arrays_in_namespace(namespace)
+        api_response = api_instance.get_arrays_in_namespace(namespace, with_metadata=with_metadata)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ArrayApi->get_arrays_in_namespace: %s\n" % e)
@@ -3565,9 +3577,10 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
 
 ### Parameters
 
-| Name          | Type    | Description                                                         | Notes |
-| ------------- | ------- | ------------------------------------------------------------------- | ----- |
-| **namespace** | **str** | namespace array is in (an organization name or user&#39;s username) |
+| Name              | Type     | Description                                                         | Notes      |
+| ----------------- | -------- | ------------------------------------------------------------------- | ---------- |
+| **namespace**     | **str**  | namespace array is in (an organization name or user&#39;s username) |
+| **with_metadata** | **bool** | include the metadata of the arrays                                  | [optional] |
 
 ### Return type
 
@@ -3855,6 +3868,146 @@ This endpoint does not need any parameter.
 | **200**     | gets last accessed arrays | -                |
 | **502**     | Bad Gateway               | -                |
 | **0**       | error response            | -                |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **load_array_schema**
+
+> LoadArraySchemaResponse load_array_schema(namespace, array, load_array_schema_request)
+
+request to get the array schema
+
+### Example
+
+- Api Key Authentication (ApiKeyAuth):
+
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+load_array_schema_request = tiledb.cloud.rest_api.LoadArraySchemaRequest() # LoadArraySchemaRequest | Load Array Schema Request
+
+    try:
+        api_response = api_instance.load_array_schema(namespace, array, load_array_schema_request)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ArrayApi->load_array_schema: %s\n" % e)
+```
+
+- Basic Authentication (BasicAuth):
+
+```python
+from __future__ import print_function
+import time
+import tiledb.cloud.rest_api
+from tiledb.cloud.rest_api.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: ApiKeyAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    host = "http://localhost",
+    api_key = {
+        'X-TILEDB-REST-API-KEY': 'YOUR_API_KEY'
+    }
+)
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['X-TILEDB-REST-API-KEY'] = 'Bearer'
+
+# Configure HTTP basic authorization: BasicAuth
+configuration = tiledb.cloud.rest_api.Configuration(
+    username = 'YOUR_USERNAME',
+    password = 'YOUR_PASSWORD'
+)
+
+# Enter a context with an instance of the API client
+with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = tiledb.cloud.rest_api.ArrayApi(api_client)
+    namespace = 'namespace_example' # str | namespace array is in (an organization name or user's username)
+array = 'array_example' # str | name/uri of array that is url-encoded
+load_array_schema_request = tiledb.cloud.rest_api.LoadArraySchemaRequest() # LoadArraySchemaRequest | Load Array Schema Request
+
+    try:
+        api_response = api_instance.load_array_schema(namespace, array, load_array_schema_request)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ArrayApi->load_array_schema: %s\n" % e)
+```
+
+### Parameters
+
+| Name                          | Type                                                    | Description                                                         | Notes |
+| ----------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------- | ----- |
+| **namespace**                 | **str**                                                 | namespace array is in (an organization name or user&#39;s username) |
+| **array**                     | **str**                                                 | name/uri of array that is url-encoded                               |
+| **load_array_schema_request** | [**LoadArraySchemaRequest**](LoadArraySchemaRequest.md) | Load Array Schema Request                                           |
+
+### Return type
+
+[**LoadArraySchemaResponse**](LoadArraySchemaResponse.md)
+
+### Authorization
+
+[ApiKeyAuth](../README.md#ApiKeyAuth), [BasicAuth](../README.md#BasicAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description                                                         | Response headers |
+| ----------- | ------------------------------------------------------------------- | ---------------- |
+| **200**     | array schemas returned successfully                                 | -                |
+| **404**     | Array does not exist or user does not have permissions to access it | -                |
+| **502**     | Bad Gateway                                                         | -                |
+| **0**       | error response                                                      | -                |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

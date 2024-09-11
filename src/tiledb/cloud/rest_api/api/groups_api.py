@@ -1629,6 +1629,7 @@ class GroupsApi(object):
         :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
         :param bool flat: if true, ignores the nesting of groups and searches all of them
         :param str parent: search only the children of the groups with this uuid
+        :param bool with_metadata: include the metadata of the groups
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1664,6 +1665,7 @@ class GroupsApi(object):
         :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
         :param bool flat: if true, ignores the nesting of groups and searches all of them
         :param str parent: search only the children of the groups with this uuid
+        :param bool with_metadata: include the metadata of the groups
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1692,6 +1694,7 @@ class GroupsApi(object):
             "exclude_tag",
             "flat",
             "parent",
+            "with_metadata",
         ]
         all_params.extend(
             [
@@ -1776,6 +1779,13 @@ class GroupsApi(object):
             "parent" in local_var_params and local_var_params["parent"] is not None
         ):  # noqa: E501
             query_params.append(("parent", local_var_params["parent"]))  # noqa: E501
+        if (
+            "with_metadata" in local_var_params
+            and local_var_params["with_metadata"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("with_metadata", local_var_params["with_metadata"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -1832,6 +1842,7 @@ class GroupsApi(object):
         :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
         :param bool flat: if true, ignores the nesting of groups and searches all of them
         :param str parent: search only the children of the groups with this uuid
+        :param bool with_metadata: include the metadata of the groups
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1867,6 +1878,7 @@ class GroupsApi(object):
         :param list[str] exclude_tag: tags to exclude matching array in results, more than one can be included
         :param bool flat: if true, ignores the nesting of groups and searches all of them
         :param str parent: search only the children of the groups with this uuid
+        :param bool with_metadata: include the metadata of the groups
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1895,6 +1907,7 @@ class GroupsApi(object):
             "exclude_tag",
             "flat",
             "parent",
+            "with_metadata",
         ]
         all_params.extend(
             [
@@ -1979,6 +1992,13 @@ class GroupsApi(object):
             "parent" in local_var_params and local_var_params["parent"] is not None
         ):  # noqa: E501
             query_params.append(("parent", local_var_params["parent"]))  # noqa: E501
+        if (
+            "with_metadata" in local_var_params
+            and local_var_params["with_metadata"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("with_metadata", local_var_params["with_metadata"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -2036,6 +2056,7 @@ class GroupsApi(object):
         :param bool flat: if true, ignores the nesting of groups and searches all of them
         :param str parent: search only the children of the groups with this uuid
         :param list[str] shared_to: namespaces to filter results of where there groups were shared to
+        :param bool with_metadata: include the metadata of the groups
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -2072,6 +2093,7 @@ class GroupsApi(object):
         :param bool flat: if true, ignores the nesting of groups and searches all of them
         :param str parent: search only the children of the groups with this uuid
         :param list[str] shared_to: namespaces to filter results of where there groups were shared to
+        :param bool with_metadata: include the metadata of the groups
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -2101,6 +2123,7 @@ class GroupsApi(object):
             "flat",
             "parent",
             "shared_to",
+            "with_metadata",
         ]
         all_params.extend(
             [
@@ -2193,6 +2216,13 @@ class GroupsApi(object):
                 ("shared_to", local_var_params["shared_to"])
             )  # noqa: E501
             collection_formats["shared_to"] = "multi"  # noqa: E501
+        if (
+            "with_metadata" in local_var_params
+            and local_var_params["with_metadata"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("with_metadata", local_var_params["with_metadata"])
+            )  # noqa: E501
 
         header_params = {}
 
