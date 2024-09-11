@@ -1,6 +1,6 @@
 import uuid
 import warnings
-from typing import Any, Callable, Iterable, List, Optional, Sequence, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence, Union
 
 import numpy
 
@@ -26,17 +26,30 @@ split_uri = utils.split_uri
 
 class ArrayList:
     """
-    This class incrementally builds a list of UDFArrayDetails
-    for use in multi array UDFs `list[UDFArrayDetails]`
+    This class incrementally builds a list of UDFArrayDetails for use in multi-
+        array UDFs `list[UDFArrayDetails]`.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.arrayList = []
+        """Stored sequence of arrays."""
 
-    def add(self, uri=None, ranges=None, buffers=None, layout=None):
+    def add(
+        self,
+        uri: Optional[str] = None,
+        ranges=None,
+        buffers=None,
+        layout: Optional[str] = None,
+    ) -> None:
         """
-        Adds an array to list
+        Adds an array to array storage list.
+
+        :param uri: URI of array to add to list.
+        :param ranges:
+        :param buffers:
+        :param layout:
         """
+
         if layout is None:
             converted_layout = None
         elif layout.upper() == "R":
@@ -57,10 +70,12 @@ class ArrayList:
         )
         self.arrayList.append(udf_array_details)
 
-    def get(self):
+    def get(self) -> List[models.UDFArrayDetails]:
+        """Get the list of UDF array details.
+
+        :return: UDF array details.
         """
-        Returns the list of UDFArrayDetails
-        """
+
         return self.arrayList
 
     def _to_tgudf_args(self) -> Sequence[object]:
@@ -81,14 +96,15 @@ class ArrayList:
         return ({"value": tgudf_ified},)
 
 
-def info(uri, async_req=False):
+def info(uri: str, async_req: bool = False) -> Dict[str, Any]:
     """
-    Returns the cloud metadata
+    Returns the cloud metadata.
 
-    :param async_req: return future instead of results for async support
-
-    :return: metadata object
+    :param uri: URI to return info for.
+    :param async_req: Return future instead of results for async support.
+    :return: metadata object.
     """
+
     (namespace, array_name) = split_uri(uri)
     api_instance = client.build(rest_api.ArrayApi)
 
@@ -100,8 +116,14 @@ def info(uri, async_req=False):
         raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
-def list_shared_with(uri, async_req=False):
-    """Return array sharing policies"""
+def list_shared_with(uri: str, async_req: bool = False) -> List[Dict[str, Any]]:
+    """
+    Return array sharing policies.
+
+    :param uri: URI to list sharing policies.
+    :param async_rec: Return future instead of results for async support.
+    """
+
     (namespace, array_name) = split_uri(uri)
     api_instance = client.build(rest_api.ArrayApi)
 
@@ -113,13 +135,19 @@ def list_shared_with(uri, async_req=False):
         raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
-def share_array(uri, namespace, permissions, async_req=False):
+def share_array(
+    uri: str,
+    namespace: str,
+    permissions: Sequence[str],
+    async_req: bool = False,
+) -> Dict[str, Any]:
     """
-    Shares array with give namespace and permissions
+    Shares array with give namespace and permissions.
 
-    :param str namespace:
-    :param list(str) permissions:
-    :param async_req: return future instead of results for async support
+    :param uri: URI of array to share.
+    :param namespace: TileDB Cloud namespace to share array to.
+    :param permissions:
+    :param async_req: Return future instead of results for async support.
     :return:
     """
 
@@ -152,7 +180,7 @@ def unshare_array(uri, namespace, async_req=False):
     Removes sharing of an array from given namespace
 
     :param str namespace: namespace to remove shared access to the array
-    :param async_req: return future instead of results for async support
+    :param async_req: Return future instead of results for async support.
     :return:
     :raises: :py:exc:
     """
@@ -178,7 +206,7 @@ def update_info(
     :param list tags: to update to
     :param str file_type: array represents give file type
     :param str file_properties: set file properties on array
-    :param async_req: return future instead of results for async support
+    :param async_req: Return future instead of results for async support.
     """
     api_instance = client.build(rest_api.ArrayApi)
     (namespace, current_array_name) = split_uri(uri)
@@ -207,6 +235,7 @@ def update_file_properties(uri, file_type=None, file_properties=None, async_req=
     :param str uri: uri of array to update
     :param str file_type: file type to set
     :param dict file_properties: dictionary of properties to set
+    :param asynch_req: Return future instead of results for async support.
     :return:
     """
 
@@ -227,23 +256,24 @@ def update_file_properties(uri, file_type=None, file_properties=None, async_req=
 
 
 def register_array(
-    uri,
-    namespace=None,
-    array_name=None,
-    description=None,
-    access_credentials_name=None,
-    async_req=False,
+    uri: str,
+    namespace: Optional[str] = None,
+    array_name: Optional[str] = None,
+    description: Optional[str] = None,
+    access_credentials_name: Optional[str] = None,
+    async_req: bool = False,
     dest_uri: Optional[str] = None,
 ):
     """
-    Register this array with the tiledb cloud service
-    :param str namespace: The user or organization to register the array under.
+    Register array to TileDB Cloud service.
+
+    :param namespace: The user or organization to register the array under.
         If unset will default to the user
-    :param str array_name: name of array
-    :param str description: optional description
-    :param str access_credentials_name: optional name of access credentials to use,
+    :param array_name: name of array
+    :param description: optional description
+    :param access_credentials_name: optional name of access credentials to use,
         if left blank default for namespace will be used
-    :param async_req: return future instead of results for async support
+    :param async_req: Return future instead of results for async support.
     :param dest_uri: If set, the ``tiledb://`` URI of the destination.
     """
     api_instance = client.build(rest_api.ArrayApi)
@@ -270,15 +300,16 @@ def register_array(
         raise tiledb_cloud_error.maybe_wrap(exc) from None
 
 
-def deregister_array(uri, async_req=False):
+def deregister_array(uri: str, async_req: bool = False):
     """
-    Deregister the from the tiledb cloud service.
+    Deregister array from the TileDB Cloud service.
+
     This does not physically delete the array, it will remain in your bucket.
     All access to the array and cloud metadata will be removed.
 
-    :param async_req: return future instead of results for async support
-
-    :return success or error
+    :param uri: TileDB Cloud URI to deregister.
+    :param async_req: Return future instead of results for async support.
+    :return: Success or error.
     """
     (namespace, array_name) = split_uri(uri)
 
@@ -294,14 +325,13 @@ def deregister_array(uri, async_req=False):
 
 def delete_array(uri, *, async_req=False):
     """
-    Deregister the array from the tiledb cloud service,
-    then deletes physical array from disk.
+    Deregister the array from the tiledb cloud service and delete from disk.
 
     All access to the array and cloud metadata will be removed.
 
-    :param async_req: return future instead of results for async support
-
-    :return success or error
+    :param uri: TileDB Cloud array URI to delete and deregister.
+    :param async_req: Return future instead of results for async support.
+    :return Success or error.
     """
     (namespace, array_name) = split_uri(uri)
 
@@ -322,7 +352,7 @@ def array_activity(uri, async_req=False):
     """
     Fetch array activity
     :param uri:
-    :param async_req: return future instead of results for async support
+    :param async_req: Return future instead of results for async support.
     :return:
     """
     (namespace, array_name) = split_uri(uri)
