@@ -217,6 +217,18 @@ def test_asset_deregister_group_recursive_dispatch(deregister_group, object_type
     deregister_group.assert_called_once_with("g", recursive=True)
 
 
+class ListingTest(unittest.TestCase):
+    def test_list(self) -> None:
+        # Ensure that we have at least one asset registered (a UDF)
+        with testonly.register_udf(lambda: 1, func_name="some_lambda"):
+            result = asset.list(page=1, per_page=2)
+        self.assertGreater(result.pagination_metadata.total_items, 0)
+
+    def test_list_public(self) -> None:
+        result = asset.list_public(page=1, per_page=2)
+        self.assertGreater(result.pagination_metadata.total_items, 0)
+
+
 class RegistrationTest(unittest.TestCase):
     def setUp(self):
         super().setUp()
