@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.56">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -416,6 +416,12 @@ ul.task-list li input[type="checkbox"] {
   <div class="sidebar-item-container"> 
   <a href="../reference/vcf.utils.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>utils</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/vcf.split.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>split</code></span></a>
   </div>
 </li>
       </ul>
@@ -955,16 +961,16 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tiledb.cloud.invites.invite_to_organization" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.invites.invite_to_organization">invite_to_organization</h3>
-<p><code>cloud.invites.invite_to_organization(organization, *, recipients, role)</code></p>
+<p><code>cloud.invites.invite_to_organization(organization, *, recipients, role, actions=None)</code></p>
 <p>Sends email to multiple recipients with joining information regarding an organization.</p>
 <section id="parameters-7" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-7">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 19%">
-<col style="width: 20%">
-<col style="width: 45%">
-<col style="width: 14%">
+<col style="width: 17%">
+<col style="width: 30%">
+<col style="width: 39%">
+<col style="width: 12%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -992,6 +998,12 @@ ul.task-list li input[type="checkbox"] {
 <td>str</td>
 <td>role assigned to the recipient.</td>
 <td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>actions</code></td>
+<td>Optional[Sequence[str]]</td>
+<td>an optional sequence of actions.</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>

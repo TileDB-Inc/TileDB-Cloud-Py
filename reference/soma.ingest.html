@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.56">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -418,6 +418,12 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text"><code>utils</code></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/vcf.split.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>split</code></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -479,10 +485,14 @@ ul.task-list li input[type="checkbox"] {
 <td>Performs the actual work of ingesting H5AD data into TileDB.</td>
 </tr>
 <tr class="even">
+<td><a href="#tiledb.cloud.soma.ingest.register_dataset_udf">register_dataset_udf</a></td>
+<td>Register the dataset on TileDB Cloud.</td>
+</tr>
+<tr class="odd">
 <td><a href="#tiledb.cloud.soma.ingest.run_ingest_workflow">run_ingest_workflow</a></td>
 <td>Starts a workflow to ingest H5AD data into SOMA.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="#tiledb.cloud.soma.ingest.run_ingest_workflow_udf">run_ingest_workflow_udf</a></td>
 <td>This is the highest-level ingestor component that runs on-node. Only here</td>
 </tr>
@@ -556,12 +566,68 @@ ul.task-list li input[type="checkbox"] {
 </table>
 </section>
 </section>
-<section id="tiledb.cloud.soma.ingest.run_ingest_workflow" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.soma.ingest.run_ingest_workflow">run_ingest_workflow</h3>
-<p><code>cloud.soma.ingest.run_ingest_workflow(output_uri, input_uri, measurement_name, pattern=None, extra_tiledb_config=None, platform_config=None, ingest_mode='write', resources=None, namespace=None, acn=None, logging_level=logging.INFO, dry_run=False, **kwargs)</code></p>
-<p>Starts a workflow to ingest H5AD data into SOMA.</p>
+<section id="tiledb.cloud.soma.ingest.register_dataset_udf" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.soma.ingest.register_dataset_udf">register_dataset_udf</h3>
+<p><code>cloud.soma.ingest.register_dataset_udf(dataset_uri, *, register_name, acn, namespace=None, config=None, verbose=False)</code></p>
+<p>Register the dataset on TileDB Cloud.</p>
 <section id="parameters-1" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 25%">
+<col style="width: 51%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>dataset_uri</code></td>
+<td>str</td>
+<td>dataset URI</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>register_name</code></td>
+<td>str</td>
+<td>name to register the dataset with on TileDB Cloud</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td><code>namespace</code></td>
+<td>Optional[str]</td>
+<td>TileDB Cloud namespace, defaults to the user’s default namespace</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>config</code></td>
+<td>Optional[Mapping[str, Any]]</td>
+<td>config dictionary, defaults to None</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>verbose</code></td>
+<td>bool</td>
+<td>verbose logging, defaults to False</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.soma.ingest.run_ingest_workflow" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.soma.ingest.run_ingest_workflow">run_ingest_workflow</h3>
+<p><code>cloud.soma.ingest.run_ingest_workflow(output_uri, input_uri, measurement_name, pattern=None, extra_tiledb_config=None, platform_config=None, ingest_mode='write', resources=None, namespace=None, register_name=None, acn=None, logging_level=logging.INFO, dry_run=False, **kwargs)</code></p>
+<p>Starts a workflow to ingest H5AD data into SOMA.</p>
+<section id="parameters-2" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 2%">
@@ -587,7 +653,7 @@ ul.task-list li input[type="checkbox"] {
 <tr class="even">
 <td><code>input_uri</code></td>
 <td>str</td>
-<td>The URI of the H5AD file(s) to read from. These are read using TileDB VFS, so any path supported (and accessible) will work. If the <code>input_uri</code> passes <code>vfs.is_file</code>, it’s ingested. If the <code>input_uri</code> passes <code>vfs.is_dir</code>, then all first-level entries are ingested . In the latter, directory case, an input file is skipped if <code>pattern</code> is provided and doesn’t match the input file. As well, in the directory case, each entry’s basename is appended to the <code>output_uri</code> to form the entry’s output URI. For example, if <code>a.h5ad` and</code>b.h5ad<code>are present within</code>input_uri<code>of</code>s3://bucket/h5ads/<code>and</code>output_uri<code>is</code>tiledb://namespace/s3://bucket/somas<code>, then</code>tiledb://namespace/s3://bucket/somas/a<code>and</code>tiledb://namespace/s3://bucket/somas/b<code>are written. | _required_ | | `measurement_name`    | str                             | The name of the Measurement within the Experiment to store the data.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | _required_ | | `pattern`             | Optional\[str\]                 | As described for</code>input_uri<code>.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `None`     | | `extra_tiledb_config` | Optional\[Dict\[str, object\]\] | Extra configuration for TileDB.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `None`     | | `platform_config`     | Optional\[Dict\[str, object\]\] | The SOMA</code>platform_config<code>value to pass in, if any.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `None`     | | `ingest_mode`         | str                             | One of the ingest modes supported by</code>tiledbsoma.io.read_h5ad<code>.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `'write'`  | | `resources`           | Optional\[Dict\[str, object\]\] | A specification for the amount of resources to provide to the UDF executing the ingestion process, to override the default.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `None`     | | `namespace`           | Optional\[str\]                 | An alternate namespace to run the ingestion process under.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `None`     | | `acn`                 | Optional\[str\]                 | The name of the credentials to pass to the executing UDF.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `None`     | | `dry_run`             | bool                            | If provided and set to</code>True`<code>, does the input-path traversals without ingesting data.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |</code>False`</td>
+<td>The URI of the H5AD file(s) to read from. These are read using TileDB VFS, so any path supported (and accessible) will work. If the <code>input_uri</code> passes <code>vfs.is_file</code>, it’s ingested. If the <code>input_uri</code> passes <code>vfs.is_dir</code>, then all first-level entries are ingested . In the latter, directory case, an input file is skipped if <code>pattern</code> is provided and doesn’t match the input file. As well, in the directory case, each entry’s basename is appended to the <code>output_uri</code> to form the entry’s output URI. For example, if <code>a.h5ad` and</code>b.h5ad<code>are present within</code>input_uri<code>of</code>s3://bucket/h5ads/<code>and</code>output_uri<code>is</code>tiledb://namespace/s3://bucket/somas<code>, then</code>tiledb://namespace/s3://bucket/somas/a<code>and</code>tiledb://namespace/s3://bucket/somas/b<code>are written. | _required_ | | `measurement_name`    | str                             | The name of the Measurement within the Experiment to store the data.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | _required_ | | `pattern`             | Optional\[str\]                 | As described for</code>input_uri<code>.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `None`     | | `extra_tiledb_config` | Optional\[Dict\[str, object\]\] | Extra configuration for TileDB.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `None`     | | `platform_config`     | Optional\[Dict\[str, object\]\] | The SOMA</code>platform_config<code>value to pass in, if any.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | `None`     | | `ingest_mode`         | str                             | One of the ingest modes supported by</code>tiledbsoma.io.read_h5ad<code>.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `'write'`  | | `resources`           | Optional\[Dict\[str, object\]\] | A specification for the amount of resources to provide to the UDF executing the ingestion process, to override the default.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | `None`     | | `namespace`           | Optional\[str\]                 | An alternate namespace to run the ingestion process under.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | `None`     | | `register_name`       | Optional\[str\]                 | name to register the dataset with on TileDB Cloud.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `None`     | | `acn`                 | Optional\[str\]                 | The name of the credentials to pass to the executing UDF.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `None`     | | `dry_run`             | bool                            | If provided and set to</code>True`<code>, does the input-path traversals without ingesting data.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |</code>False`</td>
 <td></td>
 </tr>
 </tbody>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>dag.visualization</title>
+<title>vcf.split</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -29,8 +29,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../reference/region.html" rel="next">
-<link href="../reference/dag.status.html" rel="prev">
+<link href="../reference/utilities.consolidate.html" rel="next">
+<link href="../reference/vcf.utils.html" rel="prev">
 <link href="../t_favicon.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -108,7 +108,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reference/dag.dag.html">DAG</a></li><li class="breadcrumb-item"><a href="../reference/dag.visualization.html"><code>visualization</code></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reference/vcf.allele_frequency.html">VCF</a></li><li class="breadcrumb-item"><a href="../reference/vcf.split.html"><code>split</code></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -260,13 +260,13 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
  <span class="menu-text">DAG</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../reference/dag.dag.html" class="sidebar-item-text sidebar-link">
@@ -287,7 +287,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/dag.visualization.html" class="sidebar-item-text sidebar-link active">
+  <a href="../reference/dag.visualization.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>visualization</code></span></a>
   </div>
 </li>
@@ -387,13 +387,13 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
  <span class="menu-text">VCF</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../reference/vcf.allele_frequency.html" class="sidebar-item-text sidebar-link">
@@ -420,7 +420,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/vcf.split.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/vcf.split.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><code>split</code></span></a>
   </div>
 </li>
@@ -467,9 +467,10 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="tiledb.cloud.dag.visualization" class="level1">
-<h1>dag.visualization</h1>
-<p><code>cloud.dag.visualization</code></p>
+<section id="tiledb.cloud.vcf.split" class="level1">
+<h1>vcf.split</h1>
+<p><code>cloud.vcf.split</code></p>
+<p>Split samples from multi-sample VCF.</p>
 <section id="functions" class="level2">
 <h2 class="anchored" data-anchor-id="functions">Functions</h2>
 <table class="caption-top table">
@@ -481,33 +482,32 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="#tiledb.cloud.dag.visualization.build_graph_node_details">build_graph_node_details</a></td>
-<td></td>
+<td><a href="#tiledb.cloud.vcf.split.ls_samples">ls_samples</a></td>
+<td>List samples in an aggregate VCF.</td>
 </tr>
 <tr class="even">
-<td><a href="#tiledb.cloud.dag.visualization.build_visualization_positions">build_visualization_positions</a></td>
-<td>Builds the positional spacing of all nodes(markers) based on either pydot</td>
+<td><a href="#tiledb.cloud.vcf.split.split_one_sample">split_one_sample</a></td>
+<td>Split one sample from multi-sample VCF.</td>
 </tr>
 <tr class="odd">
-<td><a href="#tiledb.cloud.dag.visualization.hierarchy_pos">hierarchy_pos</a></td>
-<td>Taken from https://epidemicsonnetworks.readthedocs.io/en/latest/_modules/EoN/auxiliary.html#hierarchy_pos</td>
-</tr>
-<tr class="even">
-<td><a href="#tiledb.cloud.dag.visualization.update_plotly_graph">update_plotly_graph</a></td>
-<td>Update a graph based on based node status and figure</td>
-</tr>
-<tr class="odd">
-<td><a href="#tiledb.cloud.dag.visualization.update_tiledb_graph">update_tiledb_graph</a></td>
-<td>Update a tiledb plot widge graph</td>
+<td><a href="#tiledb.cloud.vcf.split.split_vcf">split_vcf</a></td>
+<td>Split individual sample VCFs from an aggreate VCF.</td>
 </tr>
 </tbody>
 </table>
-<section id="tiledb.cloud.dag.visualization.build_graph_node_details" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.dag.visualization.build_graph_node_details">build_graph_node_details</h3>
-<p><code>cloud.dag.visualization.build_graph_node_details(nodes)</code></p>
+<section id="tiledb.cloud.vcf.split.ls_samples" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.split.ls_samples">ls_samples</h3>
+<p><code>cloud.vcf.split.ls_samples(vcf_uri, config=None)</code></p>
+<p>List samples in an aggregate VCF.</p>
 <section id="parameters" class="level4">
 <h4 class="anchored" data-anchor-id="parameters">Parameters</h4>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 39%">
+<col style="width: 32%">
+<col style="width: 14%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Name</th>
@@ -518,10 +518,16 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>nodes</code></td>
-<td></td>
-<td>List of nodes to get status of</td>
+<td><code>vcf_uri</code></td>
+<td>str</td>
+<td>S3 path to aggregate VCF.</td>
 <td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>config</code></td>
+<td>Optional[Mapping[str, str]]</td>
+<td>TileDB config params.</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
@@ -537,20 +543,26 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td></td>
-<td>tuple of node_colors and node_text</td>
+<td>list[str]</td>
+<td>Samples included in VCF.</td>
 </tr>
 </tbody>
 </table>
 </section>
 </section>
-<section id="tiledb.cloud.dag.visualization.build_visualization_positions" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.dag.visualization.build_visualization_positions">build_visualization_positions</h3>
-<p><code>cloud.dag.visualization.build_visualization_positions(network)</code></p>
-<p>Builds the positional spacing of all nodes(markers) based on either pydot if available or falling back to a python computation</p>
+<section id="tiledb.cloud.vcf.split.split_one_sample" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.split.split_one_sample">split_one_sample</h3>
+<p><code>cloud.vcf.split.split_one_sample(vcf_uri, sample, output_uri, config=None)</code></p>
+<p>Split one sample from multi-sample VCF.</p>
 <section id="parameters-1" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 37%">
+<col style="width: 33%">
+<col style="width: 13%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Name</th>
@@ -561,10 +573,28 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>network</code></td>
-<td></td>
-<td></td>
+<td><code>vcf_uri</code></td>
+<td>str</td>
+<td>URI of VCF to isolate from.</td>
 <td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>sample</code></td>
+<td>str</td>
+<td>Sample name to isolate.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td><code>output_uri</code></td>
+<td>str</td>
+<td>URI to deposit isolated VCF.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>config</code></td>
+<td>Optional[Mapping[str, str]]</td>
+<td>TileDB config object.</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
@@ -580,42 +610,27 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td></td>
-<td>position array</td>
+<td>str</td>
+<td>URI of isolated sample.</td>
 </tr>
 </tbody>
 </table>
 </section>
 </section>
-<section id="tiledb.cloud.dag.visualization.hierarchy_pos" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.dag.visualization.hierarchy_pos">hierarchy_pos</h3>
-<p><code>cloud.dag.visualization.hierarchy_pos(G, root=None, width=1.0, vert_gap=0.2, vert_loc=0, leaf_vs_root_factor=0.5)</code></p>
-<p>Taken from https://epidemicsonnetworks.readthedocs.io/en/latest/_modules/EoN/auxiliary.html#hierarchy_pos Licensed under MIT: https://epidemicsonnetworks.readthedocs.io/en/latest/_downloads/8e9c8138fef49ddba8102fa7799c29d7/license.txt</p>
-<p>If the graph is a tree this will return the positions to plot this in a hierarchical layout.</p>
-<p>Based on Joel’s answer at https://stackoverflow.com/a/29597209/2966723, but with some modifications.</p>
-<p>We include this because it may be useful for plotting transmission trees, and there is currently no networkx equivalent (though it may be coming soon).</p>
-<p>There are two basic approaches we think of to allocate the horizontal location of a node.</p>
-<ul>
-<li>Top down: we allocate horizontal space to a node. Then its <code>k</code> descendants split up that horizontal space equally. This tends to result in overlapping nodes when some have many descendants.</li>
-<li>Bottom up: we allocate horizontal space to each leaf node. A node at a higher level gets the entire space allocated to its descendant leaves. Based on this, leaf nodes at higher levels get the same space as leaf nodes very deep in the tree.</li>
-</ul>
-<p>We use use both of these approaches simultaneously with <code>leaf_vs_root_factor</code> determining how much of the horizontal space is based on the bottom up or top down approaches. <code>0</code> gives pure bottom up, while 1 gives pure top down.</p>
-<p>:Arguments:</p>
-<p><strong>G</strong> the graph (must be a tree)</p>
-<p><strong>root</strong> the root node of the tree - if the tree is directed and this is not given, the root will be found and used - if the tree is directed and this is given, then the positions will be just for the descendants of this node. - if the tree is undirected and not given, then a random choice will be used.</p>
-<p><strong>width</strong> horizontal space allocated for this branch - avoids overlap with other branches</p>
-<p><strong>vert_gap</strong> gap between levels of hierarchy</p>
-<p><strong>vert_loc</strong> vertical location of root</p>
-<p><strong>leaf_vs_root_factor</strong></p>
-<p>xcenter: horizontal location of root</p>
-</section>
-<section id="tiledb.cloud.dag.visualization.update_plotly_graph" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.dag.visualization.update_plotly_graph">update_plotly_graph</h3>
-<p><code>cloud.dag.visualization.update_plotly_graph(nodes, fig=None)</code></p>
-<p>Update a graph based on based node status and figure</p>
+<section id="tiledb.cloud.vcf.split.split_vcf" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.vcf.split.split_vcf">split_vcf</h3>
+<p><code>cloud.vcf.split.split_vcf(vcf_uri, output_uri, namespace, acn, resources={'cpu': '2', 'memory': '30Gi'}, compute=True, verbose=False, samples=None, retry_count=1, max_workers=100, config=None)</code></p>
+<p>Split individual sample VCFs from an aggreate VCF.</p>
+<p>Given an aggregate VCF file containing multiple samples, split all samples into isolated VCFs, one per sample. Alternatively, specify sample(s) to split apart from VCF if not all isolated VCFs are needed.</p>
 <section id="parameters-2" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-2">Parameters</h4>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 16%">
+<col style="width: 58%">
+<col style="width: 17%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Name</th>
@@ -626,15 +641,69 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>nodes</code></td>
-<td></td>
-<td>list of notes to update</td>
+<td><code>vcf_uri</code></td>
+<td>str</td>
+<td>Aggregate VCF URI.</td>
 <td><em>required</em></td>
 </tr>
 <tr class="even">
-<td><code>fig</code></td>
-<td></td>
-<td></td>
+<td><code>output_uri</code></td>
+<td>str</td>
+<td>Output URI to write isolated VCFs.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td><code>namespace</code></td>
+<td>str</td>
+<td>TileDB Cloud namespace to process task graph.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="even">
+<td><code>acn</code></td>
+<td>str</td>
+<td>Access credential friendly name to auth storage i/o.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td><code>resources</code></td>
+<td>Mapping[str, str]</td>
+<td>Resources applied to splitting UDF (start with default).</td>
+<td><code>{'cpu': '2', 'memory': '30Gi'}</code></td>
+</tr>
+<tr class="even">
+<td><code>compute</code></td>
+<td>bool</td>
+<td>Whether to execute DAG.</td>
+<td><code>True</code></td>
+</tr>
+<tr class="odd">
+<td><code>verbose</code></td>
+<td>bool</td>
+<td>Logging verbosity.</td>
+<td><code>False</code></td>
+</tr>
+<tr class="even">
+<td><code>samples</code></td>
+<td>Optional[Sequence[str]]</td>
+<td>Indicate a batch of sample names within <code>vcf_uri</code> to isolate if it is undesired to isolate all samples (default).</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>retry_count</code></td>
+<td>int</td>
+<td>Number of Node retries.</td>
+<td><code>1</code></td>
+</tr>
+<tr class="even">
+<td><code>max_workers</code></td>
+<td>int</td>
+<td>Max workers to engage simultaneously.</td>
+<td><code>100</code></td>
+</tr>
+<tr class="odd">
+<td><code>config</code></td>
+<td>Optional[Mapping[str, int]]</td>
+<td>TileDB configuration parameters used to configure virtual filesystem handler.</td>
 <td><code>None</code></td>
 </tr>
 </tbody>
@@ -651,75 +720,8 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="tiledb.cloud.dag.visualization.update_tiledb_graph" class="level3">
-<h3 class="anchored" data-anchor-id="tiledb.cloud.dag.visualization.update_tiledb_graph">update_tiledb_graph</h3>
-<p><code>cloud.dag.visualization.update_tiledb_graph(nodes, edges, node_details, positions, fig)</code></p>
-<p>Update a tiledb plot widge graph</p>
-<section id="parameters-3" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>nodes</code></td>
-<td></td>
-<td>nodes of graph</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>edges</code></td>
-<td></td>
-<td>edges for graph</td>
-<td><em>required</em></td>
-</tr>
-<tr class="odd">
-<td><code>node_details</code></td>
-<td></td>
-<td>Node details</td>
-<td><em>required</em></td>
-</tr>
-<tr class="even">
-<td><code>positions</code></td>
-<td></td>
-<td>positions for graph</td>
-<td><em>required</em></td>
-</tr>
-<tr class="odd">
-<td><code>fig</code></td>
-<td></td>
-<td>figure</td>
-<td><em>required</em></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="returns-3" class="level4">
-<h4 class="anchored" data-anchor-id="returns-3">Returns</h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td></td>
-<td></td>
+<td>DAG</td>
+<td>DAG instantiated as specified.</td>
 </tr>
 </tbody>
 </table>
@@ -1153,13 +1155,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../reference/dag.status.html" class="pagination-link" aria-label="`status`">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>status</code></span>
+      <a href="../reference/vcf.utils.html" class="pagination-link" aria-label="`utils`">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>utils</code></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../reference/region.html" class="pagination-link" aria-label="`region`">
-        <span class="nav-page-text"><code>region</code></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../reference/utilities.consolidate.html" class="pagination-link" aria-label="`consolidate`">
+        <span class="nav-page-text"><code>consolidate</code></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
