@@ -1,7 +1,7 @@
 """An asset may be an array or a group."""
 
 from functools import partial
-from typing import Callable, List, Literal, Mapping, Optional, Union
+from typing import Callable, Iterable, List, Literal, Mapping, Optional, Union
 
 import tiledb
 
@@ -14,6 +14,8 @@ from .rest_api.api import assets_api
 _AssetType = Union[Literal["array"], Literal["group"]]
 _Depth = Union[Literal["root"], Literal["all"]]
 _OwnershipLevel = Union[Literal["owned"], Literal["shared"]]
+_CSVString = Union[str, Iterable[str]]
+"""Either a CSV-style string ``"a,b,c"`` or a sequence ``("a", "b", "c")``."""
 
 
 def list(
@@ -23,7 +25,7 @@ def list(
     type: Optional[_AssetType] = None,
     ownership_level: Optional[_OwnershipLevel] = None,
     depth: Optional[_Depth] = None,
-    expand: Optional[str] = None,
+    expand: Optional[_CSVString] = None,
     page: Optional[int] = None,
     per_page: Optional[int] = None,
     order_by: Optional[str] = None,
@@ -56,7 +58,7 @@ def list(
         asset_type=type,
         ownership_level=ownership_level,
         depth=depth,
-        expand=expand,
+        expand=_canonicalize_csv(expand),
         page=page,
         per_page=per_page,
         order_by=order_by,
@@ -317,3 +319,12 @@ def unshare(uri: str, namespace: str) -> None:
 
     """
     share(uri, namespace, [])
+
+
+def _canonicalize_csv(seq: Optional[_CSVString]) -> Optional[str]:
+    """Canonicalizes sequences into a CSV-like string. Empty becomes None."""
+    if not seq:
+        return None
+    if not isinstance(seq, str):
+        seq = ",".join(seq)
+    return seq or None

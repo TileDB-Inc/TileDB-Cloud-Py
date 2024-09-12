@@ -228,6 +228,18 @@ class ListingTest(unittest.TestCase):
         result = asset.list_public(page=1, per_page=2)
         self.assertGreater(result.pagination_metadata.total_items, 0)
 
+    def test_canonicalize_csv(self) -> None:
+        in_out = (
+            ("", None),
+            ("a,b", "a,b"),
+            (("a", "b"), "a,b"),
+            ([""], None),
+            ((), None),
+            (None, None),
+        )
+        for inp, outp in in_out:
+            self.assertEqual(outp, asset._canonicalize_csv(inp))
+
 
 class RegistrationTest(unittest.TestCase):
     def setUp(self):
