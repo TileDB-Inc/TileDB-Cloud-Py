@@ -32,6 +32,7 @@ life-sciences = ["tiledbsoma"]
 docs = ["quartodoc"]
 dev = ["black", "pytest", "ruff"]
 tests = [
+    "pytest",
     "xarray",
     "pytest-cov",
     "pytest-explicit",
