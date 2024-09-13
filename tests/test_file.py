@@ -1,9 +1,12 @@
 import hashlib
 import os
 import pathlib
+import random
 import tempfile
 import unittest
 from typing import List
+
+import pytest
 
 import tiledb
 import tiledb.cloud
@@ -171,20 +174,40 @@ def _cleanup_residual_test_arrays(array_uris: List[str]) -> None:
 
 
 class UploadTest(unittest.TestCase):
-    def test_round_trip(self):
+    def test_small_file(self):
+        self._try_uploading(__file__)
+
+    @pytest.mark.bigfiles
+    def test_big_file(self):
+        self._try_bigfile(256)
+
+    @pytest.mark.bigfiles
+    def test_huge_file(self):
+        self._try_bigfile(5120)
+
+    def _try_bigfile(self, megs: int) -> None:
+        rnd = random.SystemRandom()
+        with tempfile.TemporaryDirectory(prefix=f"upload-{megs}mb-") as tmpdir:
+            bigpath = pathlib.Path(tmpdir) / f"{megs}-megs"
+            with bigpath.open("wb") as bigfile:
+                for _ in range(megs):
+                    bigfile.write(rnd.randbytes(1024**2))
+            self._try_uploading(str(bigpath))
+
+    def _try_uploading(self, local_filename: str) -> None:
         namespace = client.default_user().username
         default_path = client.default_user().default_s3_path
         output = f"{default_path}/{testonly.random_name('upload')}"
         uri = file_utils.upload_file(
-            __file__,
+            local_filename,
             f"tiledb://{namespace}/{output}",
-            content_type="text/plain",
+            content_type="application/octet-stream",
         )
         try:
             with tempfile.TemporaryDirectory() as tmpdir:
                 tmppath = pathlib.Path(tmpdir) / "output"
                 file_utils.export_file_local(uri, str(tmppath))
-                me = pathlib.Path(__file__).read_bytes()
+                me = pathlib.Path(local_filename).read_bytes()
                 downloaded = tmppath.read_bytes()
                 self.assertEqual(me, downloaded)
         finally:

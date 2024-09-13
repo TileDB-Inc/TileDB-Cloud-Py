@@ -213,7 +213,9 @@ def upload_file(
         if access_credentials_name:
             headers["x-tiledb-cloud-access-credentials-name"] = access_credentials_name
 
-        pool = client.client._client_v2.rest_client.pool_manager
+        import urllib3
+
+        pool: urllib3.PoolManager = client.client._client_v2.rest_client.pool_manager
 
         query = urllib.parse.urlencode(
             {
@@ -227,6 +229,27 @@ def upload_file(
 
         request_url = f"{config.config.host}/v2/files/{namespace}/{name}/upload?{query}"
 
+        # First, we make HEAD requests to find out if we should be redirected.
+        while True:
+            resp = pool.request(
+                method="HEAD",
+                url=request_url,
+                headers=headers,
+                redirect=False,
+            )
+            if redirect_to := resp.get_redirect_location():
+                # Follow the redirect and try again.
+                request_url = redirect_to
+                continue
+            if 200 <= resp.status < 300 or resp.status == 405:
+                # If we get a good response or 405 Method Not Allowed,
+                # that means we've probably hit the correct endpoint.
+                break
+            # We got an unexpected response type. Just raise it as an error.
+            raise tce.TileDBCloudError.from_response(resp)
+
+        # While we're probably at the place we want to end up requesting from,
+        # we might still get redirected.
         while True:
             resp = pool.request(
                 method="POST",
@@ -240,15 +263,14 @@ def upload_file(
                 request_url = resp.get_redirect_location()
                 if request_url:
                     # If we got redirected, we need to rewind the file
-                    # so we can send it to the actual location.
+                    # to send it to the actual location on the next request.
                     infile.seek(0)
                     continue
-                json_response = resp.json()
                 if not 200 <= resp.status < 300:
-                    raise tce.TileDBCloudError(json_response["message"])
-                return json_response["output_uri"]
-            except (KeyError, ValueError) as base:
-                raise tce.TileDBCloudError(resp.data) from base
+                    raise tce.TileDBCloudError.from_response(resp)
+                return resp.json()["output_uri"]
+            except (KeyError, TypeError, ValueError) as base:
+                raise tce.TileDBCloudError.from_response(resp) from base
             finally:
                 utils.release_connection(resp)
 
