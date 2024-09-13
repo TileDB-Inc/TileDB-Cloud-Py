@@ -4,7 +4,7 @@ import tiledb.cloud.taskgraphs as tg
 from tiledb.cloud import dag
 from tiledb.cloud.taskgraphs.server_executor import impl
 
-_WAIT_TIME_S = 120
+_WAIT_TIME_S = 240
 
 
 class ConnectToExistingTest(unittest.TestCase):
