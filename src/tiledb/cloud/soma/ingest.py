@@ -82,6 +82,7 @@ def run_ingest_workflow_udf(
     ingest_mode: str = "write",
     resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
+    register_name: Optional[str] = None,
     acn: Optional[str] = None,
     logging_level: int = logging.INFO,
     dry_run: bool = False,
@@ -107,6 +108,9 @@ def run_ingest_workflow_udf(
     logger.debug("ENUMERATOR OUTPUT_URI %s", output_uri)
     logger.debug("ENUMERATOR DRY_RUN    %s", str(dry_run))
 
+    h5ad_ingest = None
+    collector = None
+
     vfs = tiledb.VFS(config=extra_tiledb_config)
 
     if vfs.is_file(input_uri):
@@ -119,7 +123,8 @@ def run_ingest_workflow_udf(
             mode=dag.Mode.BATCH,
             namespace=carry_along.get("namespace", namespace),
         )
-        grf.submit(
+
+        h5ad_ingest = grf.submit(
             _ingest_h5ad_byval,
             output_uri=output_uri,
             input_uri=input_uri,
@@ -184,6 +189,23 @@ def run_ingest_workflow_udf(
 
     else:
         raise ValueError("input_uri %r is neither file nor directory", input_uri)
+
+    # Register the SOMA result if not DRY-RUN
+    if not dry_run:
+        register_soma = grf.submit(
+            _register_dataset_udf_byval,
+            output_uri,
+            namespace=namespace,
+            register_name=register_name,
+            config=extra_tiledb_config,
+            verbose=logging_level == logging.DEBUG,
+            acn=acn,
+        )
+
+        if h5ad_ingest is not None:
+            register_soma.depends_on(h5ad_ingest)
+        else:
+            register_soma.depends_on(collector)
 
     grf.compute()
 
@@ -387,7 +409,7 @@ def run_ingest_workflow(
         "access_credentials_name": acn,
     }
 
-    ingest_workflow = grf.submit(
+    grf.submit(
         _run_ingest_workflow_udf_byval,
         output_uri=output_uri,
         input_uri=input_uri,
@@ -398,27 +420,15 @@ def run_ingest_workflow(
         ingest_mode=ingest_mode,
         resources=resources,
         namespace=namespace,
+        register_name=register_name,
         access_credentials_name=acn,
         carry_along=carry_along,
         logging_level=logging_level,
         dry_run=dry_run,
     )
 
-    verbose = logging_level == logging.DEBUG
-
-    # Register the SOMA result
-    if not dry_run:
-        grf.submit(
-            _register_dataset_udf_byval,
-            output_uri,
-            namespace=namespace,
-            register_name=register_name,
-            config=extra_tiledb_config,
-            verbose=verbose,
-            acn=acn,
-        ).depends_on(ingest_workflow)
-
     # Start the ingestion process
+    verbose = logging_level == logging.DEBUG
     run_dag(grf, debug=verbose)
 
     # Get the initial graph node UUID
