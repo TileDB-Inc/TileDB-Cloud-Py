@@ -1,6 +1,7 @@
 import json
 from typing import Dict, Optional
 
+import urllib3
 from typing_extensions import Self
 
 import tiledb
@@ -32,7 +33,7 @@ class TileDBCloudError(tiledb.TileDBError):
         return f"Unknown HTTP {self.http_status} error; response body: {self.body!r}"
 
     @classmethod
-    def from_response(cls, resp) -> Self:
+    def from_response(cls, resp: "urllib3.BaseHTTPResponse") -> Self:
         try:
             json_data = resp.json()
             return cls(resp.status, json_data=json_data)
