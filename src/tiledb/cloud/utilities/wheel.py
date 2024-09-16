@@ -192,7 +192,7 @@ def install_wheel(
     verbose: bool = False,
     no_deps: bool = True,
     deps_to_refresh: Optional[Sequence[str]] = None,
-    in_venv: bool = True,
+    in_venv: Optional[bool] = None,
 ) -> None:
     """Install at runtime a Python wheel from TiileDB Filestore or PyPI.
 
@@ -207,9 +207,12 @@ def install_wheel(
     :param verbose: Verbose output, defaults to False.
     :param no_deps: Do not install dependencies, defaults to True.
     :param deps_to_refresh: Dependencies to refresh from cache.
-    :param in_venv: Whether to install to venv runtime. For conda,
-        likely want default, in_ven=True.
+    :param in_venv: Whether to install to venv runtime.
     """
+
+    # if not specified, detect if python venv active
+    if in_venv is None:
+        in_venv = sys.prefix != sys.base_prefix
 
     installer = PipInstall(
         wheel=wheel_uri,
