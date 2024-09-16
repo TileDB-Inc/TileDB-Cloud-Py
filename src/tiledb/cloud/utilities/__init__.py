@@ -11,8 +11,9 @@ from ._common import set_aws_context
 from .consolidate import consolidate_and_vacuum
 from .consolidate import consolidate_fragments
 from .consolidate import group_fragments
-from .logging import get_logger
-from .logging import get_logger_wrapper
+
+# from ..logging import get_logger
+# from ..logging import get_logger_wrapper
 from .profiler import Profiler
 from .profiler import create_log_array
 from .profiler import write_log_event
@@ -23,8 +24,8 @@ __all__ = [
     "as_batch",
     "chunk",
     "find",
-    "get_logger",
-    "get_logger_wrapper",
+    #    "get_logger",
+    #    "get_logger_wrapper",
     "max_memory_usage",
     "process_stream",
     "read_aws_config",
