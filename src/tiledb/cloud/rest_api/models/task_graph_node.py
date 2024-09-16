@@ -147,6 +147,14 @@ class TaskGraphNode(object):
         :param name: The name of this TaskGraphNode.  # noqa: E501
         :type: str
         """
+        if (
+            self.local_vars_configuration.client_side_validation
+            and name is not None
+            and len(name) > 255
+        ):
+            raise ValueError(
+                "Invalid value for `name`, length must be less than or equal to `255`"
+            )  # noqa: E501
 
         self._name = name
 

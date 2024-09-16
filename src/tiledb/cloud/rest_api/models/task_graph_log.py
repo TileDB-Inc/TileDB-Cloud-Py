@@ -49,6 +49,8 @@ class TaskGraphLog(object):
         "nodes": "list[TaskGraphNodeMetadata]",
         "task_graph_type": "TaskGraphType",
         "task_graph_id": "str",
+        "cloud_provider": "str",
+        "cloud_region": "str",
     }
 
     attribute_map = {
@@ -68,6 +70,8 @@ class TaskGraphLog(object):
         "nodes": "nodes",
         "task_graph_type": "task_graph_type",
         "task_graph_id": "task_graph_id",
+        "cloud_provider": "cloud_provider",
+        "cloud_region": "cloud_region",
     }
 
     def __init__(
@@ -88,6 +92,8 @@ class TaskGraphLog(object):
         nodes=None,
         task_graph_type=None,
         task_graph_id=None,
+        cloud_provider=None,
+        cloud_region=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """TaskGraphLog - a model defined in OpenAPI"""  # noqa: E501
@@ -111,6 +117,8 @@ class TaskGraphLog(object):
         self._nodes = None
         self._task_graph_type = None
         self._task_graph_id = None
+        self._cloud_provider = None
+        self._cloud_region = None
         self.discriminator = None
 
         if uuid is not None:
@@ -140,6 +148,10 @@ class TaskGraphLog(object):
             self.task_graph_type = task_graph_type
         if task_graph_id is not None:
             self.task_graph_id = task_graph_id
+        if cloud_provider is not None:
+            self.cloud_provider = cloud_provider
+        if cloud_region is not None:
+            self.cloud_region = cloud_region
 
     @property
     def uuid(self):
@@ -504,6 +516,52 @@ class TaskGraphLog(object):
         """
 
         self._task_graph_id = task_graph_id
+
+    @property
+    def cloud_provider(self):
+        """Gets the cloud_provider of this TaskGraphLog.  # noqa: E501
+
+        The name of the cloud provider where this task graph executed.  # noqa: E501
+
+        :return: The cloud_provider of this TaskGraphLog.  # noqa: E501
+        :rtype: str
+        """
+        return self._cloud_provider
+
+    @cloud_provider.setter
+    def cloud_provider(self, cloud_provider):
+        """Sets the cloud_provider of this TaskGraphLog.
+
+        The name of the cloud provider where this task graph executed.  # noqa: E501
+
+        :param cloud_provider: The cloud_provider of this TaskGraphLog.  # noqa: E501
+        :type: str
+        """
+
+        self._cloud_provider = cloud_provider
+
+    @property
+    def cloud_region(self):
+        """Gets the cloud_region of this TaskGraphLog.  # noqa: E501
+
+        The region of the cloud provider where this task graph executed.  # noqa: E501
+
+        :return: The cloud_region of this TaskGraphLog.  # noqa: E501
+        :rtype: str
+        """
+        return self._cloud_region
+
+    @cloud_region.setter
+    def cloud_region(self, cloud_region):
+        """Sets the cloud_region of this TaskGraphLog.
+
+        The region of the cloud provider where this task graph executed.  # noqa: E501
+
+        :param cloud_region: The cloud_region of this TaskGraphLog.  # noqa: E501
+        :type: str
+        """
+
+        self._cloud_region = cloud_region
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -53,6 +53,8 @@ class GroupInfo(object):
         "license_id": "str",
         "license_text": "str",
         "created_at": "datetime",
+        "created_by": "str",
+        "metadata": "list[MetadataStringifiedEntry]",
     }
 
     attribute_map = {
@@ -76,6 +78,8 @@ class GroupInfo(object):
         "license_id": "license_id",
         "license_text": "license_text",
         "created_at": "created_at",
+        "created_by": "created_by",
+        "metadata": "metadata",
     }
 
     def __init__(
@@ -100,6 +104,8 @@ class GroupInfo(object):
         license_id=None,
         license_text=None,
         created_at=None,
+        created_by=None,
+        metadata=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """GroupInfo - a model defined in OpenAPI"""  # noqa: E501
@@ -127,6 +133,8 @@ class GroupInfo(object):
         self._license_id = None
         self._license_text = None
         self._created_at = None
+        self._created_by = None
+        self._metadata = None
         self.discriminator = None
 
         if id is not None:
@@ -168,6 +176,10 @@ class GroupInfo(object):
             self.license_text = license_text
         if created_at is not None:
             self.created_at = created_at
+        if created_by is not None:
+            self.created_by = created_by
+        if metadata is not None:
+            self.metadata = metadata
 
     @property
     def id(self):
@@ -626,6 +638,52 @@ class GroupInfo(object):
         """
 
         self._created_at = created_at
+
+    @property
+    def created_by(self):
+        """Gets the created_by of this GroupInfo.  # noqa: E501
+
+        The username of the group's creator, if known.  # noqa: E501
+
+        :return: The created_by of this GroupInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._created_by
+
+    @created_by.setter
+    def created_by(self, created_by):
+        """Sets the created_by of this GroupInfo.
+
+        The username of the group's creator, if known.  # noqa: E501
+
+        :param created_by: The created_by of this GroupInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._created_by = created_by
+
+    @property
+    def metadata(self):
+        """Gets the metadata of this GroupInfo.  # noqa: E501
+
+        Contains metadata of the group. **Note:** This property is included in the response only if the `with_metadata` query parameter is set to `true`.   # noqa: E501
+
+        :return: The metadata of this GroupInfo.  # noqa: E501
+        :rtype: list[MetadataStringifiedEntry]
+        """
+        return self._metadata
+
+    @metadata.setter
+    def metadata(self, metadata):
+        """Sets the metadata of this GroupInfo.
+
+        Contains metadata of the group. **Note:** This property is included in the response only if the `with_metadata` query parameter is set to `true`.   # noqa: E501
+
+        :param metadata: The metadata of this GroupInfo.  # noqa: E501
+        :type: list[MetadataStringifiedEntry]
+        """
+
+        self._metadata = metadata
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -62,6 +62,8 @@ class ArrayTask(object):
         "result_format": "ResultFormat",
         "task_graph_uuid": "str",
         "client_node_uuid": "str",
+        "cloud_provider": "str",
+        "cloud_region": "str",
     }
 
     attribute_map = {
@@ -94,6 +96,8 @@ class ArrayTask(object):
         "result_format": "result_format",
         "task_graph_uuid": "task_graph_uuid",
         "client_node_uuid": "client_node_uuid",
+        "cloud_provider": "cloud_provider",
+        "cloud_region": "cloud_region",
     }
 
     def __init__(
@@ -127,6 +131,8 @@ class ArrayTask(object):
         result_format=None,
         task_graph_uuid=None,
         client_node_uuid=None,
+        cloud_provider=None,
+        cloud_region=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """ArrayTask - a model defined in OpenAPI"""  # noqa: E501
@@ -163,6 +169,8 @@ class ArrayTask(object):
         self._result_format = None
         self._task_graph_uuid = None
         self._client_node_uuid = None
+        self._cloud_provider = None
+        self._cloud_region = None
         self.discriminator = None
 
         if id is not None:
@@ -220,6 +228,10 @@ class ArrayTask(object):
             self.task_graph_uuid = task_graph_uuid
         if client_node_uuid is not None:
             self.client_node_uuid = client_node_uuid
+        if cloud_provider is not None:
+            self.cloud_provider = cloud_provider
+        if cloud_region is not None:
+            self.cloud_region = cloud_region
 
     @property
     def id(self):
@@ -875,6 +887,52 @@ class ArrayTask(object):
         """
 
         self._client_node_uuid = client_node_uuid
+
+    @property
+    def cloud_provider(self):
+        """Gets the cloud_provider of this ArrayTask.  # noqa: E501
+
+        The name of the cloud provider where this task executed.  # noqa: E501
+
+        :return: The cloud_provider of this ArrayTask.  # noqa: E501
+        :rtype: str
+        """
+        return self._cloud_provider
+
+    @cloud_provider.setter
+    def cloud_provider(self, cloud_provider):
+        """Sets the cloud_provider of this ArrayTask.
+
+        The name of the cloud provider where this task executed.  # noqa: E501
+
+        :param cloud_provider: The cloud_provider of this ArrayTask.  # noqa: E501
+        :type: str
+        """
+
+        self._cloud_provider = cloud_provider
+
+    @property
+    def cloud_region(self):
+        """Gets the cloud_region of this ArrayTask.  # noqa: E501
+
+        The region of the cloud provider where this task executed.  # noqa: E501
+
+        :return: The cloud_region of this ArrayTask.  # noqa: E501
+        :rtype: str
+        """
+        return self._cloud_region
+
+    @cloud_region.setter
+    def cloud_region(self, cloud_region):
+        """Sets the cloud_region of this ArrayTask.
+
+        The region of the cloud provider where this task executed.  # noqa: E501
+
+        :param cloud_region: The cloud_region of this ArrayTask.  # noqa: E501
+        :type: str
+        """
+
+        self._cloud_region = cloud_region
 
     def to_dict(self):
         """Returns the model properties as a dict"""

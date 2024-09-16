@@ -1314,7 +1314,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     namespace = 'namespace_example' # str | name or UUID of namespace sharing their payment info
-email_invite = None # object | Recipients of the invitation. These may only be namespaces, not email addresses.  (optional)
+email_invite = tiledb.cloud.rest_api.InlineObject1() # InlineObject1 |  (optional)
 
     try:
         api_instance.share_payment(namespace, email_invite=email_invite)
@@ -1362,7 +1362,7 @@ with tiledb.cloud.rest_api.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = tiledb.cloud.rest_api.InvitationApi(api_client)
     namespace = 'namespace_example' # str | name or UUID of namespace sharing their payment info
-email_invite = None # object | Recipients of the invitation. These may only be namespaces, not email addresses.  (optional)
+email_invite = tiledb.cloud.rest_api.InlineObject1() # InlineObject1 |  (optional)
 
     try:
         api_instance.share_payment(namespace, email_invite=email_invite)
@@ -1372,10 +1372,10 @@ email_invite = None # object | Recipients of the invitation. These may only be n
 
 ### Parameters
 
-| Name             | Type       | Description                                                                      | Notes      |
-| ---------------- | ---------- | -------------------------------------------------------------------------------- | ---------- |
-| **namespace**    | **str**    | name or UUID of namespace sharing their payment info                             |
-| **email_invite** | **object** | Recipients of the invitation. These may only be namespaces, not email addresses. | [optional] |
+| Name             | Type                                  | Description                                          | Notes      |
+| ---------------- | ------------------------------------- | ---------------------------------------------------- | ---------- |
+| **namespace**    | **str**                               | name or UUID of namespace sharing their payment info |
+| **email_invite** | [**InlineObject1**](InlineObject1.md) |                                                      | [optional] |
 
 ### Return type
 

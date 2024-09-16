@@ -485,6 +485,178 @@ class GroupsApi(object):
             collection_formats=collection_formats,
         )
 
+    def get_group_activity(self, group_namespace, group_name, **kwargs):  # noqa: E501
+        """get_group_activity  # noqa: E501
+
+        Retrieves activity logs for all assets contained in a group (arrays and other groups) including the parent group itself.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_group_activity(group_namespace, group_name, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str group_namespace: namespace group is in (an organization name or user's username) (required)
+        :param str group_name: name/uri of group that is url-encoded (required)
+        :param int start: Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
+        :param int end: End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
+        :param int page: pagination offset
+        :param int per_page: pagination limit
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: GroupActivityResponse
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs["_return_http_data_only"] = True
+        return self.get_group_activity_with_http_info(
+            group_namespace, group_name, **kwargs
+        )  # noqa: E501
+
+    def get_group_activity_with_http_info(
+        self, group_namespace, group_name, **kwargs
+    ):  # noqa: E501
+        """get_group_activity  # noqa: E501
+
+        Retrieves activity logs for all assets contained in a group (arrays and other groups) including the parent group itself.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_group_activity_with_http_info(group_namespace, group_name, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str group_namespace: namespace group is in (an organization name or user's username) (required)
+        :param str group_name: name/uri of group that is url-encoded (required)
+        :param int start: Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
+        :param int end: End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
+        :param int page: pagination offset
+        :param int per_page: pagination limit
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: tuple(GroupActivityResponse, status_code(int), headers(HTTPHeaderDict))
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = [
+            "group_namespace",
+            "group_name",
+            "start",
+            "end",
+            "page",
+            "per_page",
+        ]
+        all_params.extend(
+            [
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params["kwargs"]):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method get_group_activity" % key
+                )
+            local_var_params[key] = val
+        del local_var_params["kwargs"]
+        # verify the required parameter 'group_namespace' is set
+        if self.api_client.client_side_validation and (
+            "group_namespace" not in local_var_params
+            or local_var_params["group_namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `group_namespace` when calling `get_group_activity`"
+            )  # noqa: E501
+        # verify the required parameter 'group_name' is set
+        if self.api_client.client_side_validation and (
+            "group_name" not in local_var_params
+            or local_var_params["group_name"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `group_name` when calling `get_group_activity`"
+            )  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if "group_namespace" in local_var_params:
+            path_params["group_namespace"] = local_var_params[
+                "group_namespace"
+            ]  # noqa: E501
+        if "group_name" in local_var_params:
+            path_params["group_name"] = local_var_params["group_name"]  # noqa: E501
+
+        query_params = []
+        if (
+            "start" in local_var_params and local_var_params["start"] is not None
+        ):  # noqa: E501
+            query_params.append(("start", local_var_params["start"]))  # noqa: E501
+        if (
+            "end" in local_var_params and local_var_params["end"] is not None
+        ):  # noqa: E501
+            query_params.append(("end", local_var_params["end"]))  # noqa: E501
+        if (
+            "page" in local_var_params and local_var_params["page"] is not None
+        ):  # noqa: E501
+            query_params.append(("page", local_var_params["page"]))  # noqa: E501
+        if (
+            "per_page" in local_var_params and local_var_params["per_page"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("per_page", local_var_params["per_page"])
+            )  # noqa: E501
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+
+        return self.api_client.call_api(
+            "/v2/groups/{group_namespace}/{group_name}/activity",
+            "GET",
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type="GroupActivityResponse",  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
+
     def get_group_content_activity(
         self, group_namespace, group_name, **kwargs
     ):  # noqa: E501
@@ -931,169 +1103,6 @@ class GroupsApi(object):
             post_params=form_params,
             files=local_var_files,
             response_type=None,  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
-
-    def list_group_activity(self, namespace, group, **kwargs):  # noqa: E501
-        """list_group_activity  # noqa: E501
-
-        get group activity logs  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_group_activity(namespace, group, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace group is in (an organization name or user's username) (required)
-        :param str group: name/uri of group that is url-encoded (required)
-        :param int start: Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
-        :param int end: End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-        :param int page: pagination offset
-        :param int per_page: pagination limit
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: GroupActivityLogResponse
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs["_return_http_data_only"] = True
-        return self.list_group_activity_with_http_info(
-            namespace, group, **kwargs
-        )  # noqa: E501
-
-    def list_group_activity_with_http_info(
-        self, namespace, group, **kwargs
-    ):  # noqa: E501
-        """list_group_activity  # noqa: E501
-
-        get group activity logs  # noqa: E501
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.list_group_activity_with_http_info(namespace, group, async_req=True)
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-        :param str namespace: namespace group is in (an organization name or user's username) (required)
-        :param str group: name/uri of group that is url-encoded (required)
-        :param int start: Start time of window of fetch logs, unix epoch in seconds (default: seven days ago)
-        :param int end: End time of window of fetch logs, unix epoch in seconds (default: current utc timestamp)
-        :param int page: pagination offset
-        :param int per_page: pagination limit
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: tuple(GroupActivityLogResponse, status_code(int), headers(HTTPHeaderDict))
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        local_var_params = locals()
-
-        all_params = ["namespace", "group", "start", "end", "page", "per_page"]
-        all_params.extend(
-            [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params["kwargs"]):
-            if key not in all_params:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method list_group_activity" % key
-                )
-            local_var_params[key] = val
-        del local_var_params["kwargs"]
-        # verify the required parameter 'namespace' is set
-        if self.api_client.client_side_validation and (
-            "namespace" not in local_var_params
-            or local_var_params["namespace"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `namespace` when calling `list_group_activity`"
-            )  # noqa: E501
-        # verify the required parameter 'group' is set
-        if self.api_client.client_side_validation and (
-            "group" not in local_var_params
-            or local_var_params["group"] is None  # noqa: E501
-        ):  # noqa: E501
-            raise ApiValueError(
-                "Missing the required parameter `group` when calling `list_group_activity`"
-            )  # noqa: E501
-
-        collection_formats = {}
-
-        path_params = {}
-        if "namespace" in local_var_params:
-            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
-        if "group" in local_var_params:
-            path_params["group"] = local_var_params["group"]  # noqa: E501
-
-        query_params = []
-        if (
-            "start" in local_var_params and local_var_params["start"] is not None
-        ):  # noqa: E501
-            query_params.append(("start", local_var_params["start"]))  # noqa: E501
-        if (
-            "end" in local_var_params and local_var_params["end"] is not None
-        ):  # noqa: E501
-            query_params.append(("end", local_var_params["end"]))  # noqa: E501
-        if (
-            "page" in local_var_params and local_var_params["page"] is not None
-        ):  # noqa: E501
-            query_params.append(("page", local_var_params["page"]))  # noqa: E501
-        if (
-            "per_page" in local_var_params and local_var_params["per_page"] is not None
-        ):  # noqa: E501
-            query_params.append(
-                ("per_page", local_var_params["per_page"])
-            )  # noqa: E501
-
-        header_params = {}
-
-        form_params = []
-        local_var_files = {}
-
-        body_params = None
-        # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
-
-        # Authentication setting
-        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
-
-        return self.api_client.call_api(
-            "/v2/groups/{namespace}/{group}/activity",
-            "GET",
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type="GroupActivityLogResponse",  # noqa: E501
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(

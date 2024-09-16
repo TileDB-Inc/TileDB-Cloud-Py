@@ -1,6 +1,6 @@
 # ArrayActivityLog
 
-Actvity of an Array
+Activity of an Array
 
 ## Properties
 
