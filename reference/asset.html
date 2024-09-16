@@ -494,6 +494,14 @@ ul.task-list li input[type="checkbox"] {
 <td>Retrieve information about an asset.</td>
 </tr>
 <tr class="even">
+<td><a href="#tiledb.cloud.asset.list">list</a></td>
+<td>List/search for stored assets.</td>
+</tr>
+<tr class="odd">
+<td><a href="#tiledb.cloud.asset.list_public">list_public</a></td>
+<td>List/search for publicly-shared assets.</td>
+</tr>
+<tr class="even">
 <td><a href="#tiledb.cloud.asset.list_shared_with">list_shared_with</a></td>
 <td>List an asset’s sharing policies.</td>
 </tr>
@@ -619,6 +627,10 @@ ul.task-list li input[type="checkbox"] {
 <section id="returns" class="level4">
 <h4 class="anchored" data-anchor-id="returns">Returns</h4>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 64%">
+<col style="width: 35%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Type</th>
@@ -627,8 +639,156 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td>Union[ArrayInfo, GroupInfo]</td>
+<td>Union[models.ArrayInfo, models.GroupInfo]</td>
 <td>ArrayInfo or GroupInfo.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.asset.list" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.asset.list">list</h3>
+<p><code>cloud.asset.list(namespace=None, search=None, type=None, ownership_level=None, depth=None, expand=None, page=None, per_page=None, order_by=None)</code></p>
+<p>List/search for stored assets.</p>
+<section id="parameters-3" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 9%">
+<col style="width: 81%">
+<col style="width: 3%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>namespace</code></td>
+<td>Optional[str]</td>
+<td>The namespace to use, or the current user if absent.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>search</code></td>
+<td>Optional[str]</td>
+<td>A search string to use.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>type</code></td>
+<td>Optional[_AssetType]</td>
+<td>If provided, include only assets of the specified type (“array” or “group”).</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>ownership_level</code></td>
+<td>Optional[_OwnershipLevel]</td>
+<td>If provided, include only assets you own (“owned”), or only assets that are shared with you (“shared”).</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>depth</code></td>
+<td>Optional[_Depth]</td>
+<td>The depth to provide return information. If “root”, only root assets (i.e., arrays and groups that are not contained within another group) will be returned. If “all”, all assets that match (including those which are contained in another group) will be included.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>expand</code></td>
+<td>Optional[_CSVString]</td>
+<td>Comma-separated string specifying additional information to include in the response. As of this writing, “metadata” is supported.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>page</code></td>
+<td>Optional[int]</td>
+<td>Which page of results to retrieve. 1-based.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>per_page</code></td>
+<td>Optional[int]</td>
+<td>How many results to include on each page.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>order_by</code></td>
+<td>Optional[str]</td>
+<td>The order to return assets, by default “created_at desc”. Supported keys are “created_at”, “name”, and “asset_type”. They can be used alone or with “asc” or “desc” separated by a space (e.g.&nbsp;“created_at”, “asset_type asc”).</td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="tiledb.cloud.asset.list_public" class="level3">
+<h3 class="anchored" data-anchor-id="tiledb.cloud.asset.list_public">list_public</h3>
+<p><code>cloud.asset.list_public(search=None, type=None, depth=None, page=None, per_page=None, order_by=None)</code></p>
+<p>List/search for publicly-shared assets.</p>
+<section id="parameters-4" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 7%">
+<col style="width: 84%">
+<col style="width: 3%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>search</code></td>
+<td>Optional[str]</td>
+<td>A search string to use.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>type</code></td>
+<td>Optional[_AssetType]</td>
+<td>If provided, include only assets of the specified type (“array” or “group”).</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>depth</code></td>
+<td>Optional[_Depth]</td>
+<td>The depth to provide return information. If “root”, only root assets (i.e., arrays and groups that are not contained within another group) will be returned. If “all”, all assets that match (including those which are contained in another group) will be included.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>expand</code></td>
+<td></td>
+<td>Comma-separated string specifying additional information to include in the response. As of this writing, “metadata” is supported.</td>
+<td><em>required</em></td>
+</tr>
+<tr class="odd">
+<td><code>page</code></td>
+<td>Optional[int]</td>
+<td>Which page of results to retrieve. 1-based.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="even">
+<td><code>per_page</code></td>
+<td>Optional[int]</td>
+<td>How many results to include on each page.</td>
+<td><code>None</code></td>
+</tr>
+<tr class="odd">
+<td><code>order_by</code></td>
+<td>Optional[str]</td>
+<td>The order to return assets, by default “created_at desc”. Supported keys are “created_at”, “name”, and “asset_type”. They can be used alone or with “asc” or “desc” separated by a space (e.g.&nbsp;“created_at”, “asset_type asc”).</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
@@ -638,8 +798,8 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.list_shared_with">list_shared_with</h3>
 <p><code>cloud.asset.list_shared_with(uri)</code></p>
 <p>List an asset’s sharing policies.</p>
-<section id="parameters-3" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-3">Parameters</h4>
+<section id="parameters-5" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-5">Parameters</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -681,8 +841,8 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.register">register</h3>
 <p><code>cloud.asset.register(storage_uri, type, *, dest_uri=None, name=None, namespace=None, credentials_name=None, parent_uri=None)</code></p>
 <p>Register stored objects as an asset.</p>
-<section id="parameters-4" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-4">Parameters</h4>
+<section id="parameters-6" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-6">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 12%">
@@ -707,7 +867,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td><code>type</code></td>
-<td>str</td>
+<td>_AssetType</td>
 <td>The type of asset, “array” or “group”.</td>
 <td><em>required</em></td>
 </tr>
@@ -749,8 +909,8 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.share">share</h3>
 <p><code>cloud.asset.share(uri, namespace, permissions='read')</code></p>
 <p>Give another namespace permission to access an asset.</p>
-<section id="parameters-5" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-5">Parameters</h4>
+<section id="parameters-7" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-7">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 14%">
@@ -793,8 +953,8 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.unshare">unshare</h3>
 <p><code>cloud.asset.unshare(uri, namespace)</code></p>
 <p>Remove access permissions for another namespace.</p>
-<section id="parameters-6" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-6">Parameters</h4>
+<section id="parameters-8" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-8">Parameters</h4>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -825,8 +985,8 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="tiledb.cloud.asset.update_info">update_info</h3>
 <p><code>cloud.asset.update_info(uri, *, description=None, name=None, tags=None, access_credentials_name=None)</code></p>
 <p>Update asset info settings.</p>
-<section id="parameters-7" class="level4">
-<h4 class="anchored" data-anchor-id="parameters-7">Parameters</h4>
+<section id="parameters-9" class="level4">
+<h4 class="anchored" data-anchor-id="parameters-9">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 16%">
