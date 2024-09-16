@@ -151,7 +151,7 @@ jobs:
             --store-durations \
             --splitting-algorithm least_duration \
             --clean-durations \
-            -r fxX \
+            -r xX \
           || .github/scripts/retry 2 \
             pytest -sv \
             --last-failed \
