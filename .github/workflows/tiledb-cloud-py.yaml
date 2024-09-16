@@ -151,13 +151,13 @@ jobs:
             --store-durations \
             --splitting-algorithm least_duration \
             --clean-durations \
-            -r xX \
+            -r fExX \
           || .github/scripts/retry 2 \
             pytest -sv \
             --last-failed \
             --tb short \
             --color yes \
-            -r fxX
+            -r fExX
         env:
           TILEDB_REST_TOKEN: ${{ secrets.TILEDB_CLOUD_HELPER_VAR }}
 
