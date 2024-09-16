@@ -1,5 +1,7 @@
 import unittest
 
+import pytest
+
 import tiledb.cloud.taskgraphs as tg
 from tiledb.cloud import dag
 from tiledb.cloud.taskgraphs.server_executor import impl
@@ -7,6 +9,9 @@ from tiledb.cloud.taskgraphs.server_executor import impl
 _WAIT_TIME_S = 120
 
 
+@pytest.mark.xfail(
+    reason="Two issues upstream prevent this test from reliably passing."
+)
 class ConnectToExistingTest(unittest.TestCase):
     def test_completed_graph(self) -> None:
         to_run = dag.DAG(mode=dag.Mode.BATCH)
