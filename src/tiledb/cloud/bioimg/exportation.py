@@ -3,9 +3,9 @@ from typing import Any, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
 from tiledb.cloud import dag
-from tiledb.cloud.bioimg.helpers import get_logger_wrapper
 from tiledb.cloud.bioimg.helpers import validate_io_paths
 from tiledb.cloud.dag.mode import Mode
+from tiledb.cloud.logging import get_logger_wrapper
 from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.utilities._common import as_batch
 from tiledb.cloud.utilities._common import run_dag

@@ -21,7 +21,7 @@ from tiledb.cloud.files import indexing as file_indexing
 from tiledb.cloud.files import ingestion as file_ingestion
 from tiledb.cloud.files import udfs as file_udfs
 from tiledb.cloud.files import utils as file_utils
-from tiledb.cloud.utilities import get_logger_wrapper
+from tiledb.cloud.logging import get_logger_wrapper
 
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 

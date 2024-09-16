@@ -9,8 +9,8 @@ import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud._common import functions
 from tiledb.cloud._common import utils
+from tiledb.cloud.logging import get_logger_wrapper
 from tiledb.cloud.utilities import as_batch
-from tiledb.cloud.utilities import get_logger_wrapper
 from tiledb.cloud.utilities import run_dag
 
 _DEFAULT_RESOURCES = {"cpu": "8", "memory": "8Gi"}
