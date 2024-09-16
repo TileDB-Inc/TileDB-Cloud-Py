@@ -11,8 +11,8 @@ from attrs import field
 import tiledb
 from tiledb.cloud.dag import DAG
 from tiledb.cloud.dag import Mode
+from tiledb.cloud.logging import get_logger
 from tiledb.cloud.rest_api import RetryStrategy
-from tiledb.cloud.utilities import get_logger
 from tiledb.cloud.utilities import process_stream
 from tiledb.cloud.utilities import run_dag
 from tiledb.cloud.version import version

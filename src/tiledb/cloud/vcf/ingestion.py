@@ -13,12 +13,12 @@ import numpy as np
 
 import tiledb
 from tiledb.cloud import dag
+from tiledb.cloud.logging import get_logger
 from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import consolidate_fragments
 from tiledb.cloud.utilities import create_log_array
-from tiledb.cloud.utilities import get_logger
 from tiledb.cloud.utilities import max_memory_usage
 from tiledb.cloud.utilities import process_stream
 from tiledb.cloud.utilities import read_file

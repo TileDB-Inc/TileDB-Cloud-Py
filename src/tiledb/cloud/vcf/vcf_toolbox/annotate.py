@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 import tiledb
-from tiledb.cloud.utilities import get_logger
+from tiledb.cloud.logging import get_logger
 from tiledb.cloud.utilities import max_memory_usage
 
 from .transform import df_transform
