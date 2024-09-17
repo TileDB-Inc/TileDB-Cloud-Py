@@ -5,6 +5,8 @@ import sys
 from typing import Optional
 
 import tiledb
+import tiledb.cloud
+import tiledb.libtiledb
 
 
 def get_logger(level: int = logging.INFO, name: str = __name__) -> logging.Logger:
@@ -53,7 +55,7 @@ def get_logger_wrapper(
     logger = get_logger(level)
 
     logger.debug(
-        "tiledb.cloud=%s, tiledb=%s, libtiledb=%s",
+        "Configured logger: tiledb.cloud=%s, tiledb=%s, libtiledb=%s",
         tiledb.cloud.__version__,
         tiledb.version(),
         tiledb.libtiledb.version(),
