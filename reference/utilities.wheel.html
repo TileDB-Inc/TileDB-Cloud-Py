@@ -645,7 +645,7 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="tiledb.cloud.utilities.wheel.install_wheel" class="level3">
 <h3 class="anchored" data-anchor-id="tiledb.cloud.utilities.wheel.install_wheel">install_wheel</h3>
-<p><code>cloud.utilities.wheel.install_wheel(wheel_uri, config=None, verbose=False, no_deps=True, deps_to_refresh=None, in_venv=True)</code></p>
+<p><code>cloud.utilities.wheel.install_wheel(wheel_uri, config=None, verbose=False, no_deps=True, deps_to_refresh=None, in_venv=None)</code></p>
 <p>Install at runtime a Python wheel from TiileDB Filestore or PyPI.</p>
 <p>Note: THIS IS AN EXPERIMENTAL API. IT MAY CHANGE IN THE FUTURE.</p>
 <p>Attempt to install a wheel file from a TileDB Filestore. If <code>wheel_uri</code> does not point to a .wheel file, assume it is the name of a public Python library and attempt to install from PyPI.</p>
@@ -653,10 +653,10 @@ ul.task-list li input[type="checkbox"] {
 <h4 class="anchored" data-anchor-id="parameters-1">Parameters</h4>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 13%">
-<col style="width: 22%">
-<col style="width: 56%">
-<col style="width: 8%">
+<col style="width: 16%">
+<col style="width: 28%">
+<col style="width: 44%">
+<col style="width: 10%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -699,9 +699,9 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td><code>in_venv</code></td>
-<td>bool</td>
-<td>Whether to install to venv runtime. For conda, likely want default, in_ven=True.</td>
-<td><code>True</code></td>
+<td>Optional[bool]</td>
+<td>Whether to install to venv runtime.</td>
+<td><code>None</code></td>
 </tr>
 </tbody>
 </table>
