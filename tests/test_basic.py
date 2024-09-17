@@ -9,7 +9,6 @@ import numpy as np
 import packaging.version as pkgver
 import pandas
 import pyarrow
-import pytest
 
 import tiledb
 import tiledb.cloud
@@ -35,9 +34,6 @@ class BasicTests(unittest.TestCase):
         all_mods = ast.literal_eval(all_mods_str.decode())
         assert "pandas" not in all_mods
 
-    @pytest.mark.xfail(
-        reason="An upstream issue prevents this test from reliably passing."
-    )
     def test_info(self):
         self.assertIsNotNone(array.info("tiledb://TileDB-Inc/quickstart_sparse"))
         self.assertIsNotNone(groups.info("tiledb://TileDB-Inc/TileDB_101"))
@@ -418,9 +414,6 @@ class BasicTests(unittest.TestCase):
         )
         self.assertEqual(2, len(got.groups))
 
-    @pytest.mark.xfail(
-        reason="An upstream issue prevents this test from reliably passing."
-    )
     def test_public_groups(self):
         got = client.list_public_groups(
             namespace="tiledb-inc",
