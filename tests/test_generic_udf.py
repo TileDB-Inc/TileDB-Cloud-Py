@@ -1,3 +1,4 @@
+import datetime
 import unittest
 
 import numpy as np
@@ -122,3 +123,38 @@ class GenericUDFTest(unittest.TestCase):
 
         with self.assertRaises(tiledb_cloud_error.TileDBCloudError):
             udf.exec(test, timeout=1)
+
+
+class ParserTest(unittest.TestCase):
+    def test_parse_udf_name_timestamp(self) -> None:
+        inouts = (
+            ("just-a-name", ("just-a-name", None)),
+            ("udf/name@2022-03-04", ("udf/name", _utc(2022, 3, 4))),
+            ("other/name@2022-03-04 05:06", ("other/name", _utc(2022, 3, 4, 5, 6))),
+            ("prince@1999-09-09 21:21:21", ("prince", _utc(1999, 9, 9, 21, 21, 21))),
+            (
+                "uses-t@2024-09-17T20:59:59.999999",
+                ("uses-t", _utc(2024, 9, 17, 20, 59, 59, 999999)),
+            ),
+        )
+        for inval, outs in inouts:
+            with self.subTest(inval):
+                self.assertEqual(outs, udf._parse_udf_name_timestamp(inval))
+
+    def test_parse_udf_name_timestamp_bad(self) -> None:
+        bads = (
+            "name@not a time at all",
+            "too-short@2020-01",
+            "no-space@2020-01-0203",
+            "lowercase-t@2020-01-02t03:04",
+            "hour-only@2020-01-02 03",
+            "too-precise@2020-01-02 03:04:05.67890123456",
+        )
+        for bad in bads:
+            with self.subTest(bad):
+                with self.assertRaises(ValueError):
+                    udf._parse_udf_name_timestamp(bad)
+
+
+def _utc(*args: int) -> datetime.datetime:
+    return datetime.datetime(*args, tzinfo=datetime.timezone.utc)

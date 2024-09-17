@@ -1,7 +1,8 @@
 import base64
+import datetime
 import uuid
 import warnings
-from typing import Any, Callable, Iterable, Optional, Union
+from typing import Any, Callable, Iterable, Optional, Tuple, Union
 
 import cloudpickle
 
@@ -170,6 +171,37 @@ def exec_async(*args, **kwargs) -> Any:
     Arguments are exactly as in :func:`exec_base`.
     """
     return sender.wrap_async_base_call(exec_base, *args, **kwargs)
+
+
+_FULL_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
+_TIME_FORMATS = (
+    "%Y-%m-%d",
+    "%Y-%m-%d %H:%M",
+    "%Y-%m-%d %H:%M:%S",
+    _FULL_FORMAT,
+)
+
+
+def _parse_udf_name_timestamp(
+    full_name: str,
+) -> Tuple[str, Optional[datetime.datetime]]:
+    name, at, ts_str = full_name.partition("@")
+    if not at:
+        # This means that "@" was not found in the string,
+        # and we're just running a normal UDF.
+        return name, None
+    ts_str = ts_str.replace("T", " ")
+    for fmt in _TIME_FORMATS:
+        try:
+            naive_ts = datetime.datetime.strptime(ts_str, fmt)
+        except ValueError:
+            continue
+        return name, naive_ts.replace(tzinfo=datetime.timezone.utc)
+    raise ValueError(
+        f"Could not parse {ts_str} as a timestamp. "
+        "Timestamp must be formatted as yyyy-MM-dd[ HH:mm[:ss[.SSS]]] "
+        "and is interpreted as UTC."
+    )
 
 
 def register_udf(
