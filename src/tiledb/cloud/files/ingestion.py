@@ -13,8 +13,8 @@ from tiledb.cloud.files import utils as file_utils
 from tiledb.cloud.files.indexing import IndexTypes
 from tiledb.cloud.files.indexing import ingest_files as index_files
 from tiledb.cloud.utilities import as_batch
+from tiledb.cloud.utilities import get_logger_wrapper
 from tiledb.cloud.utilities import run_dag
-from tiledb.cloud.utilities.logging import get_logger_wrapper
 
 DEFAULT_FILE_INGESTION_NAME = "file-ingestion"
 

@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence
 import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud.utilities import as_batch
-from tiledb.cloud.utilities.logging import get_logger_wrapper
+from tiledb.cloud.utilities import get_logger_wrapper
 
 
 class IndexTypes(str, Enum):

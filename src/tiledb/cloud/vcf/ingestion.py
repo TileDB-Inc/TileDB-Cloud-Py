@@ -18,13 +18,13 @@ from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import consolidate_fragments
 from tiledb.cloud.utilities import create_log_array
+from tiledb.cloud.utilities import get_logger
 from tiledb.cloud.utilities import max_memory_usage
 from tiledb.cloud.utilities import process_stream
 from tiledb.cloud.utilities import read_file
 from tiledb.cloud.utilities import run_dag
 from tiledb.cloud.utilities import set_aws_context
 from tiledb.cloud.utilities import write_log_event
-from tiledb.cloud.utilities.logging import get_logger
 from tiledb.cloud.vcf.utils import create_index_file
 from tiledb.cloud.vcf.utils import find_index
 from tiledb.cloud.vcf.utils import get_record_count

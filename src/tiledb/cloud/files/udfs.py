@@ -6,7 +6,7 @@ from typing import Any, List, Mapping, Optional, Sequence, TypeVar
 from tiledb.cloud.files import utils as file_utils
 from tiledb.cloud.utilities import chunk
 from tiledb.cloud.utilities import find
-from tiledb.cloud.utilities.logging import get_logger_wrapper
+from tiledb.cloud.utilities import get_logger_wrapper
 
 DEFAULT_BATCH_SIZE = 100
 _T = TypeVar("_T")

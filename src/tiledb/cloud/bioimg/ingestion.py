@@ -8,9 +8,9 @@ from tiledb.cloud.bioimg.helpers import serialize_filter
 from tiledb.cloud.bioimg.helpers import validate_io_paths
 from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.rest_api.models import RetryStrategy
+from tiledb.cloud.utilities import get_logger_wrapper
 from tiledb.cloud.utilities._common import as_batch
 from tiledb.cloud.utilities._common import run_dag
-from tiledb.cloud.utilities.logging import get_logger_wrapper
 
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"

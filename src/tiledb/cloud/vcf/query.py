@@ -14,10 +14,10 @@ from tiledb.cloud.compute import DelayedArrayUDF
 from tiledb.cloud.compute import DelayedMultiArrayUDF
 from tiledb.cloud.compute import DelayedSQL
 from tiledb.cloud.utilities import Profiler
+from tiledb.cloud.utilities import get_logger
 from tiledb.cloud.utilities import max_memory_usage
 from tiledb.cloud.utilities import run_dag
 from tiledb.cloud.utilities import set_aws_context
-from tiledb.cloud.utilities.logging import get_logger
 
 DEFAULT_ATTRS = [
     "sample_name",
