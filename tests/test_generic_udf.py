@@ -129,11 +129,11 @@ class ParserTest(unittest.TestCase):
     def test_parse_udf_name_timestamp(self) -> None:
         inouts = (
             ("just-a-name", ("just-a-name", None)),
-            ("udf/name@2022-03-04", ("udf/name", _utc(2022, 3, 4))),
+            ("udf/name @ 2022-03-04", ("udf/name", _utc(2022, 3, 4))),
             ("other/name@2022-03-04 05:06", ("other/name", _utc(2022, 3, 4, 5, 6))),
             ("prince@1999-09-09 21:21:21", ("prince", _utc(1999, 9, 9, 21, 21, 21))),
             (
-                "uses-t@2024-09-17T20:59:59.999999",
+                "  uses-t @   2024-09-17T20:59:59.999999  ",
                 ("uses-t", _utc(2024, 9, 17, 20, 59, 59, 999999)),
             ),
             ("lowercase-t@2020-01-02t03:04", ("lowercase-t", _utc(2020, 1, 2, 3, 4))),

@@ -185,6 +185,8 @@ def _parse_udf_name_timestamp(
     full_name: str,
 ) -> Tuple[str, Optional[datetime.datetime]]:
     name, at, ts_str = full_name.partition("@")
+    name = name.strip()
+    ts_str = ts_str.strip()
     if not at:
         # This means that "@" was not found in the string,
         # and we're just running a normal UDF.
@@ -198,8 +200,8 @@ def _parse_udf_name_timestamp(
         return name, naive_ts.replace(tzinfo=datetime.timezone.utc)
     raise ValueError(
         f"Could not parse {ts_str} as a timestamp. "
-        "Timestamp must be formatted as yyyy-MM-dd[ HH:mm[:ss[.SSS]]] "
-        "and is interpreted as UTC."
+        "Timestamp must be formatted as yyyy-MM-dd[ HH:mm[:ss[.SSS]]], "
+        "and will interpreted as UTC."
     )
 
 
