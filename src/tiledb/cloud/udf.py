@@ -173,12 +173,11 @@ def exec_async(*args, **kwargs) -> Any:
     return sender.wrap_async_base_call(exec_base, *args, **kwargs)
 
 
-_FULL_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 _TIME_FORMATS = (
     "%Y-%m-%d",
-    "%Y-%m-%d %H:%M",
-    "%Y-%m-%d %H:%M:%S",
-    _FULL_FORMAT,
+    "%Y-%m-%dT%H:%M",
+    "%Y-%m-%dT%H:%M:%S",
+    "%Y-%m-%dT%H:%M:%S.%f",
 )
 
 
@@ -190,7 +189,7 @@ def _parse_udf_name_timestamp(
         # This means that "@" was not found in the string,
         # and we're just running a normal UDF.
         return name, None
-    ts_str = ts_str.replace("T", " ")
+    ts_str = ts_str.replace(" ", "T")
     for fmt in _TIME_FORMATS:
         try:
             naive_ts = datetime.datetime.strptime(ts_str, fmt)

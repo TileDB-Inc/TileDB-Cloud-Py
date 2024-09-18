@@ -136,6 +136,7 @@ class ParserTest(unittest.TestCase):
                 "uses-t@2024-09-17T20:59:59.999999",
                 ("uses-t", _utc(2024, 9, 17, 20, 59, 59, 999999)),
             ),
+            ("lowercase-t@2020-01-02t03:04", ("lowercase-t", _utc(2020, 1, 2, 3, 4))),
         )
         for inval, outs in inouts:
             with self.subTest(inval):
@@ -146,7 +147,6 @@ class ParserTest(unittest.TestCase):
             "name@not a time at all",
             "too-short@2020-01",
             "no-space@2020-01-0203",
-            "lowercase-t@2020-01-02t03:04",
             "hour-only@2020-01-02 03",
             "too-precise@2020-01-02 03:04:05.67890123456",
         )
