@@ -13,7 +13,6 @@ import numpy as np
 
 import tiledb
 from tiledb.cloud import dag
-from tiledb.cloud.logging import get_logger
 from tiledb.cloud.rest_api.models import RetryStrategy
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import as_batch
@@ -25,6 +24,7 @@ from tiledb.cloud.utilities import read_file
 from tiledb.cloud.utilities import run_dag
 from tiledb.cloud.utilities import set_aws_context
 from tiledb.cloud.utilities import write_log_event
+from tiledb.cloud.utilities.logging import get_logger
 from tiledb.cloud.vcf.utils import create_index_file
 from tiledb.cloud.vcf.utils import find_index
 from tiledb.cloud.vcf.utils import get_record_count

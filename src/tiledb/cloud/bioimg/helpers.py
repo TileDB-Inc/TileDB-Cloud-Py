@@ -1,6 +1,8 @@
+import warnings
 from typing import Sequence
 
 import tiledb
+import tiledb.cloud.utilities.logging
 
 
 def serialize_filter(filter):
@@ -43,3 +45,13 @@ def validate_io_paths(
                 raise ValueError("Invalid combination of source and output paths.")
         else:
             raise ValueError("Invalid combination of source and output paths.")
+
+
+def get_logger_wrapper(*args, **kwargs):
+    warnings.warn(
+        "Bioimg's get_logger_wrapper() is deprecated, "
+        "use tiledb.cloud.utilities.logging.get_logger_wrapper() instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return tiledb.cloud.utilities.logging.get_logger_wrapper(*args, **kwargs)

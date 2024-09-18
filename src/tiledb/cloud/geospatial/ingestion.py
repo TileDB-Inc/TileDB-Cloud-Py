@@ -20,7 +20,6 @@ import attrs
 
 import tiledb
 from tiledb.cloud.files import utils as file_utils
-from tiledb.cloud.logging import get_logger_wrapper
 from tiledb.cloud.utilities import Profiler
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import chunk
@@ -28,6 +27,7 @@ from tiledb.cloud.utilities import create_log_array
 from tiledb.cloud.utilities import find
 from tiledb.cloud.utilities import max_memory_usage
 from tiledb.cloud.utilities import run_dag
+from tiledb.cloud.utilities.logging import get_logger_wrapper
 
 DEFAULT_RESOURCES = {"cpu": "2", "memory": "2Gi"}
 DEFAULT_IMG_NAME = "3.9-geo"

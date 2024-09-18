@@ -6,7 +6,7 @@ import tiledbsoma
 import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud._common import functions
-from tiledb.cloud.logging import get_logger_wrapper
+from tiledb.cloud.utilities.logging import get_logger_wrapper
 
 _DEFAULT_RESOURCES = {"cpu": "8", "memory": "8Gi"}
 """Default resource size; equivalent to a "large" UDF container."""
