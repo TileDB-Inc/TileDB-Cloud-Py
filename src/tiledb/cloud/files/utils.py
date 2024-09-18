@@ -236,6 +236,7 @@ def upload_file(
             url=orig_url,
             headers=headers,
         )
+        utils.release_connection(probe)
         if not (200 <= probe.status < 300 or probe.status == 405):
             # Once we reach the end, we should get either 405 Method Not Allowed
             # or some form of OK (2xx). If not, that's an error.
