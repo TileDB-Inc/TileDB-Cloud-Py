@@ -7,7 +7,7 @@ import pytest
 
 import tiledb
 import tiledb.cloud
-from tiledb.cloud.logging import get_logger
+from tiledb.cloud.utilities import get_logger
 from tiledb.cloud.utilities import install_wheel
 from tiledb.cloud.utilities import upload_wheel
 from tiledb.cloud.utilities.wheel import PipInstall
