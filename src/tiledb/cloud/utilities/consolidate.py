@@ -5,9 +5,10 @@ from typing import Any, Mapping, Optional, Sequence
 import tiledb
 from tiledb.cloud import dag
 from tiledb.cloud.rest_api.models import RetryStrategy
-from tiledb.cloud.utilities import get_logger
-from tiledb.cloud.utilities import max_memory_usage
-from tiledb.cloud.utilities import run_dag
+
+from ._common import max_memory_usage
+from ._common import run_dag
+from .logging import get_logger
 
 MAX_FRAGMENT_SIZE_BYTES = 1 << 30
 

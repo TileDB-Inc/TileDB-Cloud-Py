@@ -8,8 +8,9 @@ import numpy as np
 from typing_extensions import Self
 
 import tiledb
-from tiledb.cloud.utilities import max_memory_usage
-from tiledb.cloud.utilities import read_file
+
+from ._common import max_memory_usage
+from ._common import read_file
 
 
 def create_log_array(uri: str) -> None:

@@ -14,7 +14,8 @@ from typing import Any, List, Mapping, Optional, Sequence
 
 import tiledb
 from tiledb.cloud.client import Config
-from tiledb.cloud.utilities import get_logger
+
+from .logging import get_logger
 
 logger = get_logger()
 logger.propagate = False
