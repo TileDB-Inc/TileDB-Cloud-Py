@@ -17,6 +17,7 @@ DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-ingestion"
 _SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs", ".ndpi", ".png")
 _SUPPORTED_CONVERTERS = ("tiff", "zarr", "osd", "png")
+BIOIMG_MAX_BATCHES = 100
 
 
 def ingest(
@@ -26,7 +27,7 @@ def ingest(
     *args: Any,
     acn: str = "",
     taskgraph_name: Optional[str] = None,
-    num_batches: Optional[int] = None,
+    num_batches: Optional[int] = BIOIMG_MAX_BATCHES,
     threads: Optional[int] = 0,
     resources: Optional[Mapping[str, Any]] = None,
     compute: bool = True,
@@ -77,7 +78,8 @@ def ingest(
     """
 
     logger = get_logger_wrapper(verbose)
-    max_workers = None if num_batches else 20  # Default picked heuristically.
+    # Limit the number of batches below the BIOIMG_MAX_BATCHES
+    num_batches = min(num_batches, BIOIMG_MAX_BATCHES)
 
     # Demand for mutual exclusion of the two arguments and existence.
     access_credentials_name = kwargs.pop("access_credentials_name", None)
@@ -328,7 +330,7 @@ def ingest(
     graph = dag.DAG(
         name=dag_name,
         mode=mode,
-        max_workers=max_workers,
+        max_workers=None,
         namespace=namespace,
         retry_strategy=RetryStrategy(
             limit=3,
