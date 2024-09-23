@@ -15,8 +15,8 @@ from tiledb.cloud.utilities._common import run_dag
 DEFAULT_RESOURCES = {"cpu": "8", "memory": "4Gi"}
 DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-ingestion"
-_SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs", ".ndpi")
-_SUPPORTED_CONVERTERS = ("tiff", "zarr", "osd")
+_SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs", ".ndpi", ".png")
+_SUPPORTED_CONVERTERS = ("tiff", "zarr", "osd", "png")
 
 
 def ingest(
@@ -203,8 +203,10 @@ def ingest(
         user_converter = {
             "zarr": Converters.OMEZARR,
             "osd": Converters.OSD,
+            "png": Converters.PNG,
         }.get(converter, Converters.OMETIFF)
 
+        experimental_reader = kwargs.get("experimental_reader", False)
         compressor = kwargs.get("compressor", None)
         if compressor:
             compressor_args = dict(compressor)
@@ -229,8 +231,10 @@ def ingest(
                 tile_scale=tile_scale,
                 source_config=config,
                 dest_config=kwargs.get("dest_config", None),
+                experimental_reader=experimental_reader,
                 **kwargs,
             )
+
         return io_uris
 
     def register_dataset_udf(
@@ -350,6 +354,7 @@ def ingest(
 
     # serialize udf arguments
     compressor = kwargs.pop("compressor", None)
+    experimental_reader = kwargs.pop("experimental_reader", False)
     logger.debug("Compressor: %r", compressor)
     compressor_serial = serialize_filter(compressor) if compressor else None
 
@@ -368,6 +373,7 @@ def ingest(
         image_name=DEFAULT_IMG_NAME,
         max_workers=threads,
         compressor=compressor_serial,
+        experimental_reader=experimental_reader,
         access_credentials_name=acn,
         **kwargs,
     )
