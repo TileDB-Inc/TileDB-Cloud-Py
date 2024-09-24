@@ -71,7 +71,9 @@ def upload_wheel(
             )
 
         # Create the array if it doesn't exist
-        if object_type is None:
+        # `object_type == "None"` is work-around for regression,
+        # see https://app.shortcut.com/tiledb-inc/story/55930 for fix
+        if object_type is None or object_type == "None":
             tiledb.Array.create(dest_uri, tiledb.ArraySchema.from_file(wheel_path))
             logger.info(f"Created filestore at '{dest_uri}'")
         elif object_type == "group":
