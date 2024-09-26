@@ -2,8 +2,11 @@ import logging
 import sys
 import unittest
 
+import pytest
+
 import tiledb.cloud
 import tiledb.cloud.soma
+from tiledb.cloud._common import testonly
 
 
 class TestSOMAIngestion(unittest.TestCase):
@@ -62,9 +65,11 @@ class TestSOMAMapper(unittest.TestCase):
         super().__init__(foo)
         self.maxDiff = None
 
+    @pytest.mark.skipif(not testonly.is_unittest_user, reason="Requires unittest user.")
     def test_mapper_basic_realtime(self):
         self._test_mapper_basic(False)
 
+    @pytest.mark.skipif(not testonly.is_unittest_user, reason="Requires unittest user.")
     def test_mapper_basic_batch(self):
         self._test_mapper_basic(True)
 
