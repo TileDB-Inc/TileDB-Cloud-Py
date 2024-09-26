@@ -74,6 +74,8 @@ def ingest(
         registered in TileDB Cloud (ARN type) if ``acn`` is not set.
     :param dest_config: dict configuration to pass on tiledb.VFS for the destination's
         resolution
+    :param reader: The selected reader backend implementation either "experimental"
+        or "production". Default["production"]
     """
 
     logger = get_logger_wrapper(verbose)
@@ -354,7 +356,11 @@ def ingest(
 
     # serialize udf arguments
     compressor = kwargs.pop("compressor", None)
-    experimental_reader = kwargs.pop("experimental_reader", False)
+
+    # Get either the new experimental or default reader
+    reader = kwargs.pop("reader", "production")
+    experimental_reader = True if reader == "experimental" else False
+
     logger.debug("Compressor: %r", compressor)
     compressor_serial = serialize_filter(compressor) if compressor else None
 
