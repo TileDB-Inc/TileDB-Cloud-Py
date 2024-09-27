@@ -89,7 +89,9 @@ def login(
     if host is None:
         host = config.default_host
     # See sc-56351. Usually, a hostname doesn't include a protocol
-    # scheme, but our SDK strictly requires the https scheme.
+    # scheme, but our SDK strictly requires the http(s) scheme.
+    elif host.startswith("http://"):
+        pass
     elif not host.startswith("https://"):
         host = f"https://{host}"
 
