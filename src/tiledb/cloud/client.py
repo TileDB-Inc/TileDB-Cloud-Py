@@ -177,6 +177,7 @@ def list_public_arrays(
     page=None,
     per_page=None,
     async_req=False,
+    with_metadata=None,
 ):
     """
     List public arrays
@@ -191,6 +192,7 @@ def list_public_arrays(
     :param int page: optional page for pagination
     :param int per_page: optional per_page for pagination
     :param async_req: return future instead of results for async support
+    :param bool with_metadata: include the metadata of the array
     :return: list of all array metadata you have access to that meet the filter applied
     """
 
@@ -217,6 +219,8 @@ def list_public_arrays(
             kwargs["page"] = page
         if per_page is not None:
             kwargs["per_page"] = per_page
+        if with_metadata is not None:
+            kwargs["with_metadata"] = with_metadata
         res = api_instance.arrays_browser_public_get(**kwargs)
 
         # if the user didn't ask for pagination just return raw array list
@@ -237,6 +241,7 @@ def list_shared_arrays(
     page=None,
     per_page=None,
     async_req=False,
+    with_metadata=None,
 ):
     """
     List shared arrays
@@ -251,6 +256,7 @@ def list_shared_arrays(
     :param int page: optional page for pagination
     :param int per_page: optional per_page for pagination
     :param async_req: return future instead of results for async support
+    :param bool with_metadata: include the metadata of the array
     :return: list of all array metadata you have access to that meet the filter applied
     """
 
@@ -277,6 +283,8 @@ def list_shared_arrays(
             kwargs["page"] = page
         if per_page is not None:
             kwargs["per_page"] = per_page
+        if with_metadata is not None:
+            kwargs["with_metadata"] = with_metadata
         res = api_instance.arrays_browser_shared_get(**kwargs)
 
         # if the user didn't ask for pagination just return raw array list
@@ -297,6 +305,7 @@ def list_arrays(
     page=None,
     per_page=None,
     async_req=False,
+    with_metadata=None,
 ):
     """
     List arrays in a user account
@@ -311,6 +320,7 @@ def list_arrays(
     :param int page: optional page for pagination
     :param int per_page: optional per_page for pagination
     :param async_req: return future instead of results for async support
+    :param bool with_metadata: include the metadata of the array
     :return: list of all array metadata you have access to that meet the filter applied
     """
 
@@ -337,7 +347,8 @@ def list_arrays(
             kwargs["page"] = page
         if per_page is not None:
             kwargs["per_page"] = per_page
-
+        if with_metadata is not None:
+            kwargs["with_metadata"] = with_metadata
         res = api_instance.arrays_browser_owned_get(**kwargs)
 
         # if the user didn't ask for pagination just return raw array list
@@ -359,6 +370,7 @@ def list_groups(
     page: Optional[int] = None,
     per_page: Optional[int] = None,
     async_req: bool = False,
+    with_metadata: Optional[bool] = None,
 ) -> object:
     """List groups owned by a user.
 
@@ -375,6 +387,7 @@ def list_groups(
     :param page: For pagination, which page to return (1-based).
     :param per_page: For pagination, how many elements to return on a page.
     :param async_req: Run this asynchronously; return a Future of results.
+    :param bool with_metadata: include the metadata of the array
     """
     api_instance = build(rest_api.GroupsApi)
     return api_instance.list_owned_groups(
@@ -389,6 +402,7 @@ def list_groups(
         page=page,
         per_page=per_page,
         async_req=async_req,
+        with_metadata=with_metadata,
     )
 
 
@@ -404,6 +418,7 @@ def list_public_groups(
     page: Optional[int] = None,
     per_page: Optional[int] = None,
     async_req: bool = False,
+    with_metadata: Optional[bool] = None,
 ) -> object:
     """List public groups owned by a user.
 
@@ -420,6 +435,7 @@ def list_public_groups(
     :param page: For pagination, which page to return (1-based).
     :param per_page: For pagination, how many elements to return on a page.
     :param async_req: Run this asynchronously; return a Future of results.
+    :param bool with_metadata: include the metadata of the array
     """
     api_instance = build(rest_api.GroupsApi)
     return api_instance.list_public_groups(
@@ -434,6 +450,7 @@ def list_public_groups(
         page=page,
         per_page=per_page,
         async_req=async_req,
+        with_metadata=with_metadata,
     )
 
 
@@ -450,6 +467,7 @@ def list_shared_groups(
     page: Optional[int] = None,
     per_page: Optional[int] = None,
     async_req: bool = False,
+    with_metadata: Optional[bool] = None,
 ) -> object:
     """List groups shared by/to specified namespaces.
 
@@ -467,6 +485,7 @@ def list_shared_groups(
     :param page: For pagination, which page to return (1-based).
     :param per_page: For pagination, how many elements to return on a page.
     :param async_req: Run this asynchronously; return a Future of results.
+    :param bool with_metadata: include the metadata of the array
     """
     api_instance = build(rest_api.GroupsApi)
     return api_instance.list_shared_groups(
@@ -482,6 +501,7 @@ def list_shared_groups(
         page=page,
         per_page=per_page,
         async_req=async_req,
+        with_metadata=with_metadata,
     )
 
 
