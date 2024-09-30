@@ -33,6 +33,7 @@ class AccessCredential(object):
                             and the value is json key in definition.
     """
     openapi_types = {
+        "uuid": "str",
         "name": "str",
         "provider": "CloudProvider",
         "provider_default": "bool",
@@ -45,6 +46,7 @@ class AccessCredential(object):
     }
 
     attribute_map = {
+        "uuid": "uuid",
         "name": "name",
         "provider": "provider",
         "provider_default": "provider_default",
@@ -58,6 +60,7 @@ class AccessCredential(object):
 
     def __init__(
         self,
+        uuid=None,
         name=None,
         provider=None,
         provider_default=None,
@@ -74,6 +77,7 @@ class AccessCredential(object):
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
+        self._uuid = None
         self._name = None
         self._provider = None
         self._provider_default = None
@@ -85,6 +89,8 @@ class AccessCredential(object):
         self._token = None
         self.discriminator = None
 
+        if uuid is not None:
+            self.uuid = uuid
         if name is not None:
             self.name = name
         if provider is not None:
@@ -101,6 +107,29 @@ class AccessCredential(object):
             self.role = role
         if token is not None:
             self.token = token
+
+    @property
+    def uuid(self):
+        """Gets the uuid of this AccessCredential.  # noqa: E501
+
+        The UUID of the credential  # noqa: E501
+
+        :return: The uuid of this AccessCredential.  # noqa: E501
+        :rtype: str
+        """
+        return self._uuid
+
+    @uuid.setter
+    def uuid(self, uuid):
+        """Sets the uuid of this AccessCredential.
+
+        The UUID of the credential  # noqa: E501
+
+        :param uuid: The uuid of this AccessCredential.  # noqa: E501
+        :type: str
+        """
+
+        self._uuid = uuid
 
     @property
     def name(self):

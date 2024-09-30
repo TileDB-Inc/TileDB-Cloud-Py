@@ -30,10 +30,17 @@ class OrganizationRoles(object):
     """
     OWNER = "owner"
     ADMIN = "admin"
+    READ_WRITE_DELETE = "read_write_delete"
     READ_WRITE = "read_write"
     READ_ONLY = "read_only"
 
-    allowable_values = [OWNER, ADMIN, READ_WRITE, READ_ONLY]  # noqa: E501
+    allowable_values = [
+        OWNER,
+        ADMIN,
+        READ_WRITE_DELETE,
+        READ_WRITE,
+        READ_ONLY,
+    ]  # noqa: E501
 
     """
     Attributes:
