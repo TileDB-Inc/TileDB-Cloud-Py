@@ -88,6 +88,10 @@ def login(
     """
     if host is None:
         host = config.default_host
+    # See sc-56351. Usually, a hostname doesn't include a protocol
+    # scheme, but our SDK strictly requires the http(s) scheme.
+    elif not host.startswith(("http://", "https://")):
+        host = f"https://{host}"
 
     if (token is None or token == "") and (
         (username is None or username == "") and (password is None or password == "")
