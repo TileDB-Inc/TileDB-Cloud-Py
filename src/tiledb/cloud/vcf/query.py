@@ -267,6 +267,7 @@ def build_read_dag(
     namespace: Optional[str] = None,
     resource_class: Optional[str] = None,
     verbose: bool = False,
+    batch_mode: bool = False,
 ) -> Tuple[tiledb.cloud.dag.DAG, tiledb.cloud.dag.Node]:
     """
     Build the DAG for a distributed read on a TileDB-VCF dataset.
@@ -289,6 +290,7 @@ def build_read_dag(
     :param namespace: TileDB-Cloud namespace, defaults to None
     :param resource_class: TileDB-Cloud resource class for UDFs, defaults to None
     :param verbose: verbose logging, defaults to False
+    :param batch_mode: run the query with batch UDFs, defaults to False
     :return: DAG and result Node
     """
 
@@ -338,10 +340,13 @@ def build_read_dag(
     logger.debug("num_sample_partitions=%d", num_sample_partitions)
     logger.debug("num_region_partitions=%d", num_region_partitions)
 
+    mode = tiledb.cloud.dag.Mode.BATCH if batch_mode else tiledb.cloud.dag.Mode.REALTIME
+
     dag = tiledb.cloud.dag.DAG(
         namespace=namespace,
         name="VCF-Distributed-Query",
         max_workers=max_workers,
+        mode=mode,
     )
 
     # If `regions` is a Delayed object, we set the parent nodes to `dag` so the
@@ -373,7 +378,7 @@ def build_read_dag(
                     name=f"VCF Query - Region {region+1}/{num_region_partitions},"
                     f" Sample {sample+1}/{num_sample_partitions}",
                     resource_class=resource_class,
-                    result_format=tiledb.cloud.UDFResultType.ARROW,
+                    # result_format=tiledb.cloud.UDFResultType.ARROW,
                 )
             )
 
@@ -429,6 +434,7 @@ def read(
     namespace: Optional[str] = None,
     resource_class: Optional[str] = None,
     verbose: bool = False,
+    batch_mode: bool = True,
 ) -> pa.Table:
     """
     Run a distributed read on a TileDB-VCF dataset.
@@ -451,6 +457,7 @@ def read(
     :param namespace: TileDB-Cloud namespace, defaults to None
     :param resource_class: TileDB-Cloud resource class for UDFs, defaults to None
     :param verbose: verbose logging, defaults to False
+    :param batch_mode: run the query with batch UDFs, defaults to False
     :return: Arrow table containing the query results
     """
 
@@ -471,6 +478,7 @@ def read(
         namespace=namespace,
         resource_class=resource_class,
         verbose=verbose,
+        batch_mode=batch_mode,
     )
 
     run_dag(dag, debug=verbose)
