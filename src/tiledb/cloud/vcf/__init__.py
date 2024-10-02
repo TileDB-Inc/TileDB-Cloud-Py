@@ -1,3 +1,7 @@
+import sys
+
+import cloudpickle
+
 from .allele_frequency import read_allele_frequency
 from .ingestion import Contigs
 from .ingestion import create_dataset_udf as create_dataset
@@ -35,3 +39,5 @@ __all__ = [
     "split_one_sample",
     "split_vcf",
 ]
+
+cloudpickle.register_pickle_by_value(sys.modules[__name__])
