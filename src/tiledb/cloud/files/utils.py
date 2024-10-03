@@ -1,22 +1,28 @@
 import base64
+import logging
 import os
 import re
 import urllib.parse
 import warnings
 from fnmatch import fnmatch
-from typing import Mapping, Optional, Tuple, Union
+from typing import Dict, List, Mapping, Optional, Tuple, Union
+
+import attrs
 
 import tiledb
+import tiledb.cloud
 import tiledb.cloud.tiledb_cloud_error as tce
 from tiledb.cloud import array
 from tiledb.cloud import client
 from tiledb.cloud import config
+from tiledb.cloud import groups
 from tiledb.cloud import rest_api
 from tiledb.cloud import tiledb_cloud_error
 from tiledb.cloud._common import utils
 from tiledb.cloud.rest_api import ApiException as GenApiException
 from tiledb.cloud.rest_api import configuration
 from tiledb.cloud.rest_api import models
+from tiledb.cloud.utilities import get_logger_wrapper
 
 
 def sanitize_filename(fname: str) -> str:
@@ -286,3 +292,170 @@ def _auth_headers(cfg: configuration.Configuration) -> Mapping[str, object]:
         return {"authorization": basic}
     return {}
     # No authentication has been provided. Do nothing.
+
+
+@attrs.define
+class UploadFoldersResults:
+    directory: str
+    report: str
+    errors: dict
+    sub_folders: list["UploadFoldersResults"]
+
+
+def upload_folder(
+    input_uri: str,
+    output_uri: str,
+    *,
+    parent_group_uri: Optional[str] = None,
+    access_credentials_name: Optional[str] = None,
+    config: Optional[dict] = None,
+    flatten: bool = False,
+    serializable: bool = True,
+    logger: Optional[logging.Logger] = None,
+    verbose: bool = False,
+) -> Union[dict, UploadFoldersResults]:
+    """
+    Uploads a folder to TileDB Cloud.
+    By default respects the initial folder structure in the destination.
+
+    :param input_uri: The URI or path of the input folder. May be an ordinary path
+        or any URI accessible via TileDB VFS.
+    :param output_uri: The TileDB URI to write the folder into.
+    :param parent_group_uri: A TileDB Group URI to add folder under,
+        defaults to None
+    :param access_credentials_name: If present, the name of the credentials
+        to use when writing the uploaded file to backend storage instead of
+        the defaults.
+    :param config: Config dictionary, defaults to None
+    :param flatten: Flag. If set to True, the upload will flatten the folder
+        structure instead of recreating it. (Not Implemented yet)
+    :param serializable: Flag. If set to True the function returns a dictionary
+        report. Differently it returns an UploadFoldersResults attrs class.
+        Defaults to True.
+    :param logger: A logging.Logger instance, defaults to None.
+    :param verbose: Verbose logging, defaults to None
+    :return: A dictionary containing a report message
+        and an upload errors dictionary (if any)
+    """
+    logger = logger or get_logger_wrapper(verbose)
+    logger.info("=====")
+
+    if flatten:
+        raise NotImplementedError(
+            "The option to flatten a folder structure is not yet implemented"
+        )
+
+    # Prepare and sanitize arguments
+    output_uri = output_uri.strip("/")
+
+    input_uri = input_uri if input_uri.endswith(os.sep) else input_uri + os.sep
+    base_dir = os.path.dirname(input_uri)
+    base_dir = os.path.basename(base_dir)
+
+    namespace, name = utils.split_uri(output_uri)
+    _, sp, acn = groups._default_ns_path_cred(namespace=namespace)
+
+    # If `name` is a URL, assume it points to a cloud storage
+    storage_path = name if "://" in name else sp
+    storage_path = f"{storage_path.strip('/')}/{base_dir}"
+    tb_storage_uri = f"tiledb://{namespace}/{storage_path}"
+    logger.debug("Output storage path: %s", storage_path)
+    logger.debug("TileDB Storage URI: %r", tb_storage_uri)
+
+    access_credentials_name = access_credentials_name or acn
+    logger.debug("Storage path: %r", storage_path)
+    logger.debug("ACN: %s", access_credentials_name)
+
+    # Group check and/or creation
+    if "://" not in name:
+        group_uri = output_uri
+    else:
+        group_uri = f"tiledb://{namespace}/{base_dir}"
+    logger.debug("Group URI: %r", group_uri)
+
+    group_created = False
+    if not tiledb.object_type(group_uri, ctx=tiledb.cloud.Ctx()) == "group":
+        group_namespace, group_name = utils.split_uri(group_uri)
+        groups.create(
+            name=group_name,
+            namespace=group_namespace,
+            storage_uri=storage_path,
+            parent_uri=parent_group_uri,
+            credentials_name=access_credentials_name,
+        )
+        group_created = True
+        logger.debug("Group URI: %r created", group_uri)
+
+    # Upload Stats
+    logger.info("-----")
+    if parent_group_uri:
+        logger.info("Sub-Folder %r Upload Stats", base_dir)
+    else:
+        logger.info("Folder %r Upload Stats", base_dir)
+    logger.info("-----")
+    logger.info("- Input URI: %r", input_uri)
+    logger.info("- Output URI: %r", output_uri)
+    logger.info("-- Storage Path: %r", storage_path)
+    logger.info("- Group URI: %r", group_uri)
+    logger.info("-- Group Created: %s", group_created)
+
+    # Report results
+    uploaded = 0
+    dir_count = 0
+    upload_errors: Dict[str, str] = {}
+    results = UploadFoldersResults(
+        directory=base_dir, report="", errors={}, sub_folders=[]
+    )
+
+    vfs = tiledb.VFS(config=config)
+    # List local folder
+    input_ls: List[str] = vfs.ls(input_uri)
+    with tiledb.Group(
+        group_uri, mode="w", config=config, ctx=tiledb.cloud.Ctx()
+    ) as grp:
+        for fname in input_ls:
+            if vfs.is_dir(fname):
+                dir_count += 1
+
+                results.sub_folders.append(
+                    upload_folder(
+                        input_uri=fname,
+                        output_uri=tb_storage_uri,
+                        parent_group_uri=group_uri,
+                        access_credentials_name=access_credentials_name,
+                        config=config,
+                        # Serialization concerns the final results.
+                        serializable=False,
+                        logger=logger,
+                        verbose=verbose,
+                    )
+                )
+            else:
+                logger.info("Uploading %r to Group %r" % (fname, group_uri))
+                filename = fname.split(base_dir + os.sep)[1]
+                tb_output_uri = f"{tb_storage_uri}/{filename}"
+                try:
+                    uploaded_uri = upload_file(
+                        input_uri=fname,
+                        output_uri=tb_output_uri,
+                        filename=filename,
+                        access_credentials_name=access_credentials_name,
+                    )
+                    grp.add(uploaded_uri)
+                    uploaded += 1
+                except Exception as exc:
+                    logger.exception(
+                        "File %r while uploading to %r raised an exception"
+                        % (filename, tb_output_uri)
+                    )
+                    upload_errors[fname] = str(exc)
+                    continue
+
+    results.report = f"Uploaded {uploaded}/{len(input_ls) - dir_count} files"
+    results.errors = upload_errors
+    logger.info(results.report)
+    logger.info("=====")
+
+    if serializable:
+        return attrs.asdict(results)
+    return results
