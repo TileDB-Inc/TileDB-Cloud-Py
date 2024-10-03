@@ -161,7 +161,24 @@ def register(
             dest_uri=dest_uri,
         )
     else:
-        raise ValueError(f"Invalid asset type {type!r}")
+       # Try to auto-detect by try/catching on each type
+        try:
+           array.register_array(
+            storage_uri,
+            namespace=namespace,
+            array_name=name,
+            access_credentials_name=credentials_name,
+            dest_uri=dest_uri,
+           )
+        except:
+           groups.register(
+            storage_uri,
+            name=name,
+            namespace=namespace,
+            credentials_name=credentials_name,
+            parent_uri=parent_uri,
+            dest_uri=dest_uri,
+           )
 
 
 def deregister(uri: str, *, recursive: Optional[bool] = False) -> None:
