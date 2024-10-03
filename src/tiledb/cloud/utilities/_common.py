@@ -343,11 +343,16 @@ def as_batch(func: _CT) -> _CT:
         """
 
         name = kwargs.get("name", func.__name__)
+
+        # The wrapper's batch mode graph uses several of the parameters
+        # that will be passed to the wrapped function for use in its
+        # own graph.
         namespace = kwargs.get("namespace", None)
+        resources = kwargs.get("resources", None)
+        image_name = kwargs.get("image_name", None)
+
         acn = kwargs.get("acn", kwargs.pop("access_credentials_name", None))
         kwargs["acn"] = acn  # for backwards compatibility
-        resources = kwargs.pop("resources", None)
-        image_name = kwargs.pop("image_name", None)
 
         # Create a new DAG
         graph = dag.DAG(
