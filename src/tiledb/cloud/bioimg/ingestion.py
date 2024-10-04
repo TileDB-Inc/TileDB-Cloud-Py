@@ -1,5 +1,6 @@
 import logging
 import warnings
+from enum import Enum
 from typing import Any, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
@@ -17,6 +18,11 @@ DEFAULT_IMG_NAME = "3.9-imaging-dev"
 DEFAULT_DAG_NAME = "bioimg-ingestion"
 _SUPPORTED_EXTENSIONS = (".tiff", ".tif", ".svs", ".ndpi", ".png")
 _SUPPORTED_CONVERTERS = ("tiff", "zarr", "osd", "png")
+
+
+class ReaderType(Enum):
+    PRODUCTION = "production"
+    EXPERIMENTAL = "experimental"
 
 
 def ingest(
@@ -358,8 +364,8 @@ def ingest(
     compressor = kwargs.pop("compressor", None)
 
     # Get either the new experimental or default reader
-    reader = kwargs.pop("reader", "production")
-    experimental_reader = True if reader == "experimental" else False
+    reader = kwargs.pop("reader", ReaderType.PRODUCTION.value)
+    experimental_reader = reader == ReaderType.EXPERIMENTAL.value
 
     logger.debug("Compressor: %r", compressor)
     compressor_serial = serialize_filter(compressor) if compressor else None
