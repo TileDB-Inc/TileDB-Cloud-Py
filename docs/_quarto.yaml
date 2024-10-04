@@ -22,101 +22,94 @@ website:
     style: "floating"
     collapse-level: 1
     contents:
-      - Cloud-Py
-      - section: Cloud Services
+      - section: Catalog
         contents:
-          - text: "`array`"
-            href: reference/array.qmd
-          - text: "`asset`"
-            href: reference/asset.qmd
-          - text: "`client`"
-            href: reference/client.qmd
-          - text: "`cloudarray`"
-            href: reference/cloudarray.qmd
-          - text: "`config`"
-            href: reference/config.qmd
-          - text: "`groups`"
+          - text: groups
             href: reference/groups.qmd
-          - text: "`invites`"
-            href: reference/invites.qmd
-          - text: "`notebook`"
+          - text: array
+            href: reference/array.qmd
+          - text: asset
+            href: reference/asset.qmd
+          - text: files
+            href: reference/files.qmd
+          - text: notebook
             href: reference/notebook.qmd
-          - text: "`pool_manager_wrapper`"
-            href: reference/pool_manager_wrapper.qmd
-          - text: "`tasks`"
-            href: reference/tasks.qmd
-          - text: "`tiledb_cloud_error`"
-            href: reference/tiledb_cloud_error.qmd
-          - text: "`udf`"
+          - text: udf
             href: reference/udf.qmd
-          - text: "`utils`"
-            href: reference/utils.qmd
-      - section: Bio-Imaging
+
+      - section: Collaborate
         contents:
-          - text: "`exportation`"
+          - text: groups
+            href: reference/groups.qmd
+          - text: array
+            href: reference/array.qmd
+          - text: asset
+            href: reference/asset.qmd
+          - text: invites
+            href: reference/invites.qmd
+
+      - section: Analyze
+        contents:
+          - text: bioimg.exportation
             href: reference/bioimg.exportation.qmd
-          - text: "`helpers`"
+          - text: bioimg.helpers
             href: reference/bioimg.helpers.qmd
-          - text: "`ingestion`"
+          - text: bioimg.ingestion
             href: reference/bioimg.ingestion.qmd
-      - section: Compute
-        contents:
-          - text: "`delayed`"
-            href: reference/compute.delayed.qmd
-      - section: DAG
-        contents:
-          - text: "`dag`"
-            href: reference/dag.dag.qmd
-          - text: "`mode`"
-            href: reference/dag.mode.qmd
-          - text: "`status`"
-            href: reference/dag.status.qmd
-          - text: "`visualization`"
-            href: reference/dag.visualization.qmd
-      - section: Region
-        contents:
-          - text: "`region`"
-            href: reference/region.qmd
-      - section: Files
-        contents:
-          - text: "`indexing`"
+          - text: files.indexing
             href: reference/files.indexing.qmd
-          - text: "`ingestion`"
+          - text: files.ingestion
             href: reference/files.ingestion.qmd
-          - text: "`udfs`"
+          - text: files.udfs
             href: reference/files.udfs.qmd
-          - text: "`utils`"
+          - text: files.utils
             href: reference/files.utils.qmd
-      - section: Geospatial
-        contents:
-          - text: "`ingestion`"
+          - text: geospatial.ingestion
             href: reference/geospatial.ingestion.qmd
-      - section: SOMA
-        contents:
-          - text: "`ingest`"
+          - text: soma.ingest
             href: reference/soma.ingest.qmd
-          - text: "`mapper`"
+          - text: soma.mapper
             href: reference/soma.mapper.qmd
-      - section: VCF
-        contents:
-          - text: "`allele_frequency`"
+          - text: vcf.allele_frequency
             href: reference/vcf.allele_frequency.qmd
-          - text: "`ingestion`"
+          - text: vcf.ingestionq
             href: reference/vcf.ingestion.qmd
-          - text: "`query`"
+          - text: vcf.query
             href: reference/vcf.query.qmd
-          - text: "`utils`"
+          - text: vcf.utils
             href: reference/vcf.utils.qmd
-          - text: "`split`"
+          - text: vcf.split
             href: reference/vcf.split.qmd
-      - section: Utilities
+
+      - section: Scale
         contents:
-          - text: "`consolidate`"
+          - text: cloudarray
+            href: reference/cloudarray.qmd
+          - text: compute.delayed
+            href: reference/compute.delayed.qmd
+          - text: dag.dag
+            href: reference/dag.dag.qmd
+          - text: dag.mode
+            href: reference/dag.mode.qmd
+          - text: dag.status
+            href: reference/dag.status.qmd
+          - text: dag.visualization
+            href: reference/dag.visualization.qmd
+          - text: tasks
+            href: reference/tasks.qmd
+          - text: udf
+            href: reference/udf.qmd
+          - text: utilities.consolidate
             href: reference/utilities.consolidate.qmd
-          - text: "`profiler`"
+          - text: utilities.profiler
             href: reference/utilities.profiler.qmd
-          - text: "`wheel`"
-            href: reference/utilities.wheel.qmd
+
+      - section: Account
+        contents:
+          - text: client
+            href: reference/client.qmd
+          - text: config
+            href: reference/config.qmd
 
 quartodoc:
   style: pkgdown
@@ -130,69 +123,50 @@ quartodoc:
     include_attributes: true
 
   sections:
-    - title: Cloud Services
-      desc: Cloud Interaction Services
+    - title: Catalog
+      desc: PLACEHOLDER CATEGORY DESCRIPTION
       contents:
+        - groups
         - array
         - asset
-        - client
-        - cloudarray
-        - config
-        - groups
-        - invites
+        - files
         - notebook
-        - pool_manager_wrapper
-        - tasks
-        - tiledb_cloud_error
         - udf
-        - utils
 
-    - title: bioimg
-      desc: Bio imaging API
+    - title: Collaborate
+      desc: PLACEHOLDER CATEGORY DESCRIPTION
+      contents:
+        - groups
+        - array
+        - asset
+        - invites
+
+    - title: Analyze
+      desc: PLACEHOLDER CATEGORY DESCRIPTION
+
+    - subtitle: Bio Imaging
       contents:
         - bioimg.exportation
         - bioimg.helpers
         - bioimg.ingestion
 
-    - title: compute
-      desc: Compute API
-      contents:
-        - compute.delayed
-
-    - title: dag
-      desc: DAG API
-      contents:
-        - dag.dag
-        - dag.mode
-        - dag.status
-        - dag.visualization
-
-    - title: region
-      desc: Cloud regions
-      contents:
-        - region
-
-    - title: files
-      desc: File API.
+    - subtitle: Files
       contents:
         - files.indexing
         - files.ingestion
         - files.udfs
         - files.utils
 
-    - title: geospatial
-      desc: Geospatial API
+    - subtitle: Geospatial
       contents:
         - geospatial.ingestion
 
-    - title: soma
-      desc: SOMA API
+    - subtitle: SOMA
       contents:
         - soma.ingest
         - soma.mapper
 
-    - title: vcf
-      desc: VCF API
+    - subtitle: VCF
       contents:
         - vcf.allele_frequency
         - vcf.ingestion
@@ -200,9 +174,22 @@ quartodoc:
         - vcf.utils
         - vcf.split
 
-    - title: utilities
-      desc: Common Utilities API
+    - title: Scale
+      desc: PLACEHOLDER CATEGORY DESCRIPTION
       contents:
+        - cloudarray
+        - compute.delayed
+        - dag.dag
+        - dag.mode
+        - dag.status
+        - dag.visualization
+        - tasks
+        - udf
         - utilities.consolidate
         - utilities.profiler
-        - utilities.wheel
+
+    - title: Account
+      desc: PLACEHOLDER CATEGORY DESCRIPTION
+      contents:
+        - client
+        - config
