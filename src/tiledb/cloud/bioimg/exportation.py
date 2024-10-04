@@ -47,7 +47,6 @@ def export(
     :param compute: When True the DAG returned will be computed inside the function
     otherwise DAG will only be returned.
     :param mode: By default runs Mode.Batch
-    :param run_on: By default runs on server if value is "client" runs client side.
     :param namespace: The namespace where the DAG will run
     :param verbose: verbose logging, defaults to False
     :param access_credentials_name: Access Credentials Name (ACN) registered
