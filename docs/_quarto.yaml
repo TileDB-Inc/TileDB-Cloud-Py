@@ -124,7 +124,7 @@ quartodoc:
 
   sections:
     - title: Catalog
-      desc: PLACEHOLDER CATEGORY DESCRIPTION
+      desc: "Find and register private and public assets."
       contents:
         - groups
         - array
@@ -134,7 +134,7 @@ quartodoc:
         - udf
 
     - title: Collaborate
-      desc: PLACEHOLDER CATEGORY DESCRIPTION
+      desc: "Share private assets with other users and organizations, or make them public."
       contents:
         - groups
         - array
@@ -142,7 +142,7 @@ quartodoc:
         - invites
 
     - title: Analyze
-      desc: PLACEHOLDER CATEGORY DESCRIPTION
+      desc: "Gain understanding domain-specific data."
 
     - subtitle: Bio Imaging
       contents:
@@ -171,11 +171,11 @@ quartodoc:
         - vcf.allele_frequency
         - vcf.ingestion
         - vcf.query
-        - vcf.utils
         - vcf.split
+        - vcf.utils
 
     - title: Scale
-      desc: PLACEHOLDER CATEGORY DESCRIPTION
+      desc: "Ingest and analyze data that is too large for a single computer."
       contents:
         - cloudarray
         - compute.delayed
@@ -189,7 +189,7 @@ quartodoc:
         - utilities.profiler
 
     - title: Account
-      desc: PLACEHOLDER CATEGORY DESCRIPTION
+      desc: "Profile, settings, and usage."
       contents:
         - client
         - config
