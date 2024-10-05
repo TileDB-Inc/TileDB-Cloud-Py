@@ -142,7 +142,7 @@ quartodoc:
         - invites
 
     - title: Analyze
-      desc: "Gain understanding domain-specific data."
+      desc: "Gain understanding of data."
 
     - subtitle: Bio Imaging
       contents:
