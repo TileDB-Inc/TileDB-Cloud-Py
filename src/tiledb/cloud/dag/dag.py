@@ -2161,13 +2161,13 @@ def exec_batch_udf(
             graph.server_graph_uuid,
         )
 
-        # logger.info(f"TileDB Cloud task submitted - {task_uri}")
+        logger.info(f"TileDB Cloud task submitted - {task_uri}")
 
         if open_browser:
             try:
                 webbrowser.open_new_tab(task_uri)
             except webbrowser.Error:
                 pass
-                # logger.debug("Unable to access webrowser.")
+                logger.debug("Unable to access webrowser.")
 
     return graph
