@@ -6,12 +6,12 @@ from webbrowser import Error
 
 from attrs import define
 
-import tiledb.cloud
+from tiledb.cloud.client import default_user
 from tiledb.cloud.dag.dag import exec_batch_udf
 from tiledb.cloud.dag.mode import Mode
 
 _TASK_NAME = "unittest-test-dag-exec-batch-udf"
-_NAMESPACE = tiledb.cloud.client.default_user().username
+_NAMESPACE = default_user().username
 
 
 @define
