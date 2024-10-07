@@ -213,7 +213,9 @@ def upload_file(
         if access_credentials_name:
             headers["x-tiledb-cloud-access-credentials-name"] = access_credentials_name
 
-        pool = client.client._client_v2.rest_client.pool_manager
+        import urllib3
+
+        pool: urllib3.PoolManager = client.client._client_v2.rest_client.pool_manager
 
         query = urllib.parse.urlencode(
             {
@@ -225,32 +227,52 @@ def upload_file(
         namespace = urllib.parse.quote(namespace)
         name = urllib.parse.quote(name, safe="")
 
-        request_url = (
-            f"{config.config.host}/v2/notebooks/{namespace}/{name}/upload?{query}"
-        )
+        orig_url = f"{config.config.host}/v2/files/{namespace}/{name}/upload?{query}"
 
+        # First, we make HEAD requests to find out if we should be redirected.
+        # We'll let urllib3 follow redirects for this one.
+        probe = pool.request(
+            method="HEAD",
+            url=orig_url,
+            headers=headers,
+        )
+        utils.release_connection(probe)
+        if not (200 <= probe.status < 300 or probe.status == 405):
+            # Once we reach the end, we should get either 405 Method Not Allowed
+            # or some form of OK (2xx). If not, that's an error.
+            raise tce.TileDBCloudError.from_response(probe)
+        final_url = probe.url or orig_url  # Where we were redirected to.
+
+        # While we're probably at the place we want to end up posting to,
+        # we might still get redirected. This time, we need to handle redirects
+        # manually, since we have to rewind the request body each time.
+        redirects_left = 3
         while True:
             resp = pool.request(
                 method="POST",
-                url=request_url,
+                url=final_url,
                 body=infile,
                 headers=headers,
                 chunked=True,
                 redirect=False,
             )
             try:
-                request_url = resp.get_redirect_location()
-                if request_url:
-                    # If we got redirected, we need to rewind the file
-                    # so we can send it to the actual location.
+                if dest := resp.get_redirect_location():
+                    # If the redirect location is non-empty, that means we have
+                    # a redirect to follow.
+                    if not redirects_left:
+                        raise tce.TileDBCloudError.from_response(resp)
+                    redirects_left -= 1
+                    final_url = dest
+                    # We need to rewind the file to send it to the right place
+                    # on the next request.
                     infile.seek(0)
                     continue
-                json_response = resp.json()
                 if not 200 <= resp.status < 300:
-                    raise tce.TileDBCloudError(json_response["message"])
-                return json_response["output_uri"]
-            except (KeyError, ValueError) as base:
-                raise tce.TileDBCloudError(resp.data) from base
+                    raise tce.TileDBCloudError.from_response(resp)
+                return resp.json()["output_uri"]
+            except (KeyError, TypeError, ValueError) as base:
+                raise tce.TileDBCloudError.from_response(resp) from base
             finally:
                 utils.release_connection(resp)
 

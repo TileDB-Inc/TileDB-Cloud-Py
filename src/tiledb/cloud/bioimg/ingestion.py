@@ -4,11 +4,11 @@ from typing import Any, Iterator, Mapping, Optional, Sequence, Tuple, Union
 
 import tiledb
 from tiledb.cloud import dag
-from tiledb.cloud.bioimg.helpers import get_logger_wrapper
 from tiledb.cloud.bioimg.helpers import serialize_filter
 from tiledb.cloud.bioimg.helpers import validate_io_paths
 from tiledb.cloud.dag.mode import Mode
 from tiledb.cloud.rest_api.models import RetryStrategy
+from tiledb.cloud.utilities import get_logger_wrapper
 from tiledb.cloud.utilities._common import as_batch
 from tiledb.cloud.utilities._common import run_dag
 
@@ -274,7 +274,7 @@ def ingest(
                     logger.debug("Object type of %s : %s", tiledb_uri, object_type)
                     if object_type == "group":
                         found = True
-                    elif object_type is not None:
+                    elif object_type is not None or object_type != "None":
                         raise ValueError(
                             f"Another object is already registered at '{tiledb_uri}'."
                         )

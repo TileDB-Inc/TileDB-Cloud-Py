@@ -631,7 +631,7 @@ class DAG:
     """Low-level API for creating and managing direct acyclic graphs
     as TileDB Cloud Task Graphs.
 
-    :param max_workers: Number of works to allocate to execute DAG.
+    :param max_workers: Number of workers to allocate to execute DAG.
     :param use_processes: If true will use processes instead of threads.
     :param done_callback: Optional call back function to register for
         when dag is completed. Function will be passed reference to this DAG.

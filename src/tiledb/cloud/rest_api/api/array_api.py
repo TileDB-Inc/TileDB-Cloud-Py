@@ -236,6 +236,7 @@ class ArrayApi(object):
         :param list[str] file_type: file_type to search for, more than one can be included
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
         :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+        :param bool with_metadata: include the metadata of the array
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -271,6 +272,7 @@ class ArrayApi(object):
         :param list[str] file_type: file_type to search for, more than one can be included
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
         :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+        :param bool with_metadata: include the metadata of the array
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -299,6 +301,7 @@ class ArrayApi(object):
             "file_type",
             "exclude_file_type",
             "file_property",
+            "with_metadata",
         ]
         all_params.extend(
             [
@@ -392,6 +395,13 @@ class ArrayApi(object):
                 ("file_property", local_var_params["file_property"])
             )  # noqa: E501
             collection_formats["file_property"] = "multi"  # noqa: E501
+        if (
+            "with_metadata" in local_var_params
+            and local_var_params["with_metadata"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("with_metadata", local_var_params["with_metadata"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -589,6 +599,7 @@ class ArrayApi(object):
         :param list[str] file_type: file_type to search for, more than one can be included
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
         :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+        :param bool with_metadata: include the metadata of the array
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -624,6 +635,7 @@ class ArrayApi(object):
         :param list[str] file_type: file_type to search for, more than one can be included
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
         :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
+        :param bool with_metadata: include the metadata of the array
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -652,6 +664,7 @@ class ArrayApi(object):
             "file_type",
             "exclude_file_type",
             "file_property",
+            "with_metadata",
         ]
         all_params.extend(
             [
@@ -745,6 +758,13 @@ class ArrayApi(object):
                 ("file_property", local_var_params["file_property"])
             )  # noqa: E501
             collection_formats["file_property"] = "multi"  # noqa: E501
+        if (
+            "with_metadata" in local_var_params
+            and local_var_params["with_metadata"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("with_metadata", local_var_params["with_metadata"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -943,6 +963,7 @@ class ArrayApi(object):
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
         :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
         :param list[str] shared_to: namespaces to filter results of where there arrays were shared to
+        :param bool with_metadata: include the metadata of the array
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -979,6 +1000,7 @@ class ArrayApi(object):
         :param list[str] exclude_file_type: file_type to exclude matching array in results, more than one can be included
         :param list[str] file_property: file_property key-value pair (comma separated, i.e. key,value) to search for, more than one can be included
         :param list[str] shared_to: namespaces to filter results of where there arrays were shared to
+        :param bool with_metadata: include the metadata of the array
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1008,6 +1030,7 @@ class ArrayApi(object):
             "exclude_file_type",
             "file_property",
             "shared_to",
+            "with_metadata",
         ]
         all_params.extend(
             [
@@ -1109,6 +1132,13 @@ class ArrayApi(object):
                 ("shared_to", local_var_params["shared_to"])
             )  # noqa: E501
             collection_formats["shared_to"] = "multi"  # noqa: E501
+        if (
+            "with_metadata" in local_var_params
+            and local_var_params["with_metadata"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("with_metadata", local_var_params["with_metadata"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -3849,6 +3879,7 @@ class ArrayApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param bool with_metadata: include the metadata of the arrays
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -3876,6 +3907,7 @@ class ArrayApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param bool with_metadata: include the metadata of the arrays
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -3892,7 +3924,7 @@ class ArrayApi(object):
 
         local_var_params = locals()
 
-        all_params = ["namespace"]
+        all_params = ["namespace", "with_metadata"]
         all_params.extend(
             [
                 "async_req",
@@ -3926,6 +3958,13 @@ class ArrayApi(object):
             path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
 
         query_params = []
+        if (
+            "with_metadata" in local_var_params
+            and local_var_params["with_metadata"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("with_metadata", local_var_params["with_metadata"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -4204,6 +4243,164 @@ class ArrayApi(object):
             post_params=form_params,
             files=local_var_files,
             response_type="list[LastAccessedArray]",  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
+
+    def load_array_schema(
+        self, namespace, array, load_array_schema_request, **kwargs
+    ):  # noqa: E501
+        """load_array_schema  # noqa: E501
+
+        request to get the array schema  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.load_array_schema(namespace, array, load_array_schema_request, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str array: name/uri of array that is url-encoded (required)
+        :param LoadArraySchemaRequest load_array_schema_request: Load Array Schema Request (required)
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: LoadArraySchemaResponse
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs["_return_http_data_only"] = True
+        return self.load_array_schema_with_http_info(
+            namespace, array, load_array_schema_request, **kwargs
+        )  # noqa: E501
+
+    def load_array_schema_with_http_info(
+        self, namespace, array, load_array_schema_request, **kwargs
+    ):  # noqa: E501
+        """load_array_schema  # noqa: E501
+
+        request to get the array schema  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.load_array_schema_with_http_info(namespace, array, load_array_schema_request, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str namespace: namespace array is in (an organization name or user's username) (required)
+        :param str array: name/uri of array that is url-encoded (required)
+        :param LoadArraySchemaRequest load_array_schema_request: Load Array Schema Request (required)
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: tuple(LoadArraySchemaResponse, status_code(int), headers(HTTPHeaderDict))
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = ["namespace", "array", "load_array_schema_request"]
+        all_params.extend(
+            [
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params["kwargs"]):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method load_array_schema" % key
+                )
+            local_var_params[key] = val
+        del local_var_params["kwargs"]
+        # verify the required parameter 'namespace' is set
+        if self.api_client.client_side_validation and (
+            "namespace" not in local_var_params
+            or local_var_params["namespace"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `namespace` when calling `load_array_schema`"
+            )  # noqa: E501
+        # verify the required parameter 'array' is set
+        if self.api_client.client_side_validation and (
+            "array" not in local_var_params
+            or local_var_params["array"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `array` when calling `load_array_schema`"
+            )  # noqa: E501
+        # verify the required parameter 'load_array_schema_request' is set
+        if self.api_client.client_side_validation and (
+            "load_array_schema_request" not in local_var_params
+            or local_var_params["load_array_schema_request"] is None  # noqa: E501
+        ):  # noqa: E501
+            raise ApiValueError(
+                "Missing the required parameter `load_array_schema_request` when calling `load_array_schema`"
+            )  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if "namespace" in local_var_params:
+            path_params["namespace"] = local_var_params["namespace"]  # noqa: E501
+        if "array" in local_var_params:
+            path_params["array"] = local_var_params["array"]  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        if "load_array_schema_request" in local_var_params:
+            body_params = local_var_params["load_array_schema_request"]
+        # HTTP header `Accept`
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ["ApiKeyAuth", "BasicAuth"]  # noqa: E501
+
+        return self.api_client.call_api(
+            "/v1/arrays/{namespace}/{array}/schema",
+            "POST",
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type="LoadArraySchemaResponse",  # noqa: E501
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(

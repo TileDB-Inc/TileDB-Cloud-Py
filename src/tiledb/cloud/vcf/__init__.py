@@ -6,6 +6,9 @@ from .ingestion import ingest_annotations
 from .ingestion import register_dataset_udf as register_dataset
 from .query import build_read_dag
 from .query import read
+from .split import ls_samples
+from .split import split_one_sample
+from .split import split_vcf
 from .utils import create_index_file
 from .utils import find_index
 from .utils import get_record_count
@@ -28,4 +31,7 @@ __all__ = [
     "get_sample_name",
     "get_record_count",
     "is_bgzipped",
+    "ls_samples",
+    "split_one_sample",
+    "split_vcf",
 ]

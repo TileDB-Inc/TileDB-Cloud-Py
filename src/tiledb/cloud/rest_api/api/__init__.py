@@ -5,6 +5,7 @@ from __future__ import absolute_import
 # import apis into api package
 from tiledb.cloud.rest_api.api.array_api import ArrayApi
 from tiledb.cloud.rest_api.api.array_tasks_api import ArrayTasksApi
+from tiledb.cloud.rest_api.api.assets_api import AssetsApi
 from tiledb.cloud.rest_api.api.favorites_api import FavoritesApi
 from tiledb.cloud.rest_api.api.files_api import FilesApi
 from tiledb.cloud.rest_api.api.groups_api import GroupsApi

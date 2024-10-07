@@ -33,7 +33,7 @@ class GroupContentActivity(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        "asset": "GroupContentActivityAsset",
+        "asset": "AssetActivityLogAsset",
         "activity_log": "ArrayActivityLog",
     }
 
@@ -62,7 +62,7 @@ class GroupContentActivity(object):
 
 
         :return: The asset of this GroupContentActivity.  # noqa: E501
-        :rtype: GroupContentActivityAsset
+        :rtype: AssetActivityLogAsset
         """
         return self._asset
 
@@ -72,7 +72,7 @@ class GroupContentActivity(object):
 
 
         :param asset: The asset of this GroupContentActivity.  # noqa: E501
-        :type: GroupContentActivityAsset
+        :type: AssetActivityLogAsset
         """
 
         self._asset = asset

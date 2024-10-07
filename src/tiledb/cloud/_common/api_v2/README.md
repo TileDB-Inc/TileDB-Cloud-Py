@@ -98,10 +98,10 @@ All URIs are relative to _http://localhost_
 | _GroupsApi_       | [**create_group**](docs/GroupsApi.md#create_group)                                                           | **POST** /v2/groups/{group_namespace}                              |
 | _GroupsApi_       | [**delete_group**](docs/GroupsApi.md#delete_group)                                                           | **DELETE** /v2/groups/{group_namespace}/{group_name}/delete        |
 | _GroupsApi_       | [**deregister_group**](docs/GroupsApi.md#deregister_group)                                                   | **DELETE** /v2/groups/{group_namespace}/{group_name}               |
+| _GroupsApi_       | [**get_group_activity**](docs/GroupsApi.md#get_group_activity)                                               | **GET** /v2/groups/{group_namespace}/{group_name}/activity         |
 | _GroupsApi_       | [**get_group_content_activity**](docs/GroupsApi.md#get_group_content_activity)                               | **GET** /v2/groups/{group_namespace}/{group_name}/content_activity |
 | _GroupsApi_       | [**get_group_metadata**](docs/GroupsApi.md#get_group_metadata)                                               | **POST** /v2/groups/{group_namespace}/{group_name}/metadata        |
 | _GroupsApi_       | [**groups_group_namespace_group_name_options**](docs/GroupsApi.md#groups_group_namespace_group_name_options) | **OPTIONS** /v2/groups/{group_namespace}/{group_name}              |
-| _GroupsApi_       | [**list_group_activity**](docs/GroupsApi.md#list_group_activity)                                             | **GET** /v2/groups/{namespace}/{group}/activity                    |
 | _GroupsApi_       | [**register_group**](docs/GroupsApi.md#register_group)                                                       | **PUT** /v2/groups/{group_namespace}                               |
 | _GroupsApi_       | [**retrieve_group**](docs/GroupsApi.md#retrieve_group)                                                       | **POST** /v2/groups/{group_namespace}/{group_name}                 |
 | _GroupsApi_       | [**update_group_contents**](docs/GroupsApi.md#update_group_contents)                                         | **PATCH** /v2/groups/{group_namespace}/{group_name}                |
@@ -141,6 +141,8 @@ All URIs are relative to _http://localhost_
 - [ArraySchemaEntry](docs/ArraySchemaEntry.md)
 - [ArraySchemaMap](docs/ArraySchemaMap.md)
 - [ArrayType](docs/ArrayType.md)
+- [AssetActivityLog](docs/AssetActivityLog.md)
+- [AssetActivityLogAsset](docs/AssetActivityLogAsset.md)
 - [AssetType](docs/AssetType.md)
 - [Attribute](docs/Attribute.md)
 - [AttributeBufferHeader](docs/AttributeBufferHeader.md)
@@ -166,10 +168,8 @@ All URIs are relative to _http://localhost_
 - [GCPServiceAccountKey](docs/GCPServiceAccountKey.md)
 - [GenericTileOffsets](docs/GenericTileOffsets.md)
 - [GroupActivityEventType](docs/GroupActivityEventType.md)
-- [GroupActivityLog](docs/GroupActivityLog.md)
-- [GroupActivityLogResponse](docs/GroupActivityLogResponse.md)
+- [GroupActivityResponse](docs/GroupActivityResponse.md)
 - [GroupContentActivity](docs/GroupContentActivity.md)
-- [GroupContentActivityAsset](docs/GroupContentActivityAsset.md)
 - [GroupContentActivityResponse](docs/GroupContentActivityResponse.md)
 - [GroupContentsChangesRequest](docs/GroupContentsChangesRequest.md)
 - [GroupContentsChangesRequestGroupChanges](docs/GroupContentsChangesRequestGroupChanges.md)

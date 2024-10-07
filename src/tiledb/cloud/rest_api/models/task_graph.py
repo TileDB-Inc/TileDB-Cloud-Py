@@ -197,6 +197,14 @@ class TaskGraph(object):
         :param name: The name of this TaskGraph.  # noqa: E501
         :type: str
         """
+        if (
+            self.local_vars_configuration.client_side_validation
+            and name is not None
+            and len(name) > 255
+        ):
+            raise ValueError(
+                "Invalid value for `name`, length must be less than or equal to `255`"
+            )  # noqa: E501
 
         self._name = name
 
@@ -294,7 +302,7 @@ class TaskGraph(object):
     def deadline(self):
         """Gets the deadline of this TaskGraph.  # noqa: E501
 
-        Duration in seconds relative to the workflow start time which the workflow is allowed to run before it gets terminated.   # noqa: E501
+        Duration in seconds relative to the workflow start time which the workflow is allowed to run before it gets terminated. Defaults to 24h when unset   # noqa: E501
 
         :return: The deadline of this TaskGraph.  # noqa: E501
         :rtype: int
@@ -305,7 +313,7 @@ class TaskGraph(object):
     def deadline(self, deadline):
         """Sets the deadline of this TaskGraph.
 
-        Duration in seconds relative to the workflow start time which the workflow is allowed to run before it gets terminated.   # noqa: E501
+        Duration in seconds relative to the workflow start time which the workflow is allowed to run before it gets terminated. Defaults to 24h when unset   # noqa: E501
 
         :param deadline: The deadline of this TaskGraph.  # noqa: E501
         :type: int

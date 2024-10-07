@@ -32,12 +32,12 @@ class Error(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"code": "int", "message": "str"}
+    openapi_types = {"code": "int", "message": "str", "request_id": "str"}
 
-    attribute_map = {"code": "code", "message": "message"}
+    attribute_map = {"code": "code", "message": "message", "request_id": "request_id"}
 
     def __init__(
-        self, code=None, message=None, local_vars_configuration=None
+        self, code=None, message=None, request_id=None, local_vars_configuration=None
     ):  # noqa: E501
         """Error - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
@@ -46,12 +46,15 @@ class Error(object):
 
         self._code = None
         self._message = None
+        self._request_id = None
         self.discriminator = None
 
         if code is not None:
             self.code = code
         if message is not None:
             self.message = message
+        if request_id is not None:
+            self.request_id = request_id
 
     @property
     def code(self):
@@ -94,6 +97,27 @@ class Error(object):
         """
 
         self._message = message
+
+    @property
+    def request_id(self):
+        """Gets the request_id of this Error.  # noqa: E501
+
+
+        :return: The request_id of this Error.  # noqa: E501
+        :rtype: str
+        """
+        return self._request_id
+
+    @request_id.setter
+    def request_id(self, request_id):
+        """Sets the request_id of this Error.
+
+
+        :param request_id: The request_id of this Error.  # noqa: E501
+        :type: str
+        """
+
+        self._request_id = request_id
 
     def to_dict(self):
         """Returns the model properties as a dict"""

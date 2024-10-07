@@ -2,6 +2,7 @@ import ast
 import subprocess
 import sys
 import unittest
+import unittest.mock
 import uuid
 
 import numpy
@@ -9,6 +10,8 @@ import numpy as np
 import packaging.version as pkgver
 import pandas
 import pyarrow
+import pytest
+import urllib3
 
 import tiledb
 import tiledb.cloud
@@ -437,3 +440,37 @@ class BasicTests(unittest.TestCase):
         """Skips the test unless it is run as the ``unittest`` user."""
         if not testonly.is_unittest_user():
             self.skipTest("May fail with non-unittest users.")
+
+
+@pytest.fixture(scope="function")
+def with_metadata_checker(monkeypatch):
+    """Intercept requests to arrays and groups list endpoints and checks the URLs."""
+
+    def fake_and_check_request(self, method, url, *args, **kwargs):
+        assert "with_metadata=True" in url
+        # Return a dummy response.
+        return urllib3.response.HTTPResponse(
+            b"[]", status=200, retries=urllib3.Retry(history=[])
+        )
+
+    monkeypatch.setattr("urllib3.PoolManager.urlopen", fake_and_check_request)
+
+
+def test_list_arrays_with_metadata_request(with_metadata_checker):
+    """with_metadata option is conveyed to the outgoing HTTP request."""
+    client.list_arrays(with_metadata=True)
+
+
+def test_list_public_arrays_with_metadata_request(with_metadata_checker):
+    """with_metadata option is conveyed to the outgoing HTTP request."""
+    client.list_public_arrays(with_metadata=True)
+
+
+def test_list_groups_with_metadata_request(with_metadata_checker):
+    """with_metadata option is conveyed to the outgoing HTTP request."""
+    client.list_groups(with_metadata=True)
+
+
+def test_list_public_groups_with_metadata_request(with_metadata_checker):
+    """with_metadata option is conveyed to the outgoing HTTP request."""
+    client.list_public_groups(with_metadata=True)

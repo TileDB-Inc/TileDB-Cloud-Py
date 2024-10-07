@@ -1,6 +1,9 @@
 import json
 from typing import Dict, Optional
 
+import urllib3
+from typing_extensions import Self
+
 import tiledb
 from tiledb.cloud import rest_api
 
@@ -11,7 +14,7 @@ class TileDBCloudError(tiledb.TileDBError):
         http_status: Optional[int] = None,
         *,
         json_data: Optional[Dict[str, object]] = None,
-        body: Optional[str] = None,
+        body: Optional[bytes] = None,
     ) -> None:
         super().__init__()
         self.json_data = json_data
@@ -28,6 +31,14 @@ class TileDBCloudError(tiledb.TileDBError):
         if self.http_status == 404:
             return "HTTP 404: resource not found"
         return f"Unknown HTTP {self.http_status} error; response body: {self.body!r}"
+
+    @classmethod
+    def from_response(cls, resp: "urllib3.BaseHTTPResponse") -> Self:
+        try:
+            json_data = resp.json()
+            return cls(resp.status, json_data=json_data)
+        except ValueError:
+            return cls(resp.status, body=resp.data)
 
 
 def maybe_wrap(exc: Exception) -> TileDBCloudError:

@@ -1,19 +1,111 @@
 """An asset may be an array or a group."""
 
 from functools import partial
-from typing import Callable, List, Mapping, Optional, Union
+from typing import Callable, Iterable, List, Literal, Mapping, Optional, Union
 
 import tiledb
 
-from . import array  # type: ignore
-from . import groups  # type: ignore
-from .rest_api.models import ArrayInfo  # type: ignore
-from .rest_api.models import GroupInfo  # type: ignore
+from . import array
+from . import client
+from . import groups
+from .rest_api import models
+from .rest_api.api import assets_api
+
+_AssetType = Union[Literal["array"], Literal["group"]]
+_Depth = Union[Literal["root"], Literal["all"]]
+_OwnershipLevel = Union[Literal["owned"], Literal["shared"]]
+_CSVString = Union[str, Iterable[str]]
+"""Either a CSV-style string ``"a,b,c"`` or a sequence ``("a", "b", "c")``."""
+
+
+def list(
+    *,
+    namespace: Optional[str] = None,
+    search: Optional[str] = None,
+    type: Optional[_AssetType] = None,
+    ownership_level: Optional[_OwnershipLevel] = None,
+    depth: Optional[_Depth] = None,
+    expand: Optional[_CSVString] = None,
+    page: Optional[int] = None,
+    per_page: Optional[int] = None,
+    order_by: Optional[str] = None,
+) -> models.AssetListResponse:
+    """List/search for stored assets.
+
+    :param namespace: The namespace to use, or the current user if absent.
+    :param search: A search string to use.
+    :param type: If provided, include only assets of the specified type
+        ("array" or "group").
+    :param ownership_level: If provided, include only assets you own ("owned"),
+        or only assets that are shared with you ("shared").
+    :param depth: The depth to provide return information.
+        If "root", only root assets (i.e., arrays and groups that are not
+        contained within another group) will be returned.
+        If "all", all assets that match (including those which are contained in
+        another group) will be included.
+    :param expand: Comma-separated string specifying additional information
+        to include in the response. As of this writing, "metadata" is supported.
+    :param page: Which page of results to retrieve. 1-based.
+    :param per_page: How many results to include on each page.
+    :param order_by: The order to return assets, by default "created_at desc".
+        Supported keys are "created_at", "name", and "asset_type".
+        They can be used alone or with "asc" or "desc" separated by a space
+        (e.g. "created_at", "asset_type asc").
+    """
+    return client.build(assets_api.AssetsApi).list_assets(
+        namespace or client.default_user().username,
+        search=search,
+        asset_type=type,
+        ownership_level=ownership_level,
+        depth=depth,
+        expand=_canonicalize_csv(expand),
+        page=page,
+        per_page=per_page,
+        order_by=order_by,
+    )
+
+
+def list_public(
+    *,
+    search: Optional[str] = None,
+    type: Optional[_AssetType] = None,
+    depth: Optional[_Depth] = None,
+    page: Optional[int] = None,
+    per_page: Optional[int] = None,
+    order_by: Optional[str] = None,
+) -> models.AssetListResponse:
+    """List/search for publicly-shared assets.
+
+    :param search: A search string to use.
+    :param type: If provided, include only assets of the specified type
+        ("array" or "group").
+    :param depth: The depth to provide return information.
+        If "root", only root assets (i.e., arrays and groups that are not
+        contained within another group) will be returned.
+        If "all", all assets that match (including those which are contained in
+        another group) will be included.
+    :param expand: Comma-separated string specifying additional information
+        to include in the response. As of this writing, "metadata" is supported.
+    :param page: Which page of results to retrieve. 1-based.
+    :param per_page: How many results to include on each page.
+    :param order_by: The order to return assets, by default "created_at desc".
+        Supported keys are "created_at", "name", and "asset_type".
+        They can be used alone or with "asc" or "desc" separated by a space
+        (e.g. "created_at", "asset_type asc").
+    """
+    return client.build(assets_api.AssetsApi).list_public_assets(
+        search=search,
+        asset_type=type,
+        depth=depth,
+        page=page,
+        per_page=per_page,
+        order_by=order_by,
+    )
 
 
 def register(
     storage_uri: str,
-    type: str,
+    type: _AssetType,
     *,
     dest_uri: Optional[str] = None,
     name: Optional[str] = None,
@@ -108,7 +200,7 @@ def delete(uri: str, *, recursive: Optional[bool] = False) -> None:
     return func(uri)
 
 
-def info(uri: str) -> Union[ArrayInfo, GroupInfo]:
+def info(uri: str) -> Union[models.ArrayInfo, models.GroupInfo]:
     """Retrieve information about an asset.
 
     :param uri: tiledb URI of the asset.
@@ -227,3 +319,12 @@ def unshare(uri: str, namespace: str) -> None:
 
     """
     share(uri, namespace, [])
+
+
+def _canonicalize_csv(seq: Optional[_CSVString]) -> Optional[str]:
+    """Canonicalizes sequences into a CSV-like string. Empty becomes None."""
+    if not seq:
+        return None
+    if not isinstance(seq, str):
+        seq = ",".join(seq)
+    return seq or None

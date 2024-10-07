@@ -1389,7 +1389,7 @@ class InvitationApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: name or UUID of namespace sharing their payment info (required)
-        :param object email_invite: Recipients of the invitation. These may only be namespaces, not email addresses.
+        :param InlineObject1 email_invite:
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1415,7 +1415,7 @@ class InvitationApi(object):
 
         :param async_req bool: execute request asynchronously
         :param str namespace: name or UUID of namespace sharing their payment info (required)
-        :param object email_invite: Recipients of the invitation. These may only be namespaces, not email addresses.
+        :param InlineObject1 email_invite:
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will

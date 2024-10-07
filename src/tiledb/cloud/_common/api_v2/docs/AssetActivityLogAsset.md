@@ -1,4 +1,4 @@
-# GroupContentActivityAsset
+# AssetActivityLogAsset
 
 The asset details
 

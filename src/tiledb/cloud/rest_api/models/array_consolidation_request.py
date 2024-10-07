@@ -32,21 +32,26 @@ class ArrayConsolidationRequest(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"config": "TileDBConfig"}
+    openapi_types = {"config": "TileDBConfig", "fragments": "list[str]"}
 
-    attribute_map = {"config": "config"}
+    attribute_map = {"config": "config", "fragments": "fragments"}
 
-    def __init__(self, config=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self, config=None, fragments=None, local_vars_configuration=None
+    ):  # noqa: E501
         """ArrayConsolidationRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
         self._config = None
+        self._fragments = None
         self.discriminator = None
 
         if config is not None:
             self.config = config
+        if fragments is not None:
+            self.fragments = fragments
 
     @property
     def config(self):
@@ -68,6 +73,29 @@ class ArrayConsolidationRequest(object):
         """
 
         self._config = config
+
+    @property
+    def fragments(self):
+        """Gets the fragments of this ArrayConsolidationRequest.  # noqa: E501
+
+        list of fragments in the array to consolidate  # noqa: E501
+
+        :return: The fragments of this ArrayConsolidationRequest.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._fragments
+
+    @fragments.setter
+    def fragments(self, fragments):
+        """Sets the fragments of this ArrayConsolidationRequest.
+
+        list of fragments in the array to consolidate  # noqa: E501
+
+        :param fragments: The fragments of this ArrayConsolidationRequest.  # noqa: E501
+        :type: list[str]
+        """
+
+        self._fragments = fragments
 
     def to_dict(self):
         """Returns the model properties as a dict"""

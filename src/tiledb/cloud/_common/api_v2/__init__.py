@@ -67,6 +67,10 @@ from tiledb.cloud._common.api_v2.models.array_schema import ArraySchema
 from tiledb.cloud._common.api_v2.models.array_schema_entry import ArraySchemaEntry
 from tiledb.cloud._common.api_v2.models.array_schema_map import ArraySchemaMap
 from tiledb.cloud._common.api_v2.models.array_type import ArrayType
+from tiledb.cloud._common.api_v2.models.asset_activity_log import AssetActivityLog
+from tiledb.cloud._common.api_v2.models.asset_activity_log_asset import (
+    AssetActivityLogAsset,
+)
 from tiledb.cloud._common.api_v2.models.asset_type import AssetType
 from tiledb.cloud._common.api_v2.models.attribute import Attribute
 from tiledb.cloud._common.api_v2.models.attribute_buffer_header import (
@@ -102,15 +106,11 @@ from tiledb.cloud._common.api_v2.models.generic_tile_offsets import GenericTileO
 from tiledb.cloud._common.api_v2.models.group_activity_event_type import (
     GroupActivityEventType,
 )
-from tiledb.cloud._common.api_v2.models.group_activity_log import GroupActivityLog
-from tiledb.cloud._common.api_v2.models.group_activity_log_response import (
-    GroupActivityLogResponse,
+from tiledb.cloud._common.api_v2.models.group_activity_response import (
+    GroupActivityResponse,
 )
 from tiledb.cloud._common.api_v2.models.group_content_activity import (
     GroupContentActivity,
-)
-from tiledb.cloud._common.api_v2.models.group_content_activity_asset import (
-    GroupContentActivityAsset,
 )
 from tiledb.cloud._common.api_v2.models.group_content_activity_response import (
     GroupContentActivityResponse,

@@ -16,6 +16,8 @@ from .array import list_shared_with
 from .array import register_array
 from .array import share_array
 from .array import unshare_array
+from .asset import list as list_assets
+from .asset import list_public as list_public_assets
 from .client import Config
 from .client import Ctx
 from .client import list_arrays
@@ -72,7 +74,9 @@ __all__ = (
     "Config",
     "Ctx",
     "list_arrays",
+    "list_assets",
     "list_public_arrays",
+    "list_public_assets",
     "list_public_groups",
     "list_shared_arrays",
     "list_shared_groups",

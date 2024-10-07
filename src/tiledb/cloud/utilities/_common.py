@@ -1,11 +1,9 @@
 import configparser
 import functools
 import inspect
-import logging
 import os
 import pathlib
 import subprocess
-import sys
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import wait
 from fnmatch import fnmatch
@@ -91,61 +89,6 @@ def set_aws_context(config: Optional[Mapping[str, Any]] = None) -> None:
 
     # Always set AWS_DEFAULT_REGION because it is required by the AWS CLI
     os.environ["AWS_DEFAULT_REGION"] = config.get("vfs.s3.region", AWS_DEFAULT_REGION)
-
-
-def get_logger(level: int = logging.INFO, name: str = __name__) -> logging.Logger:
-    """
-    Get a logger with a custom formatter and set the logging level.
-
-    :param level: logging level, defaults to logging.INFO
-    :param name: logger name, defaults to __name__
-    :return: Logger object
-    """
-
-    sh = logging.StreamHandler(stream=sys.stdout)
-    formatter = logging.Formatter(
-        "[%(asctime)s] [%(module)s] [%(funcName)s] [%(levelname)s] %(message)s"
-    )
-    sh.setFormatter(formatter)
-
-    logger = logging.getLogger(name)
-    # Only add one handler, in case get_logger is called multiple times
-    if not logger.handlers:
-        logger.addHandler(sh)
-        logger.setLevel(level)
-
-    return logger
-
-
-def get_logger_wrapper(
-    verbose: bool = False,
-    level: Optional[int] = None,
-) -> logging.Logger:
-    """
-    Get a logger instance and log version information.
-
-    Nominal use-case is a simple two-level approach: verbose or not.
-
-    Using ``level`` provides access to the ``logging`` package's levels.
-
-    :param verbose: verbose logging, defaults to False
-    :param level: if provided, supersedes ``verbose`` and applies the
-      requested level.
-    :return: logger instance
-    """
-
-    if level is None:
-        level = logging.DEBUG if verbose else logging.INFO
-    logger = get_logger(level)
-
-    logger.debug(
-        "tiledb.cloud=%s, tiledb=%s, libtiledb=%s",
-        tiledb.cloud.__version__,
-        tiledb.version(),
-        tiledb.libtiledb.version(),
-    )
-
-    return logger
 
 
 def run_dag(
@@ -445,7 +388,7 @@ def find(
     include: Optional[Union[str, Callable]] = None,
     exclude: Optional[Union[str, Callable]] = None,
     max_count: Optional[int] = None,
-) -> Iterator[str]:
+) -> Sequence[str]:
     """Searches a path for files matching the include/exclude pattern using VFS.
 
     :param uri: Input path to search
@@ -456,43 +399,41 @@ def find(
     """
     with tiledb.scope_ctx(config):
         vfs = tiledb.VFS(config=config, ctx=tiledb.Ctx(config))
-        listing = vfs.ls(uri)
-        current_count = 0
 
-        def list_files(listing):
-            for f in listing:
-                # Avoid infinite recursion
-                if f == uri:
-                    continue
+        uris = []
 
-                if vfs.is_dir(f):
-                    yield from list_files(
-                        vfs.ls(f),
-                    )
-                else:
-                    # Skip files that do not match the include pattern or match
-                    # the exclude pattern.
-                    if callable(include):
-                        if not include(f):
-                            continue
-                    else:
-                        if include and not fnmatch(f, include):
-                            continue
+        def callback(uri, size_bytes):
+            """Process each file found by the VFS.ls_recursive call"""
 
-                    if callable(exclude):
-                        if exclude(f):
-                            continue
-                    else:
-                        if exclude and fnmatch(f, exclude):
-                            continue
-                    yield f
+            # Return True to continue searching for files without adding `uri`
+            # to the list of URIs found.
+            if include:
+                if not callable(include) and not fnmatch(uri, include):
+                    return True
+                elif callable(include) and not include(uri):
+                    return True
+            if exclude:
+                if not callable(exclude) and fnmatch(uri, exclude):
+                    return True
+                elif callable(exclude) and exclude(uri):
+                    return True
 
-        for f in list_files(listing):
-            yield f
+            # Skip directories and continue searching.
+            if vfs.is_dir(uri):
+                return True
 
-            current_count += 1
-            if max_count and current_count == max_count:
-                return
+            # Add to the list of URIs found
+            uris.append(uri)
+
+            # Stop `ls_recursive` if the maximum count is reached.
+            if max_count and len(uris) >= max_count:
+                return False
+
+            return True
+
+        vfs.ls_recursive(uri, callback=callback)
+
+        return uris
 
 
 T = TypeVar("T")

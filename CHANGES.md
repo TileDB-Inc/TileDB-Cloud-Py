@@ -1,5 +1,13 @@
 # Changes
 
+## Next (2024-09-23)
+
+---
+
+New features:
+
+- Assets of a namespace can be listed in a paged fashion (gh-642).
+
 ## Next (YYYY-MM-DD)
 
 New features:

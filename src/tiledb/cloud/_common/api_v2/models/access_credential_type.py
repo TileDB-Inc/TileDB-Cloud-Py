@@ -30,9 +30,10 @@ class AccessCredentialType(object):
     """
     KEY = "key"
     ARN = "arn"
+    TOKEN = "token"
     AZURE_TOKEN = "azure_token"
 
-    allowable_values = [KEY, ARN, AZURE_TOKEN]  # noqa: E501
+    allowable_values = [KEY, ARN, TOKEN, AZURE_TOKEN]  # noqa: E501
 
     """
     Attributes:

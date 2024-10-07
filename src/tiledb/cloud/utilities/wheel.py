@@ -13,7 +13,9 @@ from dataclasses import field
 from typing import Any, List, Mapping, Optional, Sequence
 
 import tiledb
-from tiledb.cloud.utilities import get_logger
+from tiledb.cloud.client import Config
+
+from .logging import get_logger
 
 logger = get_logger()
 logger.propagate = False
@@ -47,6 +49,8 @@ def upload_wheel(
 
     :param wheel_path: Path to the local wheel file.
     :param dest_uri: URI where the wheel filestore will be created or updated.
+        Ensure wheel file includes extension '.whl' or '.wheel' for it to work
+        with `install_wheel`.
     :param config: TileDB config.
     :param overwrite: Whether to overwrite a registered wheel if one exists.
     """
@@ -55,7 +59,7 @@ def upload_wheel(
     # When installing the wheel, the original wheel file name will be recovered
     # from metadata.
     dest_uri = dest_uri.replace("+", ".")
-
+    config = config or Config()
     with tiledb.scope_ctx(config):
         # catch edge case if array registered, but array deleted from storage backend
         try:
@@ -67,7 +71,9 @@ def upload_wheel(
             )
 
         # Create the array if it doesn't exist
-        if object_type is None:
+        # `object_type == "None"` is work-around for regression,
+        # see https://app.shortcut.com/tiledb-inc/story/55930 for fix
+        if object_type is None or object_type == "None":
             tiledb.Array.create(dest_uri, tiledb.ArraySchema.from_file(wheel_path))
             logger.info(f"Created filestore at '{dest_uri}'")
         elif object_type == "group":
@@ -189,7 +195,7 @@ def install_wheel(
     verbose: bool = False,
     no_deps: bool = True,
     deps_to_refresh: Optional[Sequence[str]] = None,
-    in_venv: bool = True,
+    in_venv: Optional[bool] = None,
 ) -> None:
     """Install at runtime a Python wheel from TiileDB Filestore or PyPI.
 
@@ -204,9 +210,12 @@ def install_wheel(
     :param verbose: Verbose output, defaults to False.
     :param no_deps: Do not install dependencies, defaults to True.
     :param deps_to_refresh: Dependencies to refresh from cache.
-    :param in_venv: Whether to install to venv runtime. For conda,
-        likely want default, in_ven=True.
+    :param in_venv: Whether to install to venv runtime.
     """
+
+    # if not specified, detect if python venv active
+    if in_venv is None:
+        in_venv = sys.prefix != sys.base_prefix
 
     installer = PipInstall(
         wheel=wheel_uri,
@@ -215,6 +224,7 @@ def install_wheel(
     )
 
     if installer.wheel_ext:
+        config = config or Config()
         with tiledb.scope_ctx(config):
             # Get the original wheel file name from metadata.
             with tiledb.open(wheel_uri) as A:
