@@ -345,7 +345,10 @@ def as_batch(func: _CT) -> _CT:
         name = kwargs.get("name", func.__name__)
         namespace = kwargs.get("namespace", None)
         acn = kwargs.get("acn", kwargs.pop("access_credentials_name", None))
-        kwargs["acn"] = acn  # for backwards compatibility
+        kwargs["acn"] = acn  # for backwards compatibility.
+
+        # We pop these off to use as named keyword args when submitting
+        # the function to our graph, below.
         resources = kwargs.pop("resources", None)
         image_name = kwargs.pop("image_name", None)
 
@@ -356,7 +359,7 @@ def as_batch(func: _CT) -> _CT:
             mode=dag.Mode.BATCH,
         )
 
-        # Submit the function as a batch UDF
+        # Submit the function as a batch UDF.
         graph.submit(
             func,
             *args,
@@ -367,7 +370,7 @@ def as_batch(func: _CT) -> _CT:
             **_filter_kwargs(func, kwargs),
         )
 
-        # Run the DAG asynchronously
+        # Run the DAG asynchronously.
         graph.compute()
 
         print(
