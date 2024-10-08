@@ -274,7 +274,7 @@ def ingest(
                     logger.debug("Object type of %s : %s", tiledb_uri, object_type)
                     if object_type == "group":
                         found = True
-                    elif object_type is not None or object_type != "None":
+                    elif object_type is not None:
                         raise ValueError(
                             f"Another object is already registered at '{tiledb_uri}'."
                         )
