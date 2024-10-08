@@ -25,6 +25,7 @@ def register_dataset_udf(
     namespace: Optional[str] = None,
     config: Optional[Mapping[str, Any]] = None,
     verbose: bool = False,
+    **kwargs,
 ) -> None:
     """
     Register the dataset on TileDB Cloud.
@@ -233,6 +234,7 @@ def ingest_h5ad(
     ingest_mode: str = "write",
     logging_level: int = logging.INFO,
     dry_run: bool = False,
+    **kwargs,
 ) -> None:
     """Performs the actual work of ingesting H5AD data into TileDB.
 
@@ -402,12 +404,17 @@ def run_ingest_workflow(
         mode=dag.Mode.BATCH,
     )
 
-    # Step 1: Ingest workflow UDF
-    carry_along: Dict[str, str] = {
-        "resources": _DEFAULT_RESOURCES if resources is None else resources,
-        "namespace": namespace,
-        "access_credentials_name": acn,
-    }
+    carry_along: Dict[str, str] = kwargs.pop(
+        "carry_along",
+        {
+            "resources": _DEFAULT_RESOURCES if resources is None else resources,
+            # I don't see why this is needed. I'm not finding any code that
+            # pops "namespace" from kwargs.
+            "namespace": namespace,
+            # Because workflows might be using older user-defined functions?
+            "access_credentials_name": acn,
+        },
+    )
 
     grf.submit(
         _run_ingest_workflow_udf_byval,

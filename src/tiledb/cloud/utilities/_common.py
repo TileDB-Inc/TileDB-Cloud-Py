@@ -308,8 +308,12 @@ def _filter_kwargs(function: Callable, kwargs: Mapping[str, Any]) -> Mapping[str
     :return: filtered kwargs
     """
     valid_args = inspect.signature(function).parameters
-    filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_args}
-    return filtered_kwargs
+
+    # Detect if the function has a catch-all **kwargs parameter.
+    # If so, we'll preserve all keyword arguments.
+    has_kwargs = any(param.kind == param.VAR_KEYWORD for param in valid_args)
+
+    return {k: v for k, v in kwargs.items() if k in valid_args or has_kwargs}
 
 
 _CT = TypeVar("_CT", bound=Callable)
@@ -358,6 +362,15 @@ def as_batch(func: _CT) -> _CT:
             namespace=namespace,
             mode=dag.Mode.BATCH,
         )
+
+        # Guard against Node constructor peeling off "resources" or
+        # other functions peeling off "namespace" and "credentials".
+        # The "carry along" pattern was introduced in gh-630.
+        kwargs["carry_along"] = {
+            "resources": resources,
+            "namespace": namespace,
+            "access_credentials_name": acn,
+        }
 
         # Submit the function as a batch UDF.
         graph.submit(

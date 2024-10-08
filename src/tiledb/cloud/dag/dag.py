@@ -149,8 +149,9 @@ class Node(futures.FutureLike[_T]):
         """Processing mode of Node."""
         self._expand_node_output: Optional[Node] = expand_node_output
 
-        self._resource_class = kwargs.get("resource_class", None)
-        self._resources = kwargs.get("resources", None)
+        # This is root of the problem.
+        self._resource_class = kwargs.pop("resource_class", None)
+        self._resources = kwargs.pop("resources", None)
 
         self._wrapped_func: Callable[..., "results.Result[_T]"]
 
