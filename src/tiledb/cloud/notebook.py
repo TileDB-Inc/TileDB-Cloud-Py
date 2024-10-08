@@ -394,7 +394,7 @@ def panel_dashboard(
 
     # Get a random open port.
     with socket.socket() as sock:
-        sock.bind(("", 0))
+        sock.bind(("localhost", 0))
         port = sock.getsockname()[1]
 
     # Reduce noise from the panel server
