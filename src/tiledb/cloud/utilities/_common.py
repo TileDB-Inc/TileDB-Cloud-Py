@@ -311,7 +311,9 @@ def _filter_kwargs(function: Callable, kwargs: Mapping[str, Any]) -> Mapping[str
 
     # Detect if the function has a catch-all **kwargs parameter.
     # If so, we'll preserve all keyword arguments.
-    has_kwargs = any(param.kind == param.VAR_KEYWORD for param in valid_args)
+    has_kwargs = any(
+        param.kind == param.VAR_KEYWORD for key, param in valid_args.items()
+    )
 
     return {k: v for k, v in kwargs.items() if k in valid_args or has_kwargs}
 
@@ -323,13 +325,28 @@ def as_batch(func: _CT) -> _CT:
     """
     Decorator to run a function as a batch UDF on TileDB Cloud.
 
-    optional kwargs:
-    - name: name of the node in the DAG, defaults to func.__name__
-    - namespace: TileDB Cloud namespace, defaults to the user's default namespace
-    - acn: Access Credentials Name (ACN) registered in TileDB Cloud (ARN type)
-    - resources: resources to allocate for the UDF, defaults to None
+    :param func: function to run.
 
-    :param func: function to run
+    Note: tiledb.cloud.dag.DAG.submit() consumes "resource_class" and
+    "resources" keyword arguments (specifically, it's the Node class
+    constructor that does this) before the func is called, meaning
+    that the function will not receive those arguments.
+
+    This complicates the execution of functions that will create new
+    task graphs. If we run tiledb.cloud.soma.ingest.ingest() and
+    specify a 32GB RAM runtime in "resources", that parameter is lost
+    to the next graph in the workflow, and we're back to a default of
+    8GB.
+
+    We're going to work around that issue by requiring functions
+    that need to preserve "resource_class" and "resources" to use a
+    "_resources" keyword argument.
+
+    If you are writing a cloud function that is to be called from
+    another cloud function, you should expect to receive a
+    "_resources" keyword argument and find "resource_class" and
+    "resources" in it. Likewise, you should propagate these to the
+    next cloud function in the same way.
     """
 
     @functools.wraps(func)
@@ -350,11 +367,12 @@ def as_batch(func: _CT) -> _CT:
         namespace = kwargs.get("namespace", None)
         acn = kwargs.get("acn", kwargs.pop("access_credentials_name", None))
         kwargs["acn"] = acn  # for backwards compatibility.
+        image_name = kwargs.pop("image_name", None)
 
         # We pop these off to use as named keyword args when submitting
         # the function to our graph, below.
         resources = kwargs.pop("resources", None)
-        image_name = kwargs.pop("image_name", None)
+        resource_class = kwargs.pop("resource_class", None)
 
         # Create a new DAG
         graph = dag.DAG(
@@ -363,14 +381,19 @@ def as_batch(func: _CT) -> _CT:
             mode=dag.Mode.BATCH,
         )
 
-        # Guard against Node constructor peeling off "resources" or
-        # other functions peeling off "namespace" and "credentials".
-        # The "carry along" pattern was introduced in gh-630.
+        # The "carry along" pattern for "namespace" and "credentials"
+        # was introduced in gh-630.
         kwargs["carry_along"] = {
-            "resources": resources,
             "namespace": namespace,
             "access_credentials_name": acn,
         }
+
+        _resources = {}
+        if resources:
+            _resources["resources"] = resources
+        if resource_class:
+            _resources["resource_class"]: resource_class
+        kwargs["_resources"] = _resources
 
         # Submit the function as a batch UDF.
         graph.submit(
