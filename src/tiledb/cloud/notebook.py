@@ -373,16 +373,18 @@ def panel_dashboard(
     app: Any,
     *,
     full_screen_link: bool = True,
+    title="Dashboard - TileDB",
     verbose: bool = False,
     vh_delta: int = 70,
 ) -> Any:
     """
-    Start a panel server with the provided app and return an iframe that enables
+    Start a Panel server with the provided app and return an iframe that enables
     viewing the app in Voila. This wrapper avoids issues with reactive Panel apps
     in Voila.
 
     :param app: The Panel app to serve.
     :param full_screen_link: Include a link to the full screen view, defaults to True.
+    :param title: Title for the Panel server, defaults to "Dashboard - TileDB".
     :param verbose: Enable verbose logging, defaults to False.
     :param vh_delta: The vertical height delta for the iframe in px. This value is
         subtracted from 100vh to set the height of the iframe.
@@ -407,6 +409,7 @@ def panel_dashboard(
         port=port,
         address="localhost",
         show=False,
+        title=title,
         websocket_origin="*",
         verbose=verbose,
     )
