@@ -392,7 +392,7 @@ def as_batch(func: _CT) -> _CT:
         if resources:
             _resources["resources"] = resources
         if resource_class:
-            _resources["resource_class"]: resource_class
+            _resources["resource_class"] = resource_class
         kwargs["_resources"] = _resources
 
         # Submit the function as a batch UDF.
