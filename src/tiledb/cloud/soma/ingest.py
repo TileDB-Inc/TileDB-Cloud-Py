@@ -25,6 +25,7 @@ def register_dataset_udf(
     namespace: Optional[str] = None,
     config: Optional[Mapping[str, Any]] = None,
     verbose: bool = False,
+    **kwargs,
 ) -> None:
     """
     Register the dataset on TileDB Cloud.
@@ -86,6 +87,7 @@ def run_ingest_workflow_udf(
     acn: Optional[str] = None,
     logging_level: int = logging.INFO,
     dry_run: bool = False,
+    _resources: Optional[Dict[str, Any]] = None,
     **kwargs,
 ) -> Dict[str, str]:
     """
@@ -93,6 +95,11 @@ def run_ingest_workflow_udf(
     can we do VFS with access_credentials_name -- that does not work correctly
     on the client.
     """
+
+    # "_resources" is the data to be propagated to the next cloud function.
+    _resources = _resources or {}
+    if resources:
+        _resources["resources"] = resources
 
     # Some kwargs are eaten by the tiledb.cloud package, and won't reach
     # our child. In order to propagate these to a _grandchild_ we need to
@@ -132,10 +139,11 @@ def run_ingest_workflow_udf(
             extra_tiledb_config=extra_tiledb_config,
             ingest_mode=ingest_mode,
             platform_config=platform_config,
-            resources=carry_along.get("resources", resources),
+            resources=resources or _resources.get("resources", None),
             access_credentials_name=carry_along.get("access_credentials_name", acn),
             logging_level=logging_level,
             dry_run=dry_run,
+            _resources=_resources,
         )
 
     elif vfs.is_dir(input_uri):
@@ -180,10 +188,11 @@ def run_ingest_workflow_udf(
                 extra_tiledb_config=extra_tiledb_config,
                 ingest_mode=ingest_mode,
                 platform_config=platform_config,
-                resources=carry_along.get("resources", resources),
+                resources=resources or _resources.get("resources", None),
                 access_credentials_name=carry_along.get("access_credentials_name", acn),
                 logging_level=logging_level,
                 dry_run=dry_run,
+                _resources=_resources,
             )
             collector.depends_on(node)
 
@@ -233,6 +242,7 @@ def ingest_h5ad(
     ingest_mode: str = "write",
     logging_level: int = logging.INFO,
     dry_run: bool = False,
+    **kwargs,
 ) -> None:
     """Performs the actual work of ingesting H5AD data into TileDB.
 
@@ -327,6 +337,7 @@ def run_ingest_workflow(
     acn: Optional[str] = None,
     logging_level: int = logging.INFO,
     dry_run: bool = False,
+    _resources: Optional[Dict[str, Any]] = None,
     **kwargs,
 ) -> Dict[str, str]:
     """Starts a workflow to ingest H5AD data into SOMA.
@@ -382,6 +393,11 @@ def run_ingest_workflow(
             )
         )
 
+    # "_resources" is the data to be propagated to the next cloud function.
+    _resources = _resources or {}
+    if resources:
+        _resources["resources"] = resources
+
     try:
         ns, dst = utils.split_uri(output_uri)
         namespace = namespace or ns
@@ -402,12 +418,17 @@ def run_ingest_workflow(
         mode=dag.Mode.BATCH,
     )
 
-    # Step 1: Ingest workflow UDF
-    carry_along: Dict[str, str] = {
-        "resources": _DEFAULT_RESOURCES if resources is None else resources,
-        "namespace": namespace,
-        "access_credentials_name": acn,
-    }
+    carry_along: Dict[str, str] = kwargs.pop(
+        "carry_along",
+        {
+            "resources": _DEFAULT_RESOURCES if resources is None else resources,
+            # I don't see why this is needed. I'm not finding any code that
+            # pops "namespace" from kwargs.
+            "namespace": namespace,
+            # Because workflows might be using older user-defined functions?
+            "access_credentials_name": acn,
+        },
+    )
 
     grf.submit(
         _run_ingest_workflow_udf_byval,
@@ -418,13 +439,14 @@ def run_ingest_workflow(
         extra_tiledb_config=extra_tiledb_config,
         platform_config=platform_config,
         ingest_mode=ingest_mode,
-        resources=resources,
+        resources=resources or _resources.get("resources", None),
         namespace=namespace,
         register_name=register_name,
         access_credentials_name=acn,
         carry_along=carry_along,
         logging_level=logging_level,
         dry_run=dry_run,
+        _resources=_resources,
     )
 
     # Start the ingestion process
