@@ -38,6 +38,7 @@ def ingest(
     converter: Optional[str] = None,
     output_ext: str = "",
     tile_scale: int = 128,
+    _propagate_resources: bool = False,
     **kwargs,
 ) -> tiledb.cloud.dag.DAG:
     """The function ingests microscopy images into TileDB arrays
@@ -369,6 +370,7 @@ def ingest(
         max_workers=threads,
         compressor=compressor_serial,
         access_credentials_name=acn,
+        _propagate_resources=_propagate_resources,
         **kwargs,
     )
 
@@ -394,4 +396,4 @@ def ingest(
 
 
 # Wrapper function for batch VCF ingestion
-ingest_batch = as_batch(ingest)
+ingest_batch = as_batch(ingest, _propagate_resources=True)
