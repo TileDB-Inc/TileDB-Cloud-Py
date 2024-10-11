@@ -342,15 +342,10 @@ def as_batch(func: _CT, *, _propagate_resources=False) -> _CT:
     to the next graph in the workflow, and we're back to a default of
     8GB.
 
-    We're going to work around that issue by requiring functions
-    that need to preserve "resource_class" and "resources" to use a
-    "_resources" keyword argument.
-
     If you are writing a cloud function that is to be called from
     another cloud function, you should expect to receive a
-    "_resources" keyword argument and find "resource_class" and
-    "resources" in it. Likewise, you should propagate these to the
-    next cloud function in the same way.
+    "_propagate_resources" and should propagate this keyword argument
+    to the next cloud function.
     """
 
     @functools.wraps(func)
