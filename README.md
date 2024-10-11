@@ -37,3 +37,7 @@ Documentation uses [Quarto](https://quarto.org/) style documentation.
   - These tests run on TileDB Cloud using your current environment variable `TILEDB_REST_TOKEN` -- you will need a valid API token for the tests to pass
   - For continuous integration, the token is configured for the `unittest` user and all tests should pass
   - For interactive use, if your `TILEDB_REST_TOKEN` points to your own account, most tests will run, except for those that explicitly check against contents of the `unittest` account which are skipped
+
+### Releasing
+
+Releasing is entirely automated. Releases made on GitHub using tags that start with "v", like "v0.12.28", trigger sdist and wheel builds and upload of those distributions to the Python Package Index.
