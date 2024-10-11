@@ -948,7 +948,6 @@ class DAG:
         _fallback_name: Optional[str] = None,
         store_results=True,
         expand_node_output: Optional[Node] = None,
-        _propagate_resources=False,
         **kwargs,
     ):
         with self._lifecycle_condition:
@@ -980,7 +979,6 @@ class DAG:
                 dag=self,
                 name=name,
                 expand_node_output=expand_node_output,
-                _propagate_resources=_propagate_resources,
                 **kwargs,
             )
             return self._add_node_internal(node)
@@ -1014,15 +1012,11 @@ class DAG:
         kwargs.setdefault("name", functions.full_name(func))
         return self._add_raw_node(func, *args, mode=Mode.LOCAL, **kwargs)
 
-    def submit_udf(self, func: Callable, *args, _propagate_resources=False, **kwargs):
+    def submit_udf(self, func: Callable, *args, **kwargs):
         """Submit a function that will be executed in the cloud serverlessly.
 
         :param func: Function to execute in UDF task.
         :param *args: Postional arguments to pass into Node instantation.
-        :param _propagate_resources: True if the Node should propagate
-            "resources" and "resource_class" parameters to the function
-            it executes instead of consuming the parameters. Default:
-            False.
         :param **kwargs: Keyword args to pass into Node instantiation.
         :return: Node that is created.
         """
@@ -1041,7 +1035,6 @@ class DAG:
             func,
             *args,
             _fallback_name=functions.full_name(func),
-            _propagate_resources=_propagate_resources,
             **kwargs,
         )
 

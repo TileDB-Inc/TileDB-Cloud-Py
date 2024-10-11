@@ -321,11 +321,15 @@ def _filter_kwargs(function: Callable, kwargs: Mapping[str, Any]) -> Mapping[str
 _CT = TypeVar("_CT", bound=Callable)
 
 
-def as_batch(func: _CT) -> _CT:
+def as_batch(func: _CT, *, _propagate_resources=False) -> _CT:
     """
     Decorator to run a function as a batch UDF on TileDB Cloud.
 
     :param func: function to run.
+    :param _propagate_resources: True if the wrapper's Node should
+        propagate "resources" and "resource_class" parameters to the
+        function it executes instead of consuming the parameters.
+        Default: False.
 
     Note: tiledb.cloud.dag.DAG.submit() consumes "resource_class" and
     "resources" keyword arguments (specifically, it's the Node class
@@ -367,12 +371,11 @@ def as_batch(func: _CT) -> _CT:
         namespace = kwargs.get("namespace", None)
         acn = kwargs.get("acn", kwargs.pop("access_credentials_name", None))
         kwargs["acn"] = acn  # for backwards compatibility.
-        image_name = kwargs.pop("image_name", None)
 
         # We pop these off to use as named keyword args when submitting
         # the function to our graph, below.
+        image_name = kwargs.pop("image_name", None)
         resources = kwargs.pop("resources", None)
-        resource_class = kwargs.pop("resource_class", None)
 
         # Create a new DAG
         graph = dag.DAG(
@@ -388,13 +391,6 @@ def as_batch(func: _CT) -> _CT:
             "access_credentials_name": acn,
         }
 
-        _resources = {}
-        if resources:
-            _resources["resources"] = resources
-        if resource_class:
-            _resources["resource_class"] = resource_class
-        kwargs["_resources"] = _resources
-
         # Submit the function as a batch UDF.
         graph.submit(
             func,
@@ -403,6 +399,7 @@ def as_batch(func: _CT) -> _CT:
             access_credentials_name=acn,
             resources=resources,
             image_name=image_name,
+            _propagate_resources=_propagate_resources,
             **_filter_kwargs(func, kwargs),
         )
 

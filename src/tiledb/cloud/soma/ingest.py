@@ -87,7 +87,7 @@ def run_ingest_workflow_udf(
     acn: Optional[str] = None,
     logging_level: int = logging.INFO,
     dry_run: bool = False,
-    _resources: Optional[Dict[str, Any]] = None,
+    _propagate_resources: bool = False,
     **kwargs,
 ) -> Dict[str, str]:
     """
@@ -95,11 +95,6 @@ def run_ingest_workflow_udf(
     can we do VFS with access_credentials_name -- that does not work correctly
     on the client.
     """
-
-    # "_resources" is the data to be propagated to the next cloud function.
-    _resources = _resources or {}
-    if resources:
-        _resources["resources"] = resources
 
     # Some kwargs are eaten by the tiledb.cloud package, and won't reach
     # our child. In order to propagate these to a _grandchild_ we need to
@@ -139,11 +134,11 @@ def run_ingest_workflow_udf(
             extra_tiledb_config=extra_tiledb_config,
             ingest_mode=ingest_mode,
             platform_config=platform_config,
-            resources=resources or _resources.get("resources", None),
+            resources=resources or _DEFAULT_RESOURCES,
             access_credentials_name=carry_along.get("access_credentials_name", acn),
             logging_level=logging_level,
             dry_run=dry_run,
-            _resources=_resources,
+            _propagate_resources=_propagate_resources,
         )
 
     elif vfs.is_dir(input_uri):
@@ -188,11 +183,11 @@ def run_ingest_workflow_udf(
                 extra_tiledb_config=extra_tiledb_config,
                 ingest_mode=ingest_mode,
                 platform_config=platform_config,
-                resources=resources or _resources.get("resources", None),
+                resources=resources or _DEFAULT_RESOURCES,
                 access_credentials_name=carry_along.get("access_credentials_name", acn),
                 logging_level=logging_level,
                 dry_run=dry_run,
-                _resources=_resources,
+                _propagate_resources=_propagate_resources,
             )
             collector.depends_on(node)
 
@@ -337,7 +332,7 @@ def run_ingest_workflow(
     acn: Optional[str] = None,
     logging_level: int = logging.INFO,
     dry_run: bool = False,
-    _resources: Optional[Dict[str, Any]] = None,
+    _propagate_resources: bool = False,
     **kwargs,
 ) -> Dict[str, str]:
     """Starts a workflow to ingest H5AD data into SOMA.
@@ -393,11 +388,6 @@ def run_ingest_workflow(
             )
         )
 
-    # "_resources" is the data to be propagated to the next cloud function.
-    _resources = _resources or {}
-    if resources:
-        _resources["resources"] = resources
-
     try:
         ns, dst = utils.split_uri(output_uri)
         namespace = namespace or ns
@@ -439,14 +429,14 @@ def run_ingest_workflow(
         extra_tiledb_config=extra_tiledb_config,
         platform_config=platform_config,
         ingest_mode=ingest_mode,
-        resources=resources or _resources.get("resources", None),
+        resources=resources or _DEFAULT_RESOURCES,
         namespace=namespace,
         register_name=register_name,
         access_credentials_name=acn,
         carry_along=carry_along,
         logging_level=logging_level,
         dry_run=dry_run,
-        _resources=_resources,
+        _propagate_resources=_propagate_resources,
     )
 
     # Start the ingestion process
@@ -473,4 +463,4 @@ _run_ingest_workflow_udf_byval = functions.to_register_by_value(run_ingest_workf
 _register_dataset_udf_byval = functions.to_register_by_value(register_dataset_udf)
 _hack_patch_anndata_byval = functions.to_register_by_value(_hack_patch_anndata)
 
-ingest = as_batch(_run_ingest_workflow_byval)
+ingest = as_batch(_run_ingest_workflow_byval, _propagate_resources=True)

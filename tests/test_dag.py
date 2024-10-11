@@ -1334,6 +1334,53 @@ class ReplaceNodesTest(unittest.TestCase):
         )
 
 
+def test_node_propagate_resources_false():
+    """Node() does not propagate by default."""
+
+    def func(*args, **kwargs):
+        pass
+
+    node = dag.Node(
+        func,
+        "arg1",
+        "arg2",
+        mode=Mode.BATCH,
+        name="test",
+        kwarg1="foo",
+        resources={"cpu": "8", "memory": "32Gi"},
+    )
+    assert node._name == "test"
+    assert node._resources == {"cpu": "8", "memory": "32Gi"}
+    assert "arg1" in node.args
+    assert "arg2" in node.args
+    assert node.kwargs["kwarg1"] == "foo"
+    assert "resources" not in node.kwargs
+
+
+def test_node_propagate_resources_true():
+    """Node() does propagate."""
+
+    def func(*args, **kwargs):
+        pass
+
+    node = dag.Node(
+        func,
+        "arg1",
+        "arg2",
+        mode=Mode.BATCH,
+        name="test",
+        kwarg1="foo",
+        resources={"cpu": "8", "memory": "32Gi"},
+        _propagate_resources=True,
+    )
+    assert node._name == "test"
+    assert node._resources == {"cpu": "8", "memory": "32Gi"}
+    assert "arg1" in node.args
+    assert "arg2" in node.args
+    assert node.kwargs["kwarg1"] == "foo"
+    assert node.kwargs["resources"] == {"cpu": "8", "memory": "32Gi"}
+
+
 def _node(val):
     """Creates a completed node with the given value."""
     n = dag.Node(lambda: None)
