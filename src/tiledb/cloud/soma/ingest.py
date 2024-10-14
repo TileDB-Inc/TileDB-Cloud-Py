@@ -353,7 +353,7 @@ def run_ingest_workflow(
         if any.
     :param ingest_mode: One of the ingest modes supported by
         ``tiledbsoma.io.read_h5ad``.
-    :param resources: A specification for the amount of resources to provide
+    :param ingest_resources: A specification for the amount of resources to provide
         to the UDF executing the ingestion process, to override the default.
     :param namespace: An alternate namespace to run the ingestion process under.
     :param register_name: name to register the dataset with on TileDB Cloud.
