@@ -178,6 +178,9 @@ def run_ingest_workflow_udf(
             namespace=carry_along.get("namespace", namespace),
         )
 
+        # We've propagated ingest_resources to this function so that
+        # we can use it as the resources argument of this method
+        # call.
         h5ad_ingest = grf.submit(
             _ingest_h5ad_byval,
             output_uri=output_uri,
@@ -186,7 +189,7 @@ def run_ingest_workflow_udf(
             extra_tiledb_config=extra_tiledb_config,
             ingest_mode=ingest_mode,
             platform_config=platform_config,
-            resources=carry_along.get("resources", resources),
+            resources=ingest_resources,  # Apply propagated resources here.
             access_credentials_name=carry_along.get("access_credentials_name", acn),
             logging_level=logging_level,
             dry_run=dry_run,
