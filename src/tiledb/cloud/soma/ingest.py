@@ -103,10 +103,6 @@ def run_ingest_workflow_udf(
     # https://github.com/TileDB-Inc/TileDB-Cloud-Py/pull/512
 
     logger = get_logger_wrapper(level=logging_level)
-    logger.debug("ENUMERATOR ENTER")
-    logger.debug("ENUMERATOR INPUT_URI  %s", input_uri)
-    logger.debug("ENUMERATOR OUTPUT_URI %s", output_uri)
-    logger.debug("ENUMERATOR DRY_RUN    %s", str(dry_run))
 
     h5ad_ingest = None
     collector = None
@@ -114,8 +110,6 @@ def run_ingest_workflow_udf(
     vfs = tiledb.VFS(config=extra_tiledb_config)
 
     if vfs.is_file(input_uri):
-        logger.debug("ENUMERATOR VFS.IS_FILE")
-
         name = ("dry-run" if dry_run else "ingest") + "-h5ad-file"
 
         grf = dag.DAG(
@@ -139,8 +133,6 @@ def run_ingest_workflow_udf(
         )
 
     elif vfs.is_dir(input_uri):
-        logger.debug("ENUMERATOR VFS.IS_DIR")
-
         if dry_run:
             name = "dry-run-h5ad-files"
         else:
@@ -165,7 +157,6 @@ def run_ingest_workflow_udf(
                 )
                 continue
 
-            logger.debug("ENUMERATOR ENTRY_INPUT_URI=%r", entry_input_uri)
             base = os.path.basename(entry_input_uri)
             base, _ = os.path.splitext(base)
 
@@ -173,7 +164,6 @@ def run_ingest_workflow_udf(
             if not output_uri.endswith("/"):
                 entry_output_uri += "/"
             entry_output_uri += base
-            logger.debug("ENUMERATOR ENTRY_OUTPUT_URI=%r", entry_output_uri)
 
             if pattern is not None and not re.search(pattern, entry_input_uri):
                 logger.info(
@@ -220,7 +210,6 @@ def run_ingest_workflow_udf(
 
     grf.compute()
 
-    logger.debug("ENUMERATOR EXIT server_graph_uuid = %r", grf.server_graph_uuid)
     return grf.server_graph_uuid
 
 
