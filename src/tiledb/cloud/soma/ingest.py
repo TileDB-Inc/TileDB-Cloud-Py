@@ -158,6 +158,13 @@ def run_ingest_workflow_udf(
         )
 
         for entry_input_uri in vfs.ls(input_uri):
+            # Subdirectories/subfolders can't be ingested, we skip them.
+            if vfs.is_dir(entry_input_uri):
+                logger.info(
+                    "Skipping sub-directory: entry_input_uri=%r", entry_input_uri
+                )
+                continue
+
             logger.debug("ENUMERATOR ENTRY_INPUT_URI=%r", entry_input_uri)
             base = os.path.basename(entry_input_uri)
             base, _ = os.path.splitext(base)
@@ -168,8 +175,12 @@ def run_ingest_workflow_udf(
             entry_output_uri += base
             logger.debug("ENUMERATOR ENTRY_OUTPUT_URI=%r", entry_output_uri)
 
-            if pattern is not None and not re.match(pattern, entry_input_uri):
-                logger.debug("ENUMERATOR SKIP NO MATCH ON <<%r>>", pattern)
+            if pattern is not None and not re.search(pattern, entry_input_uri):
+                logger.info(
+                    "Skipping non-matching input: pattern=%r, entry_input_uri=%r",
+                    pattern,
+                    entry_input_uri,
+                )
                 continue
 
             node = grf.submit(
