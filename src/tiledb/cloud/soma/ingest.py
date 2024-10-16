@@ -80,7 +80,7 @@ def run_ingest_workflow_udf(
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
     ingest_mode: str = "write",
-    resources: Optional[Dict[str, object]] = None,
+    ingest_resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     register_name: Optional[str] = None,
     acn: Optional[str] = None,
@@ -118,7 +118,7 @@ def run_ingest_workflow_udf(
         grf = dag.DAG(
             name=name,
             mode=dag.Mode.BATCH,
-            namespace=namespace,
+            namespace=carry_along.get("namespace", namespace),
         )
 
         collector = grf.submit(
@@ -162,7 +162,7 @@ def run_ingest_workflow_udf(
                 extra_tiledb_config=extra_tiledb_config,
                 ingest_mode=ingest_mode,
                 platform_config=platform_config,
-                resources=carry_along.get("resources", resources),
+                resources=ingest_resources,  # Apply propagated resources here.
                 access_credentials_name=carry_along.get("access_credentials_name", acn),
                 logging_level=logging_level,
                 dry_run=dry_run,
@@ -332,7 +332,7 @@ def run_ingest_workflow(
     extra_tiledb_config: Optional[Dict[str, object]] = None,
     platform_config: Optional[Dict[str, object]] = None,
     ingest_mode: str = "write",
-    resources: Optional[Dict[str, object]] = None,
+    ingest_resources: Optional[Dict[str, object]] = None,
     namespace: Optional[str] = None,
     register_name: Optional[str] = None,
     acn: Optional[str] = None,
@@ -364,7 +364,7 @@ def run_ingest_workflow(
         if any.
     :param ingest_mode: One of the ingest modes supported by
         ``tiledbsoma.io.read_h5ad``.
-    :param resources: A specification for the amount of resources to provide
+    :param ingest_resources: A specification for the amount of resources to provide
         to the UDF executing the ingestion process, to override the default.
     :param namespace: An alternate namespace to run the ingestion process under.
     :param register_name: name to register the dataset with on TileDB Cloud.
@@ -375,6 +375,8 @@ def run_ingest_workflow(
         with the UUID of the graph on the server side, which can be used to
         manage execution and monitor progress.
     """
+    ingest_resources = ingest_resources or _DEFAULT_RESOURCES
+
     # Demand for mutual exclusion of the two arguments and existence.
     access_credentials_name = kwargs.pop("access_credentials_name", None)
     if bool(acn) == bool(access_credentials_name):
@@ -415,7 +417,6 @@ def run_ingest_workflow(
 
     # Step 1: Ingest workflow UDF
     carry_along: Dict[str, str] = {
-        "resources": _DEFAULT_RESOURCES if resources is None else resources,
         "namespace": namespace,
         "access_credentials_name": acn,
     }
@@ -429,7 +430,7 @@ def run_ingest_workflow(
         extra_tiledb_config=extra_tiledb_config,
         platform_config=platform_config,
         ingest_mode=ingest_mode,
-        resources=resources,
+        ingest_resources=ingest_resources,
         namespace=namespace,
         register_name=register_name,
         access_credentials_name=acn,
