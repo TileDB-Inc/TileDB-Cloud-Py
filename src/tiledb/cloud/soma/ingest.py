@@ -150,7 +150,7 @@ def run_ingest_workflow_udf(
         )
 
         for entry_input_uri in vfs.ls(input_uri):
-            # Subdirectories/subfolders can't be ingested, we skip them.
+            # Subdirectories/subfolders can't be ingested.
             if vfs.is_dir(entry_input_uri):
                 logger.info(
                     "Skipping sub-directory: entry_input_uri=%r", entry_input_uri
@@ -172,6 +172,8 @@ def run_ingest_workflow_udf(
                     entry_input_uri,
                 )
                 continue
+
+            logger.info("Submitting h5ad file: entry_input_uri=%r", entry_input_uri)
 
             node = grf.submit(
                 _ingest_h5ad_byval,
