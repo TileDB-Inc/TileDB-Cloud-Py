@@ -103,19 +103,73 @@ def run_ingest_workflow_udf(
     # https://github.com/TileDB-Inc/TileDB-Cloud-Py/pull/512
 
     logger = get_logger_wrapper(level=logging_level)
-    logger.debug("ENUMERATOR ENTER")
-    logger.debug("ENUMERATOR INPUT_URI  %s", input_uri)
-    logger.debug("ENUMERATOR OUTPUT_URI %s", output_uri)
-    logger.debug("ENUMERATOR DRY_RUN    %s", str(dry_run))
 
     h5ad_ingest = None
     collector = None
 
     vfs = tiledb.VFS(config=extra_tiledb_config)
 
-    if vfs.is_file(input_uri):
-        logger.debug("ENUMERATOR VFS.IS_FILE")
+    if vfs.is_dir(input_uri):
+        if dry_run:
+            name = "dry-run-h5ad-files"
+        else:
+            name = "ingest-h5ad-files"
 
+        grf = dag.DAG(
+            name=name,
+            mode=dag.Mode.BATCH,
+            namespace=carry_along.get("namespace", namespace),
+        )
+
+        collector = grf.submit(
+            lambda output_uri: output_uri,
+            output_uri=output_uri,
+        )
+
+        for entry_input_uri in vfs.ls(input_uri):
+            logger.debug("Processing folder item: entry_input_uri=%r", entry_input_uri)
+
+            # Subdirectories/subfolders can't be ingested.
+            if vfs.is_dir(entry_input_uri):
+                logger.info(
+                    "Skipping sub-directory: entry_input_uri=%r", entry_input_uri
+                )
+                continue
+
+            base = os.path.basename(entry_input_uri)
+            base, _ = os.path.splitext(base)
+
+            entry_output_uri = output_uri + "/" + base
+            if not output_uri.endswith("/"):
+                entry_output_uri += "/"
+            entry_output_uri += base
+
+            if pattern is not None and not re.search(pattern, entry_input_uri):
+                logger.info(
+                    "Skipping non-matching input: pattern=%r, entry_input_uri=%r",
+                    pattern,
+                    entry_input_uri,
+                )
+                continue
+
+            logger.debug("Submitting h5ad file: entry_input_uri=%r", entry_input_uri)
+
+            node = grf.submit(
+                _ingest_h5ad_byval,
+                output_uri=entry_output_uri,
+                input_uri=entry_input_uri,
+                measurement_name=measurement_name,
+                extra_tiledb_config=extra_tiledb_config,
+                ingest_mode=ingest_mode,
+                platform_config=platform_config,
+                resources=ingest_resources,  # Apply propagated resources here.
+                access_credentials_name=carry_along.get("access_credentials_name", acn),
+                logging_level=logging_level,
+                dry_run=dry_run,
+            )
+            collector.depends_on(node)
+
+    elif vfs.is_file(input_uri):
         name = ("dry-run" if dry_run else "ingest") + "-h5ad-file"
 
         grf = dag.DAG(
@@ -141,55 +195,6 @@ def run_ingest_workflow_udf(
             dry_run=dry_run,
         )
 
-    elif vfs.is_dir(input_uri):
-        logger.debug("ENUMERATOR VFS.IS_DIR")
-
-        if dry_run:
-            name = "dry-run-h5ad-files"
-        else:
-            name = "ingest-h5ad-files"
-
-        grf = dag.DAG(
-            name=name,
-            mode=dag.Mode.BATCH,
-            namespace=carry_along.get("namespace", namespace),
-        )
-
-        collector = grf.submit(
-            lambda output_uri: output_uri,
-            output_uri=output_uri,
-        )
-
-        for entry_input_uri in vfs.ls(input_uri):
-            logger.debug("ENUMERATOR ENTRY_INPUT_URI=%r", entry_input_uri)
-            base = os.path.basename(entry_input_uri)
-            base, _ = os.path.splitext(base)
-
-            entry_output_uri = output_uri + "/" + base
-            if not output_uri.endswith("/"):
-                entry_output_uri += "/"
-            entry_output_uri += base
-            logger.debug("ENUMERATOR ENTRY_OUTPUT_URI=%r", entry_output_uri)
-
-            if pattern is not None and not re.match(pattern, entry_input_uri):
-                logger.debug("ENUMERATOR SKIP NO MATCH ON <<%r>>", pattern)
-                continue
-
-            node = grf.submit(
-                _ingest_h5ad_byval,
-                output_uri=entry_output_uri,
-                input_uri=entry_input_uri,
-                measurement_name=measurement_name,
-                extra_tiledb_config=extra_tiledb_config,
-                ingest_mode=ingest_mode,
-                platform_config=platform_config,
-                resources=ingest_resources,  # Apply propagated resources here.
-                access_credentials_name=carry_along.get("access_credentials_name", acn),
-                logging_level=logging_level,
-                dry_run=dry_run,
-            )
-            collector.depends_on(node)
-
     else:
         raise ValueError("input_uri %r is neither file nor directory", input_uri)
 
@@ -212,7 +217,6 @@ def run_ingest_workflow_udf(
 
     grf.compute()
 
-    logger.debug("ENUMERATOR EXIT server_graph_uuid = %r", grf.server_graph_uuid)
     return grf.server_graph_uuid
 
 
@@ -302,7 +306,14 @@ def ingest_h5ad(
             return
 
         with _hack_patch_anndata_byval():
-            input_data = anndata.read_h5ad(_FSPathWrapper(input_file, input_uri), "r")
+            try:
+                input_data = anndata.read_h5ad(
+                    _FSPathWrapper(input_file, input_uri), "r"
+                )
+            except Exception as h5exc:
+                raise RuntimeError(
+                    f"Failed to read file {input_file!r} wrapping {input_uri!r}"
+                ) from h5exc
 
         output_uri = io.from_anndata(
             experiment_uri=output_uri,
