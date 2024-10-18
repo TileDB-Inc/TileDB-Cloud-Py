@@ -35,6 +35,7 @@ def ingest(
     num_batches: Optional[int] = None,
     threads: Optional[int] = 0,
     resources: Optional[Mapping[str, Any]] = None,
+    ingest_resources: Optional[Mapping[str, Any]] = None,
     compute: bool = True,
     register: bool = True,
     mode: Optional[Mode] = Mode.BATCH,
@@ -60,6 +61,10 @@ def ingest(
     :param threads: Number of threads for node side multiprocessing, defaults to 0
     :param resources: configuration for node specs e.g. {"cpu": "8", "memory": "4Gi"},
         defaults to None
+    :param ingest_resources: configuration for node specs e.g.
+        {"cpu": "8", "memory": "4Gi"}. This parameter is intended to be used with the
+        as_batch() wrapper and with the TileDB UI ingest endpoint. It defaults to None
+        and will be superseded by the resources parameter described above.
     :param compute: When True the DAG returned will be computed inside the function
     otherwise DAG will only be returned.
     :param register: When True the ingested images are also being registered under the
@@ -214,7 +219,8 @@ def ingest(
             "png": Converters.PNG,
         }.get(converter, Converters.OMETIFF)
 
-        experimental_reader = kwargs.get("experimental_reader", False)
+        experimental_reader = kwargs.pop("experimental_reader", False)
+
         compressor = kwargs.get("compressor", None)
         if compressor:
             compressor_args = dict(compressor)
@@ -381,7 +387,7 @@ def ingest(
         *args,
         name=f"{dag_name} ingestor ",
         expand_node_output=input_list_node,
-        resources=DEFAULT_RESOURCES if resources is None else resources,
+        resources=resources or ingest_resources or DEFAULT_RESOURCES,
         image_name=DEFAULT_IMG_NAME,
         max_workers=threads,
         compressor=compressor_serial,
@@ -400,8 +406,6 @@ def ingest(
             namespace=namespace,
             name=f"{dag_name} registrator ",
             expand_node_output=ingest_list_node,
-            resources=DEFAULT_RESOURCES if resources is None else resources,
-            image_name=DEFAULT_IMG_NAME,
             access_credentials_name=acn,
             **kwargs,
         )
