@@ -7,7 +7,6 @@ from unittest import mock
 
 import tiledb
 from tiledb.cloud import dag
-from tiledb.cloud._common import functions
 from tiledb.cloud._common import utils
 from tiledb.cloud.utilities import as_batch
 from tiledb.cloud.utilities import get_logger_wrapper
@@ -155,7 +154,7 @@ def run_ingest_workflow_udf(
             logger.debug("Submitting h5ad file: entry_input_uri=%r", entry_input_uri)
 
             node = grf.submit(
-                _ingest_h5ad_byval,
+                ingest_h5ad,
                 output_uri=entry_output_uri,
                 input_uri=entry_input_uri,
                 measurement_name=measurement_name,
@@ -182,7 +181,7 @@ def run_ingest_workflow_udf(
         # we can use it as the resources argument of this method
         # call.
         h5ad_ingest = grf.submit(
-            _ingest_h5ad_byval,
+            ingest_h5ad,
             output_uri=output_uri,
             input_uri=input_uri,
             measurement_name=measurement_name,
@@ -201,7 +200,7 @@ def run_ingest_workflow_udf(
     # Register the SOMA result if not DRY-RUN
     if not dry_run:
         register_soma = grf.submit(
-            _register_dataset_udf_byval,
+            register_dataset_udf,
             output_uri,
             namespace=namespace,
             register_name=register_name,
@@ -305,7 +304,7 @@ def ingest_h5ad(
             logging.info("Dry run for %s to %s", input_uri, output_uri)
             return
 
-        with _hack_patch_anndata_byval():
+        with _hack_patch_anndata():
             try:
                 input_data = anndata.read_h5ad(
                     _FSPathWrapper(input_file, input_uri), "r"
@@ -425,7 +424,7 @@ def run_ingest_workflow(
     }
 
     grf.submit(
-        _run_ingest_workflow_udf_byval,
+        run_ingest_workflow_udf,
         output_uri=output_uri,
         input_uri=input_uri,
         measurement_name=measurement_name,
@@ -455,15 +454,4 @@ def run_ingest_workflow(
     }
 
 
-# FIXME: Until we fully get this version of tiledb.cloud deployed server-side,
-# we must refer to all functions by value rather than by reference
-# -- which is a fancy way of saying these functions _will not work at all_ until
-# and unless they are checked into tiledb-cloud-py and deployed server-side.
-# _All_ dev work _must_ use this idiom.
-_ingest_h5ad_byval = functions.to_register_by_value(ingest_h5ad)
-_run_ingest_workflow_byval = functions.to_register_by_value(run_ingest_workflow)
-_run_ingest_workflow_udf_byval = functions.to_register_by_value(run_ingest_workflow_udf)
-_register_dataset_udf_byval = functions.to_register_by_value(register_dataset_udf)
-_hack_patch_anndata_byval = functions.to_register_by_value(_hack_patch_anndata)
-
-ingest = as_batch(_run_ingest_workflow_byval)
+ingest = as_batch(run_ingest_workflow)
