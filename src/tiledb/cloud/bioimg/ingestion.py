@@ -219,7 +219,8 @@ def ingest(
             "png": Converters.PNG,
         }.get(converter, Converters.OMETIFF)
 
-        experimental_reader = kwargs.get("experimental_reader", False)
+        experimental_reader = kwargs.pop("experimental_reader", False)
+
         compressor = kwargs.get("compressor", None)
         if compressor:
             compressor_args = dict(compressor)
